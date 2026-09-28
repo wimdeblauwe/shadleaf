@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Home', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <!-- Styled by the stylesheet in the Shadleaf jar, served from /shadleaf/** -->
+  <div class="sl-smoke-test" id="smoke-test">
+    If this box is green, the Shadleaf stylesheet is loaded.
+  </div>
+</div>
+</body>
+</html>

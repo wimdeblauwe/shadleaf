@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--
+  Public asset entry point for consuming applications.
+
+  Usage in a consumer template:
+    <head>
+      <th:block th:replace="~{sl/layout :: assets}"></th:block>
+    </head>
+
+  Not named `head`: that would also match the <head> element in this template.
+-->
+<head>
+  <th:block th:fragment="assets">
+    <th:block th:if="${@shadleafAssets.devMode}">
+      <script type="module" th:with="viteClientUrl=${@shadleafAssets.viteClientUrl}"
+              th:src="${viteClientUrl}"></script>
+    </th:block>
+    <link rel="stylesheet" th:with="url=${@shadleafAssets.cssUrl}" th:href="@{${url}}"/>
+  </th:block>
+</head>
+<body>
+</body>
+</html>
