@@ -6,15 +6,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title th:text="|${pageTitle} - Shadleaf Sample App 1|">Shadleaf Sample App 1</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
   <th:block th:replace="~{sl/layout :: assets}"></th:block>
   <vite:client></vite:client>
   <vite:vite>
     <vite:entry value="/css/application.css"></vite:entry>
+    <vite:entry value="/js/theme-toggle.js"></vite:entry>
   </vite:vite>
 </head>
 <body>
 <main>
-  <h1 th:text="${pageTitle}"></h1>
+  <header class="page-header">
+    <h1 th:text="${pageTitle}"></h1>
+    <div class="theme-toggle" role="group" aria-label="Theme">
+      <button type="button" class="btn" data-variant="outline" data-size="sm" data-theme-choice="light">Light</button>
+      <button type="button" class="btn" data-variant="outline" data-size="sm" data-theme-choice="dark">Dark</button>
+      <button type="button" class="btn" data-variant="outline" data-size="sm" data-theme-choice="system">System</button>
+    </div>
+  </header>
   <div th:replace="${content}"></div>
 </main>
 </body>

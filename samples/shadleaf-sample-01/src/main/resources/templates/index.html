@@ -4,20 +4,73 @@
       xmlns:sl="https://shadleaf.dev/sl"
       th:replace="~{layout/main :: layout('Home', ~{::#page-content})}">
 <body>
-<div id="page-content">
-  <!-- Styled by the stylesheet in the Shadleaf jar, served from /shadleaf/** -->
-  <div class="sl-smoke-test" id="smoke-test">
-    If this box is green, the Shadleaf stylesheet is loaded.
-  </div>
+<div id="page-content"
+     th:with="variants=${ {'primary', 'secondary', 'outline', 'ghost', 'link', 'destructive'} },
+              sizes=${ {'xs', 'sm', 'default', 'lg'} },
+              iconSizes=${ {'icon-xs', 'icon-sm', 'icon', 'icon-lg'} }">
+
+  <!--
+    Hand-written .btn markup: the stylesheet is the library's (skin and asset variant from shadleaf.skin and
+    shadleaf.assets.variant), the markup is what <sl:button> will render in M3.
+    Run with --shadleaf.skin=flat to see the second skin: same markup, same tokens, different geometry.
+  -->
+  <section>
+    <h2>Variants</h2>
+    <div class="row">
+      <button type="button" class="btn" th:each="variant : ${variants}"
+              th:attr="data-variant=${variant == 'primary' ? null : variant}"
+              th:text="${#strings.capitalize(variant)}">Button</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Sizes</h2>
+    <div class="row" th:each="variant : ${ {'primary', 'outline'} }">
+      <button type="button" class="btn" th:each="size : ${sizes}"
+              th:attr="data-variant=${variant == 'primary' ? null : variant},
+                       data-size=${size == 'default' ? null : size}"
+              th:text="${size}">Button</button>
+      <button type="button" class="btn" th:each="size : ${iconSizes}"
+              th:attr="data-variant=${variant == 'primary' ? null : variant}, data-size=${size}, aria-label=${size}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+          <path d="M5 12h14"/><path d="M12 5v14"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <h2>States</h2>
+    <div class="row">
+      <button type="button" class="btn" disabled>Disabled</button>
+      <button type="button" class="btn" data-variant="outline" disabled>Disabled</button>
+      <a class="btn" data-variant="secondary" aria-disabled="true" tabindex="-1">Disabled link</a>
+      <button type="button" class="btn" data-variant="outline" aria-invalid="true">Invalid</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Token override</h2>
+    <p>The same buttons inside <code>.brand</code>, which redefines <code>--primary</code> and <code>--radius</code>
+      in the application's own stylesheet (application.css). No Tailwind in the application.</p>
+    <div class="row brand">
+      <button type="button" class="btn" th:each="variant : ${variants}"
+              th:attr="data-variant=${variant == 'primary' ? null : variant}"
+              th:text="${#strings.capitalize(variant)}">Button</button>
+    </div>
+  </section>
 
   <!-- Demo of the M1 engine, using templates/sl/components/badge.html from this app. View the page source. -->
-  <h2>Badges</h2>
-  <p>
-    <sl:badge>Plain</sl:badge>
-    <sl:badge variant="success" class="demo-extra" hx-get="/x">New</sl:badge>
-    <sl:badge th:variant="${2 > 1 ? 'danger' : 'neutral'}" th:text="${'Evaluated'}">placeholder</sl:badge>
-    <sl:badge variant="neutral" />
-  </p>
+  <section>
+    <h2>Badges</h2>
+    <p>
+      <sl:badge>Plain</sl:badge>
+      <sl:badge variant="success" class="demo-extra" hx-get="/x">New</sl:badge>
+      <sl:badge th:variant="${2 > 1 ? 'danger' : 'neutral'}" th:text="${'Evaluated'}">placeholder</sl:badge>
+      <sl:badge variant="neutral" />
+    </p>
+  </section>
 </div>
 </body>
 </html>

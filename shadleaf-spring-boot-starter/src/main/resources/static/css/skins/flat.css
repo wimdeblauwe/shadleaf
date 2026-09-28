@@ -1,0 +1,76 @@
+/*
+  Skin: flat. A deliberately minimal alternate that exists to prove the structure/identity seam:
+  square corners, no shadow, no movement on press, a regular weight and an outline focus ring.
+  Same markup, same tokens as the default skin.
+*/
+@layer components {
+  /* Button */
+  .btn {
+    @apply rounded-none border border-transparent text-sm font-normal
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-ring
+      [&_svg:not([class*='size-'])]:size-4;
+  }
+
+  .btn:not([data-size]),
+  .btn[data-size='default'] {
+    @apply h-9 gap-2 px-4 has-[[data-icon='inline-end']]:pe-3 has-[[data-icon='inline-start']]:ps-3;
+  }
+
+  .btn[data-size='xs'] {
+    @apply h-6 gap-1 px-2 text-xs [&_svg:not([class*='size-'])]:size-3;
+  }
+
+  .btn[data-size='sm'] {
+    @apply h-8 gap-1.5 px-3;
+  }
+
+  .btn[data-size='lg'] {
+    @apply h-10 gap-2 px-6;
+  }
+
+  .btn[data-size='icon'] {
+    @apply size-9;
+  }
+
+  .btn[data-size='icon-xs'] {
+    @apply size-6 [&_svg:not([class*='size-'])]:size-3;
+  }
+
+  .btn[data-size='icon-sm'] {
+    @apply size-8;
+  }
+
+  .btn[data-size='icon-lg'] {
+    @apply size-10;
+  }
+
+  .btn:not([data-variant]),
+  .btn[data-variant='primary'] {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .btn[data-variant='secondary'] {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .btn[data-variant='outline'] {
+    @apply border-input bg-transparent hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .btn[data-variant='ghost'] {
+    @apply hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .btn[data-variant='link'] {
+    @apply text-primary underline underline-offset-4 hover:decoration-2;
+  }
+
+  .btn[data-variant='destructive'] {
+    @apply border-destructive text-destructive hover:bg-destructive/10;
+  }
+
+  /* After the variants: an outline button's border colour would otherwise hide it. */
+  .btn[aria-invalid='true'] {
+    @apply border-destructive;
+  }
+}

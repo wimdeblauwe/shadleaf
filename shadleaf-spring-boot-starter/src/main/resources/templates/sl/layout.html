@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <!--
-  Public asset entry point for consuming applications.
+  Public entry points for consuming applications.
 
   Usage in a consumer template:
     <head>
+      <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
       <th:block th:replace="~{sl/layout :: assets}"></th:block>
     </head>
 
-  Not named `head`: that would also match the <head> element in this template.
+  Fragments are never named after an HTML element: `head` would also match the <head> element in this template.
 -->
 <head>
   <th:block th:fragment="assets">
@@ -18,6 +19,17 @@
     </th:block>
     <link rel="stylesheet" th:with="url=${@shadleafAssets.cssUrl}" th:href="@{${url}}"/>
   </th:block>
+
+  <!--
+    Sets class="dark" on <html> before the first paint. Place it early in <head>, before the stylesheet.
+    Carries the request's CSP nonce when there is one (shadleaf.csp.nonce-attribute); otherwise allow it with
+    ShadleafThemeScript#getCspHash(). Both lookups go through th:with: Thymeleaf forbids @bean and #ctx in th:attr.
+  -->
+  <script th:fragment="theme-script"
+          th:with="themeScript=${@shadleafThemeScript},
+                   nonce=${#ctx.getVariable(themeScript.nonceAttribute)}"
+          th:attr="nonce=${nonce}"
+          th:utext="${themeScript.content}"></script>
 </head>
 <body>
 </body>

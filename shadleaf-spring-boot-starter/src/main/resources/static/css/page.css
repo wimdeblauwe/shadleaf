@@ -1,0 +1,13 @@
+/*
+  Page-level base styles. Standalone bundles only: in the embedded variant the application
+  compiles Tailwind itself and owns its base layer.
+*/
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

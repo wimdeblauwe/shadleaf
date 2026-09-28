@@ -1,0 +1,6 @@
+/* Shared helpers. The bundle emits no utility classes, so components use these instead. */
+@layer components {
+  .sl-sr-only {
+    @apply sr-only;
+  }
+}

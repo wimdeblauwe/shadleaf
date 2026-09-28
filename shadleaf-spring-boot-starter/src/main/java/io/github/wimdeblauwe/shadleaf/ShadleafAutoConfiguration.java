@@ -7,6 +7,7 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentDefinitionSource;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.component.FileSystemComponentDefinitionSource;
 import io.github.wimdeblauwe.shadleaf.dialect.ShadleafDialect;
+import io.github.wimdeblauwe.shadleaf.theme.ShadleafThemeScript;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.ObjectProvider;
@@ -31,7 +32,14 @@ public class ShadleafAutoConfiguration {
   @ConditionalOnMissingBean
   public ShadleafAssets shadleafAssets(ShadleafProperties properties,
       ViteManifestParser viteManifestParser) {
-    return new ShadleafAssets(properties.dev().viteServerUrl(), viteManifestParser);
+    return new ShadleafAssets(properties.skin(), properties.assets().variant(), properties.dev().viteServerUrl(),
+        viteManifestParser);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ShadleafThemeScript shadleafThemeScript(ShadleafProperties properties) {
+    return new ShadleafThemeScript(properties.csp().nonceAttribute());
   }
 
   @Bean

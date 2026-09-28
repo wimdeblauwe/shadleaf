@@ -42,6 +42,20 @@ class ShadleafAutoConfigurationTest {
   }
 
   @Test
+  void skinAndAssetVariantSelectTheStylesheet() {
+    contextRunner.withPropertyValues("shadleaf.skin=flat", "shadleaf.assets.variant=embedded")
+        .run(context -> assertThat(context.getBean(ShadleafAssets.class).getCssUrl())
+            .startsWith("/shadleaf/assets/shadleaf-flat.embedded-"));
+  }
+
+  @Test
+  void unknownSkinFailsTheStartup() {
+    contextRunner.withPropertyValues("shadleaf.skin=glossy")
+        .run(context -> assertThat(context).getFailure().rootCause()
+            .hasMessageContaining("Unknown Shadleaf skin 'glossy'"));
+  }
+
+  @Test
   void templatesPathRegistersTheLiveReloadResolver() {
     contextRunner.withPropertyValues("shadleaf.dev.templates-path=src/main/resources/templates/")
         .run(context -> assertThat(context).hasSingleBean(FileTemplateResolver.class));
