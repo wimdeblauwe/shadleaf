@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The sample's own leaf: a filled shape, replacing lucide's stroked "leaf". -->
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M20.5 3.5C11 3.5 4 8.5 4 15.5c0 1.6.4 3 1.1 4.2L3.3 21.5l1.2 1.2 1.9-1.9c1.2.7 2.6 1.1 4.1 1.1 7 0 10-7.5 10-18.4Z"/>
+</svg>

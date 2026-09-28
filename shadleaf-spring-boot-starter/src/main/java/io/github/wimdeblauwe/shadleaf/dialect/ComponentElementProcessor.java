@@ -108,15 +108,15 @@ public class ComponentElementProcessor implements IElementModelProcessor {
     ComponentDefinition definition = registry.get(name);
     Map<String, @Nullable String> attributes = getAttributesAsMap(openTag);
 
-    if (definition.declared()) {
-      Map<String, @Nullable Object> values = new LinkedHashMap<>();
-      for (PropDefinition prop : definition.props().values()) {
-        values.put(prop.name(), bindProp(context, definition, prop, attributes));
-      }
-      checkAccessibleName(definition, values, attributes);
-      structureHandler.setLocalVariable(PROPS_VARIABLE, new Props(definition, values));
+    Map<String, @Nullable Object> values = new LinkedHashMap<>();
+    for (PropDefinition prop : definition.props().values()) {
+      values.put(prop.name(), bindProp(context, definition, prop, attributes));
     }
-    structureHandler.setLocalVariable(ATTRS_VARIABLE, attributes);
+    checkAccessibleName(definition, values, attributes);
+    // Set even when the component declares no props, so a component nested in another's slot never sees the outer
+    // component's props.
+    structureHandler.setLocalVariable(PROPS_VARIABLE, new Props(definition, values));
+    structureHandler.setLocalVariable(ATTRS_VARIABLE, new Attrs(attributes));
 
     IModelFactory modelFactory = context.getModelFactory();
     SlotContentSplitter.SlotContent slotContent = slotContentSplitter.split(model, modelFactory);

@@ -9,67 +9,120 @@
               sizes=${ {'xs', 'sm', 'default', 'lg'} },
               iconSizes=${ {'icon-xs', 'icon-sm', 'icon', 'icon-lg'} }">
 
-  <!--
-    Hand-written .btn markup: the stylesheet is the library's (skin and asset variant from shadleaf.skin and
-    shadleaf.assets.variant), the markup is what <sl:button> will render in M3.
-    Run with --shadleaf.skin=flat to see the second skin: same markup, same tokens, different geometry.
-  -->
-  <section>
-    <h2>Variants</h2>
-    <div class="row">
-      <button type="button" class="btn" th:each="variant : ${variants}"
-              th:attr="data-variant=${variant == 'primary' ? null : variant}"
-              th:text="${#strings.capitalize(variant)}">Button</button>
-    </div>
-  </section>
+  <p>The five rungs of the adjustability ladder, all on <code>&lt;sl:button&gt;</code>. Take the highest rung that
+    solves the problem. View the page source to see what each one renders.</p>
 
   <section>
-    <h2>Sizes</h2>
+    <h2>1. Props</h2>
+    <h3>Variants</h3>
+    <div class="row">
+      <sl:button th:each="variant : ${variants}" th:variant="${variant}"
+                 th:text="${#strings.capitalize(variant)}">Button</sl:button>
+    </div>
+
+    <h3>Sizes</h3>
     <div class="row" th:each="variant : ${ {'primary', 'outline'} }">
-      <button type="button" class="btn" th:each="size : ${sizes}"
-              th:attr="data-variant=${variant == 'primary' ? null : variant},
-                       data-size=${size == 'default' ? null : size}"
-              th:text="${size}">Button</button>
-      <button type="button" class="btn" th:each="size : ${iconSizes}"
-              th:attr="data-variant=${variant == 'primary' ? null : variant}, data-size=${size}, aria-label=${size}">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <path d="M5 12h14"/><path d="M12 5v14"/>
-        </svg>
-      </button>
+      <sl:button th:each="size : ${sizes}" th:variant="${variant}" th:size="${size}"
+                 th:text="${size}">Button</sl:button>
+      <!-- An icon-only button needs an accessible name: without aria-label the page fails to render. -->
+      <sl:button th:each="size : ${iconSizes}" th:variant="${variant}" th:size="${size}"
+                 th:aria-label="|Add (${size})|"><sl:icon name="plus"/></sl:button>
     </div>
-  </section>
 
-  <section>
-    <h2>States</h2>
+    <h3>Icons</h3>
     <div class="row">
-      <button type="button" class="btn" disabled>Disabled</button>
-      <button type="button" class="btn" data-variant="outline" disabled>Disabled</button>
-      <a class="btn" data-variant="secondary" aria-disabled="true" tabindex="-1">Disabled link</a>
-      <button type="button" class="btn" data-variant="outline" aria-invalid="true">Invalid</button>
+      <sl:button variant="destructive">
+        <sl:slot name="icon-start"><sl:icon name="trash"/></sl:slot>
+        Delete order
+      </sl:button>
+      <sl:button variant="outline">
+        Next
+        <sl:slot name="icon-end"><sl:icon name="arrow-right"/></sl:slot>
+      </sl:button>
+      <sl:button variant="secondary">
+        <sl:slot name="icon-start"><sl:icon name="plus" size="20"/></sl:slot>
+        Explicit icon size
+      </sl:button>
+    </div>
+
+    <h3>States</h3>
+    <div class="row">
+      <sl:button disabled>Disabled</sl:button>
+      <sl:button loading>Saving</sl:button>
+      <sl:button variant="outline" loading>
+        <sl:slot name="icon-start"><sl:icon name="save"/></sl:slot>
+        Saving
+      </sl:button>
+      <sl:button variant="outline" size="icon" loading aria-label="Refresh"><sl:icon name="refresh-cw"/></sl:button>
+      <sl:button type="submit" variant="secondary">Submit</sl:button>
+    </div>
+
+    <h3>As a link</h3>
+    <div class="row">
+      <sl:button as="a" variant="link" href="#rung-5">Jump to rung 5</sl:button>
+      <sl:button as="a" variant="outline" th:href="@{/}">
+        <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+        Home
+      </sl:button>
+      <sl:button as="a" variant="secondary" disabled th:href="@{/}">Disabled link</sl:button>
     </div>
   </section>
 
   <section>
-    <h2>Token override</h2>
+    <h2>2. Pass-through attributes and classes</h2>
+    <p><code>class</code> is appended to the button's own; every other attribute that is not a prop lands on the
+      rendered element. This app has no Tailwind, so <code>wide</code> is a class from its own stylesheet. htmx and
+      Alpine are not loaded here: the <code>hx-*</code> and <code>x-*</code> attributes are in the page source.</p>
+    <div class="row">
+      <sl:button variant="outline" class="wide" hx-post="/orders/sync" hx-target="#orders"
+                 x-on:click="syncing = true" data-order-count="3" aria-describedby="sync-help">
+        <sl:slot name="icon-start"><sl:icon name="refresh-cw"/></sl:slot>
+        Sync orders
+      </sl:button>
+      <sl:button variant="outline" aria-invalid="true">Invalid</sl:button>
+      <span id="sync-help">Fetches the latest orders.</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Token overrides</h2>
     <p>The same buttons inside <code>.brand</code>, which redefines <code>--primary</code> and <code>--radius</code>
-      in the application's own stylesheet (application.css). No Tailwind in the application.</p>
+      in the application's own stylesheet (application.css). On <code>:root</code> they would rebrand the whole
+      page.</p>
     <div class="row brand">
-      <button type="button" class="btn" th:each="variant : ${variants}"
-              th:attr="data-variant=${variant == 'primary' ? null : variant}"
-              th:text="${#strings.capitalize(variant)}">Button</button>
+      <sl:button th:each="variant : ${variants}" th:variant="${variant}"
+                 th:text="${#strings.capitalize(variant)}">Button</sl:button>
     </div>
   </section>
 
-  <!-- Demo of the M1 engine, using templates/sl/components/badge.html from this app. View the page source. -->
   <section>
-    <h2>Badges</h2>
-    <p>
-      <sl:badge>Plain</sl:badge>
-      <sl:badge variant="success" class="demo-extra" hx-get="/x">New</sl:badge>
-      <sl:badge th:variant="${2 > 1 ? 'danger' : 'neutral'}" th:text="${'Evaluated'}">placeholder</sl:badge>
-      <sl:badge variant="neutral" />
-    </p>
+    <h2>4. Skin swap</h2>
+    <p>This page uses the <strong th:text="${@environment.getProperty('shadleaf.skin', 'default')}">default</strong>
+      skin. Run with <code>--shadleaf.skin=flat</code> for the second one: same markup, same tokens, different
+      geometry, weight and focus ring.</p>
+  </section>
+
+  <section id="rung-5">
+    <h2>5. Own the template</h2>
+    <p>Copy <code>templates/sl/components/button.html</code> from the Shadleaf jar into the application's own
+      <code>src/main/resources/templates/sl/components/</code>. The application's copy comes first on the classpath,
+      props included, so it wins with no configuration. It no longer receives the library's fixes.</p>
+    <p>This sample keeps its copy in its test resources (see <code>ButtonOverrideTest</code>), so the page above
+      still shows the library's button while the library is developed against it.</p>
+  </section>
+
+  <section>
+    <h2>Application icons</h2>
+    <p>An <code>IconSource</code> bean (see <code>ShadleafSample01Application</code>) reads
+      <code>src/main/resources/icons/*.svg</code> before the bundled lucide icons. Its <code>leaf.svg</code> replaces
+      lucide's leaf.</p>
+    <div class="row">
+      <sl:icon name="leaf" size="32" label="Shadleaf"/>
+      <sl:button variant="outline">
+        <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+        Inherits the button's colour and size
+      </sl:button>
+    </div>
   </section>
 </div>
 </body>

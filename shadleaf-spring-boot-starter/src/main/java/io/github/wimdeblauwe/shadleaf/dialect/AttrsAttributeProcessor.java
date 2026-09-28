@@ -1,11 +1,14 @@
 package io.github.wimdeblauwe.shadleaf.dialect;
 
+import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.AbstractAttributeTagProcessor;
 import org.thymeleaf.processor.element.IElementTagStructureHandler;
+import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.templatemode.TemplateMode;
 
 /**
@@ -16,6 +19,10 @@ import org.thymeleaf.templatemode.TemplateMode;
  * Attributes are copied verbatim, {@code th:*} ones included. They are evaluated here, on the rendered element, by
  * the standard processors that run after this one. That is why {@code th:text}, {@code th:href} or
  * {@code th:hx-post} on a component tag simply work.
+ * <p>
+ * Without a value it copies the {@code attrs} variable. With one, the value is an expression giving the attributes to
+ * copy, for a template that must leave some out in a given state:
+ * {@code sl:attrs="${props.disabled ? attrs.without('href') : attrs}"}.
  */
 public class AttrsAttributeProcessor extends AbstractAttributeTagProcessor {
 
@@ -34,7 +41,8 @@ public class AttrsAttributeProcessor extends AbstractAttributeTagProcessor {
   @Override
   protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName,
       String attributeValue, IElementTagStructureHandler structureHandler) {
-    if (!(context.getVariable(ComponentElementProcessor.ATTRS_VARIABLE) instanceof Map<?, ?> attrs)) {
+    Map<?, ?> attrs = attributesToCopy(context, attributeValue);
+    if (attrs == null) {
       return;
     }
     for (Map.Entry<?, ?> entry : attrs.entrySet()) {
@@ -50,5 +58,22 @@ public class AttrsAttributeProcessor extends AbstractAttributeTagProcessor {
         structureHandler.setAttribute(name, value);
       }
     }
+  }
+
+  private static @Nullable Map<?, ?> attributesToCopy(ITemplateContext context, @Nullable String attributeValue) {
+    if (attributeValue == null || attributeValue.isBlank()) {
+      return context.getVariable(ComponentElementProcessor.ATTRS_VARIABLE) instanceof Map<?, ?> attrs ? attrs : null;
+    }
+    Object result = StandardExpressions.getExpressionParser(context.getConfiguration())
+        .parseExpression(context, attributeValue)
+        .execute(context);
+    if (result == null) {
+      return null;
+    }
+    if (!(result instanceof Map<?, ?> attrs)) {
+      throw new ShadleafComponentException("sl:attrs=\"%s\" must evaluate to a map of attributes, not %s."
+          .formatted(attributeValue, result.getClass().getName()));
+    }
+    return attrs;
   }
 }

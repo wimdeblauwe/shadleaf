@@ -7,6 +7,9 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentDefinition;
 import io.github.wimdeblauwe.shadleaf.component.ComponentDefinitionSource;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.dialect.ShadleafDialect;
+import io.github.wimdeblauwe.shadleaf.icon.Icon;
+import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
+import io.github.wimdeblauwe.shadleaf.icon.IconSource;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -15,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.thymeleaf.IEngineConfiguration;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -64,12 +69,33 @@ class ShadleafAutoConfigurationTest {
   @Test
   void templatesPathIsTheFirstComponentSource(@TempDir Path templates) throws Exception {
     Path components = Files.createDirectories(templates.resolve("sl/components"));
-    Files.writeString(components.resolve("test-chip.html"),
+    Files.writeString(components.resolve("button.html"),
         "<html><head><sl:props><sl:prop name=\"tone\"/></sl:props></head></html>");
 
     contextRunner.withPropertyValues("shadleaf.dev.templates-path=" + templates)
-        .run(context -> assertThat(context.getBean(ComponentRegistry.class).get("test-chip").props())
+        .run(context -> assertThat(context.getBean(ComponentRegistry.class).get("button").props())
             .containsOnlyKeys("tone"));
+  }
+
+  /**
+   * The test-* components live in target/test-classes, a different classpath root from the library's
+   * target/classes: to the dev mode they are the application's own templates, like an override of button.html.
+   */
+  @Test
+  void applicationsOwnTemplateBeatsTheTemplatesPath(@TempDir Path templates) throws Exception {
+    Path components = Files.createDirectories(templates.resolve("sl/components"));
+    Files.writeString(components.resolve("test-chip.html"),
+        "<html><head><sl:props><sl:prop name=\"tone\"/></sl:props></head></html>");
+    Files.writeString(components.resolve("button.html"), "<html></html>");
+
+    contextRunner.withPropertyValues("shadleaf.dev.templates-path=" + templates + "/").run(context -> {
+      assertThat(context.getBean(ComponentRegistry.class).get("test-chip").props()).containsKey("variant");
+
+      FileTemplateResolver resolver = context.getBean(FileTemplateResolver.class);
+      IEngineConfiguration configuration = new SpringTemplateEngine().getConfiguration();
+      assertThat(resolver.resolveTemplate(configuration, null, "sl/components/test-chip", null)).isNull();
+      assertThat(resolver.resolveTemplate(configuration, null, "sl/components/button", null)).isNotNull();
+    });
   }
 
   @Test
@@ -87,5 +113,16 @@ class ShadleafAutoConfigurationTest {
           }
         })
         .run(context -> assertThat(context.getBean(ComponentRegistry.class).get("test-chip")).isSameAs(custom));
+  }
+
+  @Test
+  void iconSourceBeansComeBeforeTheBundledIcons() {
+    IconSource appIcons = name -> name.equals("trash") ? Optional.of(Icon.lucide("<rect/>")) : Optional.empty();
+
+    contextRunner.withBean(IconSource.class, () -> appIcons).run(context -> {
+      IconRegistry icons = context.getBean(IconRegistry.class);
+      assertThat(icons.get("trash").body()).isEqualTo("<rect/>");
+      assertThat(icons.get("x").body()).startsWith("<path");
+    });
   }
 }

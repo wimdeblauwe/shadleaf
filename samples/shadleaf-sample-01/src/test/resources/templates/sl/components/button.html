@@ -1,0 +1,79 @@
+<!doctype html>
+<!-- ejected from shadleaf 0.1.0-SNAPSHOT -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!--
+  Ladder rung 5: the application's own copy of the library's button.html. It comes first on the classpath, so it
+  replaces the library's, props included. The only change is data-ejected on both branches, which the tests look for.
+  It lives in the test resources so the running sample keeps showing the library's button while the library is
+  developed against it; a real application keeps its copy in src/main/resources.
+
+  <sl:button> renders a <button>, or with as="a" an anchor that looks the same. Every attribute that is not a prop
+  (hx-*, x-*, aria-*, data-*, href) passes through; class is appended to "btn".
+-->
+<head>
+  <sl:props>
+    <sl:prop name="variant" default="primary" values="primary secondary outline ghost link destructive">
+      Visual style of the button.</sl:prop>
+    <sl:prop name="size" default="default" values="xs sm default lg icon icon-xs icon-sm icon-lg">
+      Size of the button. The <code>icon</code> sizes are square, for a button that holds only an icon, and need an
+      <code>aria-label</code>.</sl:prop>
+    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
+      (<code>a</code>) for navigation.</sl:prop>
+    <sl:prop name="type" default="button" values="button submit reset">Submit behaviour. Defaults to
+      <code>button</code>, unlike HTML, so a button in a form never submits by accident.</sl:prop>
+    <sl:prop name="disabled" type="boolean">Disable the button. A disabled anchor loses its <code>href</code> and
+      leaves the tab order.</sl:prop>
+    <sl:prop name="loading" type="boolean">Show a spinner, announce the busy state and disable the button.</sl:prop>
+    <sl:accessible-name required-when="size=icon icon-xs icon-sm icon-lg"/>
+  </sl:props>
+</head>
+<body>
+<!--
+  Two branches for `as`, sharing their content through the button-content fragment: Thymeleaf cannot choose an
+  element name. The call is spelled out in full, because ~{::button-content} would look in the calling template.
+-->
+<th:block th:fragment="button">
+  <button th:if="${props.as == 'button'}"
+          class="btn"
+          data-ejected="shadleaf-sample-01"
+          th:type="${props.type}"
+          th:disabled="${props.disabled or props.loading}"
+          th:attr="data-variant=${props.unlessDefault('variant')},
+                   data-size=${props.unlessDefault('size')},
+                   aria-busy=${props.loading ? 'true' : null}"
+          sl:attrs
+          th:insert="~{sl/components/button :: button-content}"></button>
+  <!--/* Parser-level comment, so it never reaches the rendered page.
+    A disabled anchor has no href, so it cannot be followed, and leaves the tab order. role="link" keeps it announced
+    as a (disabled) link: without an href it would be a generic element, which aria-disabled does not apply to.
+  */-->
+  <a th:unless="${props.as == 'button'}"
+     th:with="inactive=${props.disabled or props.loading}"
+     class="btn"
+     data-ejected="shadleaf-sample-01"
+     th:attr="data-variant=${props.unlessDefault('variant')},
+              data-size=${props.unlessDefault('size')},
+              aria-busy=${props.loading ? 'true' : null},
+              aria-disabled=${inactive ? 'true' : null},
+              role=${inactive ? 'link' : null},
+              tabindex=${inactive ? '-1' : null}"
+     sl:attrs="${inactive ? attrs.without('href') : attrs}"
+     th:insert="~{sl/components/button :: button-content}"></a>
+</th:block>
+
+<!--
+  While loading, the spinner takes the place of the start icon, or of the whole content of an icon-only button, so the
+  button keeps its size. The visually hidden label is read before the button's own text.
+-->
+<th:block th:fragment="button-content"
+          th:with="iconOnly=${#strings.startsWith(props.size, 'icon')}">
+  <span th:if="${props.loading}" class="btn-icon" data-icon="inline-start"><sl:icon name="loader-circle"
+                                                                                  class="btn-spinner"/></span>
+  <span th:if="${props.loading}" class="sl-sr-only" th:text="#{sl.button.loading}">Loading</span>
+  <span th:if="${!props.loading and slots.has('icon-start')}" class="btn-icon" data-icon="inline-start"><sl:slot
+      name="icon-start"/></span>
+  <th:block th:unless="${props.loading and iconOnly}"><sl:slot>Button</sl:slot></th:block>
+  <span th:if="${slots.has('icon-end')}" class="btn-icon" data-icon="inline-end"><sl:slot name="icon-end"/></span>
+</th:block>
+</body>
+</html>

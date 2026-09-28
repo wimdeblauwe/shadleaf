@@ -7,10 +7,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "node scripts/icons.js && vite build",
+    "build:icons": "node scripts/icons.js"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "lucide-static": "1.48.0",
     "tailwindcss": "^4.3.3",
     "vite": "^8.1.4"
   }

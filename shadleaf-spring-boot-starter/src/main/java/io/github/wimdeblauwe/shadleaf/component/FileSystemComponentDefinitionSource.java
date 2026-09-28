@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.shadleaf.component;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import io.github.wimdeblauwe.shadleaf.dev.ApplicationTemplateOverrides;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -23,6 +25,7 @@ import java.util.stream.Stream;
 public class FileSystemComponentDefinitionSource implements ComponentDefinitionSource {
 
   private final Path componentsDirectory;
+  private final Predicate<String> skipped;
   private final Map<String, CachedDefinition> cache = new ConcurrentHashMap<>();
 
   /**
@@ -30,18 +33,32 @@ public class FileSystemComponentDefinitionSource implements ComponentDefinitionS
    *                            {@code src/main/resources/templates/sl/components}
    */
   public FileSystemComponentDefinitionSource(Path componentsDirectory) {
+    this(componentsDirectory, name -> false);
+  }
+
+  /**
+   * @param skipped the components to leave to the next source, e.g. the ones the application overrides
+   */
+  public FileSystemComponentDefinitionSource(Path componentsDirectory, Predicate<String> skipped) {
     this.componentsDirectory = componentsDirectory;
+    this.skipped = skipped;
   }
 
   /**
    * @param templatesPath the value of {@code shadleaf.dev.templates-path}: the library's templates root
+   * @param overrides     the application's own copies of library templates, which win over the ones on disk
    */
-  public static FileSystemComponentDefinitionSource forTemplatesPath(String templatesPath) {
-    return new FileSystemComponentDefinitionSource(Path.of(templatesPath, "sl", "components"));
+  public static FileSystemComponentDefinitionSource forTemplatesPath(String templatesPath,
+      ApplicationTemplateOverrides overrides) {
+    return new FileSystemComponentDefinitionSource(Path.of(templatesPath, "sl", "components"),
+        name -> overrides.isOverridden("sl/components/" + name));
   }
 
   @Override
   public Optional<ComponentDefinition> find(String name) {
+    if (skipped.test(name)) {
+      return Optional.empty();
+    }
     Path file = componentsDirectory.resolve(name + ".html");
     if (!file.normalize().startsWith(componentsDirectory.normalize()) || !Files.isRegularFile(file)) {
       cache.remove(name);

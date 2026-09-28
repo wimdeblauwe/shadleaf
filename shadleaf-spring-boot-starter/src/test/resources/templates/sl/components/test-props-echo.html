@@ -1,0 +1,7 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component without <sl:props>: shows whether it can see a props variable. -->
+<body>
+<u th:fragment="test-props-echo" th:text="${props.isEmpty() ? 'no props' : props}"></u>
+</body>
+</html>

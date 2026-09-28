@@ -146,6 +146,35 @@ class ComponentElementProcessorTest {
     assertThat(raw.text()).isEqualTo("hi");
   }
 
+  @Test
+  void attrsExpressionLetsATemplateLeaveAttributesOut() {
+    Element enabled = render("<sl:test-nav-link href=\"/a\" class=\"x\">A</sl:test-nav-link>");
+    Element disabled = render("<sl:test-nav-link disabled href=\"/a\" class=\"x\">A</sl:test-nav-link>");
+    Element disabledExpression = render("<sl:test-nav-link disabled th:href=\"@{/a}\">A</sl:test-nav-link>");
+
+    assertThat(enabled.attr("href")).isEqualTo("/a");
+    assertThat(disabled.hasAttr("href")).isFalse();
+    assertThat(disabled.attr("aria-disabled")).isEqualTo("true");
+    assertThat(disabled.className()).isEqualTo("nav-link x");
+    assertThat(disabledExpression.hasAttr("href")).isFalse();
+  }
+
+  @Test
+  void attrsExpressionMustGiveAMap() {
+    assertThatThrownBy(() -> render("""
+            <sl:test-card><b sl:attrs="${'nope'}">x</b></sl:test-card>"""))
+        .rootCause()
+        .isInstanceOf(ShadleafComponentException.class)
+        .hasMessageContaining("must evaluate to a map");
+  }
+
+  @Test
+  void undeclaredComponentInADeclaredOnesSlotDoesNotSeeItsProps() {
+    Element chip = render("<sl:test-chip variant=\"danger\"><sl:test-props-echo/></sl:test-chip>");
+
+    assertThat(chip.selectFirst("u").text()).isEqualTo("no props");
+  }
+
   // --- loud failures ----------------------------------------------------------------------------
 
   @Test

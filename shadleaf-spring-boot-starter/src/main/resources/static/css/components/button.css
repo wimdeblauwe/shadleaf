@@ -10,4 +10,15 @@
       aria-disabled:pointer-events-none aria-disabled:opacity-50
       [&_svg]:pointer-events-none [&_svg]:shrink-0;
   }
+
+  /* Wraps the icon-start and icon-end slots; data-icon says which side, so the skins can adjust the padding. */
+  .btn-icon {
+    @apply inline-flex shrink-0 items-center justify-center;
+  }
+
+  /* The spinner of a loading button. Slower rather than still under reduced motion: a frozen arc reads as a broken
+     icon, and the busy state is announced through aria-busy and the hidden label, not the motion. */
+  .btn-spinner {
+    @apply animate-spin motion-reduce:[animation-duration:2.5s];
+  }
 }

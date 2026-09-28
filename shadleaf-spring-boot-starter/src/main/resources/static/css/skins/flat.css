@@ -4,11 +4,11 @@
   Same markup, same tokens as the default skin.
 */
 @layer components {
-  /* Button */
+  /* Button. Icons without an explicit size (<sl:icon size>, or a size-* class) take the button's icon size. */
   .btn {
     @apply rounded-none border border-transparent text-sm font-normal
       focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-ring
-      [&_svg:not([class*='size-'])]:size-4;
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
   }
 
   .btn:not([data-size]),
@@ -17,7 +17,7 @@
   }
 
   .btn[data-size='xs'] {
-    @apply h-6 gap-1 px-2 text-xs [&_svg:not([class*='size-'])]:size-3;
+    @apply h-6 gap-1 px-2 text-xs [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
   }
 
   .btn[data-size='sm'] {
@@ -33,7 +33,7 @@
   }
 
   .btn[data-size='icon-xs'] {
-    @apply size-6 [&_svg:not([class*='size-'])]:size-3;
+    @apply size-6 [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
   }
 
   .btn[data-size='icon-sm'] {

@@ -8,7 +8,8 @@ body {
 }
 
 h1 { font-size: 1.875rem; font-weight: 700; }
-h2 { font-size: 1.25rem; font-weight: 600; margin: 2rem 0 0.75rem; }
+h2 { font-size: 1.25rem; font-weight: 600; margin: 2.5rem 0 0.75rem; }
+h3 { font-size: 1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }
 p { margin: 0 0 0.75rem; }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.875em; }
 
@@ -24,15 +25,5 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
   --radius: 1rem;
 }
 
-/* Demo badge (templates/sl/components/badge.html): app CSS on top of the library's tokens. */
-.badge {
-  display: inline-block;
-  padding: 0.125rem 0.5rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  background: var(--secondary);
-  color: var(--secondary-foreground);
-}
-.badge[data-variant='success'] { background: oklch(0.93 0.07 150); color: oklch(0.4 0.12 150); }
-.badge[data-variant='danger'] { background: color-mix(in oklch, var(--destructive) 15%, transparent); color: var(--destructive); }
-.demo-extra { outline: 2px dashed var(--muted-foreground); outline-offset: 2px; }
+/* Ladder rung 2: an application class on a component, merged with the component's own. */
+.wide { min-inline-size: 14rem; }

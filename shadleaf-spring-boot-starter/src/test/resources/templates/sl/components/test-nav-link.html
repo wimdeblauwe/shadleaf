@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: a disabled link drops href and th:href through sl:attrs="${...}". -->
+<head>
+  <sl:props>
+    <sl:prop name="disabled" type="boolean"/>
+  </sl:props>
+</head>
+<body>
+<a th:fragment="test-nav-link" class="nav-link"
+   th:attr="aria-disabled=${props.disabled ? 'true' : null}"
+   sl:attrs="${props.disabled ? attrs.without('href') : attrs}"><sl:slot/></a>
+</body>
+</html>

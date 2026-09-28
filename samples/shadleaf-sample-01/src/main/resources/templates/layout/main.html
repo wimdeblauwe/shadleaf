@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html th:lang="|${#locale.language}-${#locale.country}|"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
       th:fragment="layout(pageTitle, content)">
 <head>
   <meta charset="UTF-8">
@@ -19,9 +20,12 @@
   <header class="page-header">
     <h1 th:text="${pageTitle}"></h1>
     <div class="theme-toggle" role="group" aria-label="Theme">
-      <button type="button" class="btn" data-variant="outline" data-size="sm" data-theme-choice="light">Light</button>
-      <button type="button" class="btn" data-variant="outline" data-size="sm" data-theme-choice="dark">Dark</button>
-      <button type="button" class="btn" data-variant="outline" data-size="sm" data-theme-choice="system">System</button>
+      <sl:button variant="outline" size="sm" data-theme-choice="light">
+        <sl:slot name="icon-start"><sl:icon name="sun"/></sl:slot>Light</sl:button>
+      <sl:button variant="outline" size="sm" data-theme-choice="dark">
+        <sl:slot name="icon-start"><sl:icon name="moon"/></sl:slot>Dark</sl:button>
+      <sl:button variant="outline" size="sm" data-theme-choice="system">
+        <sl:slot name="icon-start"><sl:icon name="monitor"/></sl:slot>System</sl:button>
     </div>
   </header>
   <div th:replace="${content}"></div>

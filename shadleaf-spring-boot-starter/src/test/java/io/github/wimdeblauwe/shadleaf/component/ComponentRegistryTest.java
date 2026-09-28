@@ -56,7 +56,7 @@ class ComponentRegistryTest {
     Path button = components.resolve("button.html");
     Files.writeString(button, template("<sl:prop name=\"variant\" values=\"primary outline\"/>"));
     FileSystemComponentDefinitionSource source =
-        FileSystemComponentDefinitionSource.forTemplatesPath(templates.toString());
+        new FileSystemComponentDefinitionSource(templates.resolve("sl/components"));
 
     ComponentDefinition first = source.find("button").orElseThrow();
     assertThat(first.prop("variant").values()).containsExactly("primary", "outline");
@@ -79,7 +79,7 @@ class ComponentRegistryTest {
     Path components = Files.createDirectories(templates.resolve("sl/components"));
     Files.writeString(components.resolve("test-chip.html"), template("<sl:prop name=\"tone\"/>"));
     ComponentRegistry registry = new ComponentRegistry(List.of(
-        FileSystemComponentDefinitionSource.forTemplatesPath(templates.toString()), classpath));
+        new FileSystemComponentDefinitionSource(templates.resolve("sl/components")), classpath));
 
     assertThat(registry.get("test-chip").props()).containsOnlyKeys("tone");
     assertThat(registry.get("test-card").declared()).isTrue();
@@ -88,7 +88,7 @@ class ComponentRegistryTest {
   @Test
   void fileSystemSourceIgnoresMissingDirectory(@TempDir Path templates) {
     FileSystemComponentDefinitionSource source =
-        FileSystemComponentDefinitionSource.forTemplatesPath(templates.resolve("nope").toString());
+        new FileSystemComponentDefinitionSource(templates.resolve("nope").resolve("sl/components"));
 
     assertThat(source.names()).isEmpty();
     assertThat(source.find("button")).isEmpty();

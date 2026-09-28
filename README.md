@@ -24,6 +24,20 @@ Include the assets in the `<head>` of your layout:
 
 No Node.js or Tailwind is needed in your application: the jar ships compiled CSS, served under `/shadleaf/**`.
 
+Declare the namespace and use the components:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+...
+<sl:button variant="destructive" hx-delete="/orders/42">
+  <sl:slot name="icon-start"><sl:icon name="trash"/></sl:slot>
+  Delete order
+</sl:button>
+```
+
+`<sl:button>` renders `type="button"` unless you say `type="submit"`, so a button in a form never submits by accident.
+`<sl:icon>` inlines the SVG of any [lucide](https://lucide.dev) icon; declare an `IconSource` bean to add your own.
+
 ## Building
 
 ```shell
@@ -37,3 +51,6 @@ See `samples/shadleaf-sample-01` for a consuming application, and `CLAUDE.md` fo
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
+
+The bundled icons are [lucide](https://lucide.dev) (ISC licence); the jar ships its licence as
+`shadleaf/icons/LICENSE-lucide.txt`.
