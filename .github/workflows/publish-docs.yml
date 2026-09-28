@@ -1,20 +1,24 @@
 name: Publish docs
 
 # Publishes the docs site to the gh-pages branch, one directory per version, served as a GitHub project page:
-#   https://wimdeblauwe.github.io/shadleaf/<version>/   every release, and SNAPSHOTs published by hand
+#   https://wimdeblauwe.github.io/shadleaf/<version>/   every release, and the SNAPSHOT of every push to main
 #   https://wimdeblauwe.github.io/shadleaf/current/     the newest release
-# The site root redirects to current/. GitHub Pages must be set to deploy from the gh-pages branch, root folder.
+# The site root redirects to current/ (to the published version until there is a release). GitHub Pages must be set
+# to deploy from the gh-pages branch, root folder.
+# The Build workflow calls this after its docs job passed on main, handing over the previews it already rendered.
 on:
   release:
     types: [ published ]
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      generated-docs-artifact:
+        description: Name of an artifact of the calling run holding target/generated-docs; rendered here when empty
+        type: string
+        default: ''
 
 permissions:
   contents: write
-
-concurrency:
-  group: publish-docs
-  cancel-in-progress: false
 
 env:
   # The repository name: the path GitHub serves a project page under.
@@ -23,23 +27,36 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Job level, not workflow level: as a called workflow, a workflow-level group would be shared with the caller.
+    concurrency:
+      group: publish-docs
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/download-artifact@v4
+        if: inputs.generated-docs-artifact != ''
+        with:
+          name: ${{ inputs.generated-docs-artifact }}
+          path: shadleaf-spring-boot-starter/target/generated-docs/
+
       - uses: actions/setup-java@v4
+        if: inputs.generated-docs-artifact == ''
         with:
           distribution: temurin
           java-version: '17'
           cache: maven
 
       - name: Render the previews
+        if: inputs.generated-docs-artifact == ''
         run: mvn -B -pl shadleaf-spring-boot-starter -Dtest=PreviewGeneratorTest -Dsurefire.failIfNoSpecifiedTests=false test
 
+      # PreviewGeneratorTest stamps previews.json with the project version.
       - name: Determine the version
         id: version
         run: |
-          version=$(mvn -B -q help:evaluate -Dexpression=project.version -DforceStdout)
-          : "${version:?could not read the project version}"
+          version=$(jq -r '.version // empty' shadleaf-spring-boot-starter/target/generated-docs/previews.json)
+          : "${version:?could not read the version from previews.json}"
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - uses: pnpm/action-setup@v4
@@ -101,16 +118,21 @@ jobs:
           cp -r docs/dist gh-pages/current
 
       - name: Root redirect and .nojekyll
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           # Without .nojekyll, GitHub Pages drops Astro's _astro/ directory.
           touch gh-pages/.nojekyll
+          # Before the first release there is no current/: point at the version just published.
+          target=current/
+          [[ -d gh-pages/current ]] || target="$VERSION/"
           cat > gh-pages/index.html <<HTML
           <!doctype html>
           <meta charset="utf-8">
           <title>Shadleaf</title>
-          <meta http-equiv="refresh" content="0; url=current/">
-          <link rel="canonical" href="current/">
-          <a href="current/">Shadleaf documentation</a>
+          <meta http-equiv="refresh" content="0; url=$target">
+          <link rel="canonical" href="$target">
+          <a href="$target">Shadleaf documentation</a>
           HTML
 
       - name: Commit and push

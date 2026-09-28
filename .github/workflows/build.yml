@@ -78,3 +78,14 @@ jobs:
           name: playwright-report
           path: docs/playwright-report/
           retention-days: 14
+
+  # Every push to main publishes the docs of its SNAPSHOT to gh-pages (/shadleaf/<version>/), once the
+  # accessibility checks passed. Releases also move /shadleaf/current/ (publish-docs.yml on its own trigger).
+  publish-docs:
+    needs: docs
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    uses: ./.github/workflows/publish-docs.yml
+    with:
+      generated-docs-artifact: generated-docs

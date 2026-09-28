@@ -45,3 +45,7 @@ every control and requires a visible change in outline or box-shadow. Both run f
 `.github/workflows/publish-docs.yml` builds the site once per destination, with `DOCS_BASE` as Astro's `base`:
 `/shadleaf/<version>/` for every release, and `/shadleaf/current/` for the newest one. Every link and asset therefore
 goes through `import.meta.env.BASE_URL` (`withBase()` in `src/lib/generated.ts`), never a hard-coded `/`.
+
+It runs on every published release, by hand, and from the Build workflow after the `docs` job passed on a push to
+`main`. That last one reuses the previews the `build` job rendered and publishes `/shadleaf/<version>-SNAPSHOT/`;
+`current/` only moves for releases. Until the first release, the site root redirects to the published version.
