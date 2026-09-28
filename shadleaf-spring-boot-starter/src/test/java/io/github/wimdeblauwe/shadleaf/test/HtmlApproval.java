@@ -18,6 +18,9 @@ import java.nio.file.Path;
  * <pre>mvn test -Dtest=ButtonApprovalTest -Dshadleaf.approve</pre>
  * which overwrites the approved file; review its diff and commit it. A missing approved file is written and the test
  * fails, so a new approval is never silently accepted.
+ * <p>
+ * Other generated text, such as the web-types JSON, is approved the same way with {@link #verify(String, String,
+ * String)}.
  */
 public final class HtmlApproval {
 
@@ -30,9 +33,16 @@ public final class HtmlApproval {
   }
 
   public static void verify(String name, String received) {
+    verify(name, "html", received);
+  }
+
+  /**
+   * @param extension the approved file's extension, e.g. {@code json} for {@code <name>.approved.json}
+   */
+  public static void verify(String name, String extension, String received) {
     String content = received.replace("\r\n", "\n").stripTrailing() + "\n";
-    Path approved = APPROVED_DIRECTORY.resolve(name + ".approved.html");
-    Path receivedFile = RECEIVED_DIRECTORY.resolve(name + ".received.html");
+    Path approved = APPROVED_DIRECTORY.resolve(name + ".approved." + extension);
+    Path receivedFile = RECEIVED_DIRECTORY.resolve(name + ".received." + extension);
     try {
       Files.deleteIfExists(receivedFile);
       if (approving()) {
@@ -47,7 +57,7 @@ public final class HtmlApproval {
       if (!Files.readString(approved, StandardCharsets.UTF_8).equals(content)) {
         write(receivedFile, content);
         assertThat(receivedFile)
-            .as("Rendered HTML differs from %s (received: %s). If the change is deliberate, run the test with "
+            .as("Received text differs from %s (received: %s). If the change is deliberate, run the test with "
                 + "-D%s to accept it", approved, receivedFile, APPROVE_PROPERTY)
             .hasSameTextualContentAs(approved, StandardCharsets.UTF_8);
       }

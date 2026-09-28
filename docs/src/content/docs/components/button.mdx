@@ -1,0 +1,70 @@
+---
+title: Button
+description: A button, or a link that looks like one.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="button--default" />
+
+## A button never submits by accident
+
+`<sl:button>` renders `type="button"`, not HTML's default `submit`. A button inside a form therefore does nothing
+unless you say so: write `type="submit"` on the one that should submit.
+
+<ComponentPreview id="button--form" />
+
+## Variants
+
+<ComponentPreview id="button--variants" />
+
+## Sizes
+
+<ComponentPreview id="button--sizes" />
+
+The `icon` sizes are square, for a button holding only an icon. Such a button has no text for a screen reader, so it
+must have an `aria-label` (or `aria-labelledby`); rendering fails without one.
+
+<ComponentPreview id="button--icon-sizes" />
+
+## With an icon
+
+Put an [`<sl:icon>`](../icon/) in the `icon-start` or `icon-end` slot. It takes the button's colour and a 16 pixel size.
+
+<ComponentPreview id="button--with-icon" />
+
+## As a link
+
+`as="a"` renders an anchor that looks the same, for navigation.
+
+<ComponentPreview id="button--link" />
+
+## Disabled and loading
+
+A disabled button gets the native `disabled` attribute. A disabled link loses its `href`, leaves the tab order and is
+marked `aria-disabled`, so it cannot be followed. `loading` shows a spinner in place of the start icon, announces the
+busy state with `aria-busy` and a visually hidden "Loading" label, and disables the button.
+
+<ComponentPreview id="button--disabled" />
+<ComponentPreview id="button--loading" />
+
+The "Loading" label comes from the message `sl.button.loading`; define it in your own `messages.properties` to
+translate or reword it.
+
+## Props from expressions
+
+Every prop also has a `th:` form that takes a Thymeleaf expression.
+
+<ComponentPreview id="button--expression" />
+
+## Everything else passes through
+
+Attributes that are not props, such as `hx-*`, `x-*`, `aria-*` and `data-*`, land on the rendered element unchanged,
+so the button works with htmx and Alpine. `class` is appended to the component's own class.
+
+<ComponentPreview id="button--pass-through" />
+
+## Attributes
+
+<ComponentAttributes component="button" />

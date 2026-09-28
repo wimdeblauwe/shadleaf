@@ -49,6 +49,18 @@ Permit the library's assets with one matcher, `requestMatchers("/shadleaf/**").p
 `<sl:button>` renders `type="button"` unless you say `type="submit"`, so a button in a form never submits by accident.
 `<sl:icon>` inlines the SVG of any [lucide](https://lucide.dev) icon; declare an `IconSource` bean to add your own.
 
+### IDE completion
+
+IntelliJ IDEA and WebStorm complete `<sl:*>` tags, their attributes and values from a web-types file. Set
+`shadleaf.dev.web-types-file=shadleaf.web-types.json` in a development profile, and reference the file from a
+`package.json` in the project root: `{"name": "my-app", "private": true, "web-types": "./shadleaf.web-types.json"}`.
+The running application writes it from its own components, overrides included.
+
+## Documentation
+
+`docs/` is the documentation site (Astro + Starlight), with previews rendered by the library's own build; see
+`docs/README.md`. It is published to https://wimdeblauwe.github.io/shadleaf/.
+
 ## Building
 
 ```shell

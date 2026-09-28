@@ -1,0 +1,21 @@
+import {defineConfig, devices} from '@playwright/test';
+
+// Runs against the built site (pnpm run build first), served by `astro preview` at base /.
+export default defineConfig({
+  testDir: 'tests',
+  forbidOnly: !!process.env.CI,
+  reporter: process.env.CI ? [['list'], ['html', {open: 'never'}]] : 'list',
+  use: {
+    baseURL: 'http://localhost:4399',
+    // Keeps the skins' motion-safe transitions from leaving a computed style half-way when it is read.
+    contextOptions: {reducedMotion: 'reduce'},
+  },
+  projects: [{name: 'chromium', use: {...devices['Desktop Chrome']}}],
+  webServer: {
+    // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.
+    command: 'pnpm exec astro preview --port 4399 --ignore-lock',
+    url: 'http://localhost:4399/showcase/',
+    reuseExistingServer: !process.env.CI,
+    env: {DOCS_BASE: '/'},
+  },
+});

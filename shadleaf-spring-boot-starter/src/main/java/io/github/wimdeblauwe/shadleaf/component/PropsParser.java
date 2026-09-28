@@ -22,6 +22,7 @@ import org.jspecify.annotations.Nullable;
  *
  * <pre>{@code
  * <sl:props>
+ *   <sl:description>A clickable button.</sl:description>
  *   <sl:prop name="variant" default="primary" values="primary outline">Visual style.</sl:prop>
  *   <sl:prop name="disabled" type="boolean">Disable the button.</sl:prop>
  *   <sl:accessible-name required-when="size=icon"/>
@@ -31,12 +32,17 @@ import org.jspecify.annotations.Nullable;
  * Uses attoparser, the parser Thymeleaf itself is built on, so reading the schema adds no dependency. Every mistake in
  * the block is an error: a component's schema is its public API, and a silently ignored typo in it is a bug that
  * surfaces far away.
+ * <p>
+ * Descriptions keep their text only, with one exception: {@code <code>x</code>} becomes {@code `x`}, so the IDE
+ * metadata and the docs, which read descriptions as markdown, still show it as code.
  */
 public final class PropsParser {
 
   private static final String PROPS_ELEMENT = "sl:props";
   private static final String PROP_ELEMENT = "sl:prop";
   private static final String ACCESSIBLE_NAME_ELEMENT = "sl:accessible-name";
+  private static final String DESCRIPTION_ELEMENT = "sl:description";
+  private static final String CODE_ELEMENT = "code";
   private static final Set<String> PROP_ATTRIBUTES = Set.of("name", "type", "default", "values");
   private static final Pattern PROP_NAME = Pattern.compile("[a-z][a-z0-9]*(-[a-z0-9]+)*");
   private static final Pattern WHITESPACE = Pattern.compile("\\s+");
@@ -94,6 +100,8 @@ public final class PropsParser {
     private boolean seenProps;
     private boolean inProps;
     private @Nullable Map<String, String> currentProp;
+    private boolean inDescription;
+    private @Nullable String componentDescription;
     private final StringBuilder currentDescription = new StringBuilder();
     private final List<PropDefinition> props = new ArrayList<>();
     private @Nullable Map<String, String> accessibleName;
@@ -108,7 +116,8 @@ public final class PropsParser {
         return ComponentDefinition.undeclared(componentName, source);
       }
       AccessibleNameRule rule = accessibleName == null ? null : accessibleNameRule(accessibleName);
-      return ComponentDefinition.declared(componentName, props, rule, source);
+      return ComponentDefinition.declared(componentName, componentDescription == null ? "" : componentDescription,
+          props, rule, source);
     }
 
     @Override
@@ -129,12 +138,17 @@ public final class PropsParser {
         inProps = false;
       } else if (name.equals(PROP_ELEMENT) && currentProp != null) {
         finishProp();
+      } else if (name.equals(DESCRIPTION_ELEMENT) && inDescription) {
+        inDescription = false;
+        componentDescription = collapsedDescription();
+      } else if (name.equals(CODE_ELEMENT) && inDescribedElement()) {
+        currentDescription.append('`');
       }
     }
 
     @Override
     public void handleText(char[] buffer, int offset, int len, int line, int col) {
-      if (currentProp != null) {
+      if (inDescribedElement()) {
         currentDescription.append(buffer, offset, len);
       }
     }
@@ -153,8 +167,11 @@ public final class PropsParser {
       if (!inProps) {
         return;
       }
-      if (currentProp != null) {
-        // Markup inside a prop's description, e.g. <code>: only its text is kept.
+      if (inDescribedElement()) {
+        // Markup inside a description: only its text is kept, and <code> becomes a markdown code span.
+        if (name.equals(CODE_ELEMENT) && !standalone) {
+          currentDescription.append('`');
+        }
         return;
       }
       switch (name) {
@@ -165,21 +182,43 @@ public final class PropsParser {
             finishProp();
           }
         }
+        case DESCRIPTION_ELEMENT -> {
+          if (componentDescription != null) {
+            throw error("more than one <sl:description>");
+          }
+          if (!attrs.isEmpty()) {
+            throw error("<sl:description> takes no attributes");
+          }
+          currentDescription.setLength(0);
+          if (standalone) {
+            componentDescription = "";
+          } else {
+            inDescription = true;
+          }
+        }
         case ACCESSIBLE_NAME_ELEMENT -> {
           if (accessibleName != null) {
             throw error("more than one <sl:accessible-name>");
           }
           accessibleName = attrs;
         }
-        default -> throw error("unexpected <" + elementName + ">; only <sl:prop> and <sl:accessible-name> are allowed");
+        default -> throw error("unexpected <" + elementName
+            + ">; only <sl:description>, <sl:prop> and <sl:accessible-name> are allowed");
       }
     }
 
     private void finishProp() {
       Map<String, String> attrs = currentProp;
       currentProp = null;
-      String description = WHITESPACE.matcher(currentDescription).replaceAll(" ").trim();
-      props.add(propDefinition(attrs, description));
+      props.add(propDefinition(attrs, collapsedDescription()));
+    }
+
+    private boolean inDescribedElement() {
+      return currentProp != null || inDescription;
+    }
+
+    private String collapsedDescription() {
+      return WHITESPACE.matcher(currentDescription).replaceAll(" ").trim();
     }
 
     private PropDefinition propDefinition(Map<String, String> attrs, String description) {

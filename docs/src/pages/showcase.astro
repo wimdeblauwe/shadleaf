@@ -1,0 +1,56 @@
+---
+// Every preview scenario on one bare page, with nothing but the library's own CSS: what axe-core and the keyboard
+// focus pass run against (tests/). No Starlight chrome and no iframes, so every finding is the library's.
+//
+//   showcase/?skin=flat&theme=dark    skin: a skin name (default: the first); theme: light (default) or dark
+import {previews, withBase} from '../lib/generated';
+
+const skins = Object.fromEntries(previews.skins.map(skin => [skin.name, withBase(skin.css)]));
+const firstSkin = previews.skins[0]?.name ?? '';
+const components = [...new Set(previews.scenarios.map(s => s.component))];
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Shadleaf showcase</title>
+  <link rel="stylesheet" id="shadleaf-skin" href={skins[firstSkin]}>
+  <script is:inline define:vars={{skins, firstSkin}}>
+    const params = new URLSearchParams(location.search);
+    const skin = params.get('skin') ?? firstSkin;
+    if (!(skin in skins)) {
+      throw new Error(`Unknown skin ${skin}; known: ${Object.keys(skins).join(', ')}`);
+    }
+    document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
+    document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
+    document.documentElement.dataset.skin = skin;
+  </script>
+  <style>
+    body { padding: 2rem; font-family: system-ui, sans-serif; }
+    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.25rem; font-weight: 600; margin: 2rem 0 1rem; }
+    h3 { font-size: 0.875rem; font-weight: 500; margin: 1.25rem 0 0.5rem; }
+    .stage { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Shadleaf showcase</h1>
+  {previews.scenarios.length === 0 && <p>No previews: run <code>pnpm run generate</code> in docs/.</p>}
+  {components.map(component => (
+    <section>
+      <h2>{component}</h2>
+      {previews.scenarios.filter(s => s.component === component).map(scenario => (
+        <>
+          <h3>{scenario.title ?? scenario.id}</h3>
+          <div class="stage" data-scenario={scenario.id} set:html={scenario.html}/>
+        </>
+      ))}
+    </section>
+  ))}
+</main>
+</body>
+</html>

@@ -1,0 +1,222 @@
+{
+  "$schema" : "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name" : "shadleaf",
+  "version" : "test",
+  "description-markup" : "markdown",
+  "contributions" : {
+    "html" : {
+      "elements" : [ {
+        "name" : "sl:slot",
+        "description" : "Content for a named slot of the enclosing component. Inside a component template: where that content goes, with this element's body as the fallback.",
+        "attributes" : [ {
+          "name" : "name",
+          "description" : "The named slot to fill, e.g. `icon-start`. Omit it for the default slot.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:button",
+        "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`. Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "primary"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "link"
+          }, {
+            "name" : "destructive"
+          } ],
+          "default" : "primary"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) for navigation.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour. Defaults to `button`, unlike HTML, so a button in a form never submits by accident.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "disabled",
+          "description" : "Disable the button. A disabled anchor loses its `href` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "loading",
+          "description" : "Show a spinner, announce the busy state and disable the button.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:loading",
+          "description" : "`loading` from a Thymeleaf expression, e.g. `th:loading=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:icon",
+        "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
+        "attributes" : [ {
+          "name" : "name",
+          "description" : "Name of the icon, e.g. `trash`. Lucide's names and aliases, plus any icons the application registers.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "size",
+          "description" : "Width and height in pixels. Without it the icon is 24 pixels, or sized by the surrounding component (16 pixels inside a button).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "stroke-width",
+          "description" : "Stroke width, overriding the icon's own (2 for lucide).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "label",
+          "description" : "Accessible name for an icon that carries meaning on its own. Without it the icon is decorative and hidden from assistive technology.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:name",
+          "description" : "`name` from a Thymeleaf expression, e.g. `th:name=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:stroke-width",
+          "description" : "`stroke-width` from a Thymeleaf expression, e.g. `th:stroke-width=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      } ]
+    }
+  }
+}

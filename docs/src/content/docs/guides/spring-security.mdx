@@ -1,0 +1,26 @@
+---
+title: Spring Security
+description: The one matcher the library's assets need.
+sidebar:
+  order: 3
+---
+
+Everything Shadleaf serves lives under `/shadleaf/**`: the stylesheet of each skin, with a content hash in its name.
+Permit that path for anonymous visitors, or every page they can see, such as your login page, renders unstyled:
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  return http
+      .authorizeHttpRequests(requests -> requests
+          .requestMatchers("/shadleaf/**").permitAll()
+          .anyRequest().authenticated())
+      .formLogin(login -> login.loginPage("/login").permitAll())
+      .build();
+}
+```
+
+The files are static resources inside the jar, so nothing else is exposed by it: the Vite manifest that maps names to
+hashed files is kept outside the served directory.
+
+To run under a strict Content-Security-Policy as well, see [CSP](../csp/).

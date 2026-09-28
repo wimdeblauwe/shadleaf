@@ -1,0 +1,67 @@
+---
+title: The adjustability ladder
+description: Five ways to make the components your own, from a prop to owning the template.
+sidebar:
+  order: 1
+---
+
+Each step is more powerful, and more work to maintain, than the one before it. Take the first one that solves your
+problem.
+
+## 1. Props
+
+```html
+<sl:button variant="outline" size="sm">Cancel</sl:button>
+```
+
+The declared props of each component are listed on its page. This covers most needs, with no CSS at all.
+
+## 2. Pass-through attributes and classes
+
+Every attribute that is not a prop lands on the rendered element: `hx-post`, `x-on:click`, `aria-*`, `data-*`.
+`class` is appended to the component's own class.
+
+```html
+<sl:button class="toolbar-action" hx-post="/orders/42/archive">Archive</sl:button>
+```
+
+The classes are your application's own. If you compile Tailwind, `class="w-full mt-4"` works; if you don't, use a class
+from your own stylesheet. The library's bundles define no utility classes.
+
+## 3. Token overrides
+
+The components are drawn with shadcn/ui's CSS variables. Redefine them in your stylesheet, loaded after the library's,
+to rebrand every component at once:
+
+```css
+:root {
+  --primary: oklch(0.55 0.15 150);
+  --primary-foreground: oklch(0.98 0 0);
+  --radius: 0.25rem;
+}
+.dark {
+  --primary: oklch(0.7 0.14 150);
+}
+```
+
+The library's tokens sit in a cascade layer, so your values win whether or not you put them in a layer yourself. Any
+shadcn theme generator's output can be pasted in unchanged.
+
+## 4. Skin
+
+```properties
+shadleaf.skin=flat
+```
+
+A skin changes geometry, weight and shadow: the same markup and the same tokens, a different look. Token overrides keep
+working under every skin. Use the skin switch on any preview in these docs to compare.
+
+## 5. Own the template
+
+Copy a component's template from the jar, for example `templates/sl/components/button.html`, into your application's
+`src/main/resources/templates/sl/components/`. Your copy wins, props included, with no configuration.
+
+Your copy no longer receives the library's fixes, so compare it with the new version when you upgrade. A test that
+renders a page using the component keeps it honest.
+
+You can add components of your own the same way: a template at `templates/sl/components/badge.html` is `<sl:badge>`.

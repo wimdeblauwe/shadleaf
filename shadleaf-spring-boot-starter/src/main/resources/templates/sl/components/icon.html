@@ -1,11 +1,9 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
-<!--
-  <sl:icon name="trash"/> inlines the SVG of an icon: the bundled lucide icons, or the application's own through an
-  IconSource bean. Unknown names fail with the closest known ones.
--->
 <head>
   <sl:props>
+    <sl:description>Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an
+      <code>IconSource</code> bean. An unknown name fails with the closest known ones.</sl:description>
     <sl:prop name="name">Name of the icon, e.g. <code>trash</code>. Lucide's names and aliases, plus any icons the
       application registers.</sl:prop>
     <sl:prop name="size" type="number">Width and height in pixels. Without it the icon is 24 pixels, or sized by the

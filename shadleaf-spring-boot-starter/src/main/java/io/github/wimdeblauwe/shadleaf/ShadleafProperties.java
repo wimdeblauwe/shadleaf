@@ -41,8 +41,13 @@ public record ShadleafProperties(@DefaultValue("default") String skin,
    *                      loaded from there instead of from the jar.
    * @param templatesPath filesystem path to the library's {@code src/main/resources/templates/} directory. When set,
    *                      the library templates are read uncached from disk so edits show up without a rebuild.
+   * @param webTypesFile  file to write the web-types for IntelliJ IDEA and WebStorm to, e.g.
+   *                      {@code shadleaf.web-types.json}; a relative path resolves against the working directory. It
+   *                      describes this application's components, overrides included, and is referenced from the
+   *                      {@code web-types} property of a {@code package.json} next to it. Meant for development only.
    */
-  public record DevProperties(@Nullable String viteServerUrl, @Nullable String templatesPath) {
+  public record DevProperties(@Nullable String viteServerUrl, @Nullable String templatesPath,
+                              @Nullable String webTypesFile) {
 
   }
 }

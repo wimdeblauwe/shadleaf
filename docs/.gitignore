@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+test-results/
+playwright-report/
+
+# Copied in by scripts/sync.mjs from shadleaf-spring-boot-starter/target/generated-docs
+src/generated/
+public/shadleaf/
+public/shadleaf.web-types.json

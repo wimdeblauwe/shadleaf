@@ -8,6 +8,7 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.component.FileSystemComponentDefinitionSource;
 import io.github.wimdeblauwe.shadleaf.dev.ApplicationTemplateOverrides;
 import io.github.wimdeblauwe.shadleaf.dev.ShadleafDevTemplateResolver;
+import io.github.wimdeblauwe.shadleaf.dev.WebTypesFileWriter;
 import io.github.wimdeblauwe.shadleaf.dialect.ShadleafDialect;
 import io.github.wimdeblauwe.shadleaf.i18n.ShadleafMessageSource;
 import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
@@ -15,6 +16,8 @@ import io.github.wimdeblauwe.shadleaf.icon.IconSource;
 import io.github.wimdeblauwe.shadleaf.icon.LucideIconSource;
 import io.github.wimdeblauwe.shadleaf.i18n.ShadleafMessageSourcePostProcessor;
 import io.github.wimdeblauwe.shadleaf.theme.ShadleafThemeScript;
+import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.ObjectProvider;
@@ -39,6 +42,8 @@ import tools.jackson.databind.json.JsonMapper;
 @AutoConfiguration(after = MessageSourceAutoConfiguration.class)
 @EnableConfigurationProperties(ShadleafProperties.class)
 public class ShadleafAutoConfiguration {
+
+  private static final Duration WEB_TYPES_RECHECK_INTERVAL = Duration.ofSeconds(2);
 
   @Bean
   @ConditionalOnMissingBean
@@ -118,6 +123,19 @@ public class ShadleafAutoConfiguration {
   @ConditionalOnMissingBean
   public ShadleafDialect shadleafDialect(ComponentRegistry componentRegistry, IconRegistry iconRegistry) {
     return new ShadleafDialect(componentRegistry, iconRegistry);
+  }
+
+  /**
+   * Writes the IDE metadata for the application's components to {@code shadleaf.dev.web-types-file}: at startup, and
+   * every two seconds while {@code shadleaf.dev.templates-path} lets templates change without a restart.
+   */
+  @Bean
+  @ConditionalOnProperty("shadleaf.dev.web-types-file")
+  public WebTypesFileWriter shadleafWebTypesFileWriter(ShadleafProperties properties,
+      ComponentRegistry componentRegistry, JsonMapper jsonMapper) {
+    ShadleafProperties.DevProperties dev = properties.dev();
+    return new WebTypesFileWriter(componentRegistry, jsonMapper, Path.of(dev.webTypesFile()),
+        StringUtils.hasText(dev.templatesPath()) ? WEB_TYPES_RECHECK_INTERVAL : null);
   }
 
   @Bean

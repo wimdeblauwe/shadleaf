@@ -1,0 +1,48 @@
+---
+title: IDE completion
+description: Completion for sl:* tags, their attributes and values in IntelliJ IDEA and WebStorm.
+---
+
+import {withBase} from '../../lib/generated';
+
+IntelliJ IDEA and WebStorm complete `<sl:button>`, its attributes and their allowed values from a
+[web-types](https://github.com/JetBrains/web-types) file. The IDE finds that file through the `web-types` property of a
+`package.json`, and nowhere else: not inside a jar, not from a URL. The file does not need Node.js to be installed.
+
+## Let your application write it
+
+Set this property for development, for example in `application-local.properties`:
+
+```properties
+shadleaf.dev.web-types-file=shadleaf.web-types.json
+```
+
+When the application starts, it writes the file from its own component registry, relative to the working directory
+(the project root, when you run it from the IDE or with `mvn spring-boot:run`). That makes it exact for your
+application: a template you copied into your project and changed, and components of your own under
+`templates/sl/components/`, are in it too. It is only rewritten when something changed.
+
+Then reference it from a `package.json` in the project root. A Maven-only project needs nothing more than this:
+
+```json
+{
+  "name": "my-application",
+  "private": true,
+  "web-types": "./shadleaf.web-types.json"
+}
+```
+
+Add `shadleaf.web-types.json` to `.gitignore`, and commit the `package.json`. If the project already has a
+`package.json`, add the `web-types` property to it; it also takes an array of paths.
+
+## Or download it
+
+The file for this version of the docs, describing the library's own components:
+<a href={withBase('shadleaf.web-types.json')} download>shadleaf.web-types.json</a>. Save it next to the
+`package.json` above.
+
+## What it contains
+
+For every component, the props its template declares: an enum's `values`, the `default`, a `boolean` prop as an
+attribute without a value, and the prop's description. Each prop is offered a second time as `th:<prop>`, for a value
+from an expression. The attribute tables in these docs are generated from the same data.

@@ -1,0 +1,4 @@
+/* Starlight tweaks. The components' own CSS never reaches the docs pages: it only lives inside the preview frames. */
+:root {
+  --sl-content-width: 52rem;
+}

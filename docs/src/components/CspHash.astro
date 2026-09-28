@@ -1,0 +1,10 @@
+---
+// The theme script's CSP hash, as ShadleafThemeScript.getCspHash() computes it for this version.
+import {Code} from '@astrojs/starlight/components';
+import Missing from './Missing.astro';
+import {themeScript} from '../lib/generated';
+---
+
+{themeScript.cspHash
+    ? <Code code={`script-src 'self' ${themeScript.cspHash}`} lang="text" title="script-src for this version"/>
+    : <Missing what="CSP hash"/>}

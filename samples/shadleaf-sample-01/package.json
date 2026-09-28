@@ -11,5 +11,6 @@
     "dev-open" : "vite --open http://localhost:8080",
     "build" : "vite build"
   },
-  "type" : "module"
+  "type" : "module",
+  "web-types" : "./shadleaf.web-types.json"
 }

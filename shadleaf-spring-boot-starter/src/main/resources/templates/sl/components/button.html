@@ -1,11 +1,10 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
-<!--
-  <sl:button> renders a <button>, or with as="a" an anchor that looks the same. Every attribute that is not a prop
-  (hx-*, x-*, aria-*, data-*, href) passes through; class is appended to "btn".
--->
 <head>
   <sl:props>
+    <sl:description>A button, or with <code>as="a"</code> an anchor that looks the same. Every attribute that is not
+      a prop (<code>hx-*</code>, <code>x-*</code>, <code>aria-*</code>, <code>data-*</code>, <code>href</code>) passes
+      through; <code>class</code> is appended to <code>btn</code>.</sl:description>
     <sl:prop name="variant" default="primary" values="primary secondary outline ghost link destructive">
       Visual style of the button.</sl:prop>
     <sl:prop name="size" default="default" values="xs sm default lg icon icon-xs icon-sm icon-lg">

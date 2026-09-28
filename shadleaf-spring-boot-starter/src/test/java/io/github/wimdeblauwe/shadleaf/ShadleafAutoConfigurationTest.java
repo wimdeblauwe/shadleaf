@@ -6,6 +6,7 @@ import io.github.wimdeblauwe.shadleaf.assets.ShadleafAssets;
 import io.github.wimdeblauwe.shadleaf.component.ComponentDefinition;
 import io.github.wimdeblauwe.shadleaf.component.ComponentDefinitionSource;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
+import io.github.wimdeblauwe.shadleaf.dev.WebTypesFileWriter;
 import io.github.wimdeblauwe.shadleaf.dialect.ShadleafDialect;
 import io.github.wimdeblauwe.shadleaf.icon.Icon;
 import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
@@ -123,6 +124,45 @@ class ShadleafAutoConfigurationTest {
       IconRegistry icons = context.getBean(IconRegistry.class);
       assertThat(icons.get("trash").body()).isEqualTo("<rect/>");
       assertThat(icons.get("x").body()).startsWith("<path");
+    });
+  }
+
+  @Test
+  void writesNoWebTypesByDefault() {
+    contextRunner.run(context -> assertThat(context).doesNotHaveBean(WebTypesFileWriter.class));
+  }
+
+  @Test
+  void writesWebTypesOfTheApplicationsComponentsAtStartup(@TempDir Path directory) {
+    Path file = directory.resolve("ide/shadleaf.web-types.json");
+
+    contextRunner.withPropertyValues("shadleaf.dev.web-types-file=" + file).run(context -> {
+      assertThat(context).hasSingleBean(WebTypesFileWriter.class);
+      assertThat(file).content()
+          .contains("\"name\" : \"sl:button\"")
+          .contains("\"name\" : \"sl:test-chip\"");
+    });
+  }
+
+  @Test
+  void rewritesWebTypesWhenATemplateOnTheTemplatesPathChanges(@TempDir Path templates, @TempDir Path directory)
+      throws Exception {
+    Path components = Files.createDirectories(templates.resolve("sl/components"));
+    Path button = components.resolve("button.html");
+    Files.writeString(button, "<html><head><sl:props><sl:prop name=\"tone\"/></sl:props></head></html>");
+    Path file = directory.resolve("shadleaf.web-types.json");
+
+    contextRunner.withPropertyValues("shadleaf.dev.templates-path=" + templates,
+        "shadleaf.dev.web-types-file=" + file).run(context -> {
+      assertThat(file).content().contains("\"name\" : \"tone\"");
+      WebTypesFileWriter writer = context.getBean(WebTypesFileWriter.class);
+      assertThat(writer.write()).as("unchanged").isFalse();
+
+      Files.writeString(button,
+          "<html><head><sl:props><sl:prop name=\"tone\"/><sl:prop name=\"pill\" type=\"boolean\"/></sl:props></head></html>");
+
+      assertThat(writer.write()).isTrue();
+      assertThat(file).content().contains("\"name\" : \"pill\"");
     });
   }
 }

@@ -1,0 +1,28 @@
+# Scenarios for the icon's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: icon
+scenarios:
+  - id: default
+    title: Icon
+    source: |-
+      <sl:icon name="leaf"/>
+      <sl:icon name="trash"/>
+      <sl:icon name="settings"/>
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:icon name="leaf" size="16"/>
+      <sl:icon name="leaf"/>
+      <sl:icon name="leaf" size="32"/>
+
+  - id: stroke-width
+    title: Stroke width
+    source: |-
+      <sl:icon name="leaf" stroke-width="1"/>
+      <sl:icon name="leaf"/>
+      <sl:icon name="leaf" stroke-width="3"/>
+
+  - id: label
+    title: A meaningful icon
+    description: With a label the icon is announced as an image; without one it is hidden from assistive technology.
+    source: '<sl:icon name="circle-alert" label="Warning"/>'

@@ -1,0 +1,76 @@
+{
+  "version" : "test",
+  "components" : [ {
+    "name" : "button",
+    "tag" : "sl:button",
+    "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "primary",
+      "values" : [ "primary", "secondary", "outline", "ghost", "link", "destructive" ],
+      "description" : "Visual style of the button."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm", "icon-lg" ],
+      "description" : "Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`."
+    }, {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`) for navigation."
+    }, {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "submit", "reset" ],
+      "description" : "Submit behaviour. Defaults to `button`, unlike HTML, so a button in a form never submits by accident."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Disable the button. A disabled anchor loses its `href` and leaves the tab order."
+    }, {
+      "name" : "loading",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Show a spinner, announce the busy state and disable the button."
+    } ],
+    "accessibleName" : {
+      "prop" : "size",
+      "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
+    }
+  }, {
+    "name" : "icon",
+    "tag" : "sl:icon",
+    "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "name",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Name of the icon, e.g. `trash`. Lucide's names and aliases, plus any icons the application registers."
+    }, {
+      "name" : "size",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "Width and height in pixels. Without it the icon is 24 pixels, or sized by the surrounding component (16 pixels inside a button)."
+    }, {
+      "name" : "stroke-width",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "Stroke width, overriding the icon's own (2 for lucide)."
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Accessible name for an icon that carries meaning on its own. Without it the icon is decorative and hidden from assistive technology."
+    } ]
+  } ]
+}

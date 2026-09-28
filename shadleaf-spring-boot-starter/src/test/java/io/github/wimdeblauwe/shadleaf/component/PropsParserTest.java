@@ -35,8 +35,38 @@ class PropsParserTest {
     assertThat(definition.prop("stroke-width").defaultValue()).isEqualTo(new BigDecimal("1.5"));
     assertThat(definition.prop("label").type()).isEqualTo(PropType.STRING);
     assertThat(definition.prop("label").defaultValue()).isNull();
-    assertThat(definition.prop("label").description()).isEqualTo("Accessible label.");
+    assertThat(definition.prop("label").description()).isEqualTo("Accessible `label`.");
     assertThat(definition.accessibleNameRule()).isNull();
+  }
+
+  @Test
+  void parsesComponentDescription() {
+    ComponentDefinition definition = parse("""
+        <sl:props>
+          <sl:description>
+            A <code>button</code>, or
+            an <em>anchor</em>.
+          </sl:description>
+          <sl:prop name="variant" values="a b">Style.</sl:prop>
+        </sl:props>
+        """);
+
+    assertThat(definition.description()).isEqualTo("A `button`, or an anchor.");
+    assertThat(definition.prop("variant").description()).isEqualTo("Style.");
+  }
+
+  @Test
+  void descriptionIsEmptyWhenAbsent() {
+    assertThat(parse("<sl:props></sl:props>").description()).isEmpty();
+  }
+
+  @Test
+  void rejectsSecondDescription() {
+    assertThatThrownBy(() -> parse("""
+        <sl:props><sl:description>a</sl:description><sl:description>b</sl:description></sl:props>
+        """))
+        .isInstanceOf(ShadleafComponentException.class)
+        .hasMessageContaining("more than one <sl:description>");
   }
 
   @Test

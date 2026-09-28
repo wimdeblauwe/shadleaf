@@ -1,0 +1,63 @@
+---
+// The attribute table of a component, straight from the registry export (components.json): the same declared
+// props the engine validates and the IDE metadata is generated from, so it cannot drift from the template.
+import Missing from './Missing.astro';
+import {codeSpans, components} from '../lib/generated';
+
+interface Props {
+  /** Component name, with or without the sl: prefix, e.g. "button". */
+  component: string;
+}
+
+const name = Astro.props.component.replace(/^sl:/, '');
+const component = components.find(c => c.name === name);
+const accessibleName = component?.accessibleName;
+---
+
+{
+  !component ? (
+    <Missing what={`attribute table for sl:${name}`}/>
+  ) : component.props.length === 0 ? (
+    <p><code>{component.tag}</code> declares no props; every attribute passes through.</p>
+  ) : (
+    <>
+      <table>
+        <thead>
+          <tr>
+            <th>Attribute</th>
+            <th>Values</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {component.props.map(prop => (
+            <tr>
+              <td><code>{prop.name}</code></td>
+              <td>
+                {prop.type === 'enum'
+                    ? prop.values.map((value, i) => <>{i > 0 && ' '}<code>{value}</code></>)
+                    : <em>{prop.type}</em>}
+              </td>
+              <td>{prop.defaultValue && prop.type !== 'boolean' ? <code>{prop.defaultValue}</code> : '—'}</td>
+              <td>{codeSpans(prop.description).map((part, i) => i % 2 === 1 ? <code>{part}</code> : part)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p>
+        Every prop can also be set from an expression: <code>th:{component.props[0].name}="${'{'}...{'}'}"</code>.
+        Any other attribute passes through to the rendered element, and <code>class</code> is appended.
+        {accessibleName && (
+          <>
+            {' '}An <code>aria-label</code> or <code>aria-labelledby</code> is required
+            {accessibleName.prop
+                ? <> when <code>{accessibleName.prop}</code> is {accessibleName.values.map((v, i) =>
+                    <>{i > 0 && (i === accessibleName.values.length - 1 ? ' or ' : ', ')}<code>{v}</code></>)}</>
+                : ''}; rendering fails without one.
+          </>
+        )}
+      </p>
+    </>
+  )
+}

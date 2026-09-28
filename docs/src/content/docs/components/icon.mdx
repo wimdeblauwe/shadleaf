@@ -1,0 +1,42 @@
+---
+title: Icon
+description: Inline SVG icons from lucide, or your own.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+`<sl:icon>` inlines the SVG of a [lucide](https://lucide.dev) icon into the page: no sprite, no extra request, and it
+works inside htmx swaps. It draws in `currentColor`, so it takes the colour of the text around it. An unknown name
+fails with the closest known ones.
+
+<ComponentPreview id="icon--default" />
+
+## Size and stroke width
+
+<ComponentPreview id="icon--sizes" />
+<ComponentPreview id="icon--stroke-width" />
+
+## Decorative or meaningful
+
+Without a `label` an icon is decorative: it renders `aria-hidden="true"`, which is right next to text or inside a
+labelled button. With a `label` it is announced as an image with that name.
+
+<ComponentPreview id="icon--label" />
+
+## Your own icons
+
+Register an `IconSource` bean. Sources are asked in `@Order`, before the bundled lucide icons, so your icons can also
+replace lucide's:
+
+```java
+@Bean
+IconSource applicationIcons() {
+  // reads src/main/resources/icons/<name>.svg
+  return IconSource.classpathDirectory("icons/");
+}
+```
+
+## Attributes
+
+<ComponentAttributes component="icon" />

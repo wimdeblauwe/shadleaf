@@ -1,0 +1,240 @@
+---
+// A live preview of one scenario from previews.json: the markup the library rendered for it, in an iframe that links
+// the library's own CSS bundle, with the Thymeleaf source and the rendered HTML underneath.
+//
+// The iframe is the isolation boundary: the component CSS and Starlight's never see each other. Its document is a
+// srcdoc, so it is same-origin: the page swaps the skin stylesheet and the .dark class inside it directly. The skin
+// switch applies to every preview and is remembered; light and dark follow the site's theme.
+//
+// Starlight's Code (Expressive Code), not astro:components': Starlight turns off Astro's own Shiki highlighting.
+import {Code} from '@astrojs/starlight/components';
+import Missing from './Missing.astro';
+import {previews, withBase} from '../lib/generated';
+
+interface Props {
+  /** Scenario id, e.g. "button--variants". */
+  id: string;
+}
+
+const {id} = Astro.props;
+const scenario = previews.scenarios.find(s => s.id === id);
+const skins = previews.skins.map(skin => ({name: skin.name, href: withBase(skin.css)}));
+
+// Keeps the preview inert: it has nowhere to navigate to, and a blanked frame looks like a broken component.
+const navigationGuard = `<script>
+  document.addEventListener('click', event => {
+    if (event.target.closest('a[href], button[type="submit"], input[type="submit"]')) event.preventDefault();
+  });
+  document.addEventListener('submit', event => event.preventDefault());
+</script>`;
+
+// The frame reports its height; the page sizes it (see the script below), so no preview gets a scrollbar. It measures
+// the body: the root's scrollHeight is never less than the frame's own height, so a frame could grow but not shrink.
+const resize = `<script>
+  const post = () => parent.postMessage(
+      {shadleafPreviewHeight: Math.ceil(document.body.getBoundingClientRect().height)}, '*');
+  addEventListener('load', post);
+  new ResizeObserver(post).observe(document.body);
+</script>`;
+
+const srcdoc = scenario && skins.length > 0
+    ? `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" id="shadleaf-skin" href="${skins[0].href}">
+  <style>
+    html, body { margin: 0; }
+    body { padding: 1.5rem; }
+    .stage { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+  </style>
+</head>
+<body>
+<div class="stage">
+${scenario.html}
+</div>
+${navigationGuard}
+${resize}
+</body>
+</html>`
+    : '';
+---
+
+{
+  scenario && skins.length > 0 ? (
+    <figure class="sl-docs-preview" data-skins={JSON.stringify(skins)}>
+      <div class="sl-docs-preview__bar">
+        <figcaption>
+          {scenario.title && <strong>{scenario.title}</strong>}
+          {scenario.description && <span>{scenario.description}</span>}
+        </figcaption>
+        {skins.length > 1 && (
+          <div class="sl-docs-preview__skins" role="group" aria-label="Skin">
+            {skins.map((skin, i) => (
+              <button type="button" data-skin={skin.name} aria-pressed={i === 0 ? 'true' : 'false'}>
+                {skin.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <div class="sl-docs-preview__stage">
+        <iframe class="sl-docs-preview__frame" loading="lazy" title={`Preview: ${scenario.title ?? id}`} srcdoc={srcdoc}></iframe>
+      </div>
+      <details class="sl-docs-preview__code">
+        <summary>Thymeleaf source</summary>
+        <Code code={scenario.source} lang="html"/>
+      </details>
+      <details class="sl-docs-preview__code">
+        <summary>Rendered HTML</summary>
+        <Code code={scenario.normalizedHtml} lang="html"/>
+      </details>
+    </figure>
+  ) : (
+    <Missing what={`preview for ${id}`}/>
+  )
+}
+
+<style>
+  .sl-docs-preview {
+    margin: 1.5rem 0;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .sl-docs-preview__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    font-size: var(--sl-text-sm);
+
+    & figcaption {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.75rem;
+      color: var(--sl-color-gray-2);
+    }
+  }
+
+  .sl-docs-preview__skins {
+    display: flex;
+    gap: 0.25rem;
+    margin: 0;
+
+    & button {
+      margin: 0;
+      padding: 0.125rem 0.5rem;
+      border: 1px solid var(--sl-color-gray-5);
+      border-radius: 0.25rem;
+      background: transparent;
+      color: var(--sl-color-gray-2);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    & button[aria-pressed='true'] {
+      background: var(--sl-color-gray-6);
+      color: var(--sl-color-white);
+      border-color: var(--sl-color-gray-4);
+    }
+  }
+
+  .sl-docs-preview__stage {
+    margin: 0;
+  }
+
+  .sl-docs-preview__frame {
+    display: block;
+    width: 100%;
+    height: 5.5rem;
+    border: 0;
+  }
+
+  .sl-docs-preview__code {
+    margin: 0;
+    border-top: 1px solid var(--sl-color-gray-5);
+
+    & summary {
+      padding: 0.5rem 0.75rem;
+      font-size: var(--sl-text-sm);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    & :global(.expressive-code) {
+      margin: 0;
+      padding: 0 0.75rem 0.75rem;
+    }
+  }
+</style>
+
+<script>
+  const SKIN_KEY = 'shadleaf-docs-skin';
+
+  type SkinLink = { name: string; href: string };
+
+  function storedSkin(): string | null {
+    try {
+      return localStorage.getItem(SKIN_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  function apply(figure: HTMLElement) {
+    const skins: SkinLink[] = JSON.parse(figure.dataset.skins ?? '[]');
+    const skin = skins.find(s => s.name === storedSkin()) ?? skins[0];
+    figure.querySelectorAll<HTMLButtonElement>('button[data-skin]').forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.skin === skin?.name));
+    });
+    const doc = figure.querySelector('iframe')?.contentDocument;
+    const link = doc?.getElementById('shadleaf-skin') as HTMLLinkElement | null;
+    if (!doc || !link || !skin) {
+      return; // not loaded yet; the load listener applies it
+    }
+    if (link.getAttribute('href') !== skin.href) {
+      link.setAttribute('href', skin.href);
+    }
+    doc.documentElement.classList.toggle('dark', document.documentElement.dataset.theme === 'dark');
+  }
+
+  const figures = () => document.querySelectorAll<HTMLElement>('.sl-docs-preview');
+
+  figures().forEach(figure => {
+    figure.querySelector('iframe')?.addEventListener('load', () => apply(figure));
+    apply(figure);
+    figure.querySelectorAll<HTMLButtonElement>('button[data-skin]').forEach(button => {
+      button.addEventListener('click', () => {
+        try {
+          localStorage.setItem(SKIN_KEY, button.dataset.skin ?? '');
+        } catch {
+          // the choice then lasts for this page only
+        }
+        figures().forEach(apply);
+      });
+    });
+  });
+
+  // Starlight's theme picker sets data-theme on <html>.
+  new MutationObserver(() => figures().forEach(apply))
+      .observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+
+  addEventListener('message', event => {
+    const height = (event.data as { shadleafPreviewHeight?: number })?.shadleafPreviewHeight;
+    if (typeof height !== 'number') {
+      return;
+    }
+    document.querySelectorAll<HTMLIFrameElement>('.sl-docs-preview__frame').forEach(frame => {
+      if (frame.contentWindow === event.source) {
+        frame.style.height = `${height}px`;
+      }
+    });
+  });
+</script>

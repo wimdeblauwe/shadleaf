@@ -1,0 +1,92 @@
+# Scenarios for the button's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: button
+scenarios:
+  - id: default
+    title: Button
+    source: '<sl:button>Save</sl:button>'
+
+  - id: variants
+    title: Variants
+    source: |-
+      <sl:button>Primary</sl:button>
+      <sl:button variant="secondary">Secondary</sl:button>
+      <sl:button variant="outline">Outline</sl:button>
+      <sl:button variant="ghost">Ghost</sl:button>
+      <sl:button variant="link">Link</sl:button>
+      <sl:button variant="destructive">Destructive</sl:button>
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:button size="xs">Extra small</sl:button>
+      <sl:button size="sm">Small</sl:button>
+      <sl:button>Default</sl:button>
+      <sl:button size="lg">Large</sl:button>
+
+  - id: icon-sizes
+    title: Icon-only sizes
+    description: An icon-only button needs an aria-label; rendering fails without one.
+    source: |-
+      <sl:button size="icon-xs" variant="outline" aria-label="Add"><sl:icon name="plus"/></sl:button>
+      <sl:button size="icon-sm" variant="outline" aria-label="Add"><sl:icon name="plus"/></sl:button>
+      <sl:button size="icon" variant="outline" aria-label="Add"><sl:icon name="plus"/></sl:button>
+      <sl:button size="icon-lg" variant="outline" aria-label="Add"><sl:icon name="plus"/></sl:button>
+
+  - id: with-icon
+    title: With an icon
+    source: |-
+      <sl:button variant="destructive">
+        <sl:slot name="icon-start"><sl:icon name="trash"/></sl:slot>
+        Delete order
+      </sl:button>
+      <sl:button variant="outline">
+        Next
+        <sl:slot name="icon-end"><sl:icon name="arrow-right"/></sl:slot>
+      </sl:button>
+
+  - id: link
+    title: As a link
+    source: |-
+      <sl:button as="a" href="/orders" variant="outline">View orders</sl:button>
+      <sl:button as="a" href="/orders" variant="link">View orders</sl:button>
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:button disabled>Save</sl:button>
+      <sl:button as="a" href="/orders" variant="outline" disabled>View orders</sl:button>
+
+  - id: loading
+    title: Loading
+    source: |-
+      <sl:button loading>Saving</sl:button>
+      <sl:button variant="outline" loading>
+        <sl:slot name="icon-start"><sl:icon name="save"/></sl:slot>
+        Save
+      </sl:button>
+      <sl:button size="icon" variant="outline" aria-label="Refresh" loading><sl:icon name="refresh-cw"/></sl:button>
+
+  - id: form
+    title: In a form
+    description: Only the button that says type="submit" submits the form.
+    source: |-
+      <form method="post" th:action="@{/orders}">
+        <sl:button type="submit">Save</sl:button>
+        <sl:button variant="outline">Preview</sl:button>
+      </form>
+
+  - id: expression
+    title: Props from an expression
+    source: |-
+      <sl:button th:variant="${order.cancellable ? 'destructive' : 'secondary'}"
+                 th:text="#{orders.cancel}">Cancel order</sl:button>
+    renderSource: |-
+      <sl:button th:variant="${true ? 'destructive' : 'secondary'}">Cancel order</sl:button>
+
+  - id: pass-through
+    title: Pass-through attributes
+    description: Anything that is not a prop lands on the rendered element; class is appended.
+    source: |-
+      <sl:button variant="outline" class="app-wide"
+                 hx-post="/orders/42/archive" hx-target="#orders"
+                 data-testid="archive">Archive</sl:button>
