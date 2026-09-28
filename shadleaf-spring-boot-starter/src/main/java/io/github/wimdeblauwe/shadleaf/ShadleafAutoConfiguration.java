@@ -2,13 +2,23 @@ package io.github.wimdeblauwe.shadleaf;
 
 import io.github.wimdeblauwe.shadleaf.assets.ShadleafAssets;
 import io.github.wimdeblauwe.shadleaf.assets.ViteManifestParser;
+import io.github.wimdeblauwe.shadleaf.component.ClasspathComponentDefinitionSource;
+import io.github.wimdeblauwe.shadleaf.component.ComponentDefinitionSource;
+import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
+import io.github.wimdeblauwe.shadleaf.component.FileSystemComponentDefinitionSource;
 import io.github.wimdeblauwe.shadleaf.dialect.ShadleafDialect;
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternUtils;
+import org.springframework.util.StringUtils;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 import tools.jackson.databind.json.JsonMapper;
@@ -30,10 +40,30 @@ public class ShadleafAutoConfiguration {
     return new ViteManifestParser(jsonMapper);
   }
 
+  /**
+   * The components the dialect can render. Sources are asked in order: the templates on disk when
+   * {@code shadleaf.dev.templates-path} is set (re-read when they change), then any {@link ComponentDefinitionSource}
+   * beans, then the component templates on the classpath.
+   */
   @Bean
   @ConditionalOnMissingBean
-  public ShadleafDialect shadleafDialect() {
-    return new ShadleafDialect();
+  public ComponentRegistry shadleafComponentRegistry(ShadleafProperties properties,
+      ObjectProvider<ComponentDefinitionSource> additionalSources, ResourceLoader resourceLoader) {
+    List<ComponentDefinitionSource> sources = new ArrayList<>();
+    String templatesPath = properties.dev().templatesPath();
+    if (StringUtils.hasText(templatesPath)) {
+      sources.add(FileSystemComponentDefinitionSource.forTemplatesPath(templatesPath));
+    }
+    additionalSources.orderedStream().forEach(sources::add);
+    sources.add(new ClasspathComponentDefinitionSource(ResourcePatternUtils.getResourcePatternResolver(resourceLoader),
+        ClasspathComponentDefinitionSource.DEFAULT_LOCATION_PATTERN));
+    return new ComponentRegistry(sources);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ShadleafDialect shadleafDialect(ComponentRegistry componentRegistry) {
+    return new ShadleafDialect(componentRegistry);
   }
 
   @Bean

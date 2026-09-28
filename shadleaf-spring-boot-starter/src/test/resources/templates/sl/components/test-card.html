@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: a default slot and two named slots, emitted only when given. -->
+<head>
+  <sl:props></sl:props>
+</head>
+<body>
+<div th:fragment="test-card" class="card" sl:attrs>
+  <div th:if="${slots.has('header')}" class="card-header"><sl:slot name="header"/></div>
+  <div class="card-body"><sl:slot>Empty card</sl:slot></div>
+  <div th:if="${slots.has('footer')}" class="card-footer"><sl:slot name="footer"/></div>
+</div>
+</body>
+</html>

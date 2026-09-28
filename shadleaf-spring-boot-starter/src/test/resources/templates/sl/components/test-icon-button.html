@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: needs an accessible name when it is icon-sized. -->
+<head>
+  <sl:props>
+    <sl:prop name="size" default="default" values="default icon"/>
+    <sl:accessible-name required-when="size=icon"/>
+  </sl:props>
+</head>
+<body>
+<button th:fragment="test-icon-button" type="button" th:attr="data-size=${props.unlessDefault('size')}"
+        sl:attrs><sl:slot/></button>
+</body>
+</html>

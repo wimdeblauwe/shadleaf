@@ -1,0 +1,7 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component without <sl:props>: it reads the raw attrs map and passes everything through. -->
+<body>
+<em th:fragment="test-raw" class="raw" th:attr="data-tone=${attrs['tone']}" sl:attrs><sl:slot/></em>
+</body>
+</html>

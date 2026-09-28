@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: no slot at all, meant to be used self-closing (<sl:test-dot/>). -->
+<head>
+  <sl:props>
+    <sl:prop name="tone" default="info" values="info warn"/>
+  </sl:props>
+</head>
+<body>
+<i th:fragment="test-dot" class="dot" th:attr="data-tone=${props.tone}" sl:attrs></i>
+</body>
+</html>

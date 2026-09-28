@@ -9,6 +9,15 @@
   <div class="sl-smoke-test" id="smoke-test">
     If this box is green, the Shadleaf stylesheet is loaded.
   </div>
+
+  <!-- Demo of the M1 engine, using templates/sl/components/badge.html from this app. View the page source. -->
+  <h2>Badges</h2>
+  <p>
+    <sl:badge>Plain</sl:badge>
+    <sl:badge variant="success" class="demo-extra" hx-get="/x">New</sl:badge>
+    <sl:badge th:variant="${2 > 1 ? 'danger' : 'neutral'}" th:text="${'Evaluated'}">placeholder</sl:badge>
+    <sl:badge variant="neutral" />
+  </p>
 </div>
 </body>
 </html>

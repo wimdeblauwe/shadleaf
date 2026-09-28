@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component for the precedence tie: th:href, th:src, th:value and th:action are passed through. -->
+<head>
+  <sl:props>
+    <sl:prop name="variant" default="plain" values="plain muted"/>
+    <sl:prop name="size" default="md" values="sm md"/>
+    <sl:prop name="disabled" type="boolean"/>
+  </sl:props>
+</head>
+<body>
+<a th:fragment="test-link" class="link"
+   th:attr="data-variant=${props.unlessDefault('variant')},
+            data-size=${props.unlessDefault('size')},
+            aria-disabled=${props.disabled ? 'true' : null}"
+   sl:attrs><sl:slot/></a>
+</body>
+</html>

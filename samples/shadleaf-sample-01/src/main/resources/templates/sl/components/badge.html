@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!--
+  Demo component for trying out the M1 engine. Not part of the library: any template in
+  templates/sl/components/ on the application's classpath becomes an <sl:*> component.
+-->
+<head>
+  <sl:props>
+    <sl:prop name="variant" default="neutral" values="neutral success danger">Colour of the badge.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<span th:fragment="badge" class="badge"
+      th:attr="data-variant=${props.unlessDefault('variant')}" sl:attrs><sl:slot>Badge</sl:slot></span>
+</body>
+</html>
