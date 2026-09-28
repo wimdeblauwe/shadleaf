@@ -19,6 +19,10 @@ jobs:
       - name: Build and install the library
         run: mvn -B install
 
-      - name: Build the sample against the installed library
+      - name: Build sample 1 against the installed library
         run: mvn -B verify
         working-directory: samples/shadleaf-sample-01
+
+      - name: Build the Spring Security + CSP sample against the installed library
+        run: mvn -B verify
+        working-directory: samples/shadleaf-sample-02

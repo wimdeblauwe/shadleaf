@@ -5,16 +5,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.github.wimdeblauwe.shadleaf.component.ComponentDefinition;
 import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
-import io.github.wimdeblauwe.shadleaf.test.ComponentRenderer;
+import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
+import io.github.wimdeblauwe.shadleaf.test.Rendered;
 import java.util.List;
 import java.util.Map;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Test;
 
 class ComponentElementProcessorTest {
 
-  private final ComponentRenderer renderer = new ComponentRenderer();
+  private final ComponentRenderTester renderer = ComponentRenderTester.create();
 
   // --- props -----------------------------------------------------------------------------------
 
@@ -89,11 +89,11 @@ class ComponentElementProcessorTest {
 
   @Test
   void componentInsideThEachGetsItsOwnProps() {
-    String html = renderer.render("""
+    Rendered rendered = renderer.render("""
             <div><sl:test-chip th:each="v : ${variants}" th:variant="${v}" th:text="${v}"></sl:test-chip></div>""",
         Map.of("variants", List.of("neutral", "success", "danger")));
 
-    assertThat(Jsoup.parseBodyFragment(html).select("span.chip"))
+    assertThat(rendered.select("span.chip"))
         .extracting(e -> e.attr("data-variant") + "/" + e.text())
         .containsExactly("/neutral", "success/success", "danger/danger");
   }
@@ -256,7 +256,6 @@ class ComponentElementProcessorTest {
   }
 
   private Element render(String snippet, Map<String, ?> variables) {
-    String html = renderer.render(snippet, variables);
-    return Jsoup.parseBodyFragment(html).body().child(0);
+    return renderer.render(snippet, variables).root();
   }
 }

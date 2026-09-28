@@ -1,18 +1,15 @@
 package io.github.wimdeblauwe.shadleaf.button;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static io.github.wimdeblauwe.shadleaf.test.ShadleafAssertions.assertThat;
+import static io.github.wimdeblauwe.shadleaf.test.ShadleafAssertions.assertThatRenderFailure;
 
-import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
 import io.github.wimdeblauwe.shadleaf.i18n.ShadleafMessageSource;
-import io.github.wimdeblauwe.shadleaf.test.ComponentRenderer;
+import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
+import io.github.wimdeblauwe.shadleaf.test.Rendered;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Attribute;
-import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -26,24 +23,24 @@ class ButtonComponentTest {
   private static final List<String> SIZES = List.of("xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm",
       "icon-lg");
 
-  private final ComponentRenderer renderer = new ComponentRenderer();
+  private final ComponentRenderTester tester = ComponentRenderTester.create();
 
   @Test
   void plainButtonIsABareBtn() {
-    String html = renderer.render("<sl:button>Save</sl:button>");
-    Element button = first(html);
+    Rendered rendered = tester.render("<sl:button>Save</sl:button>");
 
-    assertThat(button.tagName()).isEqualTo("button");
-    assertThat(button.attributes().asList()).extracting(Attribute::getKey).containsExactly("class", "type");
-    assertThat(button.className()).isEqualTo("btn");
-    assertThat(button.attr("type")).isEqualTo("button");
-    assertThat(button.text()).isEqualTo("Save");
-    assertThat(html).doesNotContain("<!--");
+    assertThat(rendered).hasNoLeakedMarkup();
+    assertThat(rendered).root()
+        .hasTag("button")
+        .hasAttributeNames("class", "type")
+        .hasClassName("btn")
+        .hasAttribute("type", "button")
+        .hasText("Save");
   }
 
   @Test
   void withoutContentShowsTheFallbackLabel() {
-    assertThat(render("<sl:button/>").text()).isEqualTo("Button");
+    assertThat(tester.render("<sl:button/>")).root().hasText("Button");
   }
 
   static List<Arguments> matrix() {
@@ -59,162 +56,152 @@ class ButtonComponentTest {
   @ParameterizedTest(name = "{0} {1}")
   @MethodSource("matrix")
   void everyVariantAndSizeRendersAsDataAttributesExceptTheDefaults(String variant, String size) {
-    Element button = render("<sl:button variant=\"%s\" size=\"%s\" aria-label=\"Add\">Add</sl:button>"
-        .formatted(variant, size));
+    var button = assertThat(tester.render(
+        "<sl:button variant=\"%s\" size=\"%s\" aria-label=\"Add\">Add</sl:button>".formatted(variant, size))).root()
+        .hasNoAttribute("variant", "size", "as", "loading");
 
-    assertThat(button.attr("data-variant")).isEqualTo(variant.equals("primary") ? "" : variant);
-    assertThat(button.hasAttr("data-variant")).isEqualTo(!variant.equals("primary"));
-    assertThat(button.attr("data-size")).isEqualTo(size.equals("default") ? "" : size);
-    assertThat(button.hasAttr("data-size")).isEqualTo(!size.equals("default"));
-    assertThat(button.attributes().asList()).extracting(Attribute::getKey)
-        .doesNotContain("variant", "size", "as", "loading");
+    if (variant.equals("primary")) {
+      button.hasNoAttribute("data-variant");
+    } else {
+      button.hasAttribute("data-variant", variant);
+    }
+    if (size.equals("default")) {
+      button.hasNoAttribute("data-size");
+    } else {
+      button.hasAttribute("data-size", size);
+    }
   }
 
   @Test
   void variantCanBeAnExpression() {
-    Element button = render("<sl:button th:variant=\"${admin ? 'destructive' : 'primary'}\">Delete</sl:button>",
-        Map.of("admin", true));
-
-    assertThat(button.attr("data-variant")).isEqualTo("destructive");
+    assertThat(tester.render("<sl:button th:variant=\"${admin ? 'destructive' : 'primary'}\">Delete</sl:button>",
+        Map.of("admin", true))).root()
+        .hasAttribute("data-variant", "destructive");
   }
 
   @Test
   void illegalVariantFailsListingTheLegalOnes() {
-    assertThatThrownBy(() -> render("<sl:button variant=\"destructve\">Delete</sl:button>"))
-        .rootCause()
-        .isInstanceOf(ShadleafComponentException.class)
+    assertThatRenderFailure(() -> tester.render("<sl:button variant=\"destructve\">Delete</sl:button>"))
         .hasMessageContaining("destructve")
         .hasMessageContaining("primary, secondary, outline, ghost, link, destructive");
   }
 
   @Test
   void typeSubmitAndReset() {
-    assertThat(render("<sl:button type=\"submit\">Save</sl:button>").attr("type")).isEqualTo("submit");
-    assertThat(render("<sl:button type=\"reset\">Reset</sl:button>").attr("type")).isEqualTo("reset");
+    assertThat(tester.render("<sl:button type=\"submit\">Save</sl:button>")).root().hasAttribute("type", "submit");
+    assertThat(tester.render("<sl:button type=\"reset\">Reset</sl:button>")).root().hasAttribute("type", "reset");
   }
 
   @Test
   void passesThroughHtmxAlpineAriaAndDataAttributesAndMergesClass() {
-    Element button = render("""
+    assertThat(tester.render("""
         <sl:button variant="destructive" size="sm" class="ml-auto" hx-delete="/orders/42"
                    hx-confirm="Delete this order?" x-on:click="open = false" aria-describedby="help"
-                   data-order="42" id="delete">Delete order</sl:button>""");
-
-    assertThat(button.className()).isEqualTo("btn ml-auto");
-    assertThat(button.attr("hx-delete")).isEqualTo("/orders/42");
-    assertThat(button.attr("hx-confirm")).isEqualTo("Delete this order?");
-    assertThat(button.attr("x-on:click")).isEqualTo("open = false");
-    assertThat(button.attr("aria-describedby")).isEqualTo("help");
-    assertThat(button.attr("data-order")).isEqualTo("42");
-    assertThat(button.id()).isEqualTo("delete");
+                   data-order="42" id="delete">Delete order</sl:button>""")).root()
+        .hasClassName("btn ml-auto")
+        .hasAttribute("hx-delete", "/orders/42")
+        .hasAttribute("hx-confirm", "Delete this order?")
+        .hasAttribute("x-on:click", "open = false")
+        .hasAttribute("aria-describedby", "help")
+        .hasAttribute("data-order", "42")
+        .hasAttribute("id", "delete");
   }
 
   @Test
   void passedThroughThAttributesAreEvaluated() {
-    Element button = render("<sl:button th:text=\"${label}\" th:hx-post=\"@{orders/{id}(id=${id})}\">x</sl:button>",
-        Map.of("label", "Sync", "id", 7));
-
-    assertThat(button.text()).isEqualTo("Sync");
-    assertThat(button.attr("hx-post")).isEqualTo("orders/7");
+    assertThat(tester.render("<sl:button th:text=\"${label}\" th:hx-post=\"@{/orders/{id}(id=${id})}\">x</sl:button>",
+        Map.of("label", "Sync", "id", 7))).root()
+        .hasText("Sync")
+        .hasAttribute("hx-post", "/orders/7");
   }
 
   @Test
   void disabledButton() {
-    Element button = render("<sl:button disabled>Save</sl:button>");
-
-    assertThat(button.hasAttr("disabled")).isTrue();
-    assertThat(button.hasAttr("aria-busy")).isFalse();
+    assertThat(tester.render("<sl:button disabled>Save</sl:button>")).root()
+        .hasAttribute("disabled")
+        .hasNoAttribute("aria-busy");
   }
 
   @Test
   void disabledFalseIsEnabled() {
-    assertThat(render("<sl:button th:disabled=\"${false}\">Save</sl:button>").hasAttr("disabled")).isFalse();
+    assertThat(tester.render("<sl:button th:disabled=\"${false}\">Save</sl:button>")).root()
+        .hasNoAttribute("disabled");
   }
 
   // --- as="a" -----------------------------------------------------------------------------------
 
   @Test
   void anchorLooksTheSameAndKeepsItsHref() {
-    Element anchor = render("<sl:button as=\"a\" variant=\"outline\" href=\"/orders\">Orders</sl:button>");
-
-    assertThat(anchor.tagName()).isEqualTo("a");
-    assertThat(anchor.className()).isEqualTo("btn");
-    assertThat(anchor.attr("data-variant")).isEqualTo("outline");
-    assertThat(anchor.attr("href")).isEqualTo("/orders");
-    assertThat(anchor.hasAttr("type")).isFalse();
-    assertThat(anchor.hasAttr("aria-disabled")).isFalse();
-    assertThat(anchor.hasAttr("tabindex")).isFalse();
-    assertThat(anchor.hasAttr("role")).isFalse();
-    assertThat(anchor.text()).isEqualTo("Orders");
+    assertThat(tester.render("<sl:button as=\"a\" variant=\"outline\" href=\"/orders\">Orders</sl:button>")).root()
+        .hasTag("a")
+        .hasClassName("btn")
+        .hasAttribute("data-variant", "outline")
+        .hasAttribute("href", "/orders")
+        .hasNoAttribute("type", "aria-disabled", "tabindex", "role")
+        .hasText("Orders");
   }
 
-  // A relative link: the render harness has no web context, which @{/...} needs.
   @Test
-  void anchorHrefCanBeAnExpression() {
-    assertThat(render("<sl:button as=\"a\" th:href=\"@{orders/{id}(id=${id})}\">Order</sl:button>",
-        Map.of("id", 7)).attr("href")).isEqualTo("orders/7");
+  void anchorHrefCanBeAnExpressionAndHonoursTheContextPath() {
+    ComponentRenderTester shop = ComponentRenderTester.builder().contextPath("/shop").build();
+
+    assertThat(shop.render("<sl:button as=\"a\" th:href=\"@{/orders/{id}(id=${id})}\">Order</sl:button>",
+        Map.of("id", 7))).root()
+        .hasAttribute("href", "/shop/orders/7");
   }
 
   @Test
   void disabledAnchorCannotBeFollowedOrFocused() {
-    Element literal = render("<sl:button as=\"a\" disabled href=\"/orders\">Orders</sl:button>");
-    Element expression = render("<sl:button as=\"a\" disabled th:href=\"@{/orders}\">Orders</sl:button>");
-
-    for (Element anchor : List.of(literal, expression)) {
-      assertThat(anchor.hasAttr("href")).isFalse();
-      assertThat(anchor.attr("aria-disabled")).isEqualTo("true");
-      assertThat(anchor.attr("tabindex")).isEqualTo("-1");
-      assertThat(anchor.attr("role")).isEqualTo("link");
-      assertThat(anchor.hasAttr("disabled")).isFalse();
+    for (String snippet : List.of("<sl:button as=\"a\" disabled href=\"/orders\">Orders</sl:button>",
+        "<sl:button as=\"a\" disabled th:href=\"@{/orders}\">Orders</sl:button>")) {
+      assertThat(tester.render(snippet)).root()
+          .hasNoAttribute("href", "disabled")
+          .hasAttribute("aria-disabled", "true")
+          .hasAttribute("tabindex", "-1")
+          .hasAttribute("role", "link");
     }
   }
 
   @Test
   void loadingAnchorIsDisabledToo() {
-    Element anchor = render("<sl:button as=\"a\" loading href=\"/orders\">Orders</sl:button>");
-
-    assertThat(anchor.hasAttr("href")).isFalse();
-    assertThat(anchor.attr("aria-disabled")).isEqualTo("true");
-    assertThat(anchor.attr("aria-busy")).isEqualTo("true");
-    assertThat(anchor.selectFirst(".btn-spinner")).isNotNull();
+    assertThat(tester.render("<sl:button as=\"a\" loading href=\"/orders\">Orders</sl:button>")).root()
+        .hasNoAttribute("href")
+        .hasAttribute("aria-disabled", "true")
+        .hasAttribute("aria-busy", "true")
+        .element(".btn-spinner");
   }
 
   // --- loading ----------------------------------------------------------------------------------
 
   @Test
   void loadingShowsASpinnerAndAHiddenLabelAndDisables() {
-    Element button = render("<sl:button loading>Save</sl:button>");
-
-    assertThat(button.attr("aria-busy")).isEqualTo("true");
-    assertThat(button.hasAttr("disabled")).isTrue();
-    Element spinner = button.selectFirst("> .btn-icon[data-icon=inline-start] > svg.sl-icon.btn-spinner");
-    assertThat(spinner).isNotNull();
-    assertThat(spinner.attr("aria-hidden")).isEqualTo("true");
-    assertThat(button.selectFirst("> .sl-sr-only").text()).isEqualTo("Loading");
-    assertThat(button.text()).as("the hidden label is read first").isEqualTo("Loading Save");
+    var button = assertThat(tester.render("<sl:button loading>Save</sl:button>")).root()
+        .hasAttribute("aria-busy", "true")
+        .hasAttribute("disabled")
+        .as("the hidden label is read first").hasText("Loading Save");
+    button.element("> .btn-icon[data-icon=inline-start] > svg.sl-icon.btn-spinner").hasAttribute("aria-hidden", "true");
+    button.element("> .sl-sr-only").hasText("Loading");
   }
 
   @Test
   void spinnerTakesThePlaceOfTheStartIcon() {
-    Element button = render("""
+    Rendered rendered = tester.render("""
         <sl:button loading>
           <sl:slot name="icon-start"><sl:icon name="save"/></sl:slot>
           Save
         </sl:button>""");
 
-    assertThat(button.select("> .btn-icon")).hasSize(1);
-    assertThat(button.select("svg")).hasSize(1);
-    assertThat(button.selectFirst("svg").hasClass("btn-spinner")).isTrue();
+    assertThat(rendered).elements(".btn > .btn-icon").hasSize(1);
+    assertThat(rendered).elements("svg").singleElement().satisfies(svg -> assertThat(svg).hasClass("btn-spinner"));
   }
 
   @Test
   void loadingIconOnlyButtonShowsOnlyTheSpinner() {
-    Element button = render("""
+    Rendered rendered = tester.render("""
         <sl:button size="icon" loading aria-label="Delete"><sl:icon name="trash"/></sl:button>""");
 
-    assertThat(button.select("svg")).hasSize(1);
-    assertThat(button.selectFirst("svg").hasClass("btn-spinner")).isTrue();
-    assertThat(button.attr("aria-label")).isEqualTo("Delete");
+    assertThat(rendered).elements("svg").singleElement().satisfies(svg -> assertThat(svg).hasClass("btn-spinner"));
+    assertThat(rendered).root().hasAttribute("aria-label", "Delete");
   }
 
   @Test
@@ -222,58 +209,53 @@ class ButtonComponentTest {
     StaticMessageSource messages = new StaticMessageSource();
     messages.addMessage("sl.button.loading", Locale.forLanguageTag("nl"), "Bezig");
     ShadleafMessageSource.attachTo(messages);
-    ComponentRenderer dutch = new ComponentRenderer();
-    dutch.engine().setTemplateEngineMessageSource(messages);
+    ComponentRenderTester dutch = ComponentRenderTester.builder()
+        .messageSource(messages)
+        .locale(Locale.forLanguageTag("nl"))
+        .build();
 
-    String html = dutch.engine().process("<sl:button loading>Opslaan</sl:button>",
-        new org.thymeleaf.context.Context(Locale.forLanguageTag("nl")));
-
-    assertThat(first(html).selectFirst(".sl-sr-only").text()).isEqualTo("Bezig");
+    assertThat(dutch.render("<sl:button loading>Opslaan</sl:button>")).element(".sl-sr-only").hasText("Bezig");
   }
 
   // --- icon slots -------------------------------------------------------------------------------
 
   @Test
   void iconNestedInTheIconStartSlot() {
-    Element button = render("""
+    Rendered rendered = tester.render("""
         <sl:button variant="destructive">
           <sl:slot name="icon-start"><sl:icon name="trash"/></sl:slot>
           Delete order
         </sl:button>""");
 
-    Element wrapper = button.selectFirst("> span.btn-icon");
-    assertThat(wrapper.attr("data-icon")).isEqualTo("inline-start");
-    Element icon = wrapper.selectFirst("> svg.sl-icon");
-    assertThat(icon).isNotNull();
-    assertThat(icon.attr("aria-hidden")).isEqualTo("true");
-    assertThat(icon.select("path")).hasSize(5);
-    assertThat(button.select("> span.btn-icon")).hasSize(1);
-    assertThat(button.text()).isEqualTo("Delete order");
-    assertThat(button.attr("data-variant")).as("the icon's props do not leak into the button")
-        .isEqualTo("destructive");
+    assertThat(rendered).elements(".btn > span.btn-icon").hasSize(1);
+    assertThat(rendered).elements("svg path").hasSize(5);
+    var button = assertThat(rendered).root()
+        .hasText("Delete order")
+        .as("the icon's props do not leak into the button").hasAttribute("data-variant", "destructive");
+    button.element("> span.btn-icon")
+        .hasAttribute("data-icon", "inline-start")
+        .element("> svg.sl-icon").hasAttribute("aria-hidden", "true");
   }
 
   @Test
   void iconEndSlot() {
-    Element button = render("""
+    Rendered rendered = tester.render("""
         <sl:button>Next<sl:slot name="icon-end"><sl:icon name="arrow-right"/></sl:slot></sl:button>""");
 
-    assertThat(button.selectFirst("> span.btn-icon").attr("data-icon")).isEqualTo("inline-end");
-    assertThat(button.child(button.childrenSize() - 1).hasClass("btn-icon")).isTrue();
+    assertThat(rendered).element(".btn > span.btn-icon").hasAttribute("data-icon", "inline-end");
+    assertThat(rendered).element(".btn > :last-child").hasClass("btn-icon");
   }
 
   @Test
   void noIconWrapperWithoutIcons() {
-    assertThat(render("<sl:button>Save</sl:button>").select(".btn-icon")).isEmpty();
+    assertThat(tester.render("<sl:button>Save</sl:button>")).hasNoElement(".btn-icon");
   }
 
   @Test
   void explicitlySizedIconIsMarkedSoTheButtonLeavesItsSizeAlone() {
-    Element icon = render("""
-        <sl:button><sl:slot name="icon-start"><sl:icon name="plus" size="20"/></sl:slot>Add</sl:button>""")
-        .selectFirst("svg");
-
-    assertThat(icon.attr("data-icon-size")).isEqualTo("20");
+    assertThat(tester.render("""
+        <sl:button><sl:slot name="icon-start"><sl:icon name="plus" size="20"/></sl:slot>Add</sl:button>"""))
+        .element("svg").hasAttribute("data-icon-size", "20");
   }
 
   // --- accessible name --------------------------------------------------------------------------
@@ -281,9 +263,8 @@ class ButtonComponentTest {
   @ParameterizedTest
   @MethodSource("iconSizes")
   void iconOnlyButtonWithoutAriaLabelFails(String size) {
-    assertThatThrownBy(() -> render("<sl:button size=\"%s\"><sl:icon name=\"trash\"/></sl:button>".formatted(size)))
-        .rootCause()
-        .isInstanceOf(ShadleafComponentException.class)
+    assertThatRenderFailure(
+        () -> tester.render("<sl:button size=\"%s\"><sl:icon name=\"trash\"/></sl:button>".formatted(size)))
         .hasMessageContaining("<sl:button size=\"%s\">".formatted(size))
         .hasMessageContaining("aria-label");
   }
@@ -294,31 +275,16 @@ class ButtonComponentTest {
 
   @Test
   void iconOnlyButtonWithAnAccessibleName() {
-    Element labelled = render("<sl:button size=\"icon\" aria-label=\"Delete\"><sl:icon name=\"trash\"/></sl:button>");
-    Element expression = render("<sl:button size=\"icon\" th:aria-label=\"${label}\"><sl:icon name=\"trash\"/></sl:button>",
-        Map.of("label", "Delete"));
-    Element labelledBy = render("<sl:button size=\"icon\" aria-labelledby=\"t\"><sl:icon name=\"trash\"/></sl:button>");
-
-    assertThat(labelled.attr("aria-label")).isEqualTo("Delete");
-    assertThat(labelled.attr("data-size")).isEqualTo("icon");
-    assertThat(expression.attr("aria-label")).isEqualTo("Delete");
-    assertThat(labelledBy.attr("aria-labelledby")).isEqualTo("t");
+    assertThat(tester.render("<sl:button size=\"icon\" aria-label=\"Delete\"><sl:icon name=\"trash\"/></sl:button>"))
+        .root().hasAttribute("aria-label", "Delete").hasAttribute("data-size", "icon");
+    assertThat(tester.render("<sl:button size=\"icon\" th:aria-label=\"${label}\"><sl:icon name=\"trash\"/></sl:button>",
+        Map.of("label", "Delete"))).root().hasAttribute("aria-label", "Delete");
+    assertThat(tester.render("<sl:button size=\"icon\" aria-labelledby=\"t\"><sl:icon name=\"trash\"/></sl:button>"))
+        .root().hasAttribute("aria-labelledby", "t");
   }
 
   @Test
   void textButtonNeedsNoAriaLabel() {
-    assertThat(render("<sl:button size=\"sm\">Save</sl:button>").hasAttr("aria-label")).isFalse();
-  }
-
-  private Element render(String snippet) {
-    return render(snippet, Map.of());
-  }
-
-  private Element render(String snippet, Map<String, ?> variables) {
-    return first(renderer.render(snippet, variables));
-  }
-
-  private static Element first(String html) {
-    return Jsoup.parseBodyFragment(html).body().child(0);
+    assertThat(tester.render("<sl:button size=\"sm\">Save</sl:button>")).root().hasNoAttribute("aria-label");
   }
 }

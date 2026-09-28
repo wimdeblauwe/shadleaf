@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Sign in', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>This page is public, so the Shadleaf stylesheet under <code>/shadleaf/**</code> has to be too. Sign in with
+    <code>user</code> / <code>password</code>.</p>
+
+  <p th:if="${param.error}" class="message error" role="alert">Wrong username or password.</p>
+  <p th:if="${param.logout}" class="message" role="status">You have been signed out.</p>
+
+  <form class="card" method="post" th:action="@{/login}">
+    <label for="username">Username</label>
+    <input id="username" name="username" autocomplete="username" required autofocus>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+    <sl:button type="submit">
+      <sl:slot name="icon-start"><sl:icon name="log-in"/></sl:slot>
+      Sign in
+    </sl:button>
+  </form>
+</div>
+</body>
+</html>

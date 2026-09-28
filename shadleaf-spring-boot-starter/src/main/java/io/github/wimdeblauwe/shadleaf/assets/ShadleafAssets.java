@@ -12,12 +12,13 @@ import org.springframework.util.StringUtils;
 
 /**
  * Resolves the URLs of the library's assets: from the Vite dev server when {@code shadleaf.dev.vite-server-url} is
- * set, otherwise from the Vite manifest inside the jar, served under {@code /shadleaf/**}. The stylesheet is the
- * build for the configured skin and asset variant.
+ * set, otherwise from the Vite manifest inside the jar; the files it names are served under {@code /shadleaf/**}.
+ * The stylesheet is the build for the configured skin and asset variant.
  */
 public class ShadleafAssets {
 
-  public static final String MANIFEST_LOCATION = "META-INF/resources/shadleaf/.vite/manifest.json";
+  /** Outside {@code META-INF/resources}, so the manifest itself is never served. */
+  public static final String MANIFEST_LOCATION = "shadleaf/vite-manifest.json";
   public static final String BASE_URL = "/shadleaf/";
   private static final Pattern SKIN_ENTRY = Pattern.compile("css/entries/shadleaf-([^.]+)\\.css");
 

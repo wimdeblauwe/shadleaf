@@ -35,6 +35,17 @@ Declare the namespace and use the components:
 </sl:button>
 ```
 
+### Spring Security and Content-Security-Policy
+
+Permit the library's assets with one matcher, `requestMatchers("/shadleaf/**").permitAll()`. The dark-mode script
+(`~{sl/layout :: theme-script}`) is inline, and a strict policy can allow it in either of two ways:
+
+- **Nonce**: put a per-request nonce in the `cspNonce` request attribute (`shadleaf.csp.nonce-attribute`) and the
+  script renders it as `nonce="…"`.
+- **Hash**: add `ShadleafThemeScript#getCspHash()` (a `'sha256-…'` source) to `script-src`.
+
+`samples/shadleaf-sample-02` does both, with no `'unsafe-inline'`.
+
 `<sl:button>` renders `type="button"` unless you say `type="submit"`, so a button in a form never submits by accident.
 `<sl:icon>` inlines the SVG of any [lucide](https://lucide.dev) icon; declare an `IconSource` bean to add your own.
 
@@ -46,7 +57,12 @@ mvn install
 
 The build downloads Node.js and pnpm through the frontend-maven-plugin.
 
-See `samples/shadleaf-sample-01` for a consuming application, and `CLAUDE.md` for the live-reload development loop.
+See `samples/shadleaf-sample-01` for a consuming application, `samples/shadleaf-sample-02` for one behind Spring
+Security with a strict Content-Security-Policy (and no Node in its build), and `CLAUDE.md` for the live-reload
+development loop.
+
+Component markup is pinned by approval files in `shadleaf-spring-boot-starter/src/test/resources/approved/`. After a
+deliberate change, accept the new markup with `mvn test -Dshadleaf.approve`, review the diff and commit it.
 
 ## License
 

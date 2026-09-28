@@ -8,7 +8,7 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentDefinition;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.component.PropDefinition;
 import io.github.wimdeblauwe.shadleaf.component.PropType;
-import io.github.wimdeblauwe.shadleaf.test.ComponentRenderer;
+import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -41,7 +40,7 @@ import tools.jackson.databind.json.JsonMapper;
  */
 class SkinCompletenessTest {
 
-  private static final ComponentRenderer RENDERER = new ComponentRenderer();
+  private static final ComponentRenderTester RENDERER = ComponentRenderTester.create();
   private static final ComponentRegistry REGISTRY = new ComponentRegistry(List.of(
       new ClasspathComponentDefinitionSource(SkinCompletenessTest.class.getClassLoader())));
 
@@ -104,9 +103,8 @@ class SkinCompletenessTest {
 
   private static Element renderRoot(String component, String prop, String value) {
     // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>.
-    String html = RENDERER.render("<sl:%s %s=\"%s\" aria-label=\"x\" name=\"x\">x</sl:%s>"
-        .formatted(component, prop, value, component));
-    return Jsoup.parseBodyFragment(html).body().child(0);
+    return RENDERER.render("<sl:%s %s=\"%s\" aria-label=\"x\" name=\"x\">x</sl:%s>"
+        .formatted(component, prop, value, component)).root();
   }
 
   private static Set<String> selectorLists(String css) {

@@ -2,16 +2,15 @@ package io.github.wimdeblauwe.shadleaf.dialect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.wimdeblauwe.shadleaf.test.ComponentRenderer;
+import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
 import java.util.List;
 import java.util.Map;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Test;
 
 class SlotsTest {
 
-  private final ComponentRenderer renderer = new ComponentRenderer();
+  private final ComponentRenderTester renderer = ComponentRenderTester.create();
 
   @Test
   void defaultSlotReplacesTheFallback() {
@@ -150,6 +149,6 @@ class SlotsTest {
   }
 
   private Element render(String snippet, Map<String, ?> variables) {
-    return Jsoup.parseBodyFragment(renderer.render(snippet, variables)).body().child(0);
+    return renderer.render(snippet, variables).root();
   }
 }

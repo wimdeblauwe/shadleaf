@@ -4,15 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
-import io.github.wimdeblauwe.shadleaf.test.ComponentRenderer;
+import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
 import java.util.Map;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Test;
 
 class IconComponentTest {
 
-  private final ComponentRenderer renderer = new ComponentRenderer();
+  private final ComponentRenderTester renderer = ComponentRenderTester.create();
 
   @Test
   void rendersADecorativeLucideIconInline() {
@@ -107,9 +106,9 @@ class IconComponentTest {
 
   @Test
   void applicationIconsComeFirstAndCanReplaceBundledOnes() {
-    ComponentRenderer withAppIcons = new ComponentRenderer(IconSource.classpathDirectory("icons/"));
+    ComponentRenderTester withAppIcons = ComponentRenderTester.builder().iconSources(IconSource.classpathDirectory("icons/")).build();
 
-    Element logo = Jsoup.parseBodyFragment(withAppIcons.render("<sl:icon name=\"logo\"/>")).body().child(0);
+    Element logo = withAppIcons.render("<sl:icon name=\"logo\"/>").root();
     assertThat(logo.attr("viewBox")).isEqualTo("0 0 32 32");
     assertThat(logo.attr("fill")).isEqualTo("currentColor");
     assertThat(logo.hasAttr("stroke")).isFalse();
@@ -118,11 +117,11 @@ class IconComponentTest {
     assertThat(logo.id()).isEmpty();
     assertThat(logo.select("circle")).hasSize(1);
 
-    Element trash = Jsoup.parseBodyFragment(withAppIcons.render("<sl:icon name=\"trash\"/>")).body().child(0);
+    Element trash = withAppIcons.render("<sl:icon name=\"trash\"/>").root();
     assertThat(trash.attr("viewBox")).isEqualTo("0 0 16 16");
     assertThat(trash.select("rect")).hasSize(1);
 
-    Element bundled = Jsoup.parseBodyFragment(withAppIcons.render("<sl:icon name=\"x\"/>")).body().child(0);
+    Element bundled = withAppIcons.render("<sl:icon name=\"x\"/>").root();
     assertThat(bundled.attr("viewBox")).isEqualTo("0 0 24 24");
   }
 
@@ -158,6 +157,6 @@ class IconComponentTest {
   }
 
   private Element render(String snippet, Map<String, ?> variables) {
-    return Jsoup.parseBodyFragment(renderer.render(snippet, variables)).body().child(0);
+    return renderer.render(snippet, variables).root();
   }
 }

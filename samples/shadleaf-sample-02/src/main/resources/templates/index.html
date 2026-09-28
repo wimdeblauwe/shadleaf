@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Home', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>Signed in as <strong th:text="${username}">user</strong>. The page's Content-Security-Policy allows no inline
+    script or style; open the browser console to confirm nothing was blocked.</p>
+
+  <div class="row">
+    <sl:button th:each="variant : ${ {'primary', 'secondary', 'outline', 'ghost', 'link', 'destructive'} }"
+               th:variant="${variant}" th:text="${#strings.capitalize(variant)}">Button</sl:button>
+  </div>
+  <div class="row">
+    <sl:button loading>Saving</sl:button>
+    <sl:button size="icon" variant="outline" aria-label="Delete"><sl:icon name="trash"/></sl:button>
+    <sl:button as="a" variant="link" th:href="@{/}">Reload</sl:button>
+  </div>
+
+  <form method="post" th:action="@{/logout}">
+    <sl:button type="submit" variant="outline">
+      <sl:slot name="icon-start"><sl:icon name="log-out"/></sl:slot>
+      Sign out
+    </sl:button>
+  </form>
+</div>
+</body>
+</html>

@@ -4,11 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.wimdeblauwe.shadleaf.component.ClasspathComponentDefinitionSource;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
-import io.github.wimdeblauwe.shadleaf.test.ComponentRenderer;
+import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,7 +49,7 @@ class PrecedenceTieTest {
 
   @Test
   void componentProcessorCurrentlyWinsTheTieByClassName() {
-    ComponentRenderer renderer = new ComponentRenderer();
+    ComponentRenderTester renderer = ComponentRenderTester.create();
     List<IElementProcessor> processors = renderer.engine().getConfiguration()
         .getElementProcessors(TemplateMode.HTML).stream()
         .map(ProcessorConfigurationUtils::unwrap)
@@ -70,7 +69,7 @@ class PrecedenceTieTest {
   @Test
   void springThValueDoesNotTie() {
     // StandardValueTagProcessor is at 1000, but the Spring dialect replaces it with one at 1010.
-    List<IElementProcessor> processors = new ComponentRenderer().engine().getConfiguration()
+    List<IElementProcessor> processors = ComponentRenderTester.create().engine().getConfiguration()
         .getElementProcessors(TemplateMode.HTML).stream()
         .map(ProcessorConfigurationUtils::unwrap)
         .toList();
@@ -83,7 +82,7 @@ class PrecedenceTieTest {
   @ParameterizedTest(name = "component processor precedence {0}")
   @ValueSource(ints = {1000, 1001})
   void rendersTheSameWhicheverProcessorRunsFirst(int componentPrecedence) {
-    ComponentRenderer renderer = new ComponentRenderer(new TestDialect(componentPrecedence));
+    ComponentRenderTester renderer = ComponentRenderTester.builder().dialect(new TestDialect(componentPrecedence)).build();
 
     Element link = render(renderer, SNIPPET, VARIABLES);
 
@@ -105,7 +104,7 @@ class PrecedenceTieTest {
   @ValueSource(ints = {1000, 1001})
   void falseBooleanSurvivesEitherOrder(int componentPrecedence) {
     // When th:disabled runs first, false removes the attribute, so the prop falls back to its default.
-    ComponentRenderer renderer = new ComponentRenderer(new TestDialect(componentPrecedence));
+    ComponentRenderTester renderer = ComponentRenderTester.builder().dialect(new TestDialect(componentPrecedence)).build();
 
     Element link = render(renderer, "<sl:test-link th:disabled=\"${false}\">Go</sl:test-link>", Map.of());
 
@@ -113,8 +112,8 @@ class PrecedenceTieTest {
     assertThat(link.hasAttr("disabled")).isFalse();
   }
 
-  private static Element render(ComponentRenderer renderer, String snippet, Map<String, ?> variables) {
-    return Jsoup.parseBodyFragment(renderer.render(snippet, variables)).body().child(0);
+  private static Element render(ComponentRenderTester renderer, String snippet, Map<String, ?> variables) {
+    return renderer.render(snippet, variables).root();
   }
 
   private static int indexOf(List<IElementProcessor> processors, Class<?> type) {

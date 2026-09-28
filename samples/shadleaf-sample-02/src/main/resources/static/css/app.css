@@ -1,0 +1,82 @@
+/*
+ * The application's own stylesheet: plain CSS, served as a static file. It uses Shadleaf's tokens (--border,
+ * --radius, ...), so it follows the theme. Unlayered, so it wins over the library's layered rules.
+ */
+main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.theme-toggle,
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+p,
+.row {
+  margin-bottom: 1rem;
+}
+
+.card {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 22rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.card label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.card input {
+  height: 2.25rem;
+  padding: 0 0.75rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--input);
+  border-radius: calc(var(--radius) - 2px);
+  background: transparent;
+  color: inherit;
+}
+
+.card input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+.message {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.message.error {
+  border-color: var(--destructive);
+  color: var(--destructive);
+}
+
+code {
+  font-size: 0.875em;
+}

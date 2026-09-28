@@ -34,6 +34,12 @@
       <artifactId>jsoup</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- ComponentRenderTester renders in a mock web exchange, so @{/...} links work -->
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

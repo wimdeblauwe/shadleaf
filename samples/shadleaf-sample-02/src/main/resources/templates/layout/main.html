@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${pageTitle} - Shadleaf Sample App 2|">Shadleaf Sample App 2</title>
+  <!--/* Inline, so the policy must allow it: by this request's nonce, or by the published hash. */-->
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <!--/* The application's own files: plain static resources, no Node in this build. */-->
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+  <script type="module" th:src="@{/js/theme-toggle.js}"></script>
+</head>
+<body>
+<main>
+  <header class="page-header">
+    <h1 th:text="${pageTitle}"></h1>
+    <div class="theme-toggle" role="group" aria-label="Theme">
+      <sl:button variant="outline" size="sm" data-theme-choice="light">
+        <sl:slot name="icon-start"><sl:icon name="sun"/></sl:slot>Light</sl:button>
+      <sl:button variant="outline" size="sm" data-theme-choice="dark">
+        <sl:slot name="icon-start"><sl:icon name="moon"/></sl:slot>Dark</sl:button>
+      <sl:button variant="outline" size="sm" data-theme-choice="system">
+        <sl:slot name="icon-start"><sl:icon name="monitor"/></sl:slot>System</sl:button>
+    </div>
+  </header>
+  <div th:replace="${content}"></div>
+</main>
+</body>
+</html>
