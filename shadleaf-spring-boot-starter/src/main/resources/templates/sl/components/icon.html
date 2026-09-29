@@ -14,31 +14,17 @@
   </sl:props>
 </head>
 <body>
-<!--
-  data-icon-size marks an explicitly sized icon, so a component's default icon size (the button's svg rule) leaves it
-  alone. The size is not set with an inline style: that would need 'unsafe-inline' under a strict CSP.
--->
+<!--/*
+  #slIcons.svgAttributes computes the viewBox, the size, the presentation and accessibility attributes, and adds the
+  attributes passed to the component, in one call: as separate expressions they made the icon the most expensive
+  component to render. An explicit size also renders data-icon-size, so a component's default icon size (the button's
+  svg rule) leaves it alone; it is not set with an inline style, which would need 'unsafe-inline' under a strict CSP.
+*/-->
 <svg th:fragment="icon"
-     th:with="icon=${#slIcons.get(props.name)},
-              labelled=${!#strings.isEmpty(props.label)}"
+     th:with="icon=${#slIcons.get(props.name)}"
      xmlns="http://www.w3.org/2000/svg"
      class="sl-icon"
-     th:attr="viewBox=${icon.viewBox},
-              width=${props.size ?: 24},
-              height=${props.size ?: 24},
-              data-icon-size=${props.size},
-              fill=${icon.attribute('fill')},
-              stroke=${icon.attribute('stroke')},
-              stroke-width=${props['stroke-width'] ?: icon.attribute('stroke-width')},
-              stroke-linecap=${icon.attribute('stroke-linecap')},
-              stroke-linejoin=${icon.attribute('stroke-linejoin')},
-              fill-rule=${icon.attribute('fill-rule')},
-              clip-rule=${icon.attribute('clip-rule')},
-              role=${labelled ? 'img' : null},
-              aria-label=${labelled ? props.label : null},
-              aria-hidden=${labelled ? null : 'true'},
-              focusable=${labelled ? null : 'false'}"
-     sl:attrs
+     sl:attrs="${#slIcons.svgAttributes(icon, props.size, props['stroke-width'], props.label, attrs)}"
      th:utext="${icon.body}"></svg>
 </body>
 </html>

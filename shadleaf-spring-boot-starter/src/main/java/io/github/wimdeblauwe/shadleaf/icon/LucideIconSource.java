@@ -6,6 +6,7 @@ import java.io.UncheckedIOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import org.jspecify.annotations.Nullable;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -21,6 +22,8 @@ public class LucideIconSource implements IconSource {
 
   private final JsonMapper jsonMapper;
   private volatile @Nullable Catalogue catalogue;
+  /** Icons already looked up, by catalogue name, so a page does not build the same {@link Icon} for every use. */
+  private final Map<String, Icon> icons = new ConcurrentHashMap<>();
 
   public LucideIconSource(JsonMapper jsonMapper) {
     this.jsonMapper = jsonMapper;
@@ -29,8 +32,11 @@ public class LucideIconSource implements IconSource {
   @Override
   public Optional<Icon> find(String name) {
     Catalogue catalogue = catalogue();
-    String body = catalogue.icons().get(catalogue.aliases().getOrDefault(name, name));
-    return Optional.ofNullable(body).map(Icon::lucide);
+    String canonicalName = catalogue.aliases().getOrDefault(name, name);
+    String body = catalogue.icons().get(canonicalName);
+    return body == null
+        ? Optional.empty()
+        : Optional.of(icons.computeIfAbsent(canonicalName, key -> Icon.lucide(body)));
   }
 
   @Override
