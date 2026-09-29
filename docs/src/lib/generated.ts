@@ -33,7 +33,10 @@ export type Component = {
   accessibleName?: { prop?: string; values: string[] };
 };
 
-export const previews = previewsJson as { version: string; skins: Skin[]; scenarios: Scenario[] };
+/** The script of each shadleaf.assets.alpine value, relative to the site's base. */
+export type Scripts = { bundled?: string; csp?: string; external?: string };
+
+export const previews = previewsJson as { version: string; skins: Skin[]; scripts?: Scripts; scenarios: Scenario[] };
 export const components = (componentsJson as { version: string; components: Component[] }).components;
 export const themeScript = themeScriptJson as { cspHash: string; script: string };
 

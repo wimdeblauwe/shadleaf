@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.shadleaf.docs;
 
 import static io.github.wimdeblauwe.shadleaf.test.ShadleafAssertions.assertThat;
 
+import io.github.wimdeblauwe.shadleaf.assets.AlpineVariant;
 import io.github.wimdeblauwe.shadleaf.assets.AssetVariant;
 import io.github.wimdeblauwe.shadleaf.assets.ShadleafAssets;
 import io.github.wimdeblauwe.shadleaf.assets.ViteManifestParser;
@@ -20,7 +21,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -41,6 +44,8 @@ import tools.jackson.databind.json.JsonMapper;
  *   {@link ComponentRenderTester}, the same harness the component tests use, so a preview cannot show markup the
  *   library does not emit;</li>
  *   <li>{@code shadleaf/assets/*.css}: the standalone bundle of every skin, found through the Vite manifest;</li>
+ *   <li>{@code shadleaf/assets/*.js}: the script of every {@link AlpineVariant}, with the chunks it imports, for the
+ *   showcase and the behaviour tests;</li>
  *   <li>{@code components.json} and {@code web-types.json}: the registry export behind the attribute tables, and the
  *   IDE metadata offered for download;</li>
  *   <li>{@code theme-script.json}: the theme script and its CSP hash, for the CSP page.</li>
@@ -70,11 +75,13 @@ class PreviewGeneratorTest {
     FileSystemUtils.deleteRecursively(OUTPUT_DIRECTORY);
     Files.createDirectories(OUTPUT_DIRECTORY);
 
-    List<Skin> skins = copySkins();
+    ViteManifest manifest = new ViteManifestParser(jsonMapper).parse(new FileSystemResource(MANIFEST));
+    List<Skin> skins = copySkins(manifest);
+    Map<String, String> scripts = copyScripts(manifest);
     List<Preview> previews = scenarios.stream().map(this::render).toList();
     String version = System.getProperty("shadleaf.version", ComponentMetadata.libraryVersion());
 
-    write("previews.json", new Previews(version, skins, previews));
+    write("previews.json", new Previews(version, skins, scripts, previews));
     ComponentMetadata metadata = ComponentMetadata.of(registry, version);
     metadata.write(jsonMapper, OUTPUT_DIRECTORY.resolve("components.json"));
     WebTypes.write(metadata, jsonMapper, OUTPUT_DIRECTORY.resolve("web-types.json"));
@@ -85,6 +92,7 @@ class PreviewGeneratorTest {
     for (Skin skin : skins) {
       assertThat(OUTPUT_DIRECTORY.resolve(skin.css())).exists();
     }
+    assertThat(scripts).containsOnlyKeys("bundled", "csp", "external");
   }
 
   private Preview render(Scenario scenario) {
@@ -100,8 +108,7 @@ class PreviewGeneratorTest {
   }
 
   /** The standalone bundle of every skin, default first: the embedded ones carry no reset, so they cannot preview. */
-  private List<Skin> copySkins() throws IOException {
-    ViteManifest manifest = new ViteManifestParser(jsonMapper).parse(new FileSystemResource(MANIFEST));
+  private List<Skin> copySkins(ViteManifest manifest) throws IOException {
     Set<String> names = new TreeSet<>();
     for (String key : manifest.entries().keySet()) {
       Matcher matcher = STANDALONE_ENTRY.matcher(key);
@@ -112,13 +119,34 @@ class PreviewGeneratorTest {
     List<Skin> skins = new ArrayList<>();
     for (String name : names) {
       String file = manifest.getEntry(AssetVariant.STANDALONE.cssEntry(name)).file();
-      Path target = OUTPUT_DIRECTORY.resolve("shadleaf").resolve(file);
-      Files.createDirectories(target.getParent());
-      Files.copy(BUILT_ASSETS.resolve(file), target);
+      copyAsset(file);
       Skin skin = new Skin(name, "shadleaf/" + file);
       skins.add(name.equals(DEFAULT_SKIN) ? 0 : skins.size(), skin);
     }
     return skins;
+  }
+
+  /** The script of every Alpine variant, keyed by its property value, and the chunks the scripts import. */
+  private Map<String, String> copyScripts(ViteManifest manifest) throws IOException {
+    Map<String, String> scripts = new LinkedHashMap<>();
+    for (AlpineVariant alpine : AlpineVariant.values()) {
+      ViteManifestParser.ViteManifestEntry entry = manifest.getEntry(alpine.jsEntry());
+      copyAsset(entry.file());
+      for (String chunk : entry.imports()) {
+        String chunkFile = manifest.getEntry(chunk).file();
+        if (!Files.exists(OUTPUT_DIRECTORY.resolve("shadleaf").resolve(chunkFile))) {
+          copyAsset(chunkFile);
+        }
+      }
+      scripts.put(alpine.name().toLowerCase(Locale.ROOT), "shadleaf/" + entry.file());
+    }
+    return scripts;
+  }
+
+  private static void copyAsset(String file) throws IOException {
+    Path target = OUTPUT_DIRECTORY.resolve("shadleaf").resolve(file);
+    Files.createDirectories(target.getParent());
+    Files.copy(BUILT_ASSETS.resolve(file), target);
   }
 
   @SuppressWarnings("unchecked")
@@ -168,7 +196,11 @@ class PreviewGeneratorTest {
 
   }
 
-  private record Previews(String version, List<Skin> skins, List<Preview> scenarios) {
+  /**
+   * @param scripts the script of each Alpine variant ({@code bundled}, {@code csp}, {@code external}), relative to
+   *                the output directory
+   */
+  private record Previews(String version, List<Skin> skins, Map<String, String> scripts, List<Preview> scenarios) {
 
   }
 

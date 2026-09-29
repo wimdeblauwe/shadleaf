@@ -3,7 +3,7 @@
 //   <starter>/target/generated-docs/previews.json        -> src/generated/previews.json
 //   <starter>/target/generated-docs/components.json      -> src/generated/components.json
 //   <starter>/target/generated-docs/theme-script.json    -> src/generated/theme-script.json
-//   <starter>/target/generated-docs/shadleaf/            -> public/shadleaf/  (one CSS bundle per skin)
+//   <starter>/target/generated-docs/shadleaf/            -> public/shadleaf/  (CSS per skin, JS per Alpine variant)
 //   <starter>/target/generated-docs/web-types.json       -> public/shadleaf.web-types.json  (for download)
 //
 // All of it is written by PreviewGeneratorTest (run by `mvn install`, or `pnpm run generate`). Runs before
@@ -19,7 +19,7 @@ const generatedDir = join(docsDir, 'src', 'generated');
 const publicDir = join(docsDir, 'public');
 
 const placeholders = {
-  'previews.json': {version: '', skins: [], scenarios: []},
+  'previews.json': {version: '', skins: [], scripts: {}, scenarios: []},
   'components.json': {version: '', components: []},
   'theme-script.json': {cspHash: '', script: ''},
 };
