@@ -65,9 +65,9 @@
     @apply text-primary underline underline-offset-4 hover:decoration-2;
   }
 
-  /* The mix keeps the text at 4.5:1 on the hover tint as well (see the default skin). */
+  /* text-destructive-legible keeps the text at 4.5:1 on the hover tint as well (components/base.css). */
   .btn[data-variant='destructive'] {
-    @apply border-destructive text-[color-mix(in_oklch,var(--destructive),var(--foreground)_20%)]
+    @apply border-destructive text-destructive-legible
       hover:bg-destructive/10;
   }
 
@@ -105,9 +105,8 @@
     @apply text-primary underline underline-offset-4 [a]:hover:decoration-2;
   }
 
-  /* The mix keeps the text at 4.5:1 (see the default skin's button). */
   .badge[data-variant='destructive'] {
-    @apply border-destructive text-[color-mix(in_oklch,var(--destructive),var(--foreground)_20%)]
+    @apply border-destructive text-destructive-legible
       [a]:hover:bg-destructive/10;
   }
 }

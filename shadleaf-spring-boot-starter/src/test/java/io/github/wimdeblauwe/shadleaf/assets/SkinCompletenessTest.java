@@ -28,8 +28,9 @@ import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Every skin styles every value the component templates can render: for each enum prop that a component renders as a
- * {@code data-*} attribute, each compiled bundle has a rule selecting that value, and the component has a
- * {@code :focus-visible} rule.
+ * {@code data-*} attribute, each compiled bundle has a rule selecting that value, and a component that can render a
+ * focusable element (a link, a button, a form control or anything with a {@code tabindex}) has a
+ * {@code :focus-visible} rule. A card or an alert takes no focus, so it needs none.
  * <p>
  * The expected selectors come from rendering the component, not from a list kept here: {@code variant="outline"}
  * renders {@code data-variant="outline"} and needs {@code .btn[data-variant="outline"]}, while the default renders no
@@ -44,6 +45,9 @@ class SkinCompletenessTest {
   private static final ComponentRegistry REGISTRY = new ComponentRegistry(List.of(
       new ClasspathComponentDefinitionSource(SkinCompletenessTest.class.getClassLoader())));
 
+  private static final Set<String> FOCUSABLE_ELEMENTS = Set.of("a", "button", "input", "select", "textarea",
+      "summary");
+
   // A rule's selector list: the text before a "{" back to the previous "{", "}" or ";", skipping at-rules. A selector
   // list may span lines; it never contains those three characters.
   private static final Pattern SELECTOR_LIST = Pattern.compile("(?<=^|[{};])\\s*([^@\\s{};][^{};]*?)\\s*\\{");
@@ -54,6 +58,7 @@ class SkinCompletenessTest {
       for (String name : libraryComponents()) {
         ComponentDefinition definition = REGISTRY.get(name);
         String rootClass = null;
+        boolean focusable = false;
         for (PropDefinition prop : definition.props().values()) {
           if (prop.type() != PropType.ENUM) {
             continue;
@@ -64,6 +69,7 @@ class SkinCompletenessTest {
           for (String value : prop.values()) {
             Element root = renderRoot(name, prop.name(), value);
             rootClass = "." + root.classNames().iterator().next();
+            focusable |= isFocusable(root);
             if (root.hasAttr(attribute)) {
               rendersAttribute = true;
               selectors.add("%s[%s=\"%s\"]".formatted(rootClass, attribute, root.attr(attribute)));
@@ -75,7 +81,7 @@ class SkinCompletenessTest {
             selectors.forEach(selector -> arguments.add(Arguments.of(bundle, selector)));
           }
         }
-        if (rootClass != null) {
+        if (rootClass != null && focusable) {
           arguments.add(Arguments.of(bundle, rootClass + ":focus-visible"));
         }
       }
@@ -99,6 +105,10 @@ class SkinCompletenessTest {
         .filter(name -> !name.startsWith("test-"))
         .filter(name -> REGISTRY.get(name).declared())
         .toList();
+  }
+
+  private static boolean isFocusable(Element element) {
+    return FOCUSABLE_ELEMENTS.contains(element.tagName()) || element.hasAttr("tabindex");
   }
 
   private static Element renderRoot(String component, String prop, String value) {

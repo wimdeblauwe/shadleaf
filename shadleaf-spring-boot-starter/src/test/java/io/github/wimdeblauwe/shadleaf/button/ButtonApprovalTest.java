@@ -5,7 +5,6 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentDefinition;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
 import io.github.wimdeblauwe.shadleaf.test.HtmlApproval;
-import io.github.wimdeblauwe.shadleaf.test.Rendered;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -52,14 +51,6 @@ class ButtonApprovalTest {
         "<sl:button as=\"a\" disabled href=\"/orders\">Orders</sl:button>",
         "<sl:button as=\"a\" loading href=\"/orders\">Orders</sl:button>"));
 
-    StringBuilder approval = new StringBuilder();
-    for (String snippet : snippets) {
-      Rendered rendered = tester.render(snippet);
-      rendered.select("svg > *").remove();
-      approval.append("<!-- ").append(snippet).append(" -->\n")
-          .append(rendered.normalizedHtml()).append("\n\n");
-    }
-
-    HtmlApproval.verify("button", approval.toString());
+    HtmlApproval.verifyRenders("button", tester, snippets);
   }
 }

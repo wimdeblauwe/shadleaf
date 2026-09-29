@@ -7,6 +7,7 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Compares rendered HTML with an approved copy kept in version control, so a change in the markup a component emits
@@ -19,8 +20,9 @@ import java.nio.file.Path;
  * which overwrites the approved file; review its diff and commit it. A missing approved file is written and the test
  * fails, so a new approval is never silently accepted.
  * <p>
- * Other generated text, such as the web-types JSON, is approved the same way with {@link #verify(String, String,
- * String)}.
+ * A component's approval test lists snippets and passes them to {@link #verifyRenders(String, ComponentRenderTester,
+ * List)}. Other generated text, such as the web-types JSON, is approved the same way with
+ * {@link #verify(String, String, String)}.
  */
 public final class HtmlApproval {
 
@@ -30,6 +32,21 @@ public final class HtmlApproval {
   private static final Path RECEIVED_DIRECTORY = Path.of("target", "approvals");
 
   private HtmlApproval() {
+  }
+
+  /**
+   * Renders every snippet and approves the results as one file, each under a comment holding its source. Icon paths
+   * are left out: they belong to the lucide catalogue, not to the component ({@code IconApprovalTest} keeps them).
+   */
+  public static void verifyRenders(String name, ComponentRenderTester tester, List<String> snippets) {
+    StringBuilder approval = new StringBuilder();
+    for (String snippet : snippets) {
+      Rendered rendered = tester.render(snippet);
+      rendered.select("svg > *").remove();
+      approval.append("<!-- ").append(snippet).append(" -->\n")
+          .append(rendered.normalizedHtml()).append("\n\n");
+    }
+    verify(name, approval.toString());
   }
 
   public static void verify(String name, String received) {

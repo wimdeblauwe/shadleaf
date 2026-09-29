@@ -74,11 +74,9 @@
     @apply text-primary underline-offset-4 hover:underline;
   }
 
-  /* shadcn's text-destructive on this tinted background is under WCAG's 4.5:1: 3.98:1 at rest in light mode, 4.37:1
-     on hover in dark mode (docs/tests/a11y.spec.ts). Mixing in the foreground token moves the text away from the
-     background in both modes, and it still follows an application's --destructive. */
+  /* text-destructive-legible (components/base.css): shadcn's text-destructive is under 4.5:1 on the tint. */
   .btn[data-variant='destructive'] {
-    @apply bg-destructive/10 text-[color-mix(in_oklch,var(--destructive),var(--foreground)_20%)] hover:bg-destructive/20
+    @apply bg-destructive/10 text-destructive-legible hover:bg-destructive/20
       focus-visible:border-destructive/40 focus-visible:ring-destructive/20
       dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
   }
@@ -115,9 +113,8 @@
     @apply text-primary underline-offset-4 [a]:hover:underline;
   }
 
-  /* The text is mixed with --foreground, as on the destructive button, to reach 4.5:1 on the tint. */
   .badge[data-variant='destructive'] {
-    @apply bg-destructive/10 text-[color-mix(in_oklch,var(--destructive),var(--foreground)_20%)]
+    @apply bg-destructive/10 text-destructive-legible
       [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20
       dark:bg-destructive/20 dark:[a]:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
   }

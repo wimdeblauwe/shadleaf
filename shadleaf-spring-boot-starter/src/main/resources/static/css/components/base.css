@@ -4,3 +4,13 @@
     @apply sr-only;
   }
 }
+
+/*
+  shadcn's text-destructive on a destructive tint (bg-destructive/10) is under WCAG's 4.5:1: 3.98:1 at rest in light
+  mode, 4.37:1 on hover in dark mode (docs/tests/a11y.spec.ts). Mixing in the foreground token moves the text away from
+  the background in both modes, and it still follows an application's --destructive. Only used through @apply, so the
+  bundles emit no class for it.
+*/
+@utility text-destructive-legible {
+  color: color-mix(in oklch, var(--destructive), var(--foreground) 20%);
+}
