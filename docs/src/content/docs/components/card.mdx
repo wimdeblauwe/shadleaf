@@ -1,0 +1,69 @@
+---
+title: Card
+description: A container for related content and actions, built from its parts.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="card--default" />
+
+## Built from parts
+
+A card is `<sl:card>` plus the parts you need, as in shadcn/ui: `<sl:card-header>` (holding `<sl:card-title>`,
+`<sl:card-description>` and `<sl:card-action>`), `<sl:card-content>` and `<sl:card-footer>`. Use any of them, in any
+order. Each part is its own component, so it has its own attributes and IDE completion, and passes every other
+attribute through.
+
+A card takes the width of its container; set it from your layout.
+
+<ComponentPreview id="card--content-only" />
+
+## A title that is a heading
+
+`<sl:card-title>` is plain text unless you give it a `level`. With one, it is announced as a heading of that level, so
+screen reader users can jump between cards. Pick the level that fits the page: a card under an `<h2>` gets
+`level="3"`.
+
+## Small
+
+`size="sm"` tightens the spacing inside the card and between its parts.
+
+<ComponentPreview id="card--small" />
+
+## Dividing lines
+
+`border` on the header or the footer draws a line between it and the content, with matching spacing. It works without
+utility classes, so also with the standalone stylesheet.
+
+<ComponentPreview id="card--border" />
+
+## Attributes
+
+### sl:card
+
+<ComponentAttributes component="card" />
+
+### sl:card-header
+
+<ComponentAttributes component="card-header" />
+
+### sl:card-title
+
+<ComponentAttributes component="card-title" />
+
+### sl:card-description
+
+<ComponentAttributes component="card-description" />
+
+### sl:card-action
+
+<ComponentAttributes component="card-action" />
+
+### sl:card-content
+
+<ComponentAttributes component="card-content" />
+
+### sl:card-footer
+
+<ComponentAttributes component="card-footer" />

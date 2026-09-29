@@ -1,0 +1,64 @@
+<!-- <sl:card>Content</sl:card> -->
+<div class="card">Content</div>
+
+<!-- <sl:card size="sm">Content</sl:card> -->
+<div class="card" data-size="sm">Content</div>
+
+<!-- <sl:card-header>Header</sl:card-header> -->
+<div class="card-header">Header</div>
+
+<!-- <sl:card-header border>Header</sl:card-header> -->
+<div class="card-header" data-border="bottom">Header</div>
+
+<!-- <sl:card-title>Orders</sl:card-title> -->
+<div class="card-title">Orders</div>
+
+<!-- <sl:card-title level="2">Orders</sl:card-title> -->
+<div class="card-title" role="heading" aria-level="2">Orders</div>
+
+<!-- <sl:card-description>Placed this month</sl:card-description> -->
+<div class="card-description">Placed this month</div>
+
+<!-- <sl:card-action>Action</sl:card-action> -->
+<div class="card-action">Action</div>
+
+<!-- <sl:card-content>Content</sl:card-content> -->
+<div class="card-content">Content</div>
+
+<!-- <sl:card-footer>Footer</sl:card-footer> -->
+<div class="card-footer">Footer</div>
+
+<!-- <sl:card-footer border>Footer</sl:card-footer> -->
+<div class="card-footer" data-border="top">Footer</div>
+
+<!-- <sl:card class="max-w-sm" id="orders">
+  <sl:card-header>
+    <sl:card-title level="3">Orders</sl:card-title>
+    <sl:card-description>Placed this month</sl:card-description>
+    <sl:card-action><sl:badge variant="secondary">12</sl:badge></sl:card-action>
+  </sl:card-header>
+  <sl:card-content><p>Three orders are late.</p></sl:card-content>
+  <sl:card-footer><sl:button variant="outline">View all</sl:button></sl:card-footer>
+</sl:card> -->
+<div class="card max-w-sm" id="orders">
+  <div class="card-header">
+    <div class="card-title" role="heading" aria-level="3">Orders</div>
+    <div class="card-description">Placed this month</div>
+    <div class="card-action">
+      <span class="badge" data-variant="secondary">12</span>
+    </div>
+  </div>
+  <div class="card-content">
+    <p>Three orders are late.</p>
+  </div>
+  <div class="card-footer">
+    <button class="btn" type="button" data-variant="outline">View all</button>
+  </div>
+</div>
+
+<!-- <sl:card th:size="${true ? 'sm' : 'default'}">
+  <sl:card-title th:text="${'Orders'}">Title</sl:card-title>
+</sl:card> -->
+<div class="card" data-size="sm">
+  <div class="card-title">Orders</div>
+</div>

@@ -1,0 +1,28 @@
+/*
+  Card and its parts: structure only. Colour, radius, border, shadow, spacing and type are identity and live in the
+  skins. The parts only know about each other through these selectors; the templates never do.
+*/
+@layer components {
+  .card {
+    @apply flex flex-col overflow-hidden;
+  }
+
+  /* An image as the first or last child runs to the card's edges. */
+  .card > img {
+    @apply w-full object-cover;
+  }
+
+  /* Title and description stack in the first column; an action takes a second column beside both. */
+  .card-header {
+    @apply @container/card-header grid auto-rows-min items-start
+      has-[>.card-action]:grid-cols-[1fr_auto] has-[>.card-description]:grid-rows-[auto_auto];
+  }
+
+  .card-action {
+    @apply col-start-2 row-span-2 row-start-1 self-start justify-self-end;
+  }
+
+  .card-footer {
+    @apply flex items-center;
+  }
+}

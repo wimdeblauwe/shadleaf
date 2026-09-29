@@ -209,6 +209,111 @@
           }
         } ]
       }, {
+        "name" : "sl:card",
+        "description" : "A container for related content and actions. Build it from its parts, in any order and number: `sl:card-header` (holding `sl:card-title`, `sl:card-description` and `sl:card-action`), `sl:card-content` and `sl:card-footer`. An `img` as the first or last child runs to the card's edges.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Spacing inside the card and between its parts.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-action",
+        "description" : "An action in the top end corner of a card, such as a button or a badge, inside `sl:card-header`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-content",
+        "description" : "The body of a card.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-description",
+        "description" : "Supporting text below a `sl:card-title`, inside `sl:card-header`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-footer",
+        "description" : "The bottom of a card, for actions or a summary.",
+        "attributes" : [ {
+          "name" : "border",
+          "description" : "A dividing line above the footer, with matching spacing.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-header",
+        "description" : "The top of a card: a `sl:card-title`, an optional `sl:card-description` below it, and an optional `sl:card-action` beside both.",
+        "attributes" : [ {
+          "name" : "border",
+          "description" : "A dividing line below the header, with matching spacing.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-title",
+        "description" : "The title of a card, inside `sl:card-header`.",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:icon",
         "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
         "attributes" : [ {

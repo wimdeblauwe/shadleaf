@@ -118,4 +118,55 @@
       [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20
       dark:bg-destructive/20 dark:[a]:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
   }
+
+  /* Card. data-size on the card sets the spacing of its direct parts. */
+  .card {
+    @apply rounded-xl bg-card text-sm text-card-foreground shadow-xs ring-1 ring-foreground/10
+      has-[>img:first-child]:pt-0 [&>img:first-child]:rounded-t-xl [&>img:last-child]:rounded-b-xl;
+  }
+
+  .card:not([data-size]),
+  .card[data-size='default'] {
+    @apply gap-6 py-6;
+  }
+
+  .card[data-size='sm'] {
+    @apply gap-4 py-4;
+  }
+
+  .card:is(:not([data-size]), [data-size='default']) > :is(.card-header, .card-content, .card-footer) {
+    @apply px-6;
+  }
+
+  .card[data-size='sm'] > :is(.card-header, .card-content, .card-footer) {
+    @apply px-4;
+  }
+
+  .card-header {
+    @apply gap-1 data-border:border-b data-border:pb-6;
+  }
+
+  .card[data-size='sm'] > .card-header {
+    @apply data-border:pb-4;
+  }
+
+  .card-title {
+    @apply text-base leading-normal font-medium;
+  }
+
+  .card[data-size='sm'] > .card-header > .card-title {
+    @apply text-sm;
+  }
+
+  .card-description {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .card-footer {
+    @apply gap-2 data-border:border-t data-border:pt-6;
+  }
+
+  .card[data-size='sm'] > .card-footer {
+    @apply data-border:pt-4;
+  }
 }

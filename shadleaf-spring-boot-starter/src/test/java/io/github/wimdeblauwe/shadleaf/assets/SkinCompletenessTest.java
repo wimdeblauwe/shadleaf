@@ -94,9 +94,9 @@ class SkinCompletenessTest {
   void everySkinStylesEveryRenderedValue(String bundle, String selector) throws IOException {
     Set<String> selectorLists = selectorLists(bundle(bundle));
 
-    assertThat(selectorLists)
-        .as("rules in %s", bundle)
-        .anyMatch(selectorList -> selectorList.contains(selector));
+    assertThat(selectorLists.stream().anyMatch(selectorList -> selectorList.contains(selector)))
+        .as("%s has a rule whose selector contains %s", bundle, selector)
+        .isTrue();
   }
 
   /** The library's own components; the {@code test-*} ones only exist on the test classpath. */

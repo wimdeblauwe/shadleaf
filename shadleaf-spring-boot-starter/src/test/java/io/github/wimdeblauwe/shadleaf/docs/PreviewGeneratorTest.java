@@ -51,7 +51,7 @@ import tools.jackson.databind.json.JsonMapper;
  *   <li>{@code theme-script.json}: the theme script and its CSP hash, for the CSP page.</li>
  * </ul>
  * {@code docs/scripts/sync.mjs} copies them into the docs project. Adding examples for a component means adding a
- * YAML file; every library component must have one.
+ * YAML file; every library component must have one, or be listed under the {@code parts} of its family's file.
  */
 class PreviewGeneratorTest {
 
@@ -166,6 +166,11 @@ class PreviewGeneratorTest {
       String component = (String) document.get("component");
       assertThat(registry.names()).as("component of %s", file).contains(component);
       components.add(component);
+      // A component family (card, card-header, ...) shares one file, which lists the other members as its parts.
+      for (String part : (List<String>) document.getOrDefault("parts", List.of())) {
+        assertThat(registry.names()).as("part of %s", file).contains(part);
+        components.add(part);
+      }
       for (Map<String, Object> entry : (List<Map<String, Object>>) document.get("scenarios")) {
         String id = component + "--" + entry.get("id");
         assertThat(ids.add(id)).as("scenario id %s is unique", id).isTrue();

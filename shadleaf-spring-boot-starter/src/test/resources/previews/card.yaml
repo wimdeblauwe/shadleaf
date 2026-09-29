@@ -1,0 +1,53 @@
+# Scenarios for the card's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: card
+parts: [card-header, card-title, card-description, card-action, card-content, card-footer]
+scenarios:
+  - id: default
+    title: Card
+    source: |-
+      <sl:card>
+        <sl:card-header>
+          <sl:card-title level="3">Order #1042</sl:card-title>
+          <sl:card-description>Placed on 12 September</sl:card-description>
+          <sl:card-action><sl:badge variant="secondary">Shipped</sl:badge></sl:card-action>
+        </sl:card-header>
+        <sl:card-content>
+          <p>Three items, delivered to the Antwerp warehouse.</p>
+        </sl:card-content>
+        <sl:card-footer>
+          <sl:button as="a" href="/orders/1042" variant="outline">View order</sl:button>
+        </sl:card-footer>
+      </sl:card>
+
+  - id: small
+    title: Small
+    source: |-
+      <sl:card size="sm">
+        <sl:card-header>
+          <sl:card-title level="3">Late orders</sl:card-title>
+          <sl:card-description>Past their delivery date</sl:card-description>
+        </sl:card-header>
+        <sl:card-content><p>3</p></sl:card-content>
+      </sl:card>
+
+  - id: border
+    title: Dividing lines
+    source: |-
+      <sl:card>
+        <sl:card-header border>
+          <sl:card-title level="3">Notifications</sl:card-title>
+          <sl:card-description>What we email you about</sl:card-description>
+        </sl:card-header>
+        <sl:card-content><p>Order updates and weekly summaries.</p></sl:card-content>
+        <sl:card-footer border>
+          <sl:button>Save</sl:button>
+          <sl:button variant="ghost">Cancel</sl:button>
+        </sl:card-footer>
+      </sl:card>
+
+  - id: content-only
+    title: Content only
+    source: |-
+      <sl:card>
+        <sl:card-content><p>A card needs none of its parts but one.</p></sl:card-content>
+      </sl:card>

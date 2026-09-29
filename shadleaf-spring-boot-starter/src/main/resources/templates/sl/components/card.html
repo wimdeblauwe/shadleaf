@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A container for related content and actions. Build it from its parts, in any order and number:
+      <code>sl:card-header</code> (holding <code>sl:card-title</code>, <code>sl:card-description</code> and
+      <code>sl:card-action</code>), <code>sl:card-content</code> and <code>sl:card-footer</code>. An
+      <code>img</code> as the first or last child runs to the card's edges.</sl:description>
+    <sl:prop name="size" default="default" values="default sm">Spacing inside the card and between its parts.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="card"
+     class="card"
+     th:attr="data-size=${props.unlessDefault('size')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

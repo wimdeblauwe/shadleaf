@@ -48,6 +48,8 @@ const srcdoc = scenario && skins.length > 0
     html, body { margin: 0; }
     body { padding: 1.5rem; }
     .stage { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+    /* A card fills its container; give it a width, as a page's layout would. */
+    .stage > .card { inline-size: 24rem; max-inline-size: 100%; }
   </style>
 </head>
 <body>

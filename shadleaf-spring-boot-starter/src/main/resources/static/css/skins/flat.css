@@ -109,4 +109,55 @@
     @apply border-destructive text-destructive-legible
       [a]:hover:bg-destructive/10;
   }
+
+  /* Card. A border instead of a ring and a shadow, square corners. */
+  .card {
+    @apply rounded-none border border-border bg-card text-sm text-card-foreground
+      has-[>img:first-child]:pt-0;
+  }
+
+  .card:not([data-size]),
+  .card[data-size='default'] {
+    @apply gap-5 py-5;
+  }
+
+  .card[data-size='sm'] {
+    @apply gap-3 py-3;
+  }
+
+  .card:is(:not([data-size]), [data-size='default']) > :is(.card-header, .card-content, .card-footer) {
+    @apply px-5;
+  }
+
+  .card[data-size='sm'] > :is(.card-header, .card-content, .card-footer) {
+    @apply px-3;
+  }
+
+  .card-header {
+    @apply gap-1 data-border:border-b data-border:pb-5;
+  }
+
+  .card[data-size='sm'] > .card-header {
+    @apply data-border:pb-3;
+  }
+
+  .card-title {
+    @apply text-base leading-snug font-semibold;
+  }
+
+  .card[data-size='sm'] > .card-header > .card-title {
+    @apply text-sm;
+  }
+
+  .card-description {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .card-footer {
+    @apply gap-2 data-border:border-t data-border:pt-5;
+  }
+
+  .card[data-size='sm'] > .card-footer {
+    @apply data-border:pt-3;
+  }
 }

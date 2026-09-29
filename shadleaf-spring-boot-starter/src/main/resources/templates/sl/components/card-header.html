@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The top of a card: a <code>sl:card-title</code>, an optional <code>sl:card-description</code> below it, and an optional <code>sl:card-action</code> beside both.</sl:description>
+    <sl:prop name="border" type="boolean">A dividing line below the header, with matching spacing.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="card-header"
+     class="card-header"
+     th:attr="data-border=${props.border ? 'bottom' : null}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

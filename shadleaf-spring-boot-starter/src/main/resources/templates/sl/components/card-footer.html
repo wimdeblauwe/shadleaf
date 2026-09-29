@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The bottom of a card, for actions or a summary.</sl:description>
+    <sl:prop name="border" type="boolean">A dividing line above the footer, with matching spacing.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="card-footer"
+     class="card-footer"
+     th:attr="data-border=${props.border ? 'top' : null}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

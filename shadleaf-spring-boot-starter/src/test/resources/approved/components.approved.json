@@ -65,6 +65,71 @@
       "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
     }
   }, {
+    "name" : "card",
+    "tag" : "sl:card",
+    "description" : "A container for related content and actions. Build it from its parts, in any order and number: `sl:card-header` (holding `sl:card-title`, `sl:card-description` and `sl:card-action`), `sl:card-content` and `sl:card-footer`. An `img` as the first or last child runs to the card's edges.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "sm" ],
+      "description" : "Spacing inside the card and between its parts."
+    } ]
+  }, {
+    "name" : "card-action",
+    "tag" : "sl:card-action",
+    "description" : "An action in the top end corner of a card, such as a button or a badge, inside `sl:card-header`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "card-content",
+    "tag" : "sl:card-content",
+    "description" : "The body of a card.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "card-description",
+    "tag" : "sl:card-description",
+    "description" : "Supporting text below a `sl:card-title`, inside `sl:card-header`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "card-footer",
+    "tag" : "sl:card-footer",
+    "description" : "The bottom of a card, for actions or a summary.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "border",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "A dividing line above the footer, with matching spacing."
+    } ]
+  }, {
+    "name" : "card-header",
+    "tag" : "sl:card-header",
+    "description" : "The top of a card: a `sl:card-title`, an optional `sl:card-description` below it, and an optional `sl:card-action` beside both.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "border",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "A dividing line below the header, with matching spacing."
+    } ]
+  }, {
+    "name" : "card-title",
+    "tag" : "sl:card-title",
+    "description" : "The title of a card, inside `sl:card-header`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline."
+    } ]
+  }, {
     "name" : "icon",
     "tag" : "sl:icon",
     "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
