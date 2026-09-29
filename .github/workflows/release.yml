@@ -1,0 +1,174 @@
+name: Release
+run-name: Release ${{ inputs.release-version }}
+
+# Started by hand from the Actions tab, on main:
+#   1. sets the library and samples to the release version, commits and tags it (e.g. 1.0.0)
+#   2. builds and tests everything, then pushes the commit and the tag
+#   3. deploys to Maven Central (central-publishing-maven-plugin, waits until published)
+#   4. creates the GitHub release with JReleaser's notes from the conventional commits since the previous release
+#   5. publishes the docs (/shadleaf/<version>/ and /shadleaf/current/)
+#   6. sets the next development version, commits it and runs the Build workflow for a fresh early-access release
+# Secrets: MAVEN_CENTRAL_USERNAME and MAVEN_CENTRAL_PASSWORD (a Central Portal user token), MAVEN_GPG_KEY (ASCII-armored
+# secret key: gpg --armor --export-secret-keys <id>) and MAVEN_GPG_PASSPHRASE.
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: Release version (e.g. 1.0.0)
+        required: true
+        type: string
+      next-version:
+        description: Next development version (e.g. 1.1.0-SNAPSHOT)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  RELEASE_VERSION: ${{ inputs.release-version }}
+  NEXT_VERSION: ${{ inputs.next-version }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check the inputs
+        run: |
+          [[ "$GITHUB_REF" == refs/heads/main ]] || { echo "::error::Releases are made from main, not $GITHUB_REF"; exit 1; }
+          [[ "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ && "$RELEASE_VERSION" != *-SNAPSHOT ]] \
+            || { echo "::error::Release version '$RELEASE_VERSION' is not a release version such as 1.0.0"; exit 1; }
+          [[ "$NEXT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+-SNAPSHOT$ ]] \
+            || { echo "::error::Next version '$NEXT_VERSION' is not a SNAPSHOT version such as 1.1.0-SNAPSHOT"; exit 1; }
+
+      # Full history: JReleaser's release notes span every commit since the previous release tag.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Check that the tag is new
+        run: |
+          if git rev-parse -q --verify "refs/tags/$RELEASE_VERSION" > /dev/null; then
+            echo "::error::Tag $RELEASE_VERSION already exists"
+            exit 1
+          fi
+
+      # Writes the `central` server into settings.xml, with the credentials read from the environment at deploy time.
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          server-id: central
+          server-username-env-var: MAVEN_CENTRAL_USERNAME
+          server-password-env-var: MAVEN_CENTRAL_PASSWORD
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      # Local only: nothing is pushed before the build and the samples passed.
+      - name: Set the release version, commit and tag
+        run: |
+          .github/scripts/set-version.sh "$RELEASE_VERSION"
+          git commit -am "chore(release): $RELEASE_VERSION"
+          git tag -a "$RELEASE_VERSION" -m "Release $RELEASE_VERSION"
+
+      - name: Build and install the library
+        run: mvn -B install
+
+      # PreviewGeneratorTest stamped them with the release version; the docs job publishes them.
+      - name: Keep the generated docs artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: generated-docs
+          path: shadleaf-spring-boot-starter/target/generated-docs/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Build sample 1 against the installed library
+        run: mvn -B verify
+        working-directory: samples/shadleaf-sample-01
+
+      - name: Build the Spring Security + CSP sample against the installed library
+        run: mvn -B verify
+        working-directory: samples/shadleaf-sample-02
+
+      # Atomic: the commit and the tag land together, or not at all (e.g. when main moved in the meantime).
+      - name: Push the release commit and tag
+        run: git push --atomic origin HEAD:main "refs/tags/$RELEASE_VERSION"
+
+      # The tests already ran above. Only the reactor (parent + starter) is published, never the samples.
+      - name: Deploy to Maven Central
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn -B -Prelease deploy -DskipTests
+
+      # The tag exists already, so JReleaser only creates the release (with the notes) on it.
+      - name: Create the GitHub release
+        env:
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn -B -N jreleaser:release -Dshadleaf.release.skip-tag=true
+
+      - name: Keep the JReleaser output
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: jreleaser-release
+          path: |
+            target/jreleaser/trace.log
+            target/jreleaser/output.properties
+            target/jreleaser/release/CHANGELOG.md
+          if-no-files-found: ignore
+          retention-days: 14
+
+  publish-docs:
+    needs: release
+    permissions:
+      contents: write
+    uses: ./.github/workflows/publish-docs.yml
+    with:
+      generated-docs-artifact: generated-docs
+      ref: ${{ inputs.release-version }}
+
+  next-version:
+    needs: [ release, publish-docs ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      # To start the Build workflow: pushes with the GITHUB_TOKEN never trigger workflows, a dispatch does.
+      actions: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Set the next development version, commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          .github/scripts/set-version.sh "$NEXT_VERSION"
+          git commit -am "chore(release): prepare for next development iteration $NEXT_VERSION"
+          git push origin HEAD:main
+
+      # Rebuilds main on the new SNAPSHOT: its early-access release then starts from this release.
+      - name: Run the Build workflow on main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run build.yml --ref main

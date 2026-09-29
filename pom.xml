@@ -51,7 +51,17 @@
     <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
     <frontend-maven-plugin.version>2.0.1</frontend-maven-plugin.version>
     <frontend-maven-plugin.nodeVersion>v24.18.0</frontend-maven-plugin.nodeVersion>
-    <frontend-maven-plugin.pnpmVersion>11.13.0</frontend-maven-plugin.pnpmVersion>
+    <frontend-maven-plugin.pnpmVersion>12.6.0</frontend-maven-plugin.pnpmVersion>
+    <versions-maven-plugin.version>2.22.0</versions-maven-plugin.version>
+    <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+    <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+    <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+    <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
+    <jreleaser-maven-plugin.version>1.26.0</jreleaser-maven-plugin.version>
+
+    <!-- The release workflow tags the release commit itself, before the build; JReleaser only creates the tag of the
+         early-access (snapshot) release, which it moves to every new commit on main. -->
+    <shadleaf.release.skip-tag>false</shadleaf.release.skip-tag>
   </properties>
 
   <dependencyManagement>
@@ -96,7 +106,149 @@
           <artifactId>frontend-maven-plugin</artifactId>
           <version>${frontend-maven-plugin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>versions-maven-plugin</artifactId>
+          <version>${versions-maven-plugin.version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <!-- GitHub releases with release notes from the conventional commits. Only runs on the parent (not inherited):
+           mvn -N jreleaser:release. A SNAPSHOT version gives the early-access pre-release, recreated on every push to
+           main with everything since the last release. Maven Central is not JReleaser's job: see the release profile. -->
+      <plugin>
+        <groupId>org.jreleaser</groupId>
+        <artifactId>jreleaser-maven-plugin</artifactId>
+        <version>${jreleaser-maven-plugin.version}</version>
+        <inherited>false</inherited>
+        <configuration>
+          <jreleaser>
+            <project>
+              <name>Shadleaf</name>
+              <description>shadcn/ui for Thymeleaf, packaged as a Spring Boot starter.</description>
+              <license>Apache-2.0</license>
+              <inceptionYear>2026</inceptionYear>
+              <authors>
+                <author>Wim Deblauwe</author>
+              </authors>
+              <links>
+                <homepage>https://github.com/wimdeblauwe/shadleaf</homepage>
+                <documentation>https://wimdeblauwe.github.io/shadleaf/</documentation>
+              </links>
+              <snapshot>
+                <pattern>.*-SNAPSHOT</pattern>
+                <label>early-access</label>
+                <!-- Everything since the last release, not since the previous early-access -->
+                <fullChangelog>true</fullChangelog>
+              </snapshot>
+            </project>
+            <release>
+              <github>
+                <owner>wimdeblauwe</owner>
+                <name>shadleaf</name>
+                <tagName>{{projectVersion}}</tagName>
+                <releaseName>{{tagName}}</releaseName>
+                <skipTag>${shadleaf.release.skip-tag}</skipTag>
+                <overwrite>false</overwrite>
+                <prerelease>
+                  <pattern>.*-(SNAPSHOT|RC\d*|M\d+)</pattern>
+                </prerelease>
+                <changelog>
+                  <formatted>ALWAYS</formatted>
+                  <preset>conventional-commits</preset>
+                  <skipMergeCommits>true</skipMergeCommits>
+                  <!-- The version commits of the release workflow -->
+                  <labelers>
+                    <labeler>
+                      <label>release</label>
+                      <title>regex:^chore\(release\):\s.*</title>
+                    </labeler>
+                  </labelers>
+                  <excludeLabels>
+                    <excludeLabel>release</excludeLabel>
+                  </excludeLabels>
+                  <hide>
+                    <contributors>
+                      <contributor>[bot]</contributor>
+                      <contributor>GitHub</contributor>
+                    </contributors>
+                  </hide>
+                </changelog>
+              </github>
+            </release>
+          </jreleaser>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
+
+  <profiles>
+    <!-- Maven Central: mvn -Prelease deploy. Sources, javadoc and signatures for every published module; the
+         central-publishing plugin replaces the deploy plugin, uploads the bundle and waits until it is published.
+         Signing uses the Bouncy Castle signer: key and passphrase come from MAVEN_GPG_KEY and MAVEN_GPG_PASSPHRASE,
+         no gpg executable or keyring needed. The credentials are the `central` server in settings.xml. -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>${maven-source-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>${maven-javadoc-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${maven-gpg-plugin.version}</version>
+            <configuration>
+              <signer>bc</signer>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>${central-publishing-maven-plugin.version}</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <autoPublish>true</autoPublish>
+              <waitUntil>published</waitUntil>
+              <deploymentName>Shadleaf ${project.version}</deploymentName>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

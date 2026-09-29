@@ -22,7 +22,7 @@
     <!-- Maven plugins -->
     <frontend-maven-plugin.version>2.0.1</frontend-maven-plugin.version>
     <frontend-maven-plugin.nodeVersion>v24.18.0</frontend-maven-plugin.nodeVersion>
-    <frontend-maven-plugin.pnpmVersion>11.13.0</frontend-maven-plugin.pnpmVersion>
+    <frontend-maven-plugin.pnpmVersion>12.6.0</frontend-maven-plugin.pnpmVersion>
   </properties>
   <dependencies>
     <dependency>

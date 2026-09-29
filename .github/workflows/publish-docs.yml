@@ -5,15 +5,19 @@ name: Publish docs
 #   https://wimdeblauwe.github.io/shadleaf/current/     the newest release
 # The site root redirects to current/ (to the published version until there is a release). GitHub Pages must be set
 # to deploy from the gh-pages branch, root folder.
-# The Build workflow calls this after its docs job passed on main, handing over the previews it already rendered.
+# The Build workflow calls this after its docs job passed on main, and the Release workflow after a release, both
+# handing over the previews they already rendered. (Not on `release: published`: a release made with the GITHUB_TOKEN,
+# as JReleaser's is, never triggers a workflow.)
 on:
-  release:
-    types: [ published ]
   workflow_dispatch:
   workflow_call:
     inputs:
       generated-docs-artifact:
         description: Name of an artifact of the calling run holding target/generated-docs; rendered here when empty
+        type: string
+        default: ''
+      ref:
+        description: The commit, branch or tag to build the site from; the calling run's commit when empty
         type: string
         default: ''
 
@@ -32,15 +36,17 @@ jobs:
       group: publish-docs
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: inputs.generated-docs-artifact != ''
         with:
           name: ${{ inputs.generated-docs-artifact }}
           path: shadleaf-spring-boot-starter/target/generated-docs/
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         if: inputs.generated-docs-artifact == ''
         with:
           distribution: temurin
@@ -59,18 +65,15 @@ jobs:
           : "${version:?could not read the version from previews.json}"
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
-      - uses: pnpm/action-setup@v4
+      # pnpm, Node.js and `pnpm install --frozen-lockfile` in docs/, with the pnpm store cached on the lockfile.
+      - uses: pnpm/setup@v3
         with:
-          version: 11.13.0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: pnpm
+          version: 12.6.0
+          runtime: node@24
+          working-directory: docs
+          require-lockfile: true
+          cache: true
           cache-dependency-path: docs/pnpm-lock.yaml
-
-      - run: pnpm install --frozen-lockfile
-        working-directory: docs
 
       - name: Check out gh-pages
         run: |
