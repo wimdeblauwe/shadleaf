@@ -1,0 +1,707 @@
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.2.0/shadleaf/assets/shadleaf-vega-DSZH18-e.css"><script>(function(){const skins = {"vega":"/shadleaf/0.2.0/shadleaf/assets/shadleaf-vega-DSZH18-e.css","lyra":"/shadleaf/0.2.0/shadleaf/assets/shadleaf-lyra-CULmeUUj.css"};
+const firstSkin = "vega";
+
+    const params = new URLSearchParams(location.search);
+    const skin = params.get('skin') ?? firstSkin;
+    if (!(skin in skins)) {
+      throw new Error(`Unknown skin ${skin}; known: ${Object.keys(skins).join(', ')}`);
+    }
+    document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
+    document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
+    document.documentElement.dataset.skin = skin;
+  })();</script><script type="module" src="/shadleaf/0.2.0/shadleaf/assets/shadleaf.alpine-Dl9BbZpm.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}
+</style><script type="module" src="/shadleaf/0.2.0/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><main class="astro-6felt6qx"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">alert</h2><h3 class="astro-6felt6qx">Alert</h3><div class="stage astro-6felt6qx" data-scenario="alert--default"><div class="alert">
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>
+  <div class="alert-title">Order placed</div>
+  <div class="alert-description">We will email you when it ships.</div>
+</div></div><h3 class="astro-6felt6qx">Destructive</h3><div class="stage astro-6felt6qx" data-scenario="alert--destructive"><div class="alert"
+     data-variant="destructive">
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+  <div class="alert-title">Payment failed</div>
+  <div class="alert-description">
+    <p>Your card was declined. Check the details and try again:</p>
+    <ul>
+      <li>the expiry date</li>
+      <li>the billing address</li>
+    </ul>
+  </div>
+</div></div><h3 class="astro-6felt6qx">Title only, no icon</h3><div class="stage astro-6felt6qx" data-scenario="alert--title-only"><div class="alert">
+  <div class="alert-title">Your trial ends in 3 days.</div>
+</div></div><h3 class="astro-6felt6qx">Announced</h3><div class="stage astro-6felt6qx" data-scenario="alert--announced"><div class="alert"
+     data-variant="destructive" role="alert">
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+  <div class="alert-title">The order could not be saved</div>
+  <div class="alert-description">Someone else changed it. Reload the page to see their changes.</div>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">avatar</h2><h3 class="astro-6felt6qx">Avatar</h3><div class="stage astro-6felt6qx" data-scenario="avatar--default"><span class="avatar"
+      role="img" aria-label="Jane Doe">
+  <img class="avatar-image" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23b08968'/%3E%3Ccircle cx='20' cy='16' r='7' fill='%23f5ebe0'/%3E%3Cpath d='M6 40a14 14 0 0 1 28 0' fill='%23f5ebe0'/%3E%3C/svg%3E">
+  <span class="avatar-fallback">JD</span>
+</span></div><h3 class="astro-6felt6qx">Fallback</h3><div class="stage astro-6felt6qx" data-scenario="avatar--fallback"><span class="avatar"
+      role="img" aria-label="Jane Doe">
+  <img class="avatar-image" alt="" src="">
+  <span class="avatar-fallback">JD</span>
+</span>
+<span class="avatar"
+      role="img" aria-label="Unknown user">
+  <span class="avatar-fallback"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+</span></div><h3 class="astro-6felt6qx">Sizes</h3><div class="stage astro-6felt6qx" data-scenario="avatar--sizes"><span class="avatar"
+      data-size="sm" role="img" aria-label="Jane Doe"><span class="avatar-fallback">JD</span></span>
+<span class="avatar"
+      role="img" aria-label="Jane Doe"><span class="avatar-fallback">JD</span></span>
+<span class="avatar"
+      data-size="lg" role="img" aria-label="Jane Doe"><span class="avatar-fallback">JD</span></span></div><h3 class="astro-6felt6qx">Next to a name</h3><div class="stage astro-6felt6qx" data-scenario="avatar--decorative"><span class="avatar"
+      aria-hidden="true"><span class="avatar-fallback">JD</span></span>
+<span>Jane Doe</span></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">badge</h2><h3 class="astro-6felt6qx">Badge</h3><div class="stage astro-6felt6qx" data-scenario="badge--default"><span class="badge">
+  
+  New
+  
+</span></div><h3 class="astro-6felt6qx">Variants</h3><div class="stage astro-6felt6qx" data-scenario="badge--variants"><span class="badge">
+  
+  Default
+  
+</span>
+  
+
+
+  <span class="badge"
+        data-variant="secondary">
+  
+  Secondary
+  
+</span>
+  
+
+
+  <span class="badge"
+        data-variant="destructive">
+  
+  Destructive
+  
+</span>
+  
+
+
+  <span class="badge"
+        data-variant="outline">
+  
+  Outline
+  
+</span>
+  
+
+
+  <span class="badge"
+        data-variant="ghost">
+  
+  Ghost
+  
+</span>
+  
+
+
+  <span class="badge"
+        data-variant="link">
+  
+  Link
+  
+</span></div><h3 class="astro-6felt6qx">With an icon</h3><div class="stage astro-6felt6qx" data-scenario="badge--with-icon"><span class="badge"
+        data-variant="secondary">
+  <span class="badge-icon" data-icon="inline-start"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m16 9-5.5 5.5L8 12"/></svg></span>
+  
+  
+  Verified
+
+  
+</span>
+  
+
+
+  <span class="badge"
+        data-variant="outline">
+  
+  
+  Details
+  
+
+  <span class="badge-icon" data-icon="inline-end"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+</span></div><h3 class="astro-6felt6qx">As a link</h3><div class="stage astro-6felt6qx" data-scenario="badge--link"><a class="badge" href="/orders?status=open">
+  
+  Open
+  
+</a>
+
+
+  
+  <a class="badge"
+     data-variant="destructive" href="/orders?status=late">
+  
+  Late
+  
+</a>
+
+
+  
+  <a class="badge"
+     data-variant="outline" href="/orders">
+  
+  
+  All orders
+  
+
+  <span class="badge-icon" data-icon="inline-end"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></span>
+</a></div><h3 class="astro-6felt6qx">Pass-through attributes</h3><div class="stage astro-6felt6qx" data-scenario="badge--pass-through"><span class="badge app-wide"
+        data-variant="outline" id="order-status" data-testid="status">
+  
+  Shipped
+  
+</span></div><h3 class="astro-6felt6qx">Props from an expression</h3><div class="stage astro-6felt6qx" data-scenario="badge--expression"><span class="badge"
+        data-variant="destructive">
+  
+  Late
+  
+</span></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">button</h2><h3 class="astro-6felt6qx">Button</h3><div class="stage astro-6felt6qx" data-scenario="button--default"><button class="btn"
+          type="button">
+  
+  
+  
+  Save
+  
+</button></div><h3 class="astro-6felt6qx">Variants</h3><div class="stage astro-6felt6qx" data-scenario="button--variants"><button class="btn"
+          type="button">
+  
+  
+  
+  Default
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline">
+  
+  
+  
+  Outline
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="ghost">
+  
+  
+  
+  Ghost
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="destructive">
+  
+  
+  
+  Destructive
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="secondary">
+  
+  
+  
+  Secondary
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="link">
+  
+  
+  
+  Link
+  
+</button></div><h3 class="astro-6felt6qx">Sizes</h3><div class="stage astro-6felt6qx" data-scenario="button--sizes"><button class="btn"
+          type="button"
+          data-size="xs">
+  
+  
+  
+  Extra small
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-size="sm">
+  
+  
+  
+  Small
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button">
+  
+  
+  
+  Default
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-size="lg">
+  
+  
+  
+  Large
+  
+</button></div><h3 class="astro-6felt6qx">Icon-only sizes</h3><div class="stage astro-6felt6qx" data-scenario="button--icon-sizes"><button class="btn"
+          type="button"
+          data-variant="outline" data-size="icon-xs" aria-label="Add">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" data-size="icon-sm" aria-label="Add">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" data-size="icon" aria-label="Add">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" data-size="icon-lg" aria-label="Add">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+  
+</button></div><h3 class="astro-6felt6qx">With an icon</h3><div class="stage astro-6felt6qx" data-scenario="button--with-icon"><button class="btn"
+          type="button"
+          data-variant="destructive">
+  
+  
+  <span class="btn-icon" data-icon="inline-start"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+  
+  
+  Delete order
+
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline">
+  
+  
+  
+  
+  Next
+  
+
+  <span class="btn-icon" data-icon="inline-end"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></span>
+</button></div><h3 class="astro-6felt6qx">As a link</h3><div class="stage astro-6felt6qx" data-scenario="button--link"><a class="btn"
+     data-variant="outline" href="/orders">
+  
+  
+  
+  View orders
+  
+</a>
+
+
+  
+  
+  <a class="btn"
+     data-variant="link" href="/orders">
+  
+  
+  
+  View orders
+  
+</a></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="button--disabled"><button class="btn"
+          type="button" disabled="disabled">
+  
+  
+  
+  Save
+  
+</button>
+  
+  
+
+
+  
+  
+  <a class="btn"
+     data-variant="outline" aria-disabled="true" role="link" tabindex="-1">
+  
+  
+  
+  View orders
+  
+</a></div><h3 class="astro-6felt6qx">Loading</h3><div class="stage astro-6felt6qx" data-scenario="button--loading"><button class="btn"
+          type="button"
+          aria-busy="true" disabled="disabled">
+  <span class="btn-icon" data-icon="inline-start"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon btn-spinner"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>
+  <span class="sl-sr-only">Loading</span>
+  
+  Saving
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" aria-busy="true" disabled="disabled">
+  <span class="btn-icon" data-icon="inline-start"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon btn-spinner"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>
+  <span class="sl-sr-only">Loading</span>
+  
+  
+  
+  Save
+
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" data-size="icon" aria-busy="true" aria-label="Refresh" disabled="disabled">
+  <span class="btn-icon" data-icon="inline-start"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon btn-spinner"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>
+  <span class="sl-sr-only">Loading</span>
+  
+  
+  
+</button></div><h3 class="astro-6felt6qx">In a form</h3><div class="stage astro-6felt6qx" data-scenario="button--form"><form method="post" action="/orders">
+  
+  <button class="btn"
+          type="submit">
+  
+  
+  
+  Save
+  
+</button>
+  
+  
+
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline">
+  
+  
+  
+  Preview
+  
+</button>
+  
+  
+
+</form></div><h3 class="astro-6felt6qx">Props from an expression</h3><div class="stage astro-6felt6qx" data-scenario="button--expression"><button class="btn"
+          type="button"
+          data-variant="destructive">
+  
+  
+  
+  Cancel order
+  
+</button></div><h3 class="astro-6felt6qx">Pass-through attributes</h3><div class="stage astro-6felt6qx" data-scenario="button--pass-through"><button class="btn app-wide"
+          type="button"
+          data-variant="outline" hx-post="/orders/42/archive" hx-target="#orders" data-testid="archive">
+  
+  
+  
+  Archive
+  
+</button></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">card</h2><h3 class="astro-6felt6qx">Card</h3><div class="stage astro-6felt6qx" data-scenario="card--default"><div class="card">
+  <div class="card-header">
+    <div class="card-title"
+     role="heading" aria-level="3">Order #1042</div>
+    <div class="card-description">Placed on 12 September</div>
+    <div class="card-action">
+  <span class="badge"
+        data-variant="secondary">
+  
+  Shipped
+  
+</span>
+  
+</div>
+  </div>
+  <div class="card-content">
+    <p>Three items, delivered to the Antwerp warehouse.</p>
+  </div>
+  <div class="card-footer">
+    
+  
+  
+  <a class="btn"
+     data-variant="outline" href="/orders/1042">
+  
+  
+  
+  View order
+  
+</a>
+
+  </div>
+</div></div><h3 class="astro-6felt6qx">Small</h3><div class="stage astro-6felt6qx" data-scenario="card--small"><div class="card"
+     data-size="sm">
+  <div class="card-header">
+    <div class="card-title"
+     role="heading" aria-level="3">Late orders</div>
+    <div class="card-description">Past their delivery date</div>
+  </div>
+  <div class="card-content"><p>3</p></div>
+</div></div><h3 class="astro-6felt6qx">Dividing lines</h3><div class="stage astro-6felt6qx" data-scenario="card--border"><div class="card">
+  <div class="card-header"
+     data-border="bottom">
+    <div class="card-title"
+     role="heading" aria-level="3">Notifications</div>
+    <div class="card-description">What we email you about</div>
+  </div>
+  <div class="card-content"><p>Order updates and weekly summaries.</p></div>
+  <div class="card-footer"
+     data-border="top">
+    
+  <button class="btn"
+          type="button">
+  
+  
+  
+  Save
+  
+</button>
+  
+  
+
+    
+  <button class="btn"
+          type="button"
+          data-variant="ghost">
+  
+  
+  
+  Cancel
+  
+</button>
+  
+  
+
+  </div>
+</div></div><h3 class="astro-6felt6qx">Content only</h3><div class="stage astro-6felt6qx" data-scenario="card--content-only"><div class="card">
+  <div class="card-content"><p>A card needs none of its parts but one.</p></div>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">icon</h2><h3 class="astro-6felt6qx">Icon</h3><div class="stage astro-6felt6qx" data-scenario="icon--default"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg></div><h3 class="astro-6felt6qx">Sizes</h3><div class="stage astro-6felt6qx" data-scenario="icon--sizes"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="16" height="16" data-icon-size="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="32" height="32" data-icon-size="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg></div><h3 class="astro-6felt6qx">Stroke width</h3><div class="stage astro-6felt6qx" data-scenario="icon--stroke-width"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg></div><h3 class="astro-6felt6qx">A meaningful icon</h3><div class="stage astro-6felt6qx" data-scenario="icon--label"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Warning"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">kbd</h2><h3 class="astro-6felt6qx">Kbd</h3><div class="stage astro-6felt6qx" data-scenario="kbd--default"><kbd class="kbd">Esc</kbd>
+<kbd class="kbd">Enter</kbd>
+<kbd class="kbd">/</kbd></div><h3 class="astro-6felt6qx">A key combination</h3><div class="stage astro-6felt6qx" data-scenario="kbd--group"><kbd class="kbd-group">
+  <kbd class="kbd">Ctrl</kbd>
+  <kbd class="kbd">Shift</kbd>
+  <kbd class="kbd">P</kbd>
+</kbd>
+<kbd class="kbd-group"><kbd class="kbd">Ctrl</kbd>+<kbd class="kbd">K</kbd></kbd></div><h3 class="astro-6felt6qx">With an icon</h3><div class="stage astro-6felt6qx" data-scenario="kbd--icon"><kbd class="kbd-group">
+  <kbd class="kbd"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Command"><path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3"/></svg></kbd>
+  <kbd class="kbd">K</kbd>
+</kbd></div><h3 class="astro-6felt6qx">In a button</h3><div class="stage astro-6felt6qx" data-scenario="kbd--in-button"><button class="btn"
+          type="button"
+          aria-keyshortcuts="Enter">
+  
+  
+  
+  
+  Accept <kbd class="kbd" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/></svg></kbd>
+
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" aria-keyshortcuts="Escape">
+  
+  
+  
+  
+  Cancel <kbd class="kbd" aria-hidden="true">Esc</kbd>
+
+  
+</button></div><h3 class="astro-6felt6qx">In a sentence</h3><div class="stage astro-6felt6qx" data-scenario="kbd--in-text"><p>Press <kbd class="kbd">/</kbd> to search.</p></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">separator</h2><h3 class="astro-6felt6qx">Separator</h3><div class="stage astro-6felt6qx" data-scenario="separator--default"><div class="separator"
+     role="none"></div></div><h3 class="astro-6felt6qx">Vertical</h3><div class="stage astro-6felt6qx" data-scenario="separator--vertical"><a class="btn"
+     data-variant="link" href="/blog">
+  
+  
+  
+  Blog
+  
+</a>
+
+<div class="separator"
+     data-orientation="vertical" role="none"></div>
+
+  
+  
+  <a class="btn"
+     data-variant="link" href="/docs">
+  
+  
+  
+  Docs
+  
+</a>
+
+<div class="separator"
+     data-orientation="vertical" role="none"></div>
+
+  
+  
+  <a class="btn"
+     data-variant="link" href="/source">
+  
+  
+  
+  Source
+  
+</a></div><h3 class="astro-6felt6qx">Announced</h3><div class="stage astro-6felt6qx" data-scenario="separator--semantic"><div class="separator"
+     role="separator"></div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">skeleton</h2><h3 class="astro-6felt6qx">Skeleton</h3><div class="stage astro-6felt6qx" data-scenario="skeleton--default"><div class="skeleton"
+     aria-hidden="true"></div>
+<div class="skeleton"
+     aria-hidden="true"></div></div><h3 class="astro-6felt6qx">In a card</h3><div class="stage astro-6felt6qx" data-scenario="skeleton--card"><div class="card" aria-busy="true">
+  <div class="card-header">
+    <div class="skeleton"
+     aria-hidden="true"
+     data-shape="circle"></div>
+  </div>
+  <div class="card-content">
+    <div class="skeleton"
+     aria-hidden="true"></div>
+    <div class="skeleton"
+     aria-hidden="true"></div>
+  </div>
+</div></div></section></main></body></html>
