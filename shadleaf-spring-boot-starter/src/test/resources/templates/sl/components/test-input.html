@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: an <input> that takes th:field, th:errorclass and type through sl:attrs. -->
+<head>
+  <sl:props>
+    <sl:prop name="size" default="md" values="sm md"/>
+  </sl:props>
+</head>
+<body>
+<input th:fragment="test-input" class="input" th:attr="data-size=${props.unlessDefault('size')}" sl:attrs/>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: an input that reads its own binding errors. The forwarded th:field is still the unevaluated
+     "*{email}", which is what #fields.hasErrors and #fields.errors take. -->
+<body>
+<div th:fragment="test-text-field" class="field" th:with="slField=${attrs['th:field']}">
+  <input class="input" th:attr="aria-invalid=${slField != null and #fields.hasErrors(slField) ? 'true' : null}"
+         sl:attrs/>
+  <th:block th:if="${slField != null}">
+    <p class="error" th:each="slError : ${#fields.errors(slField)}" th:text="${slError}"></p>
+  </th:block>
+</div>
+</body>
+</html>

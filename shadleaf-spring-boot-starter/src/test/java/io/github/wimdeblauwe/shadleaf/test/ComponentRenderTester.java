@@ -18,9 +18,14 @@ import org.springframework.context.MessageSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.servlet.support.RequestContext;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.spring6.context.webmvc.SpringWebMvcThymeleafRequestContext;
+import org.thymeleaf.spring6.naming.SpringContextVariableNames;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.StringTemplateResolver;
@@ -37,7 +42,10 @@ import tools.jackson.databind.json.JsonMapper;
  * {@code shadleaf/messages.properties} unless {@link Builder#messageSource(MessageSource)} says otherwise.
  * <p>
  * Every render runs in a mock servlet web exchange, so {@code @{/orders}} resolves against the context path and
- * request attributes (such as a CSP nonce) are context variables, as in a request.
+ * request attributes (such as a CSP nonce) are context variables, as in a request. It also carries Spring MVC's
+ * {@code RequestContext}, as {@code ThymeleafView} sets it up, so {@code th:field}, {@code th:errors} and
+ * {@code #fields} find a {@code BindingResult} passed in the variables under
+ * {@code BindingResult.MODEL_KEY_PREFIX + name}.
  * <p>
  * This is the one definition of "render a component": the component tests, the approval tests and the docs preview
  * generator (M5) all use it.
@@ -69,11 +77,17 @@ public final class ComponentRenderTester {
     engine.addTemplateResolver(componentResolver);
     engine.addTemplateResolver(snippetResolver);
     engine.addDialect(builder.dialect != null ? builder.dialect : defaultDialect(builder.iconSources));
-    engine.setTemplateEngineMessageSource(
-        builder.messageSource != null ? builder.messageSource : new ShadleafMessageSource());
+    MessageSource messageSource = builder.messageSource != null ? builder.messageSource : new ShadleafMessageSource();
+    engine.setTemplateEngineMessageSource(messageSource);
 
     servletContext = new MockServletContext();
     servletContext.setContextPath(builder.contextPath);
+    // RequestContext needs a web application context; its message source resolves binding error messages, as the
+    // application's messageSource bean does.
+    GenericWebApplicationContext applicationContext = new GenericWebApplicationContext(servletContext);
+    applicationContext.getBeanFactory().registerSingleton("messageSource", messageSource);
+    applicationContext.refresh();
+    servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
     webApplication = JakartaServletWebApplication.buildApplication(servletContext);
     locale = builder.locale;
     contextPath = builder.contextPath;
@@ -96,9 +110,16 @@ public final class ComponentRenderTester {
   public Rendered render(String snippet, Map<String, ?> variables) {
     MockHttpServletRequest request = new MockHttpServletRequest(servletContext, "GET", contextPath + "/");
     request.setContextPath(contextPath);
+    request.addPreferredLocale(locale);
     requestAttributes.forEach(request::setAttribute);
-    WebContext context = new WebContext(webApplication.buildExchange(request, new MockHttpServletResponse()), locale);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+    WebContext context = new WebContext(webApplication.buildExchange(request, response), locale);
     variables.forEach(context::setVariable);
+    RequestContext requestContext = new RequestContext(request, response, servletContext,
+        new LinkedHashMap<String, Object>(variables));
+    context.setVariable(SpringContextVariableNames.SPRING_REQUEST_CONTEXT, requestContext);
+    context.setVariable(SpringContextVariableNames.THYMELEAF_REQUEST_CONTEXT,
+        new SpringWebMvcThymeleafRequestContext(requestContext, request));
     return new Rendered(engine.process(snippet, context));
   }
 

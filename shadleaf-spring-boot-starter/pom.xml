@@ -46,6 +46,12 @@
       <artifactId>jakarta.servlet-api</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- ComponentRenderTester sets up Spring MVC's RequestContext, which th:field and #fields read the binding from -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
