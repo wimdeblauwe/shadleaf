@@ -1,0 +1,14 @@
+---
+// The starter's Maven dependency, with the version of the library build that produced this site (from previews.json).
+import {Code} from '@astrojs/starlight/components';
+import Missing from './Missing.astro';
+import {previews} from '../lib/generated';
+
+const code = `<dependency>
+  <groupId>io.github.wimdeblauwe</groupId>
+  <artifactId>shadleaf-spring-boot-starter</artifactId>
+  <version>${previews.version}</version>
+</dependency>`;
+---
+
+{previews.version ? <Code code={code} lang="xml"/> : <Missing what="library version"/>}
