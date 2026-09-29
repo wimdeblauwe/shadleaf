@@ -180,6 +180,18 @@
       "description" : "Accessible name for an icon that carries meaning on its own. Without it the icon is decorative and hidden from assistive technology."
     } ]
   }, {
+    "name" : "kbd",
+    "tag" : "sl:kbd",
+    "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "kbd-group",
+    "tag" : "sl:kbd-group",
+    "description" : "A key combination: `sl:kbd` elements, with any text between them (such as `+`). HTML nests the keys of a combination in an outer `kbd`, as this does.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "separator",
     "tag" : "sl:separator",
     "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",

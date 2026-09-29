@@ -1,0 +1,33 @@
+# Scenarios for the kbd's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: kbd
+parts: [kbd-group]
+scenarios:
+  - id: default
+    title: Kbd
+    source: |-
+      <sl:kbd>Esc</sl:kbd>
+      <sl:kbd>Enter</sl:kbd>
+      <sl:kbd>/</sl:kbd>
+
+  - id: group
+    title: A key combination
+    source: |-
+      <sl:kbd-group>
+        <sl:kbd>Ctrl</sl:kbd>
+        <sl:kbd>Shift</sl:kbd>
+        <sl:kbd>P</sl:kbd>
+      </sl:kbd-group>
+      <sl:kbd-group><sl:kbd>Ctrl</sl:kbd>+<sl:kbd>K</sl:kbd></sl:kbd-group>
+
+  - id: icon
+    title: With an icon
+    description: An icon on its own has no text, so give the key a name.
+    source: |-
+      <sl:kbd-group>
+        <sl:kbd><sl:icon name="command" label="Command"/></sl:kbd>
+        <sl:kbd>K</sl:kbd>
+      </sl:kbd-group>
+
+  - id: in-text
+    title: In a sentence
+    source: '<p>Press <sl:kbd>/</sl:kbd> to search.</p>'

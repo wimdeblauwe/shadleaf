@@ -1,0 +1,37 @@
+---
+title: Kbd
+description: A key on the keyboard, or a combination of keys.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="kbd--default" />
+
+`<sl:kbd>` renders HTML's own `<kbd>` element, so it fits in running text.
+
+<ComponentPreview id="kbd--in-text" />
+
+## Key combinations
+
+Put the keys pressed together in `<sl:kbd-group>`. It is an outer `<kbd>`, which is how HTML marks up a combination.
+Text between the keys, such as `+`, is up to you.
+
+<ComponentPreview id="kbd--group" />
+
+## Icons
+
+A key can hold an [`<sl:icon>`](../icon/). Give the icon a `label`, as a screen reader has no text to read otherwise.
+An `aria-label` on the key itself would not do: `<kbd>` has no role that takes a name.
+
+<ComponentPreview id="kbd--icon" />
+
+## Attributes
+
+### sl:kbd
+
+<ComponentAttributes component="kbd" />
+
+### sl:kbd-group
+
+<ComponentAttributes component="kbd-group" />

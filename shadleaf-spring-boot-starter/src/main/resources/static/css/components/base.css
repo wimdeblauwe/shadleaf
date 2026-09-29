@@ -14,3 +14,11 @@
 @utility text-destructive-legible {
   color: color-mix(in oklch, var(--destructive), var(--foreground) 20%);
 }
+
+/*
+  shadcn's text-muted-foreground on bg-muted is 4.34:1 in light mode, under WCAG's 4.5:1 for small text. The same mix
+  with the foreground token as above, for text on a --muted background.
+*/
+@utility text-muted-legible {
+  color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+}

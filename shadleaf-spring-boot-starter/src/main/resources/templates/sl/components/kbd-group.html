@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A key combination: <code>sl:kbd</code> elements, with any text between them (such as
+      <code>+</code>). HTML nests the keys of a combination in an outer <code>kbd</code>, as this
+      does.</sl:description>
+  </sl:props>
+</head>
+<body>
+<kbd th:fragment="kbd-group" class="kbd-group" sl:attrs><sl:slot/></kbd>
+</body>
+</html>

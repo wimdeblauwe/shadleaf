@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A key on the keyboard, as text (<code>Ctrl</code>) or an <code>sl:icon</code>. Several keys
+      pressed together go in an <code>sl:kbd-group</code>.</sl:description>
+  </sl:props>
+</head>
+<body>
+<kbd th:fragment="kbd" class="kbd" sl:attrs><sl:slot/></kbd>
+</body>
+</html>

@@ -228,4 +228,14 @@
   .skeleton:is(:not([data-shape]), [data-shape='line']) + .skeleton:is(:not([data-shape]), [data-shape='line']) {
     @apply mt-2;
   }
+
+  /* Kbd. text-muted-legible (components/base.css): shadcn's text-muted-foreground is under 4.5:1 on --muted. */
+  .kbd {
+    @apply h-5 min-w-5 gap-1 rounded-sm bg-muted px-1 font-sans text-xs font-medium text-muted-legible
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .kbd-group {
+    @apply gap-1;
+  }
 }

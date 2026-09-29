@@ -409,6 +409,14 @@
           }
         } ]
       }, {
+        "name" : "sl:kbd",
+        "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:kbd-group",
+        "description" : "A key combination: `sl:kbd` elements, with any text between them (such as `+`). HTML nests the keys of a combination in an outer `kbd`, as this does.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:separator",
         "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",
         "attributes" : [ {

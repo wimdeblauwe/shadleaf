@@ -219,4 +219,14 @@
   .skeleton:is(:not([data-shape]), [data-shape='line']) + .skeleton:is(:not([data-shape]), [data-shape='line']) {
     @apply mt-2;
   }
+
+  /* Kbd. A border instead of a fill, square corners. */
+  .kbd {
+    @apply h-5 min-w-5 gap-1 rounded-none border border-border px-1 font-mono text-xs font-normal text-foreground
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .kbd-group {
+    @apply gap-1;
+  }
 }

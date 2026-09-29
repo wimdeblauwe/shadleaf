@@ -1,0 +1,11 @@
+/* Kbd and kbd-group: structure only. Colour, radius, size and type are identity and live in the skins. */
+@layer components {
+  .kbd {
+    @apply pointer-events-none inline-flex w-fit items-center justify-center select-none
+      [&_svg]:pointer-events-none [&_svg]:shrink-0;
+  }
+
+  .kbd-group {
+    @apply inline-flex items-center;
+  }
+}
