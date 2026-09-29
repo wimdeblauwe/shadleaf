@@ -13,7 +13,9 @@ export default defineConfig({
   projects: [{name: 'chromium', use: {...devices['Desktop Chrome']}}],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.
-    command: 'pnpm exec astro preview --port 4399 --ignore-lock',
+    // Not through `pnpm exec`: pnpm 12 starts astro in a process group of its own, which survives Playwright's stop
+    // and keeps the test run from exiting. `pnpm test` has node_modules/.bin on the PATH.
+    command: 'astro preview --port 4399 --ignore-lock',
     url: 'http://localhost:4399/showcase/',
     reuseExistingServer: !process.env.CI,
     env: {DOCS_BASE: '/'},
