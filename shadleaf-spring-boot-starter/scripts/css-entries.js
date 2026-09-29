@@ -38,8 +38,9 @@ const COMPONENT_ORDER = ['base', 'button'];
 export function generateCssEntries(cssDir) {
   const skins = cssFileNames(path.join(cssDir, 'skins')).sort();
   const components = orderComponents(cssFileNames(path.join(cssDir, 'components')));
-  if (!skins.includes('default')) {
-    throw new Error(`There must be a skins/default.css, found: ${skins.join(', ')}`);
+  // vega is the default skin (ShadleafProperties), so it must exist.
+  if (!skins.includes('vega')) {
+    throw new Error(`There must be a skins/vega.css, found: ${skins.join(', ')}`);
   }
 
   const entriesDir = path.join(cssDir, 'entries');

@@ -1,6 +1,7 @@
 /*
-  Skin: default. The visual identity of every component: radius, border, colour, shadow, weight,
-  sizes, focus ring and motion. Skins consume the tokens from tokens.css and never define colours.
+  Skin: vega, shadcn/ui's classic look and the default skin. The visual identity of every component: radius,
+  border, colour, shadow, weight, sizes, focus ring and motion. Skins consume the tokens from tokens.css and never
+  define colours. Follows shadcn's Vega style, through basecoat's styles/vega.css.
 */
 @layer components {
   /* Button. Icons without an explicit size (<sl:icon size>, or a size-* class) take the button's icon size. */

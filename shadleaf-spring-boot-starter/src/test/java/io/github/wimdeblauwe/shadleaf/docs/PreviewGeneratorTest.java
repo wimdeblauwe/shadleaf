@@ -62,7 +62,7 @@ class PreviewGeneratorTest {
   private static final Path BUILT_ASSETS = Path.of("target", "classes", "META-INF", "resources", "shadleaf");
   private static final Path MANIFEST = Path.of("target", "classes").resolve(ShadleafAssets.MANIFEST_LOCATION);
   private static final Pattern STANDALONE_ENTRY = Pattern.compile("css/entries/shadleaf-([^.]+)\\.css");
-  private static final String DEFAULT_SKIN = "default";
+  private static final String DEFAULT_SKIN = "vega";
 
   private final JsonMapper jsonMapper = JsonMapper.builder().build();
   private final ComponentRenderTester tester = ComponentRenderTester.create();

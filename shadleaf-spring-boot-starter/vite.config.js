@@ -39,11 +39,11 @@ export default defineConfig({
   build: {
     manifest: true,
     rolldownOptions: {
-      // One CSS entry per skin x asset variant, e.g. css/entries/shadleaf-default.embedded.css, plus the JS entries
+      // One CSS entry per skin x asset variant, e.g. css/entries/shadleaf-vega.embedded.css, plus the JS entries
       input: {...generateCssEntries(path.join(staticDir, 'css')), ...jsEntries},
       output: {
         // Vite names a CSS-only entry after its file name up to the first dot, which would give
-        // shadleaf-default.css and shadleaf-default.embedded.css the same asset name.
+        // shadleaf-vega.css and shadleaf-vega.embedded.css the same asset name.
         assetFileNames: asset => `assets/${path.basename(asset.originalFileNames[0] ?? asset.names[0], '.css')}-[hash][extname]`
       }
     },

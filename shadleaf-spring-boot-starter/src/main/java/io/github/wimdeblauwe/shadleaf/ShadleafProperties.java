@@ -9,14 +9,15 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 /**
  * Configuration properties for Shadleaf, bound under the {@code shadleaf} prefix.
  *
- * @param skin   the visual identity of the components: {@code default} or {@code flat}. Same markup and tokens,
- *               different geometry, weight and shadow.
+ * @param skin   the visual identity of the components, named after the shadcn/ui style it follows:
+ *               {@code vega} (the default, shadcn's classic look) or {@code flat}. Same markup and tokens, different
+ *               geometry, weight and shadow.
  * @param assets which builds of the stylesheet and the script to load
  * @param csp    Content-Security-Policy support for the inline theme script
  * @param dev    settings for working on the library itself with live reload
  */
 @ConfigurationProperties(prefix = "shadleaf")
-public record ShadleafProperties(@DefaultValue("default") String skin,
+public record ShadleafProperties(@DefaultValue("vega") String skin,
                                  @DefaultValue AssetsProperties assets,
                                  @DefaultValue CspProperties csp,
                                  @DefaultValue DevProperties dev) {

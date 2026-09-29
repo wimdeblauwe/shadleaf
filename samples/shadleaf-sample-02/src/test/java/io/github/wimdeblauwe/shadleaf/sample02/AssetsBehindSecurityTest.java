@@ -42,8 +42,8 @@ class AssetsBehindSecurityTest {
 
   @ParameterizedTest(name = "{0} {1}")
   @CsvSource({
-      "default, STANDALONE",
-      "default, EMBEDDED",
+      "vega,    STANDALONE",
+      "vega,    EMBEDDED",
       "flat,    STANDALONE",
       "flat,    EMBEDDED"
   })
@@ -60,7 +60,7 @@ class AssetsBehindSecurityTest {
   @ParameterizedTest
   @EnumSource(AlpineVariant.class)
   void everyScriptAndTheChunksItImportsAreServedAnonymously(AlpineVariant alpine) throws Exception {
-    String jsUrl = new ShadleafAssets("default", AssetVariant.STANDALONE, alpine, null, manifestParser).getJsUrl();
+    String jsUrl = new ShadleafAssets("vega", AssetVariant.STANDALONE, alpine, null, manifestParser).getJsUrl();
 
     assertThat(jsUrl).startsWith("/shadleaf/");
     String script = mockMvc.perform(get(jsUrl))
@@ -81,7 +81,7 @@ class AssetsBehindSecurityTest {
         .andReturn().getResponse().getContentAsString();
 
     String href = Jsoup.parse(html).head().selectFirst("link[href^=/shadleaf/]").attr("href");
-    assertThat(href).isEqualTo(new ShadleafAssets("default", AssetVariant.STANDALONE, AlpineVariant.CSP, null,
+    assertThat(href).isEqualTo(new ShadleafAssets("vega", AssetVariant.STANDALONE, AlpineVariant.CSP, null,
         manifestParser).getCssUrl());
     mockMvc.perform(get(href)).andExpect(status().isOk());
   }
@@ -93,7 +93,7 @@ class AssetsBehindSecurityTest {
         .andReturn().getResponse().getContentAsString();
 
     String src = Jsoup.parse(html).head().selectFirst("script[type=module][src^=/shadleaf/]").attr("src");
-    assertThat(src).isEqualTo(new ShadleafAssets("default", AssetVariant.STANDALONE, AlpineVariant.CSP, null,
+    assertThat(src).isEqualTo(new ShadleafAssets("vega", AssetVariant.STANDALONE, AlpineVariant.CSP, null,
         manifestParser).getJsUrl());
   }
 

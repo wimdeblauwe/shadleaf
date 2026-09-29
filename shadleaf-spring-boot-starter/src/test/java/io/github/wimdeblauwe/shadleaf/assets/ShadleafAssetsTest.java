@@ -16,17 +16,17 @@ class ShadleafAssetsTest {
 
   @Test
   void buildModeResolvesTheHashedCssFromTheManifest() {
-    ShadleafAssets assets = new ShadleafAssets("default", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, null, parser);
+    ShadleafAssets assets = new ShadleafAssets("vega", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, null, parser);
 
     assertThat(assets.isDevMode()).isFalse();
     assertThat(assets.getViteClientUrl()).isNull();
-    assertThat(assets.getCssUrl()).matches("/shadleaf/assets/shadleaf-default-[\\w-]+\\.css");
+    assertThat(assets.getCssUrl()).matches("/shadleaf/assets/shadleaf-vega-[\\w-]+\\.css");
   }
 
   @ParameterizedTest
   @CsvSource({
-      "default, STANDALONE, shadleaf-default-",
-      "default, EMBEDDED,   shadleaf-default.embedded-",
+      "vega,    STANDALONE, shadleaf-vega-",
+      "vega,    EMBEDDED,   shadleaf-vega.embedded-",
       "flat,    STANDALONE, shadleaf-flat-",
       "flat,    EMBEDDED,   shadleaf-flat.embedded-"
   })
@@ -50,7 +50,7 @@ class ShadleafAssetsTest {
   })
   void buildModeJsUrlPointsAtARealClasspathResourceForEveryAlpineVariant(AlpineVariant alpine,
       String fileNamePrefix) {
-    ShadleafAssets assets = new ShadleafAssets("default", AssetVariant.STANDALONE, alpine, null, parser);
+    ShadleafAssets assets = new ShadleafAssets("vega", AssetVariant.STANDALONE, alpine, null, parser);
 
     assertThat(assets.getJsUrl()).matches("/shadleaf/assets/" + Pattern.quote(fileNamePrefix) + "[\\w-]+\\.js");
     String classpathLocation = "META-INF/resources" + assets.getJsUrl();
@@ -63,15 +63,15 @@ class ShadleafAssetsTest {
   void unknownSkinFailsWithTheAvailableSkins() {
     assertThatThrownBy(() -> new ShadleafAssets("glossy", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, null, parser))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessage("Unknown Shadleaf skin 'glossy' (shadleaf.skin). Available skins: [default, flat]");
+        .hasMessage("Unknown Shadleaf skin 'glossy' (shadleaf.skin). Available skins: [flat, vega]");
   }
 
   @Test
   void devModeUsesTheViteServer() {
-    ShadleafAssets assets = new ShadleafAssets("default", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, "http://localhost:5174/", parser);
+    ShadleafAssets assets = new ShadleafAssets("vega", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, "http://localhost:5174/", parser);
 
     assertThat(assets.isDevMode()).isTrue();
-    assertThat(assets.getCssUrl()).isEqualTo("http://localhost:5174/css/entries/shadleaf-default.css");
+    assertThat(assets.getCssUrl()).isEqualTo("http://localhost:5174/css/entries/shadleaf-vega.css");
     assertThat(assets.getJsUrl()).isEqualTo("http://localhost:5174/js/entries/shadleaf.alpine.js");
     assertThat(assets.getViteClientUrl()).isEqualTo("http://localhost:5174/@vite/client");
   }

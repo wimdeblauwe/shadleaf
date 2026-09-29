@@ -1,7 +1,7 @@
 /*
   Skin: flat. A deliberately minimal alternate that exists to prove the structure/identity seam:
   square corners, no shadow, no movement on press, a regular weight and an outline focus ring.
-  Same markup, same tokens as the default skin.
+  Same markup, same tokens as the vega skin.
 */
 @layer components {
   /* Button. Icons without an explicit size (<sl:icon size>, or a size-* class) take the button's icon size. */

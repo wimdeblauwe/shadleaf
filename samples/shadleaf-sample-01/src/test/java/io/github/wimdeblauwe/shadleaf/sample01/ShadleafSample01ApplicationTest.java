@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 class ShadleafSample01ApplicationTest {
 
   private static final Pattern SHADLEAF_STYLESHEET =
-      Pattern.compile("<link rel=\"stylesheet\" href=\"(/shadleaf/assets/shadleaf-default-[^\"]+\\.css)\"");
+      Pattern.compile("<link rel=\"stylesheet\" href=\"(/shadleaf/assets/shadleaf-vega-[^\"]+\\.css)\"");
 
   @Autowired
   private MockMvc mockMvc;
