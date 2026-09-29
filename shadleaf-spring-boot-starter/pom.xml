@@ -14,6 +14,12 @@
   <name>Shadleaf Spring Boot Starter</name>
   <description>shadcn/ui for Thymeleaf: components, theming and pre-compiled CSS for Spring Boot applications.</description>
 
+  <properties>
+    <!-- JUnit tags: the performance profile swaps them -->
+    <shadleaf.test.groups/>
+    <shadleaf.test.excluded-groups>performance</shadleaf.test.excluded-groups>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -109,6 +115,9 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <!-- RenderPerformanceTest runs only with -Pperformance -->
+          <excludedGroups>${shadleaf.test.excluded-groups}</excludedGroups>
+          <groups>${shadleaf.test.groups}</groups>
           <systemPropertyVariables>
             <!-- PreviewGeneratorTest stamps the docs artifacts with it -->
             <shadleaf.version>${project.version}</shadleaf.version>
@@ -128,4 +137,15 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <!-- mvn test -Pperformance: runs only RenderPerformanceTest -->
+      <id>performance</id>
+      <properties>
+        <shadleaf.test.groups>performance</shadleaf.test.groups>
+        <shadleaf.test.excluded-groups/>
+      </properties>
+    </profile>
+  </profiles>
 </project>

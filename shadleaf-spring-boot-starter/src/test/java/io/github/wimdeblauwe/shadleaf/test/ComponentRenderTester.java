@@ -62,6 +62,7 @@ public final class ComponentRenderTester {
 
     StringTemplateResolver snippetResolver = new StringTemplateResolver();
     snippetResolver.setTemplateMode(TemplateMode.HTML);
+    snippetResolver.setCacheable(builder.cacheSnippets);
     snippetResolver.setOrder(2);
 
     engine = new SpringTemplateEngine();
@@ -122,6 +123,7 @@ public final class ComponentRenderTester {
     private @Nullable MessageSource messageSource;
     private Locale locale = Locale.ENGLISH;
     private String contextPath = "";
+    private boolean cacheSnippets;
 
     private Builder() {
     }
@@ -161,6 +163,15 @@ public final class ComponentRenderTester {
     /** A request attribute, visible to templates as a context variable, like a CSP nonce. */
     public Builder requestAttribute(String name, Object value) {
       requestAttributes.put(name, value);
+      return this;
+    }
+
+    /**
+     * Caches the parsed snippet, keyed by its text, as an application's page templates are cached in production.
+     * Off by default, so every render parses the snippet again.
+     */
+    public Builder cacheSnippets() {
+      this.cacheSnippets = true;
       return this;
     }
 

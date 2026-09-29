@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--/* The baseline for RenderPerformanceTest: the fragment an application writes today without a component library,
+  producing the same markup as <sl:button variant="outline"> with a trash icon in its icon-start slot. */-->
+<button th:fragment="button(variant, label)"
+        class="btn"
+        type="button"
+        th:attr="data-variant=${variant}">
+  <span class="btn-icon" data-icon="inline-start"><svg xmlns="http://www.w3.org/2000/svg" class="sl-icon"
+      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path
+      d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path
+      d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+  <th:block th:text="${label}">Label</th:block>
+</button>
+</body>
+</html>

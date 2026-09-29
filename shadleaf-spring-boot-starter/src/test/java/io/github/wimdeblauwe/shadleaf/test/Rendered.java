@@ -8,19 +8,20 @@ import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The output of one {@link ComponentRenderTester} render: the HTML exactly as Thymeleaf wrote it, and a jsoup
- * document parsed from it for {@link ShadleafAssertions}.
+ * document parsed from it for {@link ShadleafAssertions}. The document is parsed on first use, so a render that only
+ * needs the HTML (the performance test) does not pay for it.
  */
 public final class Rendered {
 
   private final String html;
-  private final Document document;
+  private @Nullable Document document;
 
   Rendered(String html) {
     this.html = html;
-    this.document = Jsoup.parseBodyFragment(html);
   }
 
   /** The HTML exactly as rendered, whitespace included. */
@@ -33,12 +34,15 @@ public final class Rendered {
    * {@link #html()}.
    */
   public Document document() {
+    if (document == null) {
+      document = Jsoup.parseBodyFragment(html);
+    }
     return document;
   }
 
   /** The first rendered element: for a single component, its root element. */
   public Element root() {
-    Element body = document.body();
+    Element body = document().body();
     if (body.childrenSize() == 0) {
       throw new AssertionError("Nothing rendered but text:%n%s".formatted(html));
     }
@@ -46,7 +50,7 @@ public final class Rendered {
   }
 
   public Elements select(String cssQuery) {
-    return document.body().select(cssQuery);
+    return document().body().select(cssQuery);
   }
 
   /**
@@ -59,7 +63,7 @@ public final class Rendered {
    */
   public String normalizedHtml() {
     StringBuilder out = new StringBuilder();
-    for (Node node : document.body().childNodes()) {
+    for (Node node : document().body().childNodes()) {
       print(node, 0, out);
     }
     return out.toString().stripTrailing();
