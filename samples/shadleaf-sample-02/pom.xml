@@ -12,7 +12,7 @@
   </parent>
   <groupId>io.github.wimdeblauwe.shadleaf.samples</groupId>
   <artifactId>shadleaf-sample-02</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>Shadleaf Sample App 2</name>
   <description>
     Shadleaf behind Spring Security with a strict Content-Security-Policy, and no Node in the build.
@@ -21,7 +21,7 @@
 
   <properties>
     <java.version>17</java.version>
-    <shadleaf.version>0.1.0-SNAPSHOT</shadleaf.version>
+    <shadleaf.version>0.1.0</shadleaf.version>
   </properties>
   <dependencies>
     <dependency>

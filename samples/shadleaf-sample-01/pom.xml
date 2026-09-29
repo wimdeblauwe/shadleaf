@@ -12,13 +12,13 @@
   </parent>
   <groupId>io.github.wimdeblauwe.shadleaf.samples</groupId>
   <artifactId>shadleaf-sample-01</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>Shadleaf Sample App 1</name>
   <description>Standalone consumer of the Shadleaf starter. Run `mvn install` in the repository root first.</description>
 
   <properties>
     <java.version>17</java.version>
-    <shadleaf.version>0.1.0-SNAPSHOT</shadleaf.version>
+    <shadleaf.version>0.1.0</shadleaf.version>
     <!-- Maven plugins -->
     <frontend-maven-plugin.version>2.0.1</frontend-maven-plugin.version>
     <frontend-maven-plugin.nodeVersion>v24.18.0</frontend-maven-plugin.nodeVersion>
