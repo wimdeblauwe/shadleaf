@@ -114,13 +114,13 @@
           }, {
             "name" : "secondary"
           }, {
+            "name" : "destructive"
+          }, {
             "name" : "outline"
           }, {
             "name" : "ghost"
           }, {
             "name" : "link"
-          }, {
-            "name" : "destructive"
           } ],
           "default" : "default"
         }, {
@@ -166,15 +166,15 @@
           "values" : [ {
             "name" : "default"
           }, {
-            "name" : "secondary"
-          }, {
             "name" : "outline"
           }, {
             "name" : "ghost"
           }, {
-            "name" : "link"
-          }, {
             "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
           } ],
           "default" : "default"
         }, {

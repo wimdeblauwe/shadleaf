@@ -9,11 +9,11 @@ scenarios:
     title: Variants
     source: |-
       <sl:button>Default</sl:button>
-      <sl:button variant="secondary">Secondary</sl:button>
       <sl:button variant="outline">Outline</sl:button>
       <sl:button variant="ghost">Ghost</sl:button>
-      <sl:button variant="link">Link</sl:button>
       <sl:button variant="destructive">Destructive</sl:button>
+      <sl:button variant="secondary">Secondary</sl:button>
+      <sl:button variant="link">Link</sl:button>
 
   - id: sizes
     title: Sizes

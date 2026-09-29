@@ -5,7 +5,7 @@
       th:replace="~{layout/main :: layout('Home', ~{::#page-content})}">
 <body>
 <div id="page-content"
-     th:with="variants=${ {'default', 'secondary', 'outline', 'ghost', 'link', 'destructive'} },
+     th:with="variants=${ {'default', 'outline', 'ghost', 'destructive', 'secondary', 'link'} },
               sizes=${ {'xs', 'sm', 'default', 'lg'} },
               iconSizes=${ {'icon-xs', 'icon-sm', 'icon', 'icon-lg'} }">
 

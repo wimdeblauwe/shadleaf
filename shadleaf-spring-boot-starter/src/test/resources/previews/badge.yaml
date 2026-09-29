@@ -10,10 +10,10 @@ scenarios:
     source: |-
       <sl:badge>Default</sl:badge>
       <sl:badge variant="secondary">Secondary</sl:badge>
+      <sl:badge variant="destructive">Destructive</sl:badge>
       <sl:badge variant="outline">Outline</sl:badge>
       <sl:badge variant="ghost">Ghost</sl:badge>
       <sl:badge variant="link">Link</sl:badge>
-      <sl:badge variant="destructive">Destructive</sl:badge>
 
   - id: with-icon
     title: With an icon
@@ -33,7 +33,10 @@ scenarios:
     source: |-
       <sl:badge as="a" href="/orders?status=open">Open</sl:badge>
       <sl:badge as="a" href="/orders?status=late" variant="destructive">Late</sl:badge>
-      <sl:badge as="a" href="/orders" variant="outline">All orders</sl:badge>
+      <sl:badge as="a" href="/orders" variant="outline">
+        All orders
+        <sl:slot name="icon-end"><sl:icon name="arrow-up-right"/></sl:slot>
+      </sl:badge>
 
   - id: pass-through
     title: Pass-through attributes

@@ -62,7 +62,7 @@
       "name" : "variant",
       "type" : "enum",
       "defaultValue" : "default",
-      "values" : [ "default", "secondary", "outline", "ghost", "link", "destructive" ],
+      "values" : [ "default", "secondary", "destructive", "outline", "ghost", "link" ],
       "description" : "Visual style of the badge."
     }, {
       "name" : "as",
@@ -80,7 +80,7 @@
       "name" : "variant",
       "type" : "enum",
       "defaultValue" : "default",
-      "values" : [ "default", "secondary", "outline", "ghost", "link", "destructive" ],
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
       "description" : "Visual style of the button."
     }, {
       "name" : "size",

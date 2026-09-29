@@ -18,8 +18,8 @@ import org.springframework.context.support.StaticMessageSource;
 
 class ButtonComponentTest {
 
-  private static final List<String> VARIANTS = List.of("default", "secondary", "outline", "ghost", "link",
-      "destructive");
+  private static final List<String> VARIANTS = List.of("default", "outline", "ghost", "destructive", "secondary",
+      "link");
   private static final List<String> SIZES = List.of("xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm",
       "icon-lg");
 
@@ -83,7 +83,7 @@ class ButtonComponentTest {
   void illegalVariantFailsListingTheLegalOnes() {
     assertThatRenderFailure(() -> tester.render("<sl:button variant=\"destructve\">Delete</sl:button>"))
         .hasMessageContaining("destructve")
-        .hasMessageContaining("default, secondary, outline, ghost, link, destructive");
+        .hasMessageContaining("default, outline, ghost, destructive, secondary, link");
   }
 
   @Test

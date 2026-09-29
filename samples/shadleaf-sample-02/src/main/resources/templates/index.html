@@ -9,7 +9,7 @@
     script or style; open the browser console to confirm nothing was blocked.</p>
 
   <div class="row">
-    <sl:button th:each="variant : ${ {'default', 'secondary', 'outline', 'ghost', 'link', 'destructive'} }"
+    <sl:button th:each="variant : ${ {'default', 'outline', 'ghost', 'destructive', 'secondary', 'link'} }"
                th:variant="${variant}" th:text="${#strings.capitalize(variant)}">Button</sl:button>
   </div>
   <div class="row">
