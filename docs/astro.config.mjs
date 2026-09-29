@@ -22,6 +22,7 @@ export default defineConfig({
           items: [
             {label: 'Introduction', slug: 'index'},
             'getting-started',
+            'coming-from-shadcn',
             'ide-completion',
           ],
         },

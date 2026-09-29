@@ -1,0 +1,95 @@
+---
+title: Coming from shadcn/ui
+description: What carries over from shadcn/ui unchanged, and where Shadleaf differs, and why.
+---
+
+Most of what you know from shadcn/ui carries over. The component and part names map one to one
+(`CardHeader` is `<sl:card-header>`), and so do the variant and size names (`variant="outline" size="sm"`). The colour
+tokens are shadcn's, verbatim: a theme from tweakcn or the shadcn theme generator drops in unchanged. Porting an example
+is mostly a matter of renaming tags.
+
+This page lists where Shadleaf differs. Some differences come from running on the server with Thymeleaf instead of in
+React; the others are deliberate, mostly for accessibility.
+
+## Because it is Thymeleaf, not React
+
+### `as` instead of `asChild`
+
+There is no `asChild`. A component that can render as a link takes `as="a"`:
+
+```html
+<!-- shadcn: <Button asChild><a href="/orders">Orders</a></Button> -->
+<sl:button as="a" th:href="@{/orders}">Orders</sl:button>
+```
+
+### No utility classes in the library's CSS
+
+shadcn styles its components with Tailwind classes compiled into your application. Shadleaf ships its own stylesheet,
+which defines no utility classes, so it works in an application that does not compile Tailwind at all. Where a shadcn
+example relies on a utility class to change a component, Shadleaf has a prop instead:
+
+| shadcn/ui | Shadleaf |
+| --- | --- |
+| `<CardHeader className="border-b">` | `<sl:card-header border>` |
+| `<Skeleton className="h-4 w-full" />` | `<sl:skeleton/>` (a line is the default), `shape="circle"` for an avatar |
+
+Your own classes still work: `class` is appended to the component's own, so `class="w-64"` sizes a skeleton when your
+application compiles Tailwind. See [the adjustability ladder](../guides/adjustability/).
+
+### The avatar decides on the server
+
+shadcn's avatar waits in the browser for the image to load and shows the fallback until it has. Shadleaf renders the
+image and the fallback, and the stylesheet shows the fallback when the image has no `src` or an empty one, which is
+what `th:src` gives for a user without a photo. An image URL that fails to load is not detected yet.
+
+### Markup
+
+The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
+`data-variant` or `data-size` attribute only when the value is not the default. It matters only if you port CSS written
+against shadcn's markup.
+
+## Deliberate differences
+
+### A button does not submit by default
+
+`<sl:button>` renders `type="button"`; shadcn's `Button` leaves the type out, so it submits the form it is in. Write
+`type="submit"` on the button that should submit. See [Button](../components/button/).
+
+### An alert is not announced by default
+
+shadcn's `Alert` always has `role="alert"`, so a screen reader interrupts the user to read it. Most alerts are part of
+the page when it loads, where that interruption helps nobody. Add `role="alert"` yourself when an alert appears later,
+for example in an htmx response. See [Alert](../components/alert/).
+
+### Contrast
+
+A few of shadcn's colour pairs are under the 4.5:1 contrast WCAG asks for small text:
+
+- destructive text on its light red tint (the destructive button and badge, the destructive alert);
+- muted text on a muted background (the kbd, the avatar's initials).
+
+Shadleaf mixes 20% of `--foreground` into the text colour in those places. It still follows your own `--destructive`
+and `--muted-foreground`, so your theme keeps working.
+
+Where shadcn changes text to `--muted-foreground` on hover, Shadleaf keeps `--foreground`, for the same reason.
+
+### Only interactive elements react to hover
+
+shadcn's ghost badge changes colour on hover even when it is a plain label. A Shadleaf badge only reacts to hover, and
+takes keyboard focus, when it is a link (`as="a"`).
+
+### Accessibility additions
+
+- `<sl:card-title level="3">` is announced as a heading, so screen reader users can jump between cards. Without a
+  `level` it is plain text, as in shadcn.
+- The avatar is hidden from assistive technology unless it has a `label`, as it usually sits next to the person's
+  name. With one, it is announced as a single image with that name.
+- The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
+- Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
+  `aria-label`.
+
+### Additions
+
+- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
+  `Spinner` for this.
+- A second skin, `flat`, next to the default one. The same markup, square corners and no shadows.
