@@ -1,11 +1,12 @@
 import {expect, test} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import axe, {type Result} from 'axe-core';
 import {combinations, openShowcase} from './showcase';
 
 // axe-core over every preview scenario, in each skin, light and dark: contrast, names, roles, ARIA. It does not check
 // that focus is visible; focus.spec.ts does.
 
-function describe(violations: Awaited<ReturnType<AxeBuilder['analyze']>>['violations']): string[] {
+function describe(violations: Result[]): string[] {
   return violations.map(violation =>
       `${violation.id} (${violation.impact}): ${violation.help}\n` +
       violation.nodes.map(node => `    ${node.target.join(' ')}: ${node.failureSummary}`).join('\n'));
@@ -22,17 +23,27 @@ for (const {skin, theme} of combinations) {
     expect(summary, summary.join('\n')).toEqual([]);
   });
 
-  // axe sees the resting state only. A hover background is a different colour, so check the text on it as well.
+  // axe sees the resting state only. A hover background is a different colour, so check the text on it as well: a real
+  // hover per control (styles from a hovered ancestor count too), then axe on that control alone. axe is injected once
+  // and run in the page directly; an AxeBuilder per control injects and sets it up again every time (~100 ms each).
   test(`text keeps its contrast on hover: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
+    // evaluate, not addScriptTag: a page's Content-Security-Policy does not apply to it
+    await page.evaluate(axe.source);
     const controls = page.locator('main .btn:not([disabled]):not([aria-disabled])');
+    const count = await controls.count();
     const failures: string[] = [];
-    for (let i = 0; i < await controls.count(); i++) {
+    for (let i = 0; i < count; i++) {
       const control = controls.nth(i);
       await control.evaluate(element => element.setAttribute('data-hovered', ''));
       await control.hover();
-      const results = await new AxeBuilder({page}).include('[data-hovered]').withRules(['color-contrast']).analyze();
-      failures.push(...describe(results.violations));
+      // window.axe, not the imported binding: the function runs in the page, where the import does not exist
+      const violations = await page.evaluate(async () => {
+        const results = await (window as unknown as {axe: typeof axe}).axe.run(
+            {include: [['[data-hovered]']]}, {runOnly: {type: 'rule', values: ['color-contrast']}});
+        return results.violations;
+      });
+      failures.push(...describe(violations));
       await control.evaluate(element => element.removeAttribute('data-hovered'));
     }
     expect(failures, failures.join('\n')).toEqual([]);
