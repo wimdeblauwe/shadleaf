@@ -148,7 +148,8 @@
                 <owner>wimdeblauwe</owner>
                 <name>shadleaf</name>
                 <tagName>{{projectVersion}}</tagName>
-                <releaseName>{{tagName}}</releaseName>
+                <!-- The pom's version: the tag of a release, and e.g. 0.1.0-SNAPSHOT (not early-access) for a snapshot -->
+                <releaseName>{{projectVersion}}</releaseName>
                 <skipTag>${shadleaf.release.skip-tag}</skipTag>
                 <overwrite>false</overwrite>
                 <prerelease>
