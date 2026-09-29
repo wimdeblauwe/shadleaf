@@ -1,0 +1,21 @@
+# Scenarios for the separator's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: separator
+scenarios:
+  - id: default
+    title: Separator
+    source: '<sl:separator/>'
+
+  - id: vertical
+    title: Vertical
+    description: A vertical separator stretches to the height of the flex row it is in.
+    source: |-
+      <sl:button as="a" href="/blog" variant="link">Blog</sl:button>
+      <sl:separator orientation="vertical"/>
+      <sl:button as="a" href="/docs" variant="link">Docs</sl:button>
+      <sl:separator orientation="vertical"/>
+      <sl:button as="a" href="/source" variant="link">Source</sl:button>
+
+  - id: semantic
+    title: Announced
+    description: decorative="false" makes it a separator for assistive technology too.
+    source: '<sl:separator decorative="false"/>'

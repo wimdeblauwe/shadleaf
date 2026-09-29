@@ -35,6 +35,7 @@ class WebTypesTest {
           <sl:description>A <code>chip</code>.</sl:description>
           <sl:prop name="variant" default="plain" values="plain bold">Style.</sl:prop>
           <sl:prop name="removable" type="boolean">Show a remove button.</sl:prop>
+          <sl:prop name="wrap" type="boolean" default="true">Wrap long text.</sl:prop>
           <sl:prop name="count" type="number" default="1.50"/>
           <sl:prop name="label"/>
         </sl:props>
@@ -49,6 +50,10 @@ class WebTypesTest {
     JsonNode removable = attribute(element, "removable");
     assertThat(removable.get("value").get("kind").asString()).isEqualTo("no-value");
     assertThat(removable.has("default")).isFalse();
+    JsonNode wrap = attribute(element, "wrap");
+    assertThat(wrap.get("value").get("type").asString()).isEqualTo("enum");
+    assertThat(wrap.get("values").findValuesAsString("name")).containsExactly("true", "false");
+    assertThat(wrap.get("default").asString()).isEqualTo("true");
     assertThat(attribute(element, "count").get("default").asString()).isEqualTo("1.50");
     JsonNode label = attribute(element, "label");
     assertThat(label.get("value").get("kind").asString()).isEqualTo("plain");

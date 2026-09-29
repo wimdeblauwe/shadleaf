@@ -1,0 +1,15 @@
+/* Separator: structure only. Its colour and thickness are identity and live in the skins. */
+@layer components {
+  .separator {
+    @apply shrink-0;
+  }
+
+  .separator:not([data-orientation]),
+  .separator[data-orientation='horizontal'] {
+    @apply w-full;
+  }
+
+  .separator[data-orientation='vertical'] {
+    @apply self-stretch;
+  }
+}

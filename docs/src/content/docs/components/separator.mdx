@@ -1,0 +1,29 @@
+---
+title: Separator
+description: A thin line between content.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="separator--default" />
+
+## Vertical
+
+`orientation="vertical"` draws a vertical line that stretches to the height of the row it is in. Put it in a flex
+container, such as a toolbar or a row of links.
+
+<ComponentPreview id="separator--vertical" />
+
+## Decorative or announced
+
+A separator is decorative by default, as in shadcn/ui: it only draws a line and is hidden from assistive technology
+(`role="none"`). When the line divides the content into groups a screen reader user should know about, write
+`decorative="false"`. It is then announced as a separator (`role="separator"`, with `aria-orientation` when
+vertical).
+
+<ComponentPreview id="separator--semantic" />
+
+## Attributes
+
+<ComponentAttributes component="separator" />

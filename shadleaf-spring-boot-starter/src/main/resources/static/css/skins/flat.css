@@ -186,4 +186,18 @@
   .alert[data-variant='destructive'] > .alert-description {
     @apply text-foreground;
   }
+
+  /* Separator */
+  .separator {
+    @apply bg-border;
+  }
+
+  .separator:not([data-orientation]),
+  .separator[data-orientation='horizontal'] {
+    @apply h-px;
+  }
+
+  .separator[data-orientation='vertical'] {
+    @apply w-px;
+  }
 }

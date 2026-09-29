@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A thin line between content. A vertical one stretches to the height of the row it is in, so it
+      needs a flex container.</sl:description>
+    <sl:prop name="orientation" default="horizontal" values="horizontal vertical">Direction of the line.</sl:prop>
+    <sl:prop name="decorative" type="boolean" default="true">Hide the line from assistive technology, as most
+      separators only draw a line. With <code>decorative="false"</code> it is announced as a separator, for one that
+      divides content into groups.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* aria-orientation is only needed for a vertical separator: horizontal is the role's default. */-->
+<div th:fragment="separator"
+     class="separator"
+     th:attr="data-orientation=${props.unlessDefault('orientation')},
+              role=${props.decorative ? 'none' : 'separator'},
+              aria-orientation=${!props.decorative and props.orientation == 'vertical' ? 'vertical' : null}"
+     sl:attrs></div>
+</body>
+</html>

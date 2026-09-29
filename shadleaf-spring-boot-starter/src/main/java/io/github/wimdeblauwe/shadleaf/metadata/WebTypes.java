@@ -16,7 +16,8 @@ import tools.jackson.databind.json.JsonMapper;
  * values. The IDE finds the file through the {@code web-types} property of a {@code package.json} next to it.
  * <p>
  * Everything comes from the declared props, nothing is inferred: {@code values} is the enum, {@code default} the
- * default, a {@code boolean} prop is an attribute without a value, and the prop's text is the description. Every prop
+ * default, a {@code boolean} prop is an attribute without a value (or {@code true}/{@code false} when it defaults to
+ * true), and the prop's text is the description. Every prop
  * is offered a second time as {@code th:<prop>}, for a value computed by an expression.
  */
 public final class WebTypes {
@@ -81,9 +82,18 @@ public final class WebTypes {
     if (!prop.description().isEmpty()) {
       attribute.put("description", prop.description());
     }
+    // A boolean that is on by default can only be switched off with ="false", so it takes the two values instead.
+    boolean onByDefault = prop.type().equals("boolean") && "true".equals(prop.defaultValue());
     Map<String, Object> value = new LinkedHashMap<>();
     switch (prop.type()) {
-      case "boolean" -> value.put("kind", "no-value");
+      case "boolean" -> {
+        if (onByDefault) {
+          value.put("kind", "plain");
+          value.put("type", "enum");
+        } else {
+          value.put("kind", "no-value");
+        }
+      }
       case "enum" -> {
         value.put("kind", "plain");
         value.put("type", "enum");
@@ -98,8 +108,10 @@ public final class WebTypes {
     attribute.put("value", value);
     if (!prop.values().isEmpty()) {
       attribute.put("values", prop.values().stream().map(name -> Map.of("name", name)).toList());
+    } else if (onByDefault) {
+      attribute.put("values", List.of(Map.of("name", "true"), Map.of("name", "false")));
     }
-    if (prop.defaultValue() != null && !prop.type().equals("boolean")) {
+    if (prop.defaultValue() != null && (!prop.type().equals("boolean") || onByDefault)) {
       attribute.put("default", prop.defaultValue());
     }
     return attribute;

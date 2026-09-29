@@ -408,6 +408,52 @@
             "required" : false
           }
         } ]
+      }, {
+        "name" : "sl:separator",
+        "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",
+        "attributes" : [ {
+          "name" : "orientation",
+          "description" : "Direction of the line.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "decorative",
+          "description" : "Hide the line from assistive technology, as most separators only draw a line. With `decorative=\"false\"` it is announced as a separator, for one that divides content into groups.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:decorative",
+          "description" : "`decorative` from a Thymeleaf expression, e.g. `th:decorative=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       } ]
     }
   }
