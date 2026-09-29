@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A callout for a message the user should notice: an optional <code>sl:icon</code>, then
+      <code>sl:alert-title</code> and <code>sl:alert-description</code>. It is not announced by itself; add
+      <code>role="alert"</code> when it appears after the page loaded, such as in an htmx response.</sl:description>
+    <sl:prop name="variant" default="default" values="default destructive">Visual style of the alert.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="alert"
+     class="alert"
+     th:attr="data-variant=${props.unlessDefault('variant')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

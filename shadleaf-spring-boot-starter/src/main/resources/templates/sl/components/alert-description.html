@@ -1,0 +1,11 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The body of an alert, inside <code>sl:alert</code>: text, paragraphs or a list.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="alert-description" class="alert-description" sl:attrs><sl:slot/></div>
+</body>
+</html>

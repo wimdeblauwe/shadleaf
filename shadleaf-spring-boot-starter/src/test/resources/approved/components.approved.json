@@ -1,6 +1,30 @@
 {
   "version" : "test",
   "components" : [ {
+    "name" : "alert",
+    "tag" : "sl:alert",
+    "description" : "A callout for a message the user should notice: an optional `sl:icon`, then `sl:alert-title` and `sl:alert-description`. It is not announced by itself; add `role=\"alert\"` when it appears after the page loaded, such as in an htmx response.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "destructive" ],
+      "description" : "Visual style of the alert."
+    } ]
+  }, {
+    "name" : "alert-description",
+    "tag" : "sl:alert-description",
+    "description" : "The body of an alert, inside `sl:alert`: text, paragraphs or a list.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "alert-title",
+    "tag" : "sl:alert-title",
+    "description" : "The title of an alert, inside `sl:alert`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "badge",
     "tag" : "sl:badge",
     "description" : "A small label for a status, a count or a category; with `as=\"a\"`, a link that looks the same. Every attribute that is not a prop passes through; `class` is appended to `badge`.",

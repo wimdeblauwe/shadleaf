@@ -1,0 +1,44 @@
+# Scenarios for the alert's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: alert
+parts: [alert-title, alert-description]
+scenarios:
+  - id: default
+    title: Alert
+    source: |-
+      <sl:alert>
+        <sl:icon name="circle-check"/>
+        <sl:alert-title>Order placed</sl:alert-title>
+        <sl:alert-description>We will email you when it ships.</sl:alert-description>
+      </sl:alert>
+
+  - id: destructive
+    title: Destructive
+    source: |-
+      <sl:alert variant="destructive">
+        <sl:icon name="circle-alert"/>
+        <sl:alert-title>Payment failed</sl:alert-title>
+        <sl:alert-description>
+          <p>Your card was declined. Check the details and try again:</p>
+          <ul>
+            <li>the expiry date</li>
+            <li>the billing address</li>
+          </ul>
+        </sl:alert-description>
+      </sl:alert>
+
+  - id: title-only
+    title: Title only, no icon
+    source: |-
+      <sl:alert>
+        <sl:alert-title>Your trial ends in 3 days.</sl:alert-title>
+      </sl:alert>
+
+  - id: announced
+    title: Announced
+    description: role="alert" makes a screen reader read the alert as soon as it appears.
+    source: |-
+      <sl:alert variant="destructive" role="alert">
+        <sl:icon name="circle-alert"/>
+        <sl:alert-title>The order could not be saved</sl:alert-title>
+        <sl:alert-description>Someone else changed it. Reload the page to see their changes.</sl:alert-description>
+      </sl:alert>

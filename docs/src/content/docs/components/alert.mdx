@@ -1,0 +1,46 @@
+---
+title: Alert
+description: A callout for a message the user should notice.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="alert--default" />
+
+## Built from parts
+
+`<sl:alert>` holds an optional [`<sl:icon>`](../icon/), then `<sl:alert-title>` and `<sl:alert-description>`, as in
+shadcn/ui. The icon takes the alert's colour and sits beside both. Use either part on its own.
+
+<ComponentPreview id="alert--title-only" />
+
+## Destructive
+
+<ComponentPreview id="alert--destructive" />
+
+## Announcing an alert
+
+An alert is not announced by itself. Most alerts are part of the page when it loads, and a screen reader reads them in
+order with everything else; announcing them too would interrupt the user for no reason.
+
+When an alert appears later, for example in the response to an htmx request, add `role="alert"`. A screen reader then
+reads it as soon as it is inserted. Like any other attribute, `role` passes through to the rendered element.
+
+<ComponentPreview id="alert--announced" />
+
+For a message that is not urgent, `role="status"` is announced when the user is idle instead of at once.
+
+## Attributes
+
+### sl:alert
+
+<ComponentAttributes component="alert" />
+
+### sl:alert-title
+
+<ComponentAttributes component="alert-title" />
+
+### sl:alert-description
+
+<ComponentAttributes component="alert-description" />

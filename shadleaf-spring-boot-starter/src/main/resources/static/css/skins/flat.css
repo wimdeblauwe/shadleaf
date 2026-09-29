@@ -160,4 +160,30 @@
   .card[data-size='sm'] > .card-footer {
     @apply data-border:pt-3;
   }
+
+  /* Alert. The destructive one keeps the default surface and marks itself with its border. */
+  .alert {
+    @apply gap-y-1 rounded-none border px-4 py-3 text-start text-sm has-[>svg]:gap-x-3
+      [&>svg]:translate-y-0.5 [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .alert:not([data-variant]) {
+    @apply border-border bg-card text-card-foreground;
+  }
+
+  .alert[data-variant='destructive'] {
+    @apply border-destructive bg-card text-destructive-legible;
+  }
+
+  .alert-title {
+    @apply font-semibold;
+  }
+
+  .alert-description {
+    @apply gap-1 text-sm text-muted-foreground;
+  }
+
+  .alert[data-variant='destructive'] > .alert-description {
+    @apply text-foreground;
+  }
 }

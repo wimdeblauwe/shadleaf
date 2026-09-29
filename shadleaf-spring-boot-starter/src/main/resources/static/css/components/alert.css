@@ -1,0 +1,28 @@
+/*
+  Alert and its parts: structure only. Colour, radius, border, spacing and type are identity and live in the skins.
+  An icon, as a direct child svg, takes a first column beside the title and the description.
+*/
+@layer components {
+  .alert {
+    @apply relative grid w-full grid-cols-[0_1fr] items-start has-[>svg]:grid-cols-[auto_1fr]
+      [&>svg]:row-span-2 [&>svg]:text-current;
+  }
+
+  .alert-title,
+  .alert-description {
+    @apply col-start-2;
+  }
+
+  .alert-description {
+    @apply grid justify-items-start;
+  }
+
+  /* Lists in the description keep their markers, which the standalone bundle's reset removes. */
+  .alert-description :where(ul) {
+    @apply list-inside list-disc;
+  }
+
+  .alert-description :where(ol) {
+    @apply list-inside list-decimal;
+  }
+}

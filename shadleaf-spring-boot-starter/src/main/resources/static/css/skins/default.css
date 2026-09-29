@@ -169,4 +169,30 @@
   .card[data-size='sm'] > .card-footer {
     @apply data-border:pt-4;
   }
+
+  /* Alert */
+  .alert {
+    @apply gap-y-0.5 rounded-lg border px-4 py-3 text-start text-sm has-[>svg]:gap-x-3
+      [&>svg]:translate-y-0.5 [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .alert:not([data-variant]) {
+    @apply bg-card text-card-foreground;
+  }
+
+  .alert[data-variant='destructive'] {
+    @apply bg-card text-destructive-legible;
+  }
+
+  .alert-title {
+    @apply min-h-4 font-medium tracking-tight;
+  }
+
+  .alert-description {
+    @apply gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed;
+  }
+
+  .alert[data-variant='destructive'] > .alert-description {
+    @apply text-destructive-legible;
+  }
 }
