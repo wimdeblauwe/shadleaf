@@ -24,7 +24,8 @@ In the `<head>` of your layout:
 </head>
 ```
 
-`assets` links the stylesheet of the configured skin. `theme-script` is a tiny inline script that sets `class="dark"`
+`assets` links the stylesheet of the configured skin and loads the script with Alpine.js, which the interactive
+components use; see [Alpine.js](../guides/alpine/) if your application loads Alpine itself. `theme-script` is a tiny inline script that sets `class="dark"`
 on `<html>` before the first paint: `localStorage['shadleaf-theme']` set to `light` or `dark` wins, anything else follows
 the operating system. Behind a Content-Security-Policy, see [CSP](../guides/csp/).
 
@@ -50,6 +51,7 @@ accident. Write `type="submit"` on the button that should.
 | --- | --- | --- |
 | `shadleaf.skin` | `default` | The visual identity: `default` or `flat`. |
 | `shadleaf.assets.variant` | `standalone` | `embedded` leaves out Tailwind's reset, for applications that compile Tailwind themselves. |
+| `shadleaf.assets.alpine` | `bundled` | Where Alpine.js comes from: `bundled`, `csp` or `external`; see [Alpine.js](../guides/alpine/). |
 | `shadleaf.csp.nonce-attribute` | `cspNonce` | The request attribute holding a CSP nonce for the theme script. |
 | `shadleaf.dev.web-types-file` | | Writes IDE metadata for your components; see [IDE completion](../ide-completion/). |
 

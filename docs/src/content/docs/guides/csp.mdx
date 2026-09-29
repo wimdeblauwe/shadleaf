@@ -70,9 +70,15 @@ For this version of Shadleaf that is:
 
 A hash pasted into a static configuration goes stale when an upgrade changes the script, so prefer the bean.
 
+## Alpine.js
+
+Alpine's standard build needs `'unsafe-eval'`. Under a policy without it, set `shadleaf.assets.alpine=csp` to load
+Alpine's CSP build instead; see [Alpine.js](../alpine/#csp) for what that means for your own Alpine markup. Shadleaf's
+script is served from your application, so `script-src 'self'` allows it.
+
 ## A working example
 
 `samples/shadleaf-sample-02` in the repository runs behind Spring Security with exactly this policy, switchable between
-the two modes with `sample.csp.mode=nonce|hash`. Its tests check that the header holds no `'unsafe-inline'`, that the
+the two modes with `sample.csp.mode=nonce|hash`, and loads Alpine's CSP build. Its tests check that the header holds no `'unsafe-inline'`, that the
 nonce in the header matches the script's and changes on every request, and that the page holds no `<style>`, `style=`
 or `on*=` attributes.

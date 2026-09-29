@@ -1,0 +1,114 @@
+---
+title: Alpine.js
+description: Let Shadleaf bring Alpine, use its CSP build, or register with the Alpine your application already loads.
+sidebar:
+  order: 4
+---
+
+Shadleaf's interactive components (dialog, dropdown menu, tabs and the like, from 0.4 on) use [Alpine.js](https://alpinejs.dev)
+for what the native elements cannot do on their own. A page can only have **one** Alpine: two copies would both
+initialise the same elements. So you choose where it comes from, with one property:
+
+```properties
+shadleaf.assets.alpine=bundled   # the default
+```
+
+| Value | The `assets` fragment loads | Choose it when |
+| --- | --- | --- |
+| `bundled` | Alpine's standard build, Shadleaf's components, and starts Alpine | your application does not load Alpine itself |
+| `csp` | Alpine's CSP build, Shadleaf's components, and starts Alpine | your Content-Security-Policy has no `'unsafe-eval'` |
+| `external` | only Shadleaf's components, registered with your Alpine | your application already loads Alpine |
+
+In every case the script is served from your own application under `/shadleaf/**`, so a policy with
+`script-src 'self'` allows it. It is a module script, so it never blocks rendering.
+
+## bundled
+
+Nothing to do: include the `assets` fragment as shown in [Getting started](../../getting-started/). You can use Alpine
+in your own markup too (`x-data`, `x-show`, `@click`, ...) without loading it yourself.
+
+To register your own components or plugins, listen for `alpine:init` in a script that runs **before** the `assets`
+fragment. Shadleaf starts Alpine as soon as its script runs, and `alpine:init` fires only once, at that moment:
+
+```html
+<head>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <script type="module" th:src="@{/js/alpine-components.js}"></script>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+</head>
+```
+
+```js
+// /js/alpine-components.js
+document.addEventListener('alpine:init', () => {
+  window.Alpine.data('orderLine', () => ({
+    quantity: 1,
+    increment() {
+      this.quantity++;
+    }
+  }));
+});
+```
+
+Do not load another Alpine next to it. Shadleaf's script refuses to start a second one when it finds
+`window.Alpine` already on the page, and says so in the browser console. It cannot notice an Alpine that loads
+**after** it, so if you see elements initialised twice, look for a second Alpine script tag.
+
+## csp
+
+Alpine's standard build turns every attribute expression into code with `new Function(...)`, which a policy without
+`'unsafe-eval'` blocks. The CSP build parses the expressions itself instead. Shadleaf's own templates only use
+expressions it accepts, so the components work the same with either build.
+
+The rules apply to your own Alpine markup as well. The CSP build supports property access, method calls, assignments,
+ternaries and string concatenation. It does not support arrow functions, template literals, the spread operator,
+assignments to nested properties, or globals such as `Math`, `document` and `console`. Move that logic into an
+`Alpine.data` component, registered as shown above, and call its methods from the markup:
+
+```html
+<!-- not with the CSP build -->
+<button @click="items = items.filter(i => i.done)">Clear done</button>
+
+<!-- works with both builds -->
+<div x-data="todoList">
+  <button @click="clearDone">Clear done</button>
+</div>
+```
+
+The [Content-Security-Policy guide](../csp/) covers the rest of a strict policy. `samples/shadleaf-sample-02` in the
+repository uses `csp` behind exactly that policy.
+
+## external
+
+Your application loads Alpine, and Shadleaf's script only registers its components with it. Shadleaf's script has
+to run before your Alpine starts, so put the `assets` fragment **before** the script that loads Alpine. Deferred and
+module scripts run in the order they appear:
+
+```html
+<head>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <script defer th:src="@{/js/alpine.min.js}"></script>
+</head>
+```
+
+The same goes for an Alpine you bundle yourself: the module that calls `Alpine.start()` goes after the fragment.
+
+```js
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+Alpine.start();
+```
+
+If Shadleaf's script runs after Alpine has already initialised elements, the Shadleaf components on the page stay
+inert, and the browser console says: *Shadleaf: shadleaf.js ran after Alpine started*. Move the fragment up.
+
+Some components need an Alpine plugin, such as `@alpinejs/focus`. With `bundled` and `csp` Shadleaf includes them;
+with `external` your application registers them. Each component's page lists the plugins it needs. No component
+needs one yet.
+
+## Pages without interactive components
+
+The script is on every page that includes the `assets` fragment, whether that page uses an interactive component or
+not. That keeps the setup to one fragment. `bundled` and `csp` add about 20 KB, compressed, and are cached across pages.
