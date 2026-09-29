@@ -1,0 +1,28 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A picture of a person: an <code>sl:avatar-image</code>, and an <code>sl:avatar-fallback</code>
+      (initials) shown instead when the image has no <code>src</code>. Decorative unless it has a
+      <code>label</code>, as an avatar usually sits next to the person's name.</sl:description>
+    <sl:prop name="size" default="default" values="sm default lg">Size of the avatar.</sl:prop>
+    <sl:prop name="label">The person's name, for an avatar with no name next to it. It is then announced as an
+      image with that name; without it the avatar is hidden from assistive technology.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/*
+  With a name (label, or an aria-label / aria-labelledby passed through) the avatar is one image: role="img" makes the
+  picture and the initials inside it presentational. Without one it is decorative.
+*/-->
+<span th:fragment="avatar"
+      th:with="slNamed=${props.label != null or attrs['aria-label'] != null or attrs['th:aria-label'] != null
+                         or attrs['aria-labelledby'] != null or attrs['th:aria-labelledby'] != null}"
+      class="avatar"
+      th:attr="data-size=${props.unlessDefault('size')},
+               role=${slNamed ? 'img' : null},
+               aria-label=${props.label},
+               aria-hidden=${slNamed ? null : 'true'}"
+      sl:attrs><sl:slot/></span>
+</body>
+</html>

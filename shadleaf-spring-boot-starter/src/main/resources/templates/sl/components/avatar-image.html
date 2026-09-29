@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The picture inside <code>sl:avatar</code>. Pass <code>src</code> or <code>th:src</code>; when it
+      is empty or null the image is hidden and the <code>sl:avatar-fallback</code> shows instead. The avatar's
+      <code>label</code> names it, so the image itself has an empty <code>alt</code>.</sl:description>
+  </sl:props>
+</head>
+<body>
+<img th:fragment="avatar-image" class="avatar-image" alt="" sl:attrs>
+</body>
+</html>

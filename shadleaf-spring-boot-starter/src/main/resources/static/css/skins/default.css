@@ -238,4 +238,30 @@
   .kbd-group {
     @apply gap-1;
   }
+
+  /* Avatar. text-muted-legible (components/base.css): shadcn's text-muted-foreground is under 4.5:1 on --muted. */
+  .avatar {
+    @apply rounded-full bg-muted;
+  }
+
+  .avatar:not([data-size]),
+  .avatar[data-size='default'] {
+    @apply size-8;
+  }
+
+  .avatar[data-size='sm'] {
+    @apply size-6;
+  }
+
+  .avatar[data-size='lg'] {
+    @apply size-10;
+  }
+
+  .avatar-fallback {
+    @apply text-sm text-muted-legible [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .avatar[data-size='sm'] > .avatar-fallback {
+    @apply text-xs [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
 }

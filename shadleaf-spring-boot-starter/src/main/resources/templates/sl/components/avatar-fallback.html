@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>What <code>sl:avatar</code> shows when its image has no <code>src</code>: usually the person's
+      initials, or an <code>sl:icon</code>.</sl:description>
+  </sl:props>
+</head>
+<body>
+<span th:fragment="avatar-fallback" class="avatar-fallback" sl:attrs><sl:slot/></span>
+</body>
+</html>

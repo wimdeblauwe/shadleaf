@@ -1,0 +1,30 @@
+/*
+  Avatar and its parts: structure only. Size, shape, colour and type are identity and live in the skins.
+
+  Both the image and the fallback are rendered; CSS picks one. An image without a src or with an empty one (th:src
+  with a null value renders src="") is hidden, and the fallback is hidden while the avatar has an image with a src.
+  A hidden element is also out of the accessibility tree, so only the one that shows is there.
+*/
+@layer components {
+  .avatar {
+    @apply relative inline-flex shrink-0 overflow-hidden align-middle select-none;
+  }
+
+  .avatar-image {
+    @apply absolute inset-0 aspect-square size-full object-cover;
+  }
+
+  .avatar-image:not([src]),
+  .avatar-image[src=''] {
+    @apply hidden;
+  }
+
+  .avatar-fallback {
+    @apply flex size-full items-center justify-center
+      [&_svg]:pointer-events-none [&_svg]:shrink-0;
+  }
+
+  .avatar:has(> .avatar-image[src]:not([src=''])) > .avatar-fallback {
+    @apply hidden;
+  }
+}

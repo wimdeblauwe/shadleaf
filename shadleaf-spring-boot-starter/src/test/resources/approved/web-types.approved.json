@@ -50,6 +50,55 @@
         "description" : "The title of an alert, inside `sl:alert`.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:avatar",
+        "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead when the image has no `src`. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Size of the avatar.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "label",
+          "description" : "The person's name, for an avatar with no name next to it. It is then announced as an image with that name; without it the avatar is hidden from assistive technology.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:avatar-fallback",
+        "description" : "What `sl:avatar` shows when its image has no `src`: usually the person's initials, or an `sl:icon`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:avatar-image",
+        "description" : "The picture inside `sl:avatar`. Pass `src` or `th:src`; when it is empty or null the image is hidden and the `sl:avatar-fallback` shows instead. The avatar's `label` names it, so the image itself has an empty `alt`.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:badge",
         "description" : "A small label for a status, a count or a category; with `as=\"a\"`, a link that looks the same. Every attribute that is not a prop passes through; `class` is appended to `badge`.",
         "attributes" : [ {
