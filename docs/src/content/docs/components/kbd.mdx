@@ -24,7 +24,20 @@ Text between the keys, such as `+`, is up to you.
 A key can hold an [`<sl:icon>`](../icon/). Give the icon a `label`, as a screen reader has no text to read otherwise.
 An `aria-label` on the key itself would not do: `<kbd>` has no role that takes a name.
 
+Lucide has icons for the usual keys, so you never need to type a symbol: `command`, `option`, `arrow-big-up` (Shift),
+`corner-down-left` (Enter), `delete` (Backspace), `arrow-up` / `arrow-down` / `arrow-left` / `arrow-right`, and
+`space`.
+
 <ComponentPreview id="kbd--icon" />
+
+## In a button
+
+A key can sit next to a button's label, to show its shortcut. Hide the key from screen readers with
+`aria-hidden="true"`, or it becomes part of the button's name ("Accept Enter"), and name the shortcut in
+`aria-keyshortcuts` on the button instead. An icon in a hidden key needs no `label`. `aria-keyshortcuts` only
+announces the shortcut: listening for the key is up to your own script.
+
+<ComponentPreview id="kbd--in-button" />
 
 ## Attributes
 

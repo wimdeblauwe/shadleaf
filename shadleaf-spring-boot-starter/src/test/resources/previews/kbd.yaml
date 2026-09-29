@@ -28,6 +28,17 @@ scenarios:
         <sl:kbd>K</sl:kbd>
       </sl:kbd-group>
 
+  - id: in-button
+    title: In a button
+    description: The shortcut goes in aria-keyshortcuts; the key itself is hidden from screen readers.
+    source: |-
+      <sl:button aria-keyshortcuts="Enter">
+        Accept <sl:kbd aria-hidden="true"><sl:icon name="corner-down-left"/></sl:kbd>
+      </sl:button>
+      <sl:button variant="outline" aria-keyshortcuts="Escape">
+        Cancel <sl:kbd aria-hidden="true">Esc</sl:kbd>
+      </sl:button>
+
   - id: in-text
     title: In a sentence
     source: '<p>Press <sl:kbd>/</sl:kbd> to search.</p>'
