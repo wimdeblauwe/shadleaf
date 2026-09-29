@@ -75,4 +75,39 @@
   .btn[aria-invalid='true'] {
     @apply border-destructive;
   }
+
+  /* Badge. Only a linked badge (as="a") changes on hover. */
+  .badge {
+    @apply h-5 gap-1 rounded-none border border-transparent px-2 text-xs font-normal
+      focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-ring
+      has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .badge:not([data-variant]),
+  .badge[data-variant='primary'] {
+    @apply bg-primary text-primary-foreground [a]:hover:bg-primary/90;
+  }
+
+  .badge[data-variant='secondary'] {
+    @apply bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80;
+  }
+
+  .badge[data-variant='outline'] {
+    @apply border-input text-foreground [a]:hover:bg-accent [a]:hover:text-accent-foreground;
+  }
+
+  .badge[data-variant='ghost'] {
+    @apply text-foreground [a]:hover:bg-accent [a]:hover:text-accent-foreground;
+  }
+
+  .badge[data-variant='link'] {
+    @apply text-primary underline underline-offset-4 [a]:hover:decoration-2;
+  }
+
+  /* The mix keeps the text at 4.5:1 (see the default skin's button). */
+  .badge[data-variant='destructive'] {
+    @apply border-destructive text-[color-mix(in_oklch,var(--destructive),var(--foreground)_20%)]
+      [a]:hover:bg-destructive/10;
+  }
 }

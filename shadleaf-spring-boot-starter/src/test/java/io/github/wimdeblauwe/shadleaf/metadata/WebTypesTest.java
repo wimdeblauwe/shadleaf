@@ -24,7 +24,7 @@ class WebTypesTest {
   void libraryComponents() {
     ComponentMetadata metadata = ComponentMetadata.of(LibraryComponents.registry(), "test");
 
-    assertThat(metadata.components()).extracting(ComponentMetadata.Component::name).containsExactly("button", "icon");
+    assertThat(metadata.components()).extracting(ComponentMetadata.Component::name).containsExactly("badge", "button", "icon");
     HtmlApproval.verify("components", "json", metadata.toJson(jsonMapper));
     HtmlApproval.verify("web-types", "json", WebTypes.toJson(metadata, jsonMapper));
   }

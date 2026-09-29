@@ -82,4 +82,43 @@
       focus-visible:border-destructive/40 focus-visible:ring-destructive/20
       dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
   }
+
+  /* Badge. Only a linked badge (as="a") changes on hover; a plain one is not interactive. The hover text stays
+     --foreground where shadcn uses --muted-foreground, which is under 4.5:1 on --muted. */
+  .badge {
+    @apply h-5 gap-1 rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium
+      focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40
+      has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .badge:not([data-variant]),
+  .badge[data-variant='primary'] {
+    @apply bg-primary text-primary-foreground [a]:hover:bg-primary/80;
+  }
+
+  .badge[data-variant='secondary'] {
+    @apply bg-secondary text-secondary-foreground
+      [a]:hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)];
+  }
+
+  .badge[data-variant='outline'] {
+    @apply border-border text-foreground [a]:hover:bg-muted;
+  }
+
+  .badge[data-variant='ghost'] {
+    @apply text-foreground [a]:hover:bg-muted dark:[a]:hover:bg-muted/50;
+  }
+
+  .badge[data-variant='link'] {
+    @apply text-primary underline-offset-4 [a]:hover:underline;
+  }
+
+  /* The text is mixed with --foreground, as on the destructive button, to reach 4.5:1 on the tint. */
+  .badge[data-variant='destructive'] {
+    @apply bg-destructive/10 text-[color-mix(in_oklch,var(--destructive),var(--foreground)_20%)]
+      [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20
+      dark:bg-destructive/20 dark:[a]:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
+  }
 }

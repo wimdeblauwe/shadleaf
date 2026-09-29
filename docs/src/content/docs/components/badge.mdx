@@ -1,0 +1,43 @@
+---
+title: Badge
+description: A small label for a status, a count or a category.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="badge--default" />
+
+## Variants
+
+The same variants as the [button](../button/).
+
+<ComponentPreview id="badge--variants" />
+
+## With an icon
+
+Put an [`<sl:icon>`](../icon/) in the `icon-start` or `icon-end` slot. It takes the badge's colour and a 12 pixel size.
+
+<ComponentPreview id="badge--with-icon" />
+
+## As a link
+
+`as="a"` renders an anchor, for a badge that filters a list or opens a detail page. Only a linked badge reacts to hover
+and shows a focus ring; a plain badge is not interactive, so it does not pretend to be.
+
+<ComponentPreview id="badge--link" />
+
+A badge is text, so a screen reader reads it where it stands. When a bare number or a single word would not make sense
+out of context, write the context into the text, or next to the badge.
+
+## Props from expressions
+
+<ComponentPreview id="badge--expression" />
+
+## Everything else passes through
+
+<ComponentPreview id="badge--pass-through" />
+
+## Attributes
+
+<ComponentAttributes component="badge" />

@@ -1,0 +1,49 @@
+# Scenarios for the badge's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: badge
+scenarios:
+  - id: default
+    title: Badge
+    source: '<sl:badge>New</sl:badge>'
+
+  - id: variants
+    title: Variants
+    source: |-
+      <sl:badge>Primary</sl:badge>
+      <sl:badge variant="secondary">Secondary</sl:badge>
+      <sl:badge variant="outline">Outline</sl:badge>
+      <sl:badge variant="ghost">Ghost</sl:badge>
+      <sl:badge variant="link">Link</sl:badge>
+      <sl:badge variant="destructive">Destructive</sl:badge>
+
+  - id: with-icon
+    title: With an icon
+    source: |-
+      <sl:badge variant="secondary">
+        <sl:slot name="icon-start"><sl:icon name="badge-check"/></sl:slot>
+        Verified
+      </sl:badge>
+      <sl:badge variant="outline">
+        Details
+        <sl:slot name="icon-end"><sl:icon name="arrow-right"/></sl:slot>
+      </sl:badge>
+
+  - id: link
+    title: As a link
+    description: Only a linked badge changes on hover and takes keyboard focus.
+    source: |-
+      <sl:badge as="a" href="/orders?status=open">Open</sl:badge>
+      <sl:badge as="a" href="/orders?status=late" variant="destructive">Late</sl:badge>
+      <sl:badge as="a" href="/orders" variant="outline">All orders</sl:badge>
+
+  - id: pass-through
+    title: Pass-through attributes
+    description: Anything that is not a prop lands on the rendered element; class is appended.
+    source: '<sl:badge variant="outline" class="app-wide" id="order-status" data-testid="status">Shipped</sl:badge>'
+
+  - id: expression
+    title: Props from an expression
+    source: |-
+      <sl:badge th:variant="${order.late ? 'destructive' : 'secondary'}"
+                th:text="${order.status}">Open</sl:badge>
+    renderSource: |-
+      <sl:badge th:variant="${true ? 'destructive' : 'secondary'}">Late</sl:badge>

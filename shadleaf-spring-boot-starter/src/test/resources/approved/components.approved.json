@@ -1,6 +1,24 @@
 {
   "version" : "test",
   "components" : [ {
+    "name" : "badge",
+    "tag" : "sl:badge",
+    "description" : "A small label for a status, a count or a category; with `as=\"a\"`, a link that looks the same. Every attribute that is not a prop passes through; `class` is appended to `badge`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "primary",
+      "values" : [ "primary", "secondary", "outline", "ghost", "link", "destructive" ],
+      "description" : "Visual style of the badge."
+    }, {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "span",
+      "values" : [ "span", "a" ],
+      "description" : "Element to render: a `span`, or an anchor (`a`) for a badge that links somewhere. Only a linked badge reacts to hover."
+    } ]
+  }, {
     "name" : "button",
     "tag" : "sl:button",
     "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`.",

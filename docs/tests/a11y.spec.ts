@@ -30,7 +30,8 @@ for (const {skin, theme} of combinations) {
     await openShowcase(page, skin, theme);
     // evaluate, not addScriptTag: a page's Content-Security-Policy does not apply to it
     await page.evaluate(axe.source);
-    const controls = page.locator('main .btn:not([disabled]):not([aria-disabled])');
+    // Every enabled link and button: only an interactive element has a hover state of its own.
+    const controls = page.locator('main :is(a[href], button):not([disabled]):not([aria-disabled])');
     const count = await controls.count();
     const failures: string[] = [];
     for (let i = 0; i < count; i++) {

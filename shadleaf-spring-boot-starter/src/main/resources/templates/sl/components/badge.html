@@ -1,0 +1,37 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A small label for a status, a count or a category; with <code>as="a"</code>, a link that looks
+      the same. Every attribute that is not a prop passes through; <code>class</code> is appended to
+      <code>badge</code>.</sl:description>
+    <sl:prop name="variant" default="primary" values="primary secondary outline ghost link destructive">
+      Visual style of the badge.</sl:prop>
+    <sl:prop name="as" default="span" values="span a">Element to render: a <code>span</code>, or an anchor
+      (<code>a</code>) for a badge that links somewhere. Only a linked badge reacts to hover.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* Two branches for `as`, sharing their content through badge-content, as the button does. */-->
+<th:block th:fragment="badge">
+  <span th:if="${props.as == 'span'}"
+        class="badge"
+        th:attr="data-variant=${props.unlessDefault('variant')}"
+        sl:attrs
+        th:insert="~{sl/components/badge :: badge-content}"></span>
+  <a th:unless="${props.as == 'span'}"
+     class="badge"
+     th:attr="data-variant=${props.unlessDefault('variant')}"
+     sl:attrs
+     th:insert="~{sl/components/badge :: badge-content}"></a>
+</th:block>
+
+<!--/* data-icon says which side an icon is on, so the skins can adjust the padding. */-->
+<th:block th:fragment="badge-content">
+  <span th:if="${slots.has('icon-start')}" class="badge-icon" data-icon="inline-start"><sl:slot
+      name="icon-start"/></span>
+  <sl:slot>Badge</sl:slot>
+  <span th:if="${slots.has('icon-end')}" class="badge-icon" data-icon="inline-end"><sl:slot name="icon-end"/></span>
+</th:block>
+</body>
+</html>
