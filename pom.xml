@@ -60,7 +60,7 @@
     <jreleaser-maven-plugin.version>1.26.0</jreleaser-maven-plugin.version>
 
     <!-- The release workflow tags the release commit itself, before the build; JReleaser only creates the tag of the
-         early-access (snapshot) release, which it moves to every new commit on main. -->
+         snapshot pre-release (e.g. 0.3.0-SNAPSHOT), which it moves to every new commit on main. -->
     <shadleaf.release.skip-tag>false</shadleaf.release.skip-tag>
   </properties>
 
@@ -115,8 +115,8 @@
     </pluginManagement>
     <plugins>
       <!-- GitHub releases with release notes from the conventional commits. Only runs on the parent (not inherited):
-           mvn -N jreleaser:release. A SNAPSHOT version gives the early-access pre-release, recreated on every push to
-           main with everything since the last release. Maven Central is not JReleaser's job: see the release profile. -->
+           mvn -N jreleaser:release. A SNAPSHOT version gives a pre-release tagged with that version, recreated on every
+           push to main with everything since the last release. Maven Central is not JReleaser's job: see the release profile. -->
       <plugin>
         <groupId>org.jreleaser</groupId>
         <artifactId>jreleaser-maven-plugin</artifactId>
@@ -138,8 +138,10 @@
               </links>
               <snapshot>
                 <pattern>.*-SNAPSHOT</pattern>
-                <label>early-access</label>
-                <!-- Everything since the last release, not since the previous early-access -->
+                <!-- The snapshot's tag. The version, not JReleaser's default early-access: GitHub lists tags that parse
+                     as versions first, so the pre-release sits above the last release. Old ones are deleted by hand. -->
+                <label>{{projectVersion}}</label>
+                <!-- Everything since the last release, not since the previous snapshot -->
                 <fullChangelog>true</fullChangelog>
               </snapshot>
             </project>
@@ -148,7 +150,7 @@
                 <owner>wimdeblauwe</owner>
                 <name>shadleaf</name>
                 <tagName>{{projectVersion}}</tagName>
-                <!-- The pom's version: the tag of a release, and e.g. 0.1.0-SNAPSHOT (not early-access) for a snapshot -->
+                <!-- The pom's version, for a release and a snapshot alike -->
                 <releaseName>{{projectVersion}}</releaseName>
                 <skipTag>${shadleaf.release.skip-tag}</skipTag>
                 <overwrite>false</overwrite>

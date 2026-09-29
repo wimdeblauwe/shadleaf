@@ -7,7 +7,7 @@ run-name: Release ${{ inputs.release-version }}
 #   3. deploys to Maven Central (central-publishing-maven-plugin, waits until published)
 #   4. creates the GitHub release with JReleaser's notes from the conventional commits since the previous release
 #   5. publishes the docs (/shadleaf/<version>/ and /shadleaf/current/)
-#   6. sets the next development version, commits it and runs the Build workflow for a fresh early-access release
+#   6. sets the next development version, commits it and runs the Build workflow for the next snapshot pre-release
 # Secrets: MAVEN_CENTRAL_USERNAME and MAVEN_CENTRAL_PASSWORD (a Central Portal user token), MAVEN_GPG_KEY (ASCII-armored
 # secret key: gpg --armor --export-secret-keys <id>) and MAVEN_GPG_PASSPHRASE.
 on:
@@ -167,7 +167,7 @@ jobs:
           git commit -am "chore(release): prepare for next development iteration $NEXT_VERSION"
           git push origin HEAD:main
 
-      # Rebuilds main on the new SNAPSHOT: its early-access release then starts from this release.
+      # Rebuilds main on the new SNAPSHOT: its snapshot pre-release then starts from this release.
       - name: Run the Build workflow on main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

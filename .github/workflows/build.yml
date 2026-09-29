@@ -90,8 +90,8 @@ jobs:
     with:
       generated-docs-artifact: generated-docs
 
-  # Every build of main recreates the early-access pre-release on the GitHub releases page: the `early-access` tag moves
-  # to this commit and the notes list every conventional commit since the last release, i.e. what the next release
+  # Every build of main recreates the snapshot pre-release on the GitHub releases page: its tag (the pom's version, e.g.
+  # 0.3.0-SNAPSHOT) moves to this commit and the notes list every conventional commit since the last release, i.e. what the next release
   # would contain. No versions change and nothing goes to Maven Central.
   early-access:
     needs: docs
@@ -113,15 +113,15 @@ jobs:
           java-version: '17'
           cache: maven
 
-      # JReleaser only makes an early-access release of a SNAPSHOT; a release version would be released for real.
+      # JReleaser only makes a pre-release of a SNAPSHOT; a release version would be released for real.
       - name: Check for a SNAPSHOT version
         id: version
         run: |
           version=$(mvn -B -q -N help:evaluate -Dexpression=project.version -DforceStdout)
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          [[ "$version" == *-SNAPSHOT ]] || echo "::notice::$version is not a SNAPSHOT: no early-access release"
+          [[ "$version" == *-SNAPSHOT ]] || echo "::notice::$version is not a SNAPSHOT: no snapshot pre-release"
 
-      - name: Update the early-access release
+      - name: Update the snapshot pre-release
         if: endsWith(steps.version.outputs.version, '-SNAPSHOT')
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -58,11 +58,13 @@ deliberate change, accept the new markup with `mvn test -Dshadleaf.approve`, rev
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/); the release notes are generated
 from them by [JReleaser](https://jreleaser.org). There is no CHANGELOG file.
 
-### Early access
+### Snapshot pre-release
 
-Every build of `main` (the Build workflow) recreates the **early-access** pre-release on the GitHub releases page: the
-`early-access` tag moves to the new commit and the notes list every commit since the last release, i.e. what the next
-release would contain. No versions change and nothing is published to Maven Central.
+Every build of `main` (the Build workflow) recreates the snapshot pre-release on the GitHub releases page, tagged with
+the development version (e.g. `0.3.0-SNAPSHOT`): the tag moves to the new commit and the notes list every commit since
+the last release, i.e. what the next release would contain. No versions change and nothing is published to Maven
+Central. The tag is the version rather than `early-access` so GitHub lists it above the last release. Delete the
+snapshot's release and tag by hand once its version has been released.
 
 ### A release
 
@@ -76,7 +78,7 @@ development version (e.g. `1.1.0-SNAPSHOT`). It:
    central-publishing-maven-plugin), waiting until they are published;
 4. creates the GitHub release on the tag, with JReleaser's notes since the previous release;
 5. publishes the docs to `/shadleaf/1.0.0/` and `/shadleaf/current/`;
-6. sets the next development version, commits it and runs the Build workflow, which renews the early-access release.
+6. sets the next development version, commits it and runs the Build workflow, which creates the pre-release of the next snapshot.
 
 The `chore(release):` commits are left out of the notes. After a release, add a row to the
 [Compatibility](#compatibility) table.
