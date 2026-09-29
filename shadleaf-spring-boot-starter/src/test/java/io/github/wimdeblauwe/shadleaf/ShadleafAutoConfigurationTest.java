@@ -55,6 +55,15 @@ class ShadleafAutoConfigurationTest {
   }
 
   @Test
+  void alpineVariantSelectsTheScript() {
+    contextRunner.run(context -> assertThat(context.getBean(ShadleafAssets.class).getJsUrl())
+        .startsWith("/shadleaf/assets/shadleaf.alpine-"));
+    contextRunner.withPropertyValues("shadleaf.assets.alpine=external")
+        .run(context -> assertThat(context.getBean(ShadleafAssets.class).getJsUrl())
+            .matches("/shadleaf/assets/shadleaf-[\\w-]+\\.js"));
+  }
+
+  @Test
   void unknownSkinFailsTheStartup() {
     contextRunner.withPropertyValues("shadleaf.skin=glossy")
         .run(context -> assertThat(context).getFailure().rootCause()

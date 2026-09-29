@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.core.io.Resource;
 import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
 
 public class ViteManifestParser {
@@ -19,9 +20,12 @@ public class ViteManifestParser {
 
   public ViteManifest parse(Resource resource) throws IOException {
     try (InputStream inputStream = resource.getInputStream()) {
-      Map<String, ViteManifestEntry> entries =
-          jsonMapper.readValue(inputStream, new TypeReference<>() {
-          });
+      // A shared chunk (such as the JS entries' common register.js) has no isEntry.
+      Map<String, ViteManifestEntry> entries = jsonMapper
+          .readerFor(new TypeReference<Map<String, ViteManifestEntry>>() {
+          })
+          .without(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+          .readValue(inputStream);
       return new ViteManifest(entries);
     }
   }

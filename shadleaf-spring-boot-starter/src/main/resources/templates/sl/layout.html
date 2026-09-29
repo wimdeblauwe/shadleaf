@@ -18,6 +18,9 @@
               th:src="${viteClientUrl}"></script>
     </th:block>
     <link rel="stylesheet" th:with="url=${@shadleafAssets.cssUrl}" th:href="@{${url}}"/>
+    <!--/* A module script is deferred, and runs in document order with the page's other deferred scripts. With
+           shadleaf.assets.alpine=external it must come before the script that loads the application's Alpine. */-->
+    <script type="module" th:with="url=${@shadleafAssets.jsUrl}" th:src="@{${url}}"></script>
   </th:block>
 
   <!--

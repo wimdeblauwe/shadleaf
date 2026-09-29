@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.shadleaf;
 
+import io.github.wimdeblauwe.shadleaf.assets.AlpineVariant;
 import io.github.wimdeblauwe.shadleaf.assets.AssetVariant;
 import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,7 +11,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  *
  * @param skin   the visual identity of the components: {@code default} or {@code flat}. Same markup and tokens,
  *               different geometry, weight and shadow.
- * @param assets which build of the stylesheet to load
+ * @param assets which builds of the stylesheet and the script to load
  * @param csp    Content-Security-Policy support for the inline theme script
  * @param dev    settings for working on the library itself with live reload
  */
@@ -23,8 +24,12 @@ public record ShadleafProperties(@DefaultValue("default") String skin,
   /**
    * @param variant {@code standalone} (the default) includes Tailwind's preflight reset; {@code embedded} leaves it
    *                out, for applications that compile Tailwind themselves
+   * @param alpine  where the page's Alpine.js comes from: {@code bundled} (the default) ships Alpine's standard build,
+   *                {@code csp} its CSP build for a policy without {@code 'unsafe-eval'}, and {@code external} only
+   *                Shadleaf's component registrations, for an application that loads Alpine itself
    */
-  public record AssetsProperties(@DefaultValue("standalone") AssetVariant variant) {
+  public record AssetsProperties(@DefaultValue("standalone") AssetVariant variant,
+                                 @DefaultValue("bundled") AlpineVariant alpine) {
 
   }
 
@@ -37,8 +42,8 @@ public record ShadleafProperties(@DefaultValue("default") String skin,
   }
 
   /**
-   * @param viteServerUrl URL of the library's Vite dev server (e.g. {@code http://localhost:5174}). When set, the CSS is
-   *                      loaded from there instead of from the jar.
+   * @param viteServerUrl URL of the library's Vite dev server (e.g. {@code http://localhost:5174}). When set, the CSS and
+   *                      JS are loaded from there instead of from the jar.
    * @param templatesPath filesystem path to the library's {@code src/main/resources/templates/} directory. When set,
    *                      the library templates are read uncached from disk so edits show up without a rebuild.
    * @param webTypesFile  file to write the web-types for IntelliJ IDEA and WebStorm to, e.g.

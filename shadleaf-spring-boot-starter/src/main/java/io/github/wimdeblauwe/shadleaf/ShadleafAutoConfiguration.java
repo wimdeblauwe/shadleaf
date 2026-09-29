@@ -49,8 +49,8 @@ public class ShadleafAutoConfiguration {
   @ConditionalOnMissingBean
   public ShadleafAssets shadleafAssets(ShadleafProperties properties,
       ViteManifestParser viteManifestParser) {
-    return new ShadleafAssets(properties.skin(), properties.assets().variant(), properties.dev().viteServerUrl(),
-        viteManifestParser);
+    return new ShadleafAssets(properties.skin(), properties.assets().variant(), properties.assets().alpine(),
+        properties.dev().viteServerUrl(), viteManifestParser);
   }
 
   @Bean

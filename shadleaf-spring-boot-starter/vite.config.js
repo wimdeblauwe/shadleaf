@@ -9,6 +9,9 @@ const staticDir = path.join(projectDir, 'src/main/resources/static');
 const outDir = path.join(projectDir, 'target/classes/META-INF/resources/shadleaf');
 // Read by ShadleafAssets (MANIFEST_LOCATION). Outside META-INF/resources, so it is never served.
 const manifestTarget = path.join(projectDir, 'target/classes/shadleaf/vite-manifest.json');
+// One per shadleaf.assets.alpine value (AlpineVariant); written by hand, as they do not vary per skin.
+const jsEntries = Object.fromEntries(['shadleaf', 'shadleaf.alpine', 'shadleaf.alpine-csp']
+    .map(name => [name, path.join(staticDir, 'js/entries', `${name}.js`)]));
 
 /** Moves the manifest Vite writes into the served output directory to manifestTarget. */
 function moveManifest() {
@@ -36,8 +39,8 @@ export default defineConfig({
   build: {
     manifest: true,
     rolldownOptions: {
-      // One entry per skin x asset variant, e.g. css/entries/shadleaf-default.embedded.css
-      input: generateCssEntries(path.join(staticDir, 'css')),
+      // One CSS entry per skin x asset variant, e.g. css/entries/shadleaf-default.embedded.css, plus the JS entries
+      input: {...generateCssEntries(path.join(staticDir, 'css')), ...jsEntries},
       output: {
         // Vite names a CSS-only entry after its file name up to the first dot, which would give
         // shadleaf-default.css and shadleaf-default.embedded.css the same asset name.
