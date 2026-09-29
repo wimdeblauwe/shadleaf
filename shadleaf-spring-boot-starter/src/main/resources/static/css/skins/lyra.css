@@ -1,0 +1,262 @@
+/*
+  Skin: lyra, shadcn/ui's "boxy and sharp" style: square corners, small type, a 1px focus ring and tighter sizes.
+  Follows shadcn's Lyra style, through basecoat's styles/lyra.css, with the same fixes as the vega skin (contrast,
+  hover only on links). shadcn suggests pairing it with a monospace font; that is the application's choice, as the
+  skin sets no font family. Same markup, same tokens as the vega skin.
+*/
+@layer components {
+  /* Button. Icons without an explicit size (<sl:icon size>, or a size-* class) take the button's icon size. */
+  .btn {
+    @apply rounded-none border border-transparent bg-clip-padding text-xs font-medium
+      focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      motion-safe:active:not-aria-[haspopup]:translate-y-px
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .btn:not([data-size]),
+  .btn[data-size='default'] {
+    @apply h-8 gap-1.5 px-2.5 has-[[data-icon='inline-end']]:pe-2 has-[[data-icon='inline-start']]:ps-2;
+  }
+
+  .btn[data-size='xs'] {
+    @apply h-6 gap-1 px-2 has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .btn[data-size='sm'] {
+    @apply h-7 gap-1 px-2.5 has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3.5;
+  }
+
+  .btn[data-size='lg'] {
+    @apply h-9 gap-1.5 px-2.5 has-[[data-icon='inline-end']]:pe-2 has-[[data-icon='inline-start']]:ps-2;
+  }
+
+  .btn[data-size='icon'] {
+    @apply size-8;
+  }
+
+  .btn[data-size='icon-xs'] {
+    @apply size-6 [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .btn[data-size='icon-sm'] {
+    @apply size-7;
+  }
+
+  .btn[data-size='icon-lg'] {
+    @apply size-9;
+  }
+
+  .btn:not([data-variant]),
+  .btn[data-variant='default'] {
+    @apply bg-primary text-primary-foreground hover:bg-primary/80;
+  }
+
+  .btn[data-variant='secondary'] {
+    @apply bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]
+      aria-expanded:bg-secondary aria-expanded:text-secondary-foreground;
+  }
+
+  .btn[data-variant='outline'] {
+    @apply border-border bg-background hover:bg-muted hover:text-foreground
+      dark:border-input dark:bg-input/30 dark:hover:bg-input/50
+      aria-expanded:bg-muted aria-expanded:text-foreground;
+  }
+
+  .btn[data-variant='ghost'] {
+    @apply hover:bg-muted hover:text-foreground dark:hover:bg-muted/50
+      aria-expanded:bg-muted aria-expanded:text-foreground;
+  }
+
+  .btn[data-variant='link'] {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+
+  /* text-destructive-legible (components/base.css): shadcn's text-destructive is under 4.5:1 on the tint. */
+  .btn[data-variant='destructive'] {
+    @apply bg-destructive/10 text-destructive-legible hover:bg-destructive/20
+      focus-visible:border-destructive/40 focus-visible:ring-destructive/20
+      dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
+  }
+
+  /* Badge. Only a linked badge (as="a") changes on hover. */
+  .badge {
+    @apply h-5 gap-1 rounded-none border border-transparent px-2 py-0.5 text-xs font-medium
+      focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40
+      has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .badge:not([data-variant]),
+  .badge[data-variant='default'] {
+    @apply bg-primary text-primary-foreground [a]:hover:bg-primary/80;
+  }
+
+  .badge[data-variant='secondary'] {
+    @apply bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80;
+  }
+
+  .badge[data-variant='outline'] {
+    @apply border-border text-foreground [a]:hover:bg-muted;
+  }
+
+  .badge[data-variant='ghost'] {
+    @apply text-foreground [a]:hover:bg-muted dark:[a]:hover:bg-muted/50;
+  }
+
+  .badge[data-variant='link'] {
+    @apply text-primary underline-offset-4 [a]:hover:underline;
+  }
+
+  .badge[data-variant='destructive'] {
+    @apply bg-destructive/10 text-destructive-legible
+      [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20
+      dark:bg-destructive/20 dark:[a]:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
+  }
+
+  /* Card. The footer always has a dividing line, and runs to the card's bottom edge. */
+  .card {
+    @apply rounded-none bg-card text-xs/relaxed text-card-foreground ring-1 ring-foreground/10
+      has-[>img:first-child]:pt-0 has-[>.card-footer:last-child]:pb-0;
+  }
+
+  .card:not([data-size]),
+  .card[data-size='default'] {
+    @apply gap-4 py-4;
+  }
+
+  .card[data-size='sm'] {
+    @apply gap-2 py-3;
+  }
+
+  .card:is(:not([data-size]), [data-size='default']) > :is(.card-header, .card-content, .card-footer) {
+    @apply px-4;
+  }
+
+  .card[data-size='sm'] > :is(.card-header, .card-content, .card-footer) {
+    @apply px-3;
+  }
+
+  .card-header {
+    @apply gap-1 data-border:border-b data-border:pb-4;
+  }
+
+  .card[data-size='sm'] > .card-header {
+    @apply data-border:pb-3;
+  }
+
+  .card-title {
+    @apply text-sm font-medium;
+  }
+
+  .card-description {
+    @apply text-xs/relaxed text-muted-foreground;
+  }
+
+  .card-footer {
+    @apply gap-2 border-t py-4;
+  }
+
+  .card[data-size='sm'] > .card-footer {
+    @apply py-3;
+  }
+
+  /* Alert */
+  .alert {
+    @apply gap-y-0.5 rounded-none border px-2.5 py-2 text-start text-xs has-[>svg]:gap-x-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .alert:not([data-variant]) {
+    @apply bg-card text-card-foreground;
+  }
+
+  .alert[data-variant='destructive'] {
+    @apply bg-card text-destructive-legible;
+  }
+
+  .alert-title {
+    @apply font-medium;
+  }
+
+  .alert-description {
+    @apply gap-1 text-xs/relaxed text-muted-foreground;
+  }
+
+  .alert[data-variant='destructive'] > .alert-description {
+    @apply text-destructive-legible;
+  }
+
+  /* Separator */
+  .separator {
+    @apply bg-border;
+  }
+
+  .separator:not([data-orientation]),
+  .separator[data-orientation='horizontal'] {
+    @apply h-px;
+  }
+
+  .separator[data-orientation='vertical'] {
+    @apply w-px;
+  }
+
+  /* Skeleton. Square lines; the sizes are defaults an application's own class overrides. */
+  .skeleton {
+    @apply bg-muted motion-safe:animate-pulse;
+  }
+
+  .skeleton:not([data-shape]),
+  .skeleton[data-shape='line'] {
+    @apply h-4 w-full rounded-none;
+  }
+
+  .skeleton[data-shape='circle'] {
+    @apply size-10;
+  }
+
+  /* Consecutive lines are spaced like lines of text. */
+  .skeleton:is(:not([data-shape]), [data-shape='line']) + .skeleton:is(:not([data-shape]), [data-shape='line']) {
+    @apply mt-2;
+  }
+
+  /* Kbd. text-muted-legible (components/base.css): shadcn's text-muted-foreground is under 4.5:1 on --muted. */
+  .kbd {
+    @apply h-5 min-w-5 gap-1 rounded-none bg-muted px-1 font-sans text-xs font-medium text-muted-legible
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .kbd-group {
+    @apply gap-1;
+  }
+
+  /* Avatar. Round, as in shadcn's Lyra. */
+  .avatar {
+    @apply rounded-full bg-muted;
+  }
+
+  .avatar:not([data-size]),
+  .avatar[data-size='default'] {
+    @apply size-8;
+  }
+
+  .avatar[data-size='sm'] {
+    @apply size-6;
+  }
+
+  .avatar[data-size='lg'] {
+    @apply size-10;
+  }
+
+  .avatar-fallback {
+    @apply text-xs text-muted-legible [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .avatar[data-size='sm'] > .avatar-fallback {
+    @apply [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+}

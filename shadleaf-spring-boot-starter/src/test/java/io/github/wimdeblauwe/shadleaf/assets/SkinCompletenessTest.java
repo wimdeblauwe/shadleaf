@@ -36,8 +36,8 @@ import tools.jackson.databind.json.JsonMapper;
  * renders {@code data-variant="outline"} and needs {@code .btn[data-variant="outline"]}, while the default renders no
  * attribute and needs {@code .btn:not([data-variant])}.
  * <p>
- * This checks that the rules exist, not that they draw anything. A rule that compiles but is invisible, like M2's
- * flat focus ring, is only caught in a browser.
+ * This checks that the rules exist, not that they draw anything. A rule that compiles but is invisible, such as an
+ * outline width with {@code outline-style: none}, is only caught in a browser.
  */
 class SkinCompletenessTest {
 

@@ -88,7 +88,7 @@ class PreviewGeneratorTest {
     ShadleafThemeScript themeScript = new ShadleafThemeScript("cspNonce");
     write("theme-script.json", new ThemeScript(themeScript.getCspHash(), themeScript.getContent()));
 
-    assertThat(skins).extracting(Skin::name).startsWith(DEFAULT_SKIN).contains("flat");
+    assertThat(skins).extracting(Skin::name).startsWith(DEFAULT_SKIN).contains("lyra");
     for (Skin skin : skins) {
       assertThat(OUTPUT_DIRECTORY.resolve(skin.css())).exists();
     }
@@ -210,7 +210,7 @@ class PreviewGeneratorTest {
   }
 
   /**
-   * @param css path relative to the output directory, e.g. {@code shadleaf/assets/shadleaf-flat-abc.css}
+   * @param css path relative to the output directory, e.g. {@code shadleaf/assets/shadleaf-lyra-abc.css}
    */
   private record Skin(String name, String css) {
 

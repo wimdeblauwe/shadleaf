@@ -3,7 +3,7 @@
 // focus pass run against (tests/). No Starlight chrome and no iframes, so every finding is the library's. It loads the
 // bundled script, as an application with the default shadleaf.assets.alpine does, so interactive components work.
 //
-//   showcase/?skin=flat&theme=dark    skin: a skin name (default: the first); theme: light (default) or dark
+//   showcase/?skin=lyra&theme=dark    skin: a skin name (default: the first); theme: light (default) or dark
 import {previews, withBase} from '../lib/generated';
 
 const skins = Object.fromEntries(previews.skins.map(skin => [skin.name, withBase(skin.css)]));

@@ -36,7 +36,7 @@ pnpm test                  # axe-core and the keyboard focus pass over /showcase
 
 ## The showcase and its checks
 
-`/showcase/` renders every scenario on one bare page with only the library's CSS; `?skin=flat&theme=dark` selects the
+`/showcase/` renders every scenario on one bare page with only the library's CSS; `?skin=lyra&theme=dark` selects the
 combination. `tests/a11y.spec.ts` runs axe-core over it, resting and hovered, and `tests/focus.spec.ts` tabs through
 every control and requires a visible change in outline or box-shadow. Both run for every skin, light and dark, in CI.
 

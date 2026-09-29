@@ -49,9 +49,9 @@ class ShadleafAutoConfigurationTest {
 
   @Test
   void skinAndAssetVariantSelectTheStylesheet() {
-    contextRunner.withPropertyValues("shadleaf.skin=flat", "shadleaf.assets.variant=embedded")
+    contextRunner.withPropertyValues("shadleaf.skin=lyra", "shadleaf.assets.variant=embedded")
         .run(context -> assertThat(context.getBean(ShadleafAssets.class).getCssUrl())
-            .startsWith("/shadleaf/assets/shadleaf-flat.embedded-"));
+            .startsWith("/shadleaf/assets/shadleaf-lyra.embedded-"));
   }
 
   @Test

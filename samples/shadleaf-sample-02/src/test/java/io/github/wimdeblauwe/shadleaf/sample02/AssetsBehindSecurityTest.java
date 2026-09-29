@@ -44,8 +44,8 @@ class AssetsBehindSecurityTest {
   @CsvSource({
       "vega,    STANDALONE",
       "vega,    EMBEDDED",
-      "flat,    STANDALONE",
-      "flat,    EMBEDDED"
+      "lyra,    STANDALONE",
+      "lyra,    EMBEDDED"
   })
   void everyBundleIsServedAnonymously(String skin, AssetVariant variant) throws Exception {
     String cssUrl = new ShadleafAssets(skin, variant, AlpineVariant.BUNDLED, null, manifestParser).getCssUrl();

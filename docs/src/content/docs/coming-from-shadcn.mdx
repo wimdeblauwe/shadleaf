@@ -8,6 +8,9 @@ Most of what you know from shadcn/ui carries over. The component and part names 
 tokens are shadcn's, verbatim: a theme from tweakcn or the shadcn theme generator drops in unchanged. Porting an example
 is mostly a matter of renaming tags.
 
+The skins are shadcn's styles too. `shadleaf.skin=vega` (the default) is shadcn's classic look, and `lyra` its boxy
+and sharp one. shadcn's other styles (Nova, Maia, Mira, Luma) are not available yet.
+
 This page lists where Shadleaf differs. Some differences come from running on the server with Thymeleaf instead of in
 React; the others are deliberate, mostly for accessibility.
 
@@ -92,4 +95,4 @@ takes keyboard focus, when it is a link (`as="a"`).
 
 - `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
   `Spinner` for this.
-- A second skin, `flat`, next to the default one. The same markup, square corners and no shadows.
+

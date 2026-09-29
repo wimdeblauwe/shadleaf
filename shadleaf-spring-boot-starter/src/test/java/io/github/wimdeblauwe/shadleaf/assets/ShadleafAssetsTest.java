@@ -27,8 +27,8 @@ class ShadleafAssetsTest {
   @CsvSource({
       "vega,    STANDALONE, shadleaf-vega-",
       "vega,    EMBEDDED,   shadleaf-vega.embedded-",
-      "flat,    STANDALONE, shadleaf-flat-",
-      "flat,    EMBEDDED,   shadleaf-flat.embedded-"
+      "lyra,    STANDALONE, shadleaf-lyra-",
+      "lyra,    EMBEDDED,   shadleaf-lyra.embedded-"
   })
   void buildModeCssUrlPointsAtARealClasspathResourceForEverySkinAndVariant(String skin, AssetVariant variant,
       String fileNamePrefix) {
@@ -63,7 +63,7 @@ class ShadleafAssetsTest {
   void unknownSkinFailsWithTheAvailableSkins() {
     assertThatThrownBy(() -> new ShadleafAssets("glossy", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, null, parser))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessage("Unknown Shadleaf skin 'glossy' (shadleaf.skin). Available skins: [flat, vega]");
+        .hasMessage("Unknown Shadleaf skin 'glossy' (shadleaf.skin). Available skins: [lyra, vega]");
   }
 
   @Test
@@ -78,10 +78,10 @@ class ShadleafAssetsTest {
 
   @Test
   void devModeServesTheEntryForTheConfiguredSkinAndVariant() {
-    ShadleafAssets assets = new ShadleafAssets("flat", AssetVariant.EMBEDDED, AlpineVariant.CSP, "http://localhost:5174",
+    ShadleafAssets assets = new ShadleafAssets("lyra", AssetVariant.EMBEDDED, AlpineVariant.CSP, "http://localhost:5174",
         parser);
 
-    assertThat(assets.getCssUrl()).isEqualTo("http://localhost:5174/css/entries/shadleaf-flat.embedded.css");
+    assertThat(assets.getCssUrl()).isEqualTo("http://localhost:5174/css/entries/shadleaf-lyra.embedded.css");
     assertThat(assets.getJsUrl()).isEqualTo("http://localhost:5174/js/entries/shadleaf.alpine-csp.js");
   }
 }
