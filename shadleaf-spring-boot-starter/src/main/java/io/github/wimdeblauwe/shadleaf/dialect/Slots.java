@@ -13,15 +13,21 @@ import org.thymeleaf.model.IText;
  * {@code ${slots.has('icon-start')}} lets a template emit a wrapper element only when there is something to wrap.
  * Content that is only whitespace or comments counts as absent, both here and for {@code <sl:slot>}'s fallback
  * content.
+ * <p>
+ * It also remembers the caller's {@code props}, {@code attrs} and {@code slots}: the values those names had where the
+ * component was used. Slot content is evaluated inside the component's template, where the component's own variables
+ * would hide them, so {@link SlotElementProcessor} puts the caller's back for the content the caller provided.
  */
 public final class Slots {
 
   private final IModel defaultSlot;
   private final Map<String, IModel> namedSlots;
+  private final CallerScope callerScope;
 
-  Slots(IModel defaultSlot, Map<String, IModel> namedSlots) {
+  Slots(IModel defaultSlot, Map<String, IModel> namedSlots, CallerScope callerScope) {
     this.defaultSlot = defaultSlot;
     this.namedSlots = Map.copyOf(namedSlots);
+    this.callerScope = callerScope;
   }
 
   /** Whether the named slot was given non-blank content. */
@@ -42,6 +48,10 @@ public final class Slots {
     return namedSlots.get(name);
   }
 
+  CallerScope callerScope() {
+    return callerScope;
+  }
+
   static boolean hasContent(@Nullable IModel model) {
     if (model == null) {
       return false;
@@ -58,4 +68,11 @@ public final class Slots {
     }
     return false;
   }
+
+  /**
+   * The values of {@code props}, {@code attrs} and {@code slots} where the component was used: an enclosing
+   * component's in a library template, {@code null} (or the application's own variables of that name) in an
+   * application template.
+   */
+  record CallerScope(@Nullable Object props, @Nullable Object attrs, @Nullable Object slots) {}
 }

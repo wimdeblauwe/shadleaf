@@ -144,6 +144,66 @@ class SlotsTest {
     assertThat(dot.outerHtml()).isEqualTo("<i class=\"dot\" data-tone=\"info\"></i>");
   }
 
+  // --- slot scope -------------------------------------------------------------------------------
+
+  @Test
+  void slotContentInALibraryTemplateSeesThatTemplatesProps() {
+    Element panel = render("<sl:test-panel title=\"Orders\">Body</sl:test-panel>");
+
+    assertThat(panel.selectFirst("span.chip .title").text()).isEqualTo("Orders");
+  }
+
+  @Test
+  void slotContentInALibraryTemplateSeesThatTemplatesAttrs() {
+    Element panel = render("<sl:test-panel data-id=\"42\">Body</sl:test-panel>");
+
+    assertThat(panel.selectFirst(".card-header .id").text()).isEqualTo("42");
+  }
+
+  @Test
+  void slotContentInALibraryTemplateSeesThatTemplatesSlots() {
+    Element panel = render("""
+        <sl:test-panel>
+          <sl:slot name="actions"><button>Save</button></sl:slot>
+          Body
+        </sl:test-panel>""");
+
+    assertThat(panel.selectFirst(".card-footer .has-actions").text()).isEqualTo("true");
+  }
+
+  @Test
+  void aSlotPassedIntoAnotherComponentsSlotIsTheLibraryTemplatesOwn() {
+    Element panel = render("<sl:test-panel><p>Panel body</p></sl:test-panel>");
+
+    assertThat(panel.selectFirst(".card-body").html()).isEqualTo("<p>Panel body</p>");
+  }
+
+  @Test
+  void aNamedSlotPassedIntoAnotherComponentsSlotIsTheLibraryTemplatesOwn() {
+    Element panel = render("""
+        <sl:test-panel>
+          <sl:slot name="actions"><button>Save</button></sl:slot>
+        </sl:test-panel>""");
+
+    assertThat(panel.selectFirst(".card-header button").text()).isEqualTo("Save");
+  }
+
+  @Test
+  void theFallbackOfAPassedOnSlotIsEvaluatedInTheLibraryTemplatesScope() {
+    Element panel = render("<sl:test-panel title=\"Orders\"></sl:test-panel>");
+
+    assertThat(panel.selectFirst(".card-body").html()).isEqualTo("<em>Orders</em>");
+  }
+
+  @Test
+  void slotContentInAnApplicationTemplateSeesTheApplicationsOwnPropsVariable() {
+    Element chip = render("""
+            <sl:test-chip variant="danger"><span th:text="${props}">x</span></sl:test-chip>""",
+        Map.of("props", "the application's"));
+
+    assertThat(chip.selectFirst("span").text()).isEqualTo("the application's");
+  }
+
   private Element render(String snippet) {
     return render(snippet, Map.of());
   }

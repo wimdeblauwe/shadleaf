@@ -21,10 +21,10 @@
   svg rule) leaves it alone; it is not set with an inline style, which would need 'unsafe-inline' under a strict CSP.
 */-->
 <svg th:fragment="icon"
-     th:with="icon=${#slIcons.get(props.name)}"
+     th:with="slIcon=${#slIcons.get(props.name)}"
      xmlns="http://www.w3.org/2000/svg"
      class="sl-icon"
-     sl:attrs="${#slIcons.svgAttributes(icon, props.size, props['stroke-width'], props.label, attrs)}"
-     th:utext="${icon.body}"></svg>
+     sl:attrs="${#slIcons.svgAttributes(slIcon, props.size, props['stroke-width'], props.label, attrs)}"
+     th:utext="${slIcon.body}"></svg>
 </body>
 </html>

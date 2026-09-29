@@ -113,6 +113,9 @@ public class ComponentElementProcessor implements IElementModelProcessor {
       values.put(prop.name(), bindProp(context, definition, prop, attributes));
     }
     checkAccessibleName(definition, values, attributes);
+    // Read before this component sets its own: slot content gets these back (see SlotElementProcessor).
+    Slots.CallerScope callerScope = new Slots.CallerScope(context.getVariable(PROPS_VARIABLE),
+        context.getVariable(ATTRS_VARIABLE), context.getVariable(SLOTS_VARIABLE));
     // Set even when the component declares no props, so a component nested in another's slot never sees the outer
     // component's props.
     structureHandler.setLocalVariable(PROPS_VARIABLE, new Props(definition, values));
@@ -120,7 +123,8 @@ public class ComponentElementProcessor implements IElementModelProcessor {
 
     IModelFactory modelFactory = context.getModelFactory();
     SlotContentSplitter.SlotContent slotContent = slotContentSplitter.split(model, modelFactory);
-    structureHandler.setLocalVariable(SLOTS_VARIABLE, new Slots(slotContent.defaultSlot(), slotContent.namedSlots()));
+    structureHandler.setLocalVariable(SLOTS_VARIABLE, new Slots(slotContent.defaultSlot(), slotContent.namedSlots(),
+        callerScope));
 
     // Replace the element with a fragment call to the component template, e.g. <sl:button> ->
     // ~{sl/components/button :: button}.

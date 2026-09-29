@@ -48,16 +48,16 @@
     as a (disabled) link: without an href it would be a generic element, which aria-disabled does not apply to.
   */-->
   <a th:unless="${props.as == 'button'}"
-     th:with="inactive=${props.disabled or props.loading}"
+     th:with="slInactive=${props.disabled or props.loading}"
      class="btn"
      data-ejected="shadleaf-sample-01"
      th:attr="data-variant=${props.unlessDefault('variant')},
               data-size=${props.unlessDefault('size')},
               aria-busy=${props.loading ? 'true' : null},
-              aria-disabled=${inactive ? 'true' : null},
-              role=${inactive ? 'link' : null},
-              tabindex=${inactive ? '-1' : null}"
-     sl:attrs="${inactive ? attrs.without('href') : attrs}"
+              aria-disabled=${slInactive ? 'true' : null},
+              role=${slInactive ? 'link' : null},
+              tabindex=${slInactive ? '-1' : null}"
+     sl:attrs="${slInactive ? attrs.without('href') : attrs}"
      th:insert="~{sl/components/button :: button-content}"></a>
 </th:block>
 
@@ -66,13 +66,13 @@
   button keeps its size. The visually hidden label is read before the button's own text.
 -->
 <th:block th:fragment="button-content"
-          th:with="iconOnly=${#strings.startsWith(props.size, 'icon')}">
+          th:with="slIconOnly=${#strings.startsWith(props.size, 'icon')}">
   <span th:if="${props.loading}" class="btn-icon" data-icon="inline-start"><sl:icon name="loader-circle"
                                                                                   class="btn-spinner"/></span>
   <span th:if="${props.loading}" class="sl-sr-only" th:text="#{sl.button.loading}">Loading</span>
   <span th:if="${!props.loading and slots.has('icon-start')}" class="btn-icon" data-icon="inline-start"><sl:slot
       name="icon-start"/></span>
-  <th:block th:unless="${props.loading and iconOnly}"><sl:slot>Button</sl:slot></th:block>
+  <th:block th:unless="${props.loading and slIconOnly}"><sl:slot>Button</sl:slot></th:block>
   <span th:if="${slots.has('icon-end')}" class="btn-icon" data-icon="inline-end"><sl:slot name="icon-end"/></span>
 </th:block>
 </body>

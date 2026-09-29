@@ -1,0 +1,20 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: a library template that passes its own props, attrs and slots into another component's
+     slots (test-chip's default slot, test-card's named slots). -->
+<head>
+  <sl:props>
+    <sl:prop name="title"/>
+  </sl:props>
+</head>
+<body>
+<section th:fragment="test-panel" class="panel">
+  <sl:test-chip variant="success"><span class="title" th:text="${props.title}">x</span></sl:test-chip>
+  <sl:test-card>
+    <sl:slot name="header"><span class="id" th:text="${attrs['data-id']}">x</span><sl:slot name="actions"/></sl:slot>
+    <sl:slot name="footer"><span class="has-actions" th:text="${slots.has('actions')}">x</span></sl:slot>
+    <sl:slot><em th:text="${props.title}">x</em></sl:slot>
+  </sl:test-card>
+</section>
+</body>
+</html>
