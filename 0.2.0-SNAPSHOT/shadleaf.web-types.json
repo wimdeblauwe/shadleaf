@@ -17,6 +17,142 @@
           }
         } ]
       }, {
+        "name" : "sl:alert",
+        "description" : "A callout for a message the user should notice: an optional `sl:icon`, then `sl:alert-title` and `sl:alert-description`. It is not announced by itself; add `role=\"alert\"` when it appears after the page loaded, such as in an htmx response.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the alert.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "destructive"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-description",
+        "description" : "The body of an alert, inside `sl:alert`: text, paragraphs or a list.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:alert-title",
+        "description" : "The title of an alert, inside `sl:alert`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:avatar",
+        "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead when the image has no `src`. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Size of the avatar.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "label",
+          "description" : "The person's name, for an avatar with no name next to it. It is then announced as an image with that name; without it the avatar is hidden from assistive technology.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:avatar-fallback",
+        "description" : "What `sl:avatar` shows when its image has no `src`: usually the person's initials, or an `sl:icon`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:avatar-image",
+        "description" : "The picture inside `sl:avatar`. Pass `src` or `th:src`; when it is empty or null the image is hidden and the `sl:avatar-fallback` shows instead. The avatar's `label` names it, so the image itself has an empty `alt`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:badge",
+        "description" : "A small label for a status, a count or a category; with `as=\"a\"`, a link that looks the same. Every attribute that is not a prop passes through; `class` is appended to `badge`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the badge.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "primary"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "link"
+          }, {
+            "name" : "destructive"
+          } ],
+          "default" : "primary"
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `span`, or an anchor (`a`) for a badge that links somewhere. Only a linked badge reacts to hover.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "span"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "span"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:button",
         "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`. Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
         "attributes" : [ {
@@ -155,6 +291,111 @@
           }
         } ]
       }, {
+        "name" : "sl:card",
+        "description" : "A container for related content and actions. Build it from its parts, in any order and number: `sl:card-header` (holding `sl:card-title`, `sl:card-description` and `sl:card-action`), `sl:card-content` and `sl:card-footer`. An `img` as the first or last child runs to the card's edges.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Spacing inside the card and between its parts.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-action",
+        "description" : "An action in the top end corner of a card, such as a button or a badge, inside `sl:card-header`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-content",
+        "description" : "The body of a card.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-description",
+        "description" : "Supporting text below a `sl:card-title`, inside `sl:card-header`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-footer",
+        "description" : "The bottom of a card, for actions or a summary.",
+        "attributes" : [ {
+          "name" : "border",
+          "description" : "A dividing line above the footer, with matching spacing.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-header",
+        "description" : "The top of a card: a `sl:card-title`, an optional `sl:card-description` below it, and an optional `sl:card-action` beside both.",
+        "attributes" : [ {
+          "name" : "border",
+          "description" : "A dividing line below the header, with matching spacing.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-title",
+        "description" : "The title of a card, inside `sl:card-header`.",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:icon",
         "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
         "attributes" : [ {
@@ -211,6 +452,85 @@
         }, {
           "name" : "th:label",
           "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:kbd",
+        "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:kbd-group",
+        "description" : "A key combination: `sl:kbd` elements, with any text between them (such as `+`). HTML nests the keys of a combination in an outer `kbd`, as this does.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:separator",
+        "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",
+        "attributes" : [ {
+          "name" : "orientation",
+          "description" : "Direction of the line.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "decorative",
+          "description" : "Hide the line from assistive technology, as most separators only draw a line. With `decorative=\"false\"` it is announced as a separator, for one that divides content into groups.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:decorative",
+          "description" : "`decorative` from a Thymeleaf expression, e.g. `th:decorative=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:skeleton",
+        "description" : "A placeholder that pulses while content loads. It is hidden from assistive technology; mark the region that is loading with `aria-busy=\"true\"` instead. Give it the size of what it stands in for with a class of your own.",
+        "attributes" : [ {
+          "name" : "shape",
+          "description" : "A line of text (full width, one line high) or a circle (an avatar).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "line"
+          }, {
+            "name" : "circle"
+          } ],
+          "default" : "line"
+        }, {
+          "name" : "th:shape",
+          "description" : "`shape` from a Thymeleaf expression, e.g. `th:shape=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
