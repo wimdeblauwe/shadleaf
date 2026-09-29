@@ -197,5 +197,17 @@
       "values" : [ ],
       "description" : "Hide the line from assistive technology, as most separators only draw a line. With `decorative=\"false\"` it is announced as a separator, for one that divides content into groups."
     } ]
+  }, {
+    "name" : "skeleton",
+    "tag" : "sl:skeleton",
+    "description" : "A placeholder that pulses while content loads. It is hidden from assistive technology; mark the region that is loading with `aria-busy=\"true\"` instead. Give it the size of what it stands in for with a class of your own.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "shape",
+      "type" : "enum",
+      "defaultValue" : "line",
+      "values" : [ "line", "circle" ],
+      "description" : "A line of text (full width, one line high) or a circle (an avatar)."
+    } ]
   } ]
 }

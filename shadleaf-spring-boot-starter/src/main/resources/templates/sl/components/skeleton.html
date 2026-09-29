@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A placeholder that pulses while content loads. It is hidden from assistive technology; mark the
+      region that is loading with <code>aria-busy="true"</code> instead. Give it the size of what it stands in for
+      with a class of your own.</sl:description>
+    <sl:prop name="shape" default="line" values="line circle">A line of text (full width, one line high) or a
+      circle (an avatar).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="skeleton"
+     class="skeleton"
+     th:attr="data-shape=${props.unlessDefault('shape')}"
+     aria-hidden="true"
+     sl:attrs></div>
+</body>
+</html>

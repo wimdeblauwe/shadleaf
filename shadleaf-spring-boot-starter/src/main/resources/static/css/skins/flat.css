@@ -200,4 +200,23 @@
   .separator[data-orientation='vertical'] {
     @apply w-px;
   }
+
+  /* Skeleton. Square lines; the sizes are defaults an application's own class overrides. */
+  .skeleton {
+    @apply bg-muted motion-safe:animate-pulse;
+  }
+
+  .skeleton:not([data-shape]),
+  .skeleton[data-shape='line'] {
+    @apply h-4 w-full rounded-none;
+  }
+
+  .skeleton[data-shape='circle'] {
+    @apply size-10;
+  }
+
+  /* Consecutive lines are spaced like lines of text. */
+  .skeleton:is(:not([data-shape]), [data-shape='line']) + .skeleton:is(:not([data-shape]), [data-shape='line']) {
+    @apply mt-2;
+  }
 }

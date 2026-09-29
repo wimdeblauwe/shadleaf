@@ -1,0 +1,22 @@
+# Scenarios for the skeleton's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: skeleton
+scenarios:
+  - id: default
+    title: Skeleton
+    source: |-
+      <sl:skeleton/>
+      <sl:skeleton/>
+
+  - id: card
+    title: In a card
+    description: The card that is loading says so with aria-busy; the skeletons are hidden from assistive technology.
+    source: |-
+      <sl:card aria-busy="true">
+        <sl:card-header>
+          <sl:skeleton shape="circle"/>
+        </sl:card-header>
+        <sl:card-content>
+          <sl:skeleton/>
+          <sl:skeleton/>
+        </sl:card-content>
+      </sl:card>

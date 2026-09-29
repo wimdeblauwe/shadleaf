@@ -454,6 +454,31 @@
             "required" : false
           }
         } ]
+      }, {
+        "name" : "sl:skeleton",
+        "description" : "A placeholder that pulses while content loads. It is hidden from assistive technology; mark the region that is loading with `aria-busy=\"true\"` instead. Give it the size of what it stands in for with a class of your own.",
+        "attributes" : [ {
+          "name" : "shape",
+          "description" : "A line of text (full width, one line high) or a circle (an avatar).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "line"
+          }, {
+            "name" : "circle"
+          } ],
+          "default" : "line"
+        }, {
+          "name" : "th:shape",
+          "description" : "`shape` from a Thymeleaf expression, e.g. `th:shape=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       } ]
     }
   }

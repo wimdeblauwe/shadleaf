@@ -209,4 +209,23 @@
   .separator[data-orientation='vertical'] {
     @apply w-px;
   }
+
+  /* Skeleton. The sizes are defaults; an application's own class overrides them. */
+  .skeleton {
+    @apply bg-accent motion-safe:animate-pulse;
+  }
+
+  .skeleton:not([data-shape]),
+  .skeleton[data-shape='line'] {
+    @apply h-4 w-full rounded-md;
+  }
+
+  .skeleton[data-shape='circle'] {
+    @apply size-10;
+  }
+
+  /* Consecutive lines are spaced like lines of text. */
+  .skeleton:is(:not([data-shape]), [data-shape='line']) + .skeleton:is(:not([data-shape]), [data-shape='line']) {
+    @apply mt-2;
+  }
 }
