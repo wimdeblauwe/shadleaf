@@ -50,7 +50,7 @@
   }
 
   .btn:not([data-variant]),
-  .btn[data-variant='primary'] {
+  .btn[data-variant='default'] {
     @apply bg-primary text-primary-foreground hover:bg-primary/80;
   }
 
@@ -92,7 +92,7 @@
   }
 
   .badge:not([data-variant]),
-  .badge[data-variant='primary'] {
+  .badge[data-variant='default'] {
     @apply bg-primary text-primary-foreground [a]:hover:bg-primary/80;
   }
 

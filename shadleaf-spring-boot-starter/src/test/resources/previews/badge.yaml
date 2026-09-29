@@ -8,7 +8,7 @@ scenarios:
   - id: variants
     title: Variants
     source: |-
-      <sl:badge>Primary</sl:badge>
+      <sl:badge>Default</sl:badge>
       <sl:badge variant="secondary">Secondary</sl:badge>
       <sl:badge variant="outline">Outline</sl:badge>
       <sl:badge variant="ghost">Ghost</sl:badge>

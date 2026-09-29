@@ -8,7 +8,7 @@ scenarios:
   - id: variants
     title: Variants
     source: |-
-      <sl:button>Primary</sl:button>
+      <sl:button>Default</sl:button>
       <sl:button variant="secondary">Secondary</sl:button>
       <sl:button variant="outline">Outline</sl:button>
       <sl:button variant="ghost">Ghost</sl:button>

@@ -36,7 +36,7 @@ class LadderPageTest {
   void propsRenderAsDataAttributesAndNeverLeak() {
     assertThat(page.select(".btn[data-variant]")).extracting(button -> button.attr("data-variant"))
         .contains("secondary", "outline", "ghost", "link", "destructive")
-        .doesNotContain("primary");
+        .doesNotContain("default");
     assertThat(page.select(".btn")).allSatisfy(button -> assertThat(button.attributes().asList())
         .extracting(Attribute::getKey)
         .doesNotContain("variant", "size", "as", "loading", "th:variant", "th:size"));

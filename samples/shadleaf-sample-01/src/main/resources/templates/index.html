@@ -5,7 +5,7 @@
       th:replace="~{layout/main :: layout('Home', ~{::#page-content})}">
 <body>
 <div id="page-content"
-     th:with="variants=${ {'primary', 'secondary', 'outline', 'ghost', 'link', 'destructive'} },
+     th:with="variants=${ {'default', 'secondary', 'outline', 'ghost', 'link', 'destructive'} },
               sizes=${ {'xs', 'sm', 'default', 'lg'} },
               iconSizes=${ {'icon-xs', 'icon-sm', 'icon', 'icon-lg'} }">
 
@@ -21,7 +21,7 @@
     </div>
 
     <h3>Sizes</h3>
-    <div class="row" th:each="variant : ${ {'primary', 'outline'} }">
+    <div class="row" th:each="variant : ${ {'default', 'outline'} }">
       <sl:button th:each="size : ${sizes}" th:variant="${variant}" th:size="${size}"
                  th:text="${size}">Button</sl:button>
       <!-- An icon-only button needs an accessible name: without aria-label the page fails to render. -->

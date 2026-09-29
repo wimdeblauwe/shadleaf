@@ -110,7 +110,7 @@
             "required" : false
           },
           "values" : [ {
-            "name" : "primary"
+            "name" : "default"
           }, {
             "name" : "secondary"
           }, {
@@ -122,7 +122,7 @@
           }, {
             "name" : "destructive"
           } ],
-          "default" : "primary"
+          "default" : "default"
         }, {
           "name" : "as",
           "description" : "Element to render: a `span`, or an anchor (`a`) for a badge that links somewhere. Only a linked badge reacts to hover.",
@@ -164,7 +164,7 @@
             "required" : false
           },
           "values" : [ {
-            "name" : "primary"
+            "name" : "default"
           }, {
             "name" : "secondary"
           }, {
@@ -176,7 +176,7 @@
           }, {
             "name" : "destructive"
           } ],
-          "default" : "primary"
+          "default" : "default"
         }, {
           "name" : "size",
           "description" : "Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`.",

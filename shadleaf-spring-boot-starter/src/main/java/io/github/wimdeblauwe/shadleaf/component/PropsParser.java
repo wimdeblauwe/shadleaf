@@ -23,7 +23,7 @@ import org.jspecify.annotations.Nullable;
  * <pre>{@code
  * <sl:props>
  *   <sl:description>A clickable button.</sl:description>
- *   <sl:prop name="variant" default="primary" values="primary outline">Visual style.</sl:prop>
+ *   <sl:prop name="variant" default="default" values="default outline">Visual style.</sl:prop>
  *   <sl:prop name="disabled" type="boolean">Disable the button.</sl:prop>
  *   <sl:accessible-name required-when="size=icon"/>
  * </sl:props>

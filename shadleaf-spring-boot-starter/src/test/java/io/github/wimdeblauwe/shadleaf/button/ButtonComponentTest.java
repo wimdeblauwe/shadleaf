@@ -18,7 +18,7 @@ import org.springframework.context.support.StaticMessageSource;
 
 class ButtonComponentTest {
 
-  private static final List<String> VARIANTS = List.of("primary", "secondary", "outline", "ghost", "link",
+  private static final List<String> VARIANTS = List.of("default", "secondary", "outline", "ghost", "link",
       "destructive");
   private static final List<String> SIZES = List.of("xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm",
       "icon-lg");
@@ -60,7 +60,7 @@ class ButtonComponentTest {
         "<sl:button variant=\"%s\" size=\"%s\" aria-label=\"Add\">Add</sl:button>".formatted(variant, size))).root()
         .hasNoAttribute("variant", "size", "as", "loading");
 
-    if (variant.equals("primary")) {
+    if (variant.equals("default")) {
       button.hasNoAttribute("data-variant");
     } else {
       button.hasAttribute("data-variant", variant);
@@ -74,7 +74,7 @@ class ButtonComponentTest {
 
   @Test
   void variantCanBeAnExpression() {
-    assertThat(tester.render("<sl:button th:variant=\"${admin ? 'destructive' : 'primary'}\">Delete</sl:button>",
+    assertThat(tester.render("<sl:button th:variant=\"${admin ? 'destructive' : 'default'}\">Delete</sl:button>",
         Map.of("admin", true))).root()
         .hasAttribute("data-variant", "destructive");
   }
@@ -83,7 +83,7 @@ class ButtonComponentTest {
   void illegalVariantFailsListingTheLegalOnes() {
     assertThatRenderFailure(() -> tester.render("<sl:button variant=\"destructve\">Delete</sl:button>"))
         .hasMessageContaining("destructve")
-        .hasMessageContaining("primary, secondary, outline, ghost, link, destructive");
+        .hasMessageContaining("default, secondary, outline, ghost, link, destructive");
   }
 
   @Test
