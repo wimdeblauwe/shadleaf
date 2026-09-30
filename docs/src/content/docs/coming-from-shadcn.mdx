@@ -100,6 +100,20 @@ takes keyboard focus, when it is a link (`as="a"`).
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
   on any radio button or checkbox. There is no indeterminate checkbox yet.
 
+### Field
+
+- `th:field` goes on `<sl:field>` (or `<sl:field-set>`), which wires up the label's `for`, the control's `id`,
+  `aria-describedby` and `aria-invalid`, and the field's `data-invalid`. In shadcn you set `htmlFor`, `id`,
+  `aria-invalid` and `data-invalid` yourself.
+- `<sl:field-error/>` reads the binding's messages; there is no `errors` prop. Content of your own replaces them, as
+  `children` do in shadcn.
+- The error has no `role="alert"`: after a full page load every error would be announced at once. The control is
+  described by its error instead.
+- The field has no `role="group"`, which gave every field an unnamed group. A set of options is a `<sl:field-set>`.
+- In an invalid field, only the label (or legend) and the error turn destructive; shadcn colours all the field's
+  text.
+- No `FieldTitle`, `FieldSeparator` or choice cards (a field inside a label) yet.
+
 ### Additions
 
 - An input, textarea or native select with `th:field` marks itself `aria-invalid` when its field has errors, so the

@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Stacks <code>sl:field</code>s and <code>sl:field-set</code>s with even spacing. Fields with
+      <code>orientation="responsive"</code> inside it go side by side when it is wide enough.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="field-group" class="field-group" sl:attrs><sl:slot/></div>
+</body>
+</html>

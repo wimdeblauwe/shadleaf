@@ -11,6 +11,7 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.metadata.ComponentMetadata;
 import io.github.wimdeblauwe.shadleaf.metadata.WebTypes;
 import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
+import io.github.wimdeblauwe.shadleaf.test.FormModel;
 import io.github.wimdeblauwe.shadleaf.test.LibraryComponents;
 import io.github.wimdeblauwe.shadleaf.test.Rendered;
 import io.github.wimdeblauwe.shadleaf.theme.ShadleafThemeScript;
@@ -98,7 +99,9 @@ class PreviewGeneratorTest {
   private Preview render(Scenario scenario) {
     Rendered rendered;
     try {
-      rendered = tester.render(scenario.renderSource());
+      rendered = scenario.form() == null
+          ? tester.render(scenario.renderSource())
+          : tester.render(FormModel.wrap(scenario.renderSource()), scenario.form().variables());
     } catch (RuntimeException e) {
       throw new AssertionError("Preview " + scenario.id() + " does not render: " + e.getMessage(), e);
     }
@@ -178,12 +181,27 @@ class PreviewGeneratorTest {
         assertThat(source).as("source of %s", id).isNotBlank();
         String renderSource = (String) entry.getOrDefault("renderSource", source);
         scenarios.add(new Scenario(id, component, (String) entry.get("title"), (String) entry.get("description"),
-            source.strip(), renderSource));
+            source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form"))));
       }
     }
     assertThat(components).as("components with previews in %s", PREVIEWS_DIRECTORY)
         .containsExactlyElementsOf(registry.names());
     return scenarios;
+  }
+
+  /**
+   * A scenario's {@code form}: {@code values} and {@code errors} (a message or a list of them), by field name. The
+   * snippet then renders inside {@code th:object="${form}"}, so {@code th:field} works as in an application.
+   */
+  @SuppressWarnings("unchecked")
+  private static @Nullable FormModel formModel(@Nullable Map<String, Object> form) {
+    if (form == null) {
+      return null;
+    }
+    Map<String, List<String>> errors = new LinkedHashMap<>();
+    ((Map<String, Object>) form.getOrDefault("errors", Map.of())).forEach((field, messages) ->
+        errors.put(field, messages instanceof List<?> list ? (List<String>) list : List.of((String) messages)));
+    return FormModel.of((Map<String, Object>) form.getOrDefault("values", Map.of()), errors);
   }
 
   private void write(String name, Object value) throws IOException {
@@ -195,9 +213,10 @@ class PreviewGeneratorTest {
    * @param source       the snippet shown to the reader
    * @param renderSource what is rendered, when it has to differ from the snippet (e.g. model variables replaced by
    *                     literals); the {@code source} otherwise
+   * @param form         the form object {@code th:field} binds to, if the scenario has one
    */
   private record Scenario(String id, String component, @Nullable String title, @Nullable String description,
-                          String source, String renderSource) {
+                          String source, String renderSource, @Nullable FormModel form) {
 
   }
 

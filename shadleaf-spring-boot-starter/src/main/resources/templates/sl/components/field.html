@@ -1,0 +1,33 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A form field: a <code>sl:field-label</code>, one control, and optionally a
+      <code>sl:field-description</code> and a <code>sl:field-error</code>, in any order. Put <code>th:field</code> on
+      the field, not on the control: the control takes it, gets the <code>id</code> the label points at (the field's
+      name, <code>email</code>, also for a checkbox or switch), and an <code>aria-describedby</code> listing the
+      description and, when the binding has errors, the error. The error shows the binding's messages. A field with
+      errors gets <code>data-invalid</code>. Without <code>th:field</code>, set <code>for</code> to the control's
+      id.</sl:description>
+    <sl:prop name="orientation" default="vertical" values="vertical horizontal responsive">Stack the label above the
+      control, or put them side by side (a checkbox or switch, then its label). <code>responsive</code> stacks them
+      in a narrow <code>sl:field-group</code> and puts them side by side in a wide one.</sl:prop>
+    <sl:prop name="for">The id of the control: for a field without <code>th:field</code>, or to use another id than
+      the field's name. The control gets it when it has no id of its own, and the description and error ids derive
+      from it.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* slField is what the parts and the control read: the th:field, the ids and the errors (FieldBindings). Slot
+  content sees this template's local variables, so the author never repeats the field. A nested field's description
+  and error are its own, hence 'field' as the second argument of slots.contains. */-->
+<div th:fragment="field"
+     class="field"
+     th:with="slField=${#slFields.field(attrs, props['for'], slField,
+                                        slots.contains('field-description', 'field'),
+                                        slots.contains('field-error', 'field'))}"
+     th:attr="data-orientation=${props.unlessDefault('orientation')},
+              data-invalid=${slField.invalid ? 'true' : null}"
+     sl:attrs="${attrs.without('field')}"><sl:slot/></div>
+</body>
+</html>

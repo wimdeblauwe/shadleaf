@@ -5,16 +5,17 @@
     <sl:description>One radio button in <code>sl:radio-group</code>: the browser's own, styled. Give it a
       <code>value</code> and the group's <code>name</code>, or <code>th:field</code> with a <code>value</code> or
       <code>th:value</code>; Spring then numbers the ids (<code>plan1</code>, <code>plan2</code>), so put the item
-      inside its label. Every attribute that is not a prop passes through; <code>class</code> is appended to
+      inside its label. In a <code>sl:field-set</code> with <code>th:field</code>, the items take its field. Every attribute that is not a prop passes through; <code>class</code> is appended to
       <code>radio-group-item</code>. With <code>th:field</code>, the item is marked <code>aria-invalid</code> when its
       field has errors.</sl:description>
   </sl:props>
 </head>
 <body>
 <input th:fragment="radio-group-item"
+       th:with="slAttrs=${#slFields.control(attrs, slField)}"
        type="radio"
        class="radio-group-item"
-       th:attr="aria-invalid=${attrs['th:field'] != null and #fields.hasErrors(attrs['th:field']) ? 'true' : null}"
-       sl:attrs>
+       th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+       sl:attrs="${slAttrs}">
 </body>
 </html>

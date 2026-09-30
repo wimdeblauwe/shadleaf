@@ -1,0 +1,162 @@
+<!-- <th:block th:object="${form}"><sl:field th:field="*{terms}" orientation="vertical">
+  <sl:switch/>
+  <sl:field-label>Notifications</sl:field-label>
+</sl:field></th:block> -->
+<div class="field" data-invalid="true">
+  <input type="checkbox" role="switch" class="switch" aria-invalid="true" id="terms" name="terms" value="true">
+  <input type="hidden" name="_terms" value="on">
+  <label class="label field-label" for="terms">Notifications</label>
+</div>
+
+<!-- <th:block th:object="${form}"><sl:field th:field="*{terms}" orientation="horizontal">
+  <sl:switch/>
+  <sl:field-label>Notifications</sl:field-label>
+</sl:field></th:block> -->
+<div class="field" data-orientation="horizontal" data-invalid="true">
+  <input type="checkbox" role="switch" class="switch" aria-invalid="true" id="terms" name="terms" value="true">
+  <input type="hidden" name="_terms" value="on">
+  <label class="label field-label" for="terms">Notifications</label>
+</div>
+
+<!-- <th:block th:object="${form}"><sl:field th:field="*{terms}" orientation="responsive">
+  <sl:switch/>
+  <sl:field-label>Notifications</sl:field-label>
+</sl:field></th:block> -->
+<div class="field" data-orientation="responsive" data-invalid="true">
+  <input type="checkbox" role="switch" class="switch" aria-invalid="true" id="terms" name="terms" value="true">
+  <input type="hidden" name="_terms" value="on">
+  <label class="label field-label" for="terms">Notifications</label>
+</div>
+
+<!-- <th:block th:object="${form}"><sl:field-set><sl:field-legend variant="legend">Address</sl:field-legend></sl:field-set></th:block> -->
+<fieldset class="field-set">
+  <legend class="field-legend">Address</legend>
+</fieldset>
+
+<!-- <th:block th:object="${form}"><sl:field-set><sl:field-legend variant="label">Address</sl:field-legend></sl:field-set></th:block> -->
+<fieldset class="field-set">
+  <legend class="field-legend" data-variant="label">Address</legend>
+</fieldset>
+
+<!-- <th:block th:object="${form}"><sl:field th:field="*{name}">
+  <sl:field-label>Name</sl:field-label>
+  <sl:input autocomplete="name"/>
+  <sl:field-description>As on your passport.</sl:field-description>
+  <sl:field-error/>
+</sl:field></th:block> -->
+<div class="field">
+  <label class="label field-label" for="name">Name</label>
+  <input class="input" type="text" autocomplete="name" id="name" aria-describedby="name-description" name="name" value="Wim">
+  <p class="field-description" id="name-description">As on your passport.</p>
+</div>
+
+<!-- <th:block th:object="${form}"><sl:field th:field="*{email}" class="mt-4">
+  <sl:field-label>Email</sl:field-label>
+  <sl:input type="email" aria-describedby="email-hint"/>
+  <sl:field-description>We never share it.</sl:field-description>
+  <sl:field-error/>
+</sl:field></th:block> -->
+<div class="field mt-4" data-invalid="true">
+  <label class="label field-label" for="email">Email</label>
+  <input class="input" type="email" aria-invalid="true" aria-describedby="email-hint email-description email-error" id="email" name="email" value="nope">
+  <p class="field-description" id="email-description">We never share it.</p>
+  <div class="field-error" id="email-error">
+    <ul>
+      <li>must be a valid email address</li>
+      <li>is already registered</li>
+    </ul>
+  </div>
+</div>
+
+<!-- <th:block th:object="${form}"><sl:field th:field="*{terms}" orientation="horizontal">
+  <sl:checkbox/>
+  <sl:field-content>
+    <sl:field-label>I accept the terms</sl:field-label>
+    <sl:field-description>Read them first.</sl:field-description>
+    <sl:field-error/>
+  </sl:field-content>
+</sl:field></th:block> -->
+<div class="field" data-orientation="horizontal" data-invalid="true">
+  <span class="checkbox-wrapper">
+    <input type="checkbox" class="checkbox" aria-invalid="true" id="terms" aria-describedby="terms-description terms-error" name="terms" value="true">
+    <input type="hidden" name="_terms" value="on">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </span>
+  <div class="field-content">
+    <label class="label field-label" for="terms">I accept the terms</label>
+    <p class="field-description" id="terms-description">Read them first.</p>
+    <div class="field-error" id="terms-error">must be accepted</div>
+  </div>
+</div>
+
+<!-- <th:block th:object="${form}"><sl:field-group>
+  <sl:field-set th:field="*{plan}">
+    <sl:field-legend variant="label">Plan</sl:field-legend>
+    <sl:radio-group>
+      <sl:label><sl:radio-group-item value="free"/>Free</sl:label>
+      <sl:label><sl:radio-group-item value="pro"/>Pro</sl:label>
+    </sl:radio-group>
+    <sl:field-error/>
+  </sl:field-set>
+  <sl:field-set th:field="*{toppings}">
+    <sl:field-legend variant="label">Toppings</sl:field-legend>
+    <sl:field-description>Pick any.</sl:field-description>
+    <sl:field orientation="horizontal">
+      <sl:checkbox value="cheese"/>
+      <sl:field-label>Cheese</sl:field-label>
+    </sl:field>
+    <sl:field orientation="horizontal">
+      <sl:checkbox value="olives"/>
+      <sl:field-label>Olives</sl:field-label>
+    </sl:field>
+    <sl:field-error>Pick one or two.</sl:field-error>
+  </sl:field-set>
+</sl:field-group></th:block> -->
+<div class="field-group">
+  <fieldset class="field-set" data-invalid="true" aria-describedby="plan-error">
+    <legend class="field-legend" data-variant="label">Plan</legend>
+    <div class="radio-group" role="radiogroup">
+      <label class="label">
+        <input type="radio" class="radio-group-item" aria-invalid="true" value="free" id="plan1" name="plan">
+        Free
+      </label>
+      <label class="label">
+        <input type="radio" class="radio-group-item" aria-invalid="true" value="pro" id="plan2" name="plan">
+        Pro
+      </label>
+    </div>
+    <div class="field-error" id="plan-error">must not be blank</div>
+  </fieldset>
+  <fieldset class="field-set" data-invalid="true" aria-describedby="toppings-description toppings-error">
+    <legend class="field-legend" data-variant="label">Toppings</legend>
+    <p class="field-description" id="toppings-description">Pick any.</p>
+    <div class="field" data-orientation="horizontal">
+      <span class="checkbox-wrapper">
+        <input type="checkbox" class="checkbox" aria-invalid="true" value="cheese" id="toppings1" name="toppings">
+        <input type="hidden" name="_toppings" value="on">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <label class="label field-label" for="toppings1">Cheese</label>
+    </div>
+    <div class="field" data-orientation="horizontal">
+      <span class="checkbox-wrapper">
+        <input type="checkbox" class="checkbox" aria-invalid="true" value="olives" id="toppings2" name="toppings">
+        <input type="hidden" name="_toppings" value="on">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <label class="label field-label" for="toppings2">Olives</label>
+    </div>
+    <div class="field-error" id="toppings-error">Pick one or two.</div>
+  </fieldset>
+</div>
+
+<!-- <th:block th:object="${form}"><sl:field for="query">
+  <sl:field-label>Search</sl:field-label>
+  <sl:input type="search" name="q"/>
+  <sl:field-error>Type at least two characters.</sl:field-error>
+</sl:field></th:block> -->
+<div class="field">
+  <label class="label field-label" for="query">Search</label>
+  <input class="input" type="search" name="q" id="query" aria-describedby="query-error">
+  <div class="field-error" id="query-error">Type at least two characters.</div>
+</div>

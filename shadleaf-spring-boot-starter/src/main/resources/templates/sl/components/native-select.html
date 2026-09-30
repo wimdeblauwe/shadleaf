@@ -6,7 +6,8 @@
       <code>optgroup</code> elements as content. <code>th:field</code> marks the bound option. Every attribute that is
       not a prop passes through to the <code>select</code>, except <code>class</code>, which goes to the wrapper
       around it (for its width). With <code>th:field</code>, the select is marked <code>aria-invalid</code> when its
-      field has errors.</sl:description>
+      field has errors. In a <code>sl:field</code>, it takes the field's <code>th:field</code>, id and
+      <code>aria-describedby</code>.</sl:description>
     <sl:prop name="size" default="default" values="sm default">Height of the select. It replaces HTML's
       <code>size</code> attribute, which turns a select into a list box.</sl:prop>
   </sl:props>
@@ -14,12 +15,13 @@
 <body>
 <!--/* The wrapper holds the chevron over the select; it takes the classes, so class="w-full" widens both. */-->
 <div th:fragment="native-select"
+     th:with="slAttrs=${#slFields.control(attrs, slField)}"
      class="native-select-wrapper"
      th:attr="data-size=${props.unlessDefault('size')}"
      sl:attrs="${attrs.only('class', 'classappend')}">
   <select class="native-select"
-          th:attr="aria-invalid=${attrs['th:field'] != null and #fields.hasErrors(attrs['th:field']) ? 'true' : null}"
-          sl:attrs="${attrs.without('class', 'classappend')}"><sl:slot/></select>
+          th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+          sl:attrs="${slAttrs.without('class', 'classappend')}"><sl:slot/></select>
   <sl:icon name="chevron-down" class="native-select-icon"/>
 </div>
 </body>

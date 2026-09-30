@@ -204,6 +204,32 @@ class SlotsTest {
     assertThat(chip.selectFirst("span").text()).isEqualTo("the application's");
   }
 
+  @Test
+  void containsFindsAComponentAtAnyDepthInAnySlot() {
+    Element found = render("""
+        <sl:test-slot-probe>
+          <p><span><sl:test-dot/></span></p>
+          <sl:slot name="aside"><sl:test-chip>Chip</sl:test-chip></sl:slot>
+        </sl:test-slot-probe>""");
+
+    assertThat(found.attr("data-dot")).isEqualTo("true");
+    assertThat(found.attr("data-chip")).as("names are case-insensitive, like elements").isEqualTo("true");
+  }
+
+  @Test
+  void containsSkipsTheContentOfTheComponentsItIsToldToSkip() {
+    Element outer = render("""
+        <sl:test-slot-probe>
+          <sl:test-slot-probe><p><sl:test-dot/></p></sl:test-slot-probe>
+          <p>After</p>
+        </sl:test-slot-probe>""");
+
+    assertThat(outer.attr("data-dot")).isEqualTo("false");
+    assertThat(outer.select(".slot-probe").get(1).attr("data-dot")).as("the nested one finds its own")
+        .isEqualTo("true");
+    assertThat(outer.attr("data-chip")).isEqualTo("false");
+  }
+
   private Element render(String snippet) {
     return render(snippet, Map.of());
   }

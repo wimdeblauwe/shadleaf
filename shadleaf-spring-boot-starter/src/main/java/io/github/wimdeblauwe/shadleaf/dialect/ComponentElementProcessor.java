@@ -123,8 +123,8 @@ public class ComponentElementProcessor implements IElementModelProcessor {
 
     IModelFactory modelFactory = context.getModelFactory();
     SlotContentSplitter.SlotContent slotContent = slotContentSplitter.split(model, modelFactory);
-    structureHandler.setLocalVariable(SLOTS_VARIABLE, new Slots(slotContent.defaultSlot(), slotContent.namedSlots(),
-        callerScope));
+    structureHandler.setLocalVariable(SLOTS_VARIABLE, new Slots(dialectPrefix, slotContent.defaultSlot(),
+        slotContent.namedSlots(), callerScope));
 
     // Replace the element with a fragment call to the component template, e.g. <sl:button> ->
     // ~{sl/components/button :: button}.

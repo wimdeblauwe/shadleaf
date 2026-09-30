@@ -1,0 +1,93 @@
+/*
+  Field and its parts: structure only. Gaps, type size and colours are identity and live in the skins. The parts know
+  about each other through these selectors (always with >, so a nested field does not leak); the templates only share
+  the field's binding.
+
+  Vertical: every child but the label, a checkbox, radio button or switch takes the full width, so a select fills the
+  field as an input does. Horizontal: a checkbox or switch, then its label (or a field-content holding label and
+  description), which takes the remaining space. Responsive: vertical, until the enclosing field-group is at least
+  28rem wide.
+*/
+@layer components {
+  .field-set {
+    @apply m-0 flex w-full min-w-0 flex-col border-0 p-0;
+  }
+
+  .field-legend {
+    @apply p-0;
+  }
+
+  .field-group {
+    @apply @container/field-group flex w-full flex-col;
+  }
+
+  .field {
+    @apply flex w-full;
+  }
+
+  .field:not([data-orientation]),
+  .field[data-orientation='vertical'],
+  .field[data-orientation='responsive'] {
+    @apply flex-col;
+  }
+
+  :is(.field:not([data-orientation]), .field[data-orientation='vertical'], .field[data-orientation='responsive'])
+    > :not(.field-label, .checkbox-wrapper, .switch, .radio-group-item, .sl-sr-only) {
+    @apply w-full;
+  }
+
+  .field[data-orientation='horizontal'] {
+    @apply flex-row items-center has-[>.field-content]:items-start;
+  }
+
+  .field[data-orientation='horizontal'] > .field-label {
+    @apply w-auto flex-auto;
+  }
+
+  /* Beside a two-line field-content, the control lines up with the label's first line. */
+  .field[data-orientation='horizontal']:has(> .field-content) > :is(.checkbox-wrapper, .switch, .radio-group-item) {
+    @apply mt-px;
+  }
+
+  /* .field-group in the selectors: as specific as the vertical width rule above, and later, so it wins. */
+  @container field-group (width >= 28rem) {
+    .field-group .field[data-orientation='responsive'] {
+      @apply flex-row items-center has-[>.field-content]:items-start;
+    }
+
+    .field-group .field[data-orientation='responsive'] > * {
+      @apply w-auto;
+    }
+
+    .field-group .field[data-orientation='responsive'] > .field-label {
+      @apply flex-auto;
+    }
+  }
+
+  .field-content {
+    @apply flex flex-1 flex-col;
+  }
+
+  .field-label {
+    @apply w-fit;
+  }
+
+  /* The label fades with a disabled control, as label.css does for a label right next to one. */
+  .field:has(> :disabled, > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-label,
+  .field:has(> :disabled, > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-content > .field-label {
+    @apply cursor-not-allowed opacity-50;
+  }
+
+  .field-description {
+    @apply m-0 font-normal text-start [&>a]:underline [&>a]:underline-offset-4;
+  }
+
+  .field-error {
+    @apply font-normal;
+  }
+
+  /* Preflight removes list markers, which several messages need. */
+  .field-error > ul {
+    @apply m-0 ms-4 flex list-disc flex-col gap-1 p-0;
+  }
+}

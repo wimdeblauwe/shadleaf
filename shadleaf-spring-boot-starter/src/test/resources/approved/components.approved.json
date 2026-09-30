@@ -185,7 +185,72 @@
   }, {
     "name" : "checkbox",
     "tag" : "sl:checkbox",
-    "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
+    "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "field",
+    "tag" : "sl:field",
+    "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "orientation",
+      "type" : "enum",
+      "defaultValue" : "vertical",
+      "values" : [ "vertical", "horizontal", "responsive" ],
+      "description" : "Stack the label above the control, or put them side by side (a checkbox or switch, then its label). `responsive` stacks them in a narrow `sl:field-group` and puts them side by side in a wide one."
+    }, {
+      "name" : "for",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The id of the control: for a field without `th:field`, or to use another id than the field's name. The control gets it when it has no id of its own, and the description and error ids derive from it."
+    } ]
+  }, {
+    "name" : "field-content",
+    "tag" : "sl:field-content",
+    "description" : "Stacks a `sl:field-label` with its `sl:field-description` or `sl:field-error`, beside the control of a horizontal `sl:field`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "field-description",
+    "tag" : "sl:field-description",
+    "description" : "Help text for a `sl:field` or `sl:field-set`. It gets the id the control's (or fieldset's) `aria-describedby` points at.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "field-error",
+    "tag" : "sl:field-error",
+    "description" : "The error messages of a `sl:field` or `sl:field-set`, read from its `th:field`'s binding: one message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. It gets the id the control's (or fieldset's) `aria-describedby` points at while it shows messages.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "field-group",
+    "tag" : "sl:field-group",
+    "description" : "Stacks `sl:field`s and `sl:field-set`s with even spacing. Fields with `orientation=\"responsive\"` inside it go side by side when it is wide enough.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "field-label",
+    "tag" : "sl:field-label",
+    "description" : "The label of a `sl:field`. Its `for` points at the field's control; a `for` of your own wins.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "field-legend",
+    "tag" : "sl:field-legend",
+    "description" : "The caption of a `sl:field-set`, as its `legend`. Put it first in the fieldset.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "legend",
+      "values" : [ "legend", "label" ],
+      "description" : "A section heading, or the size of a field label (for a set of options that answers one question)."
+    } ]
+  }, {
+    "name" : "field-set",
+    "tag" : "sl:field-set",
+    "description" : "A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.",
     "declared" : true,
     "props" : [ ]
   }, {
@@ -217,7 +282,7 @@
   }, {
     "name" : "input",
     "tag" : "sl:input",
-    "description" : "A text input. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors.",
+    "description" : "A text input. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
     "declared" : true,
     "props" : [ {
       "name" : "type",
@@ -247,7 +312,7 @@
   }, {
     "name" : "native-select",
     "tag" : "sl:native-select",
-    "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors.",
+    "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
     "declared" : true,
     "props" : [ {
       "name" : "size",
@@ -271,7 +336,7 @@
   }, {
     "name" : "radio-group-item",
     "tag" : "sl:radio-group-item",
-    "description" : "One radio button in `sl:radio-group`: the browser's own, styled. Give it a `value` and the group's `name`, or `th:field` with a `value` or `th:value`; Spring then numbers the ids (`plan1`, `plan2`), so put the item inside its label. Every attribute that is not a prop passes through; `class` is appended to `radio-group-item`. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+    "description" : "One radio button in `sl:radio-group`: the browser's own, styled. Give it a `value` and the group's `name`, or `th:field` with a `value` or `th:value`; Spring then numbers the ids (`plan1`, `plan2`), so put the item inside its label. In a `sl:field-set` with `th:field`, the items take its field. Every attribute that is not a prop passes through; `class` is appended to `radio-group-item`. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
     "declared" : true,
     "props" : [ ]
   }, {
@@ -307,7 +372,7 @@
   }, {
     "name" : "switch",
     "tag" : "sl:switch",
-    "description" : "A switch: a checkbox with `role=\"switch\"`, announced as on or off. It submits like a checkbox, so `th:field` on a boolean works as it does there (numbered id, hidden marker input). Every attribute that is not a prop passes through; `class` is appended to `switch`. With `th:field`, the switch is marked `aria-invalid` when its field has errors.",
+    "description" : "A switch: a checkbox with `role=\"switch\"`, announced as on or off. It submits like a checkbox, so `th:field` on a boolean works as it does there (numbered id, hidden marker input; in a `sl:field`, the field's name as id). Every attribute that is not a prop passes through; `class` is appended to `switch`. With `th:field`, the switch is marked `aria-invalid` when its field has errors.",
     "declared" : true,
     "props" : [ {
       "name" : "size",
@@ -319,7 +384,7 @@
   }, {
     "name" : "textarea",
     "tag" : "sl:textarea",
-    "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors.",
+    "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
     "declared" : true,
     "props" : [ ]
   } ]

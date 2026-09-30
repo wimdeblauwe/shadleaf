@@ -1,0 +1,185 @@
+# Scenarios for the field's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# A scenario's form is the form object th:field binds to: its values and the binding's errors, by field name. Field
+# names are unique across the showcase, as th:field turns them into ids.
+component: field
+parts: [field-label, field-description, field-error, field-content, field-set, field-legend, field-group]
+scenarios:
+  - id: default
+    title: Field
+    source: |-
+      <sl:field th:field="*{username}">
+        <sl:field-label>Username</sl:field-label>
+        <sl:input autocomplete="username"/>
+        <sl:field-description>Letters, digits and dashes.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {username: ''}
+
+  - id: invalid
+    title: With errors
+    description: A second submit renders the form again. The field shows the binding's messages and is marked data-invalid; the input is aria-invalid and described by the message.
+    source: |-
+      <sl:field th:field="*{workEmail}">
+        <sl:field-label>Work email</sl:field-label>
+        <sl:input type="email"/>
+        <sl:field-description>Your company address.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {workEmail: 'wim@'}
+      errors: {workEmail: must be a well-formed email address}
+
+  - id: several-errors
+    title: Several errors
+    source: |-
+      <sl:field th:field="*{newPassword}">
+        <sl:field-label>Password</sl:field-label>
+        <sl:input type="password" autocomplete="new-password"/>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {newPassword: ''}
+      errors:
+        newPassword: [must be at least 12 characters long, must contain a digit]
+
+  - id: textarea
+    title: Textarea
+    source: |-
+      <sl:field th:field="*{bio}">
+        <sl:field-label>Bio</sl:field-label>
+        <sl:textarea rows="3"/>
+        <sl:field-description>A few words for your profile page.</sl:field-description>
+      </sl:field>
+    form:
+      values: {bio: ''}
+
+  - id: select
+    title: Native select
+    source: |-
+      <sl:field th:field="*{country}">
+        <sl:field-label>Country</sl:field-label>
+        <sl:native-select>
+          <option value="">Select a country</option>
+          <option value="be">Belgium</option>
+          <option value="nl">Netherlands</option>
+        </sl:native-select>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {country: ''}
+      errors: {country: must not be blank}
+
+  - id: switch
+    title: Switch
+    description: A horizontal field puts the control first. field-content stacks the label with its description.
+    source: |-
+      <sl:field th:field="*{productUpdates}" orientation="horizontal">
+        <sl:switch/>
+        <sl:field-content>
+          <sl:field-label>Product updates</sl:field-label>
+          <sl:field-description>One email a month, no more.</sl:field-description>
+        </sl:field-content>
+      </sl:field>
+    form:
+      values: {productUpdates: true}
+
+  - id: checkbox
+    title: Checkbox
+    description: In a field, the checkbox gets the field's name as its id, not Spring's numbered one, so the label points at it.
+    source: |-
+      <sl:field th:field="*{acceptTerms}" orientation="horizontal">
+        <sl:checkbox/>
+        <sl:field-content>
+          <sl:field-label>I accept the terms and conditions</sl:field-label>
+          <sl:field-error/>
+        </sl:field-content>
+      </sl:field>
+    form:
+      values: {acceptTerms: false}
+      errors: {acceptTerms: must be accepted}
+
+  - id: radio-group
+    title: Radio group
+    description: The field-set holds the th:field, which its radio buttons share. The description and the error describe the fieldset.
+    source: |-
+      <sl:field-set th:field="*{billingPlan}">
+        <sl:field-legend variant="label">Plan</sl:field-legend>
+        <sl:field-description>You can change it at any time.</sl:field-description>
+        <sl:radio-group>
+          <sl:label><sl:radio-group-item value="monthly"/>Monthly</sl:label>
+          <sl:label><sl:radio-group-item value="yearly"/>Yearly</sl:label>
+        </sl:radio-group>
+        <sl:field-error/>
+      </sl:field-set>
+    form:
+      values: {billingPlan: ''}
+      errors: {billingPlan: must not be blank}
+
+  - id: checkbox-group
+    title: Checkbox group
+    description: Each option is a field without th:field of its own. It takes the field-set's, with the next of Spring's numbered ids.
+    source: |-
+      <sl:field-set th:field="*{toppings}">
+        <sl:field-legend variant="label">Toppings</sl:field-legend>
+        <sl:field orientation="horizontal">
+          <sl:checkbox value="cheese"/>
+          <sl:field-label>Cheese</sl:field-label>
+        </sl:field>
+        <sl:field orientation="horizontal">
+          <sl:checkbox value="olives"/>
+          <sl:field-label>Olives</sl:field-label>
+        </sl:field>
+        <sl:field orientation="horizontal">
+          <sl:checkbox value="basil"/>
+          <sl:field-label>Basil</sl:field-label>
+        </sl:field>
+      </sl:field-set>
+    form:
+      values: {toppings: [cheese]}
+
+  - id: field-set
+    title: Field set and field group
+    source: |-
+      <sl:field-set>
+        <sl:field-legend>Shipping address</sl:field-legend>
+        <sl:field-description>Where we deliver your order.</sl:field-description>
+        <sl:field-group>
+          <sl:field th:field="*{street}">
+            <sl:field-label>Street</sl:field-label>
+            <sl:input autocomplete="street-address"/>
+          </sl:field>
+          <sl:field th:field="*{city}">
+            <sl:field-label>City</sl:field-label>
+            <sl:input autocomplete="address-level2"/>
+          </sl:field>
+        </sl:field-group>
+      </sl:field-set>
+    form:
+      values: {street: '', city: ''}
+
+  - id: responsive
+    title: Responsive
+    description: Side by side in a wide field-group, stacked in a narrow one.
+    source: |-
+      <sl:field-group>
+        <sl:field th:field="*{displayName}" orientation="responsive">
+          <sl:field-content>
+            <sl:field-label>Display name</sl:field-label>
+            <sl:field-description>Shown next to your comments.</sl:field-description>
+          </sl:field-content>
+          <sl:input/>
+        </sl:field>
+      </sl:field-group>
+    form:
+      values: {displayName: ''}
+
+  - id: without-binding
+    title: Without th:field
+    description: for gives the control its id, and the description and error their ids.
+    source: |-
+      <sl:field for="field-search">
+        <sl:field-label>Search orders</sl:field-label>
+        <sl:input type="search" name="q"/>
+        <sl:field-description>An order number or a customer name.</sl:field-description>
+      </sl:field>

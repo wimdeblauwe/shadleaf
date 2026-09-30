@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The error messages of a <code>sl:field</code> or <code>sl:field-set</code>, read from its
+      <code>th:field</code>'s binding: one message as text, several as a list. It renders nothing while there are
+      none. Content of its own replaces the messages, and always shows. It gets the id the control's (or fieldset's)
+      <code>aria-describedby</code> points at while it shows messages.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* No role="alert": after a full page load every error would be announced at once. The control's aria-invalid and
+  aria-describedby announce the message when the user reaches the control. */-->
+<div th:fragment="field-error"
+     th:if="${slots.hasDefault() or (slField != null and slField.invalid)}"
+     class="field-error"
+     th:attr="id=${slField?.errorId}"
+     sl:attrs><sl:slot><th:block th:if="${slField.errors.size() == 1}" th:text="${slField.errors[0]}"/><ul
+    th:unless="${slField.errors.size() == 1}"><li th:each="slError : ${slField.errors}" th:text="${slError}">
+  Message</li></ul></sl:slot></div>
+</body>
+</html>

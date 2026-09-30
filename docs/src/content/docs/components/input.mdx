@@ -20,7 +20,8 @@ Inside a form with `th:object`, write `th:field` as on a plain `<input>`. Spring
 </form>
 ```
 
-An explicit `id` wins over the one `th:field` gives.
+An explicit `id` wins over the one `th:field` gives. In a [field](../field/), put `th:field` on the field instead: it
+adds the label, description and error messages and wires them to the input.
 
 ## Types
 
@@ -32,8 +33,8 @@ their own.
 ## Invalid
 
 When the field has errors after a `@Valid` submit, the input marks itself `aria-invalid="true"`, which the skins draw
-in the destructive colour. Showing the error message and linking it with `aria-describedby` is the job of the field
-component, which is coming next; until then, an `aria-describedby` you write passes through.
+in the destructive colour. A [field](../field/) shows the error message and links it with `aria-describedby`; outside
+one, an `aria-describedby` you write passes through.
 
 <ComponentPreview id="input--invalid" />
 

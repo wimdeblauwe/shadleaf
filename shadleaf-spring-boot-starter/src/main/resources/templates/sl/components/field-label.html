@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The label of a <code>sl:field</code>. Its <code>for</code> points at the field's control; a
+      <code>for</code> of your own wins.</sl:description>
+  </sl:props>
+</head>
+<body>
+<label th:fragment="field-label"
+       class="label field-label"
+       th:attr="for=${slField?.id}"
+       sl:attrs><sl:slot/></label>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A group of related fields or options under a <code>sl:field-legend</code>, as a
+      <code>fieldset</code>. With <code>th:field</code>, the options inside share it: radio buttons in a
+      <code>sl:radio-group</code>, or checkboxes each in a <code>sl:field</code> of their own (which then need no
+      <code>th:field</code> and get Spring's numbered ids, <code>toppings1</code>). A
+      <code>sl:field-description</code> and <code>sl:field-error</code> directly inside describe the fieldset, and it
+      gets <code>data-invalid</code> when the binding has errors.</sl:description>
+  </sl:props>
+</head>
+<body>
+<fieldset th:fragment="field-set"
+          class="field-set"
+          th:with="slField=${#slFields.fieldSet(attrs,
+                                                slots.contains('field-description', 'field'),
+                                                slots.contains('field-error', 'field'))}"
+          th:attr="data-invalid=${slField.invalid ? 'true' : null},
+                   aria-describedby=${slField.describedBy}"
+          sl:attrs="${attrs.without('field')}"><sl:slot/></fieldset>
+</body>
+</html>

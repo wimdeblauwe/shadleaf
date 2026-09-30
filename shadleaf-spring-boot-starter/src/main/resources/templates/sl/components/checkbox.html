@@ -5,21 +5,22 @@
     <sl:description>A checkbox: the browser's own, styled. Every attribute that is not a prop (<code>th:field</code>,
       <code>name</code>, <code>value</code>, <code>checked</code>, <code>required</code>) passes through to the
       <code>input</code>, except <code>class</code>, which goes to the wrapper that holds the check mark. With
-      <code>th:field</code>, Spring numbers the id (<code>terms1</code>), so put the checkbox inside its label or give
-      it an explicit <code>id</code>; the checkbox is marked <code>aria-invalid</code> when its field has
-      errors.</sl:description>
+      <code>th:field</code>, Spring numbers the id (<code>terms1</code>), so put the checkbox inside its label, in a
+      <code>sl:field</code> (which gives it the field's name as id), or give it an explicit <code>id</code>; the
+      checkbox is marked <code>aria-invalid</code> when its field has errors.</sl:description>
   </sl:props>
 </head>
 <body>
 <!--/* The check mark is an icon over the input, not a CSS background image, which a strict img-src would block. th:field
   adds a hidden marker input after the checkbox, so the CSS uses ~, not +. */-->
 <span th:fragment="checkbox"
+      th:with="slAttrs=${#slFields.control(attrs, slField)}"
       class="checkbox-wrapper"
       sl:attrs="${attrs.only('class', 'classappend')}">
   <input type="checkbox"
          class="checkbox"
-         th:attr="aria-invalid=${attrs['th:field'] != null and #fields.hasErrors(attrs['th:field']) ? 'true' : null}"
-         sl:attrs="${attrs.without('class', 'classappend')}">
+         th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+         sl:attrs="${slAttrs.without('class', 'classappend')}">
   <sl:icon name="check" class="checkbox-indicator"/>
 </span>
 </body>

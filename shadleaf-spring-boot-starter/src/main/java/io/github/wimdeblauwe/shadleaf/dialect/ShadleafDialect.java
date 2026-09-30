@@ -21,12 +21,15 @@ import org.thymeleaf.standard.StandardDialect;
  * <p>
  * It also provides the expression object {@code #slIcons}, the {@link IconRegistry} that {@code <sl:icon>} inlines
  * its SVG from. An expression object rather than a bean reference, so it works without a Spring application context.
+ * And {@code #slFields}, the {@link FieldBindings} through which {@code <sl:field>} shares its {@code th:field} with
+ * its parts and control.
  */
 public class ShadleafDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
 
   public static final String PREFIX = "sl";
   public static final String NAMESPACE_URI = "https://shadleaf.dev/sl";
   public static final String ICONS_EXPRESSION_OBJECT = "slIcons";
+  public static final String FIELDS_EXPRESSION_OBJECT = "slFields";
   private static final String NAME = "Shadleaf";
 
   private final ComponentRegistry registry;
@@ -38,12 +41,16 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
     this.expressionObjectFactory = new IExpressionObjectFactory() {
       @Override
       public Set<String> getAllExpressionObjectNames() {
-        return Set.of(ICONS_EXPRESSION_OBJECT);
+        return Set.of(ICONS_EXPRESSION_OBJECT, FIELDS_EXPRESSION_OBJECT);
       }
 
       @Override
       public Object buildObject(IExpressionContext context, String expressionObjectName) {
-        return ICONS_EXPRESSION_OBJECT.equals(expressionObjectName) ? iconRegistry : null;
+        return switch (expressionObjectName) {
+          case ICONS_EXPRESSION_OBJECT -> iconRegistry;
+          case FIELDS_EXPRESSION_OBJECT -> new FieldBindings(context);
+          default -> null;
+        };
       }
 
       @Override

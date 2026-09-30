@@ -364,4 +364,60 @@
   .switch[data-size='sm'] {
     @apply h-3.5 w-6 bg-size-[0.75rem];
   }
+
+  /*
+    Field. An invalid field's label (or fieldset's legend) and the error use text-destructive-legible
+    (components/base.css), as the destructive alert does; the control keeps its own text colour.
+  */
+  .field-set {
+    @apply gap-4 has-[>.radio-group]:gap-3
+      has-[>.field[data-orientation='horizontal']]:gap-3;
+  }
+
+  .field-legend {
+    @apply mb-2.5 font-medium;
+  }
+
+  .field-legend:not([data-variant]),
+  .field-legend[data-variant='legend'] {
+    @apply text-sm;
+  }
+
+  .field-legend[data-variant='label'] {
+    @apply text-xs;
+  }
+
+  .field-group {
+    @apply gap-5 [&>.field-group]:gap-4;
+  }
+
+  .field {
+    @apply gap-2;
+  }
+
+  .field-content {
+    @apply gap-0.5;
+  }
+
+  .field-label {
+    @apply leading-snug;
+  }
+
+  .field[data-invalid='true'] > .field-label,
+  .field[data-invalid='true'] > .field-content > .field-label,
+  .field-set[data-invalid='true'] > .field-legend {
+    @apply text-destructive-legible;
+  }
+
+  .field-description {
+    @apply text-xs/relaxed text-muted-foreground;
+  }
+
+  :is(.field-legend:not([data-variant]), .field-legend[data-variant='legend']) + .field-description {
+    @apply -mt-1.5;
+  }
+
+  .field-error {
+    @apply text-xs text-destructive-legible;
+  }
 }

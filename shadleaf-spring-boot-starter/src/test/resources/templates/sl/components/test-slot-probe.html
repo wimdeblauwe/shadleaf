@@ -1,0 +1,10 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: reports what slots.contains finds in its content, skipping nested test-slot-probe. -->
+<body>
+<div th:fragment="test-slot-probe"
+     class="slot-probe"
+     th:attr="data-dot=${slots.contains('test-dot', 'test-slot-probe')},
+              data-chip=${slots.contains('TEST-CHIP')}"><sl:slot/><sl:slot name="aside"/></div>
+</body>
+</html>

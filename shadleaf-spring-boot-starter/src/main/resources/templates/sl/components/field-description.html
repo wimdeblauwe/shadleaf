@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Help text for a <code>sl:field</code> or <code>sl:field-set</code>. It gets the id the control's
+      (or fieldset's) <code>aria-describedby</code> points at.</sl:description>
+  </sl:props>
+</head>
+<body>
+<p th:fragment="field-description"
+   class="field-description"
+   th:attr="id=${slField?.descriptionId}"
+   sl:attrs><sl:slot/></p>
+</body>
+</html>

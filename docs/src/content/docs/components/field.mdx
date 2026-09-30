@@ -1,0 +1,167 @@
+---
+title: Field
+description: A label, a control, a description and the binding's error messages, wired together from one th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="field--default" />
+
+## One th:field for the whole field
+
+Put `th:field` on `<sl:field>`, not on the control. The field reads the binding and hands it to its parts, so you
+write the field once and get:
+
+- the control bound to the field: `name`, value and `id`, as `th:field` on the control would give;
+- `<sl:field-label>` with a `for` that points at the control;
+- `<sl:field-description>` with an `id`, and the control's `aria-describedby` pointing at it;
+- `<sl:field-error>` showing the binding's messages, and the control described by them while there are any;
+- `aria-invalid` on the control and `data-invalid` on the field when the binding has errors.
+
+```html
+<form th:object="${signup}" th:action="@{/signup}" method="post" novalidate>
+  <sl:field th:field="*{email}">
+    <sl:field-label>Email</sl:field-label>
+    <sl:input type="email"/>
+    <sl:field-description>We never share it.</sl:field-description>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+With an error on `email`, that renders:
+
+```html
+<div class="field" data-invalid="true">
+  <label class="label field-label" for="email">Email</label>
+  <input class="input" type="email" aria-invalid="true" id="email"
+         aria-describedby="email-description email-error" name="email" value="wim@">
+  <p class="field-description" id="email-description">We never share it.</p>
+  <div class="field-error" id="email-error">must be a well-formed email address</div>
+</div>
+```
+
+The parts go in any order. A field holds one control: a second one keeps its own `th:field` and id.
+
+## Errors
+
+`<sl:field-error>` renders nothing while the field has no errors. One message is shown as text, several as a list,
+each message once. Content of your own replaces the messages and always shows, so wrap it in a `th:if` when it should
+only show with errors.
+
+<ComponentPreview id="field--invalid" />
+
+<ComponentPreview id="field--several-errors" />
+
+The error has no `role="alert"`. After a submit the whole page loads again, and a screen reader would read out every
+error at once. The control is `aria-invalid` and described by its error instead, so the message is read when the user
+reaches the control. If you swap a single field in with htmx, add `role="alert"` to its error yourself.
+
+## Ids
+
+The control's id is the field's name, the id `th:field` gives a text input: `email`, or `address.street` for a nested
+property. The description and error ids add `-description` and `-error`. Set `for` on the field to use another id:
+
+```html
+<sl:field th:field="*{email}" for="work-email">
+```
+
+An `aria-describedby` you put on the control is kept, and the field's ids are added after it.
+
+For a checkbox or switch, Spring numbers the id (`terms1`), so that several checkboxes bound to one list field get
+different ids. In a field, the checkbox gets the field's name instead, and the label points at it.
+
+## Other controls
+
+A textarea and a native select work as the input does:
+
+<ComponentPreview id="field--textarea" />
+
+<ComponentPreview id="field--select" />
+
+## Checkbox and switch
+
+`orientation="horizontal"` puts the control first and the label beside it. `<sl:field-content>` stacks the label with
+a description or an error.
+
+<ComponentPreview id="field--switch" />
+
+<ComponentPreview id="field--checkbox" />
+
+## Radio buttons and checkbox groups
+
+A set of options that answers one question is a `<sl:field-set>`, with a `<sl:field-legend>` as its question.
+`th:field` goes on the field set, and the options inside share it. A description and an error directly inside the field
+set describe the whole group: the `fieldset` gets the `aria-describedby`, while each radio button is still marked
+`aria-invalid` from the field.
+
+<ComponentPreview id="field--radio-group" />
+
+For checkboxes, make each option a horizontal field without a `th:field` of its own. It takes the field set's, and the
+next of Spring's numbered ids (`toppings1`, `toppings2`), which its label points at.
+
+<ComponentPreview id="field--checkbox-group" />
+
+`variant="label"` on the legend gives it the size of a field label; the default is a section heading.
+
+## Layout
+
+`<sl:field-group>` stacks fields with even spacing. A field set without `th:field` groups related fields under a
+heading.
+
+<ComponentPreview id="field--field-set" />
+
+`orientation="responsive"` puts the label and the control side by side when the enclosing field group is at least
+28rem wide, and stacks them when it is narrower.
+
+<ComponentPreview id="field--responsive" />
+
+## Without th:field
+
+A field without `th:field` is only layout. Set `for` to give the control its id, the label its `for`, and the
+description and error their ids. Without a binding, `data-invalid` and `aria-invalid` are yours to set.
+
+<ComponentPreview id="field--without-binding" />
+
+## How the parts find the field
+
+`<sl:field>` renders its content with a local variable, `slField`, that holds the `th:field`, the ids and the
+messages. Every part and control inside it reads that variable, which is why nothing has to be repeated. To know
+whether it has a description or an error, the field looks at its content as written: a part added with `th:replace` is
+not seen, and a part with a `th:if` that is false still counts, so the control would point at a description that is
+not there.
+
+## Attributes
+
+### sl:field
+
+<ComponentAttributes component="field" />
+
+### sl:field-label
+
+<ComponentAttributes component="field-label" />
+
+### sl:field-description
+
+<ComponentAttributes component="field-description" />
+
+### sl:field-error
+
+<ComponentAttributes component="field-error" />
+
+### sl:field-content
+
+<ComponentAttributes component="field-content" />
+
+### sl:field-set
+
+<ComponentAttributes component="field-set" />
+
+### sl:field-legend
+
+<ComponentAttributes component="field-legend" />
+
+### sl:field-group
+
+<ComponentAttributes component="field-group" />

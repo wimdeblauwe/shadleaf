@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Compares rendered HTML with an approved copy kept in version control, so a change in the markup a component emits
@@ -39,9 +40,15 @@ public final class HtmlApproval {
    * are left out: they belong to the lucide catalogue, not to the component ({@code IconApprovalTest} keeps them).
    */
   public static void verifyRenders(String name, ComponentRenderTester tester, List<String> snippets) {
+    verifyRenders(name, tester, snippets, Map.of());
+  }
+
+  /** As {@link #verifyRenders(String, ComponentRenderTester, List)}, rendering every snippet with these variables. */
+  public static void verifyRenders(String name, ComponentRenderTester tester, List<String> snippets,
+      Map<String, ?> variables) {
     StringBuilder approval = new StringBuilder();
     for (String snippet : snippets) {
-      Rendered rendered = tester.render(snippet);
+      Rendered rendered = tester.render(snippet, variables);
       rendered.select("svg > *").remove();
       approval.append("<!-- ").append(snippet).append(" -->\n")
           .append(rendered.normalizedHtml()).append("\n\n");

@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The caption of a <code>sl:field-set</code>, as its <code>legend</code>. Put it first in the
+      fieldset.</sl:description>
+    <sl:prop name="variant" default="legend" values="legend label">A section heading, or the size of a field label
+      (for a set of options that answers one question).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<legend th:fragment="field-legend"
+        class="field-legend"
+        th:attr="data-variant=${props.unlessDefault('variant')}"
+        sl:attrs><sl:slot/></legend>
+</body>
+</html>

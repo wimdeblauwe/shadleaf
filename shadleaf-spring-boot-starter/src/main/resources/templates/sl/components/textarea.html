@@ -5,13 +5,15 @@
     <sl:description>A multi-line text input that grows with its content where the browser supports it. The content
       is the initial text, unless <code>th:field</code> sets it. Every attribute that is not a prop passes through;
       <code>class</code> is appended to <code>textarea</code>. With <code>th:field</code>, the textarea is marked
-      <code>aria-invalid</code> when its field has errors.</sl:description>
+      <code>aria-invalid</code> when its field has errors. In a <code>sl:field</code>, it takes the field's
+      <code>th:field</code>, id and <code>aria-describedby</code>.</sl:description>
   </sl:props>
 </head>
 <body>
 <textarea th:fragment="textarea"
+          th:with="slAttrs=${#slFields.control(attrs, slField)}"
           class="textarea"
-          th:attr="aria-invalid=${attrs['th:field'] != null and #fields.hasErrors(attrs['th:field']) ? 'true' : null}"
-          sl:attrs><sl:slot/></textarea>
+          th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+          sl:attrs="${slAttrs}"><sl:slot/></textarea>
 </body>
 </html>
