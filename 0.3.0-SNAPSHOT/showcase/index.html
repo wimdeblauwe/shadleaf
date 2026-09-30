@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-CMOMHfxg.css"><script>(function(){const skins = {"vega":"/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-CMOMHfxg.css","lyra":"/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-vp9eA_XF.css"};
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-EHnbLgGh.css"><script>(function(){const skins = {"vega":"/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-EHnbLgGh.css","lyra":"/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-7j7U_0zd.css"};
 const firstSkin = "vega";
 
     const params = new URLSearchParams(location.search);
@@ -786,7 +786,79 @@ const firstSkin = "vega";
        type="search" name="q" id="field-search" aria-describedby="field-search-description">
   <p class="field-description"
    id="field-search-description">An order number or a customer name.</p>
-</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">icon</h2><h3 class="astro-6felt6qx">Icon</h3><div class="stage astro-6felt6qx" data-scenario="icon--default"><svg xmlns="http://www.w3.org/2000/svg"
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">form-errors</h2><h3 class="astro-6felt6qx">Form errors</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--default"><div class="field-group">
+  
+<div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="form-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title">There is a problem</div><div
+    class="alert-description">The passwords do not match.</div></div>
+
+  <div class="field">
+    <label class="label field-label"
+       for="signupPassword">Password</label>
+    <input class="input"
+       type="password" autocomplete="new-password" id="signupPassword" name="signupPassword" value="">
+  </div>
+  <div class="field">
+    <label class="label field-label"
+       for="signupRepeat">Repeat the password</label>
+    <input class="input"
+       type="password" autocomplete="new-password" id="signupRepeat" name="signupRepeat" value="">
+  </div>
+</div></div><h3 class="astro-6felt6qx">Several errors</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--several"><div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="order-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title">There is a problem</div><div
+    class="alert-description"><ul><li>The delivery date is before the order date.</li><li>Orders over 50 items need a purchase order number.</li></ul></div></div></div><h3 class="astro-6felt6qx">All errors</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--all"><div class="field-group">
+  
+<div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="account-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title">There is a problem</div><div
+    class="alert-description"><ul><li>This invitation has expired.</li><li>Enter your name.</li><li>Enter an email address like you@example.com.</li></ul></div></div>
+
+  <div class="field"
+     data-invalid="true">
+    <label class="label field-label"
+       for="accountName">Name</label>
+    <input class="input"
+       type="text" aria-invalid="true" autocomplete="name" id="accountName" aria-describedby="accountName-error" name="accountName" value="">
+    <div class="field-error"
+     id="accountName-error">Enter your name.</div>
+  </div>
+  <div class="field"
+     data-invalid="true">
+    <label class="label field-label"
+       for="accountEmail">Email</label>
+    <input class="input"
+       type="email" aria-invalid="true" autocomplete="email" id="accountEmail" aria-describedby="accountEmail-error" name="accountEmail" value="wim@">
+    <div class="field-error"
+     id="accountEmail-error">Enter an email address like you@example.com.</div>
+  </div>
+</div></div><h3 class="astro-6felt6qx">A title of its own</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--title"><div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="transfer-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title"
+    role="heading" aria-level="2">The transfer was not made</div><div
+    class="alert-description">Your balance is too low for this amount.</div></div></div><h3 class="astro-6felt6qx">Content of its own</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--content"><div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="payment-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title">There is a problem</div><div
+    class="alert-description">
+  <p>The payment service did not answer. Your card was not charged.</p>
+  <p>Try again in a minute.</p>
+</div></div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">icon</h2><h3 class="astro-6felt6qx">Icon</h3><div class="stage astro-6felt6qx" data-scenario="icon--default"><svg xmlns="http://www.w3.org/2000/svg"
      class="sl-icon"
      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg>
 <svg xmlns="http://www.w3.org/2000/svg"
