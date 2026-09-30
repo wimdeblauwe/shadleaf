@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The top of a <code>sl:sheet</code>: a <code>sl:sheet-title</code> and an optional
+      <code>sl:sheet-description</code> below it.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="sheet-header" class="sheet-header" sl:attrs><sl:slot/></div>
+</body>
+</html>

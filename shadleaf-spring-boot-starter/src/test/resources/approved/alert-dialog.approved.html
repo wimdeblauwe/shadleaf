@@ -1,0 +1,83 @@
+<!-- <sl:alert-dialog id="a1">Content</sl:alert-dialog> -->
+<dialog class="alert-dialog" role="alertdialog" id="a1" closedby="closerequest" x-data="slDialog">Content</dialog>
+
+<!-- <sl:alert-dialog id="a2" size="sm">Content</sl:alert-dialog> -->
+<dialog class="alert-dialog" role="alertdialog" id="a2" closedby="closerequest" x-data="slDialog" data-size="sm">Content</dialog>
+
+<!-- <sl:alert-dialog id="a3" open>Content</sl:alert-dialog> -->
+<dialog class="alert-dialog" role="alertdialog" id="a3" closedby="closerequest" x-data="slDialog" data-show-modal="true">Content</dialog>
+
+<!-- <sl:alert-dialog-header>Header</sl:alert-dialog-header> -->
+<div class="alert-dialog-header">Header</div>
+
+<!-- <sl:alert-dialog-media><sl:icon name="circle-alert"/></sl:alert-dialog-media> -->
+<div class="alert-dialog-media">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</div>
+
+<!-- <sl:alert-dialog-media variant="destructive"><sl:icon name="trash-2"/></sl:alert-dialog-media> -->
+<div class="alert-dialog-media" data-variant="destructive">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</div>
+
+<!-- <sl:alert-dialog-title>Are you absolutely sure?</sl:alert-dialog-title> -->
+<div class="alert-dialog-title" role="heading" aria-level="2">Are you absolutely sure?</div>
+
+<!-- <sl:alert-dialog-title level="3">Are you absolutely sure?</sl:alert-dialog-title> -->
+<div class="alert-dialog-title" role="heading" aria-level="3">Are you absolutely sure?</div>
+
+<!-- <sl:alert-dialog-description>This action cannot be undone.</sl:alert-dialog-description> -->
+<div class="alert-dialog-description">This action cannot be undone.</div>
+
+<!-- <sl:alert-dialog-footer>Footer</sl:alert-dialog-footer> -->
+<div class="alert-dialog-footer">Footer</div>
+
+<!-- <sl:alert-dialog-cancel/> -->
+<button class="btn alert-dialog-cancel" type="button" data-variant="outline" command="close" autofocus>Cancel</button>
+
+<!-- <sl:alert-dialog-cancel variant="ghost" size="sm">Keep it</sl:alert-dialog-cancel> -->
+<button class="btn alert-dialog-cancel" type="button" data-variant="ghost" data-size="sm" command="close" autofocus>Keep it</button>
+
+<!-- <sl:alert-dialog id="delete-account">
+  <sl:alert-dialog-header>
+    <sl:alert-dialog-title>Are you absolutely sure?</sl:alert-dialog-title>
+    <sl:alert-dialog-description>This action cannot be undone.</sl:alert-dialog-description>
+  </sl:alert-dialog-header>
+  <sl:alert-dialog-footer>
+    <sl:alert-dialog-cancel/>
+    <sl:button>Continue</sl:button>
+  </sl:alert-dialog-footer>
+</sl:alert-dialog> -->
+<dialog class="alert-dialog" role="alertdialog" id="delete-account" closedby="closerequest" x-data="slDialog" aria-labelledby="delete-account-title" aria-describedby="delete-account-description">
+  <div class="alert-dialog-header">
+    <div class="alert-dialog-title" role="heading" aria-level="2" id="delete-account-title">Are you absolutely sure?</div>
+    <div class="alert-dialog-description" id="delete-account-description">This action cannot be undone.</div>
+  </div>
+  <div class="alert-dialog-footer">
+    <button class="btn alert-dialog-cancel" type="button" data-variant="outline" commandfor="delete-account" command="close" autofocus>Cancel</button>
+    <button class="btn" type="button">Continue</button>
+  </div>
+</dialog>
+
+<!-- <sl:alert-dialog id="delete-chat" size="sm">
+  <sl:alert-dialog-header>
+    <sl:alert-dialog-media variant="destructive"><sl:icon name="trash-2"/></sl:alert-dialog-media>
+    <sl:alert-dialog-title>Delete chat?</sl:alert-dialog-title>
+  </sl:alert-dialog-header>
+  <sl:alert-dialog-footer>
+    <sl:alert-dialog-cancel/>
+    <sl:button variant="destructive">Delete</sl:button>
+  </sl:alert-dialog-footer>
+</sl:alert-dialog> -->
+<dialog class="alert-dialog" role="alertdialog" id="delete-chat" closedby="closerequest" x-data="slDialog" aria-labelledby="delete-chat-title" data-size="sm">
+  <div class="alert-dialog-header">
+    <div class="alert-dialog-media" data-variant="destructive">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </div>
+    <div class="alert-dialog-title" role="heading" aria-level="2" id="delete-chat-title">Delete chat?</div>
+  </div>
+  <div class="alert-dialog-footer">
+    <button class="btn alert-dialog-cancel" type="button" data-variant="outline" commandfor="delete-chat" command="close" autofocus>Cancel</button>
+    <button class="btn" type="button" data-variant="destructive">Delete</button>
+  </div>
+</dialog>

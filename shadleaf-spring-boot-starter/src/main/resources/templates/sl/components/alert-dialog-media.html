@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>An icon (or an image) at the start of a <code>sl:alert-dialog-header</code>, on a muted
+      square: above the title, or beside title and description in a wide dialog.</sl:description>
+    <sl:prop name="variant" default="default" values="default destructive">Colour of the square and its icon:
+      <code>destructive</code> for a dialog that confirms deleting something.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="alert-dialog-media"
+     class="alert-dialog-media"
+     th:attr="data-variant=${props.unlessDefault('variant')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

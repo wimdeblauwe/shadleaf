@@ -31,6 +31,18 @@
   <p>Edit fetches the dialog into <code>#modal-root</code>, and <code>&lt;sl:dialog open&gt;</code> shows it. Save
     posts the form with htmx: with errors the form comes back with them and the dialog stays open; after a valid save
     the response header <code>HX-Trigger: sl-dialog-close</code> closes it and the row is updated.</p>
+  <p>Delete fetches an alert dialog the same way. Its Delete button sends <code>hx-delete</code>; the response closes
+    the alert dialog with the same event, removes the row and moves focus to a message saying what happened. Cancel,
+    which has the focus when it opens, sends nothing.</p>
+  <p>Invite member opens a sheet that is in the page. Its form posts with htmx and swaps itself: with errors the sheet
+    stays open; after a valid invite an empty form comes back, the sheet closes and the new member is added to the
+    table.</p>
+  <div class="row">
+    <sl:button variant="outline" commandfor="invite-member" command="show-modal">
+      <sl:slot name="icon-start"><sl:icon name="user-plus"/></sl:slot>Invite member</sl:button>
+  </div>
+  <!--/* Where the response to a delete puts its message (member-deleted). */-->
+  <p id="member-status" hidden></p>
   <table class="members">
     <thead>
     <tr>
@@ -39,10 +51,22 @@
       <th scope="col"><span class="visually-hidden">Actions</span></th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id="members-body">
     <th:block th:each="member : ${members}"><tr th:replace="~{dialog :: member-row}"></tr></th:block>
     </tbody>
   </table>
+
+  <!--/* The form wraps nothing but the fields: it swaps itself, and the footer's submit button points at it. */-->
+  <sl:sheet id="invite-member">
+    <sl:sheet-header>
+      <sl:sheet-title>Invite member</sl:sheet-title>
+      <sl:sheet-description>They get an email with a link to join the team.</sl:sheet-description>
+    </sl:sheet-header>
+    <form th:replace="~{dialog :: invite-form}"></form>
+    <sl:sheet-footer close-button>
+      <sl:button type="submit" form="invite-member-form">Send invitation</sl:button>
+    </sl:sheet-footer>
+  </sl:sheet>
 </div>
 
 <!--/* One row; hx-swap-oob when it is the out-of-band update after a save (member-row-oob). */-->
@@ -56,11 +80,22 @@
       <!--/* The id lets htmx put focus back on the new button when the row is replaced after a save. */-->
       <sl:button th:id="|edit-member-${member.id}|" variant="outline" size="sm" hx:get="@{/dialog/members/{id}/edit(id=${member.id})}"
                  hx-target="#modal-root" th:aria-label="|Edit ${member.name}|">Edit</sl:button>
+      <sl:button variant="outline" size="sm" hx:get="@{/dialog/members/{id}/delete(id=${member.id})}"
+                 hx-target="#modal-root" th:aria-label="|Delete ${member.name}|">Delete</sl:button>
     </td>
   </tr>
 </table>
 <th:block th:fragment="member-row-oob" th:with="oob=true">
   <tr th:replace="~{dialog :: member-row}"></tr>
+</th:block>
+
+<!--/* The answer to a valid invite: an empty form in place of the filled one, and the new row at the end of the table
+  (a beforeend swap inserts the children of the tbody, not the tbody itself). */-->
+<th:block th:fragment="invited">
+  <form th:replace="~{dialog :: invite-form}"></form>
+  <table>
+    <tbody hx-swap-oob="beforeend:#members-body"><tr th:replace="~{dialog :: member-row}"></tr></tbody>
+  </table>
 </th:block>
 
 <!--/* The dialog htmx fetches. Only the form swaps itself, so the dialog stays open while it has errors. */-->
@@ -93,5 +128,43 @@
     </sl:field>
   </sl:field-group>
 </form>
+
+<form th:fragment="invite-form" id="invite-member-form" class="dialog-form" th:object="${inviteForm}"
+      th:action="@{/dialog/members}" method="post" novalidate
+      hx:post="@{/dialog/members}" hx-target="this" hx-swap="outerHTML">
+  <sl:form-errors autofocus/>
+  <sl:field-group>
+    <sl:field th:field="*{name}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{email}">
+      <sl:field-label>Email</sl:field-label>
+      <sl:input type="email"/>
+      <sl:field-error/>
+    </sl:field>
+  </sl:field-group>
+</form>
+
+<!--/* The alert dialog htmx fetches to confirm a delete. The row goes: hx-target is the row, and the response has
+  nothing for it but the message out of band. */-->
+<sl:alert-dialog th:fragment="delete-dialog" id="delete-member" size="sm" open>
+  <sl:alert-dialog-header>
+    <sl:alert-dialog-media variant="destructive"><sl:icon name="trash-2"/></sl:alert-dialog-media>
+    <sl:alert-dialog-title th:text="|Delete ${member.name}?|">Delete Ada Lovelace?</sl:alert-dialog-title>
+    <sl:alert-dialog-description>They lose access to the team at once. This cannot be undone.</sl:alert-dialog-description>
+  </sl:alert-dialog-header>
+  <sl:alert-dialog-footer>
+    <sl:alert-dialog-cancel/>
+    <sl:button variant="destructive" hx:delete="@{/dialog/members/{id}(id=${member.id})}"
+               th:hx-target="|#member-${member.id}|" hx-swap="outerHTML">Delete</sl:button>
+  </sl:alert-dialog-footer>
+</sl:alert-dialog>
+
+<!--/* After a delete: the message takes the focus, which would otherwise fall to the top of the page with the row's
+  Delete button gone, and focus reads it out. */-->
+<p th:fragment="member-deleted" id="member-status" class="member-status" hx-swap-oob="true" tabindex="-1" autofocus
+   th:text="|${member.name} was deleted.|">Ada Lovelace was deleted.</p>
 </body>
 </html>

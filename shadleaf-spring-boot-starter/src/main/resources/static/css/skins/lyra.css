@@ -465,4 +465,84 @@
   .dialog-footer {
     @apply gap-2;
   }
+
+  /* Alert dialog */
+  .alert-dialog {
+    @apply max-w-xs gap-4 rounded-none bg-popover p-4 text-xs/relaxed text-popover-foreground ring-1 ring-foreground/10
+      duration-100 backdrop:bg-black/10 backdrop:duration-100 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .alert-dialog:not([data-size]) {
+    @apply sm:max-w-sm;
+  }
+
+  .alert-dialog[data-size='sm'] {
+    @apply max-w-xs;
+  }
+
+  .alert-dialog-header {
+    @apply gap-1.5 has-[>.alert-dialog-media]:gap-x-4;
+  }
+
+  .alert-dialog-media {
+    @apply mb-2 size-10 rounded-none [&_svg:not([class*='size-'],[data-icon-size])]:size-6;
+  }
+
+  .alert-dialog-media:not([data-variant]) {
+    @apply bg-muted;
+  }
+
+  .alert-dialog-media[data-variant='destructive'] {
+    @apply bg-destructive/10 text-destructive dark:bg-destructive/20;
+  }
+
+  .alert-dialog-title {
+    @apply text-sm font-medium;
+  }
+
+  .alert-dialog-description {
+    @apply text-xs/relaxed text-balance text-muted-foreground md:text-pretty
+      [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground;
+  }
+
+  .alert-dialog-footer {
+    @apply gap-2;
+  }
+
+  /* Sheet */
+  .sheet {
+    @apply border-border bg-popover bg-clip-padding text-xs/relaxed text-popover-foreground shadow-lg duration-200 ease-in-out
+      backdrop:bg-black/10 backdrop:duration-200 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+    --sheet-slide: --spacing(10);
+  }
+
+  .sheet:not([data-side]),
+  .sheet[data-side='left'] {
+    @apply w-3/4 sm:max-w-sm;
+  }
+
+  /* Content between the header and the footer lines up with them (shadcn's examples give it px-4). */
+  .sheet > :not(.sheet-header, .sheet-footer, .sheet-close) {
+    @apply px-4;
+  }
+
+  .sheet-close {
+    @apply top-3 end-3;
+  }
+
+  .sheet-header {
+    @apply gap-0.5 p-4;
+  }
+
+  .sheet-footer {
+    @apply gap-2 p-4;
+  }
+
+  .sheet-title {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  .sheet-description {
+    @apply text-xs/relaxed text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground;
+  }
 }

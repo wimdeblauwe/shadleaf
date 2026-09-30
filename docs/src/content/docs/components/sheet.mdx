@@ -1,0 +1,91 @@
+---
+title: Sheet
+description: A dialog that slides in from an edge of the screen.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="sheet--default" />
+
+## Built from parts
+
+A sheet is a [dialog](../dialog/) on an edge of the screen, for content that complements the page: filters,
+settings, the details of a row. It is `<sl:sheet>` plus the parts you need, as in shadcn/ui: `<sl:sheet-header>`
+(holding `<sl:sheet-title>` and `<sl:sheet-description>`), your own content and `<sl:sheet-footer>`.
+
+```html
+<sl:button variant="outline" commandfor="edit-profile" command="show-modal">Open</sl:button>
+
+<form method="post" th:action="@{/profile}">
+  <sl:sheet id="edit-profile">
+    <sl:sheet-header>
+      <sl:sheet-title>Edit profile</sl:sheet-title>
+      <sl:sheet-description>Make changes to your profile here.</sl:sheet-description>
+    </sl:sheet-header>
+    <sl:field-group>
+      ...
+    </sl:field-group>
+    <sl:sheet-footer close-button>
+      <sl:button type="submit">Save changes</sl:button>
+    </sl:sheet-footer>
+  </sl:sheet>
+</form>
+```
+
+Everything the dialog page says holds for a sheet: it is the browser's `<dialog>` element, buttons open and close it
+with `commandfor` and `command`, the page behind it is inert and does not scroll, Escape and a click outside close it,
+focus returns to the button that opened it, and `open` shows one the server renders (an htmx swap). The title and
+description name and describe it, with ids derived from its `id`.
+
+The content between the header and the footer gets the sheet's inline padding, so it lines up with them. The footer
+stays at the bottom of a sheet on the side of the screen, however little is above it. Content taller than the screen
+scrolls inside the sheet.
+
+## Side
+
+`side` is the edge it slides in from: `top`, `right` (the default), `bottom` or `left`. A sheet on the top or bottom
+is as wide as the screen and as tall as its content; one on the right or left is as tall as the screen and three
+quarters of its width, up to a maximum.
+
+<ComponentPreview id="sheet--side" />
+
+`right` and `left` are the end and the start of a line, as everywhere in Shadleaf: on a right-to-left page
+(`dir="rtl"`) a `right` sheet opens on the left and slides in from there.
+
+The sheet fades in and slides a short distance from its edge. With reduced motion (`prefers-reduced-motion: reduce`)
+it only fades.
+
+## Close buttons
+
+The close button in the corner is on by default; `close-button="false"` leaves it out. `<sl:sheet-footer
+close-button>` adds an outline "Close" button after the footer's own actions.
+
+<ComponentPreview id="sheet--no-close-button" />
+
+## Attributes
+
+### sl:sheet
+
+<ComponentAttributes component="sheet" />
+
+### sl:sheet-header
+
+<ComponentAttributes component="sheet-header" />
+
+### sl:sheet-title
+
+<ComponentAttributes component="sheet-title" />
+
+### sl:sheet-description
+
+<ComponentAttributes component="sheet-description" />
+
+### sl:sheet-footer
+
+<ComponentAttributes component="sheet-footer" />
+
+## JavaScript
+
+`x-data="slDialog"` on the `<dialog>`, the dialog's own component: see [Dialog](../dialog/#javascript). The
+`sl-dialog-close` event closes a sheet too. It needs no Alpine plugin.

@@ -19,8 +19,8 @@
     max-block-size: calc(100% - 2rem);
   }
 
-  /* The page behind a modal dialog does not scroll, as with shadcn's. */
-  :root:has(.dialog:modal) {
+  /* The page behind a modal dialog, alert dialog or sheet does not scroll, as with shadcn's. */
+  :root:has(:is(.dialog, .alert-dialog, .sheet):modal) {
     @apply overflow-hidden;
   }
 

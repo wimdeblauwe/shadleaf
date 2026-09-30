@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Supporting text below a <code>sl:sheet-title</code>, which describes the sheet
+      (<code>aria-describedby</code>). Its id derives from the sheet's
+      (<code>filters-description</code>).</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="sheet-description"
+     class="sheet-description"
+     th:attr="id=${slDialogId != null ? slDialogId + '-description' : null}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

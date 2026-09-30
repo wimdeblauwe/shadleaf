@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The button that closes a <code>sl:alert-dialog</code> without doing anything, in its
+      <code>sl:alert-dialog-footer</code>. It takes the focus when the dialog opens, so Enter never confirms by
+      accident. Its text defaults to "Cancel" (<code>sl.alert-dialog.cancel</code>); content of its own replaces it.
+      Any other attribute passes through to the <code>sl:button</code>.</sl:description>
+    <sl:prop name="variant" default="outline" values="default outline ghost destructive secondary link">
+      Visual style of the button, as on <code>sl:button</code>.</sl:prop>
+    <sl:prop name="size" default="default" values="xs sm default lg">Size of the button, as on
+      <code>sl:button</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* A sl:button: sl:attrs puts this part's other attributes on it before it is rendered, so they reach the
+  button's props (a caller's class is appended). autofocus: showModal() focuses it. */-->
+<sl:button th:fragment="alert-dialog-cancel"
+           class="alert-dialog-cancel"
+           th:variant="${props.variant}"
+           th:size="${props.size}"
+           th:commandfor="${slDialogId}"
+           command="close"
+           autofocus
+           sl:attrs><sl:slot><th:block th:text="#{sl.alert-dialog.cancel}">Cancel</th:block></sl:slot></sl:button>
+</body>
+</html>

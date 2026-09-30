@@ -1,0 +1,82 @@
+# Scenarios for the sheet's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: sheet
+parts: [sheet-header, sheet-title, sheet-description, sheet-footer]
+scenarios:
+  - id: default
+    title: Sheet
+    description: A form in a sheet. The form wraps the sheet, so the submit button in its footer submits it.
+    source: |-
+      <sl:button variant="outline" commandfor="sheet-profile" command="show-modal">Open</sl:button>
+      <form method="post" action="/profile">
+        <sl:sheet id="sheet-profile">
+          <sl:sheet-header>
+            <sl:sheet-title>Edit profile</sl:sheet-title>
+            <sl:sheet-description>
+              Make changes to your profile here. Click save when you're done.
+            </sl:sheet-description>
+          </sl:sheet-header>
+          <sl:field-group>
+            <sl:field for="sheet-profile-name">
+              <sl:field-label>Name</sl:field-label>
+              <sl:input name="name" value="Pedro Duarte"/>
+            </sl:field>
+            <sl:field for="sheet-profile-username">
+              <sl:field-label>Username</sl:field-label>
+              <sl:input name="username" value="@peduarte"/>
+            </sl:field>
+          </sl:field-group>
+          <sl:sheet-footer close-button>
+            <sl:button type="submit">Save changes</sl:button>
+          </sl:sheet-footer>
+        </sl:sheet>
+      </form>
+
+  - id: side
+    title: Side
+    description: side="top", "right" (the default), "bottom" or "left".
+    source: |-
+      <sl:button variant="outline" commandfor="sheet-top" command="show-modal">Top</sl:button>
+      <sl:button variant="outline" commandfor="sheet-right" command="show-modal">Right</sl:button>
+      <sl:button variant="outline" commandfor="sheet-bottom" command="show-modal">Bottom</sl:button>
+      <sl:button variant="outline" commandfor="sheet-left" command="show-modal">Left</sl:button>
+      <sl:sheet id="sheet-top" side="top">
+        <sl:sheet-header>
+          <sl:sheet-title>From the top</sl:sheet-title>
+          <sl:sheet-description>A sheet on the top edge, as wide as the screen.</sl:sheet-description>
+        </sl:sheet-header>
+        <sl:sheet-footer close-button/>
+      </sl:sheet>
+      <sl:sheet id="sheet-right" side="right">
+        <sl:sheet-header>
+          <sl:sheet-title>From the right</sl:sheet-title>
+          <sl:sheet-description>The default: the end of the line, which is the left on a right-to-left page.</sl:sheet-description>
+        </sl:sheet-header>
+        <sl:sheet-footer close-button/>
+      </sl:sheet>
+      <sl:sheet id="sheet-bottom" side="bottom">
+        <sl:sheet-header>
+          <sl:sheet-title>From the bottom</sl:sheet-title>
+          <sl:sheet-description>A sheet on the bottom edge, as wide as the screen.</sl:sheet-description>
+        </sl:sheet-header>
+        <sl:sheet-footer close-button/>
+      </sl:sheet>
+      <sl:sheet id="sheet-left" side="left">
+        <sl:sheet-header>
+          <sl:sheet-title>From the left</sl:sheet-title>
+          <sl:sheet-description>The start of the line, which is the right on a right-to-left page.</sl:sheet-description>
+        </sl:sheet-header>
+        <sl:sheet-footer close-button/>
+      </sl:sheet>
+
+  - id: no-close-button
+    title: No close button in the corner
+    description: close-button="false" leaves the x out; the footer's close button remains.
+    source: |-
+      <sl:button variant="outline" commandfor="sheet-notifications" command="show-modal">Notifications</sl:button>
+      <sl:sheet id="sheet-notifications" close-button="false">
+        <sl:sheet-header>
+          <sl:sheet-title>Notifications</sl:sheet-title>
+          <sl:sheet-description>You have no unread messages.</sl:sheet-description>
+        </sl:sheet-header>
+        <sl:sheet-footer close-button/>
+      </sl:sheet>

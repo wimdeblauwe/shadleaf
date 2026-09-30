@@ -1,0 +1,38 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A modal dialog that interrupts the user with something important and waits for an answer, such as
+      a confirmation before deleting. Built on the native <code>dialog</code> element with
+      <code>role="alertdialog"</code>: a click outside does not close it, Escape does. Build it from
+      <code>sl:alert-dialog-header</code> (with an optional <code>sl:alert-dialog-media</code>,
+      <code>sl:alert-dialog-title</code> and <code>sl:alert-dialog-description</code>) and
+      <code>sl:alert-dialog-footer</code> holding <code>sl:alert-dialog-cancel</code>, which takes the focus when the
+      dialog opens, and the action, a <code>sl:button</code>. A button opens it with <code>commandfor</code> set to
+      its <code>id</code> and <code>command="show-modal"</code>; an htmx response closes it with the
+      <code>sl-dialog-close</code> event.</sl:description>
+    <sl:prop name="id" required>The dialog's id, which the button that opens it points at with
+      <code>commandfor</code>. The title and description ids derive from it.</sl:prop>
+    <sl:prop name="size" default="default" values="default sm">Size of the dialog. <code>sm</code> is narrower, with
+      the header centred and the footer's two buttons side by side.</sl:prop>
+    <sl:prop name="open" type="boolean">Open the dialog as soon as it is on the page, for a dialog the server renders
+      in answer to a request (an htmx swap). Needs Alpine.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The dialog's machinery (slDialogId for the parts, the open prop, sl-dialog-close) as sl:dialog's. No corner close
+  button and closedby="closerequest": Escape closes it, a click outside does not. */-->
+<dialog th:fragment="alert-dialog"
+        class="alert-dialog"
+        role="alertdialog"
+        th:with="slDialogId=${props.id}"
+        th:id="${slDialogId}"
+        closedby="closerequest"
+        x-data="slDialog"
+        th:attr="aria-labelledby=${slots.contains('alert-dialog-title', 'alert-dialog') ? slDialogId + '-title' : null},
+                 aria-describedby=${slots.contains('alert-dialog-description', 'alert-dialog') ? slDialogId + '-description' : null},
+                 data-size=${props.unlessDefault('size')},
+                 data-show-modal=${props.open ? 'true' : null}"
+        sl:attrs><sl:slot/></dialog>
+</body>
+</html>

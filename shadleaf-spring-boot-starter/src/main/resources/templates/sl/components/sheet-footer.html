@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The bottom of a <code>sl:sheet</code>, for its actions, stacked. It stays at the bottom of a
+      sheet on the side of the screen however little content there is above it.</sl:description>
+    <sl:prop name="close-button" type="boolean">An outline "Close" button after the other actions.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="sheet-footer" class="sheet-footer" sl:attrs><sl:slot/><sl:button
+    th:if="${props['close-button']}"
+    variant="outline"
+    th:commandfor="${slDialogId}"
+    command="close"
+    th:text="#{sl.dialog.close}"/></div>
+</body>
+</html>

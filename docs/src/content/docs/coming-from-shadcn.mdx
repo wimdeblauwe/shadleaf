@@ -63,6 +63,31 @@ A dialog is the browser's `<dialog>` element, so `DialogContent`, `DialogOverlay
 an application's own `h2` styles do not reach it. Content taller than the screen scrolls inside the dialog. See
 [Dialog](../components/dialog/).
 
+### Alert dialog: a cancel part, no action part
+
+`<sl:alert-dialog>` is the same `<dialog>` element with `role="alertdialog"`, opened the same way, and a click
+outside does not close it. `AlertDialogCancel` is `<sl:alert-dialog-cancel>`: it closes the dialog, takes the focus
+when it opens (as Radix's Cancel does) and says "Cancel" unless you give it text. `AlertDialogAction` has no part: in a
+server-rendered page the action submits a form or sends an htmx request, so it is a plain `<sl:button>`:
+
+```html
+<!-- shadcn: <AlertDialogCancel>Cancel</AlertDialogCancel> -->
+<sl:alert-dialog-cancel/>
+<!-- shadcn: <AlertDialogAction variant="destructive">Delete</AlertDialogAction> -->
+<sl:button variant="destructive" type="submit">Delete</sl:button>
+```
+
+shadcn's destructive example colours the media with `className="bg-destructive/10 text-destructive"`; Shadleaf has
+`<sl:alert-dialog-media variant="destructive">`. See [Alert Dialog](../components/alert-dialog/).
+
+### Sheet: content padding, and sides that follow the text direction
+
+`<sl:sheet>` is a dialog on an edge of the screen, with `SheetTrigger` and `SheetClose` replaced by `commandfor`, as
+for the dialog. Content between the header and the footer gets the sheet's inline padding, where shadcn's examples
+wrap it in a `div` with `px-4`. `side="right"` and `"left"` are the end and the start of a line, so they swap on a
+right-to-left page. `<sl:sheet-footer close-button>` adds an outline Close button, as the dialog footer does. With
+reduced motion the sheet only fades. See [Sheet](../components/sheet/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a

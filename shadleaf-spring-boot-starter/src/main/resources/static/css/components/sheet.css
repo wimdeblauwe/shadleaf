@@ -1,0 +1,76 @@
+/*
+  Sheet and its parts: structure only. Colour, spacing, type, width and the speed of the transitions are identity and
+  live in the skins.
+
+  The <dialog> is the panel, fixed to one edge instead of centred: no margin, no user agent maximum size. right and
+  left are the inline end and start, so they swap on a right-to-left page. Opening and closing fade through
+  @starting-style (see dialog.css), and where motion is fine the panel also slides in from its edge; under reduced
+  motion only the fade remains. The slide distance is identity (--sheet-slide, set by the skins).
+*/
+@layer components {
+  .sheet {
+    @apply fixed m-0 max-h-none max-w-none open:flex flex-col overflow-y-auto border-0 opacity-0
+      transition-[opacity,translate,overlay,display] transition-discrete
+      open:opacity-100 starting:open:opacity-0
+      backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete
+      open:backdrop:opacity-100 starting:open:backdrop:opacity-0;
+  }
+
+  /* right, the default: the inline end. */
+  .sheet:not([data-side]) {
+    @apply inset-y-0 start-auto end-0 h-full border-s;
+    --sheet-from: var(--sheet-slide) 0;
+  }
+
+  .sheet[data-side='left'] {
+    @apply inset-y-0 start-0 end-auto h-full border-e;
+    --sheet-from: calc(-1 * var(--sheet-slide)) 0;
+  }
+
+  /* On a right-to-left page the end is on the left, and the slide flips with it. */
+  .sheet:not([data-side]):dir(rtl) {
+    --sheet-from: calc(-1 * var(--sheet-slide)) 0;
+  }
+
+  .sheet[data-side='left']:dir(rtl) {
+    --sheet-from: var(--sheet-slide) 0;
+  }
+
+  .sheet[data-side='top'] {
+    @apply inset-x-0 top-0 bottom-auto h-auto w-full border-b;
+    --sheet-from: 0 calc(-1 * var(--sheet-slide));
+  }
+
+  .sheet[data-side='bottom'] {
+    @apply inset-x-0 top-auto bottom-0 h-auto w-full border-t;
+    --sheet-from: 0 var(--sheet-slide);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet {
+      translate: var(--sheet-from);
+    }
+
+    .sheet[open] {
+      translate: 0 0;
+    }
+
+    @starting-style {
+      .sheet[open] {
+        translate: var(--sheet-from);
+      }
+    }
+  }
+
+  .sheet-close {
+    @apply absolute;
+  }
+
+  .sheet-header {
+    @apply flex flex-col;
+  }
+
+  .sheet-footer {
+    @apply mt-auto flex flex-col;
+  }
+}

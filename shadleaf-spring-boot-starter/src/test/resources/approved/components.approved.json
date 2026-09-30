@@ -19,6 +19,90 @@
     "declared" : true,
     "props" : [ ]
   }, {
+    "name" : "alert-dialog",
+    "tag" : "sl:alert-dialog",
+    "description" : "A modal dialog that interrupts the user with something important and waits for an answer, such as a confirmation before deleting. Built on the native `dialog` element with `role=\"alertdialog\"`: a click outside does not close it, Escape does. Build it from `sl:alert-dialog-header` (with an optional `sl:alert-dialog-media`, `sl:alert-dialog-title` and `sl:alert-dialog-description`) and `sl:alert-dialog-footer` holding `sl:alert-dialog-cancel`, which takes the focus when the dialog opens, and the action, a `sl:button`. A button opens it with `commandfor` set to its `id` and `command=\"show-modal\"`; an htmx response closes it with the `sl-dialog-close` event.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The dialog's id, which the button that opens it points at with `commandfor`. The title and description ids derive from it.",
+      "required" : true
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "sm" ],
+      "description" : "Size of the dialog. `sm` is narrower, with the header centred and the footer's two buttons side by side."
+    }, {
+      "name" : "open",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap). Needs Alpine."
+    } ]
+  }, {
+    "name" : "alert-dialog-cancel",
+    "tag" : "sl:alert-dialog-cancel",
+    "description" : "The button that closes a `sl:alert-dialog` without doing anything, in its `sl:alert-dialog-footer`. It takes the focus when the dialog opens, so Enter never confirms by accident. Its text defaults to \"Cancel\" (`sl.alert-dialog.cancel`); content of its own replaces it. Any other attribute passes through to the `sl:button`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "outline",
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
+      "description" : "Visual style of the button, as on `sl:button`."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "xs", "sm", "default", "lg" ],
+      "description" : "Size of the button, as on `sl:button`."
+    } ]
+  }, {
+    "name" : "alert-dialog-description",
+    "tag" : "sl:alert-dialog-description",
+    "description" : "Supporting text below a `sl:alert-dialog-title`, which describes the dialog (`aria-describedby`): what happens, and whether it can be undone. Its id derives from the dialog's (`delete-account-description`).",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "alert-dialog-footer",
+    "tag" : "sl:alert-dialog-footer",
+    "description" : "The bottom of a `sl:alert-dialog`, for `sl:alert-dialog-cancel` and the action: side by side at the end on a wide screen, stacked with the first one at the bottom on a narrow one, and two equal columns in a small dialog.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "alert-dialog-header",
+    "tag" : "sl:alert-dialog-header",
+    "description" : "The top of a `sl:alert-dialog`: an optional `sl:alert-dialog-media`, a `sl:alert-dialog-title` and an optional `sl:alert-dialog-description`. Centred on a narrow screen and in a small dialog.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "alert-dialog-media",
+    "tag" : "sl:alert-dialog-media",
+    "description" : "An icon (or an image) at the start of a `sl:alert-dialog-header`, on a muted square: above the title, or beside title and description in a wide dialog.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "destructive" ],
+      "description" : "Colour of the square and its icon: `destructive` for a dialog that confirms deleting something."
+    } ]
+  }, {
+    "name" : "alert-dialog-title",
+    "tag" : "sl:alert-dialog-title",
+    "description" : "The title of a `sl:alert-dialog`, inside `sl:alert-dialog-header`: a heading that names the dialog (`aria-labelledby`). Its id derives from the dialog's (`delete-account-title`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "defaultValue" : "2",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level (`role=\"heading\"` and `aria-level`). A dialog starts an outline of its own, so the default, 2, rarely needs changing."
+    } ]
+  }, {
     "name" : "alert-title",
     "tag" : "sl:alert-title",
     "description" : "The title of an alert, inside `sl:alert`.",
@@ -444,6 +528,72 @@
       "defaultValue" : "true",
       "values" : [ ],
       "description" : "Hide the line from assistive technology, as most separators only draw a line. With `decorative=\"false\"` it is announced as a separator, for one that divides content into groups."
+    } ]
+  }, {
+    "name" : "sheet",
+    "tag" : "sl:sheet",
+    "description" : "A dialog that slides in from an edge of the screen, for content that complements the page: filters, settings, details. Built on the native `dialog` element, like `sl:dialog`: the page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it from `sl:sheet-header` (holding `sl:sheet-title` and `sl:sheet-description`), your content and `sl:sheet-footer`. A button opens it with `commandfor` set to the sheet's `id` and `command=\"show-modal\"`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The sheet's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it.",
+      "required" : true
+    }, {
+      "name" : "side",
+      "type" : "enum",
+      "defaultValue" : "right",
+      "values" : [ "top", "right", "bottom", "left" ],
+      "description" : "The edge it slides in from. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` sheet opens on the left."
+    }, {
+      "name" : "open",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Open the sheet as soon as it is on the page, for a sheet the server renders in answer to a request (an htmx swap). Needs Alpine."
+    }, {
+      "name" : "close-button",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "A close button (an x) in the corner."
+    } ]
+  }, {
+    "name" : "sheet-description",
+    "tag" : "sl:sheet-description",
+    "description" : "Supporting text below a `sl:sheet-title`, which describes the sheet (`aria-describedby`). Its id derives from the sheet's (`filters-description`).",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "sheet-footer",
+    "tag" : "sl:sheet-footer",
+    "description" : "The bottom of a `sl:sheet`, for its actions, stacked. It stays at the bottom of a sheet on the side of the screen however little content there is above it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "close-button",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "An outline \"Close\" button after the other actions."
+    } ]
+  }, {
+    "name" : "sheet-header",
+    "tag" : "sl:sheet-header",
+    "description" : "The top of a `sl:sheet`: a `sl:sheet-title` and an optional `sl:sheet-description` below it.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "sheet-title",
+    "tag" : "sl:sheet-title",
+    "description" : "The title of a `sl:sheet`, inside `sl:sheet-header`: a heading that names the sheet (`aria-labelledby`). Its id derives from the sheet's (`filters-title`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "defaultValue" : "2",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level (`role=\"heading\"` and `aria-level`). A sheet starts an outline of its own, so the default, 2, rarely needs changing."
     } ]
   }, {
     "name" : "skeleton",

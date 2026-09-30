@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The top of a <code>sl:alert-dialog</code>: an optional <code>sl:alert-dialog-media</code>, a
+      <code>sl:alert-dialog-title</code> and an optional <code>sl:alert-dialog-description</code>. Centred on a narrow
+      screen and in a small dialog.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="alert-dialog-header" class="alert-dialog-header" sl:attrs><sl:slot/></div>
+</body>
+</html>

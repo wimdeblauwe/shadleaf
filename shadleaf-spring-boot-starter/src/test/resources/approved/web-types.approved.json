@@ -46,6 +46,187 @@
         "description" : "The body of an alert, inside `sl:alert`: text, paragraphs or a list.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:alert-dialog",
+        "description" : "A modal dialog that interrupts the user with something important and waits for an answer, such as a confirmation before deleting. Built on the native `dialog` element with `role=\"alertdialog\"`: a click outside does not close it, Escape does. Build it from `sl:alert-dialog-header` (with an optional `sl:alert-dialog-media`, `sl:alert-dialog-title` and `sl:alert-dialog-description`) and `sl:alert-dialog-footer` holding `sl:alert-dialog-cancel`, which takes the focus when the dialog opens, and the action, a `sl:button`. A button opens it with `commandfor` set to its `id` and `command=\"show-modal\"`; an htmx response closes it with the `sl-dialog-close` event.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The dialog's id, which the button that opens it points at with `commandfor`. The title and description ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "size",
+          "description" : "Size of the dialog. `sm` is narrower, with the header centred and the footer's two buttons side by side.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "open",
+          "description" : "Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap). Needs Alpine.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-dialog-cancel",
+        "description" : "The button that closes a `sl:alert-dialog` without doing anything, in its `sl:alert-dialog-footer`. It takes the focus when the dialog opens, so Enter never confirms by accident. Its text defaults to \"Cancel\" (`sl.alert-dialog.cancel`); content of its own replaces it. Any other attribute passes through to the `sl:button`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "outline"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-dialog-description",
+        "description" : "Supporting text below a `sl:alert-dialog-title`, which describes the dialog (`aria-describedby`): what happens, and whether it can be undone. Its id derives from the dialog's (`delete-account-description`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:alert-dialog-footer",
+        "description" : "The bottom of a `sl:alert-dialog`, for `sl:alert-dialog-cancel` and the action: side by side at the end on a wide screen, stacked with the first one at the bottom on a narrow one, and two equal columns in a small dialog.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:alert-dialog-header",
+        "description" : "The top of a `sl:alert-dialog`: an optional `sl:alert-dialog-media`, a `sl:alert-dialog-title` and an optional `sl:alert-dialog-description`. Centred on a narrow screen and in a small dialog.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:alert-dialog-media",
+        "description" : "An icon (or an image) at the start of a `sl:alert-dialog-header`, on a muted square: above the title, or beside title and description in a wide dialog.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Colour of the square and its icon: `destructive` for a dialog that confirms deleting something.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "destructive"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-dialog-title",
+        "description" : "The title of a `sl:alert-dialog`, inside `sl:alert-dialog-header`: a heading that names the dialog (`aria-labelledby`). Its id derives from the dialog's (`delete-account-title`).",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level (`role=\"heading\"` and `aria-level`). A dialog starts an outline of its own, so the default, 2, rarely needs changing.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ],
+          "default" : "2"
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:alert-title",
         "description" : "The title of an alert, inside `sl:alert`.",
         "attributes" : [ ]
@@ -898,6 +1079,143 @@
         }, {
           "name" : "th:decorative",
           "description" : "`decorative` from a Thymeleaf expression, e.g. `th:decorative=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sheet",
+        "description" : "A dialog that slides in from an edge of the screen, for content that complements the page: filters, settings, details. Built on the native `dialog` element, like `sl:dialog`: the page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it from `sl:sheet-header` (holding `sl:sheet-title` and `sl:sheet-description`), your content and `sl:sheet-footer`. A button opens it with `commandfor` set to the sheet's `id` and `command=\"show-modal\"`.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The sheet's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "side",
+          "description" : "The edge it slides in from. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` sheet opens on the left.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ],
+          "default" : "right"
+        }, {
+          "name" : "open",
+          "description" : "Open the sheet as soon as it is on the page, for a sheet the server renders in answer to a request (an htmx swap). Needs Alpine.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "close-button",
+          "description" : "A close button (an x) in the corner.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:close-button",
+          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sheet-description",
+        "description" : "Supporting text below a `sl:sheet-title`, which describes the sheet (`aria-describedby`). Its id derives from the sheet's (`filters-description`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sheet-footer",
+        "description" : "The bottom of a `sl:sheet`, for its actions, stacked. It stays at the bottom of a sheet on the side of the screen however little content there is above it.",
+        "attributes" : [ {
+          "name" : "close-button",
+          "description" : "An outline \"Close\" button after the other actions.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:close-button",
+          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sheet-header",
+        "description" : "The top of a `sl:sheet`: a `sl:sheet-title` and an optional `sl:sheet-description` below it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sheet-title",
+        "description" : "The title of a `sl:sheet`, inside `sl:sheet-header`: a heading that names the sheet (`aria-labelledby`). Its id derives from the sheet's (`filters-title`).",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level (`role=\"heading\"` and `aria-level`). A sheet starts an outline of its own, so the default, 2, rarely needs changing.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ],
+          "default" : "2"
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

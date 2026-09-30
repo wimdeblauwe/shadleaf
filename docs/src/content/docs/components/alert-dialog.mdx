@@ -1,0 +1,154 @@
+---
+title: Alert Dialog
+description: A modal dialog that interrupts the user with something important and waits for an answer.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="alert-dialog--default" />
+
+## Built from parts
+
+An alert dialog asks a question the user has to answer before going on, such as "Delete this account?". It is
+`<sl:alert-dialog>` plus its parts, as in shadcn/ui: `<sl:alert-dialog-header>` (holding an optional
+`<sl:alert-dialog-media>`, `<sl:alert-dialog-title>` and `<sl:alert-dialog-description>`) and
+`<sl:alert-dialog-footer>` with `<sl:alert-dialog-cancel>` and the action, a plain `<sl:button>`.
+
+```html
+<sl:button variant="outline" commandfor="delete-account" command="show-modal">Delete account</sl:button>
+
+<sl:alert-dialog id="delete-account">
+  <sl:alert-dialog-header>
+    <sl:alert-dialog-title>Are you absolutely sure?</sl:alert-dialog-title>
+    <sl:alert-dialog-description>This action cannot be undone.</sl:alert-dialog-description>
+  </sl:alert-dialog-header>
+  <sl:alert-dialog-footer>
+    <sl:alert-dialog-cancel/>
+    <sl:button>Continue</sl:button>
+  </sl:alert-dialog-footer>
+</sl:alert-dialog>
+```
+
+It works like a [dialog](../dialog/), with the differences an alert dialog needs:
+
+- It has `role="alertdialog"`, so a screen reader announces it as an alert and reads the description with the title.
+- A click outside does not close it: the user has to choose. Escape still does, as in Radix, and counts as cancel.
+- It has no close button in the corner.
+- `<sl:alert-dialog-cancel>` takes the focus when it opens, so pressing Enter straight away never confirms by accident.
+  It closes the dialog (`commandfor` and `command="close"` are set for you) and says "Cancel" unless you give it text
+  of its own (the default comes from the message `sl.alert-dialog.cancel`). It takes the button's `variant` (default
+  `outline`) and `size`, and passes any other attribute on to the button.
+
+The action has no part of its own: what it does depends on the page. A `type="submit"` button in a form, a button
+with `hx-delete`, or one with `commandfor` and `command="close"` when closing is all it has to do.
+
+## Small, and with media
+
+`size="sm"` makes it narrower, centres the header and puts the two buttons side by side in equal columns.
+`<sl:alert-dialog-media>` shows an icon above the title.
+
+<ComponentPreview id="alert-dialog--small-media" />
+
+In a default-size dialog on a wide screen, the media sits beside the title and description.
+
+<ComponentPreview id="alert-dialog--media" />
+
+## Destructive
+
+For an action that deletes something, give the action `variant="destructive"`, and the media too.
+
+<ComponentPreview id="alert-dialog--destructive" />
+
+## Confirming with htmx
+
+The alert dialog can come from the server, as the [dialog](../dialog/#rendered-by-the-server-htmx) does: a Delete
+button in a row fetches it into an empty element on the page, and `open` shows it as soon as it is there.
+
+```html
+<!-- In the layout -->
+<div id="modal-root"></div>
+
+<!-- In the row -->
+<sl:button variant="outline" hx:get="@{/members/{id}/delete(id=${member.id})}" hx-target="#modal-root">
+  Delete
+</sl:button>
+```
+
+The fragment has the question, and the destructive button sends the request:
+
+```html
+<sl:alert-dialog th:fragment="delete-dialog" id="delete-member" size="sm" open>
+  <sl:alert-dialog-header>
+    <sl:alert-dialog-media variant="destructive"><sl:icon name="trash-2"/></sl:alert-dialog-media>
+    <sl:alert-dialog-title th:text="|Delete ${member.name}?|">Delete Ada Lovelace?</sl:alert-dialog-title>
+    <sl:alert-dialog-description>They lose access to the team at once.</sl:alert-dialog-description>
+  </sl:alert-dialog-header>
+  <sl:alert-dialog-footer>
+    <sl:alert-dialog-cancel/>
+    <sl:button variant="destructive" hx:delete="@{/members/{id}(id=${member.id})}"
+               th:hx-target="|#member-${member.id}|" hx-swap="outerHTML">Delete</sl:button>
+  </sl:alert-dialog-footer>
+</sl:alert-dialog>
+```
+
+The controller deletes, closes the dialog with the `sl-dialog-close` event (the same one that closes a dialog) and
+answers with nothing for the row, which removes it:
+
+```java
+@HxRequest
+@DeleteMapping("/members/{id}")
+public String delete(@PathVariable long id, HtmxResponse htmxResponse, Model model) {
+  model.addAttribute("member", memberService.delete(id));
+  htmxResponse.addTrigger("sl-dialog-close");
+  return "members :: deleted";  // only the out-of-band message below: the row is replaced by nothing
+}
+```
+
+Closing returns focus to the Delete button that opened the dialog, but the swap then removes that button with its
+row, and focus would fall back to the top of the page. So let the response say what happened and take the focus
+itself: an out-of-band message with `tabindex="-1"` and `autofocus`, which htmx focuses after the swap, and which is
+read out as it gets the focus.
+
+```html
+<p th:fragment="deleted" id="member-status" hx-swap-oob="true" tabindex="-1" autofocus
+   th:text="|${member.name} was deleted.|">Ada Lovelace was deleted.</p>
+```
+
+Without JavaScript the same buttons need a page of their own for the question, or a form per row with
+`<sl:alert-dialog>` in the page and a `type="submit"` action.
+
+## Attributes
+
+### sl:alert-dialog
+
+<ComponentAttributes component="alert-dialog" />
+
+### sl:alert-dialog-header
+
+<ComponentAttributes component="alert-dialog-header" />
+
+### sl:alert-dialog-media
+
+<ComponentAttributes component="alert-dialog-media" />
+
+### sl:alert-dialog-title
+
+<ComponentAttributes component="alert-dialog-title" />
+
+### sl:alert-dialog-description
+
+<ComponentAttributes component="alert-dialog-description" />
+
+### sl:alert-dialog-footer
+
+<ComponentAttributes component="alert-dialog-footer" />
+
+### sl:alert-dialog-cancel
+
+<ComponentAttributes component="alert-dialog-cancel" />
+
+## JavaScript
+
+`x-data="slDialog"` on the `<dialog>`, the dialog's own component: see [Dialog](../dialog/#javascript). It needs no
+Alpine plugin. `open` needs Alpine; opening from a button and closing with Escape or Cancel do not.

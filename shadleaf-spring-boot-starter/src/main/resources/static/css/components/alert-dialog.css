@@ -1,0 +1,49 @@
+/*
+  Alert dialog and its parts: structure only. Colour, radius, spacing, type and the speed of the transitions are
+  identity and live in the skins.
+
+  The <dialog> opens and closes as sl:dialog's does (see dialog.css). The header is a centred grid, which from sm on
+  aligns to the start in a default-size dialog; there the media spans the title and description rows. The footer
+  stacks the buttons on a narrow screen and puts them side by side from sm on; a small dialog always has two equal
+  columns.
+*/
+@layer components {
+  .alert-dialog {
+    @apply m-auto w-full open:grid overflow-y-auto border-0 opacity-0
+      transition-[opacity,scale,overlay,display] transition-discrete
+      open:opacity-100 starting:open:opacity-0
+      motion-safe:scale-95 motion-safe:open:scale-100 motion-safe:starting:open:scale-95
+      backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete
+      open:backdrop:opacity-100 starting:open:backdrop:opacity-0
+      forced-colors:border forced-colors:border-solid;
+    max-block-size: calc(100% - 2rem);
+  }
+
+  .alert-dialog-header {
+    @apply grid grid-rows-[auto_1fr] place-items-center text-center has-[>.alert-dialog-media]:grid-rows-[auto_auto_1fr];
+  }
+
+  .alert-dialog:not([data-size]) > .alert-dialog-header {
+    @apply sm:place-items-start sm:text-start sm:has-[>.alert-dialog-media]:grid-rows-[auto_1fr];
+  }
+
+  .alert-dialog-media {
+    @apply inline-flex items-center justify-center;
+  }
+
+  .alert-dialog:not([data-size]) > .alert-dialog-header > .alert-dialog-media {
+    @apply sm:row-span-2;
+  }
+
+  .alert-dialog:not([data-size]) > .alert-dialog-header:has(> .alert-dialog-media) > .alert-dialog-title {
+    @apply sm:col-start-2;
+  }
+
+  .alert-dialog-footer {
+    @apply flex flex-col-reverse sm:flex-row sm:justify-end;
+  }
+
+  .alert-dialog[data-size='sm'] > .alert-dialog-footer {
+    @apply grid grid-cols-2;
+  }
+}

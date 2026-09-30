@@ -157,3 +157,8 @@ A dialog can come from the server too: a button fetches `<sl:dialog open>` into 
 swaps only itself while it has errors, and an `HX-Trigger: sl-dialog-close` response header closes it after a valid
 save. Open dialogs close before htmx snapshots a page for its history, so back never restores one. See
 [Dialog](../../components/dialog/#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.
+
+The same works for an [alert dialog](../../components/alert-dialog/#confirming-with-htmx) that confirms a delete: its
+destructive button sends `hx-delete`, and the response closes it with the same event, removes the row and puts a
+message out of band that takes the focus. A [sheet](../../components/sheet/) is a dialog too, with the same `open`
+and `sl-dialog-close`.

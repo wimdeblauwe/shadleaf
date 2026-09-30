@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A dialog that slides in from an edge of the screen, for content that complements the page:
+      filters, settings, details. Built on the native <code>dialog</code> element, like <code>sl:dialog</code>: the
+      page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it
+      from <code>sl:sheet-header</code> (holding <code>sl:sheet-title</code> and <code>sl:sheet-description</code>),
+      your content and <code>sl:sheet-footer</code>. A button opens it with <code>commandfor</code> set to the sheet's
+      <code>id</code> and <code>command="show-modal"</code>.</sl:description>
+    <sl:prop name="id" required>The sheet's id, which the buttons that open and close it point at with
+      <code>commandfor</code>. The title and description ids derive from it.</sl:prop>
+    <sl:prop name="side" default="right" values="top right bottom left">The edge it slides in from.
+      <code>right</code> and <code>left</code> are the end and the start of a line: on a right-to-left page a
+      <code>right</code> sheet opens on the left.</sl:prop>
+    <sl:prop name="open" type="boolean">Open the sheet as soon as it is on the page, for a sheet the server renders
+      in answer to a request (an htmx swap). Needs Alpine.</sl:prop>
+    <sl:prop name="close-button" type="boolean" default="true">A close button (an x) in the corner.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The dialog's machinery (slDialogId for the parts, the open prop, sl-dialog-close, closedby="any") as
+  sl:dialog's. */-->
+<dialog th:fragment="sheet"
+        class="sheet"
+        th:with="slDialogId=${props.id}"
+        th:id="${slDialogId}"
+        closedby="any"
+        x-data="slDialog"
+        th:attr="aria-labelledby=${slots.contains('sheet-title', 'sheet') ? slDialogId + '-title' : null},
+                 aria-describedby=${slots.contains('sheet-description', 'sheet') ? slDialogId + '-description' : null},
+                 data-side=${props.unlessDefault('side')},
+                 data-show-modal=${props.open ? 'true' : null}"
+        sl:attrs><sl:slot/><sl:button th:if="${props['close-button']}"
+                                      variant="ghost"
+                                      size="icon-sm"
+                                      class="sheet-close"
+                                      th:commandfor="${slDialogId}"
+                                      command="close"
+                                      th:aria-label="#{sl.dialog.close}"><sl:icon name="x"/></sl:button></dialog>
+</body>
+</html>

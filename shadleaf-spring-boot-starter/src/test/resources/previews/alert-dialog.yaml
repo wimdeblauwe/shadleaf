@@ -1,0 +1,81 @@
+# Scenarios for the alert dialog's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: alert-dialog
+parts: [alert-dialog-header, alert-dialog-media, alert-dialog-title, alert-dialog-description, alert-dialog-footer,
+        alert-dialog-cancel]
+scenarios:
+  - id: default
+    title: Alert dialog
+    description: A question the user has to answer. Cancel has the focus when it opens.
+    source: |-
+      <sl:button variant="outline" commandfor="delete-account" command="show-modal">Delete account</sl:button>
+      <sl:alert-dialog id="delete-account">
+        <sl:alert-dialog-header>
+          <sl:alert-dialog-title>Are you absolutely sure?</sl:alert-dialog-title>
+          <sl:alert-dialog-description>
+            This action cannot be undone. This will permanently delete your account and remove your data from our
+            servers.
+          </sl:alert-dialog-description>
+        </sl:alert-dialog-header>
+        <sl:alert-dialog-footer>
+          <sl:alert-dialog-cancel/>
+          <sl:button>Continue</sl:button>
+        </sl:alert-dialog-footer>
+      </sl:alert-dialog>
+
+  - id: small-media
+    title: Small, with media
+    description: size="sm" centres the header and puts the two buttons side by side; the media shows an icon above the title.
+    source: |-
+      <sl:button variant="outline" commandfor="allow-accessory" command="show-modal">Connect accessory</sl:button>
+      <sl:alert-dialog id="allow-accessory" size="sm">
+        <sl:alert-dialog-header>
+          <sl:alert-dialog-media><sl:icon name="bluetooth"/></sl:alert-dialog-media>
+          <sl:alert-dialog-title>Allow accessory to connect?</sl:alert-dialog-title>
+          <sl:alert-dialog-description>
+            Do you want to allow the USB accessory to connect to this device?
+          </sl:alert-dialog-description>
+        </sl:alert-dialog-header>
+        <sl:alert-dialog-footer>
+          <sl:alert-dialog-cancel>Don't allow</sl:alert-dialog-cancel>
+          <sl:button>Allow</sl:button>
+        </sl:alert-dialog-footer>
+      </sl:alert-dialog>
+
+  - id: media
+    title: Media
+    description: In a default-size dialog on a wide screen, the media sits beside the title and description.
+    source: |-
+      <sl:button variant="outline" commandfor="share-project" command="show-modal">Share project</sl:button>
+      <sl:alert-dialog id="share-project">
+        <sl:alert-dialog-header>
+          <sl:alert-dialog-media><sl:icon name="circle-fading-plus"/></sl:alert-dialog-media>
+          <sl:alert-dialog-title>Share this project?</sl:alert-dialog-title>
+          <sl:alert-dialog-description>
+            Anyone with the link will be able to view and edit this project.
+          </sl:alert-dialog-description>
+        </sl:alert-dialog-header>
+        <sl:alert-dialog-footer>
+          <sl:alert-dialog-cancel/>
+          <sl:button>Share</sl:button>
+        </sl:alert-dialog-footer>
+      </sl:alert-dialog>
+
+  - id: destructive
+    title: Destructive
+    description: A destructive action, with a destructive media square.
+    source: |-
+      <sl:button variant="destructive" commandfor="delete-chat" command="show-modal">Delete chat</sl:button>
+      <sl:alert-dialog id="delete-chat" size="sm">
+        <sl:alert-dialog-header>
+          <sl:alert-dialog-media variant="destructive"><sl:icon name="trash-2"/></sl:alert-dialog-media>
+          <sl:alert-dialog-title>Delete chat?</sl:alert-dialog-title>
+          <sl:alert-dialog-description>
+            This will permanently delete this chat conversation. View <a href="#">Settings</a> to delete any
+            memories saved during this chat.
+          </sl:alert-dialog-description>
+        </sl:alert-dialog-header>
+        <sl:alert-dialog-footer>
+          <sl:alert-dialog-cancel/>
+          <sl:button variant="destructive">Delete</sl:button>
+        </sl:alert-dialog-footer>
+      </sl:alert-dialog>

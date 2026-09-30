@@ -7,10 +7,12 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,11 @@ import org.springframework.web.server.ResponseStatusException;
  * itself: with errors the dialog stays open, with the focus on the first field with an error. A valid save closes the
  * dialog through {@code HX-Trigger: sl-dialog-close}, swaps nothing where the form is, and updates the member's row out
  * of band.
+ * <p>
+ * Delete fetches an alert dialog the same way; its Delete button sends {@code hx-delete}, and the answer closes it with
+ * the same event, removes the row and puts a message out of band that takes the focus. Invite member opens a sheet in
+ * the page, whose form swaps itself too; a valid invite answers with an empty form, closes the sheet and appends the
+ * new row.
  */
 @Controller
 public class DialogController {
@@ -31,10 +38,12 @@ public class DialogController {
       1L, new Member(1, "Ada Lovelace", "ada@example.com"),
       2L, new Member(2, "Grace Hopper", "grace@example.com"),
       3L, new Member(3, "Alan Turing", "alan@example.com")));
+  private final AtomicLong nextId = new AtomicLong(4);
 
   @GetMapping("/dialog")
   public String page(Model model) {
     model.addAttribute("members", List.copyOf(members.values()));
+    model.addAttribute("inviteForm", new MemberForm());
     return "dialog";
   }
 
@@ -62,6 +71,39 @@ public class DialogController {
     htmxResponse.addTrigger("sl-dialog-close");
     htmxResponse.setReswap(HtmxReswap.none());
     return "dialog :: member-row-oob";
+  }
+
+  @HxRequest
+  @GetMapping("/dialog/members/{id}/delete")
+  public String confirmDelete(@PathVariable long id, Model model) {
+    model.addAttribute("member", member(id));
+    return "dialog :: delete-dialog";
+  }
+
+  @HxRequest
+  @DeleteMapping("/dialog/members/{id}")
+  public String delete(@PathVariable long id, HtmxResponse htmxResponse, Model model) {
+    Member member = member(id);
+    members.remove(id);
+    model.addAttribute("member", member);
+    htmxResponse.addTrigger("sl-dialog-close");
+    // Only the message, out of band: the row, the request's target, is replaced by nothing.
+    return "dialog :: member-deleted";
+  }
+
+  @HxRequest
+  @PostMapping("/dialog/members")
+  public String invite(@Valid @ModelAttribute("inviteForm") MemberForm inviteForm, BindingResult bindingResult,
+      HtmxResponse htmxResponse, Model model) {
+    if (bindingResult.hasErrors()) {
+      return "dialog :: invite-form";
+    }
+    Member member = new Member(nextId.getAndIncrement(), inviteForm.getName(), inviteForm.getEmail());
+    members.put(member.id(), member);
+    model.addAttribute("member", member);
+    model.addAttribute("inviteForm", new MemberForm());
+    htmxResponse.addTrigger("sl-dialog-close");
+    return "dialog :: invited";
   }
 
   private Member member(long id) {

@@ -4,11 +4,12 @@ import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
 import {combinations, openShowcase} from './showcase';
 
-// sl:dialog. On the showcase, in every skin and theme: every dialog opens from its trigger with the keyboard, takes
-// focus, passes axe open, shows focus on every control in it, and Escape closes it with focus back on the trigger.
-// In fixture pages served from a made-up origin under a strict Content-Security-Policy with the csp Alpine build: the
-// slDialog component (open on load, the sl-dialog-close event, htmx swaps and history) and its stand-ins for invoker
-// commands and closedby in browsers without them.
+// sl:dialog, sl:alert-dialog and sl:sheet. On the showcase, in every skin and theme: every one opens from its trigger
+// with the keyboard, takes focus (an alert dialog on its cancel button), passes axe open, shows focus on every control
+// in it, and Escape closes it with focus back on the trigger. In fixture pages served from a made-up origin under a
+// strict Content-Security-Policy with the csp Alpine build: the slDialog component all three use (open on load, the
+// sl-dialog-close event, htmx swaps, history, the htmx confirm pattern) and its stand-ins for invoker commands and
+// closedby in browsers without them.
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
 
@@ -19,11 +20,14 @@ async function waitUntilOpen(dialog: Locator) {
 }
 
 for (const {skin, theme} of combinations) {
-  test(`every dialog works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
+  test(`every dialog, alert dialog and sheet works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
     await page.waitForFunction(() => 'Alpine' in window);
-    const ids = await page.locator('main dialog.dialog').evaluateAll(dialogs => dialogs.map(dialog => dialog.id));
-    expect(ids.length).toBeGreaterThan(0);
+    const ids = await page.locator('main dialog:is(.dialog, .alert-dialog, .sheet)')
+        .evaluateAll(dialogs => dialogs.map(dialog => dialog.id));
+    for (const kind of ['dialog', 'alert-dialog', 'sheet']) {
+      expect(await page.locator(`main dialog.${kind}`).count(), `the showcase has a ${kind}`).toBeGreaterThan(0);
+    }
 
     const failures: string[] = [];
     for (const id of ids) {
@@ -35,6 +39,9 @@ for (const {skin, theme} of combinations) {
       expect(await dialog.evaluate(element => element.matches(':modal')), `${id} is modal`).toBe(true);
       expect(await dialog.evaluate(element => element.contains(document.activeElement)), `${id} takes focus`)
           .toBe(true);
+      if (await dialog.evaluate(element => element.classList.contains('alert-dialog'))) {
+        await expect(dialog.locator('.alert-dialog-cancel'), `${id} focuses its cancel button`).toBeFocused();
+      }
 
       const results = await new AxeBuilder({page}).include(`#${id}`).withTags(TAGS).analyze();
       failures.push(...results.violations.map(violation => `${id}: ${violation.id}: ${violation.help}\n    ${
@@ -95,6 +102,107 @@ test('a click outside, the close button and a close command close a dialog', asy
   await expect(dialog).toHaveJSProperty('open', false);
 });
 
+test('an alert dialog stays open on a click outside; Cancel closes it', async ({page}) => {
+  await openShowcase(page, 'vega', 'light');
+  await page.waitForFunction(() => 'Alpine' in window);
+  const dialog = page.locator('#delete-account');
+  const trigger = page.locator('main button[commandfor="delete-account"][command="show-modal"]');
+
+  await trigger.click();
+  await waitUntilOpen(dialog);
+  await expect(dialog).toHaveAttribute('role', 'alertdialog');
+  await expect(dialog.getByRole('button', {name: 'Close'})).toHaveCount(0);
+  await page.keyboard.press('Enter');
+  await expect(dialog, 'Enter on the focused Cancel closes it').toHaveJSProperty('open', false);
+  await expect(trigger).toBeFocused();
+
+  await trigger.click();
+  await waitUntilOpen(dialog);
+  await page.mouse.click(5, 5);
+  await expect(dialog, 'a click outside keeps it open').toHaveJSProperty('open', true);
+  await dialog.getByRole('button', {name: 'Cancel'}).click();
+  await expect(dialog).toHaveJSProperty('open', false);
+});
+
+test('a click outside and the close buttons close a sheet', async ({page}) => {
+  await openShowcase(page, 'vega', 'light');
+  await page.waitForFunction(() => 'Alpine' in window);
+  const sheet = page.locator('#sheet-right');
+  const trigger = page.locator('main button[commandfor="sheet-right"][command="show-modal"]');
+
+  await trigger.click();
+  await waitUntilOpen(sheet);
+  await page.mouse.click(5, 5);
+  await expect(sheet).toHaveJSProperty('open', false);
+
+  await trigger.click();
+  await waitUntilOpen(sheet);
+  await sheet.locator('.sheet-close').click();
+  await expect(sheet).toHaveJSProperty('open', false);
+
+  await trigger.click();
+  await waitUntilOpen(sheet);
+  await sheet.locator('.sheet-footer').getByRole('button', {name: 'Close'}).click();
+  await expect(sheet).toHaveJSProperty('open', false);
+});
+
+/** Where an open sheet sits in the viewport. */
+async function edges(page: Page, id: string) {
+  await page.locator(`main button[commandfor="${id}"][command="show-modal"]`).click();
+  const sheet = page.locator(`#${id}`);
+  await waitUntilOpen(sheet);
+  const viewport = page.viewportSize()!;
+  const box = (await sheet.boundingBox())!;
+  const result = {
+    top: Math.round(box.y) === 0,
+    bottom: Math.round(box.y + box.height) === viewport.height,
+    left: Math.round(box.x) === 0,
+    right: Math.round(box.x + box.width) === viewport.width,
+  };
+  await page.keyboard.press('Escape');
+  await expect(sheet).toHaveJSProperty('open', false);
+  return result;
+}
+
+test('a sheet sits on its side; right and left follow the text direction', async ({page}) => {
+  await openShowcase(page, 'vega', 'light');
+  await page.waitForFunction(() => 'Alpine' in window);
+
+  expect(await edges(page, 'sheet-top')).toEqual({top: true, bottom: false, left: true, right: true});
+  expect(await edges(page, 'sheet-bottom')).toEqual({top: false, bottom: true, left: true, right: true});
+  expect(await edges(page, 'sheet-right')).toEqual({top: true, bottom: true, left: false, right: true});
+  expect(await edges(page, 'sheet-left')).toEqual({top: true, bottom: true, left: true, right: false});
+
+  await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'));
+  expect(await edges(page, 'sheet-right'), 'the end is on the left').toEqual(
+      {top: true, bottom: true, left: true, right: false});
+  expect(await edges(page, 'sheet-left'), 'the start is on the right').toEqual(
+      {top: true, bottom: true, left: false, right: true});
+});
+
+test('a sheet slides in from its edge only where motion is fine', async ({page}) => {
+  await openShowcase(page, 'vega', 'light');
+  const translate = (id: string) => page.locator(`#${id}`).evaluate(element => getComputedStyle(element).translate);
+
+  // Closed: where the opening transition starts from.
+  expect(await translate('sheet-right'), 'reduced motion: only the fade').toBe('none');
+  await page.emulateMedia({reducedMotion: 'no-preference'});
+  expect(await translate('sheet-right')).toBe('40px');
+  expect(await translate('sheet-left')).toBe('-40px');
+  expect(await translate('sheet-top')).toBe('0px -40px');
+  expect(await translate('sheet-bottom')).toBe('0px 40px');
+  await page.evaluate(() => document.documentElement.setAttribute('dir', 'rtl'));
+  expect(await translate('sheet-right')).toBe('-40px');
+  expect(await translate('sheet-left')).toBe('40px');
+  await page.evaluate(() => document.documentElement.removeAttribute('dir'));
+
+  await page.waitForFunction(() => 'Alpine' in window);
+  await page.locator('main button[commandfor="sheet-right"][command="show-modal"]').click();
+  const sheet = page.locator('#sheet-right');
+  await waitUntilOpen(sheet);
+  await expect.poll(() => translate('sheet-right')).toBe('0px');
+});
+
 // --- fixture pages ---------------------------------------------------------------------------------------------------
 
 const ORIGIN = 'http://app.test';
@@ -114,6 +222,30 @@ function dialog(id: string, content: string, {open = false} = {}): string {
     <div class="dialog-header"><div class="dialog-title" role="heading" aria-level="2" id="${id}-title">Title of ${id}</div></div>
     ${content}
     <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="${id}"
+            command="close" aria-label="Close">x</button>
+  </dialog>`;
+}
+
+/** An alert dialog marked up as <sl:alert-dialog> renders it (see alert-dialog.approved.html). */
+function alertDialog(id: string, actions: string, {open = false} = {}): string {
+  return `<dialog class="alert-dialog" role="alertdialog" id="${id}" closedby="closerequest" x-data="slDialog"
+      aria-labelledby="${id}-title" data-size="sm"${open ? ' data-show-modal="true"' : ''}>
+    <div class="alert-dialog-header"><div class="alert-dialog-title" role="heading" aria-level="2" id="${id}-title">Sure?</div></div>
+    <div class="alert-dialog-footer">
+      <button class="btn alert-dialog-cancel" type="button" data-variant="outline" commandfor="${id}" command="close"
+              autofocus>Cancel</button>
+      ${actions}
+    </div>
+  </dialog>`;
+}
+
+/** A sheet marked up as <sl:sheet> renders it (see sheet.approved.html). */
+function sheet(id: string, content: string, {open = false} = {}): string {
+  return `<dialog class="sheet" id="${id}" closedby="any" x-data="slDialog" aria-labelledby="${id}-title"${
+      open ? ' data-show-modal="true"' : ''}>
+    <div class="sheet-header"><div class="sheet-title" role="heading" aria-level="2" id="${id}-title">Title of ${id}</div></div>
+    ${content}
+    <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="${id}"
             command="close" aria-label="Close">x</button>
   </dialog>`;
 }
@@ -299,4 +431,134 @@ test('htmx: history never restores a dialog open', async ({page}) => {
   await page.goBack();
   await expect(page.locator('#trigger')).toBeVisible();
   expect(await page.evaluate(() => document.querySelector('dialog[open]'))).toBeNull();
+});
+
+test('the csp build opens and closes an alert dialog under a strict policy', async ({page}) => {
+  const messages = await openFixture(page, TRIGGER + alertDialog('d', '<button type="button">Continue</button>'));
+  const d = page.locator('#d');
+
+  await page.locator('#trigger').click();
+  await waitUntilOpen(d);
+  await expect(d.locator('.alert-dialog-cancel')).toBeFocused();
+  await page.mouse.click(5, 5);
+  await expect(d, 'a click outside keeps it open').toHaveJSProperty('open', true);
+  await page.keyboard.press('Escape');
+  await expect(d).toHaveJSProperty('open', false);
+  await expect(page.locator('#trigger')).toBeFocused();
+
+  await page.locator('#trigger').click();
+  await waitUntilOpen(d);
+  await d.locator('.alert-dialog-cancel').click();
+  await expect(d).toHaveJSProperty('open', false);
+  expect(messages).toEqual([]);
+});
+
+test('the csp build opens and closes a sheet under a strict policy', async ({page}) => {
+  const messages = await openFixture(page, TRIGGER + sheet('d', '<p><a href="/elsewhere" id="link">A link</a></p>'));
+  const d = page.locator('#d');
+
+  await page.locator('#trigger').click();
+  await waitUntilOpen(d);
+  await expect(page.locator('#link')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(d).toHaveJSProperty('open', false);
+  await expect(page.locator('#trigger')).toBeFocused();
+
+  await page.locator('#trigger').click();
+  await waitUntilOpen(d);
+  await page.mouse.click(5, 5);
+  await expect(d).toHaveJSProperty('open', false);
+  expect(messages).toEqual([]);
+});
+
+test('open shows an alert dialog and a sheet as modals once Alpine starts', async ({page}) => {
+  const messages = await openFixture(page, alertDialog('a', '', {open: true}));
+  await waitUntilOpen(page.locator('#a'));
+  expect(await page.locator('#a').evaluate(element => element.matches(':modal'))).toBe(true);
+  await expect(page.locator('#a .alert-dialog-cancel')).toBeFocused();
+  expect(messages).toEqual([]);
+
+  const sheetMessages = await openFixture(page, sheet('s', '<p>Shown on load</p>', {open: true}));
+  await waitUntilOpen(page.locator('#s'));
+  expect(await page.locator('#s').evaluate(element => element.matches(':modal'))).toBe(true);
+  expect(sheetMessages).toEqual([]);
+});
+
+test('without closedby, an alert dialog still ignores a click outside', async ({page}) => {
+  await page.addInitScript(() => {
+    delete (HTMLDialogElement.prototype as unknown as Record<string, unknown>).closedBy;
+  });
+  await openFixture(page, TRIGGER + alertDialog('d', ''));
+  const d = page.locator('#d');
+
+  await page.locator('#trigger').click();
+  await waitUntilOpen(d);
+  await page.mouse.click(5, 5);
+  await expect(d).toHaveJSProperty('open', true);
+  await page.keyboard.press('Escape');
+  await expect(d).toHaveJSProperty('open', false);
+});
+
+/** The htmx confirm pattern of the alert dialog's docs page and sample-01's /dialog page. */
+async function openConfirmFixture(page: Page) {
+  const deleted: string[] = [];
+  const messages = await openFixture(page, `
+      <p id="member-status" hidden></p>
+      <table><tbody>
+        <tr id="member-1"><td>Ada</td><td><button type="button" id="delete-1" hx-get="/members/1/delete"
+            hx-target="#modal-root">Delete</button></td></tr>
+        <tr id="member-2"><td>Grace</td><td><button type="button" id="delete-2" hx-get="/members/2/delete"
+            hx-target="#modal-root">Delete</button></td></tr>
+      </tbody></table>
+      <div id="modal-root"></div>`, {
+    htmx: true,
+    routes: {
+      '/members/1/delete': () => ({
+        body: alertDialog('delete-member', `<button type="button" id="confirm" class="btn" data-variant="destructive"
+            hx-delete="/members/1" hx-target="#member-1" hx-swap="outerHTML">Delete</button>`, {open: true}),
+      }),
+      '/members/1': () => {
+        deleted.push('1');
+        return {
+          body: '<p id="member-status" hx-swap-oob="true" tabindex="-1" autofocus>Ada was deleted.</p>',
+          headers: {'HX-Trigger': 'sl-dialog-close'},
+        };
+      },
+    },
+  });
+  return {deleted, messages};
+}
+
+test('htmx: confirming a delete closes the alert dialog, removes the row and focuses the message', async ({page}) => {
+  const {deleted, messages} = await openConfirmFixture(page);
+  const dialog = page.locator('#delete-member');
+
+  await page.locator('#delete-1').click();
+  await waitUntilOpen(dialog);
+  await expect(dialog.locator('.alert-dialog-cancel')).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#confirm')).toBeFocused();
+  await page.keyboard.press('Enter');
+
+  await expect(dialog).toHaveJSProperty('open', false);
+  await expect(page.locator('#member-1')).toHaveCount(0);
+  await expect(page.locator('#member-2')).toBeVisible();
+  await expect(page.locator('#member-status')).toHaveText('Ada was deleted.');
+  await expect(page.locator('#member-status')).toBeFocused();
+  expect(deleted).toEqual(['1']);
+  expect(messages).toEqual([]);
+});
+
+test('htmx: cancelling a delete sends nothing and returns focus to the Delete button', async ({page}) => {
+  const {deleted} = await openConfirmFixture(page);
+  const dialog = page.locator('#delete-member');
+
+  await page.locator('#delete-1').click();
+  await waitUntilOpen(dialog);
+  await page.keyboard.press('Enter');
+
+  await expect(dialog).toHaveJSProperty('open', false);
+  await expect(page.locator('#delete-1')).toBeFocused();
+  await expect(page.locator('#member-1')).toBeVisible();
+  expect(deleted).toEqual([]);
 });

@@ -1,0 +1,90 @@
+<!-- <sl:sheet id="s1">Content</sl:sheet> -->
+<dialog class="sheet" id="s1" closedby="any" x-data="slDialog">
+  Content
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="s1" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:sheet id="s2" side="top">Content</sl:sheet> -->
+<dialog class="sheet" id="s2" closedby="any" x-data="slDialog" data-side="top">
+  Content
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="s2" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:sheet id="s3" side="right">Content</sl:sheet> -->
+<dialog class="sheet" id="s3" closedby="any" x-data="slDialog">
+  Content
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="s3" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:sheet id="s4" side="bottom">Content</sl:sheet> -->
+<dialog class="sheet" id="s4" closedby="any" x-data="slDialog" data-side="bottom">
+  Content
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="s4" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:sheet id="s5" side="left">Content</sl:sheet> -->
+<dialog class="sheet" id="s5" closedby="any" x-data="slDialog" data-side="left">
+  Content
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="s5" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:sheet id="s6" open>Content</sl:sheet> -->
+<dialog class="sheet" id="s6" closedby="any" x-data="slDialog" data-show-modal="true">
+  Content
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="s6" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:sheet id="s7" close-button="false">Content</sl:sheet> -->
+<dialog class="sheet" id="s7" closedby="any" x-data="slDialog">Content</dialog>
+
+<!-- <sl:sheet-header>Header</sl:sheet-header> -->
+<div class="sheet-header">Header</div>
+
+<!-- <sl:sheet-title>Edit profile</sl:sheet-title> -->
+<div class="sheet-title" role="heading" aria-level="2">Edit profile</div>
+
+<!-- <sl:sheet-title level="3">Edit profile</sl:sheet-title> -->
+<div class="sheet-title" role="heading" aria-level="3">Edit profile</div>
+
+<!-- <sl:sheet-description>Make changes to your profile.</sl:sheet-description> -->
+<div class="sheet-description">Make changes to your profile.</div>
+
+<!-- <sl:sheet-footer>Footer</sl:sheet-footer> -->
+<div class="sheet-footer">Footer</div>
+
+<!-- <sl:sheet id="edit-profile">
+  <sl:sheet-header>
+    <sl:sheet-title>Edit profile</sl:sheet-title>
+    <sl:sheet-description>Make changes to your profile.</sl:sheet-description>
+  </sl:sheet-header>
+  <p>Content</p>
+  <sl:sheet-footer close-button>
+    <sl:button type="submit">Save changes</sl:button>
+  </sl:sheet-footer>
+</sl:sheet> -->
+<dialog class="sheet" id="edit-profile" closedby="any" x-data="slDialog" aria-labelledby="edit-profile-title" aria-describedby="edit-profile-description">
+  <div class="sheet-header">
+    <div class="sheet-title" role="heading" aria-level="2" id="edit-profile-title">Edit profile</div>
+    <div class="sheet-description" id="edit-profile-description">Make changes to your profile.</div>
+  </div>
+  <p>Content</p>
+  <div class="sheet-footer">
+    <button class="btn" type="submit">Save changes</button>
+    <button class="btn" type="button" data-variant="outline" commandfor="edit-profile" command="close">Close</button>
+  </div>
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="edit-profile" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
