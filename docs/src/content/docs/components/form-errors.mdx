@@ -113,7 +113,8 @@ With `autofocus`, focus goes to the problem when the form comes back with errors
 
 Content of your own always shows, so with it the summary takes the focus. The summary decides before the controls
 below it render, so keep it above the fields, where it belongs anyway. It works on any control with a `th:field` in
-the form, inside a field or not.
+the form, inside a field or not. A control with a `disabled` attribute cannot take focus, so it is passed over (see
+[disabled and read-only fields](../field/#disabled-and-read-only)); a read-only one takes it.
 
 For a form that reloads the page, also put the outcome in the page title, such as `Error: Sign up`: it is the first
 thing a screen reader reads after a page load.

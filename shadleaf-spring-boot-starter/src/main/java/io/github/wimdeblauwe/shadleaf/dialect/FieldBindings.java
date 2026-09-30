@@ -45,6 +45,7 @@ public final class FieldBindings {
   private static final String ID_ATTRIBUTE = "id";
   private static final String DESCRIBED_BY_ATTRIBUTE = "aria-describedby";
   private static final String AUTOFOCUS_ATTRIBUTE = "autofocus";
+  private static final String DISABLED_ATTRIBUTE = "disabled";
   private static final String EXPRESSION_PREFIX = "th:";
 
   private final IExpressionContext context;
@@ -103,7 +104,8 @@ public final class FieldBindings {
    * first control in a {@code sl:field} also gets the field's {@code id}, unless it has one, and the field's
    * {@code aria-describedby} ids after any it was given. A {@code th:aria-describedby} is left alone: it cannot be
    * merged before it is evaluated. The first control with errors in a form whose {@code sl:form-errors autofocus}
-   * showed nothing gets {@code autofocus}.
+   * showed nothing gets {@code autofocus}, skipping a control with a {@code disabled} attribute, which cannot take
+   * focus. A {@code th:disabled}, or a disabled fieldset around the control, is only known after this ran.
    *
    * @param binding the {@code slField} variable, {@code null} outside a field
    */
@@ -128,7 +130,7 @@ public final class FieldBindings {
         }
       }
     }
-    if (!focusFirstInvalid.isEmpty() && invalid(values)) {
+    if (!focusFirstInvalid.isEmpty() && !values.containsKey(DISABLED_ATTRIBUTE) && invalid(values)) {
       String form = boundObjectName();
       if (form != null && focusFirstInvalid.remove(form) && !has(values, AUTOFOCUS_ATTRIBUTE)) {
         values.put(AUTOFOCUS_ATTRIBUTE, AUTOFOCUS_ATTRIBUTE);

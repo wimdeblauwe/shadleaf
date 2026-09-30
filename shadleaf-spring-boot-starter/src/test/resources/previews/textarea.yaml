@@ -32,3 +32,9 @@ scenarios:
     source: |-
       <sl:label for="textarea-disabled">Message</sl:label>
       <sl:textarea id="textarea-disabled" name="message" disabled/>
+
+  - id: read-only
+    title: Read-only
+    source: |-
+      <sl:label for="textarea-instructions">Delivery instructions</sl:label>
+      <sl:textarea id="textarea-instructions" name="instructions" readonly>Leave the parcel with the neighbours at number 12.</sl:textarea>

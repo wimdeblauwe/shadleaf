@@ -249,6 +249,24 @@ class FormErrorsBindingTest {
   }
 
   @Test
+  void aDisabledControlCannotTakeFocusSoTheNextOneWithErrorsDoes() {
+    Rendered rendered = render(renderer, bindingResult -> {
+      bindingResult.rejectValue("email", "Invalid", "is taken");
+      bindingResult.rejectValue("bio", "Invalid", "too short");
+    }, "<sl:form-errors autofocus/><sl:input th:field=\"*{email}\" disabled/><sl:textarea th:field=\"*{bio}\"/>");
+
+    assertThat(rendered.select("[autofocus]")).extracting(Element::id).containsExactly("bio");
+  }
+
+  @Test
+  void aReadOnlyControlCanTakeFocus() {
+    Rendered rendered = render(renderer, bindingResult -> bindingResult.rejectValue("email", "Invalid", "is taken"),
+        "<sl:form-errors autofocus/><sl:input th:field=\"*{email}\" readonly/>");
+
+    assertThat(rendered.select("[autofocus]")).extracting(Element::id).containsExactly("email");
+  }
+
+  @Test
   void theIdFollowsTheFormObjectsName() {
     BindingResult bindingResult = new BeanPropertyBindingResult(new Signup(), "newAccount");
     bindingResult.reject("Invalid", "Failed");

@@ -99,6 +99,8 @@ takes keyboard focus, when it is a link (`as="a"`).
 - Checkbox, radio group and switch are the browser's own inputs, styled, where shadcn builds them from buttons. They
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
   on any radio button or checkbox. There is no indeterminate checkbox yet.
+- A disabled checkbox fades as a whole, check mark included. In the lyra skin a disabled native select gets the same
+  grey background as a disabled input (shadcn's lyra only gives it to input and textarea).
 
 ### Field
 
@@ -113,6 +115,8 @@ takes keyboard focus, when it is a link (`as="a"`).
 - In an invalid field, only the label (or legend) and the error turn destructive; shadcn colours all the field's
   text.
 - No `FieldTitle`, `FieldSeparator` or choice cards (a field inside a label) yet.
+- No `data-disabled` on the field: its label fades by itself when the control is disabled, also by a
+  `<sl:field-set disabled>`. The description does not fade.
 
 ### Additions
 
@@ -120,6 +124,9 @@ takes keyboard focus, when it is a link (`as="a"`).
   invalid style needs no markup of yours.
 - `<sl:form-errors/>` shows the binding's global errors (`reject(...)`, a class-level constraint), or with
   `show="all"` every error, as a destructive alert above the fields. shadcn has no such component; you would write an `Alert` with the messages yourself.
+- A read-only input or textarea gets a muted background and no shadow; shadcn draws it as an editable one.
+- In Windows' high-contrast mode a disabled control turns the system's grey text colour (`GrayText`) instead of
+  fading.
 - `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
   `Spinner` for this.
 

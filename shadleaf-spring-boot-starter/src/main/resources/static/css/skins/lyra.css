@@ -270,6 +270,16 @@
     @apply gap-2 text-xs leading-none;
   }
 
+  /*
+    Read-only (input and textarea), as in vega: the muted background says it cannot be changed. The text keeps its
+    full colour, which keeps it apart from disabled (faded, on lyra's --input tint) and legible (read-only is not
+    exempt from contrast rules, as disabled is); the placeholder gets the legible mix on --muted. It still takes focus
+    and its focus ring. An error (aria-invalid) still colours the border and ring; the background stays.
+
+    Disabled: lyra tints input, textarea and native select with --input, as shadcn's lyra does for the first two and
+    basecoat's for all three.
+  */
+
   /* Input */
   .input {
     @apply h-8 rounded-none border border-input bg-transparent px-2.5 py-1 text-xs
@@ -278,6 +288,7 @@
       focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
       aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20
       disabled:bg-input/50
+      readonly:bg-muted readonly:placeholder:text-muted-legible
       dark:bg-input/30 dark:disabled:bg-input/80
       dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
   }
@@ -290,6 +301,7 @@
       focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
       aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20
       disabled:bg-input/50
+      readonly:bg-muted readonly:placeholder:text-muted-legible
       dark:bg-input/30 dark:disabled:bg-input/80
       dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
   }
@@ -300,7 +312,8 @@
       motion-safe:transition-colors
       focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
       aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20
-      dark:bg-input/30 dark:hover:bg-input/50
+      disabled:bg-input/50
+      dark:bg-input/30 dark:hover:bg-input/50 dark:disabled:bg-input/80
       dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
       [&[multiple]]:pe-2.5;
   }

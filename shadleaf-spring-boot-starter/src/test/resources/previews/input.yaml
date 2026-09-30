@@ -37,6 +37,13 @@ scenarios:
       <sl:label for="input-disabled">Customer number</sl:label>
       <sl:input id="input-disabled" name="customerNumber" value="C-1042" disabled/>
 
+  - id: read-only
+    title: Read-only
+    description: The value cannot be changed, but it can be focused, selected and copied, and it is submitted.
+    source: |-
+      <sl:label for="input-reference">Order reference</sl:label>
+      <sl:input id="input-reference" name="reference" value="ORD-2026-0042" readonly/>
+
   - id: htmx
     title: With htmx
     description: Every attribute that is not a prop lands on the input.

@@ -123,6 +123,29 @@ heading.
 
 <ComponentPreview id="field--responsive" />
 
+## Disabled and read-only
+
+A field notices a disabled control inside it and fades its label: there is no `data-disabled` to set, as there is in
+shadcn. The description keeps its colour, since it often says why the control is disabled.
+
+<ComponentPreview id="field--disabled" />
+
+`disabled` on a `<sl:field-set>` disables every control in it, as it does on any `fieldset`. The legend and the
+options' labels fade with them.
+
+<ComponentPreview id="field--disabled-field-set" />
+
+A read-only control changes nothing in the field: its label stays as it is. See the [input](../input/#read-only) for
+how it looks.
+
+<ComponentPreview id="field--read-only" />
+
+A disabled control is not submitted, so an error on it usually comes from something the user cannot change in this
+form. It still shows: the control keeps its destructive border, faded, next to the field's error. With
+`<sl:form-errors autofocus/>`, a control with a `disabled` attribute is passed over and the next control with errors
+takes the focus; one disabled by `th:disabled` or by a disabled field set is not known to be disabled when the page is
+rendered, and then nothing takes the focus.
+
 ## Without th:field
 
 A field without `th:field` is only layout. Set `for` to give the control its id, the label its `for`, and the

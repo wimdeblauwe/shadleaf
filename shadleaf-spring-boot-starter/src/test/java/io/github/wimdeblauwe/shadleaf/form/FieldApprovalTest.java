@@ -86,7 +86,22 @@ class FieldApprovalTest {
               <sl:field-label>Search</sl:field-label>
               <sl:input type="search" name="q"/>
               <sl:field-error>Type at least two characters.</sl:field-error>
-            </sl:field>"""));
+            </sl:field>""",
+        """
+            <sl:field th:field="*{name}">
+              <sl:field-label>Name</sl:field-label>
+              <sl:input readonly/>
+              <sl:field-description>Your name comes from your account.</sl:field-description>
+            </sl:field>""",
+        """
+            <sl:field-set th:field="*{plan}" disabled>
+              <sl:field-legend variant="label">Plan</sl:field-legend>
+              <sl:field-description>Your organisation chooses the plan.</sl:field-description>
+              <sl:radio-group>
+                <sl:label><sl:radio-group-item value="free"/>Free</sl:label>
+                <sl:label><sl:radio-group-item value="pro"/>Pro</sl:label>
+              </sl:radio-group>
+            </sl:field-set>"""));
 
     FormModel form = FormModel.of(
         Map.of("name", "Wim", "email", "nope", "terms", false, "plan", "", "toppings", List.of()),

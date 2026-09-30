@@ -31,7 +31,8 @@ class FormPageTest {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString());
 
-    for (String id : new String[] {"name", "email", "topic", "callbackDate", "message", "newsletter", "terms"}) {
+    for (String id : new String[] {"reference", "name", "email", "topic", "callbackDate", "message", "newsletter",
+        "terms"}) {
       Element control = page.getElementById(id);
       assertThat(control).as("control #%s", id).isNotNull();
       assertThat(control.closest(".field")).as("#%s is in a field", id).isNotNull();
@@ -46,8 +47,13 @@ class FormPageTest {
     assertThat(page.getElementById("callbackDate").attr("type")).isEqualTo("date");
     assertThat(page.select("#topic option")).hasSize(4);
     assertThat(page.select("fieldset.field-set .radio-group[role=radiogroup] input.radio-group-item"))
-        .extracting(Element::id, item -> item.attr("name")).containsExactly(
-            tuple("replyBy1", "replyBy"), tuple("replyBy2", "replyBy"));
+        .extracting(Element::id, item -> item.attr("name"), item -> item.hasAttr("disabled")).containsExactly(
+            tuple("replyBy1", "replyBy", false), tuple("replyBy2", "replyBy", false),
+            tuple("replyBy3", "replyBy", true));
+    Element reference = page.getElementById("reference");
+    assertThat(reference.hasAttr("readonly")).isTrue();
+    assertThat(reference.val()).matches("REQ-\\d{6}");
+    assertThat(reference.attr("aria-describedby")).isEqualTo("reference-description");
     assertThat(page.selectFirst("fieldset.field-set").hasAttr("aria-describedby")).isFalse();
     assertThat(page.select("input.switch[role=switch][name=newsletter]")).hasSize(1);
     assertThat(page.select("input.checkbox[name=terms]")).hasSize(1);
@@ -64,6 +70,7 @@ class FormPageTest {
   @Test
   void invalidSubmitMarksTheFieldsWithErrorsAndKeepsTheInput() throws Exception {
     Document page = Jsoup.parse(mockMvc.perform(post("/form")
+            .param("reference", "REQ-123456")
             .param("name", "Wim")
             .param("email", "not-an-email")
             .param("topic", "")
@@ -77,6 +84,8 @@ class FormPageTest {
 
     Element name = page.getElementById("name");
     assertThat(name.val()).isEqualTo("Wim");
+    assertThat(page.getElementById("reference").val()).as("the read-only value was posted back")
+        .isEqualTo("REQ-123456");
     assertThat(name.hasAttr("aria-invalid")).isFalse();
     assertThat(page.getElementById("callbackDate").val()).isEqualTo("2026-10-15");
 

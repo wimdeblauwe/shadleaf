@@ -1,7 +1,8 @@
 /*
   Label: structure only. Type size and weight are identity and live in the skins.
 
-  A label fades with a disabled control it holds, or one right before or after it (a checkbox, then its label).
+  A label fades with a disabled control it holds, or one right before or after it (a checkbox, then its label). A
+  control in a disabled fieldset matches :disabled too. In forced-colors mode the label turns GrayText instead.
 */
 @layer components {
   .label {
@@ -11,6 +12,6 @@
   .label:has(:disabled),
   .label:has(+ :disabled, + .checkbox-wrapper > :disabled),
   :is(:disabled, .checkbox-wrapper:has(> :disabled)) + .label {
-    @apply cursor-not-allowed opacity-50;
+    @apply cursor-not-allowed opacity-50 forced-colors:text-[GrayText] forced-colors:opacity-100;
   }
 }

@@ -72,10 +72,16 @@
     @apply w-fit;
   }
 
-  /* The label fades with a disabled control, as label.css does for a label right next to one. */
+  /*
+    The label fades with a disabled control, as label.css does for a label right next to one; the legend with a
+    disabled fieldset, whose controls are then disabled too (and match :disabled), so their labels fade as well. No
+    data-disabled to keep in step with the control, as shadcn's Field needs: the markup already says it. The
+    description stays as it is: it is often what says why the control is disabled.
+  */
   .field:has(> :disabled, > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-label,
-  .field:has(> :disabled, > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-content > .field-label {
-    @apply cursor-not-allowed opacity-50;
+  .field:has(> :disabled, > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-content > .field-label,
+  .field-set:disabled > .field-legend {
+    @apply cursor-not-allowed opacity-50 forced-colors:text-[GrayText] forced-colors:opacity-100;
   }
 
   .field-description {

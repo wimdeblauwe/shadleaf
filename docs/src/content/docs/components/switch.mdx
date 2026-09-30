@@ -25,6 +25,9 @@ form.
 
 ## Disabled
 
+Track and thumb fade together, and so does the label. A disabled switch is not submitted, so Spring leaves out the
+hidden marker input it adds for a `th:field` checkbox: the bound value stays as it was.
+
 <ComponentPreview id="switch--disabled" />
 
 ## Attributes

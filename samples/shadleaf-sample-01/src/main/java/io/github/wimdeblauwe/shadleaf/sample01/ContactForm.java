@@ -5,10 +5,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /** The form backing object of the form page. JavaBeans accessors, as Spring's data binding and th:field expect. */
 public class ContactForm {
+
+  /** Shown read-only: the user can read, select and copy it, not change it, and it is posted back with the form. */
+  private String reference = "REQ-" + ThreadLocalRandom.current().nextInt(100000, 1000000);
 
   @NotBlank
   private String name;
@@ -33,6 +37,14 @@ public class ContactForm {
 
   @AssertTrue(message = "must be accepted")
   private boolean terms;
+
+  public String getReference() {
+    return reference;
+  }
+
+  public void setReference(String reference) {
+    this.reference = reference;
+  }
 
   public String getName() {
     return name;

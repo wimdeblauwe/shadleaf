@@ -33,3 +33,4 @@ scenarios:
     title: Disabled
     source: |-
       <sl:label><sl:checkbox name="archived" checked disabled/>Archived</sl:label>
+      <sl:label><sl:checkbox name="deleted" disabled/>Deleted</sl:label>

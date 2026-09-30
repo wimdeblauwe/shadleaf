@@ -34,6 +34,8 @@ class FormControlsApprovalTest {
         "<sl:input/>",
         "<sl:input type=\"email\" id=\"email\" name=\"email\" placeholder=\"you@example.com\" required/>",
         "<sl:input name=\"code\" disabled value=\"ABC\"/>",
+        "<sl:input name=\"reference\" value=\"ORD-2026-0042\" readonly/>",
+        "<sl:input name=\"email\" value=\"wim@\" readonly aria-invalid=\"true\"/>",
         "<sl:input name=\"email\" aria-invalid=\"true\" aria-describedby=\"email-error\"/>",
         "<sl:input th:type=\"${'search'}\" name=\"q\" hx-get=\"/search\" hx-trigger=\"input changed delay:300ms\" class=\"w-64\"/>"));
 
@@ -46,7 +48,8 @@ class FormControlsApprovalTest {
         "<sl:textarea name=\"message\"/>",
         "<sl:textarea name=\"message\" placeholder=\"Type your message here.\" rows=\"4\"></sl:textarea>",
         "<sl:textarea name=\"message\">Initial text</sl:textarea>",
-        "<sl:textarea name=\"message\" disabled aria-invalid=\"true\" class=\"min-h-32\"/>"));
+        "<sl:textarea name=\"message\" disabled aria-invalid=\"true\" class=\"min-h-32\"/>",
+        "<sl:textarea name=\"notes\" readonly>Leave it at the back door.</sl:textarea>"));
   }
 
   @Test

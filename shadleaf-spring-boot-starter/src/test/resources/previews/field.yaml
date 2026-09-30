@@ -183,3 +183,51 @@ scenarios:
         <sl:input type="search" name="q"/>
         <sl:field-description>An order number or a customer name.</sl:field-description>
       </sl:field>
+
+  - id: disabled
+    title: Disabled
+    description: The label fades with a disabled control, found by the field itself; the description stays legible, as it often says why.
+    source: |-
+      <sl:field-group>
+        <sl:field th:field="*{companyName}">
+          <sl:field-label>Company name</sl:field-label>
+          <sl:input disabled/>
+          <sl:field-description>Only an administrator can change it.</sl:field-description>
+        </sl:field>
+        <sl:field th:field="*{twoFactor}" orientation="horizontal">
+          <sl:switch disabled/>
+          <sl:field-content>
+            <sl:field-label>Two-factor authentication</sl:field-label>
+            <sl:field-description>Required by your organisation.</sl:field-description>
+          </sl:field-content>
+        </sl:field>
+      </sl:field-group>
+    form:
+      values: {companyName: Acme, twoFactor: true}
+
+  - id: disabled-field-set
+    title: Disabled field set
+    description: disabled on the field set disables every control in it, as on a fieldset; the legend and labels fade with them.
+    source: |-
+      <sl:field-set th:field="*{billingCycle}" disabled>
+        <sl:field-legend variant="label">Billing cycle</sl:field-legend>
+        <sl:field-description>Fixed until your contract ends.</sl:field-description>
+        <sl:radio-group>
+          <sl:label><sl:radio-group-item value="monthly"/>Monthly</sl:label>
+          <sl:label><sl:radio-group-item value="yearly"/>Yearly</sl:label>
+        </sl:radio-group>
+      </sl:field-set>
+    form:
+      values: {billingCycle: yearly}
+
+  - id: read-only
+    title: Read-only
+    description: A read-only input keeps its label as it is. It still takes focus, and its value is submitted.
+    source: |-
+      <sl:field th:field="*{accountNumber}">
+        <sl:field-label>Account number</sl:field-label>
+        <sl:input readonly/>
+        <sl:field-description>Quote it when you contact us.</sl:field-description>
+      </sl:field>
+    form:
+      values: {accountNumber: AC-58213}

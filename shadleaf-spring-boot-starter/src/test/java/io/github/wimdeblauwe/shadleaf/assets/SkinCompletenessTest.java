@@ -15,12 +15,14 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.jspecify.annotations.Nullable;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -32,7 +34,9 @@ import tools.jackson.databind.json.JsonMapper;
  * Every skin styles every value the component templates can render: for each enum prop that a component renders as a
  * {@code data-*} attribute, each compiled bundle has a rule selecting that value, and a component that can render a
  * focusable element (a link, a button, a form control or anything with a {@code tabindex}) has a
- * {@code :focus-visible} rule. A card or an alert takes no focus, so it needs none.
+ * {@code :focus-visible} rule for it. A card or an alert takes no focus, so it needs none. A form control also needs a
+ * {@code :disabled} rule, and one that takes {@code readonly} (a textarea, a text-like input) a {@code [readonly]}
+ * rule. The focusable element can sit inside the root: the checkbox's {@code .checkbox} in its wrapper.
  * <p>
  * The expected selectors come from rendering the component, not from a list kept here: {@code variant="outline"}
  * renders {@code data-variant="outline"} and needs {@code .btn[data-variant="outline"]}, while the default renders no
@@ -50,6 +54,9 @@ class SkinCompletenessTest {
 
   private static final Set<String> FOCUSABLE_ELEMENTS = Set.of("a", "button", "input", "select", "textarea",
       "summary");
+  private static final Set<String> FORM_CONTROLS = Set.of("input", "select", "textarea");
+  // Input types that ignore readonly.
+  private static final Set<String> WITHOUT_READONLY = Set.of("checkbox", "radio", "file", "range", "color", "hidden");
 
   // A rule's selector list: the text before a "{" back to the previous "{", "}" or ";", skipping at-rules. A selector
   // list may span lines; it never contains those three characters.
@@ -61,7 +68,9 @@ class SkinCompletenessTest {
       for (String name : libraryComponents()) {
         ComponentDefinition definition = REGISTRY.get(name);
         String rootClass = null;
-        boolean focusable = false;
+        // Focusable elements by their selector (the first class), from the plain render and every enum value.
+        Map<String, Element> focusable = new LinkedHashMap<>();
+        addFocusable(renderRoot(name, null, null), focusable);
         for (PropDefinition prop : definition.props().values()) {
           if (prop.type() != PropType.ENUM) {
             continue;
@@ -72,7 +81,7 @@ class SkinCompletenessTest {
           for (String value : prop.values()) {
             Element root = renderRoot(name, prop.name(), value);
             rootClass = "." + root.classNames().iterator().next();
-            focusable |= isFocusable(root);
+            addFocusable(root, focusable);
             if (root.hasAttr(attribute)) {
               rendersAttribute = true;
               selectors.add("%s[%s=\"%s\"]".formatted(rootClass, attribute, root.attr(attribute)));
@@ -84,9 +93,15 @@ class SkinCompletenessTest {
             selectors.forEach(selector -> arguments.add(Arguments.of(bundle, selector)));
           }
         }
-        if (rootClass != null && focusable) {
-          arguments.add(Arguments.of(bundle, rootClass + ":focus-visible"));
-        }
+        focusable.forEach((selector, element) -> {
+          arguments.add(Arguments.of(bundle, selector + ":focus-visible"));
+          if (FORM_CONTROLS.contains(element.tagName())) {
+            arguments.add(Arguments.of(bundle, selector + ":disabled"));
+          }
+          if (takesReadonly(element)) {
+            arguments.add(Arguments.of(bundle, selector + "[readonly]"));
+          }
+        });
       }
     }
     return arguments;
@@ -110,15 +125,32 @@ class SkinCompletenessTest {
         .toList();
   }
 
+  private static void addFocusable(Element root, Map<String, Element> focusable) {
+    for (Element element : root.getAllElements()) {
+      if (isFocusable(element) && !element.classNames().isEmpty()) {
+        focusable.putIfAbsent("." + element.classNames().iterator().next(), element);
+      }
+    }
+  }
+
   private static boolean isFocusable(Element element) {
+    if (element.tagName().equals("input") && element.attr("type").equals("hidden")) {
+      return false;
+    }
     return FOCUSABLE_ELEMENTS.contains(element.tagName()) || element.hasAttr("tabindex");
   }
 
-  private static Element renderRoot(String component, String prop, String value) {
+  private static boolean takesReadonly(Element element) {
+    return element.tagName().equals("textarea")
+        || element.tagName().equals("input") && !WITHOUT_READONLY.contains(element.attr("type"));
+  }
+
+  private static Element renderRoot(String component, @Nullable String prop, @Nullable String value) {
     // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>.
     // Inside a form object, for the components that read one (sl:form-errors).
-    return RENDERER.render(FormModel.wrap("<sl:%s %s=\"%s\" aria-label=\"x\" name=\"x\">x</sl:%s>"
-        .formatted(component, prop, value, component)), FORM.variables()).root();
+    String propAttribute = prop == null ? "" : "%s=\"%s\" ".formatted(prop, value);
+    return RENDERER.render(FormModel.wrap("<sl:%s %saria-label=\"x\" name=\"x\">x</sl:%s>"
+        .formatted(component, propAttribute, component)), FORM.variables()).root();
   }
 
   private static Set<String> selectorLists(String css) {

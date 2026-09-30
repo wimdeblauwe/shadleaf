@@ -276,6 +276,13 @@
     @apply gap-2 text-sm leading-none font-medium;
   }
 
+  /*
+    Read-only (input and textarea): the muted background says it cannot be changed, and it drops the shadow of an
+    editable one. The text keeps its full colour, which keeps it apart from disabled (faded) and legible (read-only is
+    not exempt from contrast rules, as disabled is); the placeholder gets the legible mix on --muted. It still takes
+    focus and its focus ring. An error (aria-invalid) still colours the border and ring; the background stays.
+  */
+
   /* Input. text-base under md keeps iOS from zooming into a focused input. */
   .input {
     @apply h-9 rounded-md border border-input bg-transparent px-2.5 py-1 text-base shadow-xs
@@ -283,6 +290,7 @@
       file:h-7 file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground
       focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
       aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      readonly:bg-muted readonly:shadow-none readonly:placeholder:text-muted-legible
       dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
       md:text-sm;
   }
@@ -294,6 +302,7 @@
       placeholder:text-muted-foreground
       focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
       aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      readonly:bg-muted readonly:shadow-none readonly:placeholder:text-muted-legible
       dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
       md:text-sm;
   }

@@ -4,10 +4,14 @@
   The input and the check icon share one grid cell; the icon shows while the input is checked. th:field puts a hidden
   marker input between them, hence ~. In forced-colors mode the browser draws its own checkbox, as it drops the
   backgrounds the skins use.
+
+  Disabled fades the wrapper, not the input, so the check mark fades with the box. In forced-colors mode the browser's
+  own disabled checkbox shows instead, unfaded.
 */
 @layer components {
   .checkbox-wrapper {
-    @apply relative inline-grid shrink-0 place-items-center align-middle;
+    @apply relative inline-grid shrink-0 place-items-center align-middle
+      has-[>.checkbox:disabled]:opacity-50 forced-colors:has-[>.checkbox:disabled]:opacity-100;
   }
 
   .checkbox-wrapper > * {
@@ -16,7 +20,7 @@
 
   .checkbox {
     @apply m-0 shrink-0 appearance-none outline-none
-      disabled:cursor-not-allowed disabled:opacity-50
+      disabled:cursor-not-allowed
       forced-colors:appearance-auto;
   }
 

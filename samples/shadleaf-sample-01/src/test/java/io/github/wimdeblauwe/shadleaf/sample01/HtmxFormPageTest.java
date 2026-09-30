@@ -42,7 +42,7 @@ class HtmxFormPageTest {
     assertThat(form.attr("hx-post")).isEqualTo("/htmx-form");
     assertThat(form.attr("hx-target")).isEqualTo("#contact");
     assertThat(form.attr("hx-swap")).isEqualTo("outerHTML");
-    assertThat(form.select(".field")).as("the fields of the form page").hasSize(7);
+    assertThat(form.select(".field")).as("the fields of the form page").hasSize(8);
     assertThat(page.select("[autofocus]")).isEmpty();
   }
 

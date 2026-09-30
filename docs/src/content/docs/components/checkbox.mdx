@@ -42,7 +42,9 @@ A field with errors marks the checkbox `aria-invalid="true"`, as with the [input
 
 ## Disabled
 
-A label fades with the disabled checkbox it holds, or sits next to.
+A disabled checkbox fades with its check mark, and a label fades with the disabled checkbox it holds, or sits next
+to. In Windows' high-contrast mode the browser draws its own disabled checkbox. HTML has no read-only checkbox:
+`readonly` does nothing on one.
 
 <ComponentPreview id="checkbox--disabled" />
 

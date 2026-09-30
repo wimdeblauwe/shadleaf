@@ -160,3 +160,37 @@
   <input class="input" type="search" name="q" id="query" aria-describedby="query-error">
   <div class="field-error" id="query-error">Type at least two characters.</div>
 </div>
+
+<!-- <th:block th:object="${form}"><sl:field th:field="*{name}">
+  <sl:field-label>Name</sl:field-label>
+  <sl:input readonly/>
+  <sl:field-description>Your name comes from your account.</sl:field-description>
+</sl:field></th:block> -->
+<div class="field">
+  <label class="label field-label" for="name">Name</label>
+  <input class="input" type="text" readonly id="name" aria-describedby="name-description" name="name" value="Wim">
+  <p class="field-description" id="name-description">Your name comes from your account.</p>
+</div>
+
+<!-- <th:block th:object="${form}"><sl:field-set th:field="*{plan}" disabled>
+  <sl:field-legend variant="label">Plan</sl:field-legend>
+  <sl:field-description>Your organisation chooses the plan.</sl:field-description>
+  <sl:radio-group>
+    <sl:label><sl:radio-group-item value="free"/>Free</sl:label>
+    <sl:label><sl:radio-group-item value="pro"/>Pro</sl:label>
+  </sl:radio-group>
+</sl:field-set></th:block> -->
+<fieldset class="field-set" data-invalid="true" aria-describedby="plan-description" disabled>
+  <legend class="field-legend" data-variant="label">Plan</legend>
+  <p class="field-description" id="plan-description">Your organisation chooses the plan.</p>
+  <div class="radio-group" role="radiogroup">
+    <label class="label">
+      <input type="radio" class="radio-group-item" aria-invalid="true" value="free" id="plan1" name="plan">
+      Free
+    </label>
+    <label class="label">
+      <input type="radio" class="radio-group-item" aria-invalid="true" value="pro" id="plan2" name="plan">
+      Pro
+    </label>
+  </div>
+</fieldset>

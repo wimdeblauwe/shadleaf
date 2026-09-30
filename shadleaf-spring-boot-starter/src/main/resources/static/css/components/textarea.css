@@ -1,10 +1,13 @@
 /*
   Textarea: structure only. It grows with its content where the browser supports field-sizing. Radius, border,
-  background, padding, type size and focus ring are identity and live in the skins.
+  background, padding, type size and focus ring are identity and live in the skins, as are the read-only look and
+  any disabled background. Disabled fades it, as in every shadcn style; in forced-colors mode it turns GrayText
+  instead, as fading would change the colours the user chose.
 */
 @layer components {
   .textarea {
     @apply flex field-sizing-content min-h-16 w-full outline-none
-      disabled:cursor-not-allowed disabled:opacity-50;
+      disabled:cursor-not-allowed disabled:opacity-50
+      forced-colors:disabled:border-[GrayText] forced-colors:disabled:text-[GrayText] forced-colors:disabled:opacity-100;
   }
 }

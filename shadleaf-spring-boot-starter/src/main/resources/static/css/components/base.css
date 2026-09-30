@@ -1,4 +1,10 @@
 /* Shared helpers. The bundle emits no utility classes, so components use these instead. */
+
+/*
+  An input or textarea with readonly, unless it is also disabled, which wins. Not Tailwind's read-only:, which is
+  :read-only: that also matches a disabled input and a select, neither of which the read-only style is for.
+*/
+@custom-variant readonly (&[readonly]:not(:disabled));
 @layer components {
   .sl-sr-only {
     @apply sr-only;

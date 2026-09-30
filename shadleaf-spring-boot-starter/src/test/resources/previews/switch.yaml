@@ -26,3 +26,4 @@ scenarios:
     title: Disabled
     source: |-
       <sl:label><sl:switch name="sso" checked disabled/>Single sign-on (managed by your organisation)</sl:label>
+      <sl:label><sl:switch name="betaFeatures" disabled/>Beta features (not in your plan)</sl:label>

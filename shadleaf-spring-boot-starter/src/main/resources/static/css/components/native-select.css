@@ -4,15 +4,22 @@
   live in the skins.
 
   A multiple select is a list box: no chevron, and its height follows its options.
+
+  Disabled fades the wrapper, so the chevron fades with the select. In forced-colors mode both turn GrayText instead.
 */
 @layer components {
   .native-select-wrapper {
-    @apply relative w-fit has-[select:disabled]:opacity-50;
+    @apply relative w-fit has-[>select:disabled]:opacity-50 forced-colors:has-[>select:disabled]:opacity-100;
+  }
+
+  .native-select-wrapper:has(> select:disabled) > .native-select-icon {
+    @apply forced-colors:text-[GrayText];
   }
 
   .native-select {
     @apply w-full min-w-0 appearance-none outline-none select-none
-      disabled:pointer-events-none disabled:cursor-not-allowed;
+      disabled:pointer-events-none disabled:cursor-not-allowed
+      forced-colors:disabled:border-[GrayText] forced-colors:disabled:text-[GrayText];
   }
 
   /* The options are drawn by the browser, in its own colours: without these, dark mode can give dark text on a dark
