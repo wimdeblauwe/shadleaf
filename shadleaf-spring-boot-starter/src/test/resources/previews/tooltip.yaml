@@ -1,0 +1,44 @@
+# Scenarios for the tooltip's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: tooltip
+parts: [tooltip-content]
+scenarios:
+  - id: default
+    title: Tooltip
+    description: Shows while the pointer rests on the button, and at once when the keyboard focuses it.
+    source: |-
+      <sl:tooltip>
+        <sl:button variant="outline">Hover</sl:button>
+        <sl:tooltip-content>Add to library</sl:tooltip-content>
+      </sl:tooltip>
+
+  - id: sides
+    title: Sides
+    description: side puts it on a side of its trigger; it flips when there is no room there.
+    source: |-
+      <sl:tooltip>
+        <sl:button variant="outline">Top</sl:button>
+        <sl:tooltip-content>Shown above</sl:tooltip-content>
+      </sl:tooltip>
+      <sl:tooltip>
+        <sl:button variant="outline">Right</sl:button>
+        <sl:tooltip-content side="right">Shown after</sl:tooltip-content>
+      </sl:tooltip>
+      <sl:tooltip>
+        <sl:button variant="outline">Bottom</sl:button>
+        <sl:tooltip-content side="bottom">Shown below</sl:tooltip-content>
+      </sl:tooltip>
+      <sl:tooltip>
+        <sl:button variant="outline">Left</sl:button>
+        <sl:tooltip-content side="left">Shown before</sl:tooltip-content>
+      </sl:tooltip>
+
+  - id: keyboard-shortcut
+    title: With a keyboard shortcut
+    description: An icon button keeps its aria-label as its name; the tooltip describes it, shortcut included.
+    source: |-
+      <sl:tooltip>
+        <sl:button variant="outline" size="icon" aria-label="Save"><sl:icon name="save"/></sl:button>
+        <sl:tooltip-content>
+          Save changes <sl:kbd-group><sl:kbd>Ctrl</sl:kbd><sl:kbd>S</sl:kbd></sl:kbd-group>
+        </sl:tooltip-content>
+      </sl:tooltip>

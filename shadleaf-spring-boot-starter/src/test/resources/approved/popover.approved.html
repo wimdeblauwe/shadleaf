@@ -1,0 +1,35 @@
+<!-- <sl:popover id="dimensions">
+  <sl:popover-trigger variant="outline">Open popover</sl:popover-trigger>
+  <sl:popover-content class="wide">
+    <sl:popover-header>
+      <sl:popover-title>Dimensions</sl:popover-title>
+      <sl:popover-description>Set the dimensions for the layer.</sl:popover-description>
+    </sl:popover-header>
+    <p>Content</p>
+  </sl:popover-content>
+</sl:popover> -->
+<button class="btn popover-trigger" type="button" data-variant="outline" popovertarget="dimensions" aria-haspopup="dialog">Open popover</button>
+<div class="popover-content wide" id="dimensions" role="dialog" popover tabindex="-1" x-data="slPopover" aria-labelledby="dimensions-title" aria-describedby="dimensions-description">
+  <div class="popover-header">
+    <div class="popover-title" id="dimensions-title">Dimensions</div>
+    <p class="popover-description" id="dimensions-description">Set the dimensions for the layer.</p>
+  </div>
+  <p>Content</p>
+</div>
+
+<!-- <sl:popover id="p2">
+  <sl:popover-content side="right" align="start" aria-label="Details">Content</sl:popover-content>
+</sl:popover> -->
+<div class="popover-content" id="p2" role="dialog" popover tabindex="-1" x-data="slPopover" data-side="right" data-align="start" aria-label="Details">Content</div>
+
+<!-- <sl:popover-header>Header</sl:popover-header> -->
+<div class="popover-header">Header</div>
+
+<!-- <sl:popover-title>Dimensions</sl:popover-title> -->
+<div class="popover-title">Dimensions</div>
+
+<!-- <sl:popover-title level="3">Dimensions</sl:popover-title> -->
+<div class="popover-title" role="heading" aria-level="3">Dimensions</div>
+
+<!-- <sl:popover-description>Set the dimensions.</sl:popover-description> -->
+<p class="popover-description">Set the dimensions.</p>

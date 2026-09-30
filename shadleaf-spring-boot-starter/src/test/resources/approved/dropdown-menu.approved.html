@@ -1,0 +1,108 @@
+<!-- <sl:dropdown-menu id="m1">
+  <sl:dropdown-menu-trigger variant="outline">Open</sl:dropdown-menu-trigger>
+  <sl:dropdown-menu-content>
+    <sl:dropdown-menu-item>Profile</sl:dropdown-menu-item>
+  </sl:dropdown-menu-content>
+</sl:dropdown-menu> -->
+<button class="btn dropdown-menu-trigger" type="button" data-variant="outline" id="m1-trigger" popovertarget="m1" aria-haspopup="menu">Open</button>
+<div class="dropdown-menu-content" id="m1" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="m1-trigger">
+  <button type="button" class="dropdown-menu-item" role="menuitem">Profile</button>
+</div>
+
+<!-- <sl:dropdown-menu th:id="|member-${42}-actions|">
+  <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" aria-label="Actions">
+    <sl:icon name="ellipsis"/>
+  </sl:dropdown-menu-trigger>
+  <sl:dropdown-menu-content side="left" align="end" class="w-40">
+    <sl:dropdown-menu-item>Edit</sl:dropdown-menu-item>
+  </sl:dropdown-menu-content>
+</sl:dropdown-menu> -->
+<button class="btn dropdown-menu-trigger" type="button" data-variant="ghost" data-size="icon-sm" id="member-42-actions-trigger" popovertarget="member-42-actions" aria-haspopup="menu" aria-label="Actions">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</button>
+<div class="dropdown-menu-content w-40" id="member-42-actions" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="member-42-actions-trigger" data-side="left" data-align="end">
+  <button type="button" class="dropdown-menu-item" role="menuitem">Edit</button>
+</div>
+
+<!-- <sl:dropdown-menu id="m3">
+  <sl:dropdown-menu-content side="top" align="center">Items</sl:dropdown-menu-content>
+</sl:dropdown-menu> -->
+<div class="dropdown-menu-content" id="m3" role="menu" popover tabindex="-1" x-data="slDropdownMenu" data-side="top" data-align="center">Items</div>
+
+<!-- <sl:dropdown-menu-item>Profile</sl:dropdown-menu-item> -->
+<button type="button" class="dropdown-menu-item" role="menuitem">Profile</button>
+
+<!-- <sl:dropdown-menu-item as="a" href="/settings">Settings</sl:dropdown-menu-item> -->
+<a class="dropdown-menu-item" role="menuitem" href="/settings">Settings</a>
+
+<!-- <sl:dropdown-menu-item as="a" href="/settings" disabled>Settings</sl:dropdown-menu-item> -->
+<a class="dropdown-menu-item" role="menuitem" aria-disabled="true">Settings</a>
+
+<!-- <sl:dropdown-menu-item disabled>Archive</sl:dropdown-menu-item> -->
+<button type="button" class="dropdown-menu-item" role="menuitem" disabled>Archive</button>
+
+<!-- <sl:dropdown-menu-item variant="destructive" hx-delete="/members/1">Delete</sl:dropdown-menu-item> -->
+<button type="button" class="dropdown-menu-item" role="menuitem" data-variant="destructive" hx-delete="/members/1">Delete</button>
+
+<!-- <sl:dropdown-menu-item type="submit" inset>Log out</sl:dropdown-menu-item> -->
+<button type="submit" class="dropdown-menu-item" role="menuitem" data-inset="true">Log out</button>
+
+<!-- <sl:dropdown-menu-item><sl:icon name="user"/>Profile
+  <sl:dropdown-menu-shortcut>⇧⌘P</sl:dropdown-menu-shortcut></sl:dropdown-menu-item> -->
+<button type="button" class="dropdown-menu-item" role="menuitem">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  Profile
+  <span class="dropdown-menu-shortcut">⇧⌘P</span>
+</button>
+
+<!-- <sl:dropdown-menu-checkbox-item checked>Status bar</sl:dropdown-menu-checkbox-item> -->
+<button type="button" class="dropdown-menu-checkbox-item" role="menuitemcheckbox" aria-checked="true">
+  Status bar
+  <span class="dropdown-menu-item-indicator">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </span>
+</button>
+
+<!-- <sl:dropdown-menu-checkbox-item as="a" href="?panel=true">Panel</sl:dropdown-menu-checkbox-item> -->
+<a class="dropdown-menu-checkbox-item" role="menuitemcheckbox" aria-checked="false" href="?panel=true">
+  Panel
+  <span class="dropdown-menu-item-indicator">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </span>
+</a>
+
+<!-- <sl:dropdown-menu-radio-group aria-label="Sort by">
+  <sl:dropdown-menu-radio-item as="a" href="?sort=name" checked>Name</sl:dropdown-menu-radio-item>
+  <sl:dropdown-menu-radio-item as="a" href="?sort=date" disabled>Date</sl:dropdown-menu-radio-item>
+</sl:dropdown-menu-radio-group> -->
+<div class="dropdown-menu-radio-group" role="group" aria-label="Sort by">
+  <a class="dropdown-menu-radio-item" role="menuitemradio" aria-checked="true" href="?sort=name">
+    Name
+    <span class="dropdown-menu-item-indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+  </a>
+  <a class="dropdown-menu-radio-item" role="menuitemradio" aria-checked="false" aria-disabled="true">
+    Date
+    <span class="dropdown-menu-item-indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+  </a>
+</div>
+
+<!-- <sl:dropdown-menu-label>My account</sl:dropdown-menu-label> -->
+<div class="dropdown-menu-label">My account</div>
+
+<!-- <sl:dropdown-menu-label inset>My account</sl:dropdown-menu-label> -->
+<div class="dropdown-menu-label" data-inset="true">My account</div>
+
+<!-- <sl:dropdown-menu-group><sl:dropdown-menu-item>Team</sl:dropdown-menu-item></sl:dropdown-menu-group> -->
+<div class="dropdown-menu-group" role="group">
+  <button type="button" class="dropdown-menu-item" role="menuitem">Team</button>
+</div>
+
+<!-- <sl:dropdown-menu-separator/> -->
+<div class="dropdown-menu-separator" role="separator"></div>
+
+<!-- <sl:dropdown-menu-shortcut>⌘S</sl:dropdown-menu-shortcut> -->
+<span class="dropdown-menu-shortcut">⌘S</span>

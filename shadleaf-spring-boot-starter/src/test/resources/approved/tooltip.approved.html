@@ -1,0 +1,42 @@
+<!-- <sl:tooltip>
+  <sl:button variant="outline">Hover</sl:button>
+  <sl:tooltip-content>Add to library</sl:tooltip-content>
+</sl:tooltip> -->
+<span class="tooltip" x-data="slTooltip">
+  <button class="btn" type="button" data-variant="outline">Hover</button>
+  <span class="tooltip-content" role="tooltip" popover="manual">
+    Add to library
+    <span class="tooltip-arrow" aria-hidden="true"></span>
+  </span>
+</span>
+
+<!-- <sl:tooltip delay="0" class="toolbar-tip">
+  <sl:button variant="ghost" size="icon" aria-label="Save"><sl:icon name="save"/></sl:button>
+  <sl:tooltip-content side="bottom" align="start" id="save-tip">Save
+    <sl:kbd-group><sl:kbd>Ctrl</sl:kbd><sl:kbd>S</sl:kbd></sl:kbd-group></sl:tooltip-content>
+</sl:tooltip> -->
+<span class="tooltip toolbar-tip" x-data="slTooltip" data-delay="0">
+  <button class="btn" type="button" data-variant="ghost" data-size="icon" aria-label="Save">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+  <span class="tooltip-content" role="tooltip" popover="manual" data-side="bottom" data-align="start" id="save-tip">
+    Save
+    <kbd class="kbd-group">
+      <kbd class="kbd">Ctrl</kbd>
+      <kbd class="kbd">S</kbd>
+    </kbd>
+    <span class="tooltip-arrow" aria-hidden="true"></span>
+  </span>
+</span>
+
+<!-- <sl:tooltip-content side="right">Text</sl:tooltip-content> -->
+<span class="tooltip-content" role="tooltip" popover="manual" data-side="right">
+  Text
+  <span class="tooltip-arrow" aria-hidden="true"></span>
+</span>
+
+<!-- <sl:tooltip-content side="left" align="end">Text</sl:tooltip-content> -->
+<span class="tooltip-content" role="tooltip" popover="manual" data-side="left" data-align="end">
+  Text
+  <span class="tooltip-arrow" aria-hidden="true"></span>
+</span>

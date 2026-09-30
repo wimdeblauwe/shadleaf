@@ -87,5 +87,9 @@ close-button>` adds an outline "Close" button after the footer's own actions.
 
 ## JavaScript
 
-`x-data="slDialog"` on the `<dialog>`, the dialog's own component: see [Dialog](../dialog/#javascript). The
-`sl-dialog-close` event closes a sheet too. It needs no Alpine plugin.
+A sheet uses the dialog's Alpine component, `slDialog`; see [Dialog](../dialog/#javascript).
+
+- **Most of it works without Alpine.** Opening from a button, Escape, a click outside and the close buttons are the
+  browser's. Alpine is needed for `open` and the `sl-dialog-close` event, which closes a sheet as it closes a dialog.
+- **It needs no Alpine plugin.**
+- **Keep your own `x-data` off `<sl:sheet>`**: it would replace `slDialog`. Put it on an element inside.

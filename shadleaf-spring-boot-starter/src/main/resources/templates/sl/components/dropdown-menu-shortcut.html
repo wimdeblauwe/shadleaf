@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A keyboard shortcut at the end of a <code>sl:dropdown-menu-item</code>, such as
+      <code>⌘S</code>. It only shows the shortcut; the application handles the keys. Typeahead ignores
+      it.</sl:description>
+  </sl:props>
+</head>
+<body>
+<span th:fragment="dropdown-menu-shortcut" class="dropdown-menu-shortcut" sl:attrs><sl:slot/></span>
+</body>
+</html>

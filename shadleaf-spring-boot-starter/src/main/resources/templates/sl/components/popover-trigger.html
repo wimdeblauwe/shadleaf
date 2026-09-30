@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The button that opens and closes a <code>sl:popover</code>: a <code>sl:button</code> with
+      <code>popovertarget</code> set to the popover. Any other attribute passes through to the
+      <code>sl:button</code>.</sl:description>
+    <sl:prop name="variant" default="default" values="default outline ghost destructive secondary link">
+      Visual style of the button, as on <code>sl:button</code>.</sl:prop>
+    <sl:prop name="size" default="default" values="xs sm default lg icon icon-xs icon-sm icon-lg">Size of the
+      button, as on <code>sl:button</code>. The <code>icon</code> sizes need an <code>aria-label</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<sl:button th:fragment="popover-trigger"
+           class="popover-trigger"
+           th:variant="${props.variant}"
+           th:size="${props.size}"
+           th:popovertarget="${slPopoverId}"
+           aria-haspopup="dialog"
+           sl:attrs><sl:slot/></sl:button>
+</body>
+</html>

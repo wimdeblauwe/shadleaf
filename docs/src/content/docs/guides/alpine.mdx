@@ -106,7 +106,9 @@ inert, and the browser console says: *Shadleaf: shadleaf.js ran after Alpine sta
 
 Some components need an Alpine plugin, such as `@alpinejs/focus`. With `bundled` and `csp` Shadleaf includes them;
 with `external` your application registers them. Each component's page lists the plugins it needs. No component
-needs one yet.
+needs one yet: the dialog family, the dropdown menu, the popover and the tooltip use none. The dropdown menu, popover
+and tooltip are placed with CSS anchor positioning, not with `@alpinejs/anchor`: every current browser supports it, and
+for older ones their components set the position themselves.
 
 ## Pages without interactive components
 

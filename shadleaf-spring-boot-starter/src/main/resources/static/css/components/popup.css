@@ -1,0 +1,135 @@
+/*
+  What the dropdown menu, the popover and the tooltip share: a popover (the Popover API) placed next to its trigger with
+  CSS anchor positioning. Structure only; the skins set the gap to the trigger (--popup-offset), the slide distance
+  (--popup-slide) and the speed.
+
+  The trigger is the popover's implicit anchor: the button whose popovertarget opened it, or the element slTooltip
+  passes as the source to showPopover(). position-area puts it on one side of the anchor (--popup-side) and lines it up
+  along that side (--popup-align, which depends on the axis of the side); position-try-fallbacks flips it to the other
+  side, or the other end, when it would overflow the viewport. right and left are the inline end and start, so they
+  swap on a right-to-left page. The gap is a margin on the side facing the trigger, which a flip mirrors.
+
+  Opening and closing fade through @starting-style, with display and overlay transitioned discretely so the closing
+  transition is seen; where motion is fine, the popup also zooms from 95% and slides in from its trigger.
+*/
+@layer components {
+  .dropdown-menu-content,
+  .popover-content,
+  .tooltip-content {
+    @apply max-h-none max-w-none opacity-0
+      transition-[opacity,scale,translate,overlay,display] transition-discrete
+      open:opacity-100 starting:open:opacity-0
+      motion-safe:scale-95 motion-safe:open:scale-100 motion-safe:starting:open:scale-95
+      forced-colors:border forced-colors:border-solid;
+    inset: auto;
+    margin-block: var(--popup-margin-block);
+    margin-inline: var(--popup-margin-inline);
+    position-area: var(--popup-side) var(--popup-align);
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+
+  /* The side. bottom is the default of the menu and the popover, top that of the tooltip. */
+  .dropdown-menu-content:not([data-side]),
+  .popover-content:not([data-side]),
+  .dropdown-menu-content[data-side='bottom'],
+  .popover-content[data-side='bottom'],
+  .tooltip-content[data-side='bottom'] {
+    --popup-side: block-end;
+    --popup-align: var(--popup-align-inline);
+    --popup-margin-block: var(--popup-offset) 0;
+    --popup-margin-inline: 0;
+    --popup-from: 0 calc(-1 * var(--popup-slide));
+    transform-origin: top;
+  }
+
+  .tooltip-content:not([data-side]),
+  .dropdown-menu-content[data-side='top'],
+  .popover-content[data-side='top'],
+  .tooltip-content[data-side='top'] {
+    --popup-side: block-start;
+    --popup-align: var(--popup-align-inline);
+    --popup-margin-block: 0 var(--popup-offset);
+    --popup-margin-inline: 0;
+    --popup-from: 0 var(--popup-slide);
+    transform-origin: bottom;
+  }
+
+  .dropdown-menu-content[data-side='right'],
+  .popover-content[data-side='right'],
+  .tooltip-content[data-side='right'] {
+    --popup-side: inline-end;
+    --popup-align: var(--popup-align-block);
+    --popup-margin-block: 0;
+    --popup-margin-inline: var(--popup-offset) 0;
+    --popup-from: calc(-1 * var(--popup-slide)) 0;
+    transform-origin: left;
+  }
+
+  .dropdown-menu-content[data-side='left'],
+  .popover-content[data-side='left'],
+  .tooltip-content[data-side='left'] {
+    --popup-side: inline-start;
+    --popup-align: var(--popup-align-block);
+    --popup-margin-block: 0;
+    --popup-margin-inline: 0 var(--popup-offset);
+    --popup-from: var(--popup-slide) 0;
+    transform-origin: right;
+  }
+
+  /* On a right-to-left page the inline sides swap, and so does the slide. */
+  :is(.dropdown-menu-content, .popover-content, .tooltip-content)[data-side='right']:dir(rtl) {
+    --popup-from: var(--popup-slide) 0;
+    transform-origin: right;
+  }
+
+  :is(.dropdown-menu-content, .popover-content, .tooltip-content)[data-side='left']:dir(rtl) {
+    --popup-from: calc(-1 * var(--popup-slide)) 0;
+    transform-origin: left;
+  }
+
+  /*
+    The alignment: start is the default of the menu, center that of the popover and the tooltip. Centred spans the
+    whole row (span-all), which centres it on the trigger without limiting it to the trigger's width.
+  */
+  .dropdown-menu-content:not([data-align]),
+  .dropdown-menu-content[data-align='start'],
+  .popover-content[data-align='start'],
+  .tooltip-content[data-align='start'] {
+    --popup-align-inline: span-inline-end;
+    --popup-align-block: span-block-end;
+  }
+
+  .popover-content:not([data-align]),
+  .tooltip-content:not([data-align]),
+  .dropdown-menu-content[data-align='center'],
+  .popover-content[data-align='center'],
+  .tooltip-content[data-align='center'] {
+    --popup-align-inline: span-all;
+    --popup-align-block: span-all;
+  }
+
+  .dropdown-menu-content[data-align='end'],
+  .popover-content[data-align='end'],
+  .tooltip-content[data-align='end'] {
+    --popup-align-inline: span-inline-start;
+    --popup-align-block: span-block-start;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .dropdown-menu-content,
+    .popover-content,
+    .tooltip-content {
+      translate: var(--popup-from);
+    }
+
+    :is(.dropdown-menu-content, .popover-content, .tooltip-content):popover-open {
+      translate: 0 0;
+    }
+
+    @starting-style {
+      :is(.dropdown-menu-content, .popover-content, .tooltip-content):popover-open {
+        translate: var(--popup-from);
+      }
+    }
+  }
+}

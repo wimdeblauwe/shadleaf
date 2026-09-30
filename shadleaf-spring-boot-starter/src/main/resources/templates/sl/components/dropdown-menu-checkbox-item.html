@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>An item in a <code>sl:dropdown-menu-content</code> that shows an on/off state with a check mark
+      (<code>role="menuitemcheckbox"</code>), such as a filter or a view setting. The state comes from the server:
+      choosing the item does what its attributes say (a link to <code>?archived=true</code>, an
+      <code>hx-post</code>), and the page or fragment that comes back shows the new state. Give it its text as
+      content (<code>[[${...}]]</code>), not with <code>th:text</code>, which would replace the check mark too.
+      Otherwise as <code>sl:dropdown-menu-item</code>.</sl:description>
+    <sl:prop name="checked" type="boolean">Whether the setting is on (<code>aria-checked</code>).</sl:prop>
+    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
+      (<code>a</code>).</sl:prop>
+    <sl:prop name="type" default="button" values="button submit reset">Submit behaviour of a button item.</sl:prop>
+    <sl:prop name="inset" type="boolean">Indent the item to line up with items that start with an icon.</sl:prop>
+    <sl:prop name="disabled" type="boolean">Disable the item. The arrow keys skip it.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<th:block th:fragment="dropdown-menu-checkbox-item"><th:block
+    th:replace="~{sl/components/dropdown-menu-item :: menu-item('menuitemcheckbox', ${props.checked})}"/></th:block>
+</body>
+</html>

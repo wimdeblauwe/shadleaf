@@ -8,10 +8,14 @@
 <div id="page-content">
   <h2>On the page</h2>
   <p>The dialog is in the page; the button opens it with <code>commandfor</code> and
-    <code>command="show-modal"</code>. Escape, a click outside and the close buttons close it.</p>
+    <code>command="show-modal"</code>. Escape, a click outside and the close buttons close it. The button is an icon;
+    its tooltip shows when the pointer rests on it or the keyboard focuses it.</p>
   <div class="row">
-    <sl:button variant="outline" commandfor="shortcuts" command="show-modal">
-      <sl:slot name="icon-start"><sl:icon name="keyboard"/></sl:slot>Keyboard shortcuts</sl:button>
+    <sl:tooltip>
+      <sl:button variant="outline" size="icon" commandfor="shortcuts" command="show-modal"
+                 aria-label="Keyboard shortcuts"><sl:icon name="keyboard"/></sl:button>
+      <sl:tooltip-content>Show the keyboard shortcuts</sl:tooltip-content>
+    </sl:tooltip>
   </div>
   <sl:dialog id="shortcuts">
     <sl:dialog-header>
@@ -28,16 +32,47 @@
   </sl:dialog>
 
   <h2>From the server, with htmx</h2>
-  <p>Edit fetches the dialog into <code>#modal-root</code>, and <code>&lt;sl:dialog open&gt;</code> shows it. Save
-    posts the form with htmx: with errors the form comes back with them and the dialog stays open; after a valid save
-    the response header <code>HX-Trigger: sl-dialog-close</code> closes it and the row is updated.</p>
+  <div class="team-name">
+    <h3 th:replace="~{dialog :: team-name}">Team Shadleaf</h3>
+    <!--/* A popover with a form that swaps itself; a valid rename closes it with HX-Trigger: sl-popover-close. */-->
+    <sl:popover id="rename-team">
+      <sl:popover-trigger variant="outline" size="sm">Rename</sl:popover-trigger>
+      <sl:popover-content>
+        <sl:popover-header>
+          <sl:popover-title>Rename the team</sl:popover-title>
+          <sl:popover-description>Everyone on the team sees the new name.</sl:popover-description>
+        </sl:popover-header>
+        <form th:replace="~{dialog :: rename-form}"></form>
+      </sl:popover-content>
+    </sl:popover>
+  </div>
+  <p>Rename opens a popover with a form that posts with htmx: with errors the form comes back with them and the popover
+    stays open; after a valid rename the response header <code>HX-Trigger: sl-popover-close</code> closes it and the
+    name is updated.</p>
+  <p>Each member has a menu of row actions. Edit fetches a dialog into <code>#modal-root</code>, and
+    <code>&lt;sl:dialog open&gt;</code> shows it. Save posts the form with htmx: with errors the form comes back with
+    them and the dialog stays open; after a valid save the response header <code>HX-Trigger: sl-dialog-close</code>
+    closes it and the row is updated, with the focus back on the row's menu button.</p>
   <p>Delete fetches an alert dialog the same way. Its Delete button sends <code>hx-delete</code>; the response closes
     the alert dialog with the same event, removes the row and moves focus to a message saying what happened. Cancel,
     which has the focus when it opens, sends nothing.</p>
-  <p>Invite member opens a sheet that is in the page. Its form posts with htmx and swaps itself: with errors the sheet
-    stays open; after a valid invite an empty form comes back, the sheet closes and the new member is added to the
-    table.</p>
+  <p>Sort by is a menu of radio items: links that load the page sorted, which marks the chosen one. Invite member opens
+    a sheet that is in the page. Its form posts with htmx and swaps itself: with errors the sheet stays open; after a
+    valid invite an empty form comes back, the sheet closes and the new member is added to the table.</p>
   <div class="row">
+    <sl:dropdown-menu id="sort-members">
+      <sl:dropdown-menu-trigger variant="outline">
+        <sl:icon name="arrow-down-up"/>Sort by
+      </sl:dropdown-menu-trigger>
+      <sl:dropdown-menu-content>
+        <sl:dropdown-menu-radio-group aria-label="Sort by">
+          <sl:dropdown-menu-radio-item th:each="option : ${sortOptions}" as="a"
+                                       th:href="@{/dialog(sort=${option.key})}"
+                                       th:checked="${option.key == sort}">[[${option.value}]]
+          </sl:dropdown-menu-radio-item>
+        </sl:dropdown-menu-radio-group>
+      </sl:dropdown-menu-content>
+    </sl:dropdown-menu>
     <sl:button variant="outline" commandfor="invite-member" command="show-modal">
       <sl:slot name="icon-start"><sl:icon name="user-plus"/></sl:slot>Invite member</sl:button>
   </div>
@@ -77,11 +112,26 @@
     <td th:text="${member.name}">Ada Lovelace</td>
     <td th:text="${member.email}">ada@example.com</td>
     <td>
-      <!--/* The id lets htmx put focus back on the new button when the row is replaced after a save. */-->
-      <sl:button th:id="|edit-member-${member.id}|" variant="outline" size="sm" hx:get="@{/dialog/members/{id}/edit(id=${member.id})}"
-                 hx-target="#modal-root" th:aria-label="|Edit ${member.name}|">Edit</sl:button>
-      <sl:button variant="outline" size="sm" hx:get="@{/dialog/members/{id}/delete(id=${member.id})}"
-                 hx-target="#modal-root" th:aria-label="|Delete ${member.name}|">Delete</sl:button>
+      <!--/* The row actions. The trigger's id (member-1-actions-trigger) lets htmx put the focus back on it when the row
+        is replaced after a save. */-->
+      <sl:dropdown-menu th:id="|member-${member.id}-actions|">
+        <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" th:aria-label="|Actions for ${member.name}|">
+          <sl:icon name="ellipsis"/>
+        </sl:dropdown-menu-trigger>
+        <sl:dropdown-menu-content align="end">
+          <sl:dropdown-menu-item hx:get="@{/dialog/members/{id}/edit(id=${member.id})}" hx-target="#modal-root">
+            <sl:icon name="pencil"/>Edit
+          </sl:dropdown-menu-item>
+          <sl:dropdown-menu-item as="a" th:href="|mailto:${member.email}|">
+            <sl:icon name="mail"/>Send email
+          </sl:dropdown-menu-item>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-item variant="destructive" hx:get="@{/dialog/members/{id}/delete(id=${member.id})}"
+                                 hx-target="#modal-root">
+            <sl:icon name="trash-2"/>Delete
+          </sl:dropdown-menu-item>
+        </sl:dropdown-menu-content>
+      </sl:dropdown-menu>
     </td>
   </tr>
 </table>
@@ -96,6 +146,30 @@
   <table>
     <tbody hx-swap-oob="beforeend:#members-body"><tr th:replace="~{dialog :: member-row}"></tr></tbody>
   </table>
+</th:block>
+
+<!--/* The team's name; out of band after a valid rename (team-name-oob). */-->
+<h3 th:fragment="team-name" id="team-name" th:text="${teamName}"
+    th:attr="hx-swap-oob=${oob != null and oob ? 'true' : null}">Team Shadleaf</h3>
+<th:block th:fragment="team-name-oob" th:with="oob=true">
+  <h3 th:replace="~{dialog :: team-name}"></h3>
+</th:block>
+
+<form th:fragment="rename-form" id="rename-team-form" class="dialog-form" th:object="${renameForm}"
+      th:action="@{/dialog/team}" method="post" novalidate
+      hx:post="@{/dialog/team}" hx-target="this" hx-swap="outerHTML">
+  <sl:field th:field="*{teamName}">
+    <sl:field-label>Name</sl:field-label>
+    <sl:input/>
+    <sl:field-error/>
+  </sl:field>
+  <sl:button type="submit" size="sm">Save</sl:button>
+</form>
+
+<!--/* The answer to a valid rename: the form with the new name, and the heading out of band. */-->
+<th:block th:fragment="renamed">
+  <form th:replace="~{dialog :: rename-form}"></form>
+  <h3 th:replace="~{dialog :: team-name-oob}"></h3>
 </th:block>
 
 <!--/* The dialog htmx fetches. Only the form swaps itself, so the dialog stays open while it has errors. */-->

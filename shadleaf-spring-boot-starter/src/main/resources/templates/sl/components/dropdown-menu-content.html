@@ -1,0 +1,31 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The menu itself, inside <code>sl:dropdown-menu</code>: a popover next to its trigger, in the top
+      layer, holding the items, labels, groups and separators. It flips to the other side when there is no room.
+      </sl:description>
+    <sl:prop name="side" default="bottom" values="top right bottom left">The side of the trigger it opens on.
+      <code>right</code> and <code>left</code> are the end and the start of a line: on a right-to-left page a
+      <code>right</code> menu opens on the left.</sl:prop>
+    <sl:prop name="align" default="start" values="start center end">How it lines up with the trigger along that
+      side: <code>start</code> lines up the start edges.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* popover (auto): light dismiss, Escape, the top layer, and focus back on the trigger when it closes. The trigger
+  is its implicit anchor, which CSS anchor positioning places it against. tabindex="-1": it takes the focus itself when
+  a pointer opens it. slDropdownMenu adds the keyboard, aria-expanded on the trigger and closing after an item. */-->
+<div th:fragment="dropdown-menu-content"
+     class="dropdown-menu-content"
+     th:id="${slMenuId}"
+     role="menu"
+     popover
+     tabindex="-1"
+     x-data="slDropdownMenu"
+     th:attr="aria-labelledby=${slMenuTrigger != null and slMenuTrigger ? slMenuId + '-trigger' : null},
+              data-side=${props.unlessDefault('side')},
+              data-align=${props.unlessDefault('align')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

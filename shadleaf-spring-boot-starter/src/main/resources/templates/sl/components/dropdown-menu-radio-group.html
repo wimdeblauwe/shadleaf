@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A set of <code>sl:dropdown-menu-radio-item</code>s in a menu, one of which is chosen
+      (<code>role="group"</code>). Name it with <code>aria-label</code> when a label above it does not make the
+      choice clear.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="dropdown-menu-radio-group" class="dropdown-menu-radio-group" role="group" sl:attrs><sl:slot/></div>
+</body>
+</html>

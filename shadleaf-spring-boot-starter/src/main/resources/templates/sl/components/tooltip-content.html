@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The text of a <code>sl:tooltip</code> (<code>role="tooltip"</code>), after its trigger. Keep it
+      short and plain: it cannot hold links or buttons, and touch screens never show it. It flips to the other side
+      when there is no room.</sl:description>
+    <sl:prop name="side" default="top" values="top right bottom left">The side of the trigger it shows on.
+      <code>right</code> and <code>left</code> are the end and the start of a line.</sl:prop>
+    <sl:prop name="align" default="center" values="start center end">How it lines up with the trigger along that
+      side.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* popover="manual": showing it closes no open menu or popover, and slTooltip decides when it shows and hides. The
+  arrow is decoration; slTooltip sets data-placed to the side the tooltip ended up on, which the arrow follows. */-->
+<span th:fragment="tooltip-content"
+      class="tooltip-content"
+      role="tooltip"
+      popover="manual"
+      th:attr="data-side=${props.unlessDefault('side')},
+               data-align=${props.unlessDefault('align')}"
+      sl:attrs><sl:slot/><span class="tooltip-arrow" aria-hidden="true"></span></span>
+</body>
+</html>

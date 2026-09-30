@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Supporting text below a <code>sl:popover-title</code>, which describes the popover
+      (<code>aria-describedby</code>). Its id derives from the popover's
+      (<code>dimensions-description</code>).</sl:description>
+  </sl:props>
+</head>
+<body>
+<p th:fragment="popover-description"
+   class="popover-description"
+   th:attr="id=${slPopoverId != null ? slPopoverId + '-description' : null}"
+   sl:attrs><sl:slot/></p>
+</body>
+</html>

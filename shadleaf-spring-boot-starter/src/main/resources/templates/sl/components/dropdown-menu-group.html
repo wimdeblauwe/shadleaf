@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Items that belong together in a <code>sl:dropdown-menu-content</code>
+      (<code>role="group"</code>), usually between separators or under a label.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="dropdown-menu-group" class="dropdown-menu-group" role="group" sl:attrs><sl:slot/></div>
+</body>
+</html>

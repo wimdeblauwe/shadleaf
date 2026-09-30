@@ -1,0 +1,45 @@
+/*
+  Dropdown menu and its parts: structure only. Colour, radius, spacing, type and the gap to the trigger are identity and
+  live in the skins; where it sits and how it opens is in popup.css.
+
+  The content is at least as wide as its trigger, and scrolls when it is taller than the viewport. Items are one row:
+  an icon, the text, a shortcut at the end. A checkbox or radio item keeps room at the end for its check mark, which
+  shows while it is checked.
+*/
+@layer components {
+  .dropdown-menu-content {
+    @apply min-w-32 overflow-x-hidden overflow-y-auto border-0 outline-none;
+    min-inline-size: max(--spacing(32), anchor-size(self-inline));
+    max-block-size: calc(100dvh - --spacing(4));
+  }
+
+  /* The menu takes the focus when a pointer opens it, and its items show the focus; the menu itself never does. */
+  .dropdown-menu-content:focus-visible {
+    @apply outline-none;
+  }
+
+  .dropdown-menu-item,
+  .dropdown-menu-checkbox-item,
+  .dropdown-menu-radio-item {
+    @apply relative flex w-full cursor-default items-center text-start no-underline outline-none select-none
+      disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50
+      [&_svg]:pointer-events-none [&_svg]:shrink-0
+      forced-colors:focus:outline-2 forced-colors:focus:-outline-offset-2;
+  }
+
+  .dropdown-menu-item-indicator {
+    @apply pointer-events-none absolute flex items-center justify-center;
+  }
+
+  :is(.dropdown-menu-checkbox-item, .dropdown-menu-radio-item):not([aria-checked='true']) > .dropdown-menu-item-indicator {
+    @apply invisible;
+  }
+
+  .dropdown-menu-shortcut {
+    @apply ms-auto;
+  }
+
+  .dropdown-menu-separator {
+    @apply h-px;
+  }
+}

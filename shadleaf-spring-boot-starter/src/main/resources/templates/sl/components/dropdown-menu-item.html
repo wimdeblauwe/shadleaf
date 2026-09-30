@@ -1,0 +1,56 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>An action in a <code>sl:dropdown-menu-content</code>: a button, or with <code>as="a"</code> a
+      link. Every attribute that is not a prop (<code>hx-*</code>, <code>href</code>, <code>commandfor</code>,
+      <code>form</code>) passes through, and the menu closes once the item is chosen.</sl:description>
+    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
+      (<code>a</code>) for navigation.</sl:prop>
+    <sl:prop name="variant" default="default" values="default destructive"><code>destructive</code> for an item
+      that deletes something.</sl:prop>
+    <sl:prop name="type" default="button" values="button submit reset">Submit behaviour of a button item. Defaults
+      to <code>button</code>; <code>submit</code> submits the form it is in (or names with <code>form</code>).
+      </sl:prop>
+    <sl:prop name="inset" type="boolean">Indent the item to line up with items that start with an icon.</sl:prop>
+    <sl:prop name="disabled" type="boolean">Disable the item. The arrow keys skip it; a disabled link loses its
+      <code>href</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<th:block th:fragment="dropdown-menu-item"><th:block
+    th:replace="~{sl/components/dropdown-menu-item :: menu-item('menuitem', null)}"/></th:block>
+
+<!--/* Shared with sl:dropdown-menu-checkbox-item and sl:dropdown-menu-radio-item: slRole is the item's role, slChecked
+  null for a plain item and true or false for one with a state. Two branches for `as`, as sl:button has. No tabindex:
+  slDropdownMenu sets tabindex="-1" (the arrow keys move the focus, Tab leaves the menu), and without Alpine Tab
+  reaches every item. A disabled button cannot be focused or clicked (htmx included); a
+  disabled link loses its href. class and role are in th:attr, which runs before sl:attrs appends the caller's
+  class. */-->
+<th:block th:fragment="menu-item(slRole, slChecked)">
+  <button th:if="${props.as == 'button'}"
+          th:type="${props.type}"
+          th:disabled="${props.disabled}"
+          th:attr="class=${'dropdown-menu-' + (slChecked == null ? 'item' : slRole == 'menuitemradio' ? 'radio-item' : 'checkbox-item')},
+                   role=${slRole},
+                   aria-checked=${slChecked == null ? null : (slChecked ? 'true' : 'false')},
+                   data-variant=${slChecked == null ? props.unlessDefault('variant') : null},
+                   data-inset=${props.inset ? 'true' : null}"
+          sl:attrs
+          th:insert="~{sl/components/dropdown-menu-item :: menu-item-content(${slChecked})}"></button>
+  <a th:unless="${props.as == 'button'}"
+     th:attr="class=${'dropdown-menu-' + (slChecked == null ? 'item' : slRole == 'menuitemradio' ? 'radio-item' : 'checkbox-item')},
+              role=${slRole},
+              aria-checked=${slChecked == null ? null : (slChecked ? 'true' : 'false')},
+              aria-disabled=${props.disabled ? 'true' : null},
+              data-variant=${slChecked == null ? props.unlessDefault('variant') : null},
+              data-inset=${props.inset ? 'true' : null}"
+     sl:attrs="${props.disabled ? attrs.without('href') : attrs}"
+     th:insert="~{sl/components/dropdown-menu-item :: menu-item-content(${slChecked})}"></a>
+</th:block>
+
+<!--/* The check mark of a checkbox or radio item is always there; CSS shows it while aria-checked is true. */-->
+<th:block th:fragment="menu-item-content(slChecked)"><sl:slot/><span th:if="${slChecked != null}"
+    class="dropdown-menu-item-indicator"><sl:icon name="check"/></span></th:block>
+</body>
+</html>

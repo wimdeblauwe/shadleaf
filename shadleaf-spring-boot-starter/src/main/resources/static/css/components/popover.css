@@ -1,0 +1,14 @@
+/*
+  Popover and its parts: structure only. Colour, radius, spacing, type, width and the gap to the trigger are identity and
+  live in the skins; where it sits and how it opens is in popup.css.
+*/
+@layer components {
+  .popover-content {
+    @apply flex-col overflow-y-auto border-0 outline-none open:flex;
+    max-block-size: calc(100dvh - --spacing(4));
+  }
+
+  .popover-header {
+    @apply flex flex-col;
+  }
+}

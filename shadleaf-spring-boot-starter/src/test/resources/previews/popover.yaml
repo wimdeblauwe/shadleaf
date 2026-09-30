@@ -1,0 +1,48 @@
+# Scenarios for the popover's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: popover
+parts: [popover-trigger, popover-content, popover-header, popover-title, popover-description]
+scenarios:
+  - id: default
+    title: Popover
+    description: A small form next to its trigger. Focus moves to the first field when it opens.
+    source: |-
+      <sl:popover id="dimensions">
+        <sl:popover-trigger variant="outline">Open popover</sl:popover-trigger>
+        <sl:popover-content>
+          <sl:popover-header>
+            <sl:popover-title>Dimensions</sl:popover-title>
+            <sl:popover-description>Set the dimensions for the layer.</sl:popover-description>
+          </sl:popover-header>
+          <sl:field-group>
+            <sl:field orientation="horizontal" for="dimensions-width">
+              <sl:field-label>Width</sl:field-label>
+              <sl:input value="100%"/>
+            </sl:field>
+            <sl:field orientation="horizontal" for="dimensions-height">
+              <sl:field-label>Height</sl:field-label>
+              <sl:input value="25px"/>
+            </sl:field>
+          </sl:field-group>
+        </sl:popover-content>
+      </sl:popover>
+
+  - id: sides
+    title: Sides
+    description: side puts it on a side of its trigger; it flips when there is no room there.
+    source: |-
+      <sl:popover id="popover-top">
+        <sl:popover-trigger variant="outline">Top</sl:popover-trigger>
+        <sl:popover-content side="top" aria-label="Top">Opens above its trigger.</sl:popover-content>
+      </sl:popover>
+      <sl:popover id="popover-right">
+        <sl:popover-trigger variant="outline">Right</sl:popover-trigger>
+        <sl:popover-content side="right" aria-label="Right">Opens after its trigger.</sl:popover-content>
+      </sl:popover>
+      <sl:popover id="popover-bottom">
+        <sl:popover-trigger variant="outline">Bottom</sl:popover-trigger>
+        <sl:popover-content aria-label="Bottom">Opens below its trigger.</sl:popover-content>
+      </sl:popover>
+      <sl:popover id="popover-left">
+        <sl:popover-trigger variant="outline">Left</sl:popover-trigger>
+        <sl:popover-content side="left" aria-label="Left">Opens before its trigger.</sl:popover-content>
+      </sl:popover>

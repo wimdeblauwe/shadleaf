@@ -545,4 +545,105 @@
   .sheet-description {
     @apply text-sm text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground;
   }
+
+  /*
+    Dropdown menu. An item under the pointer or the keyboard has the focus, and the accent background shows it, as in
+    shadcn; keyboard focus adds the ring, which the accent alone (barely lighter than the menu) does not make visible.
+  */
+  .dropdown-menu-content {
+    @apply rounded-md bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100;
+    --popup-offset: --spacing(1);
+    --popup-slide: --spacing(2);
+  }
+
+  .dropdown-menu-item,
+  .dropdown-menu-checkbox-item,
+  .dropdown-menu-radio-item {
+    @apply gap-2 rounded-sm py-1.5 text-sm focus:bg-accent focus:text-accent-foreground
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .dropdown-menu-item:focus-visible,
+  .dropdown-menu-checkbox-item:focus-visible,
+  .dropdown-menu-radio-item:focus-visible {
+    @apply ring-[3px] ring-ring/50 ring-inset;
+  }
+
+  .dropdown-menu-item {
+    @apply px-2 data-inset:ps-8;
+  }
+
+  .dropdown-menu-checkbox-item,
+  .dropdown-menu-radio-item {
+    @apply ps-2 pe-8 data-inset:ps-8;
+  }
+
+  .dropdown-menu-item:not([data-variant]) {
+    @apply focus:**:text-accent-foreground;
+  }
+
+  .dropdown-menu-item[data-variant='destructive'] {
+    @apply text-destructive-legible focus:bg-destructive/10 dark:focus:bg-destructive/20 *:[svg]:text-destructive;
+  }
+
+  .dropdown-menu-item-indicator {
+    @apply end-2;
+  }
+
+  .dropdown-menu-label {
+    @apply px-2 py-1.5 text-xs font-medium text-muted-foreground data-inset:ps-8;
+  }
+
+  .dropdown-menu-separator {
+    @apply -mx-1 my-1 bg-border;
+  }
+
+  .dropdown-menu-shortcut {
+    @apply text-xs tracking-widest text-muted-foreground;
+  }
+
+  :focus > .dropdown-menu-shortcut {
+    @apply text-accent-foreground;
+  }
+
+  /* Popover */
+  .popover-content {
+    @apply w-72 gap-4 rounded-md bg-popover p-4 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10
+      duration-100;
+    --popup-offset: --spacing(1);
+    --popup-slide: --spacing(2);
+  }
+
+  /* The panel has the focus when it has no control of its own. */
+  .popover-content:focus-visible {
+    @apply ring-[3px] ring-ring/50;
+  }
+
+  .popover-header {
+    @apply gap-1 text-sm;
+  }
+
+  .popover-title {
+    @apply font-medium;
+  }
+
+  .popover-description {
+    @apply text-muted-foreground;
+  }
+
+  /* Tooltip. A kbd in it takes the tooltip's colours, as in shadcn. */
+  .tooltip-content {
+    @apply max-w-xs gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-xs text-background duration-100
+      has-[.kbd]:pe-1.5;
+    --popup-offset: --spacing(1.5);
+    --popup-slide: --spacing(2);
+  }
+
+  .tooltip-arrow {
+    @apply size-2.5 rounded-[2px] bg-foreground;
+  }
+
+  .tooltip-content .kbd {
+    @apply rounded-sm bg-background/20 text-background dark:bg-background/10;
+  }
 }

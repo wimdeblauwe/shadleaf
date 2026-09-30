@@ -162,3 +162,13 @@ The same works for an [alert dialog](../../components/alert-dialog/#confirming-w
 destructive button sends `hx-delete`, and the response closes it with the same event, removes the row and puts a
 message out of band that takes the focus. A [sheet](../../components/sheet/) is a dialog too, with the same `open`
 and `sl-dialog-close`.
+
+## Menus and popovers
+
+A [dropdown menu](../../components/dropdown-menu/) item takes `hx-*` like a button: it sends its request and the menu
+closes, with the focus back on the trigger. A menu of row actions whose response replaces the row keeps the focus in
+place when the trigger has an id, which it gets from the menu's (`th:id="|order-${order.id}-actions|"` gives
+`order-42-actions-trigger`). A form in a [popover](../../components/popover/#a-form-in-a-popover-with-htmx) closes
+it with `HX-Trigger: sl-popover-close`. A swap that replaces an open menu or popover leaves nothing open behind it,
+and back never restores one open: whether a popover is open is not part of the markup htmx saves.
+

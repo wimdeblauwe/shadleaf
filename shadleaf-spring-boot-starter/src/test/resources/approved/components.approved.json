@@ -333,6 +333,198 @@
       "description" : "Heading level (`role=\"heading\"` and `aria-level`). A dialog starts an outline of its own, so the default, 2, rarely needs changing."
     } ]
   }, {
+    "name" : "dropdown-menu",
+    "tag" : "sl:dropdown-menu",
+    "description" : "A menu of actions or links that opens from a button, on the browser's Popover API: it sits above the page, and Escape or a click outside closes it. Holds a `sl:dropdown-menu-trigger` and a `sl:dropdown-menu-content` with the items. Renders no element of its own. Needs Alpine for the arrow keys, typeahead and closing after an item is chosen.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The menu's id, which the trigger points at with `popovertarget`. Any other button can open it that way too.",
+      "required" : true
+    } ]
+  }, {
+    "name" : "dropdown-menu-checkbox-item",
+    "tag" : "sl:dropdown-menu-checkbox-item",
+    "description" : "An item in a `sl:dropdown-menu-content` that shows an on/off state with a check mark (`role=\"menuitemcheckbox\"`), such as a filter or a view setting. The state comes from the server: choosing the item does what its attributes say (a link to `?archived=true`, an `hx-post`), and the page or fragment that comes back shows the new state. Give it its text as content (`[[${...}]]`), not with `th:text`, which would replace the check mark too. Otherwise as `sl:dropdown-menu-item`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "checked",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Whether the setting is on (`aria-checked`)."
+    }, {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`)."
+    }, {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "submit", "reset" ],
+      "description" : "Submit behaviour of a button item."
+    }, {
+      "name" : "inset",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Indent the item to line up with items that start with an icon."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Disable the item. The arrow keys skip it."
+    } ]
+  }, {
+    "name" : "dropdown-menu-content",
+    "tag" : "sl:dropdown-menu-content",
+    "description" : "The menu itself, inside `sl:dropdown-menu`: a popover next to its trigger, in the top layer, holding the items, labels, groups and separators. It flips to the other side when there is no room.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "side",
+      "type" : "enum",
+      "defaultValue" : "bottom",
+      "values" : [ "top", "right", "bottom", "left" ],
+      "description" : "The side of the trigger it opens on. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` menu opens on the left."
+    }, {
+      "name" : "align",
+      "type" : "enum",
+      "defaultValue" : "start",
+      "values" : [ "start", "center", "end" ],
+      "description" : "How it lines up with the trigger along that side: `start` lines up the start edges."
+    } ]
+  }, {
+    "name" : "dropdown-menu-group",
+    "tag" : "sl:dropdown-menu-group",
+    "description" : "Items that belong together in a `sl:dropdown-menu-content` (`role=\"group\"`), usually between separators or under a label.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "dropdown-menu-item",
+    "tag" : "sl:dropdown-menu-item",
+    "description" : "An action in a `sl:dropdown-menu-content`: a button, or with `as=\"a\"` a link. Every attribute that is not a prop (`hx-*`, `href`, `commandfor`, `form`) passes through, and the menu closes once the item is chosen.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`) for navigation."
+    }, {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "destructive" ],
+      "description" : "`destructive` for an item that deletes something."
+    }, {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "submit", "reset" ],
+      "description" : "Submit behaviour of a button item. Defaults to `button`; `submit` submits the form it is in (or names with `form`)."
+    }, {
+      "name" : "inset",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Indent the item to line up with items that start with an icon."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Disable the item. The arrow keys skip it; a disabled link loses its `href`."
+    } ]
+  }, {
+    "name" : "dropdown-menu-label",
+    "tag" : "sl:dropdown-menu-label",
+    "description" : "A heading for the items below it in a `sl:dropdown-menu-content`. It cannot be chosen, and the arrow keys pass it by.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "inset",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Indent the label to line up with items that start with an icon."
+    } ]
+  }, {
+    "name" : "dropdown-menu-radio-group",
+    "tag" : "sl:dropdown-menu-radio-group",
+    "description" : "A set of `sl:dropdown-menu-radio-item`s in a menu, one of which is chosen (`role=\"group\"`). Name it with `aria-label` when a label above it does not make the choice clear.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "dropdown-menu-radio-item",
+    "tag" : "sl:dropdown-menu-radio-item",
+    "description" : "One of a set of choices in a `sl:dropdown-menu-radio-group`, with a check mark on the chosen one (`role=\"menuitemradio\"`), such as the sort order of a list. The server marks the chosen one `checked`: each item is a link (`?sort=name`) or a request, and the page or fragment that comes back shows the new choice. Give it its text as content (`[[${...}]]`), not with `th:text`, which would replace the check mark too. Otherwise as `sl:dropdown-menu-item`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "checked",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Whether this is the chosen item (`aria-checked`)."
+    }, {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`)."
+    }, {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "submit", "reset" ],
+      "description" : "Submit behaviour of a button item."
+    }, {
+      "name" : "inset",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Indent the item to line up with items that start with an icon."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Disable the item. The arrow keys skip it."
+    } ]
+  }, {
+    "name" : "dropdown-menu-separator",
+    "tag" : "sl:dropdown-menu-separator",
+    "description" : "A line between groups of items in a `sl:dropdown-menu-content` (`role=\"separator\"`).",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "dropdown-menu-shortcut",
+    "tag" : "sl:dropdown-menu-shortcut",
+    "description" : "A keyboard shortcut at the end of a `sl:dropdown-menu-item`, such as `⌘S`. It only shows the shortcut; the application handles the keys. Typeahead ignores it.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "dropdown-menu-trigger",
+    "tag" : "sl:dropdown-menu-trigger",
+    "description" : "The button that opens and closes a `sl:dropdown-menu`: a `sl:button` with `popovertarget` set to the menu, which names the menu. Arrow down opens the menu on its first item, arrow up on its last. Any other attribute passes through to the `sl:button`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
+      "description" : "Visual style of the button, as on `sl:button`."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm", "icon-lg" ],
+      "description" : "Size of the button, as on `sl:button`. The `icon` sizes need an `aria-label`."
+    } ]
+  }, {
     "name" : "field",
     "tag" : "sl:field",
     "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
@@ -494,6 +686,77 @@
       "description" : "Height of the select. It replaces HTML's `size` attribute, which turns a select into a list box."
     } ]
   }, {
+    "name" : "popover",
+    "tag" : "sl:popover",
+    "description" : "Rich content in a panel that opens from a button, on the browser's Popover API: it sits above the page next to its trigger, and Escape, a click outside or moving the focus out of it closes it. Holds a `sl:popover-trigger` and a `sl:popover-content`. Renders no element of its own.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The popover's id, which the trigger points at with `popovertarget`. The title and description ids derive from it.",
+      "required" : true
+    } ]
+  }, {
+    "name" : "popover-content",
+    "tag" : "sl:popover-content",
+    "description" : "The panel of a `sl:popover`, next to its trigger in the top layer. It is a non-modal dialog: name it with a `sl:popover-title` (in a `sl:popover-header`) or an `aria-label`. When it opens, focus moves to its first control. It flips to the other side when there is no room.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "side",
+      "type" : "enum",
+      "defaultValue" : "bottom",
+      "values" : [ "top", "right", "bottom", "left" ],
+      "description" : "The side of the trigger it opens on. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` popover opens on the left."
+    }, {
+      "name" : "align",
+      "type" : "enum",
+      "defaultValue" : "center",
+      "values" : [ "start", "center", "end" ],
+      "description" : "How it lines up with the trigger along that side."
+    } ]
+  }, {
+    "name" : "popover-description",
+    "tag" : "sl:popover-description",
+    "description" : "Supporting text below a `sl:popover-title`, which describes the popover (`aria-describedby`). Its id derives from the popover's (`dimensions-description`).",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "popover-header",
+    "tag" : "sl:popover-header",
+    "description" : "The top of a `sl:popover-content`, holding `sl:popover-title` and `sl:popover-description`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "popover-title",
+    "tag" : "sl:popover-title",
+    "description" : "The title of a `sl:popover`, inside `sl:popover-header`, which names the popover (`aria-labelledby`). Its id derives from the popover's (`dimensions-title`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`); without it, plain text, as in shadcn/ui."
+    } ]
+  }, {
+    "name" : "popover-trigger",
+    "tag" : "sl:popover-trigger",
+    "description" : "The button that opens and closes a `sl:popover`: a `sl:button` with `popovertarget` set to the popover. Any other attribute passes through to the `sl:button`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
+      "description" : "Visual style of the button, as on `sl:button`."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm", "icon-lg" ],
+      "description" : "Size of the button, as on `sl:button`. The `icon` sizes need an `aria-label`."
+    } ]
+  }, {
     "name" : "radio-group",
     "tag" : "sl:radio-group",
     "description" : "A group of `sl:radio-group-item`s, announced as a radio group. Name it with `aria-labelledby` (pointing at the question) or `aria-label`. The items share their `name`, or their `th:field`, which is what makes them one choice.",
@@ -625,5 +888,35 @@
     "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
     "declared" : true,
     "props" : [ ]
+  }, {
+    "name" : "tooltip",
+    "tag" : "sl:tooltip",
+    "description" : "A short text that shows while the pointer rests on an element or the keyboard focuses it, on the browser's Popover API. The first element inside is the trigger, any focusable element (a `sl:button`, a link); the `sl:tooltip-content` after it describes it (`aria-describedby`). Escape hides it. Needs Alpine.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "delay",
+      "type" : "number",
+      "defaultValue" : "300",
+      "values" : [ ],
+      "description" : "How long the pointer rests on the trigger before the tooltip shows, in milliseconds. Keyboard focus shows it at once, and so does moving to another trigger right after a tooltip hid."
+    } ]
+  }, {
+    "name" : "tooltip-content",
+    "tag" : "sl:tooltip-content",
+    "description" : "The text of a `sl:tooltip` (`role=\"tooltip\"`), after its trigger. Keep it short and plain: it cannot hold links or buttons, and touch screens never show it. It flips to the other side when there is no room.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "side",
+      "type" : "enum",
+      "defaultValue" : "top",
+      "values" : [ "top", "right", "bottom", "left" ],
+      "description" : "The side of the trigger it shows on. `right` and `left` are the end and the start of a line."
+    }, {
+      "name" : "align",
+      "type" : "enum",
+      "defaultValue" : "center",
+      "values" : [ "start", "center", "end" ],
+      "description" : "How it lines up with the trigger along that side."
+    } ]
   } ]
 }

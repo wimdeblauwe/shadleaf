@@ -1,0 +1,42 @@
+/*
+  Tooltip: structure only. Colour, radius, spacing, type and the gap to the trigger are identity and live in the skins;
+  where it sits and how it shows is in popup.css.
+
+  The wrapper has no box, so the trigger keeps its place in the layout. The arrow is a small square, turned 45 degrees,
+  half under the middle of the edge facing the trigger: data-placed, which slTooltip sets after showing it, says which
+  edge that is after a flip. Physical sides: data-placed is where it ended up on the screen.
+*/
+@layer components {
+  .tooltip {
+    @apply contents;
+  }
+
+  .tooltip-content {
+    @apply w-fit overflow-visible border-0 open:inline-flex items-center;
+  }
+
+  .tooltip-arrow {
+    @apply absolute rotate-45;
+  }
+
+  .tooltip-content:not([data-placed]) > .tooltip-arrow,
+  .tooltip-content[data-placed='top'] > .tooltip-arrow {
+    @apply left-1/2 top-full;
+    translate: -50% calc(-50% - 2px);
+  }
+
+  .tooltip-content[data-placed='bottom'] > .tooltip-arrow {
+    @apply left-1/2 bottom-full;
+    translate: -50% calc(50% + 2px);
+  }
+
+  .tooltip-content[data-placed='left'] > .tooltip-arrow {
+    @apply top-1/2 left-full;
+    translate: calc(-50% - 2px) -50%;
+  }
+
+  .tooltip-content[data-placed='right'] > .tooltip-arrow {
+    @apply top-1/2 right-full;
+    translate: calc(50% + 2px) -50%;
+  }
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The panel of a <code>sl:popover</code>, next to its trigger in the top layer. It is a
+      non-modal dialog: name it with a <code>sl:popover-title</code> (in a <code>sl:popover-header</code>) or an
+      <code>aria-label</code>. When it opens, focus moves to its first control. It flips to the other side when there
+      is no room.</sl:description>
+    <sl:prop name="side" default="bottom" values="top right bottom left">The side of the trigger it opens on.
+      <code>right</code> and <code>left</code> are the end and the start of a line: on a right-to-left page a
+      <code>right</code> popover opens on the left.</sl:prop>
+    <sl:prop name="align" default="center" values="start center end">How it lines up with the trigger along that
+      side.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* popover (auto): light dismiss, Escape, the top layer, and focus back on the trigger when it closes. The trigger
+  is its implicit anchor. A title nested in another popover is that one's, hence 'popover' in slots.contains. */-->
+<div th:fragment="popover-content"
+     class="popover-content"
+     th:id="${slPopoverId}"
+     role="dialog"
+     popover
+     tabindex="-1"
+     x-data="slPopover"
+     th:attr="aria-labelledby=${slots.contains('popover-title', 'popover') ? slPopoverId + '-title' : null},
+              aria-describedby=${slots.contains('popover-description', 'popover') ? slPopoverId + '-description' : null},
+              data-side=${props.unlessDefault('side')},
+              data-align=${props.unlessDefault('align')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

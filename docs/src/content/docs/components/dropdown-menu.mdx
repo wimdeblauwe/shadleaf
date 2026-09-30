@@ -1,0 +1,227 @@
+---
+title: Dropdown Menu
+description: A menu of actions or links that opens from a button, on the browser's Popover API.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="dropdown-menu--default" />
+
+## Built from parts
+
+A dropdown menu is `<sl:dropdown-menu>` with a `<sl:dropdown-menu-trigger>` and a `<sl:dropdown-menu-content>`
+holding the items, as in shadcn/ui. `<sl:dropdown-menu>` renders no element of its own: it gives the parts their ids.
+
+```html
+<sl:dropdown-menu id="account-menu">
+  <sl:dropdown-menu-trigger variant="outline">Open</sl:dropdown-menu-trigger>
+  <sl:dropdown-menu-content>
+    <sl:dropdown-menu-label>My Account</sl:dropdown-menu-label>
+    <sl:dropdown-menu-group>
+      <sl:dropdown-menu-item as="a" th:href="@{/profile}">
+        Profile <sl:dropdown-menu-shortcut>⇧⌘P</sl:dropdown-menu-shortcut>
+      </sl:dropdown-menu-item>
+      <sl:dropdown-menu-item as="a" th:href="@{/settings}">Settings</sl:dropdown-menu-item>
+    </sl:dropdown-menu-group>
+    <sl:dropdown-menu-separator/>
+    <sl:dropdown-menu-item type="submit" form="logout-form">Log out</sl:dropdown-menu-item>
+  </sl:dropdown-menu-content>
+</sl:dropdown-menu>
+```
+
+The menu is a [popover](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), so the browser does the hard
+parts: the menu is drawn above everything else (no `z-index` to manage, no portal), Escape or a click outside closes
+it, and closing returns focus to the trigger. The trigger is a `<sl:button>` with `popovertarget` set to the menu's
+`id`; it takes the button's `variant` and `size`, and any other attribute passes through. Any other button can open
+the menu the same way: `<sl:button popovertarget="account-menu">`.
+
+The menu is labelled by its trigger. A menu opened by a button of your own needs an `aria-label` on
+`<sl:dropdown-menu-content>`.
+
+## Items: links and buttons
+
+An item is a button, or with `as="a"` a link. Every attribute that is not a prop passes through, so an item does
+anything a button or link does, and the menu closes once it is chosen, with focus back on the trigger:
+
+| Item | What it does |
+| --- | --- |
+| `<sl:dropdown-menu-item as="a" th:href="@{/orders/{id}(id=${order.id})}">` | Navigates. |
+| `<sl:dropdown-menu-item hx:post="@{/orders/{id}/duplicate(id=${order.id})}">` | Sends an htmx request. |
+| `<sl:dropdown-menu-item type="submit" form="logout-form">` | Submits a form (a POST logout). |
+| `<sl:dropdown-menu-item commandfor="rename-dialog" command="show-modal">` | Opens a [dialog](../dialog/); closing it returns focus to the menu's trigger. |
+
+`variant="destructive"` is for an item that deletes something. `disabled` disables an item: the arrow keys skip it, a
+disabled button cannot be clicked (htmx included), and a disabled link loses its `href`. `inset` indents an item (or a
+label) to line up with items that start with an icon.
+
+<ComponentPreview id="dropdown-menu--icons" />
+
+`<sl:dropdown-menu-shortcut>` shows a keyboard shortcut at the end of an item. It only shows it: your application
+handles the keys.
+
+## Checkbox and radio items
+
+A checkbox item shows an on/off state with a check mark (`role="menuitemcheckbox"`), a radio item one choice out of a
+few (`role="menuitemradio"`, inside `<sl:dropdown-menu-radio-group>`). The state comes from the server: `checked`
+marks it, and choosing an item does what its attributes say, usually a link to the same page with another parameter.
+The page that comes back shows the new state.
+
+```html
+<sl:dropdown-menu-radio-group aria-label="Sort by">
+  <sl:dropdown-menu-radio-item as="a" th:href="@{/orders(sort='name')}" th:checked="${sort == 'name'}">
+    Name
+  </sl:dropdown-menu-radio-item>
+  <sl:dropdown-menu-radio-item as="a" th:href="@{/orders(sort='date')}" th:checked="${sort == 'date'}">
+    Date
+  </sl:dropdown-menu-radio-item>
+</sl:dropdown-menu-radio-group>
+```
+
+Give such an item its text as content (`[[${option.label}]]`), not with `th:text`: that attribute passes through to
+the item and would replace its check mark too.
+
+With an `hx-post` instead of a link, return the menu again (or the part of the page that holds it), so the check mark
+follows the server. Nothing changes the check mark in the browser: it always shows what the server knows.
+
+<ComponentPreview id="dropdown-menu--checkboxes" />
+
+<ComponentPreview id="dropdown-menu--radio-group" />
+
+## Keyboard
+
+| Key | On the trigger | In the menu |
+| --- | --- | --- |
+| Enter, Space | Opens the menu on its first item | Chooses the item (Space works on links too) |
+| Arrow down | Opens the menu on its first item | Next item |
+| Arrow up | Opens the menu on its last item | Previous item |
+| Home, End | | First, last item |
+| A letter | | The next item whose text starts with it; typing quickly matches a prefix |
+| Escape | | Closes the menu; focus returns to the trigger |
+| Tab | | Closes the menu and moves on |
+
+Disabled items, labels and separators are skipped. The item under the pointer takes the focus, so pointer and
+keyboard highlight items the same way; only keyboard focus draws the focus ring.
+
+## Position
+
+The menu opens below its trigger, lined up with its start. `side="top|right|bottom|left"` and
+`align="start|center|end"` on `<sl:dropdown-menu-content>` change that, and the menu flips to the other side when there
+is no room. `right` and `left` are the end and the start of a line, so they swap on a right-to-left page.
+
+It is placed with [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning),
+which every current browser supports (Chrome and Edge 133, Safari 26, Firefox 147). In older ones the menu's small
+Alpine component places it from the trigger's position instead.
+
+## Row actions
+
+A menu per row of a table takes its id from an expression; the parts derive theirs from it.
+
+<ComponentPreview id="dropdown-menu--row-actions" />
+
+```html
+<tr th:each="order : ${orders}" th:id="|order-${order.id}|">
+  <td th:text="${order.number}">1042</td>
+  <td>
+    <sl:dropdown-menu th:id="|order-${order.id}-actions|">
+      <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" th:aria-label="|Actions for order ${order.number}|">
+        <sl:icon name="ellipsis"/>
+      </sl:dropdown-menu-trigger>
+      <sl:dropdown-menu-content align="end">
+        <sl:dropdown-menu-item hx:get="@{/orders/{id}/edit(id=${order.id})}" hx-target="#modal-root">
+          Edit
+        </sl:dropdown-menu-item>
+        <sl:dropdown-menu-separator/>
+        <sl:dropdown-menu-item variant="destructive" hx:get="@{/orders/{id}/delete(id=${order.id})}"
+                               hx-target="#modal-root">Delete</sl:dropdown-menu-item>
+      </sl:dropdown-menu-content>
+    </sl:dropdown-menu>
+  </td>
+</tr>
+```
+
+The trigger's id is the menu's id plus `-trigger` (`order-1042-actions-trigger`). When a response replaces the row,
+htmx puts the focus back on the element with the same id in the new row, so the user does not lose their place. An item
+that fetches a [dialog](../dialog/#rendered-by-the-server-htmx) closes the menu first, so the dialog returns the
+focus to the trigger when it closes.
+
+## With htmx
+
+- A swap that replaces an open menu leaves nothing behind: the new menu starts closed and works like the old one.
+- Back never brings a menu back open: whether a popover is open is not part of the markup htmx saves in its history
+  cache, and the restored menu starts again.
+- An `hx-*` item sends its request and the menu closes; an `hx-target` can be anything, the menu's own row included.
+
+## Left out
+
+These shadcn/Radix parts and props have no counterpart, on purpose:
+
+- **Sub-menus** (`DropdownMenuSub`, `-SubTrigger`, `-SubContent`). They need a lot more JavaScript (hover intent,
+  a pointer grace area towards the sub-menu, arrow right and left) and are hard to use on a touch screen and with a
+  screen reader. A server-rendered menu is short: flatten it with labels and groups, or open a dialog.
+- **`DropdownMenuPortal`**: the top layer does what the portal is for.
+- **State in the browser** (`open`/`onOpenChange`, `checked`/`onCheckedChange`, `value`/`onValueChange`, `onSelect`):
+  the menu is opened by its trigger, an item is chosen by what its attributes say, and checked states come from the
+  server.
+- **`modal`**: the menu never makes the rest of the page inert; a click outside closes it.
+- **`loop`**: arrow keys stop at the first and last item, Radix's default.
+
+## Attributes
+
+### sl:dropdown-menu
+
+<ComponentAttributes component="dropdown-menu" />
+
+### sl:dropdown-menu-trigger
+
+<ComponentAttributes component="dropdown-menu-trigger" />
+
+### sl:dropdown-menu-content
+
+<ComponentAttributes component="dropdown-menu-content" />
+
+### sl:dropdown-menu-item
+
+<ComponentAttributes component="dropdown-menu-item" />
+
+### sl:dropdown-menu-checkbox-item
+
+<ComponentAttributes component="dropdown-menu-checkbox-item" />
+
+### sl:dropdown-menu-radio-group
+
+<ComponentAttributes component="dropdown-menu-radio-group" />
+
+### sl:dropdown-menu-radio-item
+
+<ComponentAttributes component="dropdown-menu-radio-item" />
+
+### sl:dropdown-menu-label
+
+<ComponentAttributes component="dropdown-menu-label" />
+
+### sl:dropdown-menu-group
+
+<ComponentAttributes component="dropdown-menu-group" />
+
+### sl:dropdown-menu-separator
+
+<ComponentAttributes component="dropdown-menu-separator" />
+
+### sl:dropdown-menu-shortcut
+
+<ComponentAttributes component="dropdown-menu-shortcut" />
+
+## JavaScript
+
+A small Alpine component, `slDropdownMenu`, adds the menu's keyboard and behaviour: `<sl:dropdown-menu-content>`
+renders as `<div class="dropdown-menu-content" role="menu" popover x-data="slDropdownMenu">`.
+
+- **The basics work without Alpine.** The trigger opens and closes the menu, Escape and a click outside close it, and
+  items work with the mouse and with Tab. Alpine is needed for the arrow keys and typeahead, for closing the menu after
+  an item is chosen, for `aria-expanded` on the trigger, and for placing the menu in browsers without CSS anchor
+  positioning. Alpine is included by default; see [Alpine](../../guides/alpine/).
+- **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
+  enough.
+- **Keep your own `x-data` off `<sl:dropdown-menu-content>`.** An element has one `x-data`, and attributes on it end up
+  on the menu, so yours would replace `slDropdownMenu`. Put it on an element inside the menu.

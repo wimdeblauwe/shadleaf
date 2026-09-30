@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A heading for the items below it in a <code>sl:dropdown-menu-content</code>. It cannot be
+      chosen, and the arrow keys pass it by.</sl:description>
+    <sl:prop name="inset" type="boolean">Indent the label to line up with items that start with an icon.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="dropdown-menu-label"
+     class="dropdown-menu-label"
+     th:attr="data-inset=${props.inset ? 'true' : null}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

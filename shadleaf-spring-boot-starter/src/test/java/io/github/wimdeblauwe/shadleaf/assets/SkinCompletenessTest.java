@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.jspecify.annotations.Nullable;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -70,7 +71,12 @@ class SkinCompletenessTest {
         String rootClass = null;
         // Focusable elements by their selector (the first class), from the plain render and every enum value.
         Map<String, Element> focusable = new LinkedHashMap<>();
-        addFocusable(renderRoot(name, null, null), focusable);
+        Element plain = renderRoot(name, null, null);
+        if (plain == null) {
+          // A root that renders no element of its own (sl:dropdown-menu): nothing to style.
+          continue;
+        }
+        addFocusable(plain, focusable);
         for (PropDefinition prop : definition.props().values()) {
           if (prop.type() != PropType.ENUM) {
             continue;
@@ -145,7 +151,8 @@ class SkinCompletenessTest {
         || element.tagName().equals("input") && !WITHOUT_READONLY.contains(element.attr("type"));
   }
 
-  private static Element renderRoot(String component, @Nullable String prop, @Nullable String value) {
+  /** The rendered root element, or {@code null} for a component that renders none of its own. */
+  private static @Nullable Element renderRoot(String component, @Nullable String prop, @Nullable String value) {
     // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>; every other required prop gets "x".
     // Inside a form object, for the components that read one (sl:form-errors).
     StringBuilder propAttribute = new StringBuilder(prop == null ? "" : "%s=\"%s\" ".formatted(prop, value));
@@ -153,8 +160,9 @@ class SkinCompletenessTest {
         .filter(PropDefinition::required)
         .filter(required -> !required.name().equals(prop) && !required.name().equals("name"))
         .forEach(required -> propAttribute.append("%s=\"x\" ".formatted(required.name())));
-    return RENDERER.render(FormModel.wrap("<sl:%s %saria-label=\"x\" name=\"x\">x</sl:%s>"
-        .formatted(component, propAttribute, component)), FORM.variables()).root();
+    Elements rendered = RENDERER.render(FormModel.wrap("<sl:%s %saria-label=\"x\" name=\"x\">x</sl:%s>"
+        .formatted(component, propAttribute, component)), FORM.variables()).document().body().children();
+    return rendered.isEmpty() ? null : rendered.first();
   }
 
   private static Set<String> selectorLists(String css) {

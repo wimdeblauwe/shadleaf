@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One of a set of choices in a <code>sl:dropdown-menu-radio-group</code>, with a check mark on the
+      chosen one (<code>role="menuitemradio"</code>), such as the sort order of a list. The server marks the chosen
+      one <code>checked</code>: each item is a link (<code>?sort=name</code>) or a request, and the page or fragment
+      that comes back shows the new choice. Give it its text as content (<code>[[${...}]]</code>), not with
+      <code>th:text</code>, which would replace the check mark too. Otherwise as
+      <code>sl:dropdown-menu-item</code>.</sl:description>
+    <sl:prop name="checked" type="boolean">Whether this is the chosen item (<code>aria-checked</code>).</sl:prop>
+    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
+      (<code>a</code>).</sl:prop>
+    <sl:prop name="type" default="button" values="button submit reset">Submit behaviour of a button item.</sl:prop>
+    <sl:prop name="inset" type="boolean">Indent the item to line up with items that start with an icon.</sl:prop>
+    <sl:prop name="disabled" type="boolean">Disable the item. The arrow keys skip it.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<th:block th:fragment="dropdown-menu-radio-item"><th:block
+    th:replace="~{sl/components/dropdown-menu-item :: menu-item('menuitemradio', ${props.checked})}"/></th:block>
+</body>
+</html>

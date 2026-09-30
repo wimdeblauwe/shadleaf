@@ -1,0 +1,20 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A menu of actions or links that opens from a button, on the browser's Popover API: it sits
+      above the page, and Escape or a click outside closes it. Holds a <code>sl:dropdown-menu-trigger</code> and a
+      <code>sl:dropdown-menu-content</code> with the items. Renders no element of its own. Needs Alpine for the arrow
+      keys, typeahead and closing after an item is chosen.</sl:description>
+    <sl:prop name="id" required>The menu's id, which the trigger points at with <code>popovertarget</code>. Any other
+      button can open it that way too.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* No element: the trigger and the content are the elements. slMenuId is what the parts read (slot content sees
+  this template's local variables); slMenuTrigger tells the content whether a trigger part names it. */-->
+<th:block th:fragment="dropdown-menu"
+          th:with="slMenuId=${props.id},
+                   slMenuTrigger=${slots.contains('dropdown-menu-trigger', 'dropdown-menu')}"><sl:slot/></th:block>
+</body>
+</html>

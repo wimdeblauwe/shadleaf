@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Rich content in a panel that opens from a button, on the browser's Popover API: it sits above
+      the page next to its trigger, and Escape, a click outside or moving the focus out of it closes it. Holds a
+      <code>sl:popover-trigger</code> and a <code>sl:popover-content</code>. Renders no element of its own.
+      </sl:description>
+    <sl:prop name="id" required>The popover's id, which the trigger points at with <code>popovertarget</code>. The
+      title and description ids derive from it.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* No element: the trigger and the content are the elements. slPopoverId is what the parts read. */-->
+<th:block th:fragment="popover" th:with="slPopoverId=${props.id}"><sl:slot/></th:block>
+</body>
+</html>

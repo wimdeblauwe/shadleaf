@@ -1,0 +1,106 @@
+# Scenarios for the dropdown menu's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: dropdown-menu
+parts: [dropdown-menu-trigger, dropdown-menu-content, dropdown-menu-item, dropdown-menu-checkbox-item,
+        dropdown-menu-radio-group, dropdown-menu-radio-item, dropdown-menu-label, dropdown-menu-group,
+        dropdown-menu-separator, dropdown-menu-shortcut]
+scenarios:
+  - id: default
+    title: Dropdown menu
+    description: Labels, groups, separators and shortcuts; links and buttons; a disabled item.
+    source: |-
+      <sl:dropdown-menu id="account-menu">
+        <sl:dropdown-menu-trigger variant="outline">Open</sl:dropdown-menu-trigger>
+        <sl:dropdown-menu-content>
+          <sl:dropdown-menu-label>My Account</sl:dropdown-menu-label>
+          <sl:dropdown-menu-group>
+            <sl:dropdown-menu-item as="a" href="/profile">
+              Profile <sl:dropdown-menu-shortcut>⇧⌘P</sl:dropdown-menu-shortcut>
+            </sl:dropdown-menu-item>
+            <sl:dropdown-menu-item as="a" href="/billing">
+              Billing <sl:dropdown-menu-shortcut>⌘B</sl:dropdown-menu-shortcut>
+            </sl:dropdown-menu-item>
+            <sl:dropdown-menu-item as="a" href="/settings">
+              Settings <sl:dropdown-menu-shortcut>⌘S</sl:dropdown-menu-shortcut>
+            </sl:dropdown-menu-item>
+          </sl:dropdown-menu-group>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-group>
+            <sl:dropdown-menu-item as="a" href="/team">Team</sl:dropdown-menu-item>
+            <sl:dropdown-menu-item>
+              New Team <sl:dropdown-menu-shortcut>⌘T</sl:dropdown-menu-shortcut>
+            </sl:dropdown-menu-item>
+          </sl:dropdown-menu-group>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-item as="a" href="https://github.com/wimdeblauwe/shadleaf">GitHub</sl:dropdown-menu-item>
+          <sl:dropdown-menu-item as="a" href="/support">Support</sl:dropdown-menu-item>
+          <sl:dropdown-menu-item disabled>API</sl:dropdown-menu-item>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-item type="submit" form="logout-form">
+            Log out <sl:dropdown-menu-shortcut>⇧⌘Q</sl:dropdown-menu-shortcut>
+          </sl:dropdown-menu-item>
+        </sl:dropdown-menu-content>
+      </sl:dropdown-menu>
+      <form id="logout-form" method="post" action="/logout"></form>
+
+  - id: icons
+    title: Icons and a destructive item
+    description: An icon at the start of an item; variant="destructive" for one that deletes.
+    source: |-
+      <sl:dropdown-menu id="file-menu">
+        <sl:dropdown-menu-trigger variant="outline">File</sl:dropdown-menu-trigger>
+        <sl:dropdown-menu-content>
+          <sl:dropdown-menu-item><sl:icon name="file"/>New file</sl:dropdown-menu-item>
+          <sl:dropdown-menu-item><sl:icon name="folder"/>New folder</sl:dropdown-menu-item>
+          <sl:dropdown-menu-item><sl:icon name="share"/>Share</sl:dropdown-menu-item>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-item variant="destructive"><sl:icon name="trash-2"/>Delete</sl:dropdown-menu-item>
+        </sl:dropdown-menu-content>
+      </sl:dropdown-menu>
+
+  - id: checkboxes
+    title: Checkbox items
+    description: Settings that are on or off. The server renders the state; choosing an item sends a request (here a
+      link) and the page that comes back shows the new state.
+    source: |-
+      <sl:dropdown-menu id="view-menu">
+        <sl:dropdown-menu-trigger variant="outline">View</sl:dropdown-menu-trigger>
+        <sl:dropdown-menu-content>
+          <sl:dropdown-menu-label>Appearance</sl:dropdown-menu-label>
+          <sl:dropdown-menu-checkbox-item as="a" href="?status-bar=false" checked>Status Bar</sl:dropdown-menu-checkbox-item>
+          <sl:dropdown-menu-checkbox-item as="a" href="?activity-bar=true" disabled>Activity Bar</sl:dropdown-menu-checkbox-item>
+          <sl:dropdown-menu-checkbox-item as="a" href="?panel=true">Panel</sl:dropdown-menu-checkbox-item>
+        </sl:dropdown-menu-content>
+      </sl:dropdown-menu>
+
+  - id: radio-group
+    title: Radio items
+    description: One choice out of a few, such as where a panel goes or how a list is sorted.
+    source: |-
+      <sl:dropdown-menu id="position-menu">
+        <sl:dropdown-menu-trigger variant="outline">Panel position</sl:dropdown-menu-trigger>
+        <sl:dropdown-menu-content>
+          <sl:dropdown-menu-label>Panel Position</sl:dropdown-menu-label>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-radio-group aria-label="Panel position">
+            <sl:dropdown-menu-radio-item as="a" href="?position=top">Top</sl:dropdown-menu-radio-item>
+            <sl:dropdown-menu-radio-item as="a" href="?position=bottom" checked>Bottom</sl:dropdown-menu-radio-item>
+            <sl:dropdown-menu-radio-item as="a" href="?position=right">Right</sl:dropdown-menu-radio-item>
+          </sl:dropdown-menu-radio-group>
+        </sl:dropdown-menu-content>
+      </sl:dropdown-menu>
+
+  - id: row-actions
+    title: Row actions
+    description: An icon button opens the actions of a table row; align="end" lines the menu up with its end.
+    source: |-
+      <sl:dropdown-menu id="order-1042-actions">
+        <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" aria-label="Actions for order 1042">
+          <sl:icon name="ellipsis"/>
+        </sl:dropdown-menu-trigger>
+        <sl:dropdown-menu-content align="end">
+          <sl:dropdown-menu-item as="a" href="/orders/1042">View order</sl:dropdown-menu-item>
+          <sl:dropdown-menu-item hx-post="/orders/1042/duplicate">Duplicate</sl:dropdown-menu-item>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-item variant="destructive" hx-delete="/orders/1042">Delete</sl:dropdown-menu-item>
+        </sl:dropdown-menu-content>
+      </sl:dropdown-menu>

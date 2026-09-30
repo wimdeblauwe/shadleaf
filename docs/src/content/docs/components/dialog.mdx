@@ -128,7 +128,7 @@ give the button an id (`th:id="|edit-member-${member.id}|"`): htmx moves focus t
 swap. Without one, focus falls back to the top of the page. Use `HX-Trigger`, not `HX-Trigger-After-Swap` or `-After-Settle`: those
 fire after the swap, when the element that made the request may be gone.
 
-`open` needs Alpine (on by default: see [Alpine](../guides/alpine/)); the browser has no attribute that opens a
+`open` needs Alpine (on by default: see [Alpine](../../guides/alpine/)); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
 inertness with it. Before htmx saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
 the back button never brings one back.
@@ -157,8 +157,17 @@ the back button never brings one back.
 
 ## JavaScript
 
-`x-data="slDialog"` on the `<dialog>`. It needs no Alpine plugin, so with `shadleaf.assets.alpine=external` your
-Alpine needs nothing extra. Your own `x-data` on `<sl:dialog>` replaces it; put yours on an element inside instead.
+A small Alpine component, `slDialog`, adds what the browser's `<dialog>` cannot do: `<sl:dialog>` renders as
+`<dialog class="dialog" x-data="slDialog">`.
+
+- **Most of it works without Alpine.** Opening and closing with `commandfor`, Escape, a click outside and focus
+  returning to the button are the browser's. Alpine is needed for `open`, for the `sl-dialog-close` event, and for
+  invoker commands and a click outside in browsers that lack them. Alpine is included by default; see
+  [Alpine](../../guides/alpine/).
+- **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
+  enough.
+- **Keep your own `x-data` off `<sl:dialog>`.** An element has one `x-data`, and attributes on `<sl:dialog>` end up on
+  the `<dialog>`, so yours would replace `slDialog`. Put it on an element inside the dialog.
 
 | Event | On | Effect |
 | --- | --- | --- |

@@ -4,7 +4,8 @@ import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxReswap;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import jakarta.validation.Valid;
-import java.util.List;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -30,21 +32,53 @@ import org.springframework.web.server.ResponseStatusException;
  * the same event, removes the row and puts a message out of band that takes the focus. Invite member opens a sheet in
  * the page, whose form swaps itself too; a valid invite answers with an empty form, closes the sheet and appends the
  * new row.
+ * <p>
+ * The row actions are a dropdown menu per member, whose items fetch the edit and delete dialogs. A second menu sorts
+ * the table: its radio items are links, and the page marks the chosen one. Rename opens a popover with a form that
+ * swaps itself; a valid rename closes it through {@code HX-Trigger: sl-popover-close} and updates the name out of
+ * band.
  */
 @Controller
 public class DialogController {
+
+  private static final Map<String, String> SORT_OPTIONS = sortOptions();
+  private static final Map<String, Comparator<Member>> SORT_ORDERS = Map.of(
+      "added", Comparator.comparingLong(Member::id),
+      "name", Comparator.comparing(Member::name, String.CASE_INSENSITIVE_ORDER),
+      "email", Comparator.comparing(Member::email, String.CASE_INSENSITIVE_ORDER));
 
   private final Map<Long, Member> members = new ConcurrentSkipListMap<>(Map.of(
       1L, new Member(1, "Ada Lovelace", "ada@example.com"),
       2L, new Member(2, "Grace Hopper", "grace@example.com"),
       3L, new Member(3, "Alan Turing", "alan@example.com")));
   private final AtomicLong nextId = new AtomicLong(4);
+  private volatile String teamName = "Team Shadleaf";
 
   @GetMapping("/dialog")
-  public String page(Model model) {
-    model.addAttribute("members", List.copyOf(members.values()));
+  public String page(@RequestParam(defaultValue = "added") String sort, Model model) {
+    String order = SORT_ORDERS.containsKey(sort) ? sort : "added";
+    model.addAttribute("members", members.values().stream().sorted(SORT_ORDERS.get(order)).toList());
+    model.addAttribute("sort", order);
+    model.addAttribute("sortOptions", SORT_OPTIONS);
     model.addAttribute("inviteForm", new MemberForm());
+    model.addAttribute("teamName", teamName);
+    model.addAttribute("renameForm", RenameTeamForm.of(teamName));
     return "dialog";
+  }
+
+  @HxRequest
+  @PostMapping("/dialog/team")
+  public String rename(@Valid @ModelAttribute("renameForm") RenameTeamForm renameForm, BindingResult bindingResult,
+      HtmxResponse htmxResponse, Model model) {
+    if (bindingResult.hasErrors()) {
+      return "dialog :: rename-form";
+    }
+    teamName = renameForm.getTeamName().strip();
+    model.addAttribute("teamName", teamName);
+    model.addAttribute("renameForm", RenameTeamForm.of(teamName));
+    htmxResponse.addTrigger("sl-popover-close");
+    // The form again, with the new name, and the heading out of band.
+    return "dialog :: renamed";
   }
 
   @HxRequest
@@ -104,6 +138,14 @@ public class DialogController {
     model.addAttribute("inviteForm", new MemberForm());
     htmxResponse.addTrigger("sl-dialog-close");
     return "dialog :: invited";
+  }
+
+  private static Map<String, String> sortOptions() {
+    Map<String, String> options = new LinkedHashMap<>();
+    options.put("added", "Date added");
+    options.put("name", "Name");
+    options.put("email", "Email");
+    return options;
   }
 
   private Member member(long id) {

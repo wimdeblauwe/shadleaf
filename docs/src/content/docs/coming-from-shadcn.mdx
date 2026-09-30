@@ -88,6 +88,29 @@ wrap it in a `div` with `px-4`. `side="right"` and `"left"` are the end and the 
 right-to-left page. `<sl:sheet-footer close-button>` adds an outline Close button, as the dialog footer does. With
 reduced motion the sheet only fades. See [Sheet](../components/sheet/).
 
+### Dropdown menu, popover and tooltip are popovers
+
+The three are the browser's [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), placed next to
+their trigger with CSS anchor positioning, so there are no portals and no `open`/`onOpenChange` state.
+`<sl:dropdown-menu>` and `<sl:popover>` render no element of their own and need an `id`; the trigger part is a
+`<sl:button>` with `popovertarget`, and any other button opens them with `popovertarget` too:
+
+```html
+<!-- shadcn: <DropdownMenuTrigger asChild><Button variant="outline">Open</Button></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger variant="outline">Open</sl:dropdown-menu-trigger>
+```
+
+- A menu item is a button or, with `as="a"`, a link; there is no `onSelect`. It does what its attributes say (`href`,
+  `hx-*`, `type="submit"`, `commandfor`) and the menu closes.
+- Checkbox and radio items show the state the server renders (`checked`); there is no `onCheckedChange` or `value`.
+  Choosing one sends a request, and the page that comes back shows the new state.
+- No sub-menus, no `DropdownMenuPortal`, no `modal`. See [Dropdown menu](../components/dropdown-menu/#left-out).
+- No `PopoverAnchor`. A form in a popover can close it with an `HX-Trigger: sl-popover-close` response header. See
+  [Popover](../components/popover/).
+- There is no `TooltipTrigger` and no `TooltipProvider`: the first element inside `<sl:tooltip>` is the trigger, and
+  `delay` sits on each tooltip. See [Tooltip](../components/tooltip/).
+- `side="right"` and `"left"` are the end and the start of a line, as for the sheet.
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
@@ -133,6 +156,17 @@ takes keyboard focus, when it is a link (`as="a"`).
 - The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
 - Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
   `aria-label`.
+
+### Menus and tooltips
+
+- Keyboard focus on a menu item draws the focus ring as well as the accent background, which alone is barely lighter
+  than the menu. The pointer highlights with the background only, as in shadcn.
+- Tab closes a menu and moves on to the next control, as the ARIA menu pattern describes; Radix keeps the focus in
+  the menu.
+- A tooltip waits 300 ms before it shows on hover (`delay`), where shadcn shows it at once, so moving the pointer
+  across a toolbar does not flash every tooltip on the way. Keyboard focus, and the next tooltip right after one hid,
+  still show at once.
+- The pointer can move onto a tooltip without it hiding, and Escape hides it, as WCAG 1.4.13 asks.
 
 ### Form controls
 

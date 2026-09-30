@@ -54,6 +54,11 @@ const srcdoc = scenario && skins.length > 0
     .stage > .card { inline-size: 24rem; max-inline-size: 100%; }
     /* A modal dialog is laid out in the frame's viewport: make room for it while one is open. */
     body:has(dialog:modal) { min-block-size: 32rem; }
+    /* So is an open menu or popover, below its trigger. A tooltip shows above its trigger: leave room for it. */
+    body:has(:is(.dropdown-menu-content, .popover-content):popover-open) { min-block-size: 28rem; }
+    body:has(.tooltip) { padding-block: 3rem; }
+    /* Centred, so a tooltip or popover has room on every side of its trigger and flips only where the docs say so. */
+    .stage:has(.tooltip, .popover-content) { justify-content: center; }
   </style>
 </head>
 <body>

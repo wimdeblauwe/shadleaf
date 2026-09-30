@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A short text that shows while the pointer rests on an element or the keyboard focuses it, on the
+      browser's Popover API. The first element inside is the trigger, any focusable element (a
+      <code>sl:button</code>, a link); the <code>sl:tooltip-content</code> after it describes it
+      (<code>aria-describedby</code>). Escape hides it. Needs Alpine.</sl:description>
+    <sl:prop name="delay" type="number" default="300">How long the pointer rests on the trigger before the tooltip
+      shows, in milliseconds. Keyboard focus shows it at once, and so does moving to another trigger right after a
+      tooltip hid.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* A wrapper without a box of its own (display: contents), so it keeps the trigger's layout, for slTooltip to find
+  the trigger and the content in. A span, so a tooltip can sit in running text. */-->
+<span th:fragment="tooltip"
+      class="tooltip"
+      x-data="slTooltip"
+      th:attr="data-delay=${props.unlessDefault('delay')}"
+      sl:attrs><sl:slot/></span>
+</body>
+</html>

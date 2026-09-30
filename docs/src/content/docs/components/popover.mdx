@@ -1,0 +1,137 @@
+---
+title: Popover
+description: Rich content in a panel next to the button that opens it, on the browser's Popover API.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="popover--default" />
+
+## Built from parts
+
+A popover is `<sl:popover>` with a `<sl:popover-trigger>` and a `<sl:popover-content>`, as in shadcn/ui. The
+content can hold a `<sl:popover-header>` with `<sl:popover-title>` and `<sl:popover-description>`, and anything
+else: text, a small form, links. `<sl:popover>` renders no element of its own: it gives the parts their ids.
+
+```html
+<sl:popover id="dimensions">
+  <sl:popover-trigger variant="outline">Open popover</sl:popover-trigger>
+  <sl:popover-content>
+    <sl:popover-header>
+      <sl:popover-title>Dimensions</sl:popover-title>
+      <sl:popover-description>Set the dimensions for the layer.</sl:popover-description>
+    </sl:popover-header>
+    ...
+  </sl:popover-content>
+</sl:popover>
+```
+
+The panel is a [popover](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API): it is drawn above everything
+else, Escape or a click outside closes it, and closing returns focus to the trigger. When it opens, focus moves to
+its first control (or to an element with `autofocus`), or to the panel when it has none; moving the focus out of it,
+with Tab past its last control for example, closes it. The trigger is a `<sl:button>` with `popovertarget` set to the
+popover's `id`; any other button can open it the same way.
+
+The panel is a non-modal dialog (`role="dialog"`): the rest of the page stays usable. The title names it and the
+description describes it (`aria-labelledby` and `aria-describedby`, with ids derived from the popover's `id`:
+`dimensions-title`). A popover without a title needs an `aria-label` on `<sl:popover-content>`. `level` on the title
+makes it a heading.
+
+## Position
+
+The panel opens below its trigger, centred on it. `side="top|right|bottom|left"` and `align="start|center|end"` on
+`<sl:popover-content>` change that, and it flips to the other side when there is no room. `right` and `left` are the
+end and the start of a line, so they swap on a right-to-left page.
+
+<ComponentPreview id="popover--sides" />
+
+It is placed with [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning),
+which every current browser supports (Chrome and Edge 133, Safari 26, Firefox 147). In older ones the popover's small
+Alpine component places it from the trigger's position instead.
+
+## A form in a popover, with htmx
+
+A form in the panel can post with htmx and swap only what it changes. An `HX-Trigger: sl-popover-close` response
+header closes the popover after a valid save, and focus returns to the trigger:
+
+```html
+<h2 id="team-name" th:text="${team.name}">Design</h2>
+<sl:popover id="rename-team">
+  <sl:popover-trigger variant="outline" size="sm">Rename</sl:popover-trigger>
+  <sl:popover-content>
+    <sl:popover-header><sl:popover-title>Rename team</sl:popover-title></sl:popover-header>
+    <form th:replace="~{team :: rename-form}"></form>
+  </sl:popover-content>
+</sl:popover>
+```
+
+```java
+@HxRequest
+@PostMapping("/team/name")
+public String rename(@Valid @ModelAttribute("renameForm") RenameForm form, BindingResult bindingResult,
+    HtmxResponse htmxResponse, Model model) {
+  if (bindingResult.hasErrors()) {
+    return "team :: rename-form";  // the form swaps itself: the popover stays open
+  }
+  model.addAttribute("team", teamService.rename(form.getName()));
+  htmxResponse.addTrigger("sl-popover-close");
+  return "team :: team-name-oob";  // the heading, with hx-swap-oob="true"
+}
+```
+
+htmx fires `sl-popover-close` on the form; it bubbles up to the popover, which closes. A popover nested in another
+closes only itself. Back never brings a popover back open: whether it is open is not part of the markup htmx saves in
+its history cache.
+
+## Left out
+
+- **`PopoverAnchor`**: the popover is placed against its trigger.
+- **`PopoverPortal`**: the top layer does what the portal is for.
+- **State in the browser** (`open`/`onOpenChange`): the trigger opens it; the `sl-popover-close` event closes it.
+- **`modal`**: a popover never makes the rest of the page inert. Use a [dialog](../dialog/) for that.
+
+## Attributes
+
+### sl:popover
+
+<ComponentAttributes component="popover" />
+
+### sl:popover-trigger
+
+<ComponentAttributes component="popover-trigger" />
+
+### sl:popover-content
+
+<ComponentAttributes component="popover-content" />
+
+### sl:popover-header
+
+<ComponentAttributes component="popover-header" />
+
+### sl:popover-title
+
+<ComponentAttributes component="popover-title" />
+
+### sl:popover-description
+
+<ComponentAttributes component="popover-description" />
+
+## JavaScript
+
+A small Alpine component, `slPopover`, adds what the browser's popover lacks: `<sl:popover-content>` renders as
+`<div class="popover-content" role="dialog" popover x-data="slPopover">`.
+
+- **The basics work without Alpine.** The trigger opens and closes the popover, and Escape and a click outside close
+  it. Alpine is needed for moving the focus into it when it opens, closing it when the focus leaves, the
+  `sl-popover-close` event, `aria-expanded` on the trigger, and placing it in browsers without CSS anchor positioning.
+  Alpine is included by default; see [Alpine](../../guides/alpine/).
+- **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
+  enough.
+- **Keep your own `x-data` off `<sl:popover-content>`.** An element has one `x-data`, and attributes on it end up on
+  the panel, so yours would replace `slPopover`. Put it on an element inside the panel.
+
+| Event | On | Effect |
+| --- | --- | --- |
+| `sl-popover-close` | the popover, or anything inside it (it bubbles) | Closes the popover. |
+| `toggle` | the popover (the browser's own) | Fired when it opens or closes, however that happened. |

@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+import org.assertj.core.groups.Tuple;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,9 +21,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 /**
- * The dialog page: a dialog on the page, and an edit dialog htmx fetches, whose form swaps itself while it has errors
- * and closes the dialog with {@code HX-Trigger: sl-dialog-close} after a valid save. An alert dialog confirms a delete,
- * and a sheet in the page holds an invite form.
+ * The dialog page: a dialog on the page, opened by an icon button with a tooltip, and an edit dialog htmx fetches from
+ * a row's menu of actions, whose form swaps itself while it has errors and closes the dialog with
+ * {@code HX-Trigger: sl-dialog-close} after a valid save. An alert dialog confirms a delete, a sheet in the page holds
+ * an invite form, a menu of radio items sorts the table, and a popover renames the team.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,7 +48,116 @@ class DialogPageTest {
     assertThat(dialog.hasAttr("data-show-modal")).isFalse();
     assertThat(page.select("#modal-root")).hasSize(1);
     assertThat(page.select("tbody tr")).hasSize(3);
-    assertThat(page.selectFirst("#member-1 button").attr("hx-get")).isEqualTo("/dialog/members/1/edit");
+    // The page holds several forms, a sheet and a popover: a label must never point into another one.
+    assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
+  }
+
+  @Test
+  void theShortcutsButtonHasATooltip() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
+
+    Element tooltip = page.selectFirst(".tooltip:has(> button[commandfor=shortcuts])");
+    assertThat(tooltip.attr("x-data")).isEqualTo("slTooltip");
+    assertThat(tooltip.selectFirst("> button").attr("aria-label")).isEqualTo("Keyboard shortcuts");
+    Element content = tooltip.selectFirst("> .tooltip-content");
+    assertThat(content.attr("role")).isEqualTo("tooltip");
+    assertThat(content.attr("popover")).isEqualTo("manual");
+    assertThat(content.text()).isEqualTo("Show the keyboard shortcuts");
+  }
+
+  @Test
+  void eachMemberHasAMenuOfRowActions() throws Exception {
+    // Grace, whom no other test changes: the tests share the controller's members.
+    Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
+
+    Element trigger = page.selectFirst("#member-2 button.dropdown-menu-trigger");
+    assertThat(trigger.id()).isEqualTo("member-2-actions-trigger");
+    assertThat(trigger.attr("popovertarget")).isEqualTo("member-2-actions");
+    assertThat(trigger.attr("aria-haspopup")).isEqualTo("menu");
+    assertThat(trigger.attr("aria-label")).isEqualTo("Actions for Grace Hopper");
+    Element menu = page.getElementById("member-2-actions");
+    assertThat(menu.attr("role")).isEqualTo("menu");
+    assertThat(menu.hasAttr("popover")).isTrue();
+    assertThat(menu.attr("x-data")).isEqualTo("slDropdownMenu");
+    assertThat(menu.attr("aria-labelledby")).isEqualTo("member-2-actions-trigger");
+    assertThat(menu.attr("data-align")).isEqualTo("end");
+    assertThat(menu.select("[role=menuitem]")).extracting(Element::text)
+        .containsExactly("Edit", "Send email", "Delete");
+    Element edit = menu.selectFirst("button[role=menuitem]");
+    assertThat(edit.attr("hx-get")).isEqualTo("/dialog/members/2/edit");
+    assertThat(edit.attr("hx-target")).isEqualTo("#modal-root");
+    assertThat(menu.selectFirst("a[role=menuitem]").attr("href")).isEqualTo("mailto:grace@example.com");
+    assertThat(menu.select(".dropdown-menu-separator[role=separator]")).hasSize(1);
+  }
+
+  @Test
+  void theSortMenuMarksTheOrderThePageIsSortedBy() throws Exception {
+    Document byAdded = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
+    assertThat(byAdded.select("#sort-members [role=menuitemradio]"))
+        .extracting(Element::text, item -> item.attr("href"), item -> item.attr("aria-checked"))
+        .containsExactly(
+            Tuple.tuple("Date added", "/dialog?sort=added", "true"),
+            Tuple.tuple("Name", "/dialog?sort=name", "false"),
+            Tuple.tuple("Email", "/dialog?sort=email", "false"));
+    assertThat(byAdded.select("#sort-members [role=menuitemradio] > .dropdown-menu-item-indicator svg")).hasSize(3);
+    // The tests share the controller's members, so the expected orders come from the page itself.
+    List<Long> ids = byAdded.select("#members-body tr").stream()
+        .map(row -> Long.parseLong(row.id().substring("member-".length()))).toList();
+    assertThat(ids).isSorted();
+    List<String> names = byAdded.select("#members-body tr > td:first-child").eachText();
+
+    Document byName = Jsoup.parse(mockMvc.perform(get("/dialog").param("sort", "name"))
+        .andReturn().getResponse().getContentAsString());
+    assertThat(byName.select("#sort-members [aria-checked=true]")).extracting(Element::text).containsExactly("Name");
+    assertThat(byName.select("#members-body tr > td:first-child").eachText())
+        .isEqualTo(names.stream().sorted(String.CASE_INSENSITIVE_ORDER).toList());
+    assertThat(byName.getElementById("sort-members").attr("aria-labelledby")).isEqualTo("sort-members-trigger");
+  }
+
+  @Test
+  void renameOpensAPopoverWithAForm() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
+
+    assertThat(page.getElementById("team-name").text()).isEqualTo("Team Shadleaf");
+    assertThat(page.selectFirst("button[popovertarget=rename-team]").attr("aria-haspopup")).isEqualTo("dialog");
+    Element popover = page.getElementById("rename-team");
+    assertThat(popover.attr("role")).isEqualTo("dialog");
+    assertThat(popover.hasAttr("popover")).isTrue();
+    assertThat(popover.attr("aria-labelledby")).isEqualTo("rename-team-title");
+    Element form = popover.getElementById("rename-team-form");
+    assertThat(form.attr("hx-post")).isEqualTo("/dialog/team");
+    assertThat(form.getElementById("teamName").val()).isEqualTo("Team Shadleaf");
+  }
+
+  @Test
+  void aRenameWithErrorsReturnsTheFormAlone() throws Exception {
+    String html = mockMvc.perform(htmx(post("/dialog/team").param("teamName", " ")))
+        .andExpect(status().isOk())
+        .andExpect(header().doesNotExist("HX-Trigger"))
+        .andReturn().getResponse().getContentAsString();
+
+    Document fragment = fragment(html);
+    assertThat(fragment.body().children()).extracting(Element::id).containsExactly("rename-team-form");
+    assertThat(fragment.getElementById("teamName").attr("aria-invalid")).isEqualTo("true");
+    assertThat(fragment.select("[autofocus]")).isEmpty();
+  }
+
+  @Test
+  void aValidRenameClosesThePopoverAndUpdatesTheNameOutOfBand() throws Exception {
+    String html = mockMvc.perform(htmx(post("/dialog/team").param("teamName", "Team Thymeleaf")))
+        .andExpect(status().isOk())
+        .andExpect(header().string("HX-Trigger", "sl-popover-close"))
+        .andReturn().getResponse().getContentAsString();
+
+    Document fragment = fragment(html);
+    assertThat(fragment.getElementById("rename-team-form").selectFirst("#teamName").val()).isEqualTo("Team Thymeleaf");
+    Element name = fragment.getElementById("team-name");
+    assertThat(name.attr("hx-swap-oob")).isEqualTo("true");
+    assertThat(name.text()).isEqualTo("Team Thymeleaf");
+
+    Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
+    assertThat(page.getElementById("team-name").text()).isEqualTo("Team Thymeleaf");
+    assertThat(page.getElementById("team-name").hasAttr("hx-swap-oob")).isFalse();
   }
 
   @Test
@@ -98,7 +210,8 @@ class DialogPageTest {
   @Test
   void deleteFetchesAnAlertDialogThatOpensItselfWithTheFocusOnCancel() throws Exception {
     Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
-    Element deleteButton = page.selectFirst("#member-2 button[aria-label='Delete Grace Hopper']");
+    Element deleteButton = page.selectFirst("#member-2-actions button[data-variant=destructive]");
+    assertThat(deleteButton.attr("role")).isEqualTo("menuitem");
     assertThat(deleteButton.attr("hx-get")).isEqualTo("/dialog/members/2/delete");
     assertThat(deleteButton.attr("hx-target")).isEqualTo("#modal-root");
     assertThat(page.getElementById("member-status").hasAttr("hidden")).isTrue();
