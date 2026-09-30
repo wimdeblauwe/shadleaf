@@ -1,6 +1,7 @@
 package io.github.wimdeblauwe.shadleaf.sample01;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
@@ -16,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
-/** The form page: Shadleaf's form controls bound with th:field, validated on the server. */
+/** The form page: Shadleaf's fields, each bound with one th:field, validated on the server. */
 @SpringBootTest
 @AutoConfigureMockMvc
 class FormPageTest {
@@ -30,24 +31,29 @@ class FormPageTest {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString());
 
-    for (String id : new String[] {"name", "email", "topic", "callbackDate", "message"}) {
+    for (String id : new String[] {"name", "email", "topic", "callbackDate", "message", "newsletter", "terms"}) {
       Element control = page.getElementById(id);
       assertThat(control).as("control #%s", id).isNotNull();
-      assertThat(page.select("label.label[for=%s]".formatted(id))).as("label for #%s", id).hasSize(1);
+      assertThat(control.closest(".field")).as("#%s is in a field", id).isNotNull();
+      assertThat(page.select("label.label.field-label[for=%s]".formatted(id))).as("label for #%s", id).hasSize(1);
       assertThat(control.hasAttr("aria-invalid")).isFalse();
-      assertThat(control.hasAttr("aria-describedby")).isFalse();
     }
+    assertThat(page.getElementById("name").hasAttr("aria-describedby")).isFalse();
+    assertThat(page.getElementById("email").attr("aria-describedby")).isEqualTo("email-description");
+    assertThat(page.getElementById("email-description").text()).isNotBlank();
+    assertThat(page.getElementById("message").attr("aria-describedby")).isEqualTo("message-description");
     assertThat(page.getElementById("email").attr("type")).isEqualTo("email");
     assertThat(page.getElementById("callbackDate").attr("type")).isEqualTo("date");
     assertThat(page.select("#topic option")).hasSize(4);
-    assertThat(page.selectFirst(".native-select-wrapper").hasClass("form-full")).isTrue();
-    assertThat(page.select(".radio-group[role=radiogroup] input.radio-group-item"))
-        .extracting(Element::id).containsExactly("replyBy1", "replyBy2");
+    assertThat(page.select("fieldset.field-set .radio-group[role=radiogroup] input.radio-group-item"))
+        .extracting(Element::id, item -> item.attr("name")).containsExactly(
+            tuple("replyBy1", "replyBy"), tuple("replyBy2", "replyBy"));
+    assertThat(page.selectFirst("fieldset.field-set").hasAttr("aria-describedby")).isFalse();
     assertThat(page.select("input.switch[role=switch][name=newsletter]")).hasSize(1);
-    assertThat(page.select("label.label input.checkbox[name=terms]")).hasSize(1);
+    assertThat(page.select("input.checkbox[name=terms]")).hasSize(1);
     assertThat(page.select("input[type=hidden][name=_terms], input[type=hidden][name=_newsletter]")).hasSize(2);
-    assertThat(page.select(".form-error")).isEmpty();
-    assertThat(page.select("sl|input, sl|label, sl|textarea, sl|native-select")).isEmpty();
+    assertThat(page.select(".field-error, [data-invalid]")).isEmpty();
+    assertThat(page.select("*").stream().filter(element -> element.tagName().startsWith("sl:"))).isEmpty();
   }
 
   @Test
@@ -72,22 +78,28 @@ class FormPageTest {
     for (String id : new String[] {"email", "topic", "message"}) {
       Element control = page.getElementById(id);
       assertThat(control.attr("aria-invalid")).as("#%s aria-invalid", id).isEqualTo("true");
-      assertThat(control.attr("aria-describedby")).isEqualTo(id + "-error");
+      assertThat(control.attr("aria-describedby")).as("#%s aria-describedby", id).endsWith(id + "-error");
+      assertThat(control.closest(".field").attr("data-invalid")).isEqualTo("true");
       assertThat(page.getElementById(id + "-error").text()).isNotBlank();
     }
+    assertThat(page.getElementById("email").attr("aria-describedby")).isEqualTo("email-description email-error");
     assertThat(page.getElementById("email").val()).isEqualTo("not-an-email");
     assertThat(page.getElementById("message").text()).isEqualTo("Too short");
+    assertThat(name.closest(".field").hasAttr("data-invalid")).isFalse();
+    assertThat(page.getElementById("name-error")).isNull();
 
     assertThat(page.select("input.radio-group-item")).allSatisfy(item ->
         assertThat(item.attr("aria-invalid")).isEqualTo("true"));
-    Element replyBy = page.selectFirst(".radio-group");
-    assertThat(replyBy.attr("aria-labelledby")).isEqualTo("replyBy-question");
+    Element replyBy = page.selectFirst("fieldset.field-set");
+    assertThat(replyBy.attr("data-invalid")).isEqualTo("true");
     assertThat(replyBy.attr("aria-describedby")).isEqualTo("replyBy-error");
-    Element terms = page.getElementById("terms1");
+    assertThat(replyBy.selectFirst("legend").text()).isEqualTo("Reply by");
+    assertThat(page.getElementById("replyBy-error").text()).isNotBlank();
+    Element terms = page.getElementById("terms");
     assertThat(terms.attr("aria-invalid")).isEqualTo("true");
     assertThat(terms.attr("aria-describedby")).isEqualTo("terms-error");
     assertThat(page.getElementById("terms-error").text()).isEqualTo("must be accepted");
-    Element newsletter = page.getElementById("newsletter1");
+    Element newsletter = page.getElementById("newsletter");
     assertThat(newsletter.hasAttr("checked")).as("the switch keeps the submitted value").isTrue();
     assertThat(newsletter.hasAttr("aria-invalid")).isFalse();
   }

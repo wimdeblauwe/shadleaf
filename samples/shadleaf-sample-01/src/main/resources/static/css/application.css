@@ -28,10 +28,6 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 /* Ladder rung 2: an application class on a component, merged with the component's own. */
 .wide { min-inline-size: 14rem; }
 
-/* The form page. Layout is the application's; the controls are Shadleaf's. */
+/* The form page. The page layout is the application's; the fields and their spacing are Shadleaf's. */
 .site-nav { display: flex; gap: 0.25rem; margin: 1rem 0; }
-.form { display: grid; gap: 1.25rem; max-inline-size: 32rem; margin-top: 1.5rem; }
-.form-row { display: grid; gap: 0.5rem; }
-.form-full { inline-size: 100%; }
-.form-question { margin: 0; font-size: 0.875rem; font-weight: 500; }
-.form-error { margin: 0; font-size: 0.875rem; color: var(--destructive); }
+.form { display: grid; gap: 2rem; max-inline-size: 32rem; margin-top: 1.5rem; }

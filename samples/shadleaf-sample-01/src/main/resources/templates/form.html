@@ -5,10 +5,9 @@
       th:replace="~{layout/main :: layout('Form', ~{::#page-content})}">
 <body>
 <div id="page-content">
-  <p>A form validated on the server with Bean Validation. Submit it empty to see the errors: each control marks
-    itself <code>aria-invalid</code> from its <code>th:field</code>. The messages come from Bean Validation; for now
-    this template renders them itself (a <code>th:errors</code> paragraph per control, linked with
-    <code>aria-describedby</code>), which the upcoming field component will do for you.</p>
+  <p>A form validated on the server with Bean Validation. Submit it empty to see the errors. Each field has one
+    <code>th:field</code>: the field gives its control the id the label points at, shows the binding's messages, and
+    links description and messages to the control with <code>aria-describedby</code>.</p>
 
   <sl:alert th:if="${sentTo}" role="status">
     <sl:icon name="circle-check"/>
@@ -17,65 +16,66 @@
   </sl:alert>
 
   <form class="form" th:object="${contactForm}" th:action="@{/form}" method="post" novalidate>
-    <div class="form-row">
-      <sl:label for="name">Name</sl:label>
-      <sl:input th:field="*{name}" autocomplete="name"
-                th:aria-describedby="${#fields.hasErrors('name') ? 'name-error' : null}"/>
-      <p class="form-error" id="name-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
-    </div>
+    <sl:field-group>
+      <sl:field th:field="*{name}">
+        <sl:field-label>Name</sl:field-label>
+        <sl:input autocomplete="name"/>
+        <sl:field-error/>
+      </sl:field>
 
-    <div class="form-row">
-      <sl:label for="email">Email</sl:label>
-      <sl:input type="email" th:field="*{email}" placeholder="you@example.com" autocomplete="email"
-                th:aria-describedby="${#fields.hasErrors('email') ? 'email-error' : null}"/>
-      <p class="form-error" id="email-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-    </div>
+      <sl:field th:field="*{email}">
+        <sl:field-label>Email</sl:field-label>
+        <sl:input type="email" placeholder="you@example.com" autocomplete="email"/>
+        <sl:field-description>We only use it to reply to you.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
 
-    <div class="form-row">
-      <sl:label for="topic">Topic</sl:label>
-      <sl:native-select th:field="*{topic}" class="form-full"
-                        th:aria-describedby="${#fields.hasErrors('topic') ? 'topic-error' : null}">
-        <option value="">Select a topic</option>
-        <option th:each="topic : ${topics}" th:value="${topic}"
-                th:text="${#strings.capitalize(topic)}">Sales</option>
-      </sl:native-select>
-      <p class="form-error" id="topic-error" th:if="${#fields.hasErrors('topic')}" th:errors="*{topic}"></p>
-    </div>
+      <sl:field th:field="*{topic}">
+        <sl:field-label>Topic</sl:field-label>
+        <sl:native-select>
+          <option value="">Select a topic</option>
+          <option th:each="topic : ${topics}" th:value="${topic}"
+                  th:text="${#strings.capitalize(topic)}">Sales</option>
+        </sl:native-select>
+        <sl:field-error/>
+      </sl:field>
 
-    <div class="form-row">
-      <sl:label for="callbackDate">Call me back on (optional)</sl:label>
-      <sl:input type="date" th:field="*{callbackDate}"/>
-    </div>
+      <sl:field th:field="*{callbackDate}">
+        <sl:field-label>Call me back on (optional)</sl:field-label>
+        <sl:input type="date"/>
+      </sl:field>
 
-    <div class="form-row">
-      <sl:label for="message">Message</sl:label>
-      <sl:textarea th:field="*{message}" rows="4" placeholder="At least 10 characters."
-                   th:aria-describedby="${#fields.hasErrors('message') ? 'message-error' : null}"/>
-      <p class="form-error" id="message-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></p>
-    </div>
+      <sl:field th:field="*{message}">
+        <sl:field-label>Message</sl:field-label>
+        <sl:textarea rows="4"/>
+        <sl:field-description>At least 10 characters.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
 
-    <div class="form-row">
-      <p class="form-question" id="replyBy-question">Reply by</p>
-      <sl:radio-group orientation="horizontal" aria-labelledby="replyBy-question"
-                      th:aria-describedby="${#fields.hasErrors('replyBy') ? 'replyBy-error' : null}">
-        <sl:label th:each="channel : ${replyChannels}">
-          <sl:radio-group-item th:field="*{replyBy}" th:value="${channel}"/>
-          <th:block th:text="${#strings.capitalize(channel)}">Email</th:block>
-        </sl:label>
-      </sl:radio-group>
-      <p class="form-error" id="replyBy-error" th:if="${#fields.hasErrors('replyBy')}" th:errors="*{replyBy}"></p>
-    </div>
+      <sl:field-set th:field="*{replyBy}">
+        <sl:field-legend variant="label">Reply by</sl:field-legend>
+        <sl:radio-group orientation="horizontal">
+          <sl:label th:each="channel : ${replyChannels}">
+            <sl:radio-group-item th:value="${channel}"/>
+            <th:block th:text="${#strings.capitalize(channel)}">Email</th:block>
+          </sl:label>
+        </sl:radio-group>
+        <sl:field-error/>
+      </sl:field-set>
 
-    <div class="form-row">
-      <sl:label><sl:switch th:field="*{newsletter}"/>Send me the monthly newsletter</sl:label>
-    </div>
+      <sl:field th:field="*{newsletter}" orientation="horizontal">
+        <sl:switch/>
+        <sl:field-label>Send me the monthly newsletter</sl:field-label>
+      </sl:field>
 
-    <div class="form-row">
-      <sl:label><sl:checkbox th:field="*{terms}"
-                             th:aria-describedby="${#fields.hasErrors('terms') ? 'terms-error' : null}"/>
-        I accept the terms and conditions</sl:label>
-      <p class="form-error" id="terms-error" th:if="${#fields.hasErrors('terms')}" th:errors="*{terms}"></p>
-    </div>
+      <sl:field th:field="*{terms}" orientation="horizontal">
+        <sl:checkbox/>
+        <sl:field-content>
+          <sl:field-label>I accept the terms and conditions</sl:field-label>
+          <sl:field-error/>
+        </sl:field-content>
+      </sl:field>
+    </sl:field-group>
 
     <div class="row">
       <sl:button type="submit">Send</sl:button>
