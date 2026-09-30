@@ -114,11 +114,16 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         run: mvn -B -Prelease deploy -DskipTests
 
-      # The tag exists already, so JReleaser only creates the release (with the notes) on it.
+      # The tag exists already, so JReleaser only creates the release (with the notes) on it. The notes start at the
+      # previous release, not at the snapshot tag on the commit before this one (empty notes for 0.3.0). Empty for
+      # the first release, so JReleaser picks the tag itself.
       - name: Create the GitHub release
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn -B -N jreleaser:release -Dshadleaf.release.skip-tag=true
+        run: |
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 --exclude='*-SNAPSHOT' --exclude=early-access "$RELEASE_VERSION^" 2>/dev/null || true)
+          echo "Release notes from ${PREVIOUS_TAG:-the first commit} to $RELEASE_VERSION"
+          mvn -B -N jreleaser:release -Dshadleaf.release.skip-tag=true "-Dshadleaf.release.previous-tag=$PREVIOUS_TAG"
 
       - name: Keep the JReleaser output
         if: ${{ !cancelled() }}

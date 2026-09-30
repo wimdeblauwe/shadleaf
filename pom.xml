@@ -62,6 +62,9 @@
     <!-- The release workflow tags the release commit itself, before the build; JReleaser only creates the tag of the
          snapshot pre-release (e.g. 0.3.0-SNAPSHOT), which it moves to every new commit on main. -->
     <shadleaf.release.skip-tag>false</shadleaf.release.skip-tag>
+    <!-- The tag the release notes start from. Set by the release workflow to the last real release: JReleaser's own
+         choice is the nearest earlier tag, which is the snapshot pre-release's tag on the commit before the release. -->
+    <shadleaf.release.previous-tag/>
   </properties>
 
   <dependencyManagement>
@@ -150,6 +153,7 @@
                 <owner>wimdeblauwe</owner>
                 <name>shadleaf</name>
                 <tagName>{{projectVersion}}</tagName>
+                <previousTagName>${shadleaf.release.previous-tag}</previousTagName>
                 <!-- The pom's version, for a release and a snapshot alike -->
                 <releaseName>{{projectVersion}}</releaseName>
                 <skipTag>${shadleaf.release.skip-tag}</skipTag>
