@@ -141,7 +141,42 @@ class PropsParserTest {
   @Test
   void rejectsUnknownPropAttribute() {
     assertThatThrownBy(() -> parse("<sl:props><sl:prop name=\"variant\" valeus=\"a b\"/></sl:props>"))
-        .hasMessageContaining("unknown attribute 'valeus' on prop 'variant'; allowed are default, name, type, values");
+        .hasMessageContaining("unknown attribute 'valeus' on prop 'variant'; allowed are default, name, required, type, values");
+  }
+
+  @Test
+  void parsesRequired() {
+    ComponentDefinition definition = parse("""
+        <sl:props>
+          <sl:prop name="id" required/>
+          <sl:prop name="target" required="true"/>
+          <sl:prop name="label" required="false"/>
+          <sl:prop name="title"/>
+        </sl:props>
+        """);
+
+    assertThat(definition.prop("id").required()).isTrue();
+    assertThat(definition.prop("target").required()).isTrue();
+    assertThat(definition.prop("label").required()).isFalse();
+    assertThat(definition.prop("title").required()).isFalse();
+  }
+
+  @Test
+  void rejectsRequiredWithDefault() {
+    assertThatThrownBy(() -> parse("<sl:props><sl:prop name=\"id\" required default=\"x\"/></sl:props>"))
+        .hasMessageContaining("prop 'id' is required and cannot have a default");
+  }
+
+  @Test
+  void rejectsRequiredBoolean() {
+    assertThatThrownBy(() -> parse("<sl:props><sl:prop name=\"open\" type=\"boolean\" required/></sl:props>"))
+        .hasMessageContaining("prop 'open' is a boolean and cannot be required");
+  }
+
+  @Test
+  void rejectsUnknownRequiredValue() {
+    assertThatThrownBy(() -> parse("<sl:props><sl:prop name=\"id\" required=\"yes\"/></sl:props>"))
+        .hasMessageContaining("prop 'id' has required=\"yes\"");
   }
 
   @Test

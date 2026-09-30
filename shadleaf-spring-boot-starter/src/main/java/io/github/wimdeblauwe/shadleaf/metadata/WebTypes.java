@@ -106,6 +106,8 @@ public final class WebTypes {
     }
     value.put("required", false);
     attribute.put("value", value);
+    // A required prop is not marked "required" here: it can be given as th:<prop> instead, which the IDE would not
+    // count, so it would flag every use that sets it with an expression.
     if (!prop.values().isEmpty()) {
       attribute.put("values", prop.values().stream().map(name -> Map.of("name", name)).toList());
     } else if (onByDefault) {

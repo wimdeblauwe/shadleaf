@@ -75,7 +75,7 @@ public record ComponentMetadata(String version, List<Component> components) {
 
   private static Prop prop(PropDefinition prop) {
     return new Prop(prop.name(), prop.type().name().toLowerCase(Locale.ROOT), text(prop.defaultValue()),
-        prop.values(), prop.description());
+        prop.values(), prop.description(), prop.required());
   }
 
   private static @Nullable String text(@Nullable Object value) {
@@ -109,10 +109,11 @@ public record ComponentMetadata(String version, List<Component> components) {
    * @param defaultValue the default as written in the template; absent when there is none
    * @param values       the legal values of an enum; empty otherwise
    * @param description  markdown
+   * @param required     whether every use must set it; written only when it is
    */
   @JsonInclude(JsonInclude.Include.NON_NULL)
   public record Prop(String name, String type, @Nullable String defaultValue, List<String> values,
-                     String description) {
+                     String description, @JsonInclude(JsonInclude.Include.NON_DEFAULT) boolean required) {
 
     public Prop {
       values = List.copyOf(values);

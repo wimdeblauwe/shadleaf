@@ -143,6 +143,16 @@ public class ComponentElementProcessor implements IElementModelProcessor {
    */
   private static @Nullable Object bindProp(ITemplateContext context, ComponentDefinition definition,
       PropDefinition prop, Map<String, @Nullable String> attributes) {
+    Object value = bindPropValue(context, definition, prop, attributes);
+    if (value == null && prop.required()) {
+      throw new ShadleafComponentException("<sl:%s> needs %s: add %s=\"...\" or th:%s=\"${...}\" (not null)."
+          .formatted(definition.name(), prop.name(), prop.name(), prop.name()));
+    }
+    return value;
+  }
+
+  private static @Nullable Object bindPropValue(ITemplateContext context, ComponentDefinition definition,
+      PropDefinition prop, Map<String, @Nullable String> attributes) {
     boolean hasExpression = attributes.containsKey(EXPRESSION_PREFIX + prop.name());
     boolean hasLiteral = attributes.containsKey(prop.name());
     String expression = attributes.remove(EXPRESSION_PREFIX + prop.name());

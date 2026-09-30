@@ -192,6 +192,25 @@ class ComponentElementProcessorTest {
   }
 
   @Test
+  void requiredPropIsBoundFromALiteralOrAnExpression() {
+    assertThat(render("<sl:test-target id=\"orders\">x</sl:test-target>").id()).isEqualTo("orders");
+    assertThat(render("<sl:test-target th:id=\"|order-${id}|\">x</sl:test-target>", Map.of("id", 42)).id())
+        .isEqualTo("order-42");
+  }
+
+  @Test
+  void missingRequiredPropFails() {
+    assertThatThrownBy(() -> renderer.render("<sl:test-target>x</sl:test-target>"))
+        .hasStackTraceContaining("<sl:test-target> needs id: add id=\"...\" or th:id=\"${...}\" (not null).");
+  }
+
+  @Test
+  void requiredPropWhoseExpressionIsNullFails() {
+    assertThatThrownBy(() -> renderer.render("<sl:test-target th:id=\"${missing}\">x</sl:test-target>"))
+        .hasStackTraceContaining("<sl:test-target> needs id");
+  }
+
+  @Test
   void illegalExpressionValueFailsToo() {
     assertThatThrownBy(() -> renderer.render("<sl:test-chip th:variant=\"${kind}\">x</sl:test-chip>",
         Map.of("kind", "warning")))

@@ -39,7 +39,8 @@ const accessibleName = component?.accessibleName;
                     ? prop.values.map((value, i) => <>{i > 0 && ' '}<code>{value}</code></>)
                     : <em>{prop.type}</em>}
               </td>
-              <td>{prop.defaultValue && (prop.type !== 'boolean' || prop.defaultValue === 'true')
+              <td>{prop.required ? <strong>required</strong>
+                  : prop.defaultValue && (prop.type !== 'boolean' || prop.defaultValue === 'true')
                   ? <code>{prop.defaultValue}</code> : '—'}</td>
               <td>{codeSpans(prop.description).map((part, i) => i % 2 === 1 ? <code>{part}</code> : part)}</td>
             </tr>

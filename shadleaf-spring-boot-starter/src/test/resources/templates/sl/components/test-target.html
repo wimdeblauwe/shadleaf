@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component with a required prop, as the dialog's id. -->
+<head>
+  <sl:props>
+    <sl:prop name="id" required>The element's id.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<section th:fragment="test-target" th:id="${props.id}" sl:attrs><sl:slot/></section>
+</body>
+</html>

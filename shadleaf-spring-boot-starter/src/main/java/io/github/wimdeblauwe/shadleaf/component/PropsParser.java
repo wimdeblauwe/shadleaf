@@ -43,7 +43,7 @@ public final class PropsParser {
   private static final String ACCESSIBLE_NAME_ELEMENT = "sl:accessible-name";
   private static final String DESCRIPTION_ELEMENT = "sl:description";
   private static final String CODE_ELEMENT = "code";
-  private static final Set<String> PROP_ATTRIBUTES = Set.of("name", "type", "default", "values");
+  private static final Set<String> PROP_ATTRIBUTES = Set.of("name", "type", "default", "values", "required");
   private static final Pattern PROP_NAME = Pattern.compile("[a-z][a-z0-9]*(-[a-z0-9]+)*");
   private static final Pattern WHITESPACE = Pattern.compile("\\s+");
   private static final ParseConfiguration PARSE_CONFIGURATION = parseConfiguration();
@@ -246,6 +246,14 @@ public final class PropsParser {
       List<String> values = parseValues(name, attrs.get("values"));
       PropType type = propType(name, attrs.get("type"), values);
 
+      boolean required = required(name, attrs);
+      if (required && attrs.containsKey("default")) {
+        throw error("prop '" + name + "' is required and cannot have a default");
+      }
+      if (required && type == PropType.BOOLEAN) {
+        throw error("prop '" + name + "' is a boolean and cannot be required: leaving it out means false");
+      }
+
       Object defaultValue = null;
       String defaultAttribute = attrs.get("default");
       if (defaultAttribute != null) {
@@ -257,7 +265,22 @@ public final class PropsParser {
       } else if (type == PropType.BOOLEAN) {
         defaultValue = Boolean.FALSE;
       }
-      return new PropDefinition(name, type, defaultValue, values, description);
+      return new PropDefinition(name, type, defaultValue, values, description, required);
+    }
+
+    /** {@code required}, {@code required="required"} or {@code required="true"}; absent or {@code "false"} is not. */
+    private boolean required(String propName, Map<String, String> attrs) {
+      if (!attrs.containsKey("required")) {
+        return false;
+      }
+      String value = attrs.get("required");
+      if (value == null || value.isEmpty() || value.equals("true") || value.equals("required")) {
+        return true;
+      }
+      if (value.equals("false")) {
+        return false;
+      }
+      throw error("prop '" + propName + "' has required=\"" + value + "\"; write required or leave it out");
     }
 
     private List<String> parseValues(String propName, @Nullable String valuesAttribute) {

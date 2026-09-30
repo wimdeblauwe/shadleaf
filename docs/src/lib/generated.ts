@@ -20,6 +20,7 @@ export type Prop = {
   name: string;
   type: 'string' | 'boolean' | 'number' | 'enum';
   defaultValue?: string;
+  required?: boolean;
   values: string[];
   description: string;
 };
