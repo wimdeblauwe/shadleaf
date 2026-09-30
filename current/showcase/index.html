@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/current/shadleaf/assets/shadleaf-vega-DSZH18-e.css"><script>(function(){const skins = {"vega":"/shadleaf/current/shadleaf/assets/shadleaf-vega-DSZH18-e.css","lyra":"/shadleaf/current/shadleaf/assets/shadleaf-lyra-CULmeUUj.css"};
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/current/shadleaf/assets/shadleaf-vega-B7fI75WH.css"><script>(function(){const skins = {"vega":"/shadleaf/current/shadleaf/assets/shadleaf-vega-B7fI75WH.css","lyra":"/shadleaf/current/shadleaf/assets/shadleaf-lyra-D_Be3Amx.css"};
 const firstSkin = "vega";
 
     const params = new URLSearchParams(location.search);
@@ -587,7 +587,326 @@ const firstSkin = "vega";
   </div>
 </div></div><h3 class="astro-6felt6qx">Content only</h3><div class="stage astro-6felt6qx" data-scenario="card--content-only"><div class="card">
   <div class="card-content"><p>A card needs none of its parts but one.</p></div>
-</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">icon</h2><h3 class="astro-6felt6qx">Icon</h3><div class="stage astro-6felt6qx" data-scenario="icon--default"><svg xmlns="http://www.w3.org/2000/svg"
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">checkbox</h2><h3 class="astro-6felt6qx">Checkbox</h3><div class="stage astro-6felt6qx" data-scenario="checkbox--default"><label class="label"><span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" name="terms">
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>Accept the terms and conditions</label></div><h3 class="astro-6felt6qx">Checked</h3><div class="stage astro-6felt6qx" data-scenario="checkbox--checked"><label class="label"><span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" name="newsletter" checked>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>Send me the newsletter</label></div><h3 class="astro-6felt6qx">With a separate label</h3><div class="stage astro-6felt6qx" data-scenario="checkbox--separate-label"><span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" id="checkbox-notify" name="notify">
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>
+<label class="label" for="checkbox-notify">Notify me by email</label></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="checkbox--invalid"><label class="label"><span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" name="terms" aria-invalid="true">
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>Accept the terms and conditions</label></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="checkbox--disabled"><label class="label"><span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" name="archived" checked disabled>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>Archived</label>
+<label class="label"><span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" name="deleted" disabled>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>Deleted</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">field</h2><h3 class="astro-6felt6qx">Field</h3><div class="stage astro-6felt6qx" data-scenario="field--default"><div class="field">
+  <label class="label field-label"
+       for="username">Username</label>
+  <input class="input"
+       type="text" autocomplete="username" id="username" aria-describedby="username-description" name="username" value="">
+  <p class="field-description"
+   id="username-description">Letters, digits and dashes.</p>
+  
+</div></div><h3 class="astro-6felt6qx">With errors</h3><div class="stage astro-6felt6qx" data-scenario="field--invalid"><div class="field"
+     data-invalid="true">
+  <label class="label field-label"
+       for="workEmail">Work email</label>
+  <input class="input"
+       type="email" aria-invalid="true" id="workEmail" aria-describedby="workEmail-description workEmail-error" name="workEmail" value="wim@">
+  <p class="field-description"
+   id="workEmail-description">Your company address.</p>
+  <div class="field-error"
+     id="workEmail-error">must be a well-formed email address</div>
+</div></div><h3 class="astro-6felt6qx">Several errors</h3><div class="stage astro-6felt6qx" data-scenario="field--several-errors"><div class="field"
+     data-invalid="true">
+  <label class="label field-label"
+       for="newPassword">Password</label>
+  <input class="input"
+       type="password" aria-invalid="true" autocomplete="new-password" id="newPassword" aria-describedby="newPassword-error" name="newPassword" value="">
+  <div class="field-error"
+     id="newPassword-error"><ul><li>must be at least 12 characters long</li><li>must contain a digit</li></ul></div>
+</div></div><h3 class="astro-6felt6qx">Textarea</h3><div class="stage astro-6felt6qx" data-scenario="field--textarea"><div class="field">
+  <label class="label field-label"
+       for="bio">Bio</label>
+  <textarea class="textarea" rows="3" id="bio" aria-describedby="bio-description" name="bio"></textarea>
+  <p class="field-description"
+   id="bio-description">A few words for your profile page.</p>
+</div></div><h3 class="astro-6felt6qx">Native select</h3><div class="stage astro-6felt6qx" data-scenario="field--select"><div class="field"
+     data-invalid="true">
+  <label class="label field-label"
+       for="country">Country</label>
+  <div class="native-select-wrapper">
+  <select class="native-select"
+          aria-invalid="true" id="country" aria-describedby="country-error" name="country">
+    <option value="" selected="selected">Select a country</option>
+    <option value="be">Belgium</option>
+    <option value="nl">Netherlands</option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon native-select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+</div>
+  <div class="field-error"
+     id="country-error">must not be blank</div>
+</div></div><h3 class="astro-6felt6qx">Switch</h3><div class="stage astro-6felt6qx" data-scenario="field--switch"><div class="field"
+     data-orientation="horizontal">
+  <input type="checkbox"
+       role="switch"
+       class="switch" id="productUpdates" aria-describedby="productUpdates-description" name="productUpdates" value="true" checked="checked"><input type="hidden" name="_productUpdates" value="on"/>
+  <div class="field-content">
+    <label class="label field-label"
+       for="productUpdates">Product updates</label>
+    <p class="field-description"
+   id="productUpdates-description">One email a month, no more.</p>
+  </div>
+</div></div><h3 class="astro-6felt6qx">Checkbox</h3><div class="stage astro-6felt6qx" data-scenario="field--checkbox"><div class="field"
+     data-orientation="horizontal" data-invalid="true">
+  <span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox"
+         aria-invalid="true" id="acceptTerms" aria-describedby="acceptTerms-error" name="acceptTerms" value="true"><input type="hidden" name="_acceptTerms" value="on"/>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>
+  <div class="field-content">
+    <label class="label field-label"
+       for="acceptTerms">I accept the terms and conditions</label>
+    <div class="field-error"
+     id="acceptTerms-error">must be accepted</div>
+  </div>
+</div></div><h3 class="astro-6felt6qx">Radio group</h3><div class="stage astro-6felt6qx" data-scenario="field--radio-group"><fieldset class="field-set"
+          data-invalid="true" aria-describedby="billingPlan-description billingPlan-error">
+  <legend class="field-legend"
+        data-variant="label">Plan</legend>
+  <p class="field-description"
+   id="billingPlan-description">You can change it at any time.</p>
+  <div class="radio-group"
+     role="radiogroup">
+    <label class="label"><input type="radio"
+       class="radio-group-item"
+       aria-invalid="true" value="monthly" id="billingPlan1" name="billingPlan">Monthly</label>
+    <label class="label"><input type="radio"
+       class="radio-group-item"
+       aria-invalid="true" value="yearly" id="billingPlan2" name="billingPlan">Yearly</label>
+  </div>
+  <div class="field-error"
+     id="billingPlan-error">must not be blank</div>
+</fieldset></div><h3 class="astro-6felt6qx">Checkbox group</h3><div class="stage astro-6felt6qx" data-scenario="field--checkbox-group"><fieldset class="field-set">
+  <legend class="field-legend"
+        data-variant="label">Toppings</legend>
+  <div class="field"
+     data-orientation="horizontal">
+    <span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" value="cheese" id="toppings1" name="toppings" checked="checked"><input type="hidden" name="_toppings" value="on"/>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>
+    <label class="label field-label"
+       for="toppings1">Cheese</label>
+  </div>
+  <div class="field"
+     data-orientation="horizontal">
+    <span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" value="olives" id="toppings2" name="toppings"><input type="hidden" name="_toppings" value="on"/>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>
+    <label class="label field-label"
+       for="toppings2">Olives</label>
+  </div>
+  <div class="field"
+     data-orientation="horizontal">
+    <span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" value="basil" id="toppings3" name="toppings"><input type="hidden" name="_toppings" value="on"/>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>
+    <label class="label field-label"
+       for="toppings3">Basil</label>
+  </div>
+</fieldset></div><h3 class="astro-6felt6qx">Field set and field group</h3><div class="stage astro-6felt6qx" data-scenario="field--field-set"><fieldset class="field-set">
+  <legend class="field-legend">Shipping address</legend>
+  <p class="field-description">Where we deliver your order.</p>
+  <div class="field-group">
+    <div class="field">
+      <label class="label field-label"
+       for="street">Street</label>
+      <input class="input"
+       type="text" autocomplete="street-address" id="street" name="street" value="">
+    </div>
+    <div class="field">
+      <label class="label field-label"
+       for="city">City</label>
+      <input class="input"
+       type="text" autocomplete="address-level2" id="city" name="city" value="">
+    </div>
+  </div>
+</fieldset></div><h3 class="astro-6felt6qx">Responsive</h3><div class="stage astro-6felt6qx" data-scenario="field--responsive"><div class="field-group">
+  <div class="field"
+     data-orientation="responsive">
+    <div class="field-content">
+      <label class="label field-label"
+       for="displayName">Display name</label>
+      <p class="field-description"
+   id="displayName-description">Shown next to your comments.</p>
+    </div>
+    <input class="input"
+       type="text" id="displayName" aria-describedby="displayName-description" name="displayName" value="">
+  </div>
+</div></div><h3 class="astro-6felt6qx">Without th:field</h3><div class="stage astro-6felt6qx" data-scenario="field--without-binding"><div class="field">
+  <label class="label field-label"
+       for="field-search">Search orders</label>
+  <input class="input"
+       type="search" name="q" id="field-search" aria-describedby="field-search-description">
+  <p class="field-description"
+   id="field-search-description">An order number or a customer name.</p>
+</div></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="field--disabled"><div class="field-group">
+  <div class="field">
+    <label class="label field-label"
+       for="companyName">Company name</label>
+    <input class="input"
+       type="text" disabled id="companyName" aria-describedby="companyName-description" name="companyName" value="Acme">
+    <p class="field-description"
+   id="companyName-description">Only an administrator can change it.</p>
+  </div>
+  <div class="field"
+     data-orientation="horizontal">
+    <input type="checkbox"
+       role="switch"
+       class="switch" disabled id="twoFactor" aria-describedby="twoFactor-description" name="twoFactor" value="true" checked="checked">
+    <div class="field-content">
+      <label class="label field-label"
+       for="twoFactor">Two-factor authentication</label>
+      <p class="field-description"
+   id="twoFactor-description">Required by your organisation.</p>
+    </div>
+  </div>
+</div></div><h3 class="astro-6felt6qx">Disabled field set</h3><div class="stage astro-6felt6qx" data-scenario="field--disabled-field-set"><fieldset class="field-set"
+          aria-describedby="billingCycle-description" disabled>
+  <legend class="field-legend"
+        data-variant="label">Billing cycle</legend>
+  <p class="field-description"
+   id="billingCycle-description">Fixed until your contract ends.</p>
+  <div class="radio-group"
+     role="radiogroup">
+    <label class="label"><input type="radio"
+       class="radio-group-item" value="monthly" id="billingCycle1" name="billingCycle">Monthly</label>
+    <label class="label"><input type="radio"
+       class="radio-group-item" value="yearly" id="billingCycle2" name="billingCycle" checked="checked">Yearly</label>
+  </div>
+</fieldset></div><h3 class="astro-6felt6qx">Read-only</h3><div class="stage astro-6felt6qx" data-scenario="field--read-only"><div class="field">
+  <label class="label field-label"
+       for="accountNumber">Account number</label>
+  <input class="input"
+       type="text" readonly id="accountNumber" aria-describedby="accountNumber-description" name="accountNumber" value="AC-58213">
+  <p class="field-description"
+   id="accountNumber-description">Quote it when you contact us.</p>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">form-errors</h2><h3 class="astro-6felt6qx">Form errors</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--default"><div class="field-group">
+  
+<div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="form-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title">There is a problem</div><div
+    class="alert-description">The passwords do not match.</div></div>
+
+  <div class="field">
+    <label class="label field-label"
+       for="signupPassword">Password</label>
+    <input class="input"
+       type="password" autocomplete="new-password" id="signupPassword" name="signupPassword" value="">
+  </div>
+  <div class="field">
+    <label class="label field-label"
+       for="signupRepeat">Repeat the password</label>
+    <input class="input"
+       type="password" autocomplete="new-password" id="signupRepeat" name="signupRepeat" value="">
+  </div>
+</div></div><h3 class="astro-6felt6qx">Several errors</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--several"><div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="order-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title">There is a problem</div><div
+    class="alert-description"><ul><li>The delivery date is before the order date.</li><li>Orders over 50 items need a purchase order number.</li></ul></div></div></div><h3 class="astro-6felt6qx">All errors</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--all"><div class="field-group">
+  
+<div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="account-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title">There is a problem</div><div
+    class="alert-description"><ul><li>This invitation has expired.</li><li>Enter your name.</li><li>Enter an email address like you@example.com.</li></ul></div></div>
+
+  <div class="field"
+     data-invalid="true">
+    <label class="label field-label"
+       for="accountName">Name</label>
+    <input class="input"
+       type="text" aria-invalid="true" autocomplete="name" id="accountName" aria-describedby="accountName-error" name="accountName" value="">
+    <div class="field-error"
+     id="accountName-error">Enter your name.</div>
+  </div>
+  <div class="field"
+     data-invalid="true">
+    <label class="label field-label"
+       for="accountEmail">Email</label>
+    <input class="input"
+       type="email" aria-invalid="true" autocomplete="email" id="accountEmail" aria-describedby="accountEmail-error" name="accountEmail" value="wim@">
+    <div class="field-error"
+     id="accountEmail-error">Enter an email address like you@example.com.</div>
+  </div>
+</div></div><h3 class="astro-6felt6qx">A title of its own</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--title"><div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="transfer-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title"
+    role="heading" aria-level="2">The transfer was not made</div><div
+    class="alert-description">Your balance is too low for this amount.</div></div></div><h3 class="astro-6felt6qx">Content of its own</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--content"><div class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     id="payment-errors"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg><div class="alert-title">There is a problem</div><div
+    class="alert-description">
+  <p>The payment service did not answer. Your card was not charged.</p>
+  <p>Try again in a minute.</p>
+</div></div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">icon</h2><h3 class="astro-6felt6qx">Icon</h3><div class="stage astro-6felt6qx" data-scenario="icon--default"><svg xmlns="http://www.w3.org/2000/svg"
      class="sl-icon"
      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg>
 <svg xmlns="http://www.w3.org/2000/svg"
@@ -613,7 +932,24 @@ const firstSkin = "vega";
      class="sl-icon"
      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M11 20a10 10 0 0010-10 25.9 25.9 0 00-1.04-7.281 1 1 0 00-1.755-.325C15.833 5.5 13 5.5 9.8 6.1A7 7 0 0011 20"/><path d="M2 21a5 5 0 012.911-4.544C7.613 15.212 8.351 15.24 11 13"/></svg></div><h3 class="astro-6felt6qx">A meaningful icon</h3><div class="stage astro-6felt6qx" data-scenario="icon--label"><svg xmlns="http://www.w3.org/2000/svg"
      class="sl-icon"
-     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Warning"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">kbd</h2><h3 class="astro-6felt6qx">Kbd</h3><div class="stage astro-6felt6qx" data-scenario="kbd--default"><kbd class="kbd">Esc</kbd>
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Warning"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">input</h2><h3 class="astro-6felt6qx">Input</h3><div class="stage astro-6felt6qx" data-scenario="input--default"><label class="label" for="email">Email</label>
+<input class="input"
+       type="email" id="email" name="email" placeholder="you@example.com"></div><h3 class="astro-6felt6qx">Types</h3><div class="stage astro-6felt6qx" data-scenario="input--types"><label class="label" for="input-password">Password</label>
+<input class="input"
+       type="password" id="input-password" name="password">
+<label class="label" for="input-date">Delivery date</label>
+<input class="input"
+       type="date" id="input-date" name="deliveryDate">
+<label class="label" for="input-file">Invoice</label>
+<input class="input"
+       type="file" id="input-file" name="invoice"></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="input--invalid"><label class="label" for="input-invalid">Email</label>
+<input class="input"
+       type="email" id="input-invalid" name="email" value="wim@" aria-invalid="true"></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="input--disabled"><label class="label" for="input-disabled">Customer number</label>
+<input class="input"
+       type="text" id="input-disabled" name="customerNumber" value="C-1042" disabled></div><h3 class="astro-6felt6qx">Read-only</h3><div class="stage astro-6felt6qx" data-scenario="input--read-only"><label class="label" for="input-reference">Order reference</label>
+<input class="input"
+       type="text" id="input-reference" name="reference" value="ORD-2026-0042" readonly></div><h3 class="astro-6felt6qx">With htmx</h3><div class="stage astro-6felt6qx" data-scenario="input--htmx"><input class="input"
+       type="search" name="q" aria-label="Search orders" hx-get="/orders" hx-trigger="input changed delay:300ms" hx-target="#orders"></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">kbd</h2><h3 class="astro-6felt6qx">Kbd</h3><div class="stage astro-6felt6qx" data-scenario="kbd--default"><kbd class="kbd">Esc</kbd>
 <kbd class="kbd">Enter</kbd>
 <kbd class="kbd">/</kbd></div><h3 class="astro-6felt6qx">A key combination</h3><div class="stage astro-6felt6qx" data-scenario="kbd--group"><kbd class="kbd-group">
   <kbd class="kbd">Ctrl</kbd>
@@ -652,7 +988,98 @@ const firstSkin = "vega";
   Cancel <kbd class="kbd" aria-hidden="true">Esc</kbd>
 
   
-</button></div><h3 class="astro-6felt6qx">In a sentence</h3><div class="stage astro-6felt6qx" data-scenario="kbd--in-text"><p>Press <kbd class="kbd">/</kbd> to search.</p></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">separator</h2><h3 class="astro-6felt6qx">Separator</h3><div class="stage astro-6felt6qx" data-scenario="separator--default"><div class="separator"
+</button></div><h3 class="astro-6felt6qx">In a sentence</h3><div class="stage astro-6felt6qx" data-scenario="kbd--in-text"><p>Press <kbd class="kbd">/</kbd> to search.</p></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">label</h2><h3 class="astro-6felt6qx">Label</h3><div class="stage astro-6felt6qx" data-scenario="label--default"><label class="label" for="label-email">Email</label>
+<input class="input"
+       type="email" id="label-email" placeholder="you@example.com"></div><h3 class="astro-6felt6qx">Around its control</h3><div class="stage astro-6felt6qx" data-scenario="label--wrapping"><label class="label"><input type="checkbox" name="newsletter"> Send me the newsletter</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">native-select</h2><h3 class="astro-6felt6qx">Native select</h3><div class="stage astro-6felt6qx" data-scenario="native-select--default"><label class="label" for="status">Status</label>
+<div class="native-select-wrapper">
+  <select class="native-select" id="status" name="status">
+  <option value="">Select status</option>
+  <option value="todo">Todo</option>
+  <option value="in-progress">In progress</option>
+  <option value="done">Done</option>
+</select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon native-select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+</div></div><h3 class="astro-6felt6qx">Groups</h3><div class="stage astro-6felt6qx" data-scenario="native-select--groups"><label class="label" for="select-department">Department</label>
+<div class="native-select-wrapper">
+  <select class="native-select" id="select-department" name="department">
+  <optgroup label="Engineering">
+    <option value="frontend">Frontend</option>
+    <option value="backend">Backend</option>
+  </optgroup>
+  <optgroup label="Sales">
+    <option value="sales-rep">Sales representative</option>
+    <option value="account-manager">Account manager</option>
+  </optgroup>
+</select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon native-select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+</div></div><h3 class="astro-6felt6qx">Sizes</h3><div class="stage astro-6felt6qx" data-scenario="native-select--sizes"><div class="native-select-wrapper"
+     data-size="sm">
+  <select class="native-select" name="priority" aria-label="Priority (small)">
+  <option>Low</option>
+  <option>High</option>
+</select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon native-select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+</div>
+<div class="native-select-wrapper">
+  <select class="native-select" name="priority" aria-label="Priority">
+  <option>Low</option>
+  <option>High</option>
+</select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon native-select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+</div></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="native-select--invalid"><div class="native-select-wrapper">
+  <select class="native-select" name="status" aria-label="Status" aria-invalid="true">
+  <option value="">Select status</option>
+  <option value="todo">Todo</option>
+</select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon native-select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+</div></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="native-select--disabled"><div class="native-select-wrapper">
+  <select class="native-select" name="status" aria-label="Status" disabled>
+  <option>Todo</option>
+</select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon native-select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">radio-group</h2><h3 class="astro-6felt6qx">Radio group</h3><div class="stage astro-6felt6qx" data-scenario="radio-group--default"><p id="plan-question">Plan</p>
+<div class="radio-group"
+     role="radiogroup" aria-labelledby="plan-question">
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="plan" value="free" checked>Free</label>
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="plan" value="pro">Pro</label>
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="plan" value="enterprise">Enterprise</label>
+</div></div><h3 class="astro-6felt6qx">Horizontal</h3><div class="stage astro-6felt6qx" data-scenario="radio-group--horizontal"><div class="radio-group"
+     role="radiogroup"
+     data-orientation="horizontal" aria-label="Density">
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="density" value="compact">Compact</label>
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="density" value="comfortable" checked>Comfortable</label>
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="density" value="spacious">Spacious</label>
+</div></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="radio-group--invalid"><div class="radio-group"
+     role="radiogroup" aria-label="Delivery">
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="delivery" value="standard" aria-invalid="true">Standard</label>
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="delivery" value="express" aria-invalid="true">Express</label>
+</div></div><h3 class="astro-6felt6qx">Disabled item</h3><div class="stage astro-6felt6qx" data-scenario="radio-group--disabled"><div class="radio-group"
+     role="radiogroup" aria-label="Shipping">
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="shipping" value="pickup" checked>Pick up in store</label>
+  <label class="label"><input type="radio"
+       class="radio-group-item" name="shipping" value="drone" disabled>Drone (not available)</label>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">separator</h2><h3 class="astro-6felt6qx">Separator</h3><div class="stage astro-6felt6qx" data-scenario="separator--default"><div class="separator"
      role="none"></div></div><h3 class="astro-6felt6qx">Vertical</h3><div class="stage astro-6felt6qx" data-scenario="separator--vertical"><a class="btn"
      data-variant="link" href="/blog">
   
@@ -704,4 +1131,24 @@ const firstSkin = "vega";
     <div class="skeleton"
      aria-hidden="true"></div>
   </div>
-</div></div></section></main></body></html>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">switch</h2><h3 class="astro-6felt6qx">Switch</h3><div class="stage astro-6felt6qx" data-scenario="switch--default"><label class="label"><input type="checkbox"
+       role="switch"
+       class="switch" name="airplaneMode">Airplane mode</label></div><h3 class="astro-6felt6qx">Sizes</h3><div class="stage astro-6felt6qx" data-scenario="switch--sizes"><label class="label"><input type="checkbox"
+       role="switch"
+       class="switch"
+       data-size="sm" name="compact" checked>Small</label>
+<label class="label"><input type="checkbox"
+       role="switch"
+       class="switch" name="regular" checked>Default</label></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="switch--invalid"><label class="label"><input type="checkbox"
+       role="switch"
+       class="switch" name="marketing" aria-invalid="true">Marketing emails</label></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="switch--disabled"><label class="label"><input type="checkbox"
+       role="switch"
+       class="switch" name="sso" checked disabled>Single sign-on (managed by your organisation)</label>
+<label class="label"><input type="checkbox"
+       role="switch"
+       class="switch" name="betaFeatures" disabled>Beta features (not in your plan)</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">textarea</h2><h3 class="astro-6felt6qx">Textarea</h3><div class="stage astro-6felt6qx" data-scenario="textarea--default"><label class="label" for="message">Message</label>
+<textarea class="textarea" id="message" name="message" placeholder="Type your message here."></textarea></div><h3 class="astro-6felt6qx">Initial text</h3><div class="stage astro-6felt6qx" data-scenario="textarea--initial-text"><label class="label" for="textarea-notes">Notes</label>
+<textarea class="textarea" id="textarea-notes" name="notes">Leave the parcel at the back door.</textarea></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="textarea--invalid"><label class="label" for="textarea-invalid">Message</label>
+<textarea class="textarea" id="textarea-invalid" name="message" aria-invalid="true"></textarea></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="textarea--disabled"><label class="label" for="textarea-disabled">Message</label>
+<textarea class="textarea" id="textarea-disabled" name="message" disabled></textarea></div><h3 class="astro-6felt6qx">Read-only</h3><div class="stage astro-6felt6qx" data-scenario="textarea--read-only"><label class="label" for="textarea-instructions">Delivery instructions</label>
+<textarea class="textarea" id="textarea-instructions" name="instructions" readonly>Leave the parcel with the neighbours at number 12.</textarea></div></section></main></body></html>
