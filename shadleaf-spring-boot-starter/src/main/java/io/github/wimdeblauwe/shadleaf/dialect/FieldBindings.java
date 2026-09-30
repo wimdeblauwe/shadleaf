@@ -33,16 +33,23 @@ import org.thymeleaf.util.StringUtils;
  * without {@code th:field} inside a {@code sl:field-set} with one) takes the next number from the same sequence Spring
  * numbers checkboxes and radio buttons with: {@code toppings1}, {@code toppings2}.
  * <p>
- * {@code sl:form-errors} reads the errors of the form object through {@link #form(boolean)}.
+ * {@code sl:form-errors} reads the errors of the form object through {@link #form(boolean, boolean)}. With
+ * {@code autofocus} and nothing to show, it leaves the focus to the first control with errors, which
+ * {@link #control(Attrs, Object)} gives {@code autofocus}. That state lives in this object: Thymeleaf builds one per
+ * template execution (the expression object is cacheable), and the form renders top to bottom, so the summary always
+ * decides before the controls below it ask.
  */
 public final class FieldBindings {
 
   private static final String FIELD_ATTRIBUTE = "th:field";
   private static final String ID_ATTRIBUTE = "id";
   private static final String DESCRIBED_BY_ATTRIBUTE = "aria-describedby";
+  private static final String AUTOFOCUS_ATTRIBUTE = "autofocus";
   private static final String EXPRESSION_PREFIX = "th:";
 
   private final IExpressionContext context;
+  /** The form objects whose first control with errors takes {@code autofocus}, by name ({@code signup}). */
+  private final Set<String> focusFirstInvalid = new HashSet<>();
 
   FieldBindings(IExpressionContext context) {
     this.context = context;
@@ -92,29 +99,39 @@ public final class FieldBindings {
   }
 
   /**
-   * The attributes of a control inside a field: its own, plus the field's {@code th:field} when it has none. The
+   * The attributes of a control: its own, plus, inside a field, the field's {@code th:field} when it has none. The
    * first control in a {@code sl:field} also gets the field's {@code id}, unless it has one, and the field's
    * {@code aria-describedby} ids after any it was given. A {@code th:aria-describedby} is left alone: it cannot be
-   * merged before it is evaluated.
+   * merged before it is evaluated. The first control with errors in a form whose {@code sl:form-errors autofocus}
+   * showed nothing gets {@code autofocus}.
    *
    * @param binding the {@code slField} variable, {@code null} outside a field
    */
   public Attrs control(Attrs attrs, @Nullable Object binding) {
-    if (!(binding instanceof FieldBinding field)) {
+    if (!(binding instanceof FieldBinding) && focusFirstInvalid.isEmpty()) {
       return attrs;
     }
     Map<String, @Nullable String> values = new LinkedHashMap<>(attrs);
-    if (field.getField() != null && !attrs.containsKey(FIELD_ATTRIBUTE)) {
-      values.put(FIELD_ATTRIBUTE, field.getField());
-    }
-    if (!field.isGroup() && field.claim()) {
-      if (field.getId() != null && !has(attrs, ID_ATTRIBUTE)) {
-        values.put(ID_ATTRIBUTE, field.getId());
+    if (binding instanceof FieldBinding field) {
+      if (field.getField() != null && !attrs.containsKey(FIELD_ATTRIBUTE)) {
+        values.put(FIELD_ATTRIBUTE, field.getField());
       }
-      String describedBy = field.getDescribedBy();
-      if (describedBy != null && !attrs.containsKey(EXPRESSION_PREFIX + DESCRIBED_BY_ATTRIBUTE)) {
-        String own = attrs.get(DESCRIBED_BY_ATTRIBUTE);
-        values.put(DESCRIBED_BY_ATTRIBUTE, StringUtils.isEmptyOrWhitespace(own) ? describedBy : own + " " + describedBy);
+      if (!field.isGroup() && field.claim()) {
+        if (field.getId() != null && !has(attrs, ID_ATTRIBUTE)) {
+          values.put(ID_ATTRIBUTE, field.getId());
+        }
+        String describedBy = field.getDescribedBy();
+        if (describedBy != null && !attrs.containsKey(EXPRESSION_PREFIX + DESCRIBED_BY_ATTRIBUTE)) {
+          String own = attrs.get(DESCRIBED_BY_ATTRIBUTE);
+          values.put(DESCRIBED_BY_ATTRIBUTE,
+              StringUtils.isEmptyOrWhitespace(own) ? describedBy : own + " " + describedBy);
+        }
+      }
+    }
+    if (!focusFirstInvalid.isEmpty() && invalid(values)) {
+      String form = boundObjectName();
+      if (form != null && focusFirstInvalid.remove(form) && !has(values, AUTOFOCUS_ATTRIBUTE)) {
+        values.put(AUTOFOCUS_ATTRIBUTE, AUTOFOCUS_ATTRIBUTE);
       }
     }
     return new Attrs(values);
@@ -125,15 +142,17 @@ public final class FieldBindings {
    * errors, and with {@code includeFieldErrors} the field errors after them, in the binding's order. A message shows
    * once per field (or once among the global errors), so two fields with the same message both keep it.
    *
+   * @param autofocus whether the summary takes {@code autofocus}: when there is nothing to show, the first control
+   *                  with errors below it takes it instead
    * @throws ShadleafComponentException outside a {@code th:object}, where there is no form object to read
    */
-  public FormErrors form(boolean includeFieldErrors) {
-    if (!(context.getVariable(SpringContextVariableNames.SPRING_BOUND_OBJECT_EXPRESSION)
-        instanceof VariableExpression boundObject)) {
+  public FormErrors form(boolean includeFieldErrors, boolean autofocus) {
+    String form = boundObjectName();
+    if (form == null) {
       throw new ShadleafComponentException(
           "sl:form-errors must be inside an element with th:object: it shows that form object's errors");
     }
-    String id = FieldUtils.idFromName(boundObject.getExpression()) + "-errors";
+    String id = FieldUtils.idFromName(form) + "-errors";
     List<DetailedError> errors = includeFieldErrors
         ? FieldUtils.detailedErrors(context)
         : FieldUtils.globalDetailedErrors(context);
@@ -145,6 +164,9 @@ public final class FieldBindings {
         messages.add(error.getMessage());
       }
     }
+    if (autofocus && messages.isEmpty()) {
+      focusFirstInvalid.add(form);
+    }
     return new FormErrors(id, messages);
   }
 
@@ -153,6 +175,11 @@ public final class FieldBindings {
     return attrs.get(FIELD_ATTRIBUTE) instanceof String field
         && !field.isBlank()
         && FieldUtils.hasErrors(context, field);
+  }
+
+  private @Nullable String boundObjectName() {
+    return context.getVariable(SpringContextVariableNames.SPRING_BOUND_OBJECT_EXPRESSION)
+        instanceof VariableExpression boundObject ? boundObject.getExpression() : null;
   }
 
   private static FieldBinding binding(@Nullable String field, @Nullable String id, @Nullable String base,

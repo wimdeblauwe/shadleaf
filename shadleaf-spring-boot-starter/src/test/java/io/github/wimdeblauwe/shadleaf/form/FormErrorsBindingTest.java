@@ -159,14 +159,93 @@ class FormErrorsBindingTest {
   }
 
   @Test
-  void anIdAClassAndAutofocusOfItsOwnPassThrough() {
+  void anIdAndAClassOfItsOwnPassThrough() {
     Rendered rendered = render(renderer, bindingResult -> bindingResult.reject("Invalid", "Failed"),
-        "<sl:form-errors id=\"top-errors\" class=\"mb-4\" autofocus/>");
+        "<sl:form-errors id=\"top-errors\" class=\"mb-4\"/>");
 
     Element errors = rendered.select(".form-errors").first();
     assertThat(errors.id()).isEqualTo("top-errors");
     assertThat(errors.classNames()).containsExactly("form-errors", "alert", "mb-4");
-    assertThat(errors.hasAttr("autofocus")).isTrue();
+  }
+
+  private static final String FIELDS = """
+      <sl:field th:field="*{email}"><sl:field-label>Email</sl:field-label><sl:input/><sl:field-error/></sl:field>
+      <sl:field th:field="*{bio}"><sl:field-label>Bio</sl:field-label><sl:textarea/><sl:field-error/></sl:field>
+      <sl:field-set th:field="*{plan}"><sl:field-legend>Plan</sl:field-legend>
+        <sl:radio-group><sl:radio-group-item value="free"/><sl:radio-group-item value="pro"/></sl:radio-group>
+      </sl:field-set>
+      <sl:checkbox th:field="*{terms}"/>
+      """;
+
+  @Test
+  void autofocusGoesToTheSummaryWhenItShows() {
+    Rendered rendered = render(renderer, bindingResult -> {
+      bindingResult.reject("Invalid", "The passwords do not match");
+      bindingResult.rejectValue("bio", "Invalid", "is too short");
+    }, "<sl:form-errors autofocus/>" + FIELDS);
+
+    assertThat(rendered.select("[autofocus]")).extracting(Element::id).containsExactly("signup-errors");
+  }
+
+  @Test
+  void withoutAnythingToShowAutofocusGoesToTheFirstControlWithErrors() {
+    Rendered rendered = render(renderer, bindingResult -> {
+      bindingResult.rejectValue("bio", "Invalid", "is too short");
+      bindingResult.rejectValue("email", "Invalid", "is taken");
+    }, "<sl:form-errors autofocus/>" + FIELDS);
+
+    assertThat(rendered.select(".form-errors")).isEmpty();
+    assertThat(rendered.select("[autofocus]")).as("the first in the form, not the first rejected")
+        .extracting(Element::id).containsExactly("email");
+  }
+
+  @Test
+  void theFirstControlWithErrorsCanBeARadioButtonOrAControlOutsideAField() {
+    Rendered group = render(renderer, bindingResult -> {
+      bindingResult.rejectValue("plan", "Invalid", "choose a plan");
+      bindingResult.rejectValue("terms", "Invalid", "must be accepted");
+    }, "<sl:form-errors autofocus/>" + FIELDS);
+    Rendered single = render(renderer, bindingResult -> bindingResult.rejectValue("terms", "Invalid", "no"),
+        "<sl:form-errors autofocus/>" + FIELDS);
+
+    assertThat(group.select("[autofocus]")).extracting(Element::id).containsExactly("plan1");
+    assertThat(single.select("[autofocus]")).extracting(Element::id).containsExactly("terms1");
+  }
+
+  @Test
+  void withAllTheSummaryShowsFieldErrorsTooAndTakesTheFocus() {
+    Rendered rendered = render(renderer, bindingResult -> bindingResult.rejectValue("bio", "Invalid", "too short"),
+        "<sl:form-errors show=\"all\" autofocus/>" + FIELDS);
+
+    assertThat(rendered.select("[autofocus]")).extracting(Element::id).containsExactly("signup-errors");
+  }
+
+  @Test
+  void contentOfItsOwnAlwaysShowsSoItTakesTheFocus() {
+    Rendered rendered = render(renderer, bindingResult -> bindingResult.rejectValue("bio", "Invalid", "too short"),
+        "<sl:form-errors autofocus>The service is down.</sl:form-errors>" + FIELDS);
+
+    assertThat(rendered.select("[autofocus]")).extracting(Element::id).containsExactly("signup-errors");
+  }
+
+  @Test
+  void nothingTakesFocusWithoutErrorsOrWithoutAutofocus() {
+    Rendered valid = render(renderer, bindingResult -> { }, "<sl:form-errors autofocus/>" + FIELDS);
+    Rendered notAsked = render(renderer, bindingResult -> bindingResult.rejectValue("bio", "Invalid", "too short"),
+        "<sl:form-errors/>" + FIELDS);
+
+    assertThat(valid.select("[autofocus]")).isEmpty();
+    assertThat(notAsked.select("[autofocus]")).isEmpty();
+  }
+
+  @Test
+  void aControlsOwnAutofocusIsKeptAndCountsAsTheFocus() {
+    Rendered rendered = render(renderer, bindingResult -> {
+      bindingResult.rejectValue("email", "Invalid", "is taken");
+      bindingResult.rejectValue("bio", "Invalid", "too short");
+    }, "<sl:form-errors autofocus/><sl:input th:field=\"*{email}\" autofocus/><sl:textarea th:field=\"*{bio}\"/>");
+
+    assertThat(rendered.select("[autofocus]")).extracting(Element::id).containsExactly("email");
   }
 
   @Test

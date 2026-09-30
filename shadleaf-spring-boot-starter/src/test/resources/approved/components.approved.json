@@ -256,7 +256,7 @@
   }, {
     "name" : "form-errors",
     "tag" : "sl:form-errors",
-    "description" : "The errors of the form object the enclosing `th:object` selects, shown as a destructive alert: by default the errors that belong to the whole form rather than one field (global errors, from `bindingResult.reject(...)` or a class-level constraint); with `show=\"all\"` the field errors too. One message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. Not announced and not focused by itself; it has an id (`signup-errors` for `th:object=\"${signup}\"`) and `tabindex=\"-1\"`, so `autofocus`, a link or a script can move focus to it.",
+    "description" : "The errors of the form object the enclosing `th:object` selects, shown as a destructive alert: by default the errors that belong to the whole form rather than one field (global errors, from `bindingResult.reject(...)` or a class-level constraint); with `show=\"all\"` the field errors too. One message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. Not announced, and not focused unless it has `autofocus`; it has an id (`signup-errors` for `th:object=\"${signup}\"`) and `tabindex=\"-1\"`, so a link or a script can move focus to it too.",
     "declared" : true,
     "props" : [ {
       "name" : "show",
@@ -274,6 +274,12 @@
       "type" : "enum",
       "values" : [ "1", "2", "3", "4", "5", "6" ],
       "description" : "Heading level of the title. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text."
+    }, {
+      "name" : "autofocus",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Move focus to the problem when the form comes back with errors: to the summary when it shows, otherwise to the first control with errors below it (in a field or with a `th:field` of its own). Nothing takes focus while the form has no errors. htmx honours it in swapped content too."
     } ]
   }, {
     "name" : "icon",

@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * What {@code sl:form-errors} shows: the errors of the form object the enclosing {@code th:object} selects (the
- * global ones, or all of them), and the id of the summary. Built by {@link FieldBindings#form(boolean)}.
+ * global ones, or all of them), and the id of the summary. Built by {@link FieldBindings#form(boolean, boolean)}.
  */
 public final class FormErrors {
 

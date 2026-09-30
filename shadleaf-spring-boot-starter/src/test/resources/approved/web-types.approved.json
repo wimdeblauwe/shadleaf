@@ -491,7 +491,7 @@
         "attributes" : [ ]
       }, {
         "name" : "sl:form-errors",
-        "description" : "The errors of the form object the enclosing `th:object` selects, shown as a destructive alert: by default the errors that belong to the whole form rather than one field (global errors, from `bindingResult.reject(...)` or a class-level constraint); with `show=\"all\"` the field errors too. One message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. Not announced and not focused by itself; it has an id (`signup-errors` for `th:object=\"${signup}\"`) and `tabindex=\"-1\"`, so `autofocus`, a link or a script can move focus to it.",
+        "description" : "The errors of the form object the enclosing `th:object` selects, shown as a destructive alert: by default the errors that belong to the whole form rather than one field (global errors, from `bindingResult.reject(...)` or a class-level constraint); with `show=\"all\"` the field errors too. One message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. Not announced, and not focused unless it has `autofocus`; it has an id (`signup-errors` for `th:object=\"${signup}\"`) and `tabindex=\"-1\"`, so a link or a script can move focus to it too.",
         "attributes" : [ {
           "name" : "show",
           "description" : "Which errors to list: the global errors only, or all of them, the global ones first and then every field's (each field keeps its own error too). Field messages are listed as they are, without the field's label, so write them to make sense on their own.",
@@ -535,6 +535,13 @@
             "name" : "6"
           } ]
         }, {
+          "name" : "autofocus",
+          "description" : "Move focus to the problem when the form comes back with errors: to the summary when it shows, otherwise to the first control with errors below it (in a field or with a `th:field` of its own). Nothing takes focus while the form has no errors. htmx honours it in swapped content too.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
           "name" : "th:show",
           "description" : "`show` from a Thymeleaf expression, e.g. `th:show=\"${...}\"`.",
           "value" : {
@@ -551,6 +558,13 @@
         }, {
           "name" : "th:level",
           "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:autofocus",
+          "description" : "`autofocus` from a Thymeleaf expression, e.g. `th:autofocus=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

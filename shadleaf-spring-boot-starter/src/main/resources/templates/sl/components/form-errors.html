@@ -6,9 +6,9 @@
       destructive alert: by default the errors that belong to the whole form rather than one field (global errors,
       from <code>bindingResult.reject(...)</code> or a class-level constraint); with <code>show="all"</code> the
       field errors too. One message as text, several as a list. It renders nothing while there are none. Content of
-      its own replaces the messages, and always shows. Not announced and not focused by itself; it has an id
-      (<code>signup-errors</code> for <code>th:object="${signup}"</code>) and <code>tabindex="-1"</code>, so
-      <code>autofocus</code>, a link or a script can move focus to it.</sl:description>
+      its own replaces the messages, and always shows. Not announced, and not focused unless it has
+      <code>autofocus</code>; it has an id (<code>signup-errors</code> for <code>th:object="${signup}"</code>) and
+      <code>tabindex="-1"</code>, so a link or a script can move focus to it too.</sl:description>
     <sl:prop name="show" default="global" values="global all">Which errors to list: the global errors only, or all
       of them, the global ones first and then every field's (each field keeps its own error too). Field messages are
       listed as they are, without the field's label, so write them to make sense on their own.</sl:prop>
@@ -17,17 +17,23 @@
     <sl:prop name="level" values="1 2 3 4 5 6">Heading level of the title. With it the title is a heading
       (<code>role="heading"</code> and <code>aria-level</code>) that screen reader users can jump to; without it,
       plain text.</sl:prop>
+    <sl:prop name="autofocus" type="boolean">Move focus to the problem when the form comes back with errors: to the
+      summary when it shows, otherwise to the first control with errors below it (in a field or with a
+      <code>th:field</code> of its own). Nothing takes focus while the form has no errors. htmx honours it in swapped
+      content too.</sl:prop>
   </sl:props>
 </head>
 <body>
 <!--/* No role="alert", as sl:field-error: after a full page load it would be announced along with everything else,
-  or not at all, depending on the screen reader. The docs page explains when to add autofocus. */-->
-<th:block th:fragment="form-errors" th:with="slForm=${#slFields.form(props.show == 'all')}">
+  or not at all, depending on the screen reader. The docs page explains when to add autofocus. Without anything to
+  show, autofocus goes to the first control with errors: #slFields.form remembers it for #slFields.control. */-->
+<th:block th:fragment="form-errors"
+          th:with="slForm=${#slFields.form(props.show == 'all', props.autofocus and !slots.hasDefault())}">
 <div th:if="${slots.hasDefault() or slForm.invalid}"
      class="form-errors alert"
      data-variant="destructive"
      tabindex="-1"
-     th:attr="id=${slForm.id}"
+     th:attr="id=${slForm.id}, autofocus=${props.autofocus ? 'autofocus' : null}"
      sl:attrs><sl:icon name="circle-alert"/><div class="alert-title"
     th:attr="role=${props.level != null ? 'heading' : null}, aria-level=${props.level}"
     th:text="${props.title ?: #messages.msg('sl.form-errors.title')}">There is a problem</div><div

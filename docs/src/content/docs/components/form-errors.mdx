@@ -86,36 +86,46 @@ sometimes.
 
 ## Announcement and focus
 
-`<sl:form-errors>` is not announced and does not take focus by itself.
+`<sl:form-errors>` is not announced, and takes focus only when you ask for it with `autofocus`.
 
 - **No `role="alert"`.** After a submit the whole page loads again. A live region that is there when the page loads
   is read out by some screen readers and ignored by others, and when it is read, it talks over the page itself. The
-  [field errors](../field/#errors) leave out `role="alert"` for the same reason.
-- **No `autofocus` by default.** Moving focus on load is what [GOV.UK's error
-  summary](https://design-system.service.gov.uk/components/error-summary/) does, and it works there because their
-  summary lists every error, with a link to each field. By default this one only holds the form-level errors, so a
-  default focus would skip the reader past the page's heading, even when the form's own errors are one tab away.
+  [field errors](../field/#errors) leave out `role="alert"` for the same reason. When focus moves to the problem, as
+  below, the screen reader reads it there, and a live region would only say it a second time.
+- **No `autofocus` by default.** Moving focus on load skips the reader past the page's heading, so it fits a form
+  that is the page's only task, or one that htmx swaps in, where the submit button that had the focus is gone. It is
+  your call per form.
 
-What to do instead, for a form that reloads the page:
+With `autofocus`, focus goes to the problem when the form comes back with errors:
 
-- Put the outcome in the page title, such as `Error: Sign up`. It is the first thing a screen reader reads after a
-  page load.
-- When the form is the page's only task, add `autofocus`. The summary has `tabindex="-1"`, so it can take focus:
-  it is read out at once, and <kbd>Tab</kbd> continues into the form. It only renders when there are errors, so the
-  first, empty form keeps its focus where it was.
-
-  ```html
+```html
+<form th:object="${signup}" th:action="@{/signup}" method="post" novalidate>
   <sl:form-errors autofocus/>
-  ```
+  ...
+</form>
+```
 
-When htmx swaps the form in without a page load, add `role="alert"` so the new message is read out, as for a field
-error. htmx also honours `autofocus` in swapped content.
+| The form comes back with | Focus goes to |
+| --- | --- |
+| a global error (or, with `show="all"`, any error) | the summary, which is read out; <kbd>Tab</kbd> continues into the form |
+| field errors only | the first control with an error, in the order of the form: its label, its invalid state and its error are read out through `aria-describedby` |
+| no errors | nowhere: the first, empty form keeps the focus where it was |
+
+Content of your own always shows, so with it the summary takes the focus. The summary decides before the controls
+below it render, so keep it above the fields, where it belongs anyway. It works on any control with a `th:field` in
+the form, inside a field or not.
+
+For a form that reloads the page, also put the outcome in the page title, such as `Error: Sign up`: it is the first
+thing a screen reader reads after a page load.
+
+htmx honours `autofocus` in the content it swaps in, after its own attempt to keep focus on the element that had it.
+The [htmx guide](../../guides/htmx/) shows a form that posts with htmx and falls back to a plain POST.
 
 ## Id
 
 The summary's id is the form object's name followed by `-errors`: `signup-errors` for `th:object="${signup}"`. Set
 `id` to use another one, for instance when two forms on a page bind objects of the same name. The id is there for
-`autofocus`, a link (`<a href="#signup-errors">`) or a script. The form's `aria-describedby` does not point at it:
+a link (`<a href="#signup-errors">`) or a script. The form's `aria-describedby` does not point at it:
 screen readers read a form's description, if at all, when the user enters the form, which is not where anyone is
 after a submit.
 
@@ -147,16 +157,16 @@ evaluated inside your `th:object`:
 errors.summary.title=There were {0} errors with your submission
 ```
 
-With every error in it, the summary is where a keyboard or screen reader user can take stock after a submit, which
-makes it the case where `autofocus` fits best.
+With every error in it, the summary is where a keyboard or screen reader user can take stock after a submit, so with
+`autofocus` it takes the focus whenever the form has errors.
 
 The messages are not links to their controls (GOV.UK's summary has those), at least for now:
 
 - The links need the controls' ids, which the fields decide as they render, below the summary. Radio buttons and
   checkbox groups have numbered ids (`replyBy1`), so the field's name is not always an id to link to.
 - Each field error is already next to its control, and read out with it through `aria-describedby`.
-- Where focus goes after an htmx submit (the first invalid field) is still to be decided, and a summary that takes
-  focus is part of that question.
+- Without `show="all"`, `autofocus` takes the user straight to the first field with an error, which is what a link
+  from the summary would do.
 
 ## Attributes
 
