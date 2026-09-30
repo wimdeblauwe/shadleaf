@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-EHnbLgGh.css"><script>(function(){const skins = {"vega":"/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-EHnbLgGh.css","lyra":"/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-7j7U_0zd.css"};
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-B7fI75WH.css"><script>(function(){const skins = {"vega":"/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-B7fI75WH.css","lyra":"/shadleaf/0.3.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-D_Be3Amx.css"};
 const firstSkin = "vega";
 
     const params = new URLSearchParams(location.search);
@@ -618,7 +618,14 @@ const firstSkin = "vega";
   <svg xmlns="http://www.w3.org/2000/svg"
      class="sl-icon checkbox-indicator"
      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
-</span>Archived</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">field</h2><h3 class="astro-6felt6qx">Field</h3><div class="stage astro-6felt6qx" data-scenario="field--default"><div class="field">
+</span>Archived</label>
+<label class="label"><span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" name="deleted" disabled>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>Deleted</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">field</h2><h3 class="astro-6felt6qx">Field</h3><div class="stage astro-6felt6qx" data-scenario="field--default"><div class="field">
   <label class="label field-label"
        for="username">Username</label>
   <input class="input"
@@ -786,6 +793,47 @@ const firstSkin = "vega";
        type="search" name="q" id="field-search" aria-describedby="field-search-description">
   <p class="field-description"
    id="field-search-description">An order number or a customer name.</p>
+</div></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="field--disabled"><div class="field-group">
+  <div class="field">
+    <label class="label field-label"
+       for="companyName">Company name</label>
+    <input class="input"
+       type="text" disabled id="companyName" aria-describedby="companyName-description" name="companyName" value="Acme">
+    <p class="field-description"
+   id="companyName-description">Only an administrator can change it.</p>
+  </div>
+  <div class="field"
+     data-orientation="horizontal">
+    <input type="checkbox"
+       role="switch"
+       class="switch" disabled id="twoFactor" aria-describedby="twoFactor-description" name="twoFactor" value="true" checked="checked">
+    <div class="field-content">
+      <label class="label field-label"
+       for="twoFactor">Two-factor authentication</label>
+      <p class="field-description"
+   id="twoFactor-description">Required by your organisation.</p>
+    </div>
+  </div>
+</div></div><h3 class="astro-6felt6qx">Disabled field set</h3><div class="stage astro-6felt6qx" data-scenario="field--disabled-field-set"><fieldset class="field-set"
+          aria-describedby="billingCycle-description" disabled>
+  <legend class="field-legend"
+        data-variant="label">Billing cycle</legend>
+  <p class="field-description"
+   id="billingCycle-description">Fixed until your contract ends.</p>
+  <div class="radio-group"
+     role="radiogroup">
+    <label class="label"><input type="radio"
+       class="radio-group-item" value="monthly" id="billingCycle1" name="billingCycle">Monthly</label>
+    <label class="label"><input type="radio"
+       class="radio-group-item" value="yearly" id="billingCycle2" name="billingCycle" checked="checked">Yearly</label>
+  </div>
+</fieldset></div><h3 class="astro-6felt6qx">Read-only</h3><div class="stage astro-6felt6qx" data-scenario="field--read-only"><div class="field">
+  <label class="label field-label"
+       for="accountNumber">Account number</label>
+  <input class="input"
+       type="text" readonly id="accountNumber" aria-describedby="accountNumber-description" name="accountNumber" value="AC-58213">
+  <p class="field-description"
+   id="accountNumber-description">Quote it when you contact us.</p>
 </div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">form-errors</h2><h3 class="astro-6felt6qx">Form errors</h3><div class="stage astro-6felt6qx" data-scenario="form-errors--default"><div class="field-group">
   
 <div class="form-errors alert"
@@ -898,7 +946,9 @@ const firstSkin = "vega";
 <input class="input"
        type="email" id="input-invalid" name="email" value="wim@" aria-invalid="true"></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="input--disabled"><label class="label" for="input-disabled">Customer number</label>
 <input class="input"
-       type="text" id="input-disabled" name="customerNumber" value="C-1042" disabled></div><h3 class="astro-6felt6qx">With htmx</h3><div class="stage astro-6felt6qx" data-scenario="input--htmx"><input class="input"
+       type="text" id="input-disabled" name="customerNumber" value="C-1042" disabled></div><h3 class="astro-6felt6qx">Read-only</h3><div class="stage astro-6felt6qx" data-scenario="input--read-only"><label class="label" for="input-reference">Order reference</label>
+<input class="input"
+       type="text" id="input-reference" name="reference" value="ORD-2026-0042" readonly></div><h3 class="astro-6felt6qx">With htmx</h3><div class="stage astro-6felt6qx" data-scenario="input--htmx"><input class="input"
        type="search" name="q" aria-label="Search orders" hx-get="/orders" hx-trigger="input changed delay:300ms" hx-target="#orders"></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">kbd</h2><h3 class="astro-6felt6qx">Kbd</h3><div class="stage astro-6felt6qx" data-scenario="kbd--default"><kbd class="kbd">Esc</kbd>
 <kbd class="kbd">Enter</kbd>
 <kbd class="kbd">/</kbd></div><h3 class="astro-6felt6qx">A key combination</h3><div class="stage astro-6felt6qx" data-scenario="kbd--group"><kbd class="kbd-group">
@@ -1093,8 +1143,12 @@ const firstSkin = "vega";
        role="switch"
        class="switch" name="marketing" aria-invalid="true">Marketing emails</label></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="switch--disabled"><label class="label"><input type="checkbox"
        role="switch"
-       class="switch" name="sso" checked disabled>Single sign-on (managed by your organisation)</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">textarea</h2><h3 class="astro-6felt6qx">Textarea</h3><div class="stage astro-6felt6qx" data-scenario="textarea--default"><label class="label" for="message">Message</label>
+       class="switch" name="sso" checked disabled>Single sign-on (managed by your organisation)</label>
+<label class="label"><input type="checkbox"
+       role="switch"
+       class="switch" name="betaFeatures" disabled>Beta features (not in your plan)</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">textarea</h2><h3 class="astro-6felt6qx">Textarea</h3><div class="stage astro-6felt6qx" data-scenario="textarea--default"><label class="label" for="message">Message</label>
 <textarea class="textarea" id="message" name="message" placeholder="Type your message here."></textarea></div><h3 class="astro-6felt6qx">Initial text</h3><div class="stage astro-6felt6qx" data-scenario="textarea--initial-text"><label class="label" for="textarea-notes">Notes</label>
 <textarea class="textarea" id="textarea-notes" name="notes">Leave the parcel at the back door.</textarea></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="textarea--invalid"><label class="label" for="textarea-invalid">Message</label>
 <textarea class="textarea" id="textarea-invalid" name="message" aria-invalid="true"></textarea></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="textarea--disabled"><label class="label" for="textarea-disabled">Message</label>
-<textarea class="textarea" id="textarea-disabled" name="message" disabled></textarea></div></section></main></body></html>
+<textarea class="textarea" id="textarea-disabled" name="message" disabled></textarea></div><h3 class="astro-6felt6qx">Read-only</h3><div class="stage astro-6felt6qx" data-scenario="textarea--read-only"><label class="label" for="textarea-instructions">Delivery instructions</label>
+<textarea class="textarea" id="textarea-instructions" name="instructions" readonly>Leave the parcel with the neighbours at number 12.</textarea></div></section></main></body></html>

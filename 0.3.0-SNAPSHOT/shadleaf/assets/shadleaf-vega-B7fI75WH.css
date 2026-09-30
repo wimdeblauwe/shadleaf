@@ -603,6 +603,16 @@
     position: relative;
   }
 
+  .checkbox-wrapper:has( > .checkbox:disabled) {
+    opacity: .5;
+  }
+
+  @media (forced-colors: active) {
+    .checkbox-wrapper:has( > .checkbox:disabled) {
+      opacity: 1;
+    }
+  }
+
   .checkbox-wrapper > * {
     grid-area: 1 / 1;
   }
@@ -617,7 +627,6 @@
 
   .checkbox:disabled {
     cursor: not-allowed;
-    opacity: .5;
   }
 
   @media (forced-colors: active) {
@@ -723,9 +732,16 @@
     width: fit-content;
   }
 
-  .field:has( > :disabled,  > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-label, .field:has( > :disabled,  > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-content > .field-label {
+  .field:has( > :disabled,  > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-label, .field:has( > :disabled,  > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-content > .field-label, .field-set:disabled > .field-legend {
     cursor: not-allowed;
     opacity: .5;
+  }
+
+  @media (forced-colors: active) {
+    .field:has( > :disabled,  > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-label, .field:has( > :disabled,  > :is(.checkbox-wrapper, .native-select-wrapper) > :disabled) > .field-content > .field-label, .field-set:disabled > .field-legend {
+      color: graytext;
+      opacity: 1;
+    }
   }
 
   .field-description {
@@ -786,6 +802,14 @@
     opacity: .5;
   }
 
+  @media (forced-colors: active) {
+    .input:disabled {
+      color: graytext;
+      opacity: 1;
+      border-color: graytext;
+    }
+  }
+
   .kbd {
     pointer-events: none;
     -webkit-user-select: none;
@@ -818,13 +842,30 @@
     opacity: .5;
   }
 
+  @media (forced-colors: active) {
+    .label:has(:disabled), .label:has( + :disabled,  + .checkbox-wrapper > :disabled), :is(:disabled, .checkbox-wrapper:has( > :disabled)) + .label {
+      color: graytext;
+      opacity: 1;
+    }
+  }
+
   .native-select-wrapper {
     width: fit-content;
     position: relative;
   }
 
-  .native-select-wrapper:has(:is(select:disabled)) {
+  .native-select-wrapper:has( > select:disabled) {
     opacity: .5;
+  }
+
+  @media (forced-colors: active) {
+    .native-select-wrapper:has( > select:disabled) {
+      opacity: 1;
+    }
+
+    .native-select-wrapper:has( > select:disabled) > .native-select-icon {
+      color: graytext;
+    }
   }
 
   .native-select {
@@ -840,6 +881,13 @@
   .native-select:disabled {
     pointer-events: none;
     cursor: not-allowed;
+  }
+
+  @media (forced-colors: active) {
+    .native-select:disabled {
+      color: graytext;
+      border-color: graytext;
+    }
   }
 
   .native-select :is(option, optgroup) {
@@ -895,6 +943,10 @@
     .radio-group-item {
       appearance: auto;
     }
+
+    .radio-group-item:disabled {
+      opacity: 1;
+    }
   }
 
   .separator {
@@ -946,6 +998,10 @@
     .switch {
       appearance: auto;
     }
+
+    .switch:disabled {
+      opacity: 1;
+    }
   }
 
   .switch {
@@ -973,6 +1029,14 @@
   .textarea:disabled {
     cursor: not-allowed;
     opacity: .5;
+  }
+
+  @media (forced-colors: active) {
+    .textarea:disabled {
+      color: graytext;
+      opacity: 1;
+      border-color: graytext;
+    }
   }
 
   .btn {
@@ -1956,6 +2020,22 @@
     }
   }
 
+  .input[readonly]:not(:disabled) {
+    background-color: var(--muted);
+    --tw-shadow: 0 0 #0000;
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .input[readonly]:not(:disabled)::placeholder {
+    color: var(--muted-foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .input[readonly]:not(:disabled)::placeholder {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+    }
+  }
+
   .textarea {
     border-radius: calc(var(--radius) - 2px);
     border-style: var(--tw-border-style);
@@ -2042,6 +2122,22 @@
   @supports (color: color-mix(in lab, red, red)) {
     .textarea:where(.dark, .dark *)[aria-invalid="true"] {
       --tw-ring-color: color-mix(in oklab, var(--destructive) 40%, transparent);
+    }
+  }
+
+  .textarea[readonly]:not(:disabled) {
+    background-color: var(--muted);
+    --tw-shadow: 0 0 #0000;
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .textarea[readonly]:not(:disabled)::placeholder {
+    color: var(--muted-foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .textarea[readonly]:not(:disabled)::placeholder {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
     }
   }
 
