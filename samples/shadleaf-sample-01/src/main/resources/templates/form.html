@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Form', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>A form validated on the server with Bean Validation. Submit it empty to see the errors: each control marks
+    itself <code>aria-invalid</code> from its <code>th:field</code>. The messages come from Bean Validation; for now
+    this template renders them itself (a <code>th:errors</code> paragraph per control, linked with
+    <code>aria-describedby</code>), which the upcoming field component will do for you.</p>
+
+  <sl:alert th:if="${sentTo}" role="status">
+    <sl:icon name="circle-check"/>
+    <sl:alert-title>Message sent</sl:alert-title>
+    <sl:alert-description th:text="|We will reply to ${sentTo}.|">We will reply to you.</sl:alert-description>
+  </sl:alert>
+
+  <form class="form" th:object="${contactForm}" th:action="@{/form}" method="post" novalidate>
+    <div class="form-row">
+      <sl:label for="name">Name</sl:label>
+      <sl:input th:field="*{name}" autocomplete="name"
+                th:aria-describedby="${#fields.hasErrors('name') ? 'name-error' : null}"/>
+      <p class="form-error" id="name-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+    </div>
+
+    <div class="form-row">
+      <sl:label for="email">Email</sl:label>
+      <sl:input type="email" th:field="*{email}" placeholder="you@example.com" autocomplete="email"
+                th:aria-describedby="${#fields.hasErrors('email') ? 'email-error' : null}"/>
+      <p class="form-error" id="email-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+    </div>
+
+    <div class="form-row">
+      <sl:label for="topic">Topic</sl:label>
+      <sl:native-select th:field="*{topic}" class="form-full"
+                        th:aria-describedby="${#fields.hasErrors('topic') ? 'topic-error' : null}">
+        <option value="">Select a topic</option>
+        <option th:each="topic : ${topics}" th:value="${topic}"
+                th:text="${#strings.capitalize(topic)}">Sales</option>
+      </sl:native-select>
+      <p class="form-error" id="topic-error" th:if="${#fields.hasErrors('topic')}" th:errors="*{topic}"></p>
+    </div>
+
+    <div class="form-row">
+      <sl:label for="callbackDate">Call me back on (optional)</sl:label>
+      <sl:input type="date" th:field="*{callbackDate}"/>
+    </div>
+
+    <div class="form-row">
+      <sl:label for="message">Message</sl:label>
+      <sl:textarea th:field="*{message}" rows="4" placeholder="At least 10 characters."
+                   th:aria-describedby="${#fields.hasErrors('message') ? 'message-error' : null}"/>
+      <p class="form-error" id="message-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></p>
+    </div>
+
+    <div class="row">
+      <sl:button type="submit">Send</sl:button>
+      <sl:button as="a" variant="outline" th:href="@{/form}">Reset</sl:button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

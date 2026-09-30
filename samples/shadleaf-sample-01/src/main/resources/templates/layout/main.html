@@ -28,6 +28,12 @@
         <sl:slot name="icon-start"><sl:icon name="monitor"/></sl:slot>System</sl:button>
     </div>
   </header>
+  <nav class="site-nav" aria-label="Pages">
+    <sl:button as="a" variant="ghost" size="sm" th:href="@{/}"
+               th:aria-current="${pageTitle == 'Home' ? 'page' : null}">Buttons</sl:button>
+    <sl:button as="a" variant="ghost" size="sm" th:href="@{/form}"
+               th:aria-current="${pageTitle == 'Form' ? 'page' : null}">Form</sl:button>
+  </nav>
   <div th:replace="${content}"></div>
 </main>
 </body>
