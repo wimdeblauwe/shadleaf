@@ -33,4 +33,5 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .form { display: grid; gap: 1.25rem; max-inline-size: 32rem; margin-top: 1.5rem; }
 .form-row { display: grid; gap: 0.5rem; }
 .form-full { inline-size: 100%; }
+.form-question { margin: 0; font-size: 0.875rem; font-weight: 500; }
 .form-error { margin: 0; font-size: 0.875rem; color: var(--destructive); }

@@ -18,10 +18,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class FormController {
 
   static final List<String> TOPICS = List.of("sales", "support", "billing");
+  static final List<String> REPLY_CHANNELS = List.of("email", "phone");
 
   @ModelAttribute("topics")
   List<String> topics() {
     return TOPICS;
+  }
+
+  @ModelAttribute("replyChannels")
+  List<String> replyChannels() {
+    return REPLY_CHANNELS;
   }
 
   @GetMapping("/form")

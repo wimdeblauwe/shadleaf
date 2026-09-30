@@ -54,6 +54,29 @@
       <p class="form-error" id="message-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}"></p>
     </div>
 
+    <div class="form-row">
+      <p class="form-question" id="replyBy-question">Reply by</p>
+      <sl:radio-group orientation="horizontal" aria-labelledby="replyBy-question"
+                      th:aria-describedby="${#fields.hasErrors('replyBy') ? 'replyBy-error' : null}">
+        <sl:label th:each="channel : ${replyChannels}">
+          <sl:radio-group-item th:field="*{replyBy}" th:value="${channel}"/>
+          <th:block th:text="${#strings.capitalize(channel)}">Email</th:block>
+        </sl:label>
+      </sl:radio-group>
+      <p class="form-error" id="replyBy-error" th:if="${#fields.hasErrors('replyBy')}" th:errors="*{replyBy}"></p>
+    </div>
+
+    <div class="form-row">
+      <sl:label><sl:switch th:field="*{newsletter}"/>Send me the monthly newsletter</sl:label>
+    </div>
+
+    <div class="form-row">
+      <sl:label><sl:checkbox th:field="*{terms}"
+                             th:aria-describedby="${#fields.hasErrors('terms') ? 'terms-error' : null}"/>
+        I accept the terms and conditions</sl:label>
+      <p class="form-error" id="terms-error" th:if="${#fields.hasErrors('terms')}" th:errors="*{terms}"></p>
+    </div>
+
     <div class="row">
       <sl:button type="submit">Send</sl:button>
       <sl:button as="a" variant="outline" th:href="@{/form}">Reset</sl:button>

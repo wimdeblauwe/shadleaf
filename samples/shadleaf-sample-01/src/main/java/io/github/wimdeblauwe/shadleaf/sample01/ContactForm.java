@@ -1,5 +1,6 @@
 package io.github.wimdeblauwe.shadleaf.sample01;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,6 +25,14 @@ public class ContactForm {
 
   @Size(min = 10, max = 500)
   private String message;
+
+  @NotBlank
+  private String replyBy;
+
+  private boolean newsletter;
+
+  @AssertTrue(message = "must be accepted")
+  private boolean terms;
 
   public String getName() {
     return name;
@@ -63,5 +72,29 @@ public class ContactForm {
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public String getReplyBy() {
+    return replyBy;
+  }
+
+  public void setReplyBy(String replyBy) {
+    this.replyBy = replyBy;
+  }
+
+  public boolean isNewsletter() {
+    return newsletter;
+  }
+
+  public void setNewsletter(boolean newsletter) {
+    this.newsletter = newsletter;
+  }
+
+  public boolean isTerms() {
+    return terms;
+  }
+
+  public void setTerms(boolean terms) {
+    this.terms = terms;
   }
 }
