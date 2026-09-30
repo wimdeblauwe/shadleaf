@@ -1,0 +1,34 @@
+# Scenarios for the textarea's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# renderSource replaces th:field, which needs a form object: its id and name are written out.
+component: textarea
+scenarios:
+  - id: default
+    title: Textarea
+    source: |-
+      <sl:label for="message">Message</sl:label>
+      <sl:textarea th:field="*{message}" placeholder="Type your message here."/>
+    renderSource: |-
+      <sl:label for="message">Message</sl:label>
+      <sl:textarea id="message" name="message" placeholder="Type your message here."/>
+
+  - id: initial-text
+    title: Initial text
+    description: Without th:field, the content is the initial text.
+    source: |-
+      <sl:label for="textarea-notes">Notes</sl:label>
+      <sl:textarea id="textarea-notes" name="notes">Leave the parcel at the back door.</sl:textarea>
+
+  - id: invalid
+    title: Invalid
+    source: |-
+      <sl:label for="message">Message</sl:label>
+      <sl:textarea th:field="*{message}"/>
+    renderSource: |-
+      <sl:label for="textarea-invalid">Message</sl:label>
+      <sl:textarea id="textarea-invalid" name="message" aria-invalid="true"/>
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:label for="textarea-disabled">Message</sl:label>
+      <sl:textarea id="textarea-disabled" name="message" disabled/>

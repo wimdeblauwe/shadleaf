@@ -458,6 +458,53 @@
           }
         } ]
       }, {
+        "name" : "sl:input",
+        "description" : "A text input. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "Type of the input. Checkboxes and radio buttons have components of their own.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "text"
+          }, {
+            "name" : "email"
+          }, {
+            "name" : "password"
+          }, {
+            "name" : "number"
+          }, {
+            "name" : "search"
+          }, {
+            "name" : "tel"
+          }, {
+            "name" : "url"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "datetime-local"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "week"
+          }, {
+            "name" : "time"
+          }, {
+            "name" : "file"
+          } ],
+          "default" : "text"
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:kbd",
         "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
         "attributes" : [ ]
@@ -465,6 +512,35 @@
         "name" : "sl:kbd-group",
         "description" : "A key combination: `sl:kbd` elements, with any text between them (such as `+`). HTML nests the keys of a combination in an outer `kbd`, as this does.",
         "attributes" : [ ]
+      }, {
+        "name" : "sl:label",
+        "description" : "A label for a form control. Point it at the control with `for` (the control's `id`; `th:field` gives the control an `id` equal to the field name), or put the control inside it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:native-select",
+        "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Height of the select. It replaces HTML's `size` attribute, which turns a select into a list box.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:separator",
         "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",
@@ -536,6 +612,10 @@
             "required" : false
           }
         } ]
+      }, {
+        "name" : "sl:textarea",
+        "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ ]
       } ]
     }
   }

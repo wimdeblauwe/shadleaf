@@ -1,0 +1,42 @@
+---
+title: Native Select
+description: The browser's own select, styled, bound to a form field with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="native-select--default" />
+
+## Options
+
+Write plain `<option>` and `<optgroup>` elements as the content, with `th:each` for options from the model. With
+`th:field` on the select, Spring marks the option that matches the field's value as selected.
+
+<ComponentPreview id="native-select--groups" />
+
+## Sizes
+
+<ComponentPreview id="native-select--sizes" />
+
+`size` picks the height, as in shadcn/ui. It replaces HTML's own `size` attribute, which turns a select into a list box;
+`multiple` still works, and hides the chevron.
+
+## Width
+
+The select sits in a wrapper that also holds the chevron. `class` goes to that wrapper, so `class="w-full"` widens
+both; every other attribute goes to the `<select>`.
+
+## Invalid
+
+As with the [input](../input/), a field with errors marks the select `aria-invalid="true"`.
+
+<ComponentPreview id="native-select--invalid" />
+
+## Disabled
+
+<ComponentPreview id="native-select--disabled" />
+
+## Attributes
+
+<ComponentAttributes component="native-select" />

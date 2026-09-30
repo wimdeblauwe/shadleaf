@@ -1,0 +1,48 @@
+# Scenarios for the input's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# renderSource replaces th:field, which needs a form object: its id, name and value are written out.
+component: input
+scenarios:
+  - id: default
+    title: Input
+    source: |-
+      <sl:label for="email">Email</sl:label>
+      <sl:input type="email" th:field="*{email}" placeholder="you@example.com"/>
+    renderSource: |-
+      <sl:label for="email">Email</sl:label>
+      <sl:input type="email" id="email" name="email" placeholder="you@example.com"/>
+
+  - id: types
+    title: Types
+    source: |-
+      <sl:label for="input-password">Password</sl:label>
+      <sl:input type="password" id="input-password" name="password"/>
+      <sl:label for="input-date">Delivery date</sl:label>
+      <sl:input type="date" id="input-date" name="deliveryDate"/>
+      <sl:label for="input-file">Invoice</sl:label>
+      <sl:input type="file" id="input-file" name="invoice"/>
+
+  - id: invalid
+    title: Invalid
+    description: With th:field, a field that has errors marks the input aria-invalid by itself.
+    source: |-
+      <sl:label for="email">Email</sl:label>
+      <sl:input type="email" th:field="*{email}"/>
+    renderSource: |-
+      <sl:label for="input-invalid">Email</sl:label>
+      <sl:input type="email" id="input-invalid" name="email" value="wim@" aria-invalid="true"/>
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:label for="input-disabled">Customer number</sl:label>
+      <sl:input id="input-disabled" name="customerNumber" value="C-1042" disabled/>
+
+  - id: htmx
+    title: With htmx
+    description: Every attribute that is not a prop lands on the input.
+    source: |-
+      <sl:input type="search" name="q" aria-label="Search orders"
+                th:hx-get="@{/orders}" hx-trigger="input changed delay:300ms" hx-target="#orders"/>
+    renderSource: |-
+      <sl:input type="search" name="q" aria-label="Search orders"
+                hx-get="/orders" hx-trigger="input changed delay:300ms" hx-target="#orders"/>

@@ -1,0 +1,6 @@
+/* Label: structure only. Type size and weight are identity and live in the skins. */
+@layer components {
+  .label {
+    @apply flex items-center select-none;
+  }
+}

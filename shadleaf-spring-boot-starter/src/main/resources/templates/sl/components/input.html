@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A text input. Every attribute that is not a prop (<code>th:field</code>, <code>name</code>,
+      <code>placeholder</code>, <code>required</code>, <code>hx-*</code>) passes through; <code>class</code> is appended
+      to <code>input</code>. With <code>th:field</code>, the input is marked <code>aria-invalid</code> when its field
+      has errors.</sl:description>
+    <sl:prop name="type" default="text"
+             values="text email password number search tel url date datetime-local month week time file">
+      Type of the input. Checkboxes and radio buttons have components of their own.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The forwarded th:field is still the unevaluated *{email}, which is what #fields.hasErrors takes. An explicit
+  aria-invalid passes through and wins. */-->
+<input th:fragment="input"
+       class="input"
+       th:attr="type=${props.type},
+                aria-invalid=${attrs['th:field'] != null and #fields.hasErrors(attrs['th:field']) ? 'true' : null}"
+       sl:attrs>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Scenarios for the label's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: label
+scenarios:
+  - id: default
+    title: Label
+    source: |-
+      <sl:label for="label-email">Email</sl:label>
+      <sl:input type="email" id="label-email" placeholder="you@example.com"/>
+
+  - id: wrapping
+    title: Around its control
+    description: A label that holds its control needs no for.
+    source: |-
+      <sl:label><input type="checkbox" name="newsletter"> Send me the newsletter</sl:label>

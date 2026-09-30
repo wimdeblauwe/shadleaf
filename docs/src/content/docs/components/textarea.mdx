@@ -1,0 +1,32 @@
+---
+title: Textarea
+description: A multi-line text input, bound to a form field with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="textarea--default" />
+
+The textarea grows with its content in browsers that support `field-sizing`; elsewhere it keeps its height and
+scrolls. `rows` sets a starting height.
+
+## Initial text
+
+With `th:field`, Spring fills the textarea from the field. Without it, the component's content is the initial text:
+
+<ComponentPreview id="textarea--initial-text" />
+
+## Invalid
+
+As with the [input](../input/), a field with errors marks the textarea `aria-invalid="true"`.
+
+<ComponentPreview id="textarea--invalid" />
+
+## Disabled
+
+<ComponentPreview id="textarea--disabled" />
+
+## Attributes
+
+<ComponentAttributes component="textarea" />

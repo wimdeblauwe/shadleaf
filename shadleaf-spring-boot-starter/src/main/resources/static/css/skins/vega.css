@@ -265,4 +265,55 @@
   .avatar[data-size='sm'] > .avatar-fallback {
     @apply text-xs [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
   }
+
+  /* Label */
+  .label {
+    @apply gap-2 text-sm leading-none font-medium;
+  }
+
+  /* Input. text-base under md keeps iOS from zooming into a focused input. */
+  .input {
+    @apply h-9 rounded-md border border-input bg-transparent px-2.5 py-1 text-base shadow-xs
+      motion-safe:transition-[color,box-shadow]
+      file:h-7 file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      md:text-sm;
+  }
+
+  /* Textarea */
+  .textarea {
+    @apply rounded-md border border-input bg-transparent px-2.5 py-2 text-base shadow-xs
+      motion-safe:transition-[color,box-shadow]
+      placeholder:text-muted-foreground
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      md:text-sm;
+  }
+
+  /* Native select. The end padding leaves room for the chevron. */
+  .native-select {
+    @apply rounded-md border border-input bg-transparent py-1 ps-2.5 pe-8 text-sm shadow-xs
+      motion-safe:transition-[color,box-shadow]
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:bg-input/30 dark:hover:bg-input/50
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      [&[multiple]]:pe-2.5;
+  }
+
+  .native-select-wrapper:not([data-size]) > .native-select:not([multiple]),
+  .native-select-wrapper[data-size='default'] > .native-select:not([multiple]) {
+    @apply h-9;
+  }
+
+  .native-select-wrapper[data-size='sm'] > .native-select:not([multiple]) {
+    @apply h-8;
+  }
+
+  .native-select-icon {
+    @apply text-muted-foreground;
+  }
 }

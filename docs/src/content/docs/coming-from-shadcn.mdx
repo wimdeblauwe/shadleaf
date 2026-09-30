@@ -91,8 +91,16 @@ takes keyboard focus, when it is a link (`as="a"`).
 - Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
   `aria-label`.
 
+### Form controls
+
+- `<sl:input>` only takes the text-like types (`text`, `email`, `password`, `date`, `file`, ...). Checkboxes, radio
+  buttons and switches are separate components, as in shadcn, but shadcn's `Input` would accept `type="checkbox"`.
+- `<sl:native-select>` takes `<option>` and `<optgroup>` as they are; there is no `NativeSelectOption`.
+
 ### Additions
 
+- An input, textarea or native select with `th:field` marks itself `aria-invalid` when its field has errors, so the
+  invalid style needs no markup of yours.
 - `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
   `Spinner` for this.
 

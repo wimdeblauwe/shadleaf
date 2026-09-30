@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A label for a form control. Point it at the control with <code>for</code> (the control's
+      <code>id</code>; <code>th:field</code> gives the control an <code>id</code> equal to the field name), or put
+      the control inside it.</sl:description>
+  </sl:props>
+</head>
+<body>
+<label th:fragment="label" class="label" sl:attrs><sl:slot/></label>
+</body>
+</html>

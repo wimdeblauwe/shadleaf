@@ -1,0 +1,26 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The browser's own <code>select</code>, styled, with its <code>option</code> and
+      <code>optgroup</code> elements as content. <code>th:field</code> marks the bound option. Every attribute that is
+      not a prop passes through to the <code>select</code>, except <code>class</code>, which goes to the wrapper
+      around it (for its width). With <code>th:field</code>, the select is marked <code>aria-invalid</code> when its
+      field has errors.</sl:description>
+    <sl:prop name="size" default="default" values="sm default">Height of the select. It replaces HTML's
+      <code>size</code> attribute, which turns a select into a list box.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The wrapper holds the chevron over the select; it takes the classes, so class="w-full" widens both. */-->
+<div th:fragment="native-select"
+     class="native-select-wrapper"
+     th:attr="data-size=${props.unlessDefault('size')}"
+     sl:attrs="${attrs.only('class', 'classappend')}">
+  <select class="native-select"
+          th:attr="aria-invalid=${attrs['th:field'] != null and #fields.hasErrors(attrs['th:field']) ? 'true' : null}"
+          sl:attrs="${attrs.without('class', 'classappend')}"><sl:slot/></select>
+  <sl:icon name="chevron-down" class="native-select-icon"/>
+</div>
+</body>
+</html>

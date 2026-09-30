@@ -259,4 +259,57 @@
   .avatar[data-size='sm'] > .avatar-fallback {
     @apply [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
   }
+
+  /* Label */
+  .label {
+    @apply gap-2 text-xs leading-none;
+  }
+
+  /* Input */
+  .input {
+    @apply h-8 rounded-none border border-input bg-transparent px-2.5 py-1 text-xs
+      motion-safe:transition-colors
+      file:h-6 file:text-xs file:font-medium file:text-foreground placeholder:text-muted-foreground
+      focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20
+      disabled:bg-input/50
+      dark:bg-input/30 dark:disabled:bg-input/80
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  /* Textarea */
+  .textarea {
+    @apply rounded-none border border-input bg-transparent px-2.5 py-2 text-xs
+      motion-safe:transition-colors
+      placeholder:text-muted-foreground
+      focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20
+      disabled:bg-input/50
+      dark:bg-input/30 dark:disabled:bg-input/80
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  /* Native select. The end padding leaves room for the chevron. */
+  .native-select {
+    @apply rounded-none border border-input bg-transparent py-1 ps-2.5 pe-8 text-xs
+      motion-safe:transition-colors
+      focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20
+      dark:bg-input/30 dark:hover:bg-input/50
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      [&[multiple]]:pe-2.5;
+  }
+
+  .native-select-wrapper:not([data-size]) > .native-select:not([multiple]),
+  .native-select-wrapper[data-size='default'] > .native-select:not([multiple]) {
+    @apply h-8;
+  }
+
+  .native-select-wrapper[data-size='sm'] > .native-select:not([multiple]) {
+    @apply h-7 py-0.5;
+  }
+
+  .native-select-icon {
+    @apply text-muted-foreground;
+  }
 }

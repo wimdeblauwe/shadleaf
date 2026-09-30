@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A multi-line text input that grows with its content where the browser supports it. The content
+      is the initial text, unless <code>th:field</code> sets it. Every attribute that is not a prop passes through;
+      <code>class</code> is appended to <code>textarea</code>. With <code>th:field</code>, the textarea is marked
+      <code>aria-invalid</code> when its field has errors.</sl:description>
+  </sl:props>
+</head>
+<body>
+<textarea th:fragment="textarea"
+          class="textarea"
+          th:attr="aria-invalid=${attrs['th:field'] != null and #fields.hasErrors(attrs['th:field']) ? 'true' : null}"
+          sl:attrs><sl:slot/></textarea>
+</body>
+</html>

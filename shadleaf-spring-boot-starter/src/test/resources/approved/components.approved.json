@@ -209,6 +209,18 @@
       "description" : "Accessible name for an icon that carries meaning on its own. Without it the icon is decorative and hidden from assistive technology."
     } ]
   }, {
+    "name" : "input",
+    "tag" : "sl:input",
+    "description" : "A text input. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "text",
+      "values" : [ "text", "email", "password", "number", "search", "tel", "url", "date", "datetime-local", "month", "week", "time", "file" ],
+      "description" : "Type of the input. Checkboxes and radio buttons have components of their own."
+    } ]
+  }, {
     "name" : "kbd",
     "tag" : "sl:kbd",
     "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
@@ -220,6 +232,24 @@
     "description" : "A key combination: `sl:kbd` elements, with any text between them (such as `+`). HTML nests the keys of a combination in an outer `kbd`, as this does.",
     "declared" : true,
     "props" : [ ]
+  }, {
+    "name" : "label",
+    "tag" : "sl:label",
+    "description" : "A label for a form control. Point it at the control with `for` (the control's `id`; `th:field` gives the control an `id` equal to the field name), or put the control inside it.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "native-select",
+    "tag" : "sl:native-select",
+    "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "sm", "default" ],
+      "description" : "Height of the select. It replaces HTML's `size` attribute, which turns a select into a list box."
+    } ]
   }, {
     "name" : "separator",
     "tag" : "sl:separator",
@@ -250,5 +280,11 @@
       "values" : [ "line", "circle" ],
       "description" : "A line of text (full width, one line high) or a circle (an avatar)."
     } ]
+  }, {
+    "name" : "textarea",
+    "tag" : "sl:textarea",
+    "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ ]
   } ]
 }

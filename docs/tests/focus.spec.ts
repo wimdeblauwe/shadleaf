@@ -12,9 +12,10 @@ for (const {skin, theme} of combinations) {
     await openShowcase(page, skin, theme);
 
     const tabbable = await page.evaluate(() => {
-      const candidates = document.querySelectorAll<HTMLElement>('main a[href], main button, main [tabindex]');
+      const candidates = document.querySelectorAll<HTMLElement>(
+          'main :is(a[href], button, input:not([type=hidden]), select, textarea, [tabindex])');
       return [...candidates]
-          .filter(element => element.tabIndex >= 0 && !(element as HTMLButtonElement).disabled)
+          .filter(element => element.tabIndex >= 0 && !(element as HTMLInputElement).disabled)
           .map((element, index) => {
             element.dataset.focusIndex = String(index);
             const style = getComputedStyle(element);
@@ -28,20 +29,27 @@ for (const {skin, theme} of combinations) {
     expect(tabbable.length).toBeGreaterThan(0);
 
     const invisible: string[] = [];
+    const readFocused = () => page.evaluate(() => {
+      const element = document.activeElement as HTMLElement;
+      const style = getComputedStyle(element);
+      return {
+        index: element.dataset.focusIndex,
+        focusVisible: element.matches(':focus-visible'),
+        outlineVisible: style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0,
+        indicator: {outline: `${style.outlineStyle} ${style.outlineWidth} ${style.outlineColor}`,
+          boxShadow: style.boxShadow} as Indicator,
+      };
+    });
+
     for (let i = 0; i < tabbable.length; i++) {
       await page.keyboard.press('Tab');
-      const focused = await page.evaluate(() => {
-        const element = document.activeElement as HTMLElement;
-        const style = getComputedStyle(element);
-        return {
-          index: element.dataset.focusIndex,
-          focusVisible: element.matches(':focus-visible'),
-          outlineVisible: style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0,
-          indicator: {outline: `${style.outlineStyle} ${style.outlineWidth} ${style.outlineColor}`,
-            boxShadow: style.boxShadow} as Indicator,
-        };
-      });
-      expect(focused.index, `Tab ${i + 1} reaches control ${i}`).toBe(String(i));
+      let focused = await readFocused();
+      // A date or time input has a tab stop per segment (day, month, year): tab on until focus leaves it.
+      for (let extra = 0; extra < 5 && i > 0 && focused.index === String(i - 1); extra++) {
+        await page.keyboard.press('Tab');
+        focused = await readFocused();
+      }
+      expect(focused.index, `Tab reaches control ${i}`).toBe(String(i));
       expect(focused.focusVisible).toBe(true);
 
       const before = tabbable[i].unfocused;

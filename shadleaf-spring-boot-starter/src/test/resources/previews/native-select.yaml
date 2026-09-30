@@ -1,0 +1,65 @@
+# Scenarios for the native select's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# renderSource replaces th:field and th:each, which need a model: the options are written out.
+component: native-select
+scenarios:
+  - id: default
+    title: Native select
+    source: |-
+      <sl:label for="status">Status</sl:label>
+      <sl:native-select th:field="*{status}">
+        <option value="">Select status</option>
+        <option th:each="status : ${statuses}" th:value="${status}" th:text="#{|status.${status}|}">Todo</option>
+      </sl:native-select>
+    renderSource: |-
+      <sl:label for="status">Status</sl:label>
+      <sl:native-select id="status" name="status">
+        <option value="">Select status</option>
+        <option value="todo">Todo</option>
+        <option value="in-progress">In progress</option>
+        <option value="done">Done</option>
+      </sl:native-select>
+
+  - id: groups
+    title: Groups
+    source: |-
+      <sl:label for="select-department">Department</sl:label>
+      <sl:native-select id="select-department" name="department">
+        <optgroup label="Engineering">
+          <option value="frontend">Frontend</option>
+          <option value="backend">Backend</option>
+        </optgroup>
+        <optgroup label="Sales">
+          <option value="sales-rep">Sales representative</option>
+          <option value="account-manager">Account manager</option>
+        </optgroup>
+      </sl:native-select>
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:native-select size="sm" name="priority" aria-label="Priority (small)">
+        <option>Low</option>
+        <option>High</option>
+      </sl:native-select>
+      <sl:native-select name="priority" aria-label="Priority">
+        <option>Low</option>
+        <option>High</option>
+      </sl:native-select>
+
+  - id: invalid
+    title: Invalid
+    description: With th:field, a field that has errors marks the select aria-invalid by itself.
+    source: |-
+      <sl:native-select th:field="*{status}" aria-label="Status">…</sl:native-select>
+    renderSource: |-
+      <sl:native-select name="status" aria-label="Status" aria-invalid="true">
+        <option value="">Select status</option>
+        <option value="todo">Todo</option>
+      </sl:native-select>
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:native-select name="status" aria-label="Status" disabled>
+        <option>Todo</option>
+      </sl:native-select>

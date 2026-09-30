@@ -1,0 +1,54 @@
+---
+title: Input
+description: A text input, bound to a form field with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="input--default" />
+
+## Binding to a form field
+
+Inside a form with `th:object`, write `th:field` as on a plain `<input>`. Spring sets the input's `id`, `name` and
+`value`, so a [label](../label/) with `for` set to the field name points at it:
+
+```html
+<form th:object="${profile}" th:action="@{/profile}" method="post">
+  <sl:label for="email">Email</sl:label>
+  <sl:input type="email" th:field="*{email}"/>
+</form>
+```
+
+An explicit `id` wins over the one `th:field` gives.
+
+## Types
+
+`type` defaults to `text` and takes the text-like input types. Checkboxes, radio buttons and switches get components of
+their own.
+
+<ComponentPreview id="input--types" />
+
+## Invalid
+
+When the field has errors after a `@Valid` submit, the input marks itself `aria-invalid="true"`, which the skins draw
+in the destructive colour. Showing the error message and linking it with `aria-describedby` is the job of the field
+component, which is coming next; until then, an `aria-describedby` you write passes through.
+
+<ComponentPreview id="input--invalid" />
+
+Without `th:field`, write `aria-invalid="true"` yourself.
+
+## Disabled
+
+<ComponentPreview id="input--disabled" />
+
+## With htmx
+
+Every attribute that is not a prop lands on the `<input>`:
+
+<ComponentPreview id="input--htmx" />
+
+## Attributes
+
+<ComponentAttributes component="input" />

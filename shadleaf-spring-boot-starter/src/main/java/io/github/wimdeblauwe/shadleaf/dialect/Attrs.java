@@ -44,4 +44,24 @@ public final class Attrs extends AbstractMap<String, @Nullable String> {
     }
     return new Attrs(remaining);
   }
+
+  /**
+   * Returns only the given attributes, each in both spellings: {@code only('class')} keeps {@code class} and
+   * {@code th:class}.
+   * <p>
+   * For a template that splits the attributes over two elements, e.g. a select inside a wrapper that takes the
+   * classes: {@code sl:attrs="${attrs.only('class', 'classappend')}"} on the wrapper and
+   * {@code sl:attrs="${attrs.without('class', 'classappend')}"} on the select.
+   */
+  public Attrs only(String... names) {
+    Map<String, @Nullable String> kept = new LinkedHashMap<>();
+    for (String name : names) {
+      for (String key : new String[] {name, EXPRESSION_PREFIX + name}) {
+        if (values.containsKey(key)) {
+          kept.put(key, values.get(key));
+        }
+      }
+    }
+    return new Attrs(kept);
+  }
 }

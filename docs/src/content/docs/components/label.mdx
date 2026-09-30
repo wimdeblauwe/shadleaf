@@ -1,0 +1,23 @@
+---
+title: Label
+description: A label for a form control.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="label--default" />
+
+## Pointing at a control
+
+Give the label a `for` with the control's `id`. A control with `th:field="*{email}"` gets `id="email"` from Spring, so
+`for="email"` matches it without writing the `id` yourself. Clicking the label focuses the control, and a screen
+reader announces the label's text as the control's name.
+
+A label can also hold its control, and then needs no `for`:
+
+<ComponentPreview id="label--wrapping" />
+
+## Attributes
+
+<ComponentAttributes component="label" />
