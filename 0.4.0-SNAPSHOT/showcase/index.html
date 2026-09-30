@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-B7fI75WH.css"><script>(function(){const skins = {"vega":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-B7fI75WH.css","lyra":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-D_Be3Amx.css"};
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-DH8xv4y1.css"><script>(function(){const skins = {"vega":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-DH8xv4y1.css","lyra":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-CbEoM52P.css"};
 const firstSkin = "vega";
 
     const params = new URLSearchParams(location.search);
@@ -9,8 +9,237 @@ const firstSkin = "vega";
     document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
     document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
     document.documentElement.dataset.skin = skin;
-  })();</script><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-Dl9BbZpm.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}
-</style><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><main class="astro-6felt6qx"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">alert</h2><h3 class="astro-6felt6qx">Alert</h3><div class="stage astro-6felt6qx" data-scenario="alert--default"><div class="alert">
+  })();</script><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-CQS1JxVi.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}
+</style><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><main class="astro-6felt6qx"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">alert-dialog</h2><h3 class="astro-6felt6qx">Alert dialog</h3><div class="stage astro-6felt6qx" data-scenario="alert-dialog--default"><button class="btn"
+          type="button"
+          data-variant="outline" commandfor="delete-account" command="show-modal">
+  
+  
+  
+  Delete account
+  
+</button>
+  
+  
+
+<dialog class="alert-dialog"
+        role="alertdialog"
+        id="delete-account"
+        closedby="closerequest"
+        x-data="slDialog"
+        aria-labelledby="delete-account-title" aria-describedby="delete-account-description">
+  <div class="alert-dialog-header">
+    <div class="alert-dialog-title"
+     role="heading"
+     aria-level="2" id="delete-account-title">Are you absolutely sure?</div>
+    <div class="alert-dialog-description"
+     id="delete-account-description">
+      This action cannot be undone. This will permanently delete your account and remove your data from our
+      servers.
+    </div>
+  </div>
+  <div class="alert-dialog-footer">
+    
+  <button class="btn alert-dialog-cancel"
+          type="button"
+          data-variant="outline" commandfor="delete-account" command="close" autofocus>
+  
+  
+  
+  Cancel
+  
+</button>
+  
+  
+
+    
+  <button class="btn"
+          type="button">
+  
+  
+  
+  Continue
+  
+</button>
+  
+  
+
+  </div>
+</dialog></div><h3 class="astro-6felt6qx">Small, with media</h3><div class="stage astro-6felt6qx" data-scenario="alert-dialog--small-media"><button class="btn"
+          type="button"
+          data-variant="outline" commandfor="allow-accessory" command="show-modal">
+  
+  
+  
+  Connect accessory
+  
+</button>
+  
+  
+
+<dialog class="alert-dialog"
+        role="alertdialog"
+        id="allow-accessory"
+        closedby="closerequest"
+        x-data="slDialog"
+        aria-labelledby="allow-accessory-title" aria-describedby="allow-accessory-description" data-size="sm">
+  <div class="alert-dialog-header">
+    <div class="alert-dialog-media"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg></div>
+    <div class="alert-dialog-title"
+     role="heading"
+     aria-level="2" id="allow-accessory-title">Allow accessory to connect?</div>
+    <div class="alert-dialog-description"
+     id="allow-accessory-description">
+      Do you want to allow the USB accessory to connect to this device?
+    </div>
+  </div>
+  <div class="alert-dialog-footer">
+    
+  <button class="btn alert-dialog-cancel"
+          type="button"
+          data-variant="outline" commandfor="allow-accessory" command="close" autofocus>
+  
+  
+  
+  Don't allow
+  
+</button>
+  
+  
+
+    
+  <button class="btn"
+          type="button">
+  
+  
+  
+  Allow
+  
+</button>
+  
+  
+
+  </div>
+</dialog></div><h3 class="astro-6felt6qx">Media</h3><div class="stage astro-6felt6qx" data-scenario="alert-dialog--media"><button class="btn"
+          type="button"
+          data-variant="outline" commandfor="share-project" command="show-modal">
+  
+  
+  
+  Share project
+  
+</button>
+  
+  
+
+<dialog class="alert-dialog"
+        role="alertdialog"
+        id="share-project"
+        closedby="closerequest"
+        x-data="slDialog"
+        aria-labelledby="share-project-title" aria-describedby="share-project-description">
+  <div class="alert-dialog-header">
+    <div class="alert-dialog-media"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2a10 10 0 0 1 7.38 16.75"/><path d="M12 8v8"/><path d="M16 12H8"/><path d="M2.5 8.875a10 10 0 0 0-.5 3"/><path d="M2.83 16a10 10 0 0 0 2.43 3.4"/><path d="M4.636 5.235a10 10 0 0 1 .891-.857"/><path d="M8.644 21.42a10 10 0 0 0 7.631-.38"/></svg></div>
+    <div class="alert-dialog-title"
+     role="heading"
+     aria-level="2" id="share-project-title">Share this project?</div>
+    <div class="alert-dialog-description"
+     id="share-project-description">
+      Anyone with the link will be able to view and edit this project.
+    </div>
+  </div>
+  <div class="alert-dialog-footer">
+    
+  <button class="btn alert-dialog-cancel"
+          type="button"
+          data-variant="outline" commandfor="share-project" command="close" autofocus>
+  
+  
+  
+  Cancel
+  
+</button>
+  
+  
+
+    
+  <button class="btn"
+          type="button">
+  
+  
+  
+  Share
+  
+</button>
+  
+  
+
+  </div>
+</dialog></div><h3 class="astro-6felt6qx">Destructive</h3><div class="stage astro-6felt6qx" data-scenario="alert-dialog--destructive"><button class="btn"
+          type="button"
+          data-variant="destructive" commandfor="delete-chat" command="show-modal">
+  
+  
+  
+  Delete chat
+  
+</button>
+  
+  
+
+<dialog class="alert-dialog"
+        role="alertdialog"
+        id="delete-chat"
+        closedby="closerequest"
+        x-data="slDialog"
+        aria-labelledby="delete-chat-title" aria-describedby="delete-chat-description" data-size="sm">
+  <div class="alert-dialog-header">
+    <div class="alert-dialog-media"
+     data-variant="destructive"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+    <div class="alert-dialog-title"
+     role="heading"
+     aria-level="2" id="delete-chat-title">Delete chat?</div>
+    <div class="alert-dialog-description"
+     id="delete-chat-description">
+      This will permanently delete this chat conversation. View <a href="#">Settings</a> to delete any
+      memories saved during this chat.
+    </div>
+  </div>
+  <div class="alert-dialog-footer">
+    
+  <button class="btn alert-dialog-cancel"
+          type="button"
+          data-variant="outline" commandfor="delete-chat" command="close" autofocus>
+  
+  
+  
+  Cancel
+  
+</button>
+  
+  
+
+    
+  <button class="btn"
+          type="button"
+          data-variant="destructive">
+  
+  
+  
+  Delete
+  
+</button>
+  
+  
+
+  </div>
+</dialog></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">alert</h2><h3 class="astro-6felt6qx">Alert</h3><div class="stage astro-6felt6qx" data-scenario="alert--default"><div class="alert">
   <svg xmlns="http://www.w3.org/2000/svg"
      class="sl-icon"
      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m16 9-5.5 5.5L8 12"/></svg>
@@ -625,7 +854,123 @@ const firstSkin = "vega";
   <svg xmlns="http://www.w3.org/2000/svg"
      class="sl-icon checkbox-indicator"
      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
-</span>Deleted</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">field</h2><h3 class="astro-6felt6qx">Field</h3><div class="stage astro-6felt6qx" data-scenario="field--default"><div class="field">
+</span>Deleted</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">dialog</h2><h3 class="astro-6felt6qx">Dialog</h3><div class="stage astro-6felt6qx" data-scenario="dialog--default"><button class="btn"
+          type="button"
+          data-variant="outline" commandfor="edit-profile" command="show-modal">
+  
+  
+  
+  Edit profile
+  
+</button>
+  
+  
+
+<form method="post" action="/profile">
+  <dialog class="dialog"
+        id="edit-profile"
+        closedby="any"
+        x-data="slDialog"
+        aria-labelledby="edit-profile-title" aria-describedby="edit-profile-description">
+    <div class="dialog-header">
+      <div class="dialog-title"
+     role="heading"
+     aria-level="2" id="edit-profile-title">Edit profile</div>
+      <div class="dialog-description"
+     id="edit-profile-description">
+        Make changes to your profile here. Click save when you're done.
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label class="label field-label"
+       for="profile-name">Name</label>
+        <input class="input"
+       type="text" name="name" value="Pedro Duarte" id="profile-name">
+      </div>
+      <div class="field">
+        <label class="label field-label"
+       for="profile-username">Username</label>
+        <input class="input"
+       type="text" name="username" value="@peduarte" id="profile-username">
+      </div>
+    </div>
+    <div class="dialog-footer">
+      
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="edit-profile" command="close">
+  
+  
+  
+  Cancel
+  
+</button>
+  
+  
+
+      
+  <button class="btn"
+          type="submit">
+  
+  
+  
+  Save changes
+  
+</button>
+  
+  
+
+    </div>
+  
+  <button class="btn dialog-close"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" commandfor="edit-profile" command="close" aria-label="Close">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  
+</button>
+  
+  
+</dialog>
+</form></div><h3 class="astro-6felt6qx">Close button in the footer</h3><div class="stage astro-6felt6qx" data-scenario="dialog--footer-close"><button class="btn"
+          type="button"
+          data-variant="outline" commandfor="share-link" command="show-modal">
+  
+  
+  
+  Share
+  
+</button>
+  
+  
+
+<dialog class="dialog"
+        id="share-link"
+        closedby="any"
+        x-data="slDialog"
+        aria-labelledby="share-link-title" aria-describedby="share-link-description">
+  <div class="dialog-header">
+    <div class="dialog-title"
+     role="heading"
+     aria-level="2" id="share-link-title">Share link</div>
+    <div class="dialog-description"
+     id="share-link-description">Anyone who has this link will be able to view this.</div>
+  </div>
+  <input class="input"
+       type="text" aria-label="Link" value="https://ui.shadcn.com/docs/installation" readonly>
+  <div class="dialog-footer">
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="share-link" command="close">Close</button>
+  
+  
+</div>
+</dialog></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">field</h2><h3 class="astro-6felt6qx">Field</h3><div class="stage astro-6felt6qx" data-scenario="field--default"><div class="field">
   <label class="label field-label"
        for="username">Username</label>
   <input class="input"
@@ -1116,7 +1461,300 @@ const firstSkin = "vega";
   Source
   
 </a></div><h3 class="astro-6felt6qx">Announced</h3><div class="stage astro-6felt6qx" data-scenario="separator--semantic"><div class="separator"
-     role="separator"></div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">skeleton</h2><h3 class="astro-6felt6qx">Skeleton</h3><div class="stage astro-6felt6qx" data-scenario="skeleton--default"><div class="skeleton"
+     role="separator"></div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">sheet</h2><h3 class="astro-6felt6qx">Sheet</h3><div class="stage astro-6felt6qx" data-scenario="sheet--default"><button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-profile" command="show-modal">
+  
+  
+  
+  Open
+  
+</button>
+  
+  
+
+<form method="post" action="/profile">
+  <dialog class="sheet"
+        id="sheet-profile"
+        closedby="any"
+        x-data="slDialog"
+        aria-labelledby="sheet-profile-title" aria-describedby="sheet-profile-description">
+    <div class="sheet-header">
+      <div class="sheet-title"
+     role="heading"
+     aria-level="2" id="sheet-profile-title">Edit profile</div>
+      <div class="sheet-description"
+     id="sheet-profile-description">
+        Make changes to your profile here. Click save when you're done.
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label class="label field-label"
+       for="sheet-profile-name">Name</label>
+        <input class="input"
+       type="text" name="name" value="Pedro Duarte" id="sheet-profile-name">
+      </div>
+      <div class="field">
+        <label class="label field-label"
+       for="sheet-profile-username">Username</label>
+        <input class="input"
+       type="text" name="username" value="@peduarte" id="sheet-profile-username">
+      </div>
+    </div>
+    <div class="sheet-footer">
+      
+  <button class="btn"
+          type="submit">
+  
+  
+  
+  Save changes
+  
+</button>
+  
+  
+
+    
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-profile" command="close">Close</button>
+  
+  
+</div>
+  
+  <button class="btn sheet-close"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" commandfor="sheet-profile" command="close" aria-label="Close">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  
+</button>
+  
+  
+</dialog>
+</form></div><h3 class="astro-6felt6qx">Side</h3><div class="stage astro-6felt6qx" data-scenario="sheet--side"><button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-top" command="show-modal">
+  
+  
+  
+  Top
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-right" command="show-modal">
+  
+  
+  
+  Right
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-bottom" command="show-modal">
+  
+  
+  
+  Bottom
+  
+</button>
+  
+  
+
+
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-left" command="show-modal">
+  
+  
+  
+  Left
+  
+</button>
+  
+  
+
+<dialog class="sheet"
+        id="sheet-top"
+        closedby="any"
+        x-data="slDialog"
+        aria-labelledby="sheet-top-title" aria-describedby="sheet-top-description" data-side="top">
+  <div class="sheet-header">
+    <div class="sheet-title"
+     role="heading"
+     aria-level="2" id="sheet-top-title">From the top</div>
+    <div class="sheet-description"
+     id="sheet-top-description">A sheet on the top edge, as wide as the screen.</div>
+  </div>
+  <div class="sheet-footer">
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-top" command="close">Close</button>
+  
+  
+</div>
+
+  <button class="btn sheet-close"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" commandfor="sheet-top" command="close" aria-label="Close">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  
+</button>
+  
+  
+</dialog>
+<dialog class="sheet"
+        id="sheet-right"
+        closedby="any"
+        x-data="slDialog"
+        aria-labelledby="sheet-right-title" aria-describedby="sheet-right-description">
+  <div class="sheet-header">
+    <div class="sheet-title"
+     role="heading"
+     aria-level="2" id="sheet-right-title">From the right</div>
+    <div class="sheet-description"
+     id="sheet-right-description">The default: the end of the line, which is the left on a right-to-left page.</div>
+  </div>
+  <div class="sheet-footer">
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-right" command="close">Close</button>
+  
+  
+</div>
+
+  <button class="btn sheet-close"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" commandfor="sheet-right" command="close" aria-label="Close">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  
+</button>
+  
+  
+</dialog>
+<dialog class="sheet"
+        id="sheet-bottom"
+        closedby="any"
+        x-data="slDialog"
+        aria-labelledby="sheet-bottom-title" aria-describedby="sheet-bottom-description" data-side="bottom">
+  <div class="sheet-header">
+    <div class="sheet-title"
+     role="heading"
+     aria-level="2" id="sheet-bottom-title">From the bottom</div>
+    <div class="sheet-description"
+     id="sheet-bottom-description">A sheet on the bottom edge, as wide as the screen.</div>
+  </div>
+  <div class="sheet-footer">
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-bottom" command="close">Close</button>
+  
+  
+</div>
+
+  <button class="btn sheet-close"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" commandfor="sheet-bottom" command="close" aria-label="Close">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  
+</button>
+  
+  
+</dialog>
+<dialog class="sheet"
+        id="sheet-left"
+        closedby="any"
+        x-data="slDialog"
+        aria-labelledby="sheet-left-title" aria-describedby="sheet-left-description" data-side="left">
+  <div class="sheet-header">
+    <div class="sheet-title"
+     role="heading"
+     aria-level="2" id="sheet-left-title">From the left</div>
+    <div class="sheet-description"
+     id="sheet-left-description">The start of the line, which is the right on a right-to-left page.</div>
+  </div>
+  <div class="sheet-footer">
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-left" command="close">Close</button>
+  
+  
+</div>
+
+  <button class="btn sheet-close"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" commandfor="sheet-left" command="close" aria-label="Close">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  
+</button>
+  
+  
+</dialog></div><h3 class="astro-6felt6qx">No close button in the corner</h3><div class="stage astro-6felt6qx" data-scenario="sheet--no-close-button"><button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-notifications" command="show-modal">
+  
+  
+  
+  Notifications
+  
+</button>
+  
+  
+
+<dialog class="sheet"
+        id="sheet-notifications"
+        closedby="any"
+        x-data="slDialog"
+        aria-labelledby="sheet-notifications-title" aria-describedby="sheet-notifications-description">
+  <div class="sheet-header">
+    <div class="sheet-title"
+     role="heading"
+     aria-level="2" id="sheet-notifications-title">Notifications</div>
+    <div class="sheet-description"
+     id="sheet-notifications-description">You have no unread messages.</div>
+  </div>
+  <div class="sheet-footer">
+  <button class="btn"
+          type="button"
+          data-variant="outline" commandfor="sheet-notifications" command="close">Close</button>
+  
+  
+</div>
+</dialog></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">skeleton</h2><h3 class="astro-6felt6qx">Skeleton</h3><div class="stage astro-6felt6qx" data-scenario="skeleton--default"><div class="skeleton"
      aria-hidden="true"></div>
 <div class="skeleton"
      aria-hidden="true"></div></div><h3 class="astro-6felt6qx">In a card</h3><div class="stage astro-6felt6qx" data-scenario="skeleton--card"><div class="card" aria-busy="true">
