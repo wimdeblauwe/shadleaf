@@ -56,6 +56,10 @@ const srcdoc = scenario && skins.length > 0
     body:has(dialog:modal) { min-block-size: 32rem; }
     /* So is an open menu or popover, below its trigger. A tooltip shows above its trigger: leave room for it. */
     body:has(:is(.dropdown-menu-content, .popover-content):popover-open) { min-block-size: 28rem; }
+    /* And an open select's list: the customizable select's picker, or slSelect's list box where the browser has none.
+       Two rules: a browser that does not know :open would drop a rule that names it. */
+    body:has(.select-content:popover-open) { min-block-size: 28rem; }
+    body:has(select:open) { min-block-size: 28rem; }
     body:has(.tooltip) { padding-block: 3rem; }
     /* Centred, so a tooltip or popover has room on every side of its trigger and flips only where the docs say so. */
     .stage:has(.tooltip, .popover-content) { justify-content: center; }

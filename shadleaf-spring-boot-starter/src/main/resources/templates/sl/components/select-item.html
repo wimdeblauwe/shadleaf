@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>An option in a <code>sl:select</code>: an <code>option</code> with a check mark that shows
+      while it is chosen. <code>value</code> (or <code>th:value</code>) and <code>disabled</code> pass through;
+      <code>th:field</code> on the select marks the bound one. Its content may start with an icon; always give it text,
+      which is all an older browser keeps of it.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* th:text on the item replaces the check mark too; base-select then shows its own ::checkmark. */-->
+<option th:fragment="select-item"
+        class="select-item"
+        sl:attrs><sl:slot/><sl:icon name="check" class="select-item-indicator"/></option>
+</body>
+</html>

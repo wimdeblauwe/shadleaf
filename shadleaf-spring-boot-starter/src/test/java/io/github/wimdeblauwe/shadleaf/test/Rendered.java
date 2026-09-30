@@ -35,10 +35,26 @@ public final class Rendered {
    */
   public Document document() {
     if (document == null) {
-      document = Jsoup.parseBodyFragment(html);
+      document = parse(html);
     }
     return document;
   }
+
+  /**
+   * jsoup up to 1.23 parses a {@code select} by the old HTML rules, which drop everything in it but options, option
+   * groups and text: the {@code button} of a customizable select, an {@code hr}, the icons in an option. Browsers
+   * keep them now (jsoup 1.24 will too). So the select is parsed under another name, where jsoup keeps its content,
+   * and renamed back.
+   */
+  private static Document parse(String html) {
+    Document parsed = Jsoup.parseBodyFragment(html
+        .replaceAll("<select(?=[\\s>])", "<" + SELECT_STAND_IN)
+        .replace("</select>", "</" + SELECT_STAND_IN + ">"));
+    parsed.select(SELECT_STAND_IN).forEach(select -> select.tagName("select"));
+    return parsed;
+  }
+
+  private static final String SELECT_STAND_IN = "sl-parsed-select";
 
   /** The first rendered element: for a single component, its root element. */
   public Element root() {

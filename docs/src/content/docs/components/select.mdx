@@ -1,0 +1,221 @@
+---
+title: Select
+description: shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="select--default" />
+
+## Built from parts
+
+A select is `<sl:select>` holding `<sl:select-item>`s, optionally in `<sl:select-group>`s with
+`<sl:select-separator>`s between them. It renders a real `<select>` with `<option>`, `<optgroup>` and `<hr>`
+elements, so `th:field` binds it as it binds any select: Spring marks the bound item as selected, and the form submits
+the chosen value.
+
+```html
+<form th:object="${order}" th:action="@{/orders}" method="post">
+  <sl:field th:field="*{fruit}">
+    <sl:field-label>Fruit</sl:field-label>
+    <sl:select placeholder="Select a fruit">
+      <sl:select-group label="Fruits">
+        <sl:select-item th:each="fruit : ${fruits}" th:value="${fruit.id}">[[${fruit.name}]]</sl:select-item>
+      </sl:select-group>
+    </sl:select>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+Give an item its text as content (`[[${fruit.name}]]`), not with `th:text`: that attribute passes through to the
+`<option>` and replaces its check mark too. (The select still works; the browser's own check mark shows instead.)
+
+## Select or native select?
+
+Both are a real `<select>` underneath, bind with `th:field` and submit with the form.
+
+- **`<sl:select>`** looks like shadcn/ui's Select: its list is drawn in the page's style, with a check mark on the
+  chosen item, and items can start with an icon. Use it where the look matters and the list is short enough to scan:
+  a few to a few dozen items.
+- **[`<sl:native-select>`](../select-native/)** styles only the closed control and leaves the list to the operating
+  system: on a phone that is the system's own picker wheel or sheet, which many people find easier to use. Use it for
+  long lists (countries, years), inside dense forms, and for `multiple`, which `<sl:select>` does not support.
+
+## Placeholder
+
+`placeholder` adds a first option with an empty value, hidden from the list. It is chosen while the field has no
+value, and shown in the muted colour. A `required` select with the placeholder chosen is invalid, as for any select
+whose first option has an empty value; with server-side validation (`@NotBlank`, `@NotNull`) the field shows its
+error instead.
+
+## Groups, separators and icons
+
+`<sl:select-group label="...">` is an `<optgroup>`: its label shows above its items and is read with them.
+`<sl:select-separator/>` is an `<hr>`, which browsers draw as a line in a select's list.
+
+<ComponentPreview id="select--groups" />
+
+An item may start with an [icon](../icon/). The closed select shows the chosen item's icon and text.
+
+<ComponentPreview id="select--icons" />
+
+Long lists scroll; the list never grows taller than the window.
+
+<ComponentPreview id="select--scrollable" />
+
+## Sizes
+
+<ComponentPreview id="select--sizes" />
+
+`size` picks the height, as in shadcn/ui. The list opens below the select, lined up with its start and at least as
+wide as it, and above it when there is no room below.
+
+## Width
+
+The select sits in a wrapper that also holds the chevron. `class` goes to that wrapper, so `class="w-full"` widens
+both; every other attribute goes to the `<select>`.
+
+## In a form
+
+- **`th:field`**, on the select or on its [field](../field/), binds it. In a field, the select also takes the field's
+  `id` (the label points at it) and `aria-describedby` (the description and, while there are errors, the error).
+- **Errors.** A field with errors marks the select `aria-invalid="true"`, and
+  [`<sl:form-errors autofocus/>`](../form-errors/) gives it `autofocus` when it is the first control with errors.
+- **In a field set** with a `th:field` of its own (`<sl:field-set th:field="*{plan}">`), the select takes the field
+  but no id; give it an `aria-label`, as the legend names the group, not the select.
+- **Events.** Choosing an option fires `input` and `change` on the `<select>`, in every browser and with Shadleaf's
+  list box too, so `hx-trigger="change"` and your own listeners work unchanged. A script that sets the select's value
+  should fire `change` itself, as it should for any select; the list box then shows the new value.
+- **Form reset** puts the select back to its rendered value, and the list box follows.
+
+<ComponentPreview id="select--invalid" />
+
+## Disabled
+
+`disabled` on the select, or on a `<sl:field-set>` around it, disables it: it fades with its chevron, and the lyra skin
+also gives it a grey background. `disabled` on an item leaves it in the list, faded; the keyboard and the pointer skip
+it.
+
+HTML has no read-only select: `readonly` does nothing on one, and Shadleaf's list box ignores it too. To show a choice
+that cannot be changed, use a read-only [input](../input/#read-only) with the item's text, and a hidden input if the
+value has to be submitted.
+
+<ComponentPreview id="select--disabled" />
+
+## Keyboard
+
+With the focus on the select:
+
+| Key | Closed | Open |
+| --- | --- | --- |
+| Arrow down, arrow up | Opens the list on the chosen item | Next, previous item |
+| Enter, Space | Opens the list | Chooses the highlighted item and closes |
+| Home, End | Opens the list on the first, last item | First, last item |
+| A letter | Chooses (customizable select) or highlights (list box) the next item that starts with it | Highlights the next item that starts with it; typing quickly matches a prefix |
+| Escape | | Closes without choosing; the value stays as it was |
+| Tab | Moves on | The customizable select closes without choosing, the focus staying on it; Shadleaf's list box chooses the highlighted item and moves on, as the ARIA pattern describes |
+
+Disabled items, group labels and separators are skipped. The item under the pointer is highlighted, and only keyboard
+focus draws the focus ring as well. Focus stays on the select (or on the list box's button) while the list is open,
+and is back there when it closes.
+
+With the customizable select the browser handles the keys itself; `slSelect` only adds what it leaves out: Enter
+opens the list, Home and End open it on the first and last item, and the item under the pointer takes the focus. It
+also works around a Chrome bug: after a form reset the select showed the option chosen before, not the reset one.
+
+## With htmx
+
+- A response that renders the form again with errors keeps the chosen value (`th:field` marks it), and focus goes
+  where `autofocus` says, the select included; see [Forms with htmx](../../guides/htmx/).
+- A swap that replaces an open select leaves nothing open behind.
+- Back restores the select as htmx saved it; Shadleaf's list box builds itself again from the restored select.
+- A select can trigger a request itself: `hx-get="/cities" hx-trigger="change" hx-target="#city-field"`. Swapping in
+  new items (`hx-target` on the select) is picked up by the list box.
+
+## Forced colours
+
+The select and its list keep a visible border, and the highlighted item an outline, when the system's colours
+replace the page's (Windows High Contrast). A disabled select turns `GrayText` instead of fading.
+
+## Left out
+
+These shadcn/Radix parts and props have no counterpart, on purpose:
+
+- **`SelectTrigger`, `SelectValue` and `SelectContent`.** In HTML the select is the trigger, shows its own value and
+  holds its options, so `<sl:select>` covers all three: `size` from the trigger, `placeholder` from the value.
+- **`SelectLabel` on its own.** A group's heading is the `label` of `<sl:select-group>` (an `<optgroup>` needs one);
+  there is no heading outside a group, which no browser would show.
+- **`SelectScrollUpButton`, `SelectScrollDownButton`.** The list scrolls like any other, with the wheel, the keys or a
+  finger.
+- **`position="item-aligned"`, `side`, `align`.** shadcn's default lays the list over the select with the chosen item
+  on top of it; the customizable select always opens below the select (above when there is no room), and the list box
+  does the same, so both look alike.
+- **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
+  value with `th:field`, and the select's `change` event reports a new one.
+- **`multiple`**, which shadcn does not have either: use [`<sl:native-select multiple>`](../select-native/) or a
+  [field set](../field/) of checkboxes.
+- **`SelectItem`'s `textValue`**: typeahead reads the item's text.
+
+## How it is drawn
+
+Browsers are halfway through gaining the
+[customizable select](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select)
+(`appearance: base-select`), which lets CSS draw a select's list. Checked on 30 September 2026:
+
+| Browser | Customizable select | What Shadleaf does |
+| --- | --- | --- |
+| Chrome, Edge 135 and later | Yes | The browser draws the list in the skin's style, above everything else, placed with anchor positioning. |
+| Safari 27 and later | Yes | The same. |
+| Firefox (155 at the time of writing) | Behind a setting | Once Alpine runs, the `slSelect` component hides the select and shows a button and a list box of its own in its place, built from the select's options. |
+| Older browsers, or no Alpine | No | The select is drawn like the native select: the closed control has the skin's look, and the list is the browser's own. |
+
+The server always renders the same markup, a real select, so the choice happens in the browser and needs nothing
+from you. That also means the form works before Alpine starts and without it: the select submits, binds, validates
+and takes the keyboard like any select (rule 4 of [Alpine](../../guides/alpine/)).
+
+The customizable select is used wherever the browser has it, rather than Shadleaf's list box everywhere, because the
+browser's own is simply the better control: the keyboard, the screen reader, the top layer, the placing next to the
+select and the form all come from the browser, and keep working if the page's JavaScript fails. The list box exists
+only for the browsers still missing it, and follows the same
+[ARIA select-only combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/)
+the browsers follow.
+
+Only options with text work everywhere: an older browser drops any markup inside an `<option>` and keeps its text, so
+an item's icon is extra, never its only label.
+
+## Attributes
+
+### sl:select
+
+<ComponentAttributes component="select" />
+
+### sl:select-item
+
+<ComponentAttributes component="select-item" />
+
+### sl:select-group
+
+<ComponentAttributes component="select-group" />
+
+### sl:select-separator
+
+<ComponentAttributes component="select-separator" />
+
+## JavaScript
+
+A small Alpine component, `slSelect`, sits on the select's wrapper:
+`<div class="select-wrapper" x-data="slSelect">`.
+
+- **Without Alpine the select works** as the browser's own, customizable or not.
+- **Where the customizable select is missing**, `slSelect` hides the `<select>` (it stays in the form, and still
+  submits, resets and validates) and adds a `<button role="combobox" class="select select-trigger">` and a
+  `<div role="listbox" class="select-content" popover>` after it. The button takes the select's label (its `<label>`s,
+  `aria-labelledby` or `aria-label`), `aria-describedby`, `aria-invalid`, `required` and `disabled`, and follows them
+  when they change. Focus that reaches the hidden select, from a click on its label, `autofocus` or the browser's
+  validation, moves on to the button.
+- **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
+  enough.
+- **Keep your own `x-data` off `<sl:select>`**: `class` is the only attribute that reaches the wrapper, and an element
+  has one `x-data`. Listen for `change` on the select instead.

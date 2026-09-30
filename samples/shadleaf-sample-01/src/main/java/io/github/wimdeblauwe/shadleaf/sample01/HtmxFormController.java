@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class HtmxFormController {
 
   @ModelAttribute("topics")
-  List<String> topics() {
+  List<FormController.Topic> topics() {
     return FormController.TOPICS;
   }
 

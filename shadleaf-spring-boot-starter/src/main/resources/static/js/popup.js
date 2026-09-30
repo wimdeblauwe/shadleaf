@@ -1,11 +1,11 @@
 /*
-  What the dropdown menu, the popover and the tooltip share. Each is a popover (the Popover API), which gives the top
-  layer, light dismiss and Escape (popover="auto") and focus back on the trigger when it closes. CSS anchor
-  positioning puts it next to its trigger, the popover's implicit anchor. This adds:
+  What the dropdown menu, the popover, the tooltip and the select's list box share. Each is a popover (the Popover
+  API), which gives the top layer, light dismiss and Escape (popover="auto") and focus back on the trigger when it
+  closes. CSS anchor positioning puts it next to its trigger, the popover's implicit anchor. This adds:
   - aria-expanded on the buttons that point at a popover with popovertarget;
   - a stand-in for anchor positioning in browsers without it (Safari before 26, Firefox before 147), which sets the
     position from the trigger's box while the popup is open;
-  - small helpers for the listeners a component removes again in destroy().
+  - small helpers for the listeners a component removes again in destroy(), and typeahead.
 */
 
 /** Adds a listener and remembers how to remove it. */
@@ -164,4 +164,16 @@ export function placedSide(popup, anchor) {
     return 'bottom';
   }
   return x < a.left ? 'left' : 'right';
+}
+
+/**
+ * The item whose text (`textOf`, lower case) starts with `typed`, looking from the one after `index` and wrapping
+ * around. Typing one letter over and over moves through the items that start with it.
+ */
+export function typeaheadMatch(items, index, typed, textOf) {
+  const repeated = typed.length > 1 && [...typed].every(character => character === typed[0]);
+  const search = repeated ? typed[0] : typed;
+  const start = repeated || typed.length === 1 ? index + 1 : Math.max(index, 0);
+  const ordered = [...items.slice(start), ...items.slice(0, start)];
+  return ordered.find(item => textOf(item).startsWith(search));
 }

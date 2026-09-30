@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A select drawn like shadcn/ui's: a real <code>select</code> with <code>sl:select-item</code>,
+      <code>sl:select-group</code> and <code>sl:select-separator</code> as content, so <code>th:field</code>,
+      submitting and the keyboard work as for any select. Where the browser supports the customizable select
+      (<code>appearance: base-select</code>) it draws the list itself; elsewhere <code>slSelect</code> puts a list
+      box in its place once Alpine runs. Every attribute that is not a prop passes through to the
+      <code>select</code>, except <code>class</code>, which goes to the wrapper around it. In a
+      <code>sl:field</code>, it takes the field's <code>th:field</code>, id and <code>aria-describedby</code>.
+      </sl:description>
+    <sl:prop name="size" default="default" values="sm default">Height of the select.</sl:prop>
+    <sl:prop name="placeholder">Text shown while no option is chosen: a first option with an empty value, hidden from
+      the list. A required select with it selected is invalid.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The button holds selectedcontent, a copy of the chosen option's content, where base-select is supported;
+  other browsers ignore it. The chevron sits over the end of the select (or of slSelect's button), in every browser.
+  The template holds the check mark slSelect gives its options where the browser dropped the ones in the options. */-->
+<div th:fragment="select"
+     th:with="slAttrs=${#slFields.control(attrs, slField)}"
+     class="select-wrapper"
+     x-data="slSelect"
+     th:attr="data-size=${props.unlessDefault('size')}"
+     sl:attrs="${attrs.only('class', 'classappend')}">
+  <select class="select"
+          th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+          sl:attrs="${slAttrs.without('class', 'classappend')}"><button type="button"><selectedcontent></selectedcontent></button><option th:if="${props.placeholder != null}"
+      class="select-item" value="" hidden data-placeholder="true" th:text="${props.placeholder}"></option><sl:slot/></select>
+  <sl:icon name="chevron-down" class="select-icon"/>
+  <template class="select-indicator-template"><sl:icon name="check" class="select-item-indicator"/></template>
+</div>
+</body>
+</html>

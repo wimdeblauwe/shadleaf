@@ -24,7 +24,7 @@
     @apply relative flex w-full cursor-default items-center text-start no-underline outline-none select-none
       disabled:cursor-not-allowed disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:opacity-50
       [&_svg]:pointer-events-none [&_svg]:shrink-0
-      forced-colors:focus:outline-2 forced-colors:focus:-outline-offset-2;
+      forced-colors:focus:outline-2 forced-colors:focus:-outline-offset-2 forced-colors:focus:outline-solid;
   }
 
   .dropdown-menu-item-indicator {

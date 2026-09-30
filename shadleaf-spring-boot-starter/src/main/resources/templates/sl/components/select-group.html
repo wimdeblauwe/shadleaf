@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A group of <code>sl:select-item</code>s under a heading: an <code>optgroup</code>.
+      </sl:description>
+    <sl:prop name="label" required>The group's heading, shadcn/ui's <code>SelectLabel</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<optgroup th:fragment="select-group"
+          class="select-group"
+          th:attr="label=${props.label}"
+          sl:attrs><sl:slot/></optgroup>
+</body>
+</html>

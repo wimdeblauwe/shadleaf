@@ -775,6 +775,47 @@
     "declared" : true,
     "props" : [ ]
   }, {
+    "name" : "select",
+    "tag" : "sl:select",
+    "description" : "A select drawn like shadcn/ui's: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "sm", "default" ],
+      "description" : "Height of the select."
+    }, {
+      "name" : "placeholder",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Text shown while no option is chosen: a first option with an empty value, hidden from the list. A required select with it selected is invalid."
+    } ]
+  }, {
+    "name" : "select-group",
+    "tag" : "sl:select-group",
+    "description" : "A group of `sl:select-item`s under a heading: an `optgroup`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The group's heading, shadcn/ui's `SelectLabel`.",
+      "required" : true
+    } ]
+  }, {
+    "name" : "select-item",
+    "tag" : "sl:select-item",
+    "description" : "An option in a `sl:select`: an `option` with a check mark that shows while it is chosen. `value` (or `th:value`) and `disabled` pass through; `th:field` on the select marks the bound one. Its content may start with an icon; always give it text, which is all an older browser keeps of it.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "select-separator",
+    "tag" : "sl:select-separator",
+    "description" : "A line between items or groups of a `sl:select`: an `hr`, which every current browser draws in a select's list.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "separator",
     "tag" : "sl:separator",
     "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",

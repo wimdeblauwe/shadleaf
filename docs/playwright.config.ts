@@ -10,7 +10,11 @@ export default defineConfig({
     // Keeps the skins' motion-safe transitions from leaving a computed style half-way when it is read.
     contextOptions: {reducedMotion: 'reduce'},
   },
-  projects: [{name: 'chromium', use: {...devices['Desktop Chrome']}}],
+  projects: [
+    {name: 'chromium', use: {...devices['Desktop Chrome']}},
+    // Firefox has no customizable select (appearance: base-select), so sl:select shows slSelect's list box there.
+    {name: 'firefox', use: {...devices['Desktop Firefox']}, testMatch: 'select.spec.ts'},
+  ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.
     // Not through `pnpm exec`: pnpm 12 starts astro in a process group of its own, which survives Playwright's stop

@@ -12,7 +12,7 @@
   Nothing is needed for htmx's history cache: whether a popover is open is not in the markup it saves, and Alpine
   initialises the restored markup again, which resets aria-expanded.
 */
-import {hide, listener, positionWithoutAnchoring, show, trackExpanded, triggersOf} from '../popup.js';
+import {hide, listener, positionWithoutAnchoring, show, trackExpanded, triggersOf, typeaheadMatch} from '../popup.js';
 
 const ITEM = '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
 const TYPEAHEAD_RESET_MS = 500;
@@ -104,7 +104,7 @@ export default function dropdownMenu() {
               const now = Date.now();
               typed = now - typedAt > TYPEAHEAD_RESET_MS ? event.key : typed + event.key;
               typedAt = now;
-              next = match(items, index, typed.toLowerCase());
+              next = typeaheadMatch(items, index, typed.toLowerCase(), textOf);
               if (next) {
                 event.preventDefault();
               }
@@ -164,18 +164,6 @@ function enabledItems(menu) {
 
 function isEnabled(item) {
   return !item.matches(':disabled, [aria-disabled="true"]');
-}
-
-/**
- * The item whose text starts with `typed`, looking from the one after `index` and wrapping around. Typing one letter
- * over and over moves through the items that start with it.
- */
-function match(items, index, typed) {
-  const repeated = typed.length > 1 && [...typed].every(character => character === typed[0]);
-  const search = repeated ? typed[0] : typed;
-  const start = repeated || typed.length === 1 ? index + 1 : Math.max(index, 0);
-  const ordered = [...items.slice(start), ...items.slice(0, start)];
-  return ordered.find(item => textOf(item).startsWith(search));
 }
 
 /** An item's text without its shortcut, for typeahead. */

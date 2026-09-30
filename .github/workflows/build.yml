@@ -65,8 +65,9 @@ jobs:
       - name: Build the docs site
         run: pnpm run build
 
-      - name: Install Chromium for Playwright
-        run: pnpm exec playwright install --with-deps chromium
+      # Firefox for select.spec.ts: it has no customizable select, so sl:select's list box is tested there for real
+      - name: Install Chromium and Firefox for Playwright
+        run: pnpm exec playwright install --with-deps chromium firefox
 
       # axe-core and the keyboard focus pass over the showcase page, in every skin, light and dark
       - name: Check the showcase's accessibility

@@ -83,6 +83,23 @@ class HtmxFormPageTest {
   }
 
   @Test
+  void anHtmxSubmitWithErrorsKeepsTheChosenTopicInItsSelect() throws Exception {
+    Document fragment = Jsoup.parseBodyFragment(mockMvc.perform(htmx(post("/htmx-form")
+            .param("name", "")
+            .param("email", "wim@example.com")
+            .param("topic", "billing")
+            .param("_terms", "on")))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString());
+
+    Element topic = fragment.getElementById("topic");
+    assertThat(topic.parent().attr("x-data")).isEqualTo("slSelect");
+    assertThat(topic.select("option[selected]")).extracting(Element::val).containsExactly("billing");
+    assertThat(topic.hasAttr("aria-invalid")).isFalse();
+    assertThat(fragment.select("[autofocus]")).extracting(Element::id).containsExactly("name");
+  }
+
+  @Test
   void anHtmxSubmitWithAGlobalErrorFocusesTheSummary() throws Exception {
     Document fragment = Jsoup.parseBodyFragment(mockMvc.perform(htmx(post("/htmx-form")
             .param("name", "Wim")

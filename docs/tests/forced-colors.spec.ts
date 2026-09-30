@@ -2,7 +2,7 @@ import {expect, test} from '@playwright/test';
 import {openShowcase, skins} from './showcase';
 
 // In forced-colors mode (Windows' high contrast) a disabled control should use the system's GrayText, not half
-// opacity: fading turns the colours the user chose into ones they did not. The text-like controls, the native select's
+// opacity: fading turns the colours the user chose into ones they did not. The text-like controls, the selects'
 // chevron and the labels and legends that fade with a control turn GrayText; the checkbox, radio button and switch are
 // drawn by the browser (appearance: auto), which draws its own disabled state, so they only must not be faded.
 
@@ -50,7 +50,7 @@ for (const skin of skins) {
       for (const legend of document.querySelectorAll('main fieldset:disabled > legend')) {
         check(legend, true);
       }
-      for (const icon of document.querySelectorAll('main .native-select-wrapper:has(> select:disabled) > svg')) {
+      for (const icon of document.querySelectorAll('main :is(.native-select-wrapper, .select-wrapper):has(> select:disabled) > svg')) {
         check(icon, true);
       }
       return {checked: controls.length, problems};
@@ -60,3 +60,22 @@ for (const skin of skins) {
     expect(problems.problems, problems.problems.join('\n')).toEqual([]);
   });
 }
+
+// Forced colors drop backgrounds and box-shadows, so the accent background and the ring of a focused menu item are
+// gone: the item needs an outline there. (outline-none sets outline-style none, which a width alone does not undo.)
+test('a focused menu item draws an outline in forced-colors mode', async ({page}) => {
+  await page.emulateMedia({forcedColors: 'active'});
+  await openShowcase(page, skins[0], 'light');
+  await page.waitForFunction(() => 'Alpine' in window);
+  const id = await page.locator('main .dropdown-menu-content').first().evaluate(menu => menu.id);
+  await page.locator(`#${id}-trigger`).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator(`#${id} [role^="menuitem"]`).first()).toBeFocused();
+
+  const outline = await page.evaluate(() => {
+    const style = getComputedStyle(document.activeElement!);
+    return {style: style.outlineStyle, width: parseFloat(style.outlineWidth)};
+  });
+  expect(outline.style).not.toBe('none');
+  expect(outline.width).toBeGreaterThan(0);
+});

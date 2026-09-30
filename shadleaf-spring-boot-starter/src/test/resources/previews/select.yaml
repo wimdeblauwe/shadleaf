@@ -1,0 +1,140 @@
+# Scenarios for the select's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# Ids are unique across the showcase: th:field gives the select the field's name as its id.
+component: select
+parts: [select-item, select-group, select-separator]
+scenarios:
+  - id: default
+    title: Select
+    description: A placeholder until an option is chosen; th:field marks the bound one.
+    source: |-
+      <sl:field th:field="*{fruit}">
+        <sl:field-label>Fruit</sl:field-label>
+        <sl:select placeholder="Select a fruit">
+          <sl:select-group label="Fruits">
+            <sl:select-item value="apple">Apple</sl:select-item>
+            <sl:select-item value="banana">Banana</sl:select-item>
+            <sl:select-item value="blueberry">Blueberry</sl:select-item>
+            <sl:select-item value="grapes">Grapes</sl:select-item>
+            <sl:select-item value="pineapple">Pineapple</sl:select-item>
+          </sl:select-group>
+        </sl:select>
+      </sl:field>
+    form:
+      values: {fruit: ''}
+
+  - id: groups
+    title: Groups and separators
+    source: |-
+      <sl:field th:field="*{food}">
+        <sl:field-label>Food</sl:field-label>
+        <sl:select>
+          <sl:select-group label="Fruits">
+            <sl:select-item value="apple">Apple</sl:select-item>
+            <sl:select-item value="banana">Banana</sl:select-item>
+          </sl:select-group>
+          <sl:select-separator/>
+          <sl:select-group label="Vegetables">
+            <sl:select-item value="carrot">Carrot</sl:select-item>
+            <sl:select-item value="broccoli">Broccoli</sl:select-item>
+          </sl:select-group>
+        </sl:select>
+      </sl:field>
+    form:
+      values: {food: carrot}
+
+  - id: icons
+    title: Icons
+    description: An item may start with an icon; the select shows it with the chosen item's text. Older browsers, which drop markup inside an option, show the text alone.
+    source: |-
+      <sl:field th:field="*{chartType}">
+        <sl:field-label>Chart</sl:field-label>
+        <sl:select>
+          <sl:select-item value="bar"><sl:icon name="chart-bar"/>Bar</sl:select-item>
+          <sl:select-item value="line"><sl:icon name="chart-line"/>Line</sl:select-item>
+          <sl:select-item value="pie"><sl:icon name="chart-pie"/>Pie</sl:select-item>
+        </sl:select>
+      </sl:field>
+    form:
+      values: {chartType: line}
+
+  - id: scrollable
+    title: Long lists
+    description: The list scrolls when it is taller than the window.
+    source: |-
+      <sl:field th:field="*{timezone}">
+        <sl:field-label>Timezone</sl:field-label>
+        <sl:select placeholder="Select a timezone">
+          <sl:select-group label="Europe &amp; Africa">
+            <sl:select-item value="gmt">Greenwich Mean Time (GMT)</sl:select-item>
+            <sl:select-item value="cet">Central European Time (CET)</sl:select-item>
+            <sl:select-item value="eet">Eastern European Time (EET)</sl:select-item>
+            <sl:select-item value="west">Western European Summer Time (WEST)</sl:select-item>
+            <sl:select-item value="cat">Central Africa Time (CAT)</sl:select-item>
+            <sl:select-item value="eat">East Africa Time (EAT)</sl:select-item>
+          </sl:select-group>
+          <sl:select-group label="Asia">
+            <sl:select-item value="msk">Moscow Time (MSK)</sl:select-item>
+            <sl:select-item value="ist">India Standard Time (IST)</sl:select-item>
+            <sl:select-item value="cst_china">China Standard Time (CST)</sl:select-item>
+            <sl:select-item value="jst">Japan Standard Time (JST)</sl:select-item>
+            <sl:select-item value="kst">Korea Standard Time (KST)</sl:select-item>
+          </sl:select-group>
+          <sl:select-group label="Americas">
+            <sl:select-item value="est">Eastern Standard Time (EST)</sl:select-item>
+            <sl:select-item value="cst">Central Standard Time (CST)</sl:select-item>
+            <sl:select-item value="mst">Mountain Standard Time (MST)</sl:select-item>
+            <sl:select-item value="pst">Pacific Standard Time (PST)</sl:select-item>
+          </sl:select-group>
+        </sl:select>
+      </sl:field>
+    form:
+      values: {timezone: ''}
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:select size="sm" name="density" aria-label="Density (small)">
+        <sl:select-item value="compact">Compact</sl:select-item>
+        <sl:select-item value="comfortable">Comfortable</sl:select-item>
+      </sl:select>
+      <sl:select name="density" aria-label="Density">
+        <sl:select-item value="compact">Compact</sl:select-item>
+        <sl:select-item value="comfortable">Comfortable</sl:select-item>
+      </sl:select>
+
+  - id: invalid
+    title: With errors
+    description: In a field with errors, the select is aria-invalid and described by the message.
+    source: |-
+      <sl:field th:field="*{shipping}">
+        <sl:field-label>Shipping</sl:field-label>
+        <sl:select placeholder="Select a shipping method">
+          <sl:select-item value="standard">Standard</sl:select-item>
+          <sl:select-item value="express">Express</sl:select-item>
+        </sl:select>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {shipping: ''}
+      errors: {shipping: must not be empty}
+
+  - id: disabled
+    title: Disabled
+    description: A disabled select, and a disabled item that the keyboard and the pointer skip.
+    source: |-
+      <sl:field th:field="*{region}">
+        <sl:field-label>Region</sl:field-label>
+        <sl:select disabled>
+          <sl:select-item value="eu">Europe</sl:select-item>
+        </sl:select>
+      </sl:field>
+      <sl:field th:field="*{seat}">
+        <sl:field-label>Seat</sl:field-label>
+        <sl:select>
+          <sl:select-item value="aisle">Aisle</sl:select-item>
+          <sl:select-item value="middle" disabled>Middle</sl:select-item>
+          <sl:select-item value="window">Window</sl:select-item>
+        </sl:select>
+      </sl:field>
+    form:
+      values: {region: eu, seat: window}

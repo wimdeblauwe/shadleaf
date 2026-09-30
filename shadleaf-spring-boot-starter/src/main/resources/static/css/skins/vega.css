@@ -331,6 +331,91 @@
     @apply text-muted-foreground;
   }
 
+  /*
+    Select. Its trigger looks like the native select; the list like the dropdown menu, in the picker of the
+    customizable select and in slSelect's list box alike. The item under the pointer or the keyboard has the accent
+    background; keyboard focus adds the ring, as in the menu.
+  */
+  .select {
+    @apply gap-1.5 rounded-md border border-input bg-transparent ps-2.5 pe-8 text-sm shadow-xs
+      motion-safe:transition-[color,box-shadow]
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:bg-input/30 dark:hover:bg-input/50
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      [&_:is(selectedcontent,.select-value)]:gap-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .select-wrapper:not([data-size]) > .select,
+  .select-wrapper[data-size='default'] > .select {
+    @apply h-9;
+  }
+
+  .select-wrapper[data-size='sm'] > .select {
+    @apply h-8;
+  }
+
+  .select:has(> option[data-placeholder]:checked),
+  .select[data-placeholder] {
+    @apply text-muted-foreground;
+  }
+
+  .select-icon {
+    @apply text-muted-foreground;
+  }
+
+  .select-content {
+    @apply rounded-md bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100;
+  }
+
+  /* The customizable select's list. A rule of its own: a browser without it drops a rule that names it. */
+  .select::picker(select) {
+    @apply rounded-md bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100;
+  }
+
+  .select-content,
+  .select {
+    --popup-offset: --spacing(1);
+    --popup-slide: --spacing(2);
+  }
+
+  .select-item {
+    @apply gap-2 rounded-sm py-1.5 ps-2 pe-8 text-sm
+      hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
+      data-active:bg-accent data-active:text-accent-foreground;
+  }
+
+  .select-item svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .select-item:focus-visible,
+  .select-wrapper:has(> .select:focus-visible) .select-item[data-active] {
+    @apply ring-[3px] ring-ring/50 ring-inset;
+  }
+
+  .select-item-indicator {
+    @apply end-2;
+  }
+
+  .select-group,
+  .select-label {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .select-label {
+    @apply px-2 py-1.5;
+  }
+
+  .select-group > .select-item {
+    @apply text-sm text-popover-foreground;
+  }
+
+  .select-separator {
+    @apply -mx-1 my-1 bg-border;
+  }
+
   /* Checkbox */
   .checkbox {
     @apply size-4 rounded-[4px] border border-input bg-transparent shadow-xs

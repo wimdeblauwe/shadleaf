@@ -45,7 +45,14 @@ class FormPageTest {
     assertThat(page.getElementById("message").attr("aria-describedby")).isEqualTo("message-description");
     assertThat(page.getElementById("email").attr("type")).isEqualTo("email");
     assertThat(page.getElementById("callbackDate").attr("type")).isEqualTo("date");
-    assertThat(page.select("#topic option")).hasSize(4);
+    Element topic = page.getElementById("topic");
+    assertThat(topic.classNames()).containsExactly("select");
+    assertThat(topic.parent().attr("x-data")).as("sl:select, not the native select").isEqualTo("slSelect");
+    assertThat(topic.select("option")).extracting(Element::val).containsExactly("", "sales", "support", "billing");
+    Element placeholder = topic.selectFirst("option");
+    assertThat(placeholder.hasAttr("hidden")).isTrue();
+    assertThat(placeholder.text()).isEqualTo("Select a topic");
+    assertThat(topic.select("option[selected]")).isEmpty();
     assertThat(page.select("fieldset.field-set .radio-group[role=radiogroup] input.radio-group-item"))
         .extracting(Element::id, item -> item.attr("name"), item -> item.hasAttr("disabled")).containsExactly(
             tuple("replyBy1", "replyBy", false), tuple("replyBy2", "replyBy", false),
@@ -146,6 +153,8 @@ class FormPageTest {
         .isEqualTo("We do not accept messages with links, to keep spam out.");
     assertThat(page.select("[aria-invalid], [data-invalid], .field-error")).as("no field is at fault").isEmpty();
     assertThat(page.getElementById("message").text()).isEqualTo("Great deals at https://example.com/deals");
+    assertThat(page.select("#topic option[selected]")).as("the topic select keeps the chosen one")
+        .extracting(Element::val).containsExactly("support");
   }
 
   @Test

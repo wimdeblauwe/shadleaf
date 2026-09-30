@@ -1,0 +1,114 @@
+<!-- <sl:select size="sm" name="fruit" aria-label="Fruit">
+  <sl:select-item value="apple">Apple</sl:select-item>
+</sl:select> -->
+<div class="select-wrapper" x-data="slSelect" data-size="sm">
+  <select class="select" name="fruit" aria-label="Fruit">
+    <button type="button">
+      <selectedcontent></selectedcontent>
+    </button>
+    <option class="select-item" value="apple">
+      Apple
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <template class="select-indicator-template">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </template>
+</div>
+
+<!-- <sl:select size="default" name="fruit" aria-label="Fruit">
+  <sl:select-item value="apple">Apple</sl:select-item>
+</sl:select> -->
+<div class="select-wrapper" x-data="slSelect">
+  <select class="select" name="fruit" aria-label="Fruit">
+    <button type="button">
+      <selectedcontent></selectedcontent>
+    </button>
+    <option class="select-item" value="apple">
+      Apple
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <template class="select-indicator-template">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </template>
+</div>
+
+<!-- <sl:select id="fruit" name="fruit" placeholder="Select a fruit" class="w-full" required>
+  <sl:select-group label="Fruits">
+    <sl:select-item value="apple">Apple</sl:select-item>
+    <sl:select-item value="banana" disabled>Banana</sl:select-item>
+  </sl:select-group>
+  <sl:select-separator/>
+  <sl:select-group label="Vegetables">
+    <sl:select-item value="carrot" selected>Carrot</sl:select-item>
+  </sl:select-group>
+</sl:select> -->
+<div class="select-wrapper w-full" x-data="slSelect">
+  <select class="select" id="fruit" name="fruit" required>
+    <button type="button">
+      <selectedcontent></selectedcontent>
+    </button>
+    <option class="select-item" value="" hidden data-placeholder="true">Select a fruit</option>
+    <optgroup class="select-group" label="Fruits">
+      <option class="select-item" value="apple">
+        Apple
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </option>
+      <option class="select-item" value="banana" disabled>
+        Banana
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </option>
+    </optgroup>
+    <hr class="select-separator">
+    <optgroup class="select-group" label="Vegetables">
+      <option class="select-item" value="carrot" selected>
+        Carrot
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </option>
+    </optgroup>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <template class="select-indicator-template">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </template>
+</div>
+
+<!-- <sl:select name="theme" aria-label="Theme" disabled aria-invalid="true" hx-post="/theme" hx-trigger="change">
+  <sl:select-item value="light"><sl:icon name="sun"/>Light</sl:select-item>
+</sl:select> -->
+<div class="select-wrapper" x-data="slSelect">
+  <select class="select" name="theme" aria-label="Theme" disabled aria-invalid="true" hx-post="/theme" hx-trigger="change">
+    <button type="button">
+      <selectedcontent></selectedcontent>
+    </button>
+    <option class="select-item" value="light">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      Light
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <template class="select-indicator-template">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </template>
+</div>
+
+<!-- <sl:select-item th:value="${'dark'}">Dark</sl:select-item> -->
+<option class="select-item" value="dark">
+  Dark
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</option>
+
+<!-- <sl:select-group th:label="${'Fruits'}" class="x"><sl:select-item value="a">A</sl:select-item></sl:select-group> -->
+<optgroup class="select-group x" label="Fruits">
+  <option class="select-item" value="a">
+    A
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon select-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </option>
+</optgroup>
+
+<!-- <sl:select-separator/> -->
+<hr class="select-separator">

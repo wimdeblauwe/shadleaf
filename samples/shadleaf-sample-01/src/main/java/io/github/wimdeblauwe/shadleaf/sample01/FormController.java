@@ -20,12 +20,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class FormController {
 
-  static final List<String> TOPICS = List.of("sales", "support", "billing");
+  static final List<Topic> TOPICS = List.of(new Topic("sales", "handshake"), new Topic("support", "life-buoy"),
+      new Topic("billing", "receipt"));
   static final List<String> REPLY_CHANNELS = List.of("email", "phone");
   private static final Pattern LINK = Pattern.compile("(?i)\\b(https?://|www\\.)");
 
   @ModelAttribute("topics")
-  List<String> topics() {
+  List<Topic> topics() {
     return TOPICS;
   }
 
@@ -56,5 +57,9 @@ public class FormController {
     if (contactForm.getMessage() != null && LINK.matcher(contactForm.getMessage()).find()) {
       bindingResult.reject("contactForm.links", "We do not accept messages with links, to keep spam out.");
     }
+  }
+
+  /** A choice for the topic select: its value and the icon shown with it. */
+  record Topic(String value, String icon) {
   }
 }

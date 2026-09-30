@@ -1,5 +1,5 @@
 ---
-title: Native Select
+title: Select (Native)
 description: The browser's own select, styled, bound to a form field with th:field.
 ---
 
@@ -7,6 +7,14 @@ import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
 <ComponentPreview id="native-select--default" />
+
+## Native select or select?
+
+Both are a real `<select>` underneath, bind with `th:field` and submit with the form. This one styles only the closed
+control and leaves the list to the operating system: on a phone that is the system's own picker, which many people
+find easier to use. Use it for long lists (countries, years), in dense forms, and for `multiple`.
+[`<sl:select>`](../select/) draws its list in the page's style, like shadcn/ui's Select, with a check mark on the
+chosen item and room for an icon; use it where the look matters and the list is short enough to scan.
 
 ## Options
 

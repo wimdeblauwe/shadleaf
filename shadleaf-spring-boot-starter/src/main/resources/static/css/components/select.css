@@ -1,0 +1,181 @@
+/*
+  Select: structure only. Height, radius, border, colours, type size, spacing and focus rings are identity and live in
+  the skins.
+
+  One component, three ways to draw it:
+  - where the browser supports the customizable select (appearance: base-select), the select draws its own list, the
+    picker (::picker(select)), and its button shows a copy of the chosen option (selectedcontent);
+  - elsewhere, before Alpine runs or without it, the select is drawn like sl:native-select and the browser shows its
+    own list;
+  - once slSelect runs there, it hides the select (data-enhanced on the wrapper) and puts a button with the same
+    classes and a list box (.select-content, a popover placed by popup.css) in its place.
+  The options (.select-item) and separators are styled the same in the picker and the list box. The chevron is the
+  wrapper's icon, over the end of whichever is shown.
+
+  Disabled fades the wrapper, so the chevron fades with the select. In forced-colors mode both turn GrayText instead.
+*/
+@layer components {
+  .select-wrapper {
+    @apply relative w-fit has-[>.select:disabled]:opacity-50 forced-colors:has-[>.select:disabled]:opacity-100;
+  }
+
+  .select-wrapper:has(> .select:disabled) > .select-icon {
+    @apply forced-colors:text-[GrayText];
+  }
+
+  /* The select, and slSelect's button in its place. */
+  .select {
+    @apply flex w-full min-w-0 appearance-none items-center text-start whitespace-nowrap outline-none select-none
+      disabled:pointer-events-none disabled:cursor-not-allowed
+      forced-colors:disabled:border-[GrayText] forced-colors:disabled:text-[GrayText];
+  }
+
+  .select-icon {
+    @apply pointer-events-none absolute top-1/2 end-2.5 size-4 -translate-y-1/2 select-none;
+  }
+
+  /* Hidden, not removed, once slSelect has put its button in place: it still submits, resets and validates. */
+  .select-wrapper[data-enhanced] > select.select {
+    @apply pointer-events-none absolute inset-0 size-full opacity-0;
+  }
+
+  .select-value {
+    @apply flex min-w-0 flex-1 items-center overflow-hidden;
+  }
+
+  .select-value > .select-item-indicator {
+    @apply hidden;
+  }
+
+
+  /* The list box slSelect adds: at least as wide as the select, scrolling when taller than the viewport. */
+  .select-content {
+    @apply overflow-x-hidden overflow-y-auto border-0 outline-none;
+    min-inline-size: max(--spacing(36), anchor-size(self-inline));
+    max-block-size: calc(100dvh - --spacing(4));
+  }
+
+  .select-item {
+    @apply relative flex w-full cursor-default items-center outline-none select-none
+      disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50
+      [&_svg]:pointer-events-none [&_svg]:shrink-0
+      forced-colors:focus:outline-2 forced-colors:focus:-outline-offset-2 forced-colors:focus:outline-solid
+      forced-colors:data-active:outline-2 forced-colors:data-active:-outline-offset-2
+      forced-colors:data-active:outline-solid;
+  }
+
+  .select-item-indicator {
+    @apply pointer-events-none invisible absolute;
+  }
+
+  .select-item:is(:checked, [aria-selected='true']) > .select-item-indicator {
+    @apply visible;
+  }
+
+  .select-separator {
+    @apply h-px border-0;
+  }
+}
+
+/*
+  Browsers that draw the list natively, in their own colours: without these, dark mode can give dark text on a dark
+  list. Not with base-select, which draws the list with the page's styles.
+*/
+@supports not (appearance: base-select) {
+  @layer components {
+    select.select :is(option, optgroup) {
+      @apply bg-[Canvas] text-[CanvasText];
+    }
+  }
+}
+
+/*
+  The customizable select. Both the select and its picker opt in. The picker keeps the side and gap of the other
+  popups: below the select, lined up with its start, flipped above when there is no room below (the margin flips
+  with it), and fades in, zooming and sliding where motion is fine. The browser's own picker icon and check mark give
+  way to the chevron and the item's indicator; an item without one (th:text replaced it) keeps the check mark.
+*/
+@supports (appearance: base-select) {
+  @layer components {
+    select.select,
+    .select::picker(select) {
+      appearance: base-select;
+    }
+
+    .select::picker-icon {
+      display: none;
+    }
+
+    /* The full height of the select, which has no padding of its own: a target of at least 24 pixels (WCAG 2.5.8). */
+    .select > button {
+      @apply flex min-w-0 flex-1 items-center self-stretch border-0 bg-transparent p-0 text-start;
+      color: inherit;
+      font: inherit;
+    }
+
+    .select selectedcontent {
+      @apply flex min-w-0 items-center overflow-hidden;
+    }
+
+    .select selectedcontent > .select-item-indicator {
+      @apply hidden;
+    }
+
+    .select-item:has(> .select-item-indicator)::checkmark {
+      display: none;
+    }
+
+    .select::picker(select) {
+      @apply border-0 opacity-0 forced-colors:border forced-colors:border-solid;
+      inset: auto;
+      margin-block: var(--popup-offset) 0;
+      margin-inline: 0;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-block;
+      /* The browser's own is most-block-size, which opens the list above whenever there is more room there. */
+      position-try-order: normal;
+      min-inline-size: max(--spacing(36), anchor-size(self-inline));
+      max-block-size: calc(100dvh - --spacing(4));
+      overflow-x: hidden;
+      overflow-y: auto;
+      transform-origin: top;
+      transition-property: opacity, scale, translate, overlay, display;
+      transition-behavior: allow-discrete;
+    }
+
+    .select:open::picker(select) {
+      opacity: 1;
+    }
+
+    @starting-style {
+      .select:open::picker(select) {
+        opacity: 0;
+      }
+    }
+
+    .select-group {
+      @apply block;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @layer components {
+      .select::picker(select) {
+        scale: 0.95;
+        translate: 0 calc(-1 * var(--popup-slide));
+      }
+
+      .select:open::picker(select) {
+        scale: 1;
+        translate: 0 0;
+      }
+
+      @starting-style {
+        .select:open::picker(select) {
+          scale: 0.95;
+          translate: 0 calc(-1 * var(--popup-slide));
+        }
+      }
+    }
+  }
+}

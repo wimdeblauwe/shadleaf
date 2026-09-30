@@ -111,6 +111,32 @@ their trigger with CSS anchor positioning, so there are no portals and no `open`
   `delay` sits on each tooltip. See [Tooltip](../components/tooltip/).
 - `side="right"` and `"left"` are the end and the start of a line, as for the sheet.
 
+### Select is a real select
+
+`<sl:select>` renders a `<select>`, so `th:field` binds it and the form submits it without a hidden input. The
+customizable select (`appearance: base-select`) draws its list where the browser has it (Chrome and Edge 135, Safari
+27); elsewhere a small Alpine component shows a list box in its place, and without Alpine it is the browser's own
+select.
+
+```html
+<!-- shadcn: <Select><SelectTrigger><SelectValue placeholder="Select a fruit"/></SelectTrigger>
+             <SelectContent><SelectGroup><SelectLabel>Fruits</SelectLabel>
+             <SelectItem value="apple">Apple</SelectItem>... -->
+<sl:select th:field="*{fruit}" placeholder="Select a fruit">
+  <sl:select-group label="Fruits">
+    <sl:select-item value="apple">Apple</sl:select-item>
+  </sl:select-group>
+</sl:select>
+```
+
+- `SelectTrigger`, `SelectValue` and `SelectContent` are all `<sl:select>`: `size` and `placeholder` are its props.
+- A group's heading is `<sl:select-group label>`; there is no `SelectLabel` part.
+- No scroll buttons, no `position="item-aligned"`, `side` or `align`: the list opens below the select, or above it
+  when there is no room.
+- No `value`/`onValueChange`: `th:field` renders the value, and the select fires `change`.
+- The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
+  item at once, as on any select, where Radix opens the list. See [Select](../components/select/#left-out).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
@@ -173,6 +199,9 @@ takes keyboard focus, when it is a link (`as="a"`).
 - `<sl:input>` only takes the text-like types (`text`, `email`, `password`, `date`, `file`, ...). Checkboxes, radio
   buttons and switches are separate components, as in shadcn, but shadcn's `Input` would accept `type="checkbox"`.
 - `<sl:native-select>` takes `<option>` and `<optgroup>` as they are; there is no `NativeSelectOption`.
+- The select's list is at least as wide as the select and opens below it, where shadcn's default
+  (`position="item-aligned"`) lays it over the select. Keyboard focus on an item draws the focus ring as well as the
+  accent background, as in the dropdown menu.
 - Checkbox, radio group and switch are the browser's own inputs, styled, where shadcn builds them from buttons. They
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
   on any radio button or checkbox. There is no indeterminate checkbox yet.
