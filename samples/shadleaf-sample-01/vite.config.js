@@ -31,6 +31,12 @@ export default defineConfig({
     },
     server: {
         proxy: {
+            // WebJars (htmx) are served by Spring Boot, although their paths end in .js
+            '^/webjars/': {
+                target: 'http://localhost:8080',
+                changeOrigin: true,
+                secure: false
+            },
             // Proxy all backend requests to Spring Boot except for static assets
             '^/(?!static|assets|@|.*\\.(js|css|png|svg|jpg|jpeg|gif|ico|woff|woff2)$)': {
                 target: 'http://localhost:8080',  // Proxy to Spring Boot backend

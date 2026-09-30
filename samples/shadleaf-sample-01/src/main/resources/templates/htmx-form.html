@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      xmlns:hx="http://www.w3.org/1999/xhtml"
+      th:replace="~{layout/main :: layout('Form with htmx', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>The <a th:href="@{/form}">form</a> again, posted with htmx: the server answers with the fragment below, with its
+    errors or the confirmation, and htmx swaps it in without loading the page again. Focus goes to the summary when it
+    shows, otherwise to the first field with an error (<code>&lt;sl:form-errors autofocus/&gt;</code>), and to the
+    confirmation after a valid submit. Without JavaScript the same form is a plain POST.</p>
+
+  <!--/* The part htmx swaps: the controller renders it alone ("htmx-form :: contact") for a request with HX-Request. */-->
+  <div id="contact" th:fragment="contact">
+    <th:block th:if="${sentTo}">
+      <!--/* Focus moves to the confirmation, which reads it out: the submit button it replaces is gone. */-->
+      <sl:alert tabindex="-1" autofocus>
+        <sl:icon name="circle-check"/>
+        <sl:alert-title>Message sent</sl:alert-title>
+        <sl:alert-description th:text="|We will reply to ${sentTo}.|">We will reply to you.</sl:alert-description>
+      </sl:alert>
+      <div class="row">
+        <sl:button as="a" variant="outline" th:href="@{/htmx-form}">Send another message</sl:button>
+      </div>
+    </th:block>
+
+    <form th:unless="${sentTo}" class="form" th:object="${contactForm}" th:action="@{/htmx-form}" method="post"
+          novalidate hx:post="@{/htmx-form}" hx-target="#contact" hx-swap="outerHTML">
+      <sl:form-errors autofocus/>
+
+      <th:block th:replace="~{form :: contact-fields}"></th:block>
+
+      <div class="row">
+        <sl:button type="submit">Send</sl:button>
+        <sl:button as="a" variant="outline" th:href="@{/htmx-form}">Reset</sl:button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

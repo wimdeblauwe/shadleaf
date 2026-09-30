@@ -9,7 +9,7 @@
     <code>th:field</code>: the field gives its control the id the label points at, shows the binding's messages, and
     links description and messages to the control with <code>aria-describedby</code>. A message with a link in it
     (<code>https://...</code>) is rejected by the controller as a whole: that global error shows at the top of the
-    form.</p>
+    form. The <a th:href="@{/htmx-form}">form with htmx</a> is the same form, posted without a page load.</p>
 
   <sl:alert th:if="${sentTo}" role="status">
     <sl:icon name="circle-check"/>
@@ -20,66 +20,70 @@
   <form class="form" th:object="${contactForm}" th:action="@{/form}" method="post" novalidate>
     <sl:form-errors autofocus/>
 
-    <sl:field-group>
-      <sl:field th:field="*{name}">
-        <sl:field-label>Name</sl:field-label>
-        <sl:input autocomplete="name"/>
-        <sl:field-error/>
-      </sl:field>
-
-      <sl:field th:field="*{email}">
-        <sl:field-label>Email</sl:field-label>
-        <sl:input type="email" placeholder="you@example.com" autocomplete="email"/>
-        <sl:field-description>We only use it to reply to you.</sl:field-description>
-        <sl:field-error/>
-      </sl:field>
-
-      <sl:field th:field="*{topic}">
-        <sl:field-label>Topic</sl:field-label>
-        <sl:native-select>
-          <option value="">Select a topic</option>
-          <option th:each="topic : ${topics}" th:value="${topic}"
-                  th:text="${#strings.capitalize(topic)}">Sales</option>
-        </sl:native-select>
-        <sl:field-error/>
-      </sl:field>
-
-      <sl:field th:field="*{callbackDate}">
-        <sl:field-label>Call me back on (optional)</sl:field-label>
-        <sl:input type="date"/>
-      </sl:field>
-
-      <sl:field th:field="*{message}">
-        <sl:field-label>Message</sl:field-label>
-        <sl:textarea rows="4"/>
-        <sl:field-description>At least 10 characters.</sl:field-description>
-        <sl:field-error/>
-      </sl:field>
-
-      <sl:field-set th:field="*{replyBy}">
-        <sl:field-legend variant="label">Reply by</sl:field-legend>
-        <sl:radio-group orientation="horizontal">
-          <sl:label th:each="channel : ${replyChannels}">
-            <sl:radio-group-item th:value="${channel}"/>
-            <th:block th:text="${#strings.capitalize(channel)}">Email</th:block>
-          </sl:label>
-        </sl:radio-group>
-        <sl:field-error/>
-      </sl:field-set>
-
-      <sl:field th:field="*{newsletter}" orientation="horizontal">
-        <sl:switch/>
-        <sl:field-label>Send me the monthly newsletter</sl:field-label>
-      </sl:field>
-
-      <sl:field th:field="*{terms}" orientation="horizontal">
-        <sl:checkbox/>
-        <sl:field-content>
-          <sl:field-label>I accept the terms and conditions</sl:field-label>
+    <!--/* The fields, shared with the htmx form page (htmx-form.html), which includes this fragment inside its own
+      th:object form. */-->
+    <th:block th:fragment="contact-fields">
+      <sl:field-group>
+        <sl:field th:field="*{name}">
+          <sl:field-label>Name</sl:field-label>
+          <sl:input autocomplete="name"/>
           <sl:field-error/>
-        </sl:field-content>
-      </sl:field>
-    </sl:field-group>
+        </sl:field>
+
+        <sl:field th:field="*{email}">
+          <sl:field-label>Email</sl:field-label>
+          <sl:input type="email" placeholder="you@example.com" autocomplete="email"/>
+          <sl:field-description>We only use it to reply to you.</sl:field-description>
+          <sl:field-error/>
+        </sl:field>
+
+        <sl:field th:field="*{topic}">
+          <sl:field-label>Topic</sl:field-label>
+          <sl:native-select>
+            <option value="">Select a topic</option>
+            <option th:each="topic : ${topics}" th:value="${topic}"
+                    th:text="${#strings.capitalize(topic)}">Sales</option>
+          </sl:native-select>
+          <sl:field-error/>
+        </sl:field>
+
+        <sl:field th:field="*{callbackDate}">
+          <sl:field-label>Call me back on (optional)</sl:field-label>
+          <sl:input type="date"/>
+        </sl:field>
+
+        <sl:field th:field="*{message}">
+          <sl:field-label>Message</sl:field-label>
+          <sl:textarea rows="4"/>
+          <sl:field-description>At least 10 characters.</sl:field-description>
+          <sl:field-error/>
+        </sl:field>
+
+        <sl:field-set th:field="*{replyBy}">
+          <sl:field-legend variant="label">Reply by</sl:field-legend>
+          <sl:radio-group orientation="horizontal">
+            <sl:label th:each="channel : ${replyChannels}">
+              <sl:radio-group-item th:value="${channel}"/>
+              <th:block th:text="${#strings.capitalize(channel)}">Email</th:block>
+            </sl:label>
+          </sl:radio-group>
+          <sl:field-error/>
+        </sl:field-set>
+
+        <sl:field th:field="*{newsletter}" orientation="horizontal">
+          <sl:switch/>
+          <sl:field-label>Send me the monthly newsletter</sl:field-label>
+        </sl:field>
+
+        <sl:field th:field="*{terms}" orientation="horizontal">
+          <sl:checkbox/>
+          <sl:field-content>
+            <sl:field-label>I accept the terms and conditions</sl:field-label>
+            <sl:field-error/>
+          </sl:field-content>
+        </sl:field>
+      </sl:field-group>
+    </th:block>
 
     <div class="row">
       <sl:button type="submit">Send</sl:button>

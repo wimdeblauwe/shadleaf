@@ -17,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
-/** The form page: Shadleaf's fields, each bound with one th:field, validated on the server. */
+/** The form page: Shadleaf's fields, each bound with one th:field, validated on the server, posted as a plain form. */
 @SpringBootTest
 @AutoConfigureMockMvc
 class FormPageTest {
@@ -53,6 +53,11 @@ class FormPageTest {
     assertThat(page.select("input.checkbox[name=terms]")).hasSize(1);
     assertThat(page.select("input[type=hidden][name=_terms], input[type=hidden][name=_newsletter]")).hasSize(2);
     assertThat(page.select(".field-error, [data-invalid], .form-errors")).isEmpty();
+    assertThat(page.select("[autofocus]")).as("the first, empty form keeps the focus where it was").isEmpty();
+    Element form = page.selectFirst("form");
+    assertThat(form.attr("action")).isEqualTo("/form");
+    assertThat(form.attr("method")).isEqualTo("post");
+    assertThat(form.attributes().asList()).noneMatch(attribute -> attribute.getKey().startsWith("hx-"));
     assertThat(page.select("*").stream().filter(element -> element.tagName().startsWith("sl:"))).isEmpty();
   }
 
@@ -103,6 +108,8 @@ class FormPageTest {
     assertThat(newsletter.hasAttr("checked")).as("the switch keeps the submitted value").isTrue();
     assertThat(newsletter.hasAttr("aria-invalid")).isFalse();
     assertThat(page.select(".form-errors")).as("only field errors").isEmpty();
+    assertThat(page.select("[autofocus]")).as("the first field with an error, in the order of the form")
+        .extracting(Element::id).containsExactly("email");
   }
 
   @Test
@@ -123,7 +130,7 @@ class FormPageTest {
     assertThat(errors.id()).isEqualTo("contactForm-errors");
     assertThat(errors.attr("data-variant")).isEqualTo("destructive");
     assertThat(errors.attr("tabindex")).isEqualTo("-1");
-    assertThat(errors.hasAttr("autofocus")).isTrue();
+    assertThat(page.select("[autofocus]")).containsExactly(errors);
     assertThat(errors.hasAttr("role")).isFalse();
     assertThat(errors.selectFirst(".alert-title").text()).isEqualTo("There is a problem");
     assertThat(errors.selectFirst(".alert-description").text())

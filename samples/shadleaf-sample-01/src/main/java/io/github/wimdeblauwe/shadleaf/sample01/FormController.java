@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * A server-side validated form built from Shadleaf's form controls. A failed submit renders the form again with the
  * errors; a valid one redirects back to an empty form (post/redirect/get). Besides Bean Validation's field errors,
  * the controller rejects a message with a link in it as a whole, a global error that the form shows at the top.
+ * {@link HtmxFormController} serves the same form, posted with htmx.
  */
 @Controller
 public class FormController {
@@ -42,13 +43,18 @@ public class FormController {
   @PostMapping("/form")
   public String submit(@Valid @ModelAttribute("contactForm") ContactForm contactForm, BindingResult bindingResult,
       RedirectAttributes redirectAttributes) {
-    if (contactForm.getMessage() != null && LINK.matcher(contactForm.getMessage()).find()) {
-      bindingResult.reject("contactForm.links", "We do not accept messages with links, to keep spam out.");
-    }
+    rejectLinks(contactForm, bindingResult);
     if (bindingResult.hasErrors()) {
       return "form";
     }
     redirectAttributes.addFlashAttribute("sentTo", contactForm.getEmail());
     return "redirect:/form";
+  }
+
+  /** A message with a link in it is rejected as a whole: a global error, not one of the message field. */
+  static void rejectLinks(ContactForm contactForm, BindingResult bindingResult) {
+    if (contactForm.getMessage() != null && LINK.matcher(contactForm.getMessage()).find()) {
+      bindingResult.reject("contactForm.links", "We do not accept messages with links, to keep spam out.");
+    }
   }
 }

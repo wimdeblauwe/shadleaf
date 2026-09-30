@@ -25,7 +25,9 @@ An alert is not announced by itself. Most alerts are part of the page when it lo
 order with everything else; announcing them too would interrupt the user for no reason.
 
 When an alert appears later, for example in the response to an htmx request, add `role="alert"`. A screen reader then
-reads it as soon as it is inserted. Like any other attribute, `role` passes through to the rendered element.
+reads it as soon as it is inserted. Like any other attribute, `role` passes through to the rendered element. An
+alert that takes the focus when it appears (`tabindex="-1"` and `autofocus`, which htmx honours in swapped content) is
+read out because of the focus, and needs no role; see [Forms with htmx](../../guides/htmx/).
 
 <ComponentPreview id="alert--announced" />
 

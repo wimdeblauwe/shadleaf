@@ -9,6 +9,11 @@
   <title th:text="|${pageTitle} - Shadleaf Sample App 1|">Shadleaf Sample App 1</title>
   <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
   <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <!--/* htmx from its webjar (version in the pom), so it comes from our own origin. The config keeps it within a
+    strict CSP: no inline <style> for the request indicator, and no eval (hx-on, js: values), which this app does not
+    use. Every page loads it; the htmx form page uses it. */-->
+  <meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
   <vite:client></vite:client>
   <vite:vite>
     <vite:entry value="/css/application.css"></vite:entry>
@@ -33,6 +38,8 @@
                th:aria-current="${pageTitle == 'Home' ? 'page' : null}">Buttons</sl:button>
     <sl:button as="a" variant="ghost" size="sm" th:href="@{/form}"
                th:aria-current="${pageTitle == 'Form' ? 'page' : null}">Form</sl:button>
+    <sl:button as="a" variant="ghost" size="sm" th:href="@{/htmx-form}"
+               th:aria-current="${pageTitle == 'Form with htmx' ? 'page' : null}">Form with htmx</sl:button>
   </nav>
   <div th:replace="${content}"></div>
 </main>
