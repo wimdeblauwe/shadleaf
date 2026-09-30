@@ -12,13 +12,13 @@
   </parent>
   <groupId>io.github.wimdeblauwe.shadleaf.samples</groupId>
   <artifactId>shadleaf-sample-01</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0-SNAPSHOT</version>
   <name>Shadleaf Sample App 1</name>
   <description>Standalone consumer of the Shadleaf starter. Run `mvn install` in the repository root first.</description>
 
   <properties>
     <java.version>17</java.version>
-    <shadleaf.version>0.3.0</shadleaf.version>
+    <shadleaf.version>0.4.0-SNAPSHOT</shadleaf.version>
     <htmx-spring-boot.version>5.1.0</htmx-spring-boot.version>
     <!-- htmx itself, pinned: the webjar is served from the application's own origin (/webjars/**), which a strict
       CSP allows, and needs no Node. -->
