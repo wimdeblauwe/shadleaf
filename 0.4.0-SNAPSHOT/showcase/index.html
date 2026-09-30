@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-DH8xv4y1.css"><script>(function(){const skins = {"vega":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-DH8xv4y1.css","lyra":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-CbEoM52P.css"};
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-_Ct9vQwp.css"><script>(function(){const skins = {"vega":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-_Ct9vQwp.css","lyra":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra--ip4I5gc.css"};
 const firstSkin = "vega";
 
     const params = new URLSearchParams(location.search);
@@ -9,7 +9,7 @@ const firstSkin = "vega";
     document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
     document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
     document.documentElement.dataset.skin = skin;
-  })();</script><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-CQS1JxVi.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}
+  })();</script><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-CNylwxlg.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}
 </style><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><main class="astro-6felt6qx"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">alert-dialog</h2><h3 class="astro-6felt6qx">Alert dialog</h3><div class="stage astro-6felt6qx" data-scenario="alert-dialog--default"><button class="btn"
           type="button"
           data-variant="outline" commandfor="delete-account" command="show-modal">
@@ -970,7 +970,250 @@ const firstSkin = "vega";
   
   
 </div>
-</dialog></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">field</h2><h3 class="astro-6felt6qx">Field</h3><div class="stage astro-6felt6qx" data-scenario="field--default"><div class="field">
+</dialog></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">dropdown-menu</h2><h3 class="astro-6felt6qx">Dropdown menu</h3><div class="stage astro-6felt6qx" data-scenario="dropdown-menu--default"><button class="btn dropdown-menu-trigger"
+          type="button"
+          data-variant="outline" id="account-menu-trigger" popovertarget="account-menu" aria-haspopup="menu">
+  
+  
+  
+  Open
+  
+</button>
+  
+  
+
+  <div class="dropdown-menu-content"
+     id="account-menu"
+     role="menu"
+     popover
+     tabindex="-1"
+     x-data="slDropdownMenu"
+     aria-labelledby="account-menu-trigger">
+    <div class="dropdown-menu-label">My Account</div>
+    <div class="dropdown-menu-group" role="group">
+      
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/profile">
+        Profile <span class="dropdown-menu-shortcut">⇧⌘P</span>
+      </a>
+
+      
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/billing">
+        Billing <span class="dropdown-menu-shortcut">⌘B</span>
+      </a>
+
+      
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/settings">
+        Settings <span class="dropdown-menu-shortcut">⌘S</span>
+      </a>
+
+    </div>
+    <div class="dropdown-menu-separator" role="separator"></div>
+    <div class="dropdown-menu-group" role="group">
+      
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/team">Team</a>
+
+      
+  <button type="button"
+          class="dropdown-menu-item" role="menuitem">
+        New Team <span class="dropdown-menu-shortcut">⌘T</span>
+      </button>
+  
+
+    </div>
+    <div class="dropdown-menu-separator" role="separator"></div>
+    
+  
+  <a class="dropdown-menu-item" role="menuitem" href="https://github.com/wimdeblauwe/shadleaf">GitHub</a>
+
+    
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/support">Support</a>
+
+    
+  <button type="button"
+          class="dropdown-menu-item" role="menuitem" disabled="disabled">API</button>
+  
+
+    <div class="dropdown-menu-separator" role="separator"></div>
+    
+  <button type="submit"
+          class="dropdown-menu-item" role="menuitem" form="logout-form">
+      Log out <span class="dropdown-menu-shortcut">⇧⌘Q</span>
+    </button>
+  
+
+  </div>
+
+<form id="logout-form" method="post" action="/logout"></form></div><h3 class="astro-6felt6qx">Icons and a destructive item</h3><div class="stage astro-6felt6qx" data-scenario="dropdown-menu--icons"><button class="btn dropdown-menu-trigger"
+          type="button"
+          data-variant="outline" id="file-menu-trigger" popovertarget="file-menu" aria-haspopup="menu">
+  
+  
+  
+  File
+  
+</button>
+  
+  
+
+  <div class="dropdown-menu-content"
+     id="file-menu"
+     role="menu"
+     popover
+     tabindex="-1"
+     x-data="slDropdownMenu"
+     aria-labelledby="file-menu-trigger">
+    
+  <button type="button"
+          class="dropdown-menu-item" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/></svg>New file</button>
+  
+
+    
+  <button type="button"
+          class="dropdown-menu-item" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>New folder</button>
+  
+
+    
+  <button type="button"
+          class="dropdown-menu-item" role="menuitem"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2v13"/><path d="m16 6-4-4-4 4"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/></svg>Share</button>
+  
+
+    <div class="dropdown-menu-separator" role="separator"></div>
+    
+  <button type="button"
+          class="dropdown-menu-item" role="menuitem" data-variant="destructive"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Delete</button>
+  
+
+  </div></div><h3 class="astro-6felt6qx">Checkbox items</h3><div class="stage astro-6felt6qx" data-scenario="dropdown-menu--checkboxes"><button class="btn dropdown-menu-trigger"
+          type="button"
+          data-variant="outline" id="view-menu-trigger" popovertarget="view-menu" aria-haspopup="menu">
+  
+  
+  
+  View
+  
+</button>
+  
+  
+
+  <div class="dropdown-menu-content"
+     id="view-menu"
+     role="menu"
+     popover
+     tabindex="-1"
+     x-data="slDropdownMenu"
+     aria-labelledby="view-menu-trigger">
+    <div class="dropdown-menu-label">Appearance</div>
+    
+  
+  <a class="dropdown-menu-checkbox-item" role="menuitemcheckbox" aria-checked="true" href="?status-bar=false">Status Bar<span class="dropdown-menu-item-indicator"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></span></a>
+
+    
+  
+  <a class="dropdown-menu-checkbox-item" role="menuitemcheckbox" aria-checked="false" aria-disabled="true">Activity Bar<span class="dropdown-menu-item-indicator"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></span></a>
+
+    
+  
+  <a class="dropdown-menu-checkbox-item" role="menuitemcheckbox" aria-checked="false" href="?panel=true">Panel<span class="dropdown-menu-item-indicator"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></span></a>
+
+  </div></div><h3 class="astro-6felt6qx">Radio items</h3><div class="stage astro-6felt6qx" data-scenario="dropdown-menu--radio-group"><button class="btn dropdown-menu-trigger"
+          type="button"
+          data-variant="outline" id="position-menu-trigger" popovertarget="position-menu" aria-haspopup="menu">
+  
+  
+  
+  Panel position
+  
+</button>
+  
+  
+
+  <div class="dropdown-menu-content"
+     id="position-menu"
+     role="menu"
+     popover
+     tabindex="-1"
+     x-data="slDropdownMenu"
+     aria-labelledby="position-menu-trigger">
+    <div class="dropdown-menu-label">Panel Position</div>
+    <div class="dropdown-menu-separator" role="separator"></div>
+    <div class="dropdown-menu-radio-group" role="group" aria-label="Panel position">
+      
+  
+  <a class="dropdown-menu-radio-item" role="menuitemradio" aria-checked="false" href="?position=top">Top<span class="dropdown-menu-item-indicator"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></span></a>
+
+      
+  
+  <a class="dropdown-menu-radio-item" role="menuitemradio" aria-checked="true" href="?position=bottom">Bottom<span class="dropdown-menu-item-indicator"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></span></a>
+
+      
+  
+  <a class="dropdown-menu-radio-item" role="menuitemradio" aria-checked="false" href="?position=right">Right<span class="dropdown-menu-item-indicator"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></span></a>
+
+    </div>
+  </div></div><h3 class="astro-6felt6qx">Row actions</h3><div class="stage astro-6felt6qx" data-scenario="dropdown-menu--row-actions"><button class="btn dropdown-menu-trigger"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" id="order-1042-actions-trigger" popovertarget="order-1042-actions" aria-haspopup="menu" aria-label="Actions for order 1042">
+  
+  
+  
+  
+    <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+  
+  
+</button>
+  
+  
+
+  <div class="dropdown-menu-content"
+     id="order-1042-actions"
+     role="menu"
+     popover
+     tabindex="-1"
+     x-data="slDropdownMenu"
+     aria-labelledby="order-1042-actions-trigger" data-align="end">
+    
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/orders/1042">View order</a>
+
+    
+  <button type="button"
+          class="dropdown-menu-item" role="menuitem" hx-post="/orders/1042/duplicate">Duplicate</button>
+  
+
+    <div class="dropdown-menu-separator" role="separator"></div>
+    
+  <button type="button"
+          class="dropdown-menu-item" role="menuitem" data-variant="destructive" hx-delete="/orders/1042">Delete</button>
+  
+
+  </div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">field</h2><h3 class="astro-6felt6qx">Field</h3><div class="stage astro-6felt6qx" data-scenario="field--default"><div class="field">
   <label class="label field-label"
        for="username">Username</label>
   <input class="input"
@@ -1394,7 +1637,131 @@ const firstSkin = "vega";
   <svg xmlns="http://www.w3.org/2000/svg"
      class="sl-icon native-select-icon"
      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
-</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">radio-group</h2><h3 class="astro-6felt6qx">Radio group</h3><div class="stage astro-6felt6qx" data-scenario="radio-group--default"><p id="plan-question">Plan</p>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">popover</h2><h3 class="astro-6felt6qx">Popover</h3><div class="stage astro-6felt6qx" data-scenario="popover--default"><button class="btn popover-trigger"
+          type="button"
+          data-variant="outline" popovertarget="dimensions" aria-haspopup="dialog">
+  
+  
+  
+  Open popover
+  
+</button>
+  
+  
+
+  <div class="popover-content"
+     id="dimensions"
+     role="dialog"
+     popover
+     tabindex="-1"
+     x-data="slPopover"
+     aria-labelledby="dimensions-title" aria-describedby="dimensions-description">
+    <div class="popover-header">
+      <div class="popover-title"
+     id="dimensions-title">Dimensions</div>
+      <p class="popover-description"
+   id="dimensions-description">Set the dimensions for the layer.</p>
+    </div>
+    <div class="field-group">
+      <div class="field"
+     data-orientation="horizontal">
+        <label class="label field-label"
+       for="dimensions-width">Width</label>
+        <input class="input"
+       type="text" value="100%" id="dimensions-width">
+      </div>
+      <div class="field"
+     data-orientation="horizontal">
+        <label class="label field-label"
+       for="dimensions-height">Height</label>
+        <input class="input"
+       type="text" value="25px" id="dimensions-height">
+      </div>
+    </div>
+  </div></div><h3 class="astro-6felt6qx">Sides</h3><div class="stage astro-6felt6qx" data-scenario="popover--sides"><button class="btn popover-trigger"
+          type="button"
+          data-variant="outline" popovertarget="popover-top" aria-haspopup="dialog">
+  
+  
+  
+  Top
+  
+</button>
+  
+  
+
+  <div class="popover-content"
+     id="popover-top"
+     role="dialog"
+     popover
+     tabindex="-1"
+     x-data="slPopover"
+     data-side="top" aria-label="Top">Opens above its trigger.</div>
+
+
+  
+  <button class="btn popover-trigger"
+          type="button"
+          data-variant="outline" popovertarget="popover-right" aria-haspopup="dialog">
+  
+  
+  
+  Right
+  
+</button>
+  
+  
+
+  <div class="popover-content"
+     id="popover-right"
+     role="dialog"
+     popover
+     tabindex="-1"
+     x-data="slPopover"
+     data-side="right" aria-label="Right">Opens after its trigger.</div>
+
+
+  
+  <button class="btn popover-trigger"
+          type="button"
+          data-variant="outline" popovertarget="popover-bottom" aria-haspopup="dialog">
+  
+  
+  
+  Bottom
+  
+</button>
+  
+  
+
+  <div class="popover-content"
+     id="popover-bottom"
+     role="dialog"
+     popover
+     tabindex="-1"
+     x-data="slPopover" aria-label="Bottom">Opens below its trigger.</div>
+
+
+  
+  <button class="btn popover-trigger"
+          type="button"
+          data-variant="outline" popovertarget="popover-left" aria-haspopup="dialog">
+  
+  
+  
+  Left
+  
+</button>
+  
+  
+
+  <div class="popover-content"
+     id="popover-left"
+     role="dialog"
+     popover
+     tabindex="-1"
+     x-data="slPopover"
+     data-side="left" aria-label="Left">Opens before its trigger.</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">radio-group</h2><h3 class="astro-6felt6qx">Radio group</h3><div class="stage astro-6felt6qx" data-scenario="radio-group--default"><p id="plan-question">Plan</p>
 <div class="radio-group"
      role="radiogroup" aria-labelledby="plan-question">
   <label class="label"><input type="radio"
@@ -1789,4 +2156,122 @@ const firstSkin = "vega";
 <textarea class="textarea" id="textarea-notes" name="notes">Leave the parcel at the back door.</textarea></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="textarea--invalid"><label class="label" for="textarea-invalid">Message</label>
 <textarea class="textarea" id="textarea-invalid" name="message" aria-invalid="true"></textarea></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="textarea--disabled"><label class="label" for="textarea-disabled">Message</label>
 <textarea class="textarea" id="textarea-disabled" name="message" disabled></textarea></div><h3 class="astro-6felt6qx">Read-only</h3><div class="stage astro-6felt6qx" data-scenario="textarea--read-only"><label class="label" for="textarea-instructions">Delivery instructions</label>
-<textarea class="textarea" id="textarea-instructions" name="instructions" readonly>Leave the parcel with the neighbours at number 12.</textarea></div></section></main></body></html>
+<textarea class="textarea" id="textarea-instructions" name="instructions" readonly>Leave the parcel with the neighbours at number 12.</textarea></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">tooltip</h2><h3 class="astro-6felt6qx">Tooltip</h3><div class="stage astro-6felt6qx" data-scenario="tooltip--default"><span class="tooltip"
+      x-data="slTooltip">
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline">
+  
+  
+  
+  Hover
+  
+</button>
+  
+  
+
+  <span class="tooltip-content"
+      role="tooltip"
+      popover="manual">Add to library<span class="tooltip-arrow" aria-hidden="true"></span></span>
+</span></div><h3 class="astro-6felt6qx">Sides</h3><div class="stage astro-6felt6qx" data-scenario="tooltip--sides"><span class="tooltip"
+      x-data="slTooltip">
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline">
+  
+  
+  
+  Top
+  
+</button>
+  
+  
+
+  <span class="tooltip-content"
+      role="tooltip"
+      popover="manual">Shown above<span class="tooltip-arrow" aria-hidden="true"></span></span>
+</span>
+<span class="tooltip"
+      x-data="slTooltip">
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline">
+  
+  
+  
+  Right
+  
+</button>
+  
+  
+
+  <span class="tooltip-content"
+      role="tooltip"
+      popover="manual"
+      data-side="right">Shown after<span class="tooltip-arrow" aria-hidden="true"></span></span>
+</span>
+<span class="tooltip"
+      x-data="slTooltip">
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline">
+  
+  
+  
+  Bottom
+  
+</button>
+  
+  
+
+  <span class="tooltip-content"
+      role="tooltip"
+      popover="manual"
+      data-side="bottom">Shown below<span class="tooltip-arrow" aria-hidden="true"></span></span>
+</span>
+<span class="tooltip"
+      x-data="slTooltip">
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline">
+  
+  
+  
+  Left
+  
+</button>
+  
+  
+
+  <span class="tooltip-content"
+      role="tooltip"
+      popover="manual"
+      data-side="left">Shown before<span class="tooltip-arrow" aria-hidden="true"></span></span>
+</span></div><h3 class="astro-6felt6qx">With a keyboard shortcut</h3><div class="stage astro-6felt6qx" data-scenario="tooltip--keyboard-shortcut"><span class="tooltip"
+      x-data="slTooltip">
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline" data-size="icon" aria-label="Save">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+  
+</button>
+  
+  
+
+  <span class="tooltip-content"
+      role="tooltip"
+      popover="manual">
+    Save changes <kbd class="kbd-group"><kbd class="kbd">Ctrl</kbd><kbd class="kbd">S</kbd></kbd>
+  <span class="tooltip-arrow" aria-hidden="true"></span></span>
+</span></div></section></main></body></html>
