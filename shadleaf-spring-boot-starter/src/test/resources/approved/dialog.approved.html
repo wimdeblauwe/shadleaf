@@ -1,0 +1,68 @@
+<!-- <sl:dialog id="d1">Content</sl:dialog> -->
+<dialog class="dialog" id="d1" closedby="any" x-data="slDialog">
+  Content
+  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d1" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:dialog id="d2" open>Content</sl:dialog> -->
+<dialog class="dialog" id="d2" closedby="any" x-data="slDialog" data-show-modal="true">
+  Content
+  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d2" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:dialog id="d3" close-button="false">Content</sl:dialog> -->
+<dialog class="dialog" id="d3" closedby="any" x-data="slDialog">Content</dialog>
+
+<!-- <sl:dialog-header>Header</sl:dialog-header> -->
+<div class="dialog-header">Header</div>
+
+<!-- <sl:dialog-title>Edit profile</sl:dialog-title> -->
+<div class="dialog-title" role="heading" aria-level="2">Edit profile</div>
+
+<!-- <sl:dialog-title level="3">Edit profile</sl:dialog-title> -->
+<div class="dialog-title" role="heading" aria-level="3">Edit profile</div>
+
+<!-- <sl:dialog-description>Make changes to your profile.</sl:dialog-description> -->
+<div class="dialog-description">Make changes to your profile.</div>
+
+<!-- <sl:dialog-footer>Footer</sl:dialog-footer> -->
+<div class="dialog-footer">Footer</div>
+
+<!-- <sl:dialog id="edit-profile" class="wide">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+    <sl:dialog-description>Make changes to your profile.</sl:dialog-description>
+  </sl:dialog-header>
+  <p>Content</p>
+  <sl:dialog-footer close-button>
+    <sl:button type="submit">Save changes</sl:button>
+  </sl:dialog-footer>
+</sl:dialog> -->
+<dialog class="dialog wide" id="edit-profile" closedby="any" x-data="slDialog" aria-labelledby="edit-profile-title" aria-describedby="edit-profile-description">
+  <div class="dialog-header">
+    <div class="dialog-title" role="heading" aria-level="2" id="edit-profile-title">Edit profile</div>
+    <div class="dialog-description" id="edit-profile-description">Make changes to your profile.</div>
+  </div>
+  <p>Content</p>
+  <div class="dialog-footer">
+    <button class="btn" type="submit">Save changes</button>
+    <button class="btn" type="button" data-variant="outline" commandfor="edit-profile" command="close">Close</button>
+  </div>
+  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="edit-profile" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:dialog th:id="|delete-${42}|" aria-label="Delete order">
+  <p>Delete order 42?</p>
+</sl:dialog> -->
+<dialog class="dialog" id="delete-42" closedby="any" x-data="slDialog" aria-label="Delete order">
+  <p>Delete order 42?</p>
+  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="delete-42" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>

@@ -24,6 +24,8 @@ for (const {skin, theme} of combinations) {
       };
       return [...candidates]
           .filter(element => element.tabIndex >= 0 && !disabled(element))
+          // Not in a closed dialog: dialog.spec.ts tabs through those with the dialog open.
+          .filter(element => !element.closest('dialog:not([open])'))
           .filter(element => !(element instanceof HTMLInputElement && element.type === 'radio') || radioTabStop(element))
           .map((element, index) => {
             element.dataset.focusIndex = String(index);

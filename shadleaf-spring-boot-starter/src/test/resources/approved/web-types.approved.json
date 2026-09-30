@@ -400,6 +400,118 @@
         "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:dialog",
+        "description" : "A modal dialog on the native `dialog` element: the page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it from `sl:dialog-header` (holding `sl:dialog-title` and `sl:dialog-description`), your content and `sl:dialog-footer`. A button opens it with `commandfor` set to the dialog's `id` and `command=\"show-modal\"`, and closes it with `command=\"close\"`; an htmx response closes it with the `sl-dialog-close` event.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The dialog's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "open",
+          "description" : "Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap, or a page shown after a redirect). Needs Alpine.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "close-button",
+          "description" : "A close button (an x) in the corner.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:close-button",
+          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dialog-description",
+        "description" : "Supporting text below a `sl:dialog-title`, which describes the dialog (`aria-describedby`). Its id derives from the dialog's (`edit-profile-description`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:dialog-footer",
+        "description" : "The bottom of a `sl:dialog`, for its actions: side by side at the end on a wide screen, stacked with the first one at the bottom on a narrow one.",
+        "attributes" : [ {
+          "name" : "close-button",
+          "description" : "An outline \"Close\" button after the other actions.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:close-button",
+          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dialog-header",
+        "description" : "The top of a `sl:dialog`: a `sl:dialog-title` and an optional `sl:dialog-description` below it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:dialog-title",
+        "description" : "The title of a `sl:dialog`, inside `sl:dialog-header`: a heading that names the dialog (`aria-labelledby`). Its id derives from the dialog's (`edit-profile-title`).",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level (`role=\"heading\"` and `aria-level`). A dialog starts an outline of its own, so the default, 2, rarely needs changing.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ],
+          "default" : "2"
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:field",
         "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
         "attributes" : [ {

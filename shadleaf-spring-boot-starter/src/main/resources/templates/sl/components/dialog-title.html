@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The title of a <code>sl:dialog</code>, inside <code>sl:dialog-header</code>: a heading that names
+      the dialog (<code>aria-labelledby</code>). Its id derives from the dialog's
+      (<code>edit-profile-title</code>).</sl:description>
+    <sl:prop name="level" default="2" values="1 2 3 4 5 6">Heading level (<code>role="heading"</code> and
+      <code>aria-level</code>). A dialog starts an outline of its own, so the default, 2, rarely needs
+      changing.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* A div with role="heading", as sl:card-title: an application's own h2 rules would restyle an h2. */-->
+<div th:fragment="dialog-title"
+     class="dialog-title"
+     role="heading"
+     th:attr="aria-level=${props.level},
+              id=${slDialogId != null ? slDialogId + '-title' : null}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

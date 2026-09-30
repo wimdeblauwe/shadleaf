@@ -40,8 +40,12 @@
                th:aria-current="${pageTitle == 'Form' ? 'page' : null}">Form</sl:button>
     <sl:button as="a" variant="ghost" size="sm" th:href="@{/htmx-form}"
                th:aria-current="${pageTitle == 'Form with htmx' ? 'page' : null}">Form with htmx</sl:button>
+    <sl:button as="a" variant="ghost" size="sm" th:href="@{/dialog}"
+               th:aria-current="${pageTitle == 'Dialog' ? 'page' : null}">Dialog</sl:button>
   </nav>
   <div th:replace="${content}"></div>
 </main>
+<!--/* Where htmx puts a dialog the server renders (the dialog page's edit dialog). */-->
+<div id="modal-root"></div>
 </body>
 </html>

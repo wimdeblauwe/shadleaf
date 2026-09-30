@@ -438,4 +438,31 @@
   .field-error {
     @apply text-xs text-destructive-legible;
   }
+
+  /* Dialog */
+  .dialog {
+    @apply max-w-[calc(100%-2rem)] gap-4 rounded-none bg-popover p-4 text-xs/relaxed text-popover-foreground ring-1
+      ring-foreground/10 duration-100 sm:max-w-sm
+      backdrop:bg-black/10 backdrop:duration-100 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .dialog-close {
+    @apply top-2 end-2;
+  }
+
+  .dialog-header {
+    @apply gap-1 text-start;
+  }
+
+  .dialog-title {
+    @apply text-sm font-medium;
+  }
+
+  .dialog-description {
+    @apply text-xs/relaxed text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground;
+  }
+
+  .dialog-footer {
+    @apply gap-2;
+  }
 }

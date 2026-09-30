@@ -31,3 +31,14 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 /* The form page. The page layout is the application's; the fields and their spacing are Shadleaf's. */
 .site-nav { display: flex; gap: 0.25rem; margin: 1rem 0; }
 .form { display: grid; gap: 2rem; max-inline-size: 32rem; margin-top: 1.5rem; }
+
+/* The dialog page. */
+.shortcuts { display: grid; grid-template-columns: 1fr auto; gap: 0.5rem 1rem; align-items: center; margin: 0; }
+.shortcuts dd { margin: 0; }
+.dialog-form { display: grid; gap: 1.5rem; }
+.members { border-collapse: collapse; min-inline-size: 32rem; }
+.members :is(th, td) { padding: 0.5rem 0.75rem; text-align: start; border-block-end: 1px solid var(--border); }
+.members th { font-weight: 500; }
+.visually-hidden {
+  position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}

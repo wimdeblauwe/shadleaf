@@ -150,3 +150,10 @@ or as the server renders it again. If you boost navigation (`hx-boost`) or push 
 failed form keeps the user's input in its `value` attributes. For a form with personal data, set
 `"historyCacheSize": 0` in the htmx config, or `hx-history="false"` on the page.
 
+
+## Dialogs
+
+A dialog can come from the server too: a button fetches `<sl:dialog open>` into an empty element, the form in it
+swaps only itself while it has errors, and an `HX-Trigger: sl-dialog-close` response header closes it after a valid
+save. Open dialogs close before htmx snapshots a page for its history, so back never restores one. See
+[Dialog](../../components/dialog/#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.

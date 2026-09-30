@@ -189,6 +189,66 @@
     "declared" : true,
     "props" : [ ]
   }, {
+    "name" : "dialog",
+    "tag" : "sl:dialog",
+    "description" : "A modal dialog on the native `dialog` element: the page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it from `sl:dialog-header` (holding `sl:dialog-title` and `sl:dialog-description`), your content and `sl:dialog-footer`. A button opens it with `commandfor` set to the dialog's `id` and `command=\"show-modal\"`, and closes it with `command=\"close\"`; an htmx response closes it with the `sl-dialog-close` event.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The dialog's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it.",
+      "required" : true
+    }, {
+      "name" : "open",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap, or a page shown after a redirect). Needs Alpine."
+    }, {
+      "name" : "close-button",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "A close button (an x) in the corner."
+    } ]
+  }, {
+    "name" : "dialog-description",
+    "tag" : "sl:dialog-description",
+    "description" : "Supporting text below a `sl:dialog-title`, which describes the dialog (`aria-describedby`). Its id derives from the dialog's (`edit-profile-description`).",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "dialog-footer",
+    "tag" : "sl:dialog-footer",
+    "description" : "The bottom of a `sl:dialog`, for its actions: side by side at the end on a wide screen, stacked with the first one at the bottom on a narrow one.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "close-button",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "An outline \"Close\" button after the other actions."
+    } ]
+  }, {
+    "name" : "dialog-header",
+    "tag" : "sl:dialog-header",
+    "description" : "The top of a `sl:dialog`: a `sl:dialog-title` and an optional `sl:dialog-description` below it.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "dialog-title",
+    "tag" : "sl:dialog-title",
+    "description" : "The title of a `sl:dialog`, inside `sl:dialog-header`: a heading that names the dialog (`aria-labelledby`). Its id derives from the dialog's (`edit-profile-title`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "defaultValue" : "2",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level (`role=\"heading\"` and `aria-level`). A dialog starts an outline of its own, so the default, 2, rarely needs changing."
+    } ]
+  }, {
     "name" : "field",
     "tag" : "sl:field",
     "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",

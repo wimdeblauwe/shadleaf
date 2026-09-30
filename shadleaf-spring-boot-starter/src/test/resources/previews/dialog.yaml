@@ -1,0 +1,47 @@
+# Scenarios for the dialog's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: dialog
+parts: [dialog-header, dialog-title, dialog-description, dialog-footer]
+scenarios:
+  - id: default
+    title: Dialog
+    description: A form in a dialog. The form wraps the dialog, so the submit button in its footer submits it.
+    source: |-
+      <sl:button variant="outline" commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+      <form method="post" action="/profile">
+        <sl:dialog id="edit-profile">
+          <sl:dialog-header>
+            <sl:dialog-title>Edit profile</sl:dialog-title>
+            <sl:dialog-description>
+              Make changes to your profile here. Click save when you're done.
+            </sl:dialog-description>
+          </sl:dialog-header>
+          <sl:field-group>
+            <sl:field for="profile-name">
+              <sl:field-label>Name</sl:field-label>
+              <sl:input name="name" value="Pedro Duarte"/>
+            </sl:field>
+            <sl:field for="profile-username">
+              <sl:field-label>Username</sl:field-label>
+              <sl:input name="username" value="@peduarte"/>
+            </sl:field>
+          </sl:field-group>
+          <sl:dialog-footer>
+            <sl:button variant="outline" commandfor="edit-profile" command="close">Cancel</sl:button>
+            <sl:button type="submit">Save changes</sl:button>
+          </sl:dialog-footer>
+        </sl:dialog>
+      </form>
+
+  - id: footer-close
+    title: Close button in the footer
+    description: No close button in the corner; the footer has one instead.
+    source: |-
+      <sl:button variant="outline" commandfor="share-link" command="show-modal">Share</sl:button>
+      <sl:dialog id="share-link" close-button="false">
+        <sl:dialog-header>
+          <sl:dialog-title>Share link</sl:dialog-title>
+          <sl:dialog-description>Anyone who has this link will be able to view this.</sl:dialog-description>
+        </sl:dialog-header>
+        <sl:input aria-label="Link" value="https://ui.shadcn.com/docs/installation" readonly/>
+        <sl:dialog-footer close-button/>
+      </sl:dialog>

@@ -1,0 +1,38 @@
+/*
+  Dialog and its parts: structure only. Colour, radius, spacing, type and the speed of the transitions are identity and
+  live in the skins.
+
+  The <dialog> is the panel itself: showModal() puts it in the top layer, and the user agent's modal styles centre it
+  (fixed, inset 0, margin auto). Its ::backdrop is the overlay. Opening and closing fade (and, where motion is fine,
+  zoom) through @starting-style, with display and overlay transitioned discretely so the closing transition is seen.
+  Only an open dialog is a grid: any display would override the user agent's display: none on a closed one.
+*/
+@layer components {
+  .dialog {
+    @apply m-auto w-full open:grid overflow-y-auto border-0 opacity-0
+      transition-[opacity,scale,overlay,display] transition-discrete
+      open:opacity-100 starting:open:opacity-0
+      motion-safe:scale-95 motion-safe:open:scale-100 motion-safe:starting:open:scale-95
+      backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete
+      open:backdrop:opacity-100 starting:open:backdrop:opacity-0
+      forced-colors:border forced-colors:border-solid;
+    max-block-size: calc(100% - 2rem);
+  }
+
+  /* The page behind a modal dialog does not scroll, as with shadcn's. */
+  :root:has(.dialog:modal) {
+    @apply overflow-hidden;
+  }
+
+  .dialog-close {
+    @apply absolute;
+  }
+
+  .dialog-header {
+    @apply flex flex-col;
+  }
+
+  .dialog-footer {
+    @apply flex flex-col-reverse sm:flex-row sm:justify-end;
+  }
+}

@@ -1,0 +1,166 @@
+---
+title: Dialog
+description: A modal window over the page, on the native dialog element.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="dialog--default" />
+
+## Built from parts
+
+A dialog is `<sl:dialog>` plus the parts you need, as in shadcn/ui: `<sl:dialog-header>` (holding
+`<sl:dialog-title>` and `<sl:dialog-description>`), your own content and `<sl:dialog-footer>`. shadcn's `Dialog`,
+`DialogContent`, `DialogOverlay` and `DialogPortal` are all `<sl:dialog>`: it renders the browser's own `<dialog>`
+element, which is the panel, and its `::backdrop` is the overlay.
+
+The browser does the hard parts. A dialog opened as a modal is drawn above everything else, the page behind it is inert
+(no clicks, no focus, hidden from screen readers), focus moves to the first control in it, Escape closes it, and closing
+returns focus to the button that opened it. A click outside closes it too. The page behind it does not scroll.
+
+The title names the dialog and the description describes it (`aria-labelledby` and `aria-describedby`, with ids
+derived from the dialog's `id`: `edit-profile-title`). A dialog without a title needs an `aria-label`.
+
+## Opening and closing
+
+Every dialog has an `id`, and the buttons that open and close it point at it with HTML's
+[invoker commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API): `commandfor` names the
+dialog and `command` says what to do. No JavaScript of yours is involved.
+
+```html
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+
+<sl:dialog id="edit-profile">
+  ...
+  <sl:dialog-footer>
+    <sl:button variant="outline" commandfor="edit-profile" command="close">Cancel</sl:button>
+    <sl:button type="submit">Save changes</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+The close button in the corner does the same; `close-button="false"` leaves it out. `<sl:dialog-footer close-button>`
+adds an outline "Close" button after the footer's own actions.
+
+<ComponentPreview id="dialog--footer-close" />
+
+A dialog per row of a table takes its id from an expression, and so do the buttons:
+
+```html
+<tr th:each="order : ${orders}">
+  <td>
+    <sl:button variant="outline" th:commandfor="|delete-${order.id}|" command="show-modal">Delete</sl:button>
+    <sl:dialog th:id="|delete-${order.id}|">...</sl:dialog>
+  </td>
+</tr>
+```
+
+Invoker commands work in every current browser. For older ones (Safari before 26.2), and for a click outside where
+the browser lacks `closedby`, the dialog's small Alpine component stands in, so both still work with Alpine on the page.
+To react when a dialog closes, listen for the `close` event of the `<dialog>` element.
+
+## A form in a dialog
+
+Put the form around the dialog, as shadcn's example does, so the submit button in the footer submits it. After a full
+page post, the page renders again and the dialog is closed. To show the form's errors in the dialog again, render it
+with `open`, below.
+
+## Rendered by the server: htmx
+
+With htmx the dialog can come from the server when it is needed: a
+button fetches it into an empty element on the page, and `open` shows it as a modal as soon as it is there.
+
+```html
+<!-- In the layout -->
+<div id="modal-root"></div>
+
+<!-- The button -->
+<sl:button hx:get="@{/members/{id}/edit(id=${member.id})}" hx-target="#modal-root">Edit</sl:button>
+```
+
+The fragment the controller returns has the dialog, and inside it a form that swaps only itself. The submit button
+sits in the footer, outside the form, and points at it with `form`:
+
+```html
+<sl:dialog th:fragment="edit-dialog" id="edit-member" open>
+  <sl:dialog-header>
+    <sl:dialog-title>Edit member</sl:dialog-title>
+  </sl:dialog-header>
+  <form th:fragment="edit-form" id="edit-member-form" th:object="${member}"
+        hx:post="@{/members/{id}(id=${member.id})}" hx-target="this" hx-swap="outerHTML">
+    <sl:form-errors autofocus/>
+    <sl:field th:field="*{name}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+  </form>
+  <sl:dialog-footer>
+    <sl:button variant="outline" commandfor="edit-member" command="close">Cancel</sl:button>
+    <sl:button type="submit" form="edit-member-form">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+With errors, the controller returns the form alone: the dialog stays open and focus moves to the first field with an
+error (see [form errors](../form-errors/)). When the save succeeds, it closes the dialog with an `HX-Trigger`
+response header, swaps nothing where the form is, and updates the member's row out of band:
+
+```java
+@HxRequest
+@PostMapping("/members/{id}")
+public String update(@PathVariable long id, @Valid @ModelAttribute("member") EditMemberForm form,
+    BindingResult bindingResult, HtmxResponse htmxResponse, Model model) {
+  if (bindingResult.hasErrors()) {
+    return "members :: edit-form";
+  }
+  model.addAttribute("member", memberService.update(id, form));
+  htmxResponse.addTrigger("sl-dialog-close");
+  htmxResponse.setReswap(HtmxReswap.none());
+  return "members :: member-row-oob";  // the row, with hx-swap-oob="true"
+}
+```
+
+htmx fires `sl-dialog-close` on the form that made the request; the event bubbles up to the dialog, which closes, and
+focus returns to the button that fetched it. When the response then replaces that button, as the new row does here,
+give the button an id (`th:id="|edit-member-${member.id}|"`): htmx moves focus to the element with the same id after a
+swap. Without one, focus falls back to the top of the page. Use `HX-Trigger`, not `HX-Trigger-After-Swap` or `-After-Settle`: those
+fire after the swap, when the element that made the request may be gone.
+
+`open` needs Alpine (on by default: see [Alpine](../guides/alpine/)); the browser has no attribute that opens a
+dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
+inertness with it. Before htmx saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
+the back button never brings one back.
+
+## Attributes
+
+### sl:dialog
+
+<ComponentAttributes component="dialog" />
+
+### sl:dialog-header
+
+<ComponentAttributes component="dialog-header" />
+
+### sl:dialog-title
+
+<ComponentAttributes component="dialog-title" />
+
+### sl:dialog-description
+
+<ComponentAttributes component="dialog-description" />
+
+### sl:dialog-footer
+
+<ComponentAttributes component="dialog-footer" />
+
+## JavaScript
+
+`x-data="slDialog"` on the `<dialog>`. It needs no Alpine plugin, so with `shadleaf.assets.alpine=external` your
+Alpine needs nothing extra. Your own `x-data` on `<sl:dialog>` replaces it; put yours on an element inside instead.
+
+| Event | On | Effect |
+| --- | --- | --- |
+| `sl-dialog-close` | the dialog, or anything inside it (it bubbles) | Closes the dialog. |
+| `close` | the `<dialog>` (the browser's own) | Fired when it closes, however that happened. |

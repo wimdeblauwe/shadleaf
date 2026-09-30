@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      xmlns:hx="http://www.w3.org/1999/xhtml"
+      th:replace="~{layout/main :: layout('Dialog', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <h2>On the page</h2>
+  <p>The dialog is in the page; the button opens it with <code>commandfor</code> and
+    <code>command="show-modal"</code>. Escape, a click outside and the close buttons close it.</p>
+  <div class="row">
+    <sl:button variant="outline" commandfor="shortcuts" command="show-modal">
+      <sl:slot name="icon-start"><sl:icon name="keyboard"/></sl:slot>Keyboard shortcuts</sl:button>
+  </div>
+  <sl:dialog id="shortcuts">
+    <sl:dialog-header>
+      <sl:dialog-title>Keyboard shortcuts</sl:dialog-title>
+      <sl:dialog-description>Work faster in the order list.</sl:dialog-description>
+    </sl:dialog-header>
+    <dl class="shortcuts">
+      <dt>Search</dt>
+      <dd><sl:kbd-group><sl:kbd>Ctrl</sl:kbd><sl:kbd>K</sl:kbd></sl:kbd-group></dd>
+      <dt>New order</dt>
+      <dd><sl:kbd>N</sl:kbd></dd>
+    </dl>
+    <sl:dialog-footer close-button/>
+  </sl:dialog>
+
+  <h2>From the server, with htmx</h2>
+  <p>Edit fetches the dialog into <code>#modal-root</code>, and <code>&lt;sl:dialog open&gt;</code> shows it. Save
+    posts the form with htmx: with errors the form comes back with them and the dialog stays open; after a valid save
+    the response header <code>HX-Trigger: sl-dialog-close</code> closes it and the row is updated.</p>
+  <table class="members">
+    <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col"><span class="visually-hidden">Actions</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="member : ${members}"><tr th:replace="~{dialog :: member-row}"></tr></th:block>
+    </tbody>
+  </table>
+</div>
+
+<!--/* One row; hx-swap-oob when it is the out-of-band update after a save (member-row-oob). */-->
+<table>
+  <tr th:fragment="member-row"
+      th:id="|member-${member.id}|"
+      th:attr="hx-swap-oob=${oob != null and oob ? 'true' : null}">
+    <td th:text="${member.name}">Ada Lovelace</td>
+    <td th:text="${member.email}">ada@example.com</td>
+    <td>
+      <!--/* The id lets htmx put focus back on the new button when the row is replaced after a save. */-->
+      <sl:button th:id="|edit-member-${member.id}|" variant="outline" size="sm" hx:get="@{/dialog/members/{id}/edit(id=${member.id})}"
+                 hx-target="#modal-root" th:aria-label="|Edit ${member.name}|">Edit</sl:button>
+    </td>
+  </tr>
+</table>
+<th:block th:fragment="member-row-oob" th:with="oob=true">
+  <tr th:replace="~{dialog :: member-row}"></tr>
+</th:block>
+
+<!--/* The dialog htmx fetches. Only the form swaps itself, so the dialog stays open while it has errors. */-->
+<sl:dialog th:fragment="edit-dialog" id="edit-member" open>
+  <sl:dialog-header>
+    <sl:dialog-title>Edit member</sl:dialog-title>
+    <sl:dialog-description>Changes are saved when you click Save.</sl:dialog-description>
+  </sl:dialog-header>
+  <form th:replace="~{dialog :: edit-form}"></form>
+  <sl:dialog-footer>
+    <sl:button variant="outline" commandfor="edit-member" command="close">Cancel</sl:button>
+    <sl:button type="submit" form="edit-member-form">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+
+<form th:fragment="edit-form" id="edit-member-form" class="dialog-form" th:object="${memberForm}"
+      th:action="@{/dialog/members/{id}(id=${member.id})}" method="post" novalidate
+      hx:post="@{/dialog/members/{id}(id=${member.id})}" hx-target="this" hx-swap="outerHTML">
+  <sl:form-errors autofocus/>
+  <sl:field-group>
+    <sl:field th:field="*{name}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{email}">
+      <sl:field-label>Email</sl:field-label>
+      <sl:input type="email"/>
+      <sl:field-error/>
+    </sl:field>
+  </sl:field-group>
+</form>
+</body>
+</html>

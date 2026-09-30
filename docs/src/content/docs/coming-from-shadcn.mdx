@@ -45,6 +45,24 @@ shadcn's avatar waits in the browser for the image to load and shows the fallbac
 image and the fallback, and the stylesheet shows the fallback when the image has no `src` or an empty one, which is
 what `th:src` gives for a user without a photo. An image URL that fails to load is not detected yet.
 
+### Dialogs open with invoker commands
+
+A dialog is the browser's `<dialog>` element, so `DialogContent`, `DialogOverlay` and `DialogPortal` are all
+`<sl:dialog>`. There is no `DialogTrigger` or `DialogClose`, and no `open`/`onOpenChange` state: every dialog has an
+`id`, and any button opens or closes it with `commandfor` and `command`:
+
+```html
+<!-- shadcn: <DialogTrigger asChild><Button variant="outline">Edit</Button></DialogTrigger> -->
+<sl:button variant="outline" commandfor="edit-profile" command="show-modal">Edit</sl:button>
+<!-- shadcn: <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose> -->
+<sl:button variant="outline" commandfor="edit-profile" command="close">Cancel</sl:button>
+```
+
+`open` on `<sl:dialog>` opens it when it is rendered (for a dialog htmx fetches), and the server closes it with the
+`sl-dialog-close` event. The title is a `div` with `role="heading"` and `aria-level="2"` (Radix renders an `h2`), so
+an application's own `h2` styles do not reach it. Content taller than the screen scrolls inside the dialog. See
+[Dialog](../components/dialog/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
