@@ -52,7 +52,7 @@ class FormPageTest {
     assertThat(page.select("input.switch[role=switch][name=newsletter]")).hasSize(1);
     assertThat(page.select("input.checkbox[name=terms]")).hasSize(1);
     assertThat(page.select("input[type=hidden][name=_terms], input[type=hidden][name=_newsletter]")).hasSize(2);
-    assertThat(page.select(".field-error, [data-invalid]")).isEmpty();
+    assertThat(page.select(".field-error, [data-invalid], .form-errors")).isEmpty();
     assertThat(page.select("*").stream().filter(element -> element.tagName().startsWith("sl:"))).isEmpty();
   }
 
@@ -102,6 +102,34 @@ class FormPageTest {
     Element newsletter = page.getElementById("newsletter");
     assertThat(newsletter.hasAttr("checked")).as("the switch keeps the submitted value").isTrue();
     assertThat(newsletter.hasAttr("aria-invalid")).isFalse();
+    assertThat(page.select(".form-errors")).as("only field errors").isEmpty();
+  }
+
+  @Test
+  void aMessageWithALinkIsRejectedAsAWholeAtTheTopOfTheForm() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(post("/form")
+            .param("name", "Wim")
+            .param("email", "wim@example.com")
+            .param("topic", "support")
+            .param("message", "Great deals at https://example.com/deals")
+            .param("replyBy", "email")
+            .param("terms", "true"))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString());
+
+    Element errors = page.selectFirst("form > .form-errors");
+    assertThat(errors).isNotNull();
+    assertThat(errors.firstElementSibling()).as("the first thing in the form").isEqualTo(errors);
+    assertThat(errors.id()).isEqualTo("contactForm-errors");
+    assertThat(errors.attr("data-variant")).isEqualTo("destructive");
+    assertThat(errors.attr("tabindex")).isEqualTo("-1");
+    assertThat(errors.hasAttr("autofocus")).isTrue();
+    assertThat(errors.hasAttr("role")).isFalse();
+    assertThat(errors.selectFirst(".alert-title").text()).isEqualTo("There is a problem");
+    assertThat(errors.selectFirst(".alert-description").text())
+        .isEqualTo("We do not accept messages with links, to keep spam out.");
+    assertThat(page.select("[aria-invalid], [data-invalid], .field-error")).as("no field is at fault").isEmpty();
+    assertThat(page.getElementById("message").text()).isEqualTo("Great deals at https://example.com/deals");
   }
 
   @Test
