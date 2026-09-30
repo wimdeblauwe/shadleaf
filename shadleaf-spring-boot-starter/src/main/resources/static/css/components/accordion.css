@@ -1,0 +1,63 @@
+/*
+  Accordion and its parts: structure only. Borders, spacing, type, the focus ring and the speed of the opening are
+  identity and live in the skins.
+
+  Each item is a <details> element and its trigger the <summary>, so the browser opens and closes it, from the keyboard
+  too, and opens a closed one when find-in-page or a link to an element in it finds a match. The summary's marker is
+  replaced by the chevron, which turns while the item is open.
+
+  The height animates where the browser can animate to auto (interpolate-size, Chrome and Edge 129); elsewhere the
+  content shows and hides at once. ::details-content is the box around everything but the summary (Chrome 131, Safari
+  18.4, Firefox 143); a browser without it drops the rules that name it. Under reduced motion nothing moves.
+*/
+@layer components {
+  .accordion {
+    @apply flex w-full flex-col;
+  }
+
+  .accordion-trigger {
+    @apply relative flex w-full cursor-pointer list-none items-start justify-between gap-4 border border-transparent
+      text-start outline-none select-none
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid
+      [&::-webkit-details-marker]:hidden;
+  }
+
+  .accordion-trigger-icon {
+    @apply pointer-events-none shrink-0 motion-safe:transition-transform;
+  }
+
+  .accordion-item[open] > .accordion-trigger > .accordion-trigger-icon {
+    @apply rotate-180;
+  }
+
+  /* A disabled item: its trigger is out of the tab order (tabindex="-1") and ignores the pointer. In forced-colors
+     mode it turns GrayText instead of fading. */
+  .accordion-item[data-disabled] > .accordion-trigger {
+    @apply pointer-events-none opacity-50 forced-colors:text-[GrayText] forced-colors:opacity-100;
+  }
+
+  .accordion-item::details-content {
+    overflow: clip;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (interpolate-size: allow-keywords) {
+      .accordion-item {
+        interpolate-size: allow-keywords;
+      }
+
+      /* content-visibility keeps the content painted while it closes. The duration is the skin's. */
+      .accordion-item::details-content {
+        block-size: 0;
+        transition-property: block-size, content-visibility;
+        transition-behavior: allow-discrete;
+        transition-timing-function: ease-out;
+        transition-duration: var(--accordion-duration, 0s);
+      }
+
+      .accordion-item[open]::details-content {
+        block-size: auto;
+      }
+    }
+  }
+}

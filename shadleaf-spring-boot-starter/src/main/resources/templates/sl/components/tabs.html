@@ -1,0 +1,33 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Panels of content shown one at a time, chosen from a row of tabs. Holds a
+      <code>sl:tabs-list</code> of <code>sl:tabs-trigger</code>s and a <code>sl:tabs-content</code> per tab. The
+      server renders the active tab's panel and hides the others, so the page is right before any script runs;
+      Alpine adds switching in the browser and the keyboard (the ARIA tabs pattern). Give the triggers an
+      <code>href</code> and the tabs work without JavaScript too.</sl:description>
+    <sl:prop name="id" required>The id of the tabs. The ids of the triggers and panels derive from it
+      (<code>settings-account-trigger</code>, <code>settings-account-content</code>).</sl:prop>
+    <sl:prop name="active" required>The <code>tab</code> of the trigger and panel that are active when the page
+      renders, e.g. from a request parameter: <code>th:active="${tab}"</code>.</sl:prop>
+    <sl:prop name="orientation" default="horizontal" values="horizontal vertical"><code>vertical</code> puts the
+      tabs in a column next to the panels, and the up and down arrow keys move between them.</sl:prop>
+    <sl:prop name="activation-mode" default="automatic" values="automatic manual"><code>automatic</code>: a tab shows
+      its panel as soon as the arrow keys reach it. <code>manual</code>: the arrow keys only move the focus, and
+      Enter or Space shows the panel; for panels that are slow to show, such as ones loaded with htmx.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The parts read slTabsId, slTabsActive and slTabsOrientation: slot content sees this template's local variables.
+  data-activation, not data-activation-mode: it is read by slTabs, not styled. */-->
+<div th:fragment="tabs"
+     class="tabs"
+     x-data="slTabs"
+     th:with="slTabsId=${props.id}, slTabsActive=${props.active}, slTabsOrientation=${props.orientation}"
+     th:attr="id=${slTabsId},
+              data-orientation=${props.unlessDefault('orientation')},
+              data-activation=${props.unlessDefault('activation-mode')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

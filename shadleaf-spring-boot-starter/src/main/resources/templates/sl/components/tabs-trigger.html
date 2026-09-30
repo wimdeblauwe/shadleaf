@@ -1,0 +1,39 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A tab in a <code>sl:tabs-list</code>, which shows the <code>sl:tabs-content</code> with the same
+      <code>tab</code>. A button, or with an <code>href</code> a link to the page with this tab active: without
+      JavaScript the link loads it, with Alpine the tab switches in place and the address follows.</sl:description>
+    <sl:prop name="tab" required>Which tab this is: the <code>tab</code> of its <code>sl:tabs-content</code>, and the
+      value <code>sl:tabs</code>' <code>active</code> names. Part of the ids, so letters, digits and dashes.</sl:prop>
+    <sl:prop name="disabled" type="boolean">The tab cannot be chosen; the arrow keys skip it. A disabled link loses its
+      <code>href</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* No tabindex from the server: without Alpine every tab is a stop for Tab (a link must be). slTabs gives the
+  inactive ones tabindex="-1", so Tab stops once in the list and the arrow keys move between the tabs. */-->
+<th:block th:fragment="tabs-trigger"
+          th:with="slTabActive=${slTabsActive != null and slTabsActive == props.tab},
+                   slTabId=${slTabsId != null ? slTabsId + '-' + props.tab : null}">
+  <button th:unless="${attrs.has('href')}"
+          type="button"
+          class="tabs-trigger"
+          role="tab"
+          th:disabled="${props.disabled}"
+          th:attr="id=${slTabId != null ? slTabId + '-trigger' : null},
+                   aria-controls=${slTabId != null ? slTabId + '-content' : null},
+                   aria-selected=${slTabActive ? 'true' : 'false'}"
+          sl:attrs><sl:slot/></button>
+  <a th:if="${attrs.has('href')}"
+     class="tabs-trigger"
+     role="tab"
+     th:attr="id=${slTabId != null ? slTabId + '-trigger' : null},
+              aria-controls=${slTabId != null ? slTabId + '-content' : null},
+              aria-selected=${slTabActive ? 'true' : 'false'},
+              aria-disabled=${props.disabled ? 'true' : null}"
+     sl:attrs="${props.disabled ? attrs.without('href') : attrs}"><sl:slot/></a>
+</th:block>
+</body>
+</html>

@@ -3,7 +3,8 @@ import {openShowcase, skins} from './showcase';
 
 // In forced-colors mode (Windows' high contrast) a disabled control should use the system's GrayText, not half
 // opacity: fading turns the colours the user chose into ones they did not. The text-like controls, the selects'
-// chevron and the labels and legends that fade with a control turn GrayText; the checkbox, radio button and switch are
+// chevron, the labels and legends that fade with a control, and disabled accordion, collapsible and tab triggers turn
+// GrayText; the checkbox, radio button and switch are
 // drawn by the browser (appearance: auto), which draws its own disabled state, so they only must not be faded.
 
 for (const skin of skins) {
@@ -53,6 +54,11 @@ for (const skin of skins) {
       for (const icon of document.querySelectorAll('main :is(.native-select-wrapper, .select-wrapper):has(> select:disabled) > svg')) {
         check(icon, true);
       }
+      // A disabled accordion item's or collapsible's trigger, and a disabled tab.
+      for (const trigger of document.querySelectorAll('main :is(details[data-disabled] > summary, '
+          + '[role=tab]:is(:disabled, [aria-disabled=true]))')) {
+        check(trigger, true);
+      }
       return {checked: controls.length, problems};
     });
 
@@ -78,4 +84,33 @@ test('a focused menu item draws an outline in forced-colors mode', async ({page}
   });
   expect(outline.style).not.toBe('none');
   expect(outline.width).toBeGreaterThan(0);
+});
+
+// The accordion and collapsible triggers, the tabs and the tab panels show focus with a ring (a box-shadow), which
+// forced colors drop: each needs an outline there. The active tab loses its raised background, so it is underlined.
+test('accordion, collapsible and tabs show focus and the active tab in forced-colors mode', async ({page}) => {
+  await page.emulateMedia({forcedColors: 'active'});
+  await openShowcase(page, skins[0], 'light');
+  await page.waitForFunction(() => 'Alpine' in window);
+
+  const selectors = ['main .accordion-trigger:not([tabindex="-1"])', 'main .collapsible-trigger:not([tabindex="-1"])',
+    'main .tabs-trigger[aria-selected=true]', 'main .tabs-content:not([hidden])'];
+  for (const selector of selectors) {
+    const element = page.locator(selector).first();
+    await element.focus();
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Tab');
+    await expect(element).toBeFocused();
+    const outline = await element.evaluate(focused => {
+      const style = getComputedStyle(focused);
+      return {visible: focused.matches(':focus-visible'), style: style.outlineStyle, width: parseFloat(style.outlineWidth)};
+    });
+    expect(outline.visible, selector).toBe(true);
+    expect(outline.style, selector).not.toBe('none');
+    expect(outline.width, selector).toBeGreaterThan(0);
+  }
+
+  const decoration = await page.locator('main .tabs-trigger[aria-selected=true]').first()
+      .evaluate(tab => getComputedStyle(tab).textDecorationLine);
+  expect(decoration).toBe('underline');
 });

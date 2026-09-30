@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Content that a button shows and hides. Built on the browser's <code>details</code> element, so it
+      needs no JavaScript. Holds a <code>sl:collapsible-trigger</code> (first) and a
+      <code>sl:collapsible-content</code>.</sl:description>
+    <sl:prop name="open" type="boolean">Render it open.</sl:prop>
+    <sl:prop name="disabled" type="boolean">It cannot be opened or closed: its trigger is out of the tab order and
+      ignores the pointer, and closed it renders no content, so find-in-page cannot open it.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* slCollapsibleDisabled is read by the trigger, slCollapsibleHidden by the content. */-->
+<details th:fragment="collapsible"
+         class="collapsible"
+         th:with="slCollapsibleDisabled=${props.disabled}, slCollapsibleHidden=${props.disabled and !props.open}"
+         th:attr="open=${props.open ? 'open' : null}, data-disabled=${props.disabled ? 'true' : null}"
+         sl:attrs><sl:slot/></details>
+</body>
+</html>

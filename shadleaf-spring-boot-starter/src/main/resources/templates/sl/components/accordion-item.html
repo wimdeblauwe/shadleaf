@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One section of a <code>sl:accordion</code>: a <code>details</code> element holding a
+      <code>sl:accordion-trigger</code> (first) and a <code>sl:accordion-content</code>.</sl:description>
+    <sl:prop name="open" type="boolean">Render the section open. In a <code>single</code> accordion only the first
+      open section stays open.</sl:prop>
+    <sl:prop name="disabled" type="boolean">The section cannot be opened or closed: its trigger is out of the tab order
+      and ignores the pointer, and a closed disabled section renders no content, so find-in-page cannot open
+      it.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* slAccordionItemDisabled is read by the trigger, slAccordionItemHidden by the content. */-->
+<details th:fragment="accordion-item"
+         class="accordion-item"
+         th:with="slAccordionItemDisabled=${props.disabled}, slAccordionItemHidden=${props.disabled and !props.open}"
+         th:attr="name=${slAccordionName}, open=${props.open ? 'open' : null},
+                  data-disabled=${props.disabled ? 'true' : null}"
+         sl:attrs><sl:slot/></details>
+</body>
+</html>

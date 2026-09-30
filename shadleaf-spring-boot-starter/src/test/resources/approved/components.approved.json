@@ -1,6 +1,59 @@
 {
   "version" : "test",
   "components" : [ {
+    "name" : "accordion",
+    "tag" : "sl:accordion",
+    "description" : "A stack of sections, each with a heading that shows or hides its content. Built on the browser's `details` element, so it needs no JavaScript: the keyboard, the open state, and find-in-page opening a section that holds a match all come from the browser. Holds `sl:accordion-item`s, each with a `sl:accordion-trigger` and a `sl:accordion-content`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "single",
+      "values" : [ "single", "multiple" ],
+      "description" : "`single`: opening a section closes the one that was open (the items share a `details` `name`). `multiple`: sections open and close on their own."
+    }, {
+      "name" : "name",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The group name the items of a `single` accordion share. Must be unique on the page. Without it, each render generates one (`sl-accordion-` and eight random characters)."
+    } ]
+  }, {
+    "name" : "accordion-content",
+    "tag" : "sl:accordion-content",
+    "description" : "The content of a `sl:accordion-item`, shown while it is open. Find-in-page searches it while it is closed, and opens the section on a match.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "accordion-item",
+    "tag" : "sl:accordion-item",
+    "description" : "One section of a `sl:accordion`: a `details` element holding a `sl:accordion-trigger` (first) and a `sl:accordion-content`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "open",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Render the section open. In a `single` accordion only the first open section stays open."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "The section cannot be opened or closed: its trigger is out of the tab order and ignores the pointer, and a closed disabled section renders no content, so find-in-page cannot open it."
+    } ]
+  }, {
+    "name" : "accordion-trigger",
+    "tag" : "sl:accordion-trigger",
+    "description" : "The heading of a `sl:accordion-item`, which opens and closes it: the `details` element's `summary`, so it must be the item's first child. Its text is a heading inside the `summary`, and a chevron follows it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "defaultValue" : "3",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level of the text (`role=\"heading\"` and `aria-level`), as shadcn/ui's trigger sits in an `h3`. Pick the level that fits the page's outline."
+    } ]
+  }, {
     "name" : "alert",
     "tag" : "sl:alert",
     "description" : "A callout for a message the user should notice: an optional `sl:icon`, then `sl:alert-title` and `sl:alert-description`. It is not announced by itself; add `role=\"alert\"` when it appears after the page loaded, such as in an htmx response.",
@@ -272,6 +325,50 @@
     "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
     "declared" : true,
     "props" : [ ]
+  }, {
+    "name" : "collapsible",
+    "tag" : "sl:collapsible",
+    "description" : "Content that a button shows and hides. Built on the browser's `details` element, so it needs no JavaScript. Holds a `sl:collapsible-trigger` (first) and a `sl:collapsible-content`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "open",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Render it open."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "It cannot be opened or closed: its trigger is out of the tab order and ignores the pointer, and closed it renders no content, so find-in-page cannot open it."
+    } ]
+  }, {
+    "name" : "collapsible-content",
+    "tag" : "sl:collapsible-content",
+    "description" : "The content of a `sl:collapsible`, shown while it is open. Find-in-page searches it while it is closed, and opens it on a match.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "collapsible-trigger",
+    "tag" : "sl:collapsible-trigger",
+    "description" : "What the user clicks to open and close a `sl:collapsible`: its `details` element's `summary`, so it must come first. Plain text by default; `variant` or `size` draws it as a `sl:button`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "values" : [ "default", "outline", "secondary", "ghost", "destructive", "link" ],
+      "description" : "Draw the trigger as a button of this variant, as on `sl:button`."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "values" : [ "xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm", "icon-lg" ],
+      "description" : "Draw the trigger as a button of this size, as on `sl:button`. The `icon` sizes need an `aria-label`."
+    } ],
+    "accessibleName" : {
+      "prop" : "size",
+      "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
+    }
   }, {
     "name" : "dialog",
     "tag" : "sl:dialog",
@@ -922,6 +1019,78 @@
       "defaultValue" : "default",
       "values" : [ "sm", "default" ],
       "description" : "Size of the switch."
+    } ]
+  }, {
+    "name" : "tabs",
+    "tag" : "sl:tabs",
+    "description" : "Panels of content shown one at a time, chosen from a row of tabs. Holds a `sl:tabs-list` of `sl:tabs-trigger`s and a `sl:tabs-content` per tab. The server renders the active tab's panel and hides the others, so the page is right before any script runs; Alpine adds switching in the browser and the keyboard (the ARIA tabs pattern). Give the triggers an `href` and the tabs work without JavaScript too.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The id of the tabs. The ids of the triggers and panels derive from it (`settings-account-trigger`, `settings-account-content`).",
+      "required" : true
+    }, {
+      "name" : "active",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `tab` of the trigger and panel that are active when the page renders, e.g. from a request parameter: `th:active=\"${tab}\"`.",
+      "required" : true
+    }, {
+      "name" : "orientation",
+      "type" : "enum",
+      "defaultValue" : "horizontal",
+      "values" : [ "horizontal", "vertical" ],
+      "description" : "`vertical` puts the tabs in a column next to the panels, and the up and down arrow keys move between them."
+    }, {
+      "name" : "activation-mode",
+      "type" : "enum",
+      "defaultValue" : "automatic",
+      "values" : [ "automatic", "manual" ],
+      "description" : "`automatic`: a tab shows its panel as soon as the arrow keys reach it. `manual`: the arrow keys only move the focus, and Enter or Space shows the panel; for panels that are slow to show, such as ones loaded with htmx."
+    } ]
+  }, {
+    "name" : "tabs-content",
+    "tag" : "sl:tabs-content",
+    "description" : "The panel of one tab of a `sl:tabs`, labelled by its trigger. Only the active tab's panel shows; the others are `hidden`. It takes the focus with Tab after the tabs (as in Radix), so a panel without controls can be read and scrolled.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "tab",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Which tab's panel this is: the `tab` of its `sl:tabs-trigger`.",
+      "required" : true
+    } ]
+  }, {
+    "name" : "tabs-list",
+    "tag" : "sl:tabs-list",
+    "description" : "The row (or column) of `sl:tabs-trigger`s of a `sl:tabs`: a `tablist`. An `aria-label` names it when the page has more than one.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "line" ],
+      "description" : "`default`: the tabs sit on a muted track and the active one is raised. `line`: no track, a line under the active tab."
+    } ]
+  }, {
+    "name" : "tabs-trigger",
+    "tag" : "sl:tabs-trigger",
+    "description" : "A tab in a `sl:tabs-list`, which shows the `sl:tabs-content` with the same `tab`. A button, or with an `href` a link to the page with this tab active: without JavaScript the link loads it, with Alpine the tab switches in place and the address follows.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "tab",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Which tab this is: the `tab` of its `sl:tabs-content`, and the value `sl:tabs`' `active` names. Part of the ids, so letters, digits and dashes.",
+      "required" : true
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "The tab cannot be chosen; the arrow keys skip it. A disabled link loses its `href`."
     } ]
   }, {
     "name" : "textarea",

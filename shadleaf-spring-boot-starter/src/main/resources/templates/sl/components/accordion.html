@@ -1,0 +1,26 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A stack of sections, each with a heading that shows or hides its content. Built on the browser's
+      <code>details</code> element, so it needs no JavaScript: the keyboard, the open state, and find-in-page opening
+      a section that holds a match all come from the browser. Holds <code>sl:accordion-item</code>s, each with a
+      <code>sl:accordion-trigger</code> and a <code>sl:accordion-content</code>.</sl:description>
+    <sl:prop name="type" default="single" values="single multiple"><code>single</code>: opening a section closes the
+      one that was open (the items share a <code>details</code> <code>name</code>). <code>multiple</code>: sections
+      open and close on their own.</sl:prop>
+    <sl:prop name="name">The group name the items of a <code>single</code> accordion share. Must be unique on the
+      page. Without it, each render generates one (<code>sl-accordion-</code> and eight random characters).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* slAccordionName is what the items read: slot content sees this template's local variables. A multiple accordion
+  sets it to null, so its items leave a surrounding single accordion's group. The generated name is random, not a
+  counter: a counter restarts in every template execution, and an htmx fragment would join a group on the page. */-->
+<div th:fragment="accordion"
+     class="accordion"
+     th:with="slAccordionName=${props.type == 'single'
+         ? (props.name ?: 'sl-accordion-' + #strings.randomAlphanumeric(8).toLowerCase()) : null}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# Scenarios for the collapsible's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: collapsible
+parts: [collapsible-trigger, collapsible-content]
+scenarios:
+  - id: default
+    title: Collapsible
+    source: |-
+      <sl:collapsible>
+        <sl:collapsible-trigger>@peduarte starred 3 repositories <sl:icon name="chevrons-up-down"/></sl:collapsible-trigger>
+        <sl:collapsible-content>
+          <p>@radix-ui/primitives</p>
+          <p>@radix-ui/colors</p>
+          <p>@stitches/react</p>
+        </sl:collapsible-content>
+      </sl:collapsible>
+
+  - id: button
+    title: Drawn as a button
+    description: variant and size draw the trigger as a button, as shadcn/ui's asChild on a Button does.
+    source: |-
+      <sl:collapsible open>
+        <sl:collapsible-trigger variant="outline" size="sm"><sl:icon name="sliders-horizontal"/> Filters</sl:collapsible-trigger>
+        <sl:collapsible-content>
+          <sl:field orientation="horizontal" for="collapsible-in-stock">
+            <sl:checkbox checked/>
+            <sl:field-label>In stock only</sl:field-label>
+          </sl:field>
+        </sl:collapsible-content>
+      </sl:collapsible>
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:collapsible disabled>
+        <sl:collapsible-trigger variant="ghost" size="sm">Order history</sl:collapsible-trigger>
+        <sl:collapsible-content>Your past orders.</sl:collapsible-content>
+      </sl:collapsible>

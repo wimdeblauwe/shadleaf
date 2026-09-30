@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The heading of a <code>sl:accordion-item</code>, which opens and closes it: the
+      <code>details</code> element's <code>summary</code>, so it must be the item's first child. Its text is a
+      heading inside the <code>summary</code>, and a chevron follows it.</sl:description>
+    <sl:prop name="level" default="3" values="1 2 3 4 5 6">Heading level of the text (<code>role="heading"</code> and
+      <code>aria-level</code>), as shadcn/ui's trigger sits in an <code>h3</code>. Pick the level that fits the page's
+      outline.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The heading is inside the summary, not around it: a summary must be the details element's first child. It keeps
+  the summary's own role (a disclosure with its expanded state); role="heading" on the summary would replace it. A span
+  with role="heading" rather than an h3, as sl:card-title: an application's own h3 rules would restyle it, and the
+  summary only takes phrasing content besides headings. */-->
+<summary th:fragment="accordion-trigger"
+         class="accordion-trigger"
+         th:attr="aria-disabled=${slAccordionItemDisabled == true ? 'true' : null},
+                  tabindex=${slAccordionItemDisabled == true ? '-1' : null}"
+         sl:attrs><span class="accordion-trigger-text" role="heading" th:attr="aria-level=${props.level}"><sl:slot/></span><sl:icon
+    name="chevron-down" class="accordion-trigger-icon"/></summary>
+</body>
+</html>

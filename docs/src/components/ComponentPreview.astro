@@ -52,6 +52,9 @@ const srcdoc = scenario && skins.length > 0
     .stage { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
     /* A card fills its container; give it a width, as a page's layout would. */
     .stage > .card { inline-size: 24rem; max-inline-size: 100%; }
+    /* An accordion fills its container, tabs and a collapsible fit their content: give them a width too. */
+    .stage > .accordion { max-inline-size: 32rem; }
+    .stage > :is(.tabs, .collapsible) { inline-size: 24rem; max-inline-size: 100%; }
     /* A modal dialog is laid out in the frame's viewport: make room for it while one is open. */
     body:has(dialog:modal) { min-block-size: 32rem; }
     /* So is an open menu or popover, below its trigger. A tooltip shows above its trigger: leave room for it. */

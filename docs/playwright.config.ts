@@ -12,8 +12,10 @@ export default defineConfig({
   },
   projects: [
     {name: 'chromium', use: {...devices['Desktop Chrome']}},
-    // Firefox has no customizable select (appearance: base-select), so sl:select shows slSelect's list box there.
-    {name: 'firefox', use: {...devices['Desktop Firefox']}, testMatch: 'select.spec.ts'},
+    // Firefox has no customizable select (appearance: base-select), so sl:select shows slSelect's list box there; it
+    // cannot animate a height to auto (interpolate-size), and was later with find-in-page opening details and
+    // hidden="until-found", which the accordion and the tabs use.
+    {name: 'firefox', use: {...devices['Desktop Firefox']}, testMatch: /(select|disclosure|tabs)\.spec\.ts/},
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

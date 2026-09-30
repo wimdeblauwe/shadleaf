@@ -10,10 +10,12 @@ type Indicator = { outline: string; boxShadow: string };
 for (const {skin, theme} of combinations) {
   test(`keyboard focus is visible on every control: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
+    // slTabs takes the inactive tabs out of the tab order: collect the stops once it has.
+    await page.waitForFunction(() => 'Alpine' in window);
 
     const tabbable = await page.evaluate(() => {
       const candidates = document.querySelectorAll<HTMLElement>(
-          'main :is(a[href], button, input:not([type=hidden]), select, textarea, [tabindex])');
+          'main :is(a[href], button, input:not([type=hidden]), select, textarea, summary, [tabindex])');
       // :disabled, not the disabled property: a control in a disabled fieldset is disabled without the attribute.
       const disabled = (element: Element) => element.matches(':disabled');
       // Tab stops once per radio group: on its checked radio, or on its first one when none is checked.
@@ -28,6 +30,8 @@ for (const {skin, theme} of combinations) {
           .filter(element => !element.matches('select > button'))
           // Not in a closed dialog or popover: dialog.spec.ts and popup.spec.ts tab through those open.
           .filter(element => !element.closest('dialog:not([open]), [popover]:not(:popover-open)'))
+          // Not in a closed details element (accordion, collapsible) or an inactive tab panel.
+          .filter(element => element.checkVisibility())
           .filter(element => !(element instanceof HTMLInputElement && element.type === 'radio') || radioTabStop(element))
           .map((element, index) => {
             element.dataset.focusIndex = String(index);

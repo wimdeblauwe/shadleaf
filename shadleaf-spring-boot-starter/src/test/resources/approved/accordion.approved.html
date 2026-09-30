@@ -1,0 +1,85 @@
+<!-- <sl:accordion name="faq">
+  <sl:accordion-item open>
+    <sl:accordion-trigger>Is it accessible?</sl:accordion-trigger>
+    <sl:accordion-content>Yes. It is a details element.</sl:accordion-content>
+  </sl:accordion-item>
+  <sl:accordion-item>
+    <sl:accordion-trigger level="2">Is it styled?</sl:accordion-trigger>
+    <sl:accordion-content><p>Yes.</p></sl:accordion-content>
+  </sl:accordion-item>
+</sl:accordion> -->
+<div class="accordion">
+  <details class="accordion-item" name="faq" open>
+    <summary class="accordion-trigger">
+      <span class="accordion-trigger-text" role="heading" aria-level="3">Is it accessible?</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon accordion-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </summary>
+    <div class="accordion-content">Yes. It is a details element.</div>
+  </details>
+  <details class="accordion-item" name="faq">
+    <summary class="accordion-trigger">
+      <span class="accordion-trigger-text" role="heading" aria-level="2">Is it styled?</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon accordion-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </summary>
+    <div class="accordion-content">
+      <p>Yes.</p>
+    </div>
+  </details>
+</div>
+
+<!-- <sl:accordion type="multiple" class="wide">
+  <sl:accordion-item><sl:accordion-trigger>One</sl:accordion-trigger>
+    <sl:accordion-content>First</sl:accordion-content></sl:accordion-item>
+  <sl:accordion-item open><sl:accordion-trigger>Two</sl:accordion-trigger>
+    <sl:accordion-content>Second</sl:accordion-content></sl:accordion-item>
+</sl:accordion> -->
+<div class="accordion wide">
+  <details class="accordion-item">
+    <summary class="accordion-trigger">
+      <span class="accordion-trigger-text" role="heading" aria-level="3">One</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon accordion-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </summary>
+    <div class="accordion-content">First</div>
+  </details>
+  <details class="accordion-item" open>
+    <summary class="accordion-trigger">
+      <span class="accordion-trigger-text" role="heading" aria-level="3">Two</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon accordion-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </summary>
+    <div class="accordion-content">Second</div>
+  </details>
+</div>
+
+<!-- <sl:accordion name="plans">
+  <sl:accordion-item disabled><sl:accordion-trigger>Premium</sl:accordion-trigger>
+    <sl:accordion-content>Upgrade to see this.</sl:accordion-content></sl:accordion-item>
+  <sl:accordion-item disabled open><sl:accordion-trigger>Current plan</sl:accordion-trigger>
+    <sl:accordion-content>Starter</sl:accordion-content></sl:accordion-item>
+</sl:accordion> -->
+<div class="accordion">
+  <details class="accordion-item" name="plans" data-disabled="true">
+    <summary class="accordion-trigger" aria-disabled="true" tabindex="-1">
+      <span class="accordion-trigger-text" role="heading" aria-level="3">Premium</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon accordion-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </summary>
+  </details>
+  <details class="accordion-item" name="plans" open data-disabled="true">
+    <summary class="accordion-trigger" aria-disabled="true" tabindex="-1">
+      <span class="accordion-trigger-text" role="heading" aria-level="3">Current plan</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon accordion-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </summary>
+    <div class="accordion-content">Starter</div>
+  </details>
+</div>
+
+<!-- <sl:accordion-item id="billing">x</sl:accordion-item> -->
+<details class="accordion-item" id="billing">x</details>
+
+<!-- <sl:accordion-trigger>Question</sl:accordion-trigger> -->
+<summary class="accordion-trigger">
+  <span class="accordion-trigger-text" role="heading" aria-level="3">Question</span>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon accordion-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</summary>
+
+<!-- <sl:accordion-content>Answer</sl:accordion-content> -->
+<div class="accordion-content">Answer</div>

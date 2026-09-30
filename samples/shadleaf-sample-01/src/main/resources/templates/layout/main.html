@@ -42,6 +42,8 @@
                th:aria-current="${pageTitle == 'Form with htmx' ? 'page' : null}">Form with htmx</sl:button>
     <sl:button as="a" variant="ghost" size="sm" th:href="@{/dialog}"
                th:aria-current="${pageTitle == 'Dialog' ? 'page' : null}">Dialog</sl:button>
+    <sl:button as="a" variant="ghost" size="sm" th:href="@{/settings}"
+               th:aria-current="${pageTitle == 'Settings' ? 'page' : null}">Settings</sl:button>
   </nav>
   <div th:replace="${content}"></div>
 </main>

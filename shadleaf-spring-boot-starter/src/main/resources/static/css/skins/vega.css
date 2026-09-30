@@ -731,4 +731,99 @@
   .tooltip-content .kbd {
     @apply rounded-sm bg-background/20 text-background dark:bg-background/10;
   }
+
+  /* Accordion. The height animation's speed (components/accordion.css) is --accordion-duration. */
+  .accordion-item {
+    @apply border-border not-last:border-b;
+    --accordion-duration: 200ms;
+  }
+
+  .accordion-trigger {
+    @apply rounded-md py-4 text-sm font-medium hover:underline
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50;
+  }
+
+  .accordion-trigger-icon {
+    @apply size-4 text-muted-foreground;
+  }
+
+  .accordion-content {
+    @apply pt-0 pb-4 text-sm [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground
+      [&_p:not(:last-child)]:mb-4;
+  }
+
+  /* Collapsible. A trigger drawn as a button (.btn) gets the rest from the button's rules. */
+  .collapsible-trigger {
+    @apply rounded-md focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50;
+  }
+
+  /* shadcn's examples put gap-2 between the trigger and the content. */
+  .collapsible-content {
+    @apply mt-2;
+  }
+
+  .collapsible-trigger:not(.btn) {
+    @apply text-sm font-medium;
+  }
+
+  /*
+    Tabs. The inactive tabs' text is mixed from the foreground, as in shadcn, and the active one raised on the muted
+    track; in the line variant a bar in the foreground colour marks it.
+  */
+  .tabs {
+    @apply gap-2;
+  }
+
+  .tabs-list {
+    @apply rounded-lg p-[3px] text-muted-foreground;
+  }
+
+  .tabs:not([data-orientation]) > .tabs-list {
+    @apply h-9;
+  }
+
+  .tabs-list:not([data-variant]) {
+    @apply bg-muted;
+  }
+
+  .tabs-list[data-variant='line'] {
+    @apply gap-1 rounded-none bg-transparent;
+  }
+
+  .tabs-trigger {
+    @apply gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium text-foreground/60
+      hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground
+      focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1
+      focus-visible:outline-ring motion-safe:transition-all
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .tabs:not([data-orientation]) > .tabs-list > .tabs-trigger {
+    @apply h-[calc(100%-1px)];
+  }
+
+  .tabs-trigger:has(> svg:first-child) {
+    @apply ps-1.5;
+  }
+
+  .tabs-trigger:has(> svg:last-child) {
+    @apply pe-1.5;
+  }
+
+  .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected='true'] {
+    @apply bg-background text-foreground shadow-sm dark:border-input dark:bg-input/30 dark:text-foreground;
+  }
+
+  .tabs-list[data-variant='line'] > .tabs-trigger {
+    @apply after:bg-foreground;
+  }
+
+  .tabs-list[data-variant='line'] > .tabs-trigger[aria-selected='true'] {
+    @apply text-foreground;
+  }
+
+  /* The panel takes the focus after the tabs (tabindex="0"). */
+  .tabs-content {
+    @apply rounded-md text-sm focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
 }

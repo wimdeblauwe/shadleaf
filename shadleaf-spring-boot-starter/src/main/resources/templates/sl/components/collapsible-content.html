@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The content of a <code>sl:collapsible</code>, shown while it is open. Find-in-page searches it
+      while it is closed, and opens it on a match.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* Nothing for a closed disabled collapsible: find-in-page would open it. */-->
+<div th:fragment="collapsible-content"
+     th:unless="${slCollapsibleHidden == true}"
+     class="collapsible-content"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

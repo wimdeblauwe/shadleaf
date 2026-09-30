@@ -31,11 +31,14 @@ for (const {skin, theme} of combinations) {
     // evaluate, not addScriptTag: a page's Content-Security-Policy does not apply to it
     await page.evaluate(axe.source);
     // Every enabled link and button: only an interactive element has a hover state of its own. Those in a closed
-    // dialog or popover cannot be hovered; dialog.spec.ts and popup.spec.ts check them open. The button of a customizable
+    // dialog or popover cannot be hovered; dialog.spec.ts and popup.spec.ts check them open, as disclosure.spec.ts and
+    // tabs.spec.ts check closed sections and inactive panels. The button of a customizable
     // select is part of the select, not a control of its own.
     const controls = page.locator(
         'main :is(a[href], button):not([disabled]):not([aria-disabled]):not(select > button)'
-        + ':not(dialog:not([open]) *):not([popover]:not(:popover-open) *)');
+        + ':not(dialog:not([open]) *):not([popover]:not(:popover-open) *)'
+        // Nor those in a closed details element (accordion, collapsible) or an inactive tab panel.
+        + ':not(details:not([open]) > :not(summary) *):not([hidden] *)');
     const count = await controls.count();
     const failures: string[] = [];
     for (let i = 0; i < count; i++) {

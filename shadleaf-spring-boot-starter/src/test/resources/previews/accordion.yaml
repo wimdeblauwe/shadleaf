@@ -1,0 +1,88 @@
+# Scenarios for the accordion's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: accordion
+parts: [accordion-item, accordion-trigger, accordion-content]
+scenarios:
+  - id: default
+    title: Accordion
+    description: One section open at a time. Opening another closes it; the open one closes on a click.
+    source: |-
+      <sl:accordion name="accordion-demo">
+        <sl:accordion-item open>
+          <sl:accordion-trigger>Is it accessible?</sl:accordion-trigger>
+          <sl:accordion-content>Yes. Each section is a details element, which the browser opens and closes, from the
+            keyboard too.</sl:accordion-content>
+        </sl:accordion-item>
+        <sl:accordion-item>
+          <sl:accordion-trigger>Is it styled?</sl:accordion-trigger>
+          <sl:accordion-content>Yes. It comes with default styles that match the other components.</sl:accordion-content>
+        </sl:accordion-item>
+        <sl:accordion-item>
+          <sl:accordion-trigger>Is it animated?</sl:accordion-trigger>
+          <sl:accordion-content>Yes, where the browser can animate a height to auto, and only when the user has not
+            asked for reduced motion.</sl:accordion-content>
+        </sl:accordion-item>
+      </sl:accordion>
+
+  - id: multiple
+    title: Multiple
+    description: type="multiple" opens and closes each section on its own.
+    source: |-
+      <sl:accordion type="multiple">
+        <sl:accordion-item open>
+          <sl:accordion-trigger>How do I reset my password?</sl:accordion-trigger>
+          <sl:accordion-content>Choose "Forgot password" on the sign-in page and follow the link we email
+            you.</sl:accordion-content>
+        </sl:accordion-item>
+        <sl:accordion-item open>
+          <sl:accordion-trigger>Can I change my username?</sl:accordion-trigger>
+          <sl:accordion-content>Yes, once every 30 days, from your profile settings.</sl:accordion-content>
+        </sl:accordion-item>
+      </sl:accordion>
+
+  - id: card
+    title: In a card
+    source: |-
+      <sl:card>
+        <sl:card-header>
+          <sl:card-title level="2">Subscription &amp; billing</sl:card-title>
+          <sl:card-description>Common questions about your account, plans and payments</sl:card-description>
+        </sl:card-header>
+        <sl:card-content>
+          <sl:accordion name="accordion-billing">
+            <sl:accordion-item open>
+              <sl:accordion-trigger>What subscription plans do you offer?</sl:accordion-trigger>
+              <sl:accordion-content>
+                <p>Three: Starter, Professional and Enterprise, each with more storage and support.</p>
+                <p><a href="/plans">Annual billing is available</a> with a 20% discount.</p>
+              </sl:accordion-content>
+            </sl:accordion-item>
+            <sl:accordion-item>
+              <sl:accordion-trigger>How does billing work?</sl:accordion-trigger>
+              <sl:accordion-content>At the start of each billing cycle, by card or bank transfer.</sl:accordion-content>
+            </sl:accordion-item>
+            <sl:accordion-item>
+              <sl:accordion-trigger>How do I cancel?</sl:accordion-trigger>
+              <sl:accordion-content>From your account settings, at any time.</sl:accordion-content>
+            </sl:accordion-item>
+          </sl:accordion>
+        </sl:card-content>
+      </sl:card>
+
+  - id: disabled
+    title: Disabled
+    description: A disabled section cannot be opened, and renders no content while it is closed.
+    source: |-
+      <sl:accordion name="accordion-disabled">
+        <sl:accordion-item>
+          <sl:accordion-trigger>Can I access my account history?</sl:accordion-trigger>
+          <sl:accordion-content>Yes, in the Account history section of your dashboard.</sl:accordion-content>
+        </sl:accordion-item>
+        <sl:accordion-item disabled>
+          <sl:accordion-trigger>Premium feature information</sl:accordion-trigger>
+          <sl:accordion-content>Upgrade your plan to see this.</sl:accordion-content>
+        </sl:accordion-item>
+        <sl:accordion-item>
+          <sl:accordion-trigger>How do I update my email address?</sl:accordion-trigger>
+          <sl:accordion-content>In your account settings; we send a link to the new address.</sl:accordion-content>
+        </sl:accordion-item>
+      </sl:accordion>

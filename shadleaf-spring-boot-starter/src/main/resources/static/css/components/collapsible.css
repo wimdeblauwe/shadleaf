@@ -1,0 +1,19 @@
+/*
+  Collapsible and its parts: structure only. A <details> element whose <summary> is the trigger, without the marker;
+  the browser opens and closes it, and opens it when find-in-page finds a match inside. It does not animate, as
+  shadcn/ui's does not. A trigger drawn as a button takes the button's classes (.btn), which set its look.
+*/
+@layer components {
+  .collapsible-trigger {
+    @apply cursor-pointer list-none outline-none [&::-webkit-details-marker]:hidden
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid;
+  }
+
+  .collapsible-trigger:not(.btn) {
+    @apply inline-flex items-center gap-2;
+  }
+
+  .collapsible[data-disabled] > .collapsible-trigger {
+    @apply pointer-events-none opacity-50 forced-colors:text-[GrayText] forced-colors:opacity-100;
+  }
+}

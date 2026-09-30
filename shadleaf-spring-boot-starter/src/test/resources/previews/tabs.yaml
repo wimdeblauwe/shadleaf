@@ -1,0 +1,115 @@
+# Scenarios for the tabs' docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: tabs
+parts: [tabs-list, tabs-trigger, tabs-content]
+scenarios:
+  - id: default
+    title: Tabs
+    description: The arrow keys move between the tabs; Tab moves on to the panel.
+    source: |-
+      <sl:tabs id="tabs-demo" active="account">
+        <sl:tabs-list>
+          <sl:tabs-trigger tab="account">Account</sl:tabs-trigger>
+          <sl:tabs-trigger tab="password">Password</sl:tabs-trigger>
+        </sl:tabs-list>
+        <sl:tabs-content tab="account">
+          <sl:card>
+            <sl:card-header>
+              <sl:card-title level="2">Account</sl:card-title>
+              <sl:card-description>Make changes to your account here. Click save when you're done.</sl:card-description>
+            </sl:card-header>
+            <sl:card-content>
+              <sl:field-group>
+                <sl:field for="tabs-demo-name">
+                  <sl:field-label>Name</sl:field-label>
+                  <sl:input value="Pedro Duarte"/>
+                </sl:field>
+                <sl:field for="tabs-demo-username">
+                  <sl:field-label>Username</sl:field-label>
+                  <sl:input value="@peduarte"/>
+                </sl:field>
+              </sl:field-group>
+            </sl:card-content>
+            <sl:card-footer><sl:button>Save changes</sl:button></sl:card-footer>
+          </sl:card>
+        </sl:tabs-content>
+        <sl:tabs-content tab="password">
+          <sl:card>
+            <sl:card-header>
+              <sl:card-title level="2">Password</sl:card-title>
+              <sl:card-description>Change your password here. After saving, you'll be logged out.</sl:card-description>
+            </sl:card-header>
+            <sl:card-content>
+              <sl:field-group>
+                <sl:field for="tabs-demo-current">
+                  <sl:field-label>Current password</sl:field-label>
+                  <sl:input type="password"/>
+                </sl:field>
+                <sl:field for="tabs-demo-new">
+                  <sl:field-label>New password</sl:field-label>
+                  <sl:input type="password"/>
+                </sl:field>
+              </sl:field-group>
+            </sl:card-content>
+            <sl:card-footer><sl:button>Save password</sl:button></sl:card-footer>
+          </sl:card>
+        </sl:tabs-content>
+      </sl:tabs>
+
+  - id: line
+    title: Line
+    source: |-
+      <sl:tabs id="tabs-line" active="overview">
+        <sl:tabs-list variant="line" aria-label="Report">
+          <sl:tabs-trigger tab="overview">Overview</sl:tabs-trigger>
+          <sl:tabs-trigger tab="analytics">Analytics</sl:tabs-trigger>
+          <sl:tabs-trigger tab="reports">Reports</sl:tabs-trigger>
+        </sl:tabs-list>
+        <sl:tabs-content tab="overview">Sales are up 12% on last month.</sl:tabs-content>
+        <sl:tabs-content tab="analytics">1,204 visitors this week.</sl:tabs-content>
+        <sl:tabs-content tab="reports">Three reports are ready to download.</sl:tabs-content>
+      </sl:tabs>
+
+  - id: vertical
+    title: Vertical
+    description: orientation="vertical" puts the tabs in a column; the up and down arrow keys move between them.
+    source: |-
+      <sl:tabs id="tabs-vertical" active="general" orientation="vertical">
+        <sl:tabs-list aria-label="Preferences">
+          <sl:tabs-trigger tab="general">General</sl:tabs-trigger>
+          <sl:tabs-trigger tab="appearance">Appearance</sl:tabs-trigger>
+          <sl:tabs-trigger tab="advanced">Advanced</sl:tabs-trigger>
+        </sl:tabs-list>
+        <sl:tabs-content tab="general">Language, time zone and start page.</sl:tabs-content>
+        <sl:tabs-content tab="appearance">Theme and density.</sl:tabs-content>
+        <sl:tabs-content tab="advanced">Developer options.</sl:tabs-content>
+      </sl:tabs>
+
+  - id: icons
+    title: Icons and a disabled tab
+    description: The arrow keys skip a disabled tab.
+    source: |-
+      <sl:tabs id="tabs-icons" active="preview">
+        <sl:tabs-list aria-label="View">
+          <sl:tabs-trigger tab="preview"><sl:icon name="app-window"/> Preview</sl:tabs-trigger>
+          <sl:tabs-trigger tab="code"><sl:icon name="code"/> Code</sl:tabs-trigger>
+          <sl:tabs-trigger tab="history" disabled><sl:icon name="history"/> History</sl:tabs-trigger>
+        </sl:tabs-list>
+        <sl:tabs-content tab="preview">The rendered page.</sl:tabs-content>
+        <sl:tabs-content tab="code">The template.</sl:tabs-content>
+        <sl:tabs-content tab="history">Earlier versions.</sl:tabs-content>
+      </sl:tabs>
+
+  - id: links
+    title: Links
+    description: Triggers with an href load the page with that tab active when there is no JavaScript; with it, the tab switches in place and the address follows.
+    source: |-
+      <sl:tabs id="tabs-links" active="week" activation-mode="manual">
+        <sl:tabs-list aria-label="Period">
+          <sl:tabs-trigger tab="day" href="?period=day">Day</sl:tabs-trigger>
+          <sl:tabs-trigger tab="week" href="?period=week">Week</sl:tabs-trigger>
+          <sl:tabs-trigger tab="month" href="?period=month">Month</sl:tabs-trigger>
+        </sl:tabs-list>
+        <sl:tabs-content tab="day">14 orders today.</sl:tabs-content>
+        <sl:tabs-content tab="week">86 orders this week.</sl:tabs-content>
+        <sl:tabs-content tab="month">312 orders this month.</sl:tabs-content>
+      </sl:tabs>

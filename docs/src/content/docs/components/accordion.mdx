@@ -1,0 +1,138 @@
+---
+title: Accordion
+description: A stack of sections, each with a heading that shows or hides its content, on the browser's details element.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="accordion--default" />
+
+## Built from parts
+
+An accordion is `<sl:accordion>` holding `<sl:accordion-item>`s, each with an `<sl:accordion-trigger>` and an
+`<sl:accordion-content>`, as in shadcn/ui:
+
+```html
+<sl:accordion>
+  <sl:accordion-item open>
+    <sl:accordion-trigger>Is it accessible?</sl:accordion-trigger>
+    <sl:accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</sl:accordion-content>
+  </sl:accordion-item>
+  <sl:accordion-item>
+    <sl:accordion-trigger>Is it styled?</sl:accordion-trigger>
+    <sl:accordion-content>Yes.</sl:accordion-content>
+  </sl:accordion-item>
+</sl:accordion>
+```
+
+Each item is a [`<details>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details) element and
+its trigger is the `<summary>`, so **the accordion needs no JavaScript**: the browser opens and closes the sections,
+from the keyboard too (Tab, then Enter or Space), and a screen reader announces each trigger as expanded or collapsed.
+The trigger must be the item's first child.
+
+## One or several open
+
+`type="single"` (the default) keeps one section open: opening another closes it. The items share a `details` `name`,
+which the browser uses to close the others. The open section closes on a click too, so a single accordion is always
+what shadcn/ui calls `collapsible`. The name must be unique on the page; without `name` each render generates one
+(`sl-accordion-` and eight random characters), so an accordion that htmx swaps in never joins one that is already there.
+Set `name` yourself when you want stable markup, but not on an accordion that htmx replaces: see below.
+
+`type="multiple"` opens and closes every section on its own:
+
+<ComponentPreview id="accordion--multiple" />
+
+## Open from the server
+
+`open` on an item renders it open, where shadcn/ui takes `defaultValue`. The server decides, for example from a
+request parameter or a fragment of the URL it rendered a link to:
+
+```html
+<sl:accordion>
+  <sl:accordion-item th:each="question : ${faq}" th:open="${question.id == openQuestion}" th:id="${question.id}">
+    <sl:accordion-trigger>[[${question.title}]]</sl:accordion-trigger>
+    <sl:accordion-content th:utext="${question.answerHtml}">Answer</sl:accordion-content>
+  </sl:accordion-item>
+</sl:accordion>
+```
+
+In a single accordion only the first open item stays open. Write the trigger's text with `[[${...}]]`, not `th:text`:
+`th:text` replaces the trigger's content, heading and chevron included.
+
+## Headings
+
+shadcn/ui puts each trigger in an `h3`. A `<summary>` must be the first child of its `<details>`, so it cannot sit in
+a heading; the heading goes inside it instead. The trigger renders
+`<summary><span role="heading" aria-level="3">…</span><svg …/></summary>`: the summary keeps its own role, a
+disclosure with its expanded state, and screen reader users can still jump from question to question by heading.
+`level` sets the level (3 by default); pick the one that fits the page's outline. For content that is not a list of
+headed sections, use a [collapsible](../collapsible/).
+
+## Find in page and links
+
+The content of a closed section is still in the page. When the browser's find-in-page, or a link to an element inside
+it (`/faq#refunds`), finds a match there, the browser opens the section. This works in Chrome and Edge 97, Firefox 148
+and Safari 26.2 (where Safari and Firefox 139 to 147 do not scroll to the match yet); older browsers do not search
+closed sections.
+
+## Animation
+
+The section's height animates open and closed where the browser can animate a height to `auto`
+([`interpolate-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/interpolate-size), Chrome and Edge 129). The
+height is that of `::details-content`, the box around everything but the summary (Chrome 131, Safari 18.4, Firefox
+143). Other browsers open and close the section at once, and so does every browser when the user asks for reduced
+motion. The chevron turns in both cases (not under reduced motion).
+
+## In a card
+
+<ComponentPreview id="accordion--card" />
+
+## Disabled
+
+`disabled` on an item keeps it closed (or open, with `open`): its trigger fades, leaves the tab order and ignores the
+pointer. A closed disabled item renders no content, so find-in-page cannot open it either. shadcn/ui does the same by
+not rendering closed content at all.
+
+<ComponentPreview id="accordion--disabled" />
+
+## With htmx
+
+An accordion is plain markup, so a swap that replaces it shows it as the server rendered it, and htmx's history cache
+keeps the sections the user opened (the `open` attribute is in the markup it saves).
+
+Leave `name` out of a single accordion that a swap replaces. htmx inserts the new markup before it removes the old,
+and the browser closes an open `details` that joins a group which already has one open: with the same name on both,
+the section the server rendered open arrives closed. The generated name is new on every render, so it never meets
+the old one.
+
+## Left out
+
+- **Arrow keys between the triggers.** Radix moves the focus with the up and down arrows, Home and End; the ARIA
+  pattern makes these optional. A `details` accordion has no script, so Tab moves between the triggers.
+- **A single accordion that cannot be closed** (shadcn/ui's single without `collapsible`): the browser always lets the
+  open `details` close.
+- **`value`, `onValueChange` and controlled state**: the server renders the open items with `open`; the browser's
+  `toggle` event reports changes.
+- **`dir` and `orientation`**: the accordion follows the page's direction, and is vertical.
+- **`role="region"` on the content.** Radix gives every panel one; the ARIA pattern advises against it where more than
+  about six panels can be open at once, as landmarks pile up. The content is inside the `details`, which already
+  groups it with its trigger.
+
+## Attributes
+
+### sl:accordion
+
+<ComponentAttributes component="accordion" />
+
+### sl:accordion-item
+
+<ComponentAttributes component="accordion-item" />
+
+### sl:accordion-trigger
+
+<ComponentAttributes component="accordion-trigger" />
+
+### sl:accordion-content
+
+<ComponentAttributes component="accordion-content" />

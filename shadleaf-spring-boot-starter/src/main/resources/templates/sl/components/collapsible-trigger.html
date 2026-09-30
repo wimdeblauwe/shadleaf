@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>What the user clicks to open and close a <code>sl:collapsible</code>: its
+      <code>details</code> element's <code>summary</code>, so it must come first. Plain text by default;
+      <code>variant</code> or <code>size</code> draws it as a <code>sl:button</code>.</sl:description>
+    <sl:prop name="variant" values="default outline secondary ghost destructive link">Draw the trigger as a button of
+      this variant, as on <code>sl:button</code>.</sl:prop>
+    <sl:prop name="size" values="xs sm default lg icon icon-xs icon-sm icon-lg">Draw the trigger as a button of this
+      size, as on <code>sl:button</code>. The <code>icon</code> sizes need an <code>aria-label</code>.</sl:prop>
+    <sl:accessible-name required-when="size=icon icon-xs icon-sm icon-lg"/>
+  </sl:props>
+</head>
+<body>
+<!--/* A summary drawn with the button's classes and data attributes: shadcn/ui's asChild on a Button. class is in th:attr,
+  which runs before sl:attrs appends the caller's class. */-->
+<summary th:fragment="collapsible-trigger"
+         th:with="slButton=${props.variant != null or props.size != null}"
+         th:attr="class=${slButton ? 'btn collapsible-trigger' : 'collapsible-trigger'},
+                  data-variant=${props.variant != null and props.variant != 'default' ? props.variant : null},
+                  data-size=${props.size != null and props.size != 'default' ? props.size : null},
+                  aria-disabled=${slCollapsibleDisabled == true ? 'true' : null},
+                  tabindex=${slCollapsibleDisabled == true ? '-1' : null}"
+         sl:attrs><sl:slot/></summary>
+</body>
+</html>

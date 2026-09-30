@@ -1,0 +1,34 @@
+<!-- <sl:collapsible>
+  <sl:collapsible-trigger>Show details</sl:collapsible-trigger>
+  <sl:collapsible-content>Details</sl:collapsible-content>
+</sl:collapsible> -->
+<details class="collapsible">
+  <summary class="collapsible-trigger">Show details</summary>
+  <div class="collapsible-content">Details</div>
+</details>
+
+<!-- <sl:collapsible open class="panel">
+  <sl:collapsible-trigger variant="ghost" size="sm">Order #4189</sl:collapsible-trigger>
+  <sl:collapsible-content>Shipped</sl:collapsible-content>
+</sl:collapsible> -->
+<details class="collapsible panel" open>
+  <summary class="btn collapsible-trigger" data-variant="ghost" data-size="sm">Order #4189</summary>
+  <div class="collapsible-content">Shipped</div>
+</details>
+
+<!-- <sl:collapsible disabled>
+  <sl:collapsible-trigger variant="outline" size="icon" aria-label="More">+</sl:collapsible-trigger>
+  <sl:collapsible-content>More</sl:collapsible-content>
+</sl:collapsible> -->
+<details class="collapsible" data-disabled="true">
+  <summary class="btn collapsible-trigger" data-variant="outline" data-size="icon" aria-disabled="true" tabindex="-1" aria-label="More">+</summary>
+</details>
+
+<!-- <sl:collapsible-trigger variant="default">Toggle</sl:collapsible-trigger> -->
+<summary class="btn collapsible-trigger">Toggle</summary>
+
+<!-- <sl:collapsible-trigger size="sm">Toggle</sl:collapsible-trigger> -->
+<summary class="btn collapsible-trigger" data-size="sm">Toggle</summary>
+
+<!-- <sl:collapsible-content>Content</sl:collapsible-content> -->
+<div class="collapsible-content">Content</div>

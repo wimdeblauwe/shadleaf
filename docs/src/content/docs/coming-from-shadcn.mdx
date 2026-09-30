@@ -137,6 +137,48 @@ select.
 - The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
   item at once, as on any select, where Radix opens the list. See [Select](../components/select/#left-out).
 
+### Accordion and collapsible are details elements
+
+Each accordion item and each collapsible is a `<details>` element with the trigger as its `<summary>`, so they need
+no JavaScript. That changes a few things:
+
+```html
+<!-- shadcn: <Accordion type="single" collapsible defaultValue="item-1">
+             <AccordionItem value="item-1">... -->
+<sl:accordion>
+  <sl:accordion-item open>...</sl:accordion-item>
+</sl:accordion>
+```
+
+- `defaultValue` is `open` on the item; items have no `value`, and there is no `onValueChange`.
+- `type="single"` (the default here) is always `collapsible`: the browser lets the open `details` close. The items
+  share a `name`, which must be unique on the page; one is generated when you give none.
+- The trigger's text is a heading (`role="heading"`, `level`, 3 by default) inside the `summary`, where Radix puts the
+  trigger's button in an `h3`.
+- No arrow keys between accordion triggers (optional in the ARIA pattern): Tab moves between them.
+- The trigger must be the first child of its item or collapsible; a collapsible's trigger cannot sit after its
+  content. `<CollapsibleTrigger asChild><Button …>` is `<sl:collapsible-trigger variant="…" size="…">`.
+- A closed disabled item renders no content, as Radix renders no closed content at all.
+
+See [Accordion](../components/accordion/) and [Collapsible](../components/collapsible/).
+
+### Tabs: `tab` and `active` instead of `value` and `defaultValue`
+
+`value` is taken in Thymeleaf (`th:value`), so a trigger and its panel share a `tab`, and `active` on `<sl:tabs>`
+names the active one, which the server renders. The tabs need an `id`, and a trigger with an `href` is a link that
+works without JavaScript:
+
+```html
+<!-- shadcn: <Tabs defaultValue="account"><TabsList><TabsTrigger value="account">... -->
+<sl:tabs id="settings" active="account">
+  <sl:tabs-list><sl:tabs-trigger tab="account">Account</sl:tabs-trigger>...</sl:tabs-list>
+  <sl:tabs-content tab="account">...</sl:tabs-content>
+</sl:tabs>
+```
+
+`activationMode` is `activation-mode`; there is no `onValueChange` (an `sl-tabs-show` event fires on the panel that is
+shown). See [Tabs](../components/tabs/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
@@ -180,6 +222,8 @@ takes keyboard focus, when it is a link (`as="a"`).
 - The avatar is hidden from assistive technology unless it has a `label`, as it usually sits next to the person's
   name. With one, it is announced as a single image with that name.
 - The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
+- A tab panel shows the focus ring when Tab reaches it; shadcn's takes the focus without showing it. In Windows'
+  high-contrast mode the active tab is underlined, as its background and shadow are gone there.
 - Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
   `aria-label`.
 

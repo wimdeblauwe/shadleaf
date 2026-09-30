@@ -30,6 +30,22 @@ public final class Attrs extends AbstractMap<String, @Nullable String> {
   }
 
   /**
+   * Whether any of the given attributes is there, in either spelling: {@code has('href')} for {@code href} or
+   * {@code th:href}.
+   * <p>
+   * For a template that renders a different element depending on an attribute, e.g. a tab that is a link when it has
+   * an {@code href}: {@code th:if="${attrs.has('href')}"}.
+   */
+  public boolean has(String... names) {
+    for (String name : names) {
+      if (values.containsKey(name) || values.containsKey(EXPRESSION_PREFIX + name)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Returns these attributes without the given ones, each in both spellings: {@code without('href')} drops
    * {@code href} and {@code th:href}.
    * <p>

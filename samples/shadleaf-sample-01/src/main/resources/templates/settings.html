@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Settings', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>The tabs are links to <code>/settings?tab=…</code>: without JavaScript each loads the page with its tab active,
+    with it the tab switches in place and the address follows. The sessions panel is loaded with htmx the first time
+    it is shown (<code>hx-trigger="sl-tabs-show once"</code>); the arrow keys only move between the tabs
+    (<code>activation-mode="manual"</code>), Enter shows one.</p>
+  <sl:tabs id="settings" th:active="${tab}" activation-mode="manual">
+    <sl:tabs-list aria-label="Settings">
+      <sl:tabs-trigger tab="account" th:href="@{/settings(tab=account)}"><sl:icon name="user"/> Account</sl:tabs-trigger>
+      <sl:tabs-trigger tab="notifications" th:href="@{/settings(tab=notifications)}"><sl:icon name="bell"/>
+        Notifications</sl:tabs-trigger>
+      <sl:tabs-trigger tab="sessions" th:href="@{/settings(tab=sessions)}"><sl:icon name="monitor-smartphone"/>
+        Sessions</sl:tabs-trigger>
+      <sl:tabs-trigger tab="help" th:href="@{/settings(tab=help)}"><sl:icon name="circle-help"/> Help</sl:tabs-trigger>
+    </sl:tabs-list>
+
+    <sl:tabs-content tab="account">
+      <sl:card>
+        <sl:card-header>
+          <sl:card-title level="2">Account</sl:card-title>
+          <sl:card-description>Your team's administrator manages these.</sl:card-description>
+        </sl:card-header>
+        <sl:card-content>
+          <sl:field-group>
+            <sl:field for="account-name">
+              <sl:field-label>Name</sl:field-label>
+              <sl:input value="Ada Lovelace" readonly/>
+            </sl:field>
+            <sl:field for="account-email">
+              <sl:field-label>Email</sl:field-label>
+              <sl:input type="email" value="ada@example.com" readonly/>
+            </sl:field>
+          </sl:field-group>
+        </sl:card-content>
+      </sl:card>
+    </sl:tabs-content>
+
+    <sl:tabs-content tab="notifications">
+      <sl:card>
+        <sl:card-header>
+          <sl:card-title level="2">Notifications</sl:card-title>
+          <sl:card-description>What we email you about.</sl:card-description>
+        </sl:card-header>
+        <sl:card-content>
+          <sl:field-group>
+            <sl:field orientation="horizontal" for="notify-orders">
+              <sl:switch checked/>
+              <sl:field-label>Orders</sl:field-label>
+            </sl:field>
+            <sl:field orientation="horizontal" for="notify-mentions">
+              <sl:switch checked/>
+              <sl:field-label>Mentions</sl:field-label>
+            </sl:field>
+          </sl:field-group>
+          <!--/* A collapsible for the options few people need. */-->
+          <sl:collapsible class="advanced">
+            <sl:collapsible-trigger variant="ghost" size="sm"><sl:icon name="chevrons-up-down"/>
+              Advanced</sl:collapsible-trigger>
+            <sl:collapsible-content>
+              <sl:field-group>
+                <sl:field orientation="horizontal" for="notify-digest">
+                  <sl:switch/>
+                  <sl:field-label>One digest a day instead of every email</sl:field-label>
+                </sl:field>
+              </sl:field-group>
+            </sl:collapsible-content>
+          </sl:collapsible>
+        </sl:card-content>
+      </sl:card>
+    </sl:tabs-content>
+
+    <!--/* Rendered by the server when the page is asked for with this tab; otherwise htmx loads it on first view. */-->
+    <sl:tabs-content tab="sessions"
+                     th:hx-get="${tab != 'sessions'} ? @{/settings/sessions}"
+                     hx-trigger="sl-tabs-show once">
+      <th:block th:if="${tab == 'sessions'}"><div th:replace="~{settings :: sessions}"></div></th:block>
+      <p th:unless="${tab == 'sessions'}" class="muted">Loading sessions…</p>
+    </sl:tabs-content>
+
+    <sl:tabs-content tab="help">
+      <h2>Frequently asked questions</h2>
+      <sl:accordion class="faq">
+        <sl:accordion-item th:each="question : ${faq}" th:id="${question.id}"
+                           th:open="${question.id == openQuestion}">
+          <sl:accordion-trigger>[[${question.title}]]</sl:accordion-trigger>
+          <sl:accordion-content><p th:text="${question.answer}">Answer</p></sl:accordion-content>
+        </sl:accordion-item>
+      </sl:accordion>
+      <p>Link to a question with <code>?tab=help&amp;question=export</code>, or search the page: find-in-page opens
+        the question that holds a match.</p>
+    </sl:tabs-content>
+  </sl:tabs>
+</div>
+
+<div th:fragment="sessions" id="sessions">
+  <sl:card>
+    <sl:card-header>
+      <sl:card-title level="2">Sessions</sl:card-title>
+      <sl:card-description>Where you are signed in.</sl:card-description>
+    </sl:card-header>
+    <sl:card-content>
+      <ul class="sessions">
+        <li th:each="signIn : ${sessions}"><strong th:text="${signIn.device}">Firefox</strong>,
+          <span th:text="${signIn.place}">Antwerp</span>: <span th:text="${signIn.lastSeen}">now</span></li>
+      </ul>
+    </sl:card-content>
+  </sl:card>
+</div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!-- <sl:tabs id="settings" active="account">
+  <sl:tabs-list aria-label="Settings">
+    <sl:tabs-trigger tab="account">Account</sl:tabs-trigger>
+    <sl:tabs-trigger tab="password">Password</sl:tabs-trigger>
+    <sl:tabs-trigger tab="billing" disabled>Billing</sl:tabs-trigger>
+  </sl:tabs-list>
+  <sl:tabs-content tab="account">Account settings</sl:tabs-content>
+  <sl:tabs-content tab="password">Password settings</sl:tabs-content>
+  <sl:tabs-content tab="billing">Billing settings</sl:tabs-content>
+</sl:tabs> -->
+<div class="tabs" x-data="slTabs" id="settings">
+  <div class="tabs-list" role="tablist" aria-label="Settings">
+    <button type="button" class="tabs-trigger" role="tab" id="settings-account-trigger" aria-controls="settings-account-content" aria-selected="true">Account</button>
+    <button type="button" class="tabs-trigger" role="tab" id="settings-password-trigger" aria-controls="settings-password-content" aria-selected="false">Password</button>
+    <button type="button" class="tabs-trigger" role="tab" id="settings-billing-trigger" aria-controls="settings-billing-content" aria-selected="false" disabled>Billing</button>
+  </div>
+  <div class="tabs-content" role="tabpanel" tabindex="0" id="settings-account-content" aria-labelledby="settings-account-trigger">Account settings</div>
+  <div class="tabs-content" role="tabpanel" tabindex="0" id="settings-password-content" aria-labelledby="settings-password-trigger" hidden>Password settings</div>
+  <div class="tabs-content" role="tabpanel" tabindex="0" id="settings-billing-content" aria-labelledby="settings-billing-trigger" hidden>Billing settings</div>
+</div>
+
+<!-- <sl:tabs id="report" active="analytics" orientation="vertical" activation-mode="manual" class="wide">
+  <sl:tabs-list variant="line">
+    <sl:tabs-trigger tab="overview" href="?tab=overview">Overview</sl:tabs-trigger>
+    <sl:tabs-trigger tab="analytics" href="?tab=analytics">Analytics</sl:tabs-trigger>
+    <sl:tabs-trigger tab="reports" href="?tab=reports" disabled>Reports</sl:tabs-trigger>
+  </sl:tabs-list>
+  <sl:tabs-content tab="overview">Overview</sl:tabs-content>
+  <sl:tabs-content tab="analytics" hx-get="/analytics" hx-trigger="sl-tabs-show once">…</sl:tabs-content>
+  <sl:tabs-content tab="reports">Reports</sl:tabs-content>
+</sl:tabs> -->
+<div class="tabs wide" x-data="slTabs" id="report" data-orientation="vertical" data-activation="manual">
+  <div class="tabs-list" role="tablist" aria-orientation="vertical" data-variant="line">
+    <a class="tabs-trigger" role="tab" id="report-overview-trigger" aria-controls="report-overview-content" aria-selected="false" href="?tab=overview">Overview</a>
+    <a class="tabs-trigger" role="tab" id="report-analytics-trigger" aria-controls="report-analytics-content" aria-selected="true" href="?tab=analytics">Analytics</a>
+    <a class="tabs-trigger" role="tab" id="report-reports-trigger" aria-controls="report-reports-content" aria-selected="false" aria-disabled="true">Reports</a>
+  </div>
+  <div class="tabs-content" role="tabpanel" tabindex="0" id="report-overview-content" aria-labelledby="report-overview-trigger" hidden>Overview</div>
+  <div class="tabs-content" role="tabpanel" tabindex="0" id="report-analytics-content" aria-labelledby="report-analytics-trigger" hx-get="/analytics" hx-trigger="sl-tabs-show once">…</div>
+  <div class="tabs-content" role="tabpanel" tabindex="0" id="report-reports-content" aria-labelledby="report-reports-trigger" hidden>Reports</div>
+</div>
+
+<!-- <sl:tabs-list>x</sl:tabs-list> -->
+<div class="tabs-list" role="tablist">x</div>
+
+<!-- <sl:tabs-trigger tab="x">X</sl:tabs-trigger> -->
+<button type="button" class="tabs-trigger" role="tab" aria-selected="false">X</button>
+
+<!-- <sl:tabs-content tab="x">X</sl:tabs-content> -->
+<div class="tabs-content" role="tabpanel" tabindex="0" hidden>X</div>

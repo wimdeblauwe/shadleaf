@@ -1,0 +1,26 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The panel of one tab of a <code>sl:tabs</code>, labelled by its trigger. Only the active tab's
+      panel shows; the others are <code>hidden</code>. It takes the focus with Tab after the tabs (as in Radix), so
+      a panel without controls can be read and scrolled.</sl:description>
+    <sl:prop name="tab" required>Which tab's panel this is: the <code>tab</code> of its
+      <code>sl:tabs-trigger</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* hidden, not hidden="until-found": without Alpine a find-in-page match would show a second panel under a tab that
+  stays inactive. slTabs switches the inactive panels to until-found and activates the tab of a match. */-->
+<div th:fragment="tabs-content"
+     class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     th:with="slTabActive=${slTabsActive != null and slTabsActive == props.tab},
+              slTabId=${slTabsId != null ? slTabsId + '-' + props.tab : null}"
+     th:attr="id=${slTabId != null ? slTabId + '-content' : null},
+              aria-labelledby=${slTabId != null ? slTabId + '-trigger' : null},
+              hidden=${slTabActive ? null : 'hidden'}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

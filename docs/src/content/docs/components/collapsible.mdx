@@ -1,0 +1,73 @@
+---
+title: Collapsible
+description: Content that a button shows and hides, on the browser's details element.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="collapsible--default" />
+
+## Built from parts
+
+A collapsible is `<sl:collapsible>` with an `<sl:collapsible-trigger>` and an `<sl:collapsible-content>`:
+
+```html
+<sl:collapsible>
+  <sl:collapsible-trigger>@peduarte starred 3 repositories <sl:icon name="chevrons-up-down"/></sl:collapsible-trigger>
+  <sl:collapsible-content>
+    <p>@radix-ui/primitives</p>
+    <p>@radix-ui/colors</p>
+  </sl:collapsible-content>
+</sl:collapsible>
+```
+
+It is a [`<details>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details) element with the
+trigger as its `<summary>`, so it needs no JavaScript: the browser opens and closes it, from the keyboard too, and
+tells a screen reader whether it is expanded. Two consequences for porting a shadcn/ui example:
+
+- **The trigger comes first**, and the content after it, both inside `<sl:collapsible>`. shadcn/ui's examples can put
+  the trigger anywhere in the collapsible, even after the content; a `summary` must be the first child.
+- **Everything else goes in the trigger or the content.** Text next to the trigger (shadcn's "@peduarte starred 3
+  repositories" heading) can be part of the trigger.
+
+`open` renders it open. As with the [accordion](../accordion/), find-in-page and a link to an element inside open a
+closed collapsible on a match (Chrome and Edge 97, Firefox 148, Safari 26.2). It does not animate, as shadcn/ui's does
+not.
+
+## Drawn as a button
+
+The trigger is plain text by default. `variant` or `size` draws it as a [button](../button/), with the button's
+variants and sizes, where shadcn/ui writes `<CollapsibleTrigger asChild><Button …>`. An icon-only trigger
+(`size="icon"`) needs an `aria-label`.
+
+<ComponentPreview id="collapsible--button" />
+
+## Disabled
+
+`disabled` keeps it closed (or open, with `open`): the trigger fades, leaves the tab order and ignores the pointer, and
+a closed disabled collapsible renders no content, so find-in-page cannot open it.
+
+<ComponentPreview id="collapsible--disabled" />
+
+## Left out
+
+- **`asChild` on the trigger**: `variant` and `size` draw it as a button; the element stays a `summary`.
+- **`open`/`onOpenChange` state**: `open` renders it open; the browser's `toggle` event reports changes.
+- **A trigger outside the collapsible**, or after the content: a `details` element has its `summary` first.
+- **Styling the trigger's icon by state** (shadcn's `group-data-[state=open]:rotate-90`): the bundle has no utility
+  classes. In your own CSS, `.collapsible[open] > .collapsible-trigger svg { rotate: 90deg; }` does it.
+
+## Attributes
+
+### sl:collapsible
+
+<ComponentAttributes component="collapsible" />
+
+### sl:collapsible-trigger
+
+<ComponentAttributes component="collapsible-trigger" />
+
+### sl:collapsible-content
+
+<ComponentAttributes component="collapsible-content" />

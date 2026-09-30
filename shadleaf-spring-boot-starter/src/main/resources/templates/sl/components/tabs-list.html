@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The row (or column) of <code>sl:tabs-trigger</code>s of a <code>sl:tabs</code>: a
+      <code>tablist</code>. An <code>aria-label</code> names it when the page has more than one.</sl:description>
+    <sl:prop name="variant" default="default" values="default line"><code>default</code>: the tabs sit on a muted
+      track and the active one is raised. <code>line</code>: no track, a line under the active tab.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="tabs-list"
+     class="tabs-list"
+     role="tablist"
+     th:attr="aria-orientation=${slTabsOrientation == 'vertical' ? 'vertical' : null},
+              data-variant=${props.unlessDefault('variant')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>
