@@ -58,6 +58,9 @@ The error has no `role="alert"`. After a submit the whole page loads again, and 
 error at once. The control is `aria-invalid` and described by its error instead, so the message is read when the user
 reaches the control. If you swap a single field in with htmx, add `role="alert"` to its error yourself.
 
+Errors that belong to the whole form rather than one field, such as `reject(...)` in the controller, go in a
+[`<sl:form-errors/>`](../form-errors/) above the fields.
+
 ## Ids
 
 The control's id is the field's name, the id `th:field` gives a text input: `email`, or `address.street` for a nested

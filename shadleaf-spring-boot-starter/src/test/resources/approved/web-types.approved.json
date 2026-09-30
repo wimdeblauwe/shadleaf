@@ -490,6 +490,73 @@
         "description" : "A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:form-errors",
+        "description" : "The errors of the form object the enclosing `th:object` selects, shown as a destructive alert: by default the errors that belong to the whole form rather than one field (global errors, from `bindingResult.reject(...)` or a class-level constraint); with `show=\"all\"` the field errors too. One message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. Not announced and not focused by itself; it has an id (`signup-errors` for `th:object=\"${signup}\"`) and `tabindex=\"-1\"`, so `autofocus`, a link or a script can move focus to it.",
+        "attributes" : [ {
+          "name" : "show",
+          "description" : "Which errors to list: the global errors only, or all of them, the global ones first and then every field's (each field keeps its own error too). Field messages are listed as they are, without the field's label, so write them to make sense on their own.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "global"
+          }, {
+            "name" : "all"
+          } ],
+          "default" : "global"
+        }, {
+          "name" : "title",
+          "description" : "The title above the messages. Defaults to the message `sl.form-errors.title` (\"There is a problem\"); use `th:title` for a message of your own.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "level",
+          "description" : "Heading level of the title. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:show",
+          "description" : "`show` from a Thymeleaf expression, e.g. `th:show=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:title",
+          "description" : "`title` from a Thymeleaf expression, e.g. `th:title=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:icon",
         "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
         "attributes" : [ {

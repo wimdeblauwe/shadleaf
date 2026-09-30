@@ -191,6 +191,11 @@
     @apply text-destructive-legible;
   }
 
+  /* Form errors: the focus ring for when autofocus, a link or a script moves focus to it (tabindex="-1"). */
+  .form-errors {
+    @apply focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50;
+  }
+
   /* Separator */
   .separator {
     @apply bg-border;

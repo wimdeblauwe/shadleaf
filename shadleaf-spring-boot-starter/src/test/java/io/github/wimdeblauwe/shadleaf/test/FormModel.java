@@ -9,7 +9,7 @@ import org.springframework.validation.MapBindingResult;
 
 /**
  * A form object for a snippet with {@code th:field}, without writing a backing class: a map of field values and a
- * {@link MapBindingResult} holding the given errors. {@link #wrap(String)} puts the snippet inside
+ * {@link MapBindingResult} holding the given field errors and global errors. {@link #wrap(String)} puts the snippet inside
  * {@code th:object="${form}"}.
  * <p>
  * For approvals and docs previews. Tests of the binding itself use a real bean, as an application does.
@@ -20,10 +20,12 @@ public final class FormModel {
 
   private final Map<String, Object> values;
   private final Map<String, List<String>> errors;
+  private final List<String> globalErrors;
 
-  private FormModel(Map<String, Object> values, Map<String, List<String>> errors) {
+  private FormModel(Map<String, Object> values, Map<String, List<String>> errors, List<String> globalErrors) {
     this.values = new LinkedHashMap<>(values);
     this.errors = new LinkedHashMap<>(errors);
+    this.globalErrors = List.copyOf(globalErrors);
   }
 
   /**
@@ -31,7 +33,16 @@ public final class FormModel {
    * @param errors the error messages, by field name
    */
   public static FormModel of(Map<String, ?> values, Map<String, List<String>> errors) {
-    return new FormModel(new LinkedHashMap<>(values), errors);
+    return of(values, errors, List.of());
+  }
+
+  /**
+   * @param values       the field values, by field name
+   * @param errors       the error messages, by field name
+   * @param globalErrors the messages of errors that belong to the whole form, as {@code reject(...)} adds them
+   */
+  public static FormModel of(Map<String, ?> values, Map<String, List<String>> errors, List<String> globalErrors) {
+    return new FormModel(new LinkedHashMap<>(values), errors, globalErrors);
   }
 
   /** The variables to render the wrapped snippet with. */
@@ -39,6 +50,7 @@ public final class FormModel {
     MapBindingResult bindingResult = new MapBindingResult(values, NAME);
     errors.forEach((field, messages) -> messages.forEach(message ->
         bindingResult.rejectValue(field, "Invalid", message)));
+    globalErrors.forEach(message -> bindingResult.reject("Invalid", message));
     Map<String, Object> variables = new HashMap<>();
     variables.put(NAME, values);
     variables.put(BindingResult.MODEL_KEY_PREFIX + NAME, bindingResult);

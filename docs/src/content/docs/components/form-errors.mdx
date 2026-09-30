@@ -1,0 +1,163 @@
+---
+title: Form errors
+description: The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="form-errors--default" />
+
+## Errors that belong to the form
+
+Some errors are about no single field: two passwords that do not match, a date range that ends before it starts, or a
+service that refused the request. Spring keeps them in the `BindingResult` as global errors. `<sl:form-errors/>`
+shows them as a destructive [alert](../alert/), and renders nothing while there are none:
+
+```html
+<form th:object="${signup}" th:action="@{/signup}" method="post" novalidate>
+  <sl:field-group>
+    <sl:form-errors/>
+    <sl:field th:field="*{password}">...</sl:field>
+    <sl:field th:field="*{repeatPassword}">...</sl:field>
+  </sl:field-group>
+</form>
+```
+
+With one global error, that renders:
+
+```html
+<div class="form-errors alert" data-variant="destructive" tabindex="-1" id="signup-errors">
+  <svg class="sl-icon" aria-hidden="true" ...>...</svg>
+  <div class="alert-title">There is a problem</div>
+  <div class="alert-description">The passwords do not match.</div>
+</div>
+```
+
+As the first thing in a `<sl:field-group>`, it gets the same space as a field. One message is shown as text, several
+as a list, each message once. By default field errors are not repeated: they stay with
+their [fields](../field/). To list them too, see [All errors](#all-errors).
+
+<ComponentPreview id="form-errors--several" />
+
+It must be inside the element with `th:object`: that is the form object whose errors it reads. Outside one, rendering
+fails with a message that says so.
+
+## Where global errors come from
+
+Anything that calls `reject(...)` on the `BindingResult` instead of `rejectValue(field, ...)`:
+
+- **The controller**, for a rule that needs a service or a second look at the form:
+
+  ```java
+  @PostMapping("/signup")
+  String signup(@Valid @ModelAttribute("signup") SignupForm signup, BindingResult bindingResult) {
+    if (accounts.isBlocked(signup.getEmail())) {
+      bindingResult.reject("signup.blocked", "We cannot create an account for this address.");
+    }
+    if (bindingResult.hasErrors()) {
+      return "signup";
+    }
+    ...
+  }
+  ```
+
+  The code (`signup.blocked`) is looked up in your `messages.properties` first; the second argument is the default.
+
+- **A class-level constraint**: a Bean Validation annotation on the form class, such as a `@PasswordsMatch` of your
+  own. Its violation has no property path, so Spring adds it as a global error.
+
+A failure the controller catches and does not want in the binding can go in as content of its own (below).
+
+## Title
+
+The title defaults to the message `sl.form-errors.title`, "There is a problem". Define that key in your own
+`messages.properties` to reword or translate it for every form, or set `title` (or `th:title="#{...}"`) on one.
+`level` makes the title a heading that screen reader users can jump to.
+
+<ComponentPreview id="form-errors--title" />
+
+## Content of your own
+
+Content of your own replaces the messages and always shows, so wrap it in a `th:if` when it should only show
+sometimes.
+
+<ComponentPreview id="form-errors--content" />
+
+## Announcement and focus
+
+`<sl:form-errors>` is not announced and does not take focus by itself.
+
+- **No `role="alert"`.** After a submit the whole page loads again. A live region that is there when the page loads
+  is read out by some screen readers and ignored by others, and when it is read, it talks over the page itself. The
+  [field errors](../field/#errors) leave out `role="alert"` for the same reason.
+- **No `autofocus` by default.** Moving focus on load is what [GOV.UK's error
+  summary](https://design-system.service.gov.uk/components/error-summary/) does, and it works there because their
+  summary lists every error, with a link to each field. By default this one only holds the form-level errors, so a
+  default focus would skip the reader past the page's heading, even when the form's own errors are one tab away.
+
+What to do instead, for a form that reloads the page:
+
+- Put the outcome in the page title, such as `Error: Sign up`. It is the first thing a screen reader reads after a
+  page load.
+- When the form is the page's only task, add `autofocus`. The summary has `tabindex="-1"`, so it can take focus:
+  it is read out at once, and <kbd>Tab</kbd> continues into the form. It only renders when there are errors, so the
+  first, empty form keeps its focus where it was.
+
+  ```html
+  <sl:form-errors autofocus/>
+  ```
+
+When htmx swaps the form in without a page load, add `role="alert"` so the new message is read out, as for a field
+error. htmx also honours `autofocus` in swapped content.
+
+## Id
+
+The summary's id is the form object's name followed by `-errors`: `signup-errors` for `th:object="${signup}"`. Set
+`id` to use another one, for instance when two forms on a page bind objects of the same name. The id is there for
+`autofocus`, a link (`<a href="#signup-errors">`) or a script. The form's `aria-describedby` does not point at it:
+screen readers read a form's description, if at all, when the user enters the form, which is not where anyone is
+after a submit.
+
+## All errors
+
+`show="all"` lists the field errors too, after the global ones, in the order they were rejected. Each field still
+shows its own error next to its control. A message is listed once per field, so two fields that both say "must not be
+blank" both appear.
+
+<ComponentPreview id="form-errors--all" />
+
+The messages are listed as the binding has them, without the field's label, so write them to make sense on their own:
+"Enter your name" rather than "must not be blank". Spring looks up a message code per field before the constraint's
+default, so your `messages.properties` can do that without touching the form class:
+
+```properties
+NotBlank.contactForm.name=Enter your name.
+Email.contactForm.email=Enter an email address like you@example.com.
+```
+
+A title with the number of errors takes `#fields` from your own `messages.properties`; the component's attributes are
+evaluated inside your `th:object`:
+
+```html
+<sl:form-errors show="all" th:title="#{errors.summary.title(${#fields.errors().size()})}"/>
+```
+
+```properties
+errors.summary.title=There were {0} errors with your submission
+```
+
+With every error in it, the summary is where a keyboard or screen reader user can take stock after a submit, which
+makes it the case where `autofocus` fits best.
+
+The messages are not links to their controls (GOV.UK's summary has those), at least for now:
+
+- The links need the controls' ids, which the fields decide as they render, below the summary. Radio buttons and
+  checkbox groups have numbered ids (`replyBy1`), so the field's name is not always an id to link to.
+- Each field error is already next to its control, and read out with it through `aria-describedby`.
+- Where focus goes after an htmx submit (the first invalid field) is still to be decided, and a summary that takes
+  focus is part of that question.
+
+## Attributes
+
+<ComponentAttributes component="form-errors" />

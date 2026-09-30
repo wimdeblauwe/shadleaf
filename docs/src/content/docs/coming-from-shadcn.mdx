@@ -118,6 +118,8 @@ takes keyboard focus, when it is a link (`as="a"`).
 
 - An input, textarea or native select with `th:field` marks itself `aria-invalid` when its field has errors, so the
   invalid style needs no markup of yours.
+- `<sl:form-errors/>` shows the binding's global errors (`reject(...)`, a class-level constraint), or with
+  `show="all"` every error, as a destructive alert above the fields. shadcn has no such component; you would write an `Alert` with the messages yourself.
 - `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
   `Spinner` for this.
 

@@ -9,12 +9,14 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.component.PropDefinition;
 import io.github.wimdeblauwe.shadleaf.component.PropType;
 import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
+import io.github.wimdeblauwe.shadleaf.test.FormModel;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,6 +44,7 @@ import tools.jackson.databind.json.JsonMapper;
 class SkinCompletenessTest {
 
   private static final ComponentRenderTester RENDERER = ComponentRenderTester.create();
+  private static final FormModel FORM = FormModel.of(Map.of(), Map.of());
   private static final ComponentRegistry REGISTRY = new ComponentRegistry(List.of(
       new ClasspathComponentDefinitionSource(SkinCompletenessTest.class.getClassLoader())));
 
@@ -113,8 +116,9 @@ class SkinCompletenessTest {
 
   private static Element renderRoot(String component, String prop, String value) {
     // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>.
-    return RENDERER.render("<sl:%s %s=\"%s\" aria-label=\"x\" name=\"x\">x</sl:%s>"
-        .formatted(component, prop, value, component)).root();
+    // Inside a form object, for the components that read one (sl:form-errors).
+    return RENDERER.render(FormModel.wrap("<sl:%s %s=\"%s\" aria-label=\"x\" name=\"x\">x</sl:%s>"
+        .formatted(component, prop, value, component)), FORM.variables()).root();
   }
 
   private static Set<String> selectorLists(String css) {

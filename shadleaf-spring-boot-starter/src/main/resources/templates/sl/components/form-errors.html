@@ -1,0 +1,39 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The errors of the form object the enclosing <code>th:object</code> selects, shown as a
+      destructive alert: by default the errors that belong to the whole form rather than one field (global errors,
+      from <code>bindingResult.reject(...)</code> or a class-level constraint); with <code>show="all"</code> the
+      field errors too. One message as text, several as a list. It renders nothing while there are none. Content of
+      its own replaces the messages, and always shows. Not announced and not focused by itself; it has an id
+      (<code>signup-errors</code> for <code>th:object="${signup}"</code>) and <code>tabindex="-1"</code>, so
+      <code>autofocus</code>, a link or a script can move focus to it.</sl:description>
+    <sl:prop name="show" default="global" values="global all">Which errors to list: the global errors only, or all
+      of them, the global ones first and then every field's (each field keeps its own error too). Field messages are
+      listed as they are, without the field's label, so write them to make sense on their own.</sl:prop>
+    <sl:prop name="title">The title above the messages. Defaults to the message <code>sl.form-errors.title</code>
+      ("There is a problem"); use <code>th:title</code> for a message of your own.</sl:prop>
+    <sl:prop name="level" values="1 2 3 4 5 6">Heading level of the title. With it the title is a heading
+      (<code>role="heading"</code> and <code>aria-level</code>) that screen reader users can jump to; without it,
+      plain text.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* No role="alert", as sl:field-error: after a full page load it would be announced along with everything else,
+  or not at all, depending on the screen reader. The docs page explains when to add autofocus. */-->
+<th:block th:fragment="form-errors" th:with="slForm=${#slFields.form(props.show == 'all')}">
+<div th:if="${slots.hasDefault() or slForm.invalid}"
+     class="form-errors alert"
+     data-variant="destructive"
+     tabindex="-1"
+     th:attr="id=${slForm.id}"
+     sl:attrs><sl:icon name="circle-alert"/><div class="alert-title"
+    th:attr="role=${props.level != null ? 'heading' : null}, aria-level=${props.level}"
+    th:text="${props.title ?: #messages.msg('sl.form-errors.title')}">There is a problem</div><div
+    class="alert-description"><sl:slot><th:block th:if="${slForm.errors.size() == 1}"
+    th:text="${slForm.errors[0]}"/><ul th:unless="${slForm.errors.size() == 1}"><li
+    th:each="slError : ${slForm.errors}" th:text="${slError}">Message</li></ul></sl:slot></div></div>
+</th:block>
+</body>
+</html>

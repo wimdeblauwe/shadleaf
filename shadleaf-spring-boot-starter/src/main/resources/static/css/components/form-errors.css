@@ -1,0 +1,9 @@
+/*
+  Form errors: a destructive alert (alert.css) that can take focus, as it has tabindex="-1". Structure only; the focus
+  ring is identity and lives in the skins.
+*/
+@layer components {
+  .form-errors {
+    @apply outline-none;
+  }
+}

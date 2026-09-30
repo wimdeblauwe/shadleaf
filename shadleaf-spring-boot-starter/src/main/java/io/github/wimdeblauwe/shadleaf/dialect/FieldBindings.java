@@ -1,15 +1,21 @@
 package io.github.wimdeblauwe.shadleaf.dialect;
 
+import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.jspecify.annotations.Nullable;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.spring6.context.IThymeleafBindStatus;
+import org.thymeleaf.spring6.naming.SpringContextVariableNames;
+import org.thymeleaf.spring6.util.DetailedError;
 import org.thymeleaf.spring6.util.FieldUtils;
+import org.thymeleaf.standard.expression.VariableExpression;
 import org.thymeleaf.util.StringUtils;
 
 /**
@@ -26,6 +32,8 @@ import org.thymeleaf.util.StringUtils;
  * {@code terms}, not Spring's numbered {@code terms1}, and the label can point at it. One option of a group (a field
  * without {@code th:field} inside a {@code sl:field-set} with one) takes the next number from the same sequence Spring
  * numbers checkboxes and radio buttons with: {@code toppings1}, {@code toppings2}.
+ * <p>
+ * {@code sl:form-errors} reads the errors of the form object through {@link #form(boolean)}.
  */
 public final class FieldBindings {
 
@@ -110,6 +118,34 @@ public final class FieldBindings {
       }
     }
     return new Attrs(values);
+  }
+
+  /**
+   * The errors of the form object the enclosing {@code th:object} selects, for {@code sl:form-errors}: the global
+   * errors, and with {@code includeFieldErrors} the field errors after them, in the binding's order. A message shows
+   * once per field (or once among the global errors), so two fields with the same message both keep it.
+   *
+   * @throws ShadleafComponentException outside a {@code th:object}, where there is no form object to read
+   */
+  public FormErrors form(boolean includeFieldErrors) {
+    if (!(context.getVariable(SpringContextVariableNames.SPRING_BOUND_OBJECT_EXPRESSION)
+        instanceof VariableExpression boundObject)) {
+      throw new ShadleafComponentException(
+          "sl:form-errors must be inside an element with th:object: it shows that form object's errors");
+    }
+    String id = FieldUtils.idFromName(boundObject.getExpression()) + "-errors";
+    List<DetailedError> errors = includeFieldErrors
+        ? FieldUtils.detailedErrors(context)
+        : FieldUtils.globalDetailedErrors(context);
+    Set<List<String>> seen = new HashSet<>();
+    List<String> messages = new ArrayList<>();
+    for (DetailedError error : errors) {
+      String field = error.isGlobal() ? "" : error.getFieldName();
+      if (seen.add(List.of(field, String.valueOf(error.getMessage())))) {
+        messages.add(error.getMessage());
+      }
+    }
+    return new FormErrors(id, messages);
   }
 
   /** Whether a control's {@code th:field} (as {@link #control} left it) has errors: its {@code aria-invalid}. */

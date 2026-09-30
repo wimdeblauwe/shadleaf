@@ -1,0 +1,73 @@
+# Scenarios for the form errors' docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# A scenario's form is the form object th:field binds to; globalErrors are the errors reject(...) adds to the whole
+# form. Every summary on the showcase gets an id of its own, as the default (form-errors) would repeat.
+component: form-errors
+scenarios:
+  - id: default
+    title: Form errors
+    description: The binding has a global error, from a class-level constraint or reject(...) in the controller. It shows above the fields (here first in the field group, which spaces it like a field); the field errors stay with their fields.
+    source: |-
+      <sl:field-group>
+        <sl:form-errors/>
+        <sl:field th:field="*{signupPassword}">
+          <sl:field-label>Password</sl:field-label>
+          <sl:input type="password" autocomplete="new-password"/>
+        </sl:field>
+        <sl:field th:field="*{signupRepeat}">
+          <sl:field-label>Repeat the password</sl:field-label>
+          <sl:input type="password" autocomplete="new-password"/>
+        </sl:field>
+      </sl:field-group>
+    form:
+      values: {signupPassword: '', signupRepeat: ''}
+      globalErrors: The passwords do not match.
+
+  - id: several
+    title: Several errors
+    source: |-
+      <sl:form-errors id="order-errors"/>
+    form:
+      globalErrors: [The delivery date is before the order date., Orders over 50 items need a purchase order number.]
+
+  - id: all
+    title: All errors
+    description: show="all" lists the field errors too, after the global ones. Each field still shows its own error.
+    source: |-
+      <sl:field-group>
+        <sl:form-errors id="account-errors" show="all"/>
+        <sl:field th:field="*{accountName}">
+          <sl:field-label>Name</sl:field-label>
+          <sl:input autocomplete="name"/>
+          <sl:field-error/>
+        </sl:field>
+        <sl:field th:field="*{accountEmail}">
+          <sl:field-label>Email</sl:field-label>
+          <sl:input type="email" autocomplete="email"/>
+          <sl:field-error/>
+        </sl:field>
+      </sl:field-group>
+    form:
+      values: {accountName: '', accountEmail: 'wim@'}
+      errors:
+        accountName: Enter your name.
+        accountEmail: Enter an email address like you@example.com.
+      globalErrors: This invitation has expired.
+
+  - id: title
+    title: A title of its own
+    description: title replaces the default title (the message sl.form-errors.title); level makes it a heading.
+    source: |-
+      <sl:form-errors id="transfer-errors" title="The transfer was not made" level="2"/>
+    form:
+      globalErrors: Your balance is too low for this amount.
+
+  - id: content
+    title: Content of its own
+    description: Content of its own replaces the messages and always shows, for an error the controller does not put in the binding.
+    source: |-
+      <sl:form-errors id="payment-errors">
+        <p>The payment service did not answer. Your card was not charged.</p>
+        <p>Try again in a minute.</p>
+      </sl:form-errors>
+    form:
+      values: {}

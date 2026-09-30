@@ -190,7 +190,8 @@ class PreviewGeneratorTest {
   }
 
   /**
-   * A scenario's {@code form}: {@code values} and {@code errors} (a message or a list of them), by field name. The
+   * A scenario's {@code form}: {@code values} and {@code errors} (a message or a list of them), by field name, and
+   * {@code globalErrors} (a message or a list of them) for the whole form. The
    * snippet then renders inside {@code th:object="${form}"}, so {@code th:field} works as in an application.
    */
   @SuppressWarnings("unchecked")
@@ -201,7 +202,9 @@ class PreviewGeneratorTest {
     Map<String, List<String>> errors = new LinkedHashMap<>();
     ((Map<String, Object>) form.getOrDefault("errors", Map.of())).forEach((field, messages) ->
         errors.put(field, messages instanceof List<?> list ? (List<String>) list : List.of((String) messages)));
-    return FormModel.of((Map<String, Object>) form.getOrDefault("values", Map.of()), errors);
+    Object globalErrors = form.getOrDefault("globalErrors", List.of());
+    return FormModel.of((Map<String, Object>) form.getOrDefault("values", Map.of()), errors,
+        globalErrors instanceof List<?> list ? (List<String>) list : List.of((String) globalErrors));
   }
 
   private void write(String name, Object value) throws IOException {

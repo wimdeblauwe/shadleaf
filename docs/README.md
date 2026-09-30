@@ -19,8 +19,9 @@ so the docs cannot drift from what the library renders. `PreviewGeneratorTest` i
 clone) the site still builds, and each page says which command to run.
 
 To add examples for a component, add or edit its YAML file, then embed a scenario with
-`<ComponentPreview id="button--variants" />`. A scenario with a `form` (`values` and `errors`, by field name) renders
-inside `th:object="${form}"`, so `th:field` binds and shows errors as in an application (see `field.yaml`).
+`<ComponentPreview id="button--variants" />`. A scenario with a `form` (`values` and `errors`, by field name, and
+`globalErrors` for the whole form) renders inside `th:object="${form}"`, so `th:field` binds and shows errors as in an
+application (see `field.yaml` and `form-errors.yaml`).
 
 ## Commands
 
