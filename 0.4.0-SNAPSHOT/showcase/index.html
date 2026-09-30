@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-_Ct9vQwp.css"><script>(function(){const skins = {"vega":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-_Ct9vQwp.css","lyra":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra--ip4I5gc.css"};
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-CJmdOLup.css"><script>(function(){const skins = {"vega":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-CJmdOLup.css","lyra":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-ByPp3FWW.css"};
 const firstSkin = "vega";
 
     const params = new URLSearchParams(location.search);
@@ -9,7 +9,7 @@ const firstSkin = "vega";
     document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
     document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
     document.documentElement.dataset.skin = skin;
-  })();</script><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-CNylwxlg.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}
+  })();</script><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-BoTRAOOr.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}
 </style><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><main class="astro-6felt6qx"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">alert-dialog</h2><h3 class="astro-6felt6qx">Alert dialog</h3><div class="stage astro-6felt6qx" data-scenario="alert-dialog--default"><button class="btn"
           type="button"
           data-variant="outline" commandfor="delete-account" command="show-modal">
@@ -1791,6 +1791,267 @@ const firstSkin = "vega";
        class="radio-group-item" name="shipping" value="pickup" checked>Pick up in store</label>
   <label class="label"><input type="radio"
        class="radio-group-item" name="shipping" value="drone" disabled>Drone (not available)</label>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">select</h2><h3 class="astro-6felt6qx">Select</h3><div class="stage astro-6felt6qx" data-scenario="select--default"><div class="field">
+  <label class="label field-label"
+       for="fruit">Fruit</label>
+  <div class="select-wrapper"
+     x-data="slSelect">
+  <select class="select" id="fruit" name="fruit"><button type="button"><selectedcontent></selectedcontent></button><option class="select-item" value="" hidden data-placeholder="true" selected="selected">Select a fruit</option>
+    <optgroup class="select-group"
+          label="Fruits">
+      <option class="select-item" value="apple">Apple<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="banana">Banana<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="blueberry">Blueberry<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="grapes">Grapes<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="pineapple">Pineapple<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    </optgroup>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div>
+</div></div><h3 class="astro-6felt6qx">Groups and separators</h3><div class="stage astro-6felt6qx" data-scenario="select--groups"><div class="field">
+  <label class="label field-label"
+       for="food">Food</label>
+  <div class="select-wrapper"
+     x-data="slSelect">
+  <select class="select" id="food" name="food"><button type="button"><selectedcontent></selectedcontent></button>
+    <optgroup class="select-group"
+          label="Fruits">
+      <option class="select-item" value="apple">Apple<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="banana">Banana<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    </optgroup>
+    <hr class="select-separator">
+    <optgroup class="select-group"
+          label="Vegetables">
+      <option class="select-item" value="carrot" selected="selected">Carrot<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="broccoli">Broccoli<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    </optgroup>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div>
+</div></div><h3 class="astro-6felt6qx">Icons</h3><div class="stage astro-6felt6qx" data-scenario="select--icons"><div class="field">
+  <label class="label field-label"
+       for="chartType">Chart</label>
+  <div class="select-wrapper"
+     x-data="slSelect">
+  <select class="select" id="chartType" name="chartType"><button type="button"><selectedcontent></selectedcontent></button>
+    <option class="select-item" value="bar"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M7 16h8"/><path d="M7 11h12"/><path d="M7 6h3"/></svg>Bar<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    <option class="select-item" value="line" selected="selected"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>Line<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    <option class="select-item" value="pie"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"/><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/></svg>Pie<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div>
+</div></div><h3 class="astro-6felt6qx">Long lists</h3><div class="stage astro-6felt6qx" data-scenario="select--scrollable"><div class="field">
+  <label class="label field-label"
+       for="timezone">Timezone</label>
+  <div class="select-wrapper"
+     x-data="slSelect">
+  <select class="select" id="timezone" name="timezone"><button type="button"><selectedcontent></selectedcontent></button><option class="select-item" value="" hidden data-placeholder="true" selected="selected">Select a timezone</option>
+    <optgroup class="select-group"
+          label="Europe &amp;amp; Africa">
+      <option class="select-item" value="gmt">Greenwich Mean Time (GMT)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="cet">Central European Time (CET)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="eet">Eastern European Time (EET)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="west">Western European Summer Time (WEST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="cat">Central Africa Time (CAT)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="eat">East Africa Time (EAT)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    </optgroup>
+    <optgroup class="select-group"
+          label="Asia">
+      <option class="select-item" value="msk">Moscow Time (MSK)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="ist">India Standard Time (IST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="cst_china">China Standard Time (CST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="jst">Japan Standard Time (JST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="kst">Korea Standard Time (KST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    </optgroup>
+    <optgroup class="select-group"
+          label="Americas">
+      <option class="select-item" value="est">Eastern Standard Time (EST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="cst">Central Standard Time (CST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="mst">Mountain Standard Time (MST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+      <option class="select-item" value="pst">Pacific Standard Time (PST)<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    </optgroup>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div>
+</div></div><h3 class="astro-6felt6qx">Sizes</h3><div class="stage astro-6felt6qx" data-scenario="select--sizes"><div class="select-wrapper"
+     x-data="slSelect"
+     data-size="sm">
+  <select class="select" name="density" aria-label="Density (small)"><button type="button"><selectedcontent></selectedcontent></button>
+  <option class="select-item" value="compact">Compact<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+  <option class="select-item" value="comfortable">Comfortable<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+</select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div>
+<div class="select-wrapper"
+     x-data="slSelect">
+  <select class="select" name="density" aria-label="Density"><button type="button"><selectedcontent></selectedcontent></button>
+  <option class="select-item" value="compact">Compact<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+  <option class="select-item" value="comfortable">Comfortable<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+</select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div></div><h3 class="astro-6felt6qx">With errors</h3><div class="stage astro-6felt6qx" data-scenario="select--invalid"><div class="field"
+     data-invalid="true">
+  <label class="label field-label"
+       for="shipping">Shipping</label>
+  <div class="select-wrapper"
+     x-data="slSelect">
+  <select class="select"
+          aria-invalid="true" id="shipping" aria-describedby="shipping-error" name="shipping"><button type="button"><selectedcontent></selectedcontent></button><option class="select-item" value="" hidden data-placeholder="true" selected="selected">Select a shipping method</option>
+    <option class="select-item" value="standard">Standard<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    <option class="select-item" value="express">Express<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div>
+  <div class="field-error"
+     id="shipping-error">must not be empty</div>
+</div></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="select--disabled"><div class="field">
+  <label class="label field-label"
+       for="region">Region</label>
+  <div class="select-wrapper"
+     x-data="slSelect">
+  <select class="select" disabled id="region" name="region"><button type="button"><selectedcontent></selectedcontent></button>
+    <option class="select-item" value="eu" selected="selected">Europe<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div>
+</div>
+<div class="field">
+  <label class="label field-label"
+       for="seat">Seat</label>
+  <div class="select-wrapper"
+     x-data="slSelect">
+  <select class="select" id="seat" name="seat"><button type="button"><selectedcontent></selectedcontent></button>
+    <option class="select-item" value="aisle">Aisle<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    <option class="select-item" value="middle" disabled>Middle<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+    <option class="select-item" value="window" selected="selected">Window<svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+  <template class="select-indicator-template"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon select-item-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg></template>
+</div>
 </div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">separator</h2><h3 class="astro-6felt6qx">Separator</h3><div class="stage astro-6felt6qx" data-scenario="separator--default"><div class="separator"
      role="none"></div></div><h3 class="astro-6felt6qx">Vertical</h3><div class="stage astro-6felt6qx" data-scenario="separator--vertical"><a class="btn"
      data-variant="link" href="/blog">

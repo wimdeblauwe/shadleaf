@@ -1662,6 +1662,71 @@
         "description" : "One radio button in `sl:radio-group`: the browser's own, styled. Give it a `value` and the group's `name`, or `th:field` with a `value` or `th:value`; Spring then numbers the ids (`plan1`, `plan2`), so put the item inside its label. In a `sl:field-set` with `th:field`, the items take its field. Every attribute that is not a prop passes through; `class` is appended to `radio-group-item`. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:select",
+        "description" : "A select drawn like shadcn/ui's: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Height of the select.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "placeholder",
+          "description" : "Text shown while no option is chosen: a first option with an empty value, hidden from the list. A required select with it selected is invalid.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:placeholder",
+          "description" : "`placeholder` from a Thymeleaf expression, e.g. `th:placeholder=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:select-group",
+        "description" : "A group of `sl:select-item`s under a heading: an `optgroup`.",
+        "attributes" : [ {
+          "name" : "label",
+          "description" : "The group's heading, shadcn/ui's `SelectLabel`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:select-item",
+        "description" : "An option in a `sl:select`: an `option` with a check mark that shows while it is chosen. `value` (or `th:value`) and `disabled` pass through; `th:field` on the select marks the bound one. Its content may start with an icon; always give it text, which is all an older browser keeps of it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:select-separator",
+        "description" : "A line between items or groups of a `sl:select`: an `hr`, which every current browser draws in a select's list.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:separator",
         "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",
         "attributes" : [ {

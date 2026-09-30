@@ -1,0 +1,1 @@
+import{t as e}from"./register-BlS0_rDF.js";e();
