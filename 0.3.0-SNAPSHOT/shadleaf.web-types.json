@@ -396,6 +396,100 @@
           }
         } ]
       }, {
+        "name" : "sl:checkbox",
+        "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field",
+        "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
+        "attributes" : [ {
+          "name" : "orientation",
+          "description" : "Stack the label above the control, or put them side by side (a checkbox or switch, then its label). `responsive` stacks them in a narrow `sl:field-group` and puts them side by side in a wide one.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "vertical"
+          }, {
+            "name" : "horizontal"
+          }, {
+            "name" : "responsive"
+          } ],
+          "default" : "vertical"
+        }, {
+          "name" : "for",
+          "description" : "The id of the control: for a field without `th:field`, or to use another id than the field's name. The control gets it when it has no id of its own, and the description and error ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:for",
+          "description" : "`for` from a Thymeleaf expression, e.g. `th:for=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:field-content",
+        "description" : "Stacks a `sl:field-label` with its `sl:field-description` or `sl:field-error`, beside the control of a horizontal `sl:field`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-description",
+        "description" : "Help text for a `sl:field` or `sl:field-set`. It gets the id the control's (or fieldset's) `aria-describedby` points at.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-error",
+        "description" : "The error messages of a `sl:field` or `sl:field-set`, read from its `th:field`'s binding: one message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. It gets the id the control's (or fieldset's) `aria-describedby` points at while it shows messages.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-group",
+        "description" : "Stacks `sl:field`s and `sl:field-set`s with even spacing. Fields with `orientation=\"responsive\"` inside it go side by side when it is wide enough.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-label",
+        "description" : "The label of a `sl:field`. Its `for` points at the field's control; a `for` of your own wins.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-legend",
+        "description" : "The caption of a `sl:field-set`, as its `legend`. Put it first in the fieldset.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "A section heading, or the size of a field label (for a set of options that answers one question).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "legend"
+          }, {
+            "name" : "label"
+          } ],
+          "default" : "legend"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:field-set",
+        "description" : "A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:icon",
         "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
         "attributes" : [ {
@@ -458,12 +552,117 @@
           }
         } ]
       }, {
+        "name" : "sl:input",
+        "description" : "A text input. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "Type of the input. Checkboxes and radio buttons have components of their own.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "text"
+          }, {
+            "name" : "email"
+          }, {
+            "name" : "password"
+          }, {
+            "name" : "number"
+          }, {
+            "name" : "search"
+          }, {
+            "name" : "tel"
+          }, {
+            "name" : "url"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "datetime-local"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "week"
+          }, {
+            "name" : "time"
+          }, {
+            "name" : "file"
+          } ],
+          "default" : "text"
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:kbd",
         "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
         "attributes" : [ ]
       }, {
         "name" : "sl:kbd-group",
         "description" : "A key combination: `sl:kbd` elements, with any text between them (such as `+`). HTML nests the keys of a combination in an outer `kbd`, as this does.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:label",
+        "description" : "A label for a form control. Point it at the control with `for` (the control's `id`; `th:field` gives the control an `id` equal to the field name), or put the control inside it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:native-select",
+        "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Height of the select. It replaces HTML's `size` attribute, which turns a select into a list box.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:radio-group",
+        "description" : "A group of `sl:radio-group-item`s, announced as a radio group. Name it with `aria-labelledby` (pointing at the question) or `aria-label`. The items share their `name`, or their `th:field`, which is what makes them one choice.",
+        "attributes" : [ {
+          "name" : "orientation",
+          "description" : "Stack the items, or put them on a row that wraps.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "vertical"
+          }, {
+            "name" : "horizontal"
+          } ],
+          "default" : "vertical"
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:radio-group-item",
+        "description" : "One radio button in `sl:radio-group`: the browser's own, styled. Give it a `value` and the group's `name`, or `th:field` with a `value` or `th:value`; Spring then numbers the ids (`plan1`, `plan2`), so put the item inside its label. In a `sl:field-set` with `th:field`, the items take its field. Every attribute that is not a prop passes through; `class` is appended to `radio-group-item`. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
         "attributes" : [ ]
       }, {
         "name" : "sl:separator",
@@ -536,6 +735,35 @@
             "required" : false
           }
         } ]
+      }, {
+        "name" : "sl:switch",
+        "description" : "A switch: a checkbox with `role=\"switch\"`, announced as on or off. It submits like a checkbox, so `th:field` on a boolean works as it does there (numbered id, hidden marker input; in a `sl:field`, the field's name as id). Every attribute that is not a prop passes through; `class` is appended to `switch`. With `th:field`, the switch is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Size of the switch.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:textarea",
+        "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ ]
       } ]
     }
   }
