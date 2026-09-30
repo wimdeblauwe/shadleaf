@@ -17,6 +17,114 @@
           }
         } ]
       }, {
+        "name" : "sl:accordion",
+        "description" : "A stack of sections, each with a heading that shows or hides its content. Built on the browser's `details` element, so it needs no JavaScript: the keyboard, the open state, and find-in-page opening a section that holds a match all come from the browser. Holds `sl:accordion-item`s, each with a `sl:accordion-trigger` and a `sl:accordion-content`.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "`single`: opening a section closes the one that was open (the items share a `details` `name`). `multiple`: sections open and close on their own.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "single"
+          }, {
+            "name" : "multiple"
+          } ],
+          "default" : "single"
+        }, {
+          "name" : "name",
+          "description" : "The group name the items of a `single` accordion share. Must be unique on the page. Without it, each render generates one (`sl-accordion-` and eight random characters).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:name",
+          "description" : "`name` from a Thymeleaf expression, e.g. `th:name=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:accordion-content",
+        "description" : "The content of a `sl:accordion-item`, shown while it is open. Find-in-page searches it while it is closed, and opens the section on a match.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:accordion-item",
+        "description" : "One section of a `sl:accordion`: a `details` element holding a `sl:accordion-trigger` (first) and a `sl:accordion-content`.",
+        "attributes" : [ {
+          "name" : "open",
+          "description" : "Render the section open. In a `single` accordion only the first open section stays open.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "The section cannot be opened or closed: its trigger is out of the tab order and ignores the pointer, and a closed disabled section renders no content, so find-in-page cannot open it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:accordion-trigger",
+        "description" : "The heading of a `sl:accordion-item`, which opens and closes it: the `details` element's `summary`, so it must be the item's first child. Its text is a heading inside the `summary`, and a chevron follows it.",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level of the text (`role=\"heading\"` and `aria-level`), as shadcn/ui's trigger sits in an `h3`. Pick the level that fits the page's outline.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ],
+          "default" : "3"
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:alert",
         "description" : "A callout for a message the user should notice: an optional `sl:icon`, then `sl:alert-title` and `sl:alert-description`. It is not announced by itself; add `role=\"alert\"` when it appears after the page loaded, such as in an htmx response.",
         "attributes" : [ {
@@ -580,6 +688,106 @@
         "name" : "sl:checkbox",
         "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
         "attributes" : [ ]
+      }, {
+        "name" : "sl:collapsible",
+        "description" : "Content that a button shows and hides. Built on the browser's `details` element, so it needs no JavaScript. Holds a `sl:collapsible-trigger` (first) and a `sl:collapsible-content`.",
+        "attributes" : [ {
+          "name" : "open",
+          "description" : "Render it open.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "It cannot be opened or closed: its trigger is out of the tab order and ignores the pointer, and closed it renders no content, so find-in-page cannot open it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:collapsible-content",
+        "description" : "The content of a `sl:collapsible`, shown while it is open. Find-in-page searches it while it is closed, and opens it on a match.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:collapsible-trigger",
+        "description" : "What the user clicks to open and close a `sl:collapsible`: its `details` element's `summary`, so it must come first. Plain text by default; `variant` or `size` draws it as a `sl:button`. Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Draw the trigger as a button of this variant, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "link"
+          } ]
+        }, {
+          "name" : "size",
+          "description" : "Draw the trigger as a button of this size, as on `sl:button`. The `icon` sizes need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ]
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:dialog",
         "description" : "A modal dialog on the native `dialog` element: the page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it from `sl:dialog-header` (holding `sl:dialog-title` and `sl:dialog-description`), your content and `sl:dialog-footer`. A button opens it with `commandfor` set to the dialog's `id` and `command=\"show-modal\"`, and closes it with `command=\"close\"`; an htmx response closes it with the `sl-dialog-close` event.",
@@ -1954,6 +2162,155 @@
         }, {
           "name" : "th:size",
           "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tabs",
+        "description" : "Panels of content shown one at a time, chosen from a row of tabs. Holds a `sl:tabs-list` of `sl:tabs-trigger`s and a `sl:tabs-content` per tab. The server renders the active tab's panel and hides the others, so the page is right before any script runs; Alpine adds switching in the browser and the keyboard (the ARIA tabs pattern). Give the triggers an `href` and the tabs work without JavaScript too.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The id of the tabs. The ids of the triggers and panels derive from it (`settings-account-trigger`, `settings-account-content`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "active",
+          "description" : "The `tab` of the trigger and panel that are active when the page renders, e.g. from a request parameter: `th:active=\"${tab}\"`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "orientation",
+          "description" : "`vertical` puts the tabs in a column next to the panels, and the up and down arrow keys move between them.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "activation-mode",
+          "description" : "`automatic`: a tab shows its panel as soon as the arrow keys reach it. `manual`: the arrow keys only move the focus, and Enter or Space shows the panel; for panels that are slow to show, such as ones loaded with htmx.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "automatic"
+          }, {
+            "name" : "manual"
+          } ],
+          "default" : "automatic"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:active",
+          "description" : "`active` from a Thymeleaf expression, e.g. `th:active=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:activation-mode",
+          "description" : "`activation-mode` from a Thymeleaf expression, e.g. `th:activation-mode=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tabs-content",
+        "description" : "The panel of one tab of a `sl:tabs`, labelled by its trigger. Only the active tab's panel shows; the others are `hidden`. It takes the focus with Tab after the tabs (as in Radix), so a panel without controls can be read and scrolled.",
+        "attributes" : [ {
+          "name" : "tab",
+          "description" : "Which tab's panel this is: the `tab` of its `sl:tabs-trigger`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tab",
+          "description" : "`tab` from a Thymeleaf expression, e.g. `th:tab=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tabs-list",
+        "description" : "The row (or column) of `sl:tabs-trigger`s of a `sl:tabs`: a `tablist`. An `aria-label` names it when the page has more than one.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "`default`: the tabs sit on a muted track and the active one is raised. `line`: no track, a line under the active tab.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "line"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tabs-trigger",
+        "description" : "A tab in a `sl:tabs-list`, which shows the `sl:tabs-content` with the same `tab`. A button, or with an `href` a link to the page with this tab active: without JavaScript the link loads it, with Alpine the tab switches in place and the address follows.",
+        "attributes" : [ {
+          "name" : "tab",
+          "description" : "Which tab this is: the `tab` of its `sl:tabs-content`, and the value `sl:tabs`' `active` names. Part of the ids, so letters, digits and dashes.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "The tab cannot be chosen; the arrow keys skip it. A disabled link loses its `href`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tab",
+          "description" : "`tab` from a Thymeleaf expression, e.g. `th:tab=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

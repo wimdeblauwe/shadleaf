@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-CJmdOLup.css"><script>(function(){const skins = {"vega":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-CJmdOLup.css","lyra":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-ByPp3FWW.css"};
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-CRtQy-A6.css"><script>(function(){const skins = {"vega":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-vega-CRtQy-A6.css","lyra":"/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf-lyra-DGbrWgtP.css"};
 const firstSkin = "vega";
 
     const params = new URLSearchParams(location.search);
@@ -9,8 +9,105 @@ const firstSkin = "vega";
     document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
     document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
     document.documentElement.dataset.skin = skin;
-  })();</script><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-BoTRAOOr.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}
-</style><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><main class="astro-6felt6qx"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">alert-dialog</h2><h3 class="astro-6felt6qx">Alert dialog</h3><div class="stage astro-6felt6qx" data-scenario="alert-dialog--default"><button class="btn"
+  })();</script><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-JvSty7oP.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}.stage:where(.astro-6felt6qx)>.accordion{max-inline-size:32rem}.stage:where(.astro-6felt6qx)>:is(.tabs,.collapsible){inline-size:24rem;max-inline-size:100%}
+</style><script type="module" src="/shadleaf/0.4.0-SNAPSHOT/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><main class="astro-6felt6qx"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">accordion</h2><h3 class="astro-6felt6qx">Accordion</h3><div class="stage astro-6felt6qx" data-scenario="accordion--default"><div class="accordion">
+  <details class="accordion-item"
+         name="accordion-demo" open="open">
+    <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">Is it accessible?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="accordion-content">Yes. Each section is a details element, which the browser opens and closes, from the
+      keyboard too.</div>
+  </details>
+  <details class="accordion-item"
+         name="accordion-demo">
+    <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">Is it styled?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="accordion-content">Yes. It comes with default styles that match the other components.</div>
+  </details>
+  <details class="accordion-item"
+         name="accordion-demo">
+    <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">Is it animated?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="accordion-content">Yes, where the browser can animate a height to auto, and only when the user has not
+      asked for reduced motion.</div>
+  </details>
+</div></div><h3 class="astro-6felt6qx">Multiple</h3><div class="stage astro-6felt6qx" data-scenario="accordion--multiple"><div class="accordion">
+  <details class="accordion-item"
+         open="open">
+    <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">How do I reset my password?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="accordion-content">Choose "Forgot password" on the sign-in page and follow the link we email
+      you.</div>
+  </details>
+  <details class="accordion-item"
+         open="open">
+    <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">Can I change my username?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="accordion-content">Yes, once every 30 days, from your profile settings.</div>
+  </details>
+</div></div><h3 class="astro-6felt6qx">In a card</h3><div class="stage astro-6felt6qx" data-scenario="accordion--card"><div class="card">
+  <div class="card-header">
+    <div class="card-title"
+     role="heading" aria-level="2">Subscription &amp; billing</div>
+    <div class="card-description">Common questions about your account, plans and payments</div>
+  </div>
+  <div class="card-content">
+    <div class="accordion">
+      <details class="accordion-item"
+         name="accordion-billing" open="open">
+        <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">What subscription plans do you offer?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="accordion-content">
+          <p>Three: Starter, Professional and Enterprise, each with more storage and support.</p>
+          <p><a href="/plans">Annual billing is available</a> with a 20% discount.</p>
+        </div>
+      </details>
+      <details class="accordion-item"
+         name="accordion-billing">
+        <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">How does billing work?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="accordion-content">At the start of each billing cycle, by card or bank transfer.</div>
+      </details>
+      <details class="accordion-item"
+         name="accordion-billing">
+        <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">How do I cancel?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+        <div class="accordion-content">From your account settings, at any time.</div>
+      </details>
+    </div>
+  </div>
+</div></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="accordion--disabled"><div class="accordion">
+  <details class="accordion-item"
+         name="accordion-disabled">
+    <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">Can I access my account history?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="accordion-content">Yes, in the Account history section of your dashboard.</div>
+  </details>
+  <details class="accordion-item"
+         name="accordion-disabled" data-disabled="true">
+    <summary class="accordion-trigger"
+         aria-disabled="true" tabindex="-1"><span class="accordion-trigger-text" role="heading" aria-level="3">Premium feature information</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+    
+  </details>
+  <details class="accordion-item"
+         name="accordion-disabled">
+    <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">How do I update my email address?</span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon accordion-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="accordion-content">In your account settings; we send a link to the new address.</div>
+  </details>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">alert-dialog</h2><h3 class="astro-6felt6qx">Alert dialog</h3><div class="stage astro-6felt6qx" data-scenario="alert-dialog--default"><button class="btn"
           type="button"
           data-variant="outline" commandfor="delete-account" command="show-modal">
   
@@ -854,7 +951,39 @@ const firstSkin = "vega";
   <svg xmlns="http://www.w3.org/2000/svg"
      class="sl-icon checkbox-indicator"
      viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
-</span>Deleted</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">dialog</h2><h3 class="astro-6felt6qx">Dialog</h3><div class="stage astro-6felt6qx" data-scenario="dialog--default"><button class="btn"
+</span>Deleted</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">collapsible</h2><h3 class="astro-6felt6qx">Collapsible</h3><div class="stage astro-6felt6qx" data-scenario="collapsible--default"><details class="collapsible">
+  <summary class="collapsible-trigger">@peduarte starred 3 repositories <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></summary>
+  <div class="collapsible-content">
+    <p>@radix-ui/primitives</p>
+    <p>@radix-ui/colors</p>
+    <p>@stitches/react</p>
+  </div>
+</details></div><h3 class="astro-6felt6qx">Drawn as a button</h3><div class="stage astro-6felt6qx" data-scenario="collapsible--button"><details class="collapsible"
+         open="open">
+  <summary class="btn collapsible-trigger" data-variant="outline" data-size="sm"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 5H3"/><path d="M12 19H3"/><path d="M14 3v4"/><path d="M16 17v4"/><path d="M21 12h-9"/><path d="M21 19h-5"/><path d="M21 5h-7"/><path d="M8 10v4"/><path d="M8 12H3"/></svg> Filters</summary>
+  <div class="collapsible-content">
+    <div class="field"
+     data-orientation="horizontal">
+      <span class="checkbox-wrapper">
+  <input type="checkbox"
+         class="checkbox" checked id="collapsible-in-stock">
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon checkbox-indicator"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+</span>
+      <label class="label field-label"
+       for="collapsible-in-stock">In stock only</label>
+    </div>
+  </div>
+</details></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="collapsible--disabled"><details class="collapsible"
+         data-disabled="true">
+  <summary class="btn collapsible-trigger" data-variant="ghost" data-size="sm" aria-disabled="true" tabindex="-1">Order history</summary>
+  
+</details></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">dialog</h2><h3 class="astro-6felt6qx">Dialog</h3><div class="stage astro-6felt6qx" data-scenario="dialog--default"><button class="btn"
           type="button"
           data-variant="outline" commandfor="edit-profile" command="show-modal">
   
@@ -2412,7 +2541,268 @@ const firstSkin = "vega";
        class="switch" name="sso" checked disabled>Single sign-on (managed by your organisation)</label>
 <label class="label"><input type="checkbox"
        role="switch"
-       class="switch" name="betaFeatures" disabled>Beta features (not in your plan)</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">textarea</h2><h3 class="astro-6felt6qx">Textarea</h3><div class="stage astro-6felt6qx" data-scenario="textarea--default"><label class="label" for="message">Message</label>
+       class="switch" name="betaFeatures" disabled>Beta features (not in your plan)</label></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">tabs</h2><h3 class="astro-6felt6qx">Tabs</h3><div class="stage astro-6felt6qx" data-scenario="tabs--default"><div class="tabs"
+     x-data="slTabs"
+     id="tabs-demo">
+  <div class="tabs-list"
+     role="tablist">
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-demo-account-trigger" aria-controls="tabs-demo-account-content" aria-selected="true">Account</button>
+  
+
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-demo-password-trigger" aria-controls="tabs-demo-password-content" aria-selected="false">Password</button>
+  
+
+  </div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-demo-account-content" aria-labelledby="tabs-demo-account-trigger">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"
+     role="heading" aria-level="2">Account</div>
+        <div class="card-description">Make changes to your account here. Click save when you're done.</div>
+      </div>
+      <div class="card-content">
+        <div class="field-group">
+          <div class="field">
+            <label class="label field-label"
+       for="tabs-demo-name">Name</label>
+            <input class="input"
+       type="text" value="Pedro Duarte" id="tabs-demo-name">
+          </div>
+          <div class="field">
+            <label class="label field-label"
+       for="tabs-demo-username">Username</label>
+            <input class="input"
+       type="text" value="@peduarte" id="tabs-demo-username">
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+  <button class="btn"
+          type="button">
+  
+  
+  
+  Save changes
+  
+</button>
+  
+  
+</div>
+    </div>
+  </div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-demo-password-content" aria-labelledby="tabs-demo-password-trigger" hidden="hidden">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"
+     role="heading" aria-level="2">Password</div>
+        <div class="card-description">Change your password here. After saving, you'll be logged out.</div>
+      </div>
+      <div class="card-content">
+        <div class="field-group">
+          <div class="field">
+            <label class="label field-label"
+       for="tabs-demo-current">Current password</label>
+            <input class="input"
+       type="password" id="tabs-demo-current">
+          </div>
+          <div class="field">
+            <label class="label field-label"
+       for="tabs-demo-new">New password</label>
+            <input class="input"
+       type="password" id="tabs-demo-new">
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+  <button class="btn"
+          type="button">
+  
+  
+  
+  Save password
+  
+</button>
+  
+  
+</div>
+    </div>
+  </div>
+</div></div><h3 class="astro-6felt6qx">Line</h3><div class="stage astro-6felt6qx" data-scenario="tabs--line"><div class="tabs"
+     x-data="slTabs"
+     id="tabs-line">
+  <div class="tabs-list"
+     role="tablist"
+     data-variant="line" aria-label="Report">
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-line-overview-trigger" aria-controls="tabs-line-overview-content" aria-selected="true">Overview</button>
+  
+
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-line-analytics-trigger" aria-controls="tabs-line-analytics-content" aria-selected="false">Analytics</button>
+  
+
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-line-reports-trigger" aria-controls="tabs-line-reports-content" aria-selected="false">Reports</button>
+  
+
+  </div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-line-overview-content" aria-labelledby="tabs-line-overview-trigger">Sales are up 12% on last month.</div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-line-analytics-content" aria-labelledby="tabs-line-analytics-trigger" hidden="hidden">1,204 visitors this week.</div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-line-reports-content" aria-labelledby="tabs-line-reports-trigger" hidden="hidden">Three reports are ready to download.</div>
+</div></div><h3 class="astro-6felt6qx">Vertical</h3><div class="stage astro-6felt6qx" data-scenario="tabs--vertical"><div class="tabs"
+     x-data="slTabs"
+     id="tabs-vertical" data-orientation="vertical">
+  <div class="tabs-list"
+     role="tablist"
+     aria-orientation="vertical" aria-label="Preferences">
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-vertical-general-trigger" aria-controls="tabs-vertical-general-content" aria-selected="true">General</button>
+  
+
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-vertical-appearance-trigger" aria-controls="tabs-vertical-appearance-content" aria-selected="false">Appearance</button>
+  
+
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-vertical-advanced-trigger" aria-controls="tabs-vertical-advanced-content" aria-selected="false">Advanced</button>
+  
+
+  </div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-vertical-general-content" aria-labelledby="tabs-vertical-general-trigger">Language, time zone and start page.</div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-vertical-appearance-content" aria-labelledby="tabs-vertical-appearance-trigger" hidden="hidden">Theme and density.</div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-vertical-advanced-content" aria-labelledby="tabs-vertical-advanced-trigger" hidden="hidden">Developer options.</div>
+</div></div><h3 class="astro-6felt6qx">Icons and a disabled tab</h3><div class="stage astro-6felt6qx" data-scenario="tabs--icons"><div class="tabs"
+     x-data="slTabs"
+     id="tabs-icons">
+  <div class="tabs-list"
+     role="tablist" aria-label="View">
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-icons-preview-trigger" aria-controls="tabs-icons-preview-content" aria-selected="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M2 8h20"/><path d="M6 4v4"/></svg> Preview</button>
+  
+
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-icons-code-trigger" aria-controls="tabs-icons-code-content" aria-selected="false"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg> Code</button>
+  
+
+    
+  <button type="button"
+          class="tabs-trigger"
+          role="tab"
+          id="tabs-icons-history-trigger" aria-controls="tabs-icons-history-content" aria-selected="false" disabled="disabled"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg> History</button>
+  
+
+  </div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-icons-preview-content" aria-labelledby="tabs-icons-preview-trigger">The rendered page.</div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-icons-code-content" aria-labelledby="tabs-icons-code-trigger" hidden="hidden">The template.</div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-icons-history-content" aria-labelledby="tabs-icons-history-trigger" hidden="hidden">Earlier versions.</div>
+</div></div><h3 class="astro-6felt6qx">Links</h3><div class="stage astro-6felt6qx" data-scenario="tabs--links"><div class="tabs"
+     x-data="slTabs"
+     id="tabs-links" data-activation="manual">
+  <div class="tabs-list"
+     role="tablist" aria-label="Period">
+    
+  
+  <a class="tabs-trigger"
+     role="tab"
+     id="tabs-links-day-trigger" aria-controls="tabs-links-day-content" aria-selected="false" href="?period=day">Day</a>
+
+    
+  
+  <a class="tabs-trigger"
+     role="tab"
+     id="tabs-links-week-trigger" aria-controls="tabs-links-week-content" aria-selected="true" href="?period=week">Week</a>
+
+    
+  
+  <a class="tabs-trigger"
+     role="tab"
+     id="tabs-links-month-trigger" aria-controls="tabs-links-month-content" aria-selected="false" href="?period=month">Month</a>
+
+  </div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-links-day-content" aria-labelledby="tabs-links-day-trigger" hidden="hidden">14 orders today.</div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-links-week-content" aria-labelledby="tabs-links-week-trigger">86 orders this week.</div>
+  <div class="tabs-content"
+     role="tabpanel"
+     tabindex="0"
+     id="tabs-links-month-content" aria-labelledby="tabs-links-month-trigger" hidden="hidden">312 orders this month.</div>
+</div></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">textarea</h2><h3 class="astro-6felt6qx">Textarea</h3><div class="stage astro-6felt6qx" data-scenario="textarea--default"><label class="label" for="message">Message</label>
 <textarea class="textarea" id="message" name="message" placeholder="Type your message here."></textarea></div><h3 class="astro-6felt6qx">Initial text</h3><div class="stage astro-6felt6qx" data-scenario="textarea--initial-text"><label class="label" for="textarea-notes">Notes</label>
 <textarea class="textarea" id="textarea-notes" name="notes">Leave the parcel at the back door.</textarea></div><h3 class="astro-6felt6qx">Invalid</h3><div class="stage astro-6felt6qx" data-scenario="textarea--invalid"><label class="label" for="textarea-invalid">Message</label>
 <textarea class="textarea" id="textarea-invalid" name="message" aria-invalid="true"></textarea></div><h3 class="astro-6felt6qx">Disabled</h3><div class="stage astro-6felt6qx" data-scenario="textarea--disabled"><label class="label" for="textarea-disabled">Message</label>
