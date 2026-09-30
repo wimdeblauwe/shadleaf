@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A group of <code>sl:radio-group-item</code>s, announced as a radio group. Name it with
+      <code>aria-labelledby</code> (pointing at the question) or <code>aria-label</code>. The items share their
+      <code>name</code>, or their <code>th:field</code>, which is what makes them one choice.</sl:description>
+    <sl:prop name="orientation" default="vertical" values="vertical horizontal">Stack the items, or put them on a
+      row that wraps.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="radio-group"
+     class="radio-group"
+     role="radiogroup"
+     th:attr="data-orientation=${props.unlessDefault('orientation')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

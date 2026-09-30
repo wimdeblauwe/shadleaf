@@ -1,0 +1,53 @@
+# Scenarios for the radio group's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# renderSource replaces th:field and th:each, which need a model: the items are written out.
+component: radio-group
+parts: [radio-group-item]
+scenarios:
+  - id: default
+    title: Radio group
+    source: |-
+      <p id="plan-question">Plan</p>
+      <sl:radio-group aria-labelledby="plan-question">
+        <sl:label th:each="plan : ${plans}">
+          <sl:radio-group-item th:field="*{plan}" th:value="${plan}"/>
+          <th:block th:text="#{|plan.${plan}|}">Free</th:block>
+        </sl:label>
+      </sl:radio-group>
+    renderSource: |-
+      <p id="plan-question">Plan</p>
+      <sl:radio-group aria-labelledby="plan-question">
+        <sl:label><sl:radio-group-item name="plan" value="free" checked/>Free</sl:label>
+        <sl:label><sl:radio-group-item name="plan" value="pro"/>Pro</sl:label>
+        <sl:label><sl:radio-group-item name="plan" value="enterprise"/>Enterprise</sl:label>
+      </sl:radio-group>
+
+  - id: horizontal
+    title: Horizontal
+    source: |-
+      <sl:radio-group orientation="horizontal" aria-label="Density">
+        <sl:label><sl:radio-group-item name="density" value="compact"/>Compact</sl:label>
+        <sl:label><sl:radio-group-item name="density" value="comfortable" checked/>Comfortable</sl:label>
+        <sl:label><sl:radio-group-item name="density" value="spacious"/>Spacious</sl:label>
+      </sl:radio-group>
+
+  - id: invalid
+    title: Invalid
+    description: With th:field, a field that has errors marks every item aria-invalid by itself.
+    source: |-
+      <sl:radio-group aria-label="Delivery">
+        <sl:label><sl:radio-group-item th:field="*{delivery}" value="standard"/>Standard</sl:label>
+        <sl:label><sl:radio-group-item th:field="*{delivery}" value="express"/>Express</sl:label>
+      </sl:radio-group>
+    renderSource: |-
+      <sl:radio-group aria-label="Delivery">
+        <sl:label><sl:radio-group-item name="delivery" value="standard" aria-invalid="true"/>Standard</sl:label>
+        <sl:label><sl:radio-group-item name="delivery" value="express" aria-invalid="true"/>Express</sl:label>
+      </sl:radio-group>
+
+  - id: disabled
+    title: Disabled item
+    source: |-
+      <sl:radio-group aria-label="Shipping">
+        <sl:label><sl:radio-group-item name="shipping" value="pickup" checked/>Pick up in store</sl:label>
+        <sl:label><sl:radio-group-item name="shipping" value="drone" disabled/>Drone (not available)</sl:label>
+      </sl:radio-group>

@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * The basic form controls, {@code <sl:label>}, {@code <sl:input>}, {@code <sl:textarea>} and
- * {@code <sl:native-select>}, each rendered into {@code src/test/resources/approved/<name>.approved.html}. Their
+ * The form controls, {@code <sl:label>}, {@code <sl:input>}, {@code <sl:textarea>}, {@code <sl:native-select>},
+ * {@code <sl:checkbox>}, {@code <sl:radio-group>} and {@code <sl:switch>}, each rendered into {@code src/test/resources/approved/<name>.approved.html}. Their
  * behaviour with {@code th:field} is in {@link FormControlsBindingTest}.
  */
 class FormControlsApprovalTest {
@@ -74,5 +74,44 @@ class FormControlsApprovalTest {
             </sl:native-select>"""));
 
     HtmlApproval.verifyRenders("native-select", tester, snippets);
+  }
+
+  @Test
+  void checkbox() {
+    HtmlApproval.verifyRenders("checkbox", tester, List.of(
+        "<sl:checkbox name=\"terms\"/>",
+        "<sl:checkbox id=\"terms\" name=\"terms\" value=\"yes\" checked required/>",
+        "<sl:checkbox name=\"terms\" disabled aria-invalid=\"true\" class=\"ms-2\"/>",
+        "<sl:label><sl:checkbox name=\"newsletter\"/>Send me the newsletter</sl:label>"));
+  }
+
+  @Test
+  void radioGroup() {
+    List<String> snippets = new ArrayList<>();
+    for (String orientation : LibraryComponents.registry().get("radio-group").prop("orientation").values()) {
+      snippets.add("""
+          <sl:radio-group orientation="%s" aria-label="Plan">
+            <sl:label><sl:radio-group-item name="plan" value="free" checked/>Free</sl:label>
+            <sl:label><sl:radio-group-item name="plan" value="pro"/>Pro</sl:label>
+          </sl:radio-group>""".formatted(orientation));
+    }
+    snippets.addAll(List.of(
+        "<sl:radio-group aria-labelledby=\"plan-legend\" class=\"mt-2\"/>",
+        "<sl:radio-group-item name=\"plan\" value=\"free\" disabled aria-invalid=\"true\" class=\"ms-2\"/>"));
+
+    HtmlApproval.verifyRenders("radio-group", tester, snippets);
+  }
+
+  @Test
+  void switchComponent() {
+    List<String> snippets = new ArrayList<>();
+    for (String size : LibraryComponents.registry().get("switch").prop("size").values()) {
+      snippets.add("<sl:switch size=\"%s\" name=\"notifications\"/>".formatted(size));
+    }
+    snippets.addAll(List.of(
+        "<sl:switch id=\"airplane-mode\" name=\"airplaneMode\" checked/>",
+        "<sl:switch name=\"airplaneMode\" disabled aria-invalid=\"true\" class=\"ms-2\"/>"));
+
+    HtmlApproval.verifyRenders("switch", tester, snippets);
   }
 }

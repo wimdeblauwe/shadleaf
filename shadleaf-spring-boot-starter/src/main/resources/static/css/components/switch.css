@@ -1,0 +1,26 @@
+/*
+  Switch: structure only. Track size, colours and focus ring are identity and live in the skins.
+
+  The input is the track; the thumb is a circle drawn as its background (a gradient, not an image, so a strict img-src
+  allows it), moved from the start to the end when checked. The skins size it with background-size and colour it with
+  --switch-thumb. In forced-colors mode the browser draws a plain checkbox, as it drops backgrounds.
+*/
+@layer components {
+  .switch {
+    @apply m-0 inline-flex shrink-0 appearance-none rounded-full bg-no-repeat outline-none
+      motion-safe:transition-all
+      disabled:cursor-not-allowed disabled:opacity-50
+      forced-colors:appearance-auto;
+    background-image: radial-gradient(circle closest-side, var(--switch-thumb) calc(100% - 1px), transparent 100%);
+    background-position: left center;
+  }
+
+  .switch:checked,
+  .switch:dir(rtl) {
+    background-position: right center;
+  }
+
+  .switch:dir(rtl):checked {
+    background-position: left center;
+  }
+}

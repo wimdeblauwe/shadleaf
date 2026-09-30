@@ -1,0 +1,42 @@
+---
+title: Radio Group
+description: A set of the browser's own radio buttons, styled, bound to a form field with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="radio-group--default" />
+
+## Binding to a form field
+
+Write `th:field` on every item, with the item's own `value` or `th:value`. Spring gives them the field's `name`,
+numbers their ids (`plan1`, `plan2`, ...) and checks the one whose value matches the field. Because of the numbered
+ids, put each item inside its [label](../label/).
+
+The group is announced as a radio group. Name it with `aria-labelledby`, pointing at the question, or with
+`aria-label`.
+
+## Horizontal
+
+<ComponentPreview id="radio-group--horizontal" />
+
+## Invalid
+
+A field with errors marks every item `aria-invalid="true"`.
+
+<ComponentPreview id="radio-group--invalid" />
+
+## Disabled
+
+<ComponentPreview id="radio-group--disabled" />
+
+## Attributes
+
+### sl:radio-group
+
+<ComponentAttributes component="radio-group" />
+
+### sl:radio-group-item
+
+<ComponentAttributes component="radio-group-item" />

@@ -1,0 +1,28 @@
+# Scenarios for the switch's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# renderSource replaces th:field, which needs a form object: its name and checked state are written out.
+component: switch
+scenarios:
+  - id: default
+    title: Switch
+    source: |-
+      <sl:label><sl:switch th:field="*{airplaneMode}"/>Airplane mode</sl:label>
+    renderSource: |-
+      <sl:label><sl:switch name="airplaneMode"/>Airplane mode</sl:label>
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:label><sl:switch size="sm" name="compact" checked/>Small</sl:label>
+      <sl:label><sl:switch name="regular" checked/>Default</sl:label>
+
+  - id: invalid
+    title: Invalid
+    source: |-
+      <sl:label><sl:switch th:field="*{marketing}"/>Marketing emails</sl:label>
+    renderSource: |-
+      <sl:label><sl:switch name="marketing" aria-invalid="true"/>Marketing emails</sl:label>
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:label><sl:switch name="sso" checked disabled/>Single sign-on (managed by your organisation)</sl:label>

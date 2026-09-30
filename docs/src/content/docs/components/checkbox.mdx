@@ -1,0 +1,54 @@
+---
+title: Checkbox
+description: The browser's own checkbox, styled, bound to a form field with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="checkbox--default" />
+
+## Binding to a form field
+
+`th:field` on a boolean field sets `checked` and adds the hidden `_terms` input Spring uses to see an unchecked box.
+For a collection field, give each checkbox a `value` (or `th:value`), as with a plain checkbox.
+
+```html
+<form th:object="${signup}" th:action="@{/signup}" method="post">
+  <sl:label><sl:checkbox th:field="*{terms}"/>Accept the terms and conditions</sl:label>
+</form>
+```
+
+## Labelling it
+
+Put the checkbox inside its [label](../label/): clicking the text toggles it, and it needs no `id`. Spring numbers the
+`id` of a checkbox (`terms1`), so a label with `for="terms"` would miss it. For a label beside the checkbox, give the
+checkbox an explicit `id`, which wins over the numbered one:
+
+<ComponentPreview id="checkbox--separate-label" />
+
+## Checked
+
+<ComponentPreview id="checkbox--checked" />
+
+## Invalid
+
+A field with errors marks the checkbox `aria-invalid="true"`, as with the [input](../input/).
+
+<ComponentPreview id="checkbox--invalid" />
+
+## Disabled
+
+A label fades with the disabled checkbox it holds, or sits next to.
+
+<ComponentPreview id="checkbox--disabled" />
+
+## How it is drawn
+
+The check mark is an icon inside a wrapper around the `<input>`, not a CSS background image, so the checkbox renders
+under a strict `img-src` policy. `class` goes to that wrapper; every other attribute to the `<input>`. In Windows'
+high-contrast mode the browser draws its own checkbox.
+
+## Attributes
+
+<ComponentAttributes component="checkbox" />

@@ -316,4 +316,56 @@
   .native-select-icon {
     @apply text-muted-foreground;
   }
+
+  /* Checkbox */
+  .checkbox {
+    @apply size-4 rounded-[4px] border border-input bg-transparent shadow-xs
+      motion-safe:transition-shadow
+      checked:border-primary checked:bg-primary
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      aria-invalid:checked:border-primary
+      dark:bg-input/30 dark:checked:bg-primary
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  .checkbox-indicator {
+    @apply size-3.5 text-primary-foreground;
+  }
+
+  /* Radio group. The dot is a gradient in the checked item's background. */
+  .radio-group {
+    @apply gap-3;
+  }
+
+  .radio-group-item {
+    @apply size-4 border border-input bg-transparent
+      checked:border-primary checked:bg-primary bg-size-[0.5rem]
+      checked:bg-[radial-gradient(circle_closest-side,var(--primary-foreground)_calc(100%-1px),transparent_100%)]
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      aria-invalid:checked:border-primary
+      dark:bg-input/30 dark:checked:bg-primary
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  /* Switch. The thumb is the track's background (components/switch.css), coloured with --switch-thumb. */
+  .switch {
+    @apply border border-transparent bg-input shadow-xs [--switch-thumb:var(--background)]
+      checked:bg-primary
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:bg-input/80 dark:[--switch-thumb:var(--foreground)]
+      dark:checked:bg-primary dark:checked:[--switch-thumb:var(--primary-foreground)]
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  .switch:not([data-size]),
+  .switch[data-size='default'] {
+    @apply h-[18.4px] w-8 bg-size-[1rem];
+  }
+
+  .switch[data-size='sm'] {
+    @apply h-3.5 w-6 bg-size-[0.75rem];
+  }
 }

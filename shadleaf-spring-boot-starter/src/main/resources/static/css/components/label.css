@@ -1,6 +1,16 @@
-/* Label: structure only. Type size and weight are identity and live in the skins. */
+/*
+  Label: structure only. Type size and weight are identity and live in the skins.
+
+  A label fades with a disabled control it holds, or one right before or after it (a checkbox, then its label).
+*/
 @layer components {
   .label {
     @apply flex items-center select-none;
+  }
+
+  .label:has(:disabled),
+  .label:has(+ :disabled, + .checkbox-wrapper > :disabled),
+  :is(:disabled, .checkbox-wrapper:has(> :disabled)) + .label {
+    @apply cursor-not-allowed opacity-50;
   }
 }

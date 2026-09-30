@@ -14,8 +14,15 @@ for (const {skin, theme} of combinations) {
     const tabbable = await page.evaluate(() => {
       const candidates = document.querySelectorAll<HTMLElement>(
           'main :is(a[href], button, input:not([type=hidden]), select, textarea, [tabindex])');
+      // Tab stops once per radio group: on its checked radio, or on its first one when none is checked.
+      const radioTabStop = (radio: HTMLInputElement) => {
+        const group = [...document.querySelectorAll<HTMLInputElement>(`input[type=radio][name="${radio.name}"]`)]
+            .filter(other => !other.disabled);
+        return radio === (group.find(other => other.checked) ?? group[0]);
+      };
       return [...candidates]
           .filter(element => element.tabIndex >= 0 && !(element as HTMLInputElement).disabled)
+          .filter(element => !(element instanceof HTMLInputElement && element.type === 'radio') || radioTabStop(element))
           .map((element, index) => {
             element.dataset.focusIndex = String(index);
             const style = getComputedStyle(element);

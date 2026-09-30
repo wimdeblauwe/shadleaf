@@ -1,0 +1,35 @@
+<!-- <sl:radio-group orientation="vertical" aria-label="Plan">
+  <sl:label><sl:radio-group-item name="plan" value="free" checked/>Free</sl:label>
+  <sl:label><sl:radio-group-item name="plan" value="pro"/>Pro</sl:label>
+</sl:radio-group> -->
+<div class="radio-group" role="radiogroup" aria-label="Plan">
+  <label class="label">
+    <input type="radio" class="radio-group-item" name="plan" value="free" checked>
+    Free
+  </label>
+  <label class="label">
+    <input type="radio" class="radio-group-item" name="plan" value="pro">
+    Pro
+  </label>
+</div>
+
+<!-- <sl:radio-group orientation="horizontal" aria-label="Plan">
+  <sl:label><sl:radio-group-item name="plan" value="free" checked/>Free</sl:label>
+  <sl:label><sl:radio-group-item name="plan" value="pro"/>Pro</sl:label>
+</sl:radio-group> -->
+<div class="radio-group" role="radiogroup" data-orientation="horizontal" aria-label="Plan">
+  <label class="label">
+    <input type="radio" class="radio-group-item" name="plan" value="free" checked>
+    Free
+  </label>
+  <label class="label">
+    <input type="radio" class="radio-group-item" name="plan" value="pro">
+    Pro
+  </label>
+</div>
+
+<!-- <sl:radio-group aria-labelledby="plan-legend" class="mt-2"/> -->
+<div class="radio-group mt-2" role="radiogroup" aria-labelledby="plan-legend"></div>
+
+<!-- <sl:radio-group-item name="plan" value="free" disabled aria-invalid="true" class="ms-2"/> -->
+<input type="radio" class="radio-group-item ms-2" name="plan" value="free" disabled aria-invalid="true">

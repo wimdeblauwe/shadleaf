@@ -1,0 +1,35 @@
+# Scenarios for the checkbox's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# renderSource replaces th:field, which needs a form object: its name and checked state are written out.
+component: checkbox
+scenarios:
+  - id: default
+    title: Checkbox
+    source: |-
+      <sl:label><sl:checkbox th:field="*{terms}"/>Accept the terms and conditions</sl:label>
+    renderSource: |-
+      <sl:label><sl:checkbox name="terms"/>Accept the terms and conditions</sl:label>
+
+  - id: checked
+    title: Checked
+    source: |-
+      <sl:label><sl:checkbox name="newsletter" checked/>Send me the newsletter</sl:label>
+
+  - id: separate-label
+    title: With a separate label
+    description: Give the checkbox an explicit id for the label's for; th:field would number it.
+    source: |-
+      <sl:checkbox id="checkbox-notify" name="notify"/>
+      <sl:label for="checkbox-notify">Notify me by email</sl:label>
+
+  - id: invalid
+    title: Invalid
+    description: With th:field, a field that has errors marks the checkbox aria-invalid by itself.
+    source: |-
+      <sl:label><sl:checkbox th:field="*{terms}"/>Accept the terms and conditions</sl:label>
+    renderSource: |-
+      <sl:label><sl:checkbox name="terms" aria-invalid="true"/>Accept the terms and conditions</sl:label>
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:label><sl:checkbox name="archived" checked disabled/>Archived</sl:label>

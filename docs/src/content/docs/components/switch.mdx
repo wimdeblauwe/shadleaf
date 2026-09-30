@@ -1,0 +1,32 @@
+---
+title: Switch
+description: An on/off control, bound to a boolean form field with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="switch--default" />
+
+A switch is a checkbox with `role="switch"`, so a screen reader announces it as on or off and a form submits it as a
+checkbox. `th:field` on a boolean field works as it does on the [checkbox](../checkbox/), including the numbered `id`:
+put the switch inside its label.
+
+Use a switch for a setting that takes effect as it is, and a checkbox for a choice the user confirms by submitting a
+form.
+
+## Sizes
+
+<ComponentPreview id="switch--sizes" />
+
+## Invalid
+
+<ComponentPreview id="switch--invalid" />
+
+## Disabled
+
+<ComponentPreview id="switch--disabled" />
+
+## Attributes
+
+<ComponentAttributes component="switch" />

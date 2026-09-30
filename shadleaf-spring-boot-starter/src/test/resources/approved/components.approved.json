@@ -183,6 +183,12 @@
       "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline."
     } ]
   }, {
+    "name" : "checkbox",
+    "tag" : "sl:checkbox",
+    "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "icon",
     "tag" : "sl:icon",
     "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
@@ -251,6 +257,24 @@
       "description" : "Height of the select. It replaces HTML's `size` attribute, which turns a select into a list box."
     } ]
   }, {
+    "name" : "radio-group",
+    "tag" : "sl:radio-group",
+    "description" : "A group of `sl:radio-group-item`s, announced as a radio group. Name it with `aria-labelledby` (pointing at the question) or `aria-label`. The items share their `name`, or their `th:field`, which is what makes them one choice.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "orientation",
+      "type" : "enum",
+      "defaultValue" : "vertical",
+      "values" : [ "vertical", "horizontal" ],
+      "description" : "Stack the items, or put them on a row that wraps."
+    } ]
+  }, {
+    "name" : "radio-group-item",
+    "tag" : "sl:radio-group-item",
+    "description" : "One radio button in `sl:radio-group`: the browser's own, styled. Give it a `value` and the group's `name`, or `th:field` with a `value` or `th:value`; Spring then numbers the ids (`plan1`, `plan2`), so put the item inside its label. Every attribute that is not a prop passes through; `class` is appended to `radio-group-item`. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "separator",
     "tag" : "sl:separator",
     "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",
@@ -279,6 +303,18 @@
       "defaultValue" : "line",
       "values" : [ "line", "circle" ],
       "description" : "A line of text (full width, one line high) or a circle (an avatar)."
+    } ]
+  }, {
+    "name" : "switch",
+    "tag" : "sl:switch",
+    "description" : "A switch: a checkbox with `role=\"switch\"`, announced as on or off. It submits like a checkbox, so `th:field` on a boolean works as it does there (numbered id, hidden marker input). Every attribute that is not a prop passes through; `class` is appended to `switch`. With `th:field`, the switch is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "sm", "default" ],
+      "description" : "Size of the switch."
     } ]
   }, {
     "name" : "textarea",

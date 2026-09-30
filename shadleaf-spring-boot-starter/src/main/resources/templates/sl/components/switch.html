@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A switch: a checkbox with <code>role="switch"</code>, announced as on or off. It submits like a
+      checkbox, so <code>th:field</code> on a boolean works as it does there (numbered id, hidden marker input). Every
+      attribute that is not a prop passes through; <code>class</code> is appended to <code>switch</code>. With
+      <code>th:field</code>, the switch is marked <code>aria-invalid</code> when its field has errors.</sl:description>
+    <sl:prop name="size" default="default" values="sm default">Size of the switch.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<input th:fragment="switch"
+       type="checkbox"
+       role="switch"
+       class="switch"
+       th:attr="data-size=${props.unlessDefault('size')},
+                aria-invalid=${attrs['th:field'] != null and #fields.hasErrors(attrs['th:field']) ? 'true' : null}"
+       sl:attrs>
+</body>
+</html>

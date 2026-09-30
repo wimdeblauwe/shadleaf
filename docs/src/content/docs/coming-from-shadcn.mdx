@@ -96,6 +96,9 @@ takes keyboard focus, when it is a link (`as="a"`).
 - `<sl:input>` only takes the text-like types (`text`, `email`, `password`, `date`, `file`, ...). Checkboxes, radio
   buttons and switches are separate components, as in shadcn, but shadcn's `Input` would accept `type="checkbox"`.
 - `<sl:native-select>` takes `<option>` and `<optgroup>` as they are; there is no `NativeSelectOption`.
+- Checkbox, radio group and switch are the browser's own inputs, styled, where shadcn builds them from buttons. They
+  submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
+  on any radio button or checkbox. There is no indeterminate checkbox yet.
 
 ### Additions
 

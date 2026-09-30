@@ -396,6 +396,10 @@
           }
         } ]
       }, {
+        "name" : "sl:checkbox",
+        "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:icon",
         "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
         "attributes" : [ {
@@ -542,6 +546,35 @@
           }
         } ]
       }, {
+        "name" : "sl:radio-group",
+        "description" : "A group of `sl:radio-group-item`s, announced as a radio group. Name it with `aria-labelledby` (pointing at the question) or `aria-label`. The items share their `name`, or their `th:field`, which is what makes them one choice.",
+        "attributes" : [ {
+          "name" : "orientation",
+          "description" : "Stack the items, or put them on a row that wraps.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "vertical"
+          }, {
+            "name" : "horizontal"
+          } ],
+          "default" : "vertical"
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:radio-group-item",
+        "description" : "One radio button in `sl:radio-group`: the browser's own, styled. Give it a `value` and the group's `name`, or `th:field` with a `value` or `th:value`; Spring then numbers the ids (`plan1`, `plan2`), so put the item inside its label. Every attribute that is not a prop passes through; `class` is appended to `radio-group-item`. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:separator",
         "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",
         "attributes" : [ {
@@ -607,6 +640,31 @@
         }, {
           "name" : "th:shape",
           "description" : "`shape` from a Thymeleaf expression, e.g. `th:shape=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:switch",
+        "description" : "A switch: a checkbox with `role=\"switch\"`, announced as on or off. It submits like a checkbox, so `th:field` on a boolean works as it does there (numbered id, hidden marker input). Every attribute that is not a prop passes through; `class` is appended to `switch`. With `th:field`, the switch is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Size of the switch.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
