@@ -2,8 +2,14 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
-      th:replace="~{layout/main :: layout('Form', ~{::#page-content})}">
+      th:replace="~{layout/main :: layout('Form', ~{::breadcrumb}, ~{::#page-content})}">
 <body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Forms</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page>Form</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
 <div id="page-content">
   <p>A form validated on the server with Bean Validation. Submit it empty to see the errors. Each field has one
     <code>th:field</code>: the field gives its control the id the label points at, shows the binding's messages, and

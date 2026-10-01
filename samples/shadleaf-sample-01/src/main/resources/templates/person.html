@@ -3,8 +3,16 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
       xmlns:hx="http://www.w3.org/1999/xhtml"
-      th:replace="~{layout/main :: layout(${person.name}, ~{::#page-content})}">
+      th:replace="~{layout/main :: layout(${person.name}, ~{::breadcrumb}, ~{::#page-content})}">
 <body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header: the people page is a level of its own. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-link th:href="@{/people}">People</sl:breadcrumb-link></sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page th:text="${person.name}">Name</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
 <div id="page-content">
   <!--/* View in a row menu of the people page. */-->
   <sl:card th:unless="${confirm}" class="person-card">

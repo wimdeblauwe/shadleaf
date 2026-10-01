@@ -70,7 +70,7 @@ class HtmxFormPageTest {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString();
 
-    assertThat(html).doesNotContain("<html", "<head", "<title", "page-header");
+    assertThat(html).doesNotContain("<html", "<head", "<title", "sidebar-provider");
     Document fragment = Jsoup.parseBodyFragment(html);
     assertThat(fragment.body().children()).extracting(Element::id).containsExactly("contact");
     assertThat(fragment.select("#contact > form[hx-post=/htmx-form]")).hasSize(1);

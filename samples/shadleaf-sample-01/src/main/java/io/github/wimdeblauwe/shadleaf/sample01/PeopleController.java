@@ -36,7 +36,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * size menu are boosted: htmx sends {@code HX-Request}, and the answer is then the {@code results} fragment alone (the
  * table and its footer), which htmx swaps in. Both ask for this same URL, so the address htmx pushes and the links the
  * fragment's components build from the request agree. A history restore (back to a page htmx did not keep) gets the
- * whole page, as does every request without htmx.
+ * whole page, as do a link the layout's boost sends (the sidebar's) and every request without htmx
+ * ({@link HtmxRequests}).
  * <p>
  * Each row has a menu of actions. View is a link to the person's page. Change role is a radio group of submit buttons
  * in a form around the menu, which posts the person and the role to this page's own URL, query string included, so
@@ -91,7 +92,7 @@ public class PeopleController {
       @PageableDefault(size = PAGE_SIZE, sort = "name") Pageable pageable, HtmxRequest htmxRequest,
       HtmxResponse htmxResponse, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
     Toast toast = deleteAll(ids == null ? List.of() : ids);
-    if (!htmxRequest.isHtmxRequest()) {
+    if (!HtmxRequests.wantsFragment(htmxRequest)) {
       redirectAttributes.addFlashAttribute("toasts", List.of(toast));
       return "redirect:" + selfUrl(request).substring(request.getContextPath().length());
     }
@@ -122,7 +123,7 @@ public class PeopleController {
     person.changeRole(role);
     repository.save(person);
     Toast toast = Toast.success("%s is now %s".formatted(person.getName(), article(role)));
-    if (!htmxRequest.isHtmxRequest()) {
+    if (!HtmxRequests.wantsFragment(htmxRequest)) {
       redirectAttributes.addFlashAttribute("toasts", List.of(toast));
       return "redirect:" + selfUrl(request).substring(request.getContextPath().length());
     }
@@ -141,7 +142,7 @@ public class PeopleController {
     List<Person> before = find(q, pageable).getContent();
     repository.delete(person);
     Toast toast = Toast.success("%s was deleted".formatted(person.getName()));
-    if (!htmxRequest.isHtmxRequest()) {
+    if (!HtmxRequests.wantsFragment(htmxRequest)) {
       redirectAttributes.addFlashAttribute("toasts", List.of(toast));
       return "redirect:" + selfUrl(request).substring(request.getContextPath().length());
     }
@@ -173,7 +174,7 @@ public class PeopleController {
     model.addAttribute("confirm", true);
     String query = request.getQueryString();
     model.addAttribute("pageUrl", request.getContextPath() + "/people" + (query == null ? "" : "?" + query));
-    return htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest() ? "person :: delete-dialog" : "person";
+    return HtmxRequests.wantsFragment(htmxRequest) ? "person :: delete-dialog" : "person";
   }
 
   /** The people page with one slice more each time, or with htmx the next slice's rows alone. */
@@ -181,7 +182,7 @@ public class PeopleController {
   public String loadMore(@PageableDefault(size = PAGE_SIZE, sort = "name") Pageable pageable,
       HtmxRequest htmxRequest, Model model) {
     Pageable query = stable(sortable(pageable));
-    boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest();
+    boolean fragment = HtmxRequests.wantsFragment(htmxRequest);
     Slice<Person> people;
     int offset;
     if (fragment) {
@@ -246,7 +247,7 @@ public class PeopleController {
     // What a screen reader announces after a search (the form's role="status").
     model.addAttribute("found", search.isEmpty() ? ""
         : people.getTotalElements() == 1 ? "1 person found" : people.getTotalElements() + " people found");
-    boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest();
+    boolean fragment = HtmxRequests.wantsFragment(htmxRequest);
     model.addAttribute("fragment", fragment);
     // Where the selection form and the row menus post: this page, with its search, order and page.
     model.addAttribute("selfUrl", selfUrl(request));

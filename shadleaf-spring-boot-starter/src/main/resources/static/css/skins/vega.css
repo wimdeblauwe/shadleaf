@@ -56,19 +56,33 @@
   }
 
   .btn[data-variant='secondary'] {
-    @apply bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]
-      aria-expanded:bg-secondary aria-expanded:text-secondary-foreground;
+    @apply bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)];
+  }
+
+  /*
+    An open menu's trigger keeps the hover look (aria-expanded), as shadcn's. Not the sidebar's trigger: on a desktop
+    it is expanded whenever the sidebar is, which is most of the time (shadcn's has no aria-expanded). :where keeps the
+    specificity of the variant's own rules.
+  */
+  .btn[data-variant='secondary'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-secondary text-secondary-foreground;
   }
 
   .btn[data-variant='outline'] {
     @apply border-border bg-background shadow-xs hover:bg-muted hover:text-foreground
-      dark:border-input dark:bg-input/30 dark:hover:bg-input/50
-      aria-expanded:bg-muted aria-expanded:text-foreground;
+      dark:border-input dark:bg-input/30 dark:hover:bg-input/50;
+  }
+
+  .btn[data-variant='outline'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-muted text-foreground;
   }
 
   .btn[data-variant='ghost'] {
-    @apply hover:bg-muted hover:text-foreground dark:hover:bg-muted/50
-      aria-expanded:bg-muted aria-expanded:text-foreground;
+    @apply hover:bg-muted hover:text-foreground dark:hover:bg-muted/50;
+  }
+
+  .btn[data-variant='ghost'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-muted text-foreground;
   }
 
   .btn[data-variant='link'] {
@@ -1030,6 +1044,22 @@
 
   .sidebar-inset {
     @apply bg-background;
+  }
+
+  /*
+    Variants on a desktop, after shadcn's vega style: floating is a rounded panel with a shadow; inset puts the
+    sidebar's colour around the page, which becomes a rounded card with a shadow. Margins and edges are structure.
+  */
+  .sidebar[data-variant='floating'] {
+    @apply md:rounded-lg md:shadow-sm;
+  }
+
+  .sidebar-provider:has(> .sidebar[data-variant='inset']) {
+    @apply bg-sidebar;
+  }
+
+  .sidebar-provider:has(> .sidebar[data-variant='inset']) > .sidebar-inset {
+    @apply duration-200 ease-linear md:rounded-xl md:shadow-sm;
   }
 
   /*

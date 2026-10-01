@@ -1225,6 +1225,12 @@
       "values" : [ "start", "end" ],
       "description" : "The edge it sits on: the start of a line (the left, or the right on a right-to-left page) or the end."
     }, {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "sidebar",
+      "values" : [ "sidebar", "floating", "inset" ],
+      "description" : "How it looks on a desktop: `sidebar` is a column along the edge with a border; `floating` a panel with a margin all round; `inset` lays the sidebar's ground around the page, which (`sl:sidebar-inset`) becomes a card on it. The phone panel looks the same for all three."
+    }, {
       "name" : "collapsible",
       "type" : "enum",
       "defaultValue" : "offcanvas",

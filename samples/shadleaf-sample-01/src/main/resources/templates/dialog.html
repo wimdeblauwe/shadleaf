@@ -3,8 +3,14 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
       xmlns:hx="http://www.w3.org/1999/xhtml"
-      th:replace="~{layout/main :: layout('Dialog', ~{::#page-content})}">
+      th:replace="~{layout/main :: layout('Dialog', ~{::breadcrumb}, ~{::#page-content})}">
 <body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Interactive</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page>Dialog</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
 <div id="page-content">
   <h2>On the page</h2>
   <p>The dialog is in the page; the button opens it with <code>commandfor</code> and

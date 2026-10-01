@@ -10,6 +10,8 @@
     tab order and the accessibility tree. The user agent's popover styles (fixed, centred, display: none) are undone.
   - below 768 px it is what the popover is: hidden until the trigger opens it in the top layer, then fixed to its edge
     with the ::backdrop over the page. data-state does not apply there.
+  variant (desktop only): floating draws it as a panel with a margin all round; inset gives it no edge and makes the
+  inset a card on the sidebar's ground (the skins colour the provider for that). The phone panel is the same for all.
   start and end are logical, so they swap on a right-to-left page, and the slide follows. Motion (the slide on a phone,
   the collapse on a desktop) only where the user has not asked for less: without it the change is immediate.
 */
@@ -25,8 +27,9 @@
     @apply m-0 flex-col overflow-y-auto overscroll-contain p-0 transition-none forced-colors:border-solid;
   }
 
+  /* The inset card's margin follows a collapse only under the motion rules below, as the sidebar. */
   .sidebar-inset {
-    @apply relative flex min-w-0 w-full flex-1 flex-col;
+    @apply relative flex min-w-0 w-full flex-1 flex-col transition-none;
   }
 
   /*
@@ -103,12 +106,53 @@
       inline-size: var(--sidebar-width);
     }
 
-    .sidebar:not([data-side]) {
+    .sidebar:not([data-variant]):not([data-side]) {
       @apply border-e;
     }
 
     .sidebar[data-side='end'] {
-      @apply order-1 border-s;
+      @apply order-1;
+    }
+
+    .sidebar[data-side='end']:not([data-variant]) {
+      @apply border-s;
+    }
+
+    /*
+      Floating: a panel with a margin all round, its footprint as wide as the plain sidebar's (--sidebar-width), so a
+      page lays out the same with either.
+    */
+    .sidebar[data-variant='floating'] {
+      @apply border;
+      top: --spacing(2);
+      block-size: calc(100svh - --spacing(4));
+      inline-size: calc(var(--sidebar-width) - --spacing(4));
+      margin: --spacing(2);
+    }
+
+    /* Inset: no edge of its own, the content inside the same margin the inset card keeps. */
+    .sidebar[data-variant='inset'] {
+      @apply p-2;
+    }
+
+    /*
+      The inset as a card on the sidebar's ground: a margin all round but on the sidebar's side, where the sidebar's
+      own padding is the gap. Collapsed, that side gets the margin too.
+    */
+    .sidebar-provider:has(> .sidebar[data-variant='inset']) > .sidebar-inset {
+      @apply m-2 forced-colors:border forced-colors:border-solid;
+    }
+
+    .sidebar-provider:has(> .sidebar[data-variant='inset']:not([data-side])) > .sidebar-inset {
+      @apply ms-0;
+    }
+
+    .sidebar-provider:has(> .sidebar[data-variant='inset'][data-side='end']) > .sidebar-inset {
+      @apply me-0;
+    }
+
+    .sidebar-provider[data-state='collapsed']:has(> .sidebar[data-variant='inset']) > .sidebar-inset {
+      @apply m-2;
     }
 
     .sidebar-provider[data-state='expanded'] > .sidebar {
@@ -126,12 +170,25 @@
     .sidebar-provider[data-state='collapsed'] > .sidebar[data-side='end'] {
       margin-inline-end: calc(-1 * var(--sidebar-width));
     }
+
+    /* The floating panel keeps its outer margin, so its footprint is still -(width - margin) + width = 0. */
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-variant='floating']:not([data-side]) {
+      margin-inline-start: calc(-1 * (var(--sidebar-width) - --spacing(2)));
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-variant='floating'][data-side='end'] {
+      margin-inline-end: calc(-1 * (var(--sidebar-width) - --spacing(2)));
+    }
   }
 
   @media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
     /* visibility changes at the end of a collapse and at the start of an expansion, so the slide is seen both ways. */
     .sidebar {
       @apply transition-[margin,visibility];
+    }
+
+    .sidebar-provider:has(> .sidebar[data-variant='inset']) > .sidebar-inset {
+      @apply transition-[margin];
     }
   }
 

@@ -9,10 +9,10 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 <ComponentPreview id="sidebar--default" />
 
 :::note[Being built]
-The sidebar's frame (provider, sidebar, trigger, inset: collapsing, the phone panel, the remembered state), the
-parts that go inside it (header, groups, menus, the current page, badges, actions), the page header's
-[breadcrumb](../breadcrumb/) and the [skip link](../skip-link/) are here. Collapsing to icons with sub-menus, and a
-header layout follow in the next releases.
+The sidebar's frame (provider, sidebar, trigger, inset: collapsing, the phone panel, the remembered state, the three
+variants), the parts that go inside it (header, groups, menus, the current page, badges, actions), the page header's
+[breadcrumb](../breadcrumb/), the [skip link](../skip-link/) and a [layout](#layout) to copy are here. Collapsing to
+icons with sub-menus, and a header layout follow in the next releases.
 :::
 
 ## Built from parts
@@ -52,6 +52,7 @@ The [skip link](../skip-link/) comes first in the body: the sidebar puts many li
 keyboard user jump past them to the inset. The header at the top of the inset holds the trigger, a vertical
 [separator](../separator/) and the [breadcrumb](../breadcrumb/), as shadcn's blocks have it. Lay it out as a row
 yourself (flex, the items centred, a small gap): the library's CSS styles its components, not the page around them.
+The [layout](#layout) below has the CSS.
 
 ## What goes inside
 
@@ -206,6 +207,21 @@ page renders in the same state from the first paint: nothing jumps, with or with
 
 The phone panel ignores the state: it always opens with everything in it.
 
+## Variants
+
+`variant` changes how the sidebar looks on a desktop, as shadcn/ui's:
+
+- `sidebar` (the default) is a column along the edge of the screen, with a border on the page's side.
+- `floating` is a panel with a margin all round, rounded (in the vega skin) and with a shadow. It takes as much room
+  as the plain sidebar, so a page lays out the same with either.
+- `inset` gives the sidebar no edge: its colour lies around the page, and `<sl:sidebar-inset>` becomes a card on it,
+  with a margin, rounded corners (vega) and a shadow. The example at the top of this page, and the [layout](#layout)
+  below, use it.
+
+<ComponentPreview id="sidebar--variant" />
+
+Below 768 px the variant makes no difference: the panel and the page are the same for all three.
+
 ## Side
 
 `side="end"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
@@ -238,10 +254,164 @@ the trigger is hidden there (`@media (scripting: none)`); the sidebar shows in t
 
 ## htmx
 
-With `hx-boost` on the body, every page comes from the server with the sidebar in the cookie's state and the panel
-closed. Boosting only the main area works too: following a link in the panel closes it, and a trigger htmx swaps in is
+With `hx-boost` on the body, every page comes from the server with the sidebar in the cookie's state, the current
+page marked and the panel closed. Boosting only the main area works too: following a link in the panel closes it, and a trigger htmx swaps in is
 set up again. Going back through htmx's history shows the page with the panel closed (whether a popover is open is not
 part of the markup htmx saves, and the panel closes before htmx takes its snapshot).
+
+A boosted link sends `HX-Request` too. A controller that answers htmx with a fragment (a table's rows, a dialog) must
+tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
+`HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The [layout](#layout) below shows the
+check.
+
+## Layout
+
+shadcn/ui's sidebar-07 block with the inset variant, as the layout of the sample application (sample-01's
+`layout/main.html`, which has four groups): the application's name and logo at the top, groups of pages, a footer,
+and the page as a card beside it with a header holding the trigger, a separator, the page's breadcrumb and the theme
+toggle. `hx-boost` on the body loads every page with htmx.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${pageTitle} - Acme|">Acme</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body hx-boost="true">
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="inset">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+            <strong>Acme</strong>
+            <small>Enterprise</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="nav-forms">
+        <sl:sidebar-group-label>Forms</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}">
+                <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                Form
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-tables">
+        <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+                <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
+                People
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+    <sl:sidebar-footer>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button href="https://example.com/help" size="sm">
+            <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
+            Documentation
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-footer>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <header class="inset-header">
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+      <div class="inset-header-end">
+        <sl:theme-toggle/>
+      </div>
+    </header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<sl:toaster/>
+</body>
+</html>
+```
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout(${person.name}, ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-link th:href="@{/people}">People</sl:breadcrumb-link></sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page th:text="${person.name}">Name</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+The header and the page's padding are the application's, as in shadcn's block (a 4rem row, the separator 1rem high,
+the page 1rem in from the card's edges). Without Tailwind:
+
+```css
+.inset-header { display: flex; align-items: center; gap: 0.5rem; block-size: 4rem; flex-shrink: 0; padding-inline: 1rem; }
+.inset-header > .sidebar-trigger { margin-inline-start: -0.25rem; }
+.inset-header > .separator { block-size: 1rem; align-self: center; margin-inline-end: 0.5rem; }
+.inset-header-end { margin-inline-start: auto; }
+.page { padding: 0 1rem 1rem; }
+.app-logo {
+  display: grid; place-items: center; flex-shrink: 0; inline-size: 2rem; block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px); background: var(--sidebar-primary); color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+```
+
+With the body boosted, a controller that answers other htmx requests with a fragment checks for a whole-page request
+first (see [htmx](#htmx) above). With [htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot):
+
+```java
+static boolean wantsFragment(HtmxRequest request) {
+  return request.isHtmxRequest()
+      && !request.isHistoryRestoreRequest()
+      && !(request.isBoosted() && request.getTarget() == null);
+}
+```
+
+A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
+table) does send `HX-Target`, and still gets its fragment.
 
 ## Left out
 
@@ -251,7 +421,6 @@ For now:
   sub-menus (`SidebarMenuSub`), and `collapsible="none"`;
 - a menu action that opens a dropdown menu;
 - `SidebarInput` (use `<sl:input>`) and `SidebarMenuSkeleton` (use `<sl:skeleton>`);
-- `variant="floating"` and `variant="inset"`;
 - `SidebarRail`, the strip along the sidebar's edge that toggles it;
 - a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page.
 

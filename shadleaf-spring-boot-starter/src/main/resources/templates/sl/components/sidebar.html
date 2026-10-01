@@ -14,6 +14,10 @@
       <code>for</code>).</sl:prop>
     <sl:prop name="side" default="start" values="start end">The edge it sits on: the start of a line (the left, or the
       right on a right-to-left page) or the end.</sl:prop>
+    <sl:prop name="variant" default="sidebar" values="sidebar floating inset">How it looks on a desktop:
+      <code>sidebar</code> is a column along the edge with a border; <code>floating</code> a panel with a
+      margin all round; <code>inset</code> lays the sidebar's ground around the page, which
+      (<code>sl:sidebar-inset</code>) becomes a card on it. The phone panel looks the same for all three.</sl:prop>
     <sl:prop name="collapsible" default="offcanvas" values="offcanvas">How it collapses on a desktop:
       <code>offcanvas</code> moves it out of view entirely. Collapsing to icons comes later.</sl:prop>
   </sl:props>
@@ -27,6 +31,7 @@
      popover
      th:attr="aria-label=#{sl.sidebar.label},
               data-side=${props.unlessDefault('side')},
+              data-variant=${props.unlessDefault('variant')},
               data-collapsible=${props.unlessDefault('collapsible')}"
      sl:attrs><sl:slot/></nav>
 </body>

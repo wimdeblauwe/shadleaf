@@ -1,8 +1,8 @@
 # Scenarios for the sidebar's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
-# A page holds one sidebar and one main, so only the first scenario is on the showcase (which puts it after its region
+# A page holds one sidebar and one main, so only the first scenario is on the showcase (which puts it before its region
 # of other components, as a page's shell). docs/tests/sidebar.spec.ts builds its fixture pages from that scenario: it
 # expects Home to be the current page and links to /inbox, /calendar and /settings, a skip link before the provider and
-# a breadcrumb in the inset's header ending in the page "Home".
+# a breadcrumb in the inset's header ending in the page "Home", and variant="inset" (it sets the variant itself).
 component: sidebar
 parts: [sidebar-provider, sidebar-trigger, sidebar-inset, sidebar-header, sidebar-content, sidebar-footer,
         sidebar-separator, sidebar-group, sidebar-group-label, sidebar-group-action, sidebar-group-content,
@@ -14,12 +14,13 @@ scenarios:
       Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or
       Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered
       for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to
-      the inset, whose header holds the trigger and the breadcrumb.
+      the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the
+      sidebar's ground (from 768 px), as sample-01's layout.
     request: /
     source: |-
       <sl:skip-link/>
       <sl:sidebar-provider>
-        <sl:sidebar>
+        <sl:sidebar variant="inset">
           <sl:sidebar-header>
             <sl:sidebar-menu>
               <sl:sidebar-menu-item>
@@ -249,5 +250,40 @@ scenarios:
             <sl:sidebar-trigger for="sidebar-collapsed"/>
           </header>
           <h1>Home</h1>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+
+  - id: variant
+    title: Variants
+    description: >-
+      variant="sidebar" (the default) is a column along the edge with a border, variant="floating" a panel with a
+      margin all round; the inset variant is the first example. On a phone the panel is the same for all three.
+    showcase: false
+    source: |-
+      <sl:sidebar-provider>
+        <sl:sidebar id="sidebar-floating" variant="floating">
+          <sl:sidebar-content>
+            <sl:sidebar-group>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/" active>Home</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/inbox">Inbox</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/settings">Settings</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+          </sl:sidebar-content>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <header>
+            <sl:sidebar-trigger for="sidebar-floating"/>
+          </header>
+          <h1>Floating</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>

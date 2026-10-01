@@ -216,7 +216,7 @@ class PeoplePageTest {
         .andExpect(header().stringValues("Vary", org.hamcrest.Matchers.hasItem("HX-Request")));
     Document fragment = Jsoup.parseBodyFragment(html("/people?q=ada&sort=email,asc", "HX-Request", "true"));
 
-    assertThat(fragment.select("h1, nav.site-nav, #people-search")).isEmpty();
+    assertThat(fragment.select("h1, nav.sidebar, #people-search")).isEmpty();
     Element results = fragment.body().child(0);
     assertThat(results.id()).isEqualTo("people-results");
     assertThat(results.select(".table > tbody > tr")).isNotEmpty();

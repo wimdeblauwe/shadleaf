@@ -371,7 +371,7 @@ class DialogPageTest {
   }
 
   private static Document fragment(String html) {
-    assertThat(html).doesNotContain("<html", "<head", "page-header");
+    assertThat(html).doesNotContain("<html", "<head", "sidebar-provider");
     return Jsoup.parseBodyFragment(html);
   }
 

@@ -239,7 +239,8 @@ the trigger opens it as the panel (focus in, the rest of the page inert while it
 `expanded` or `collapsed` (shadcn's `sidebar_state` holds `true` or `false`) for a year instead of a week, and the
 server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
 the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
-the text direction. Only `collapsible="offcanvas"` so far. See [Sidebar](../components/sidebar/).
+the text direction. `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
+Only `collapsible="offcanvas"` so far. See [Sidebar](../components/sidebar/).
 
 The parts inside it keep shadcn's names. `<sl:sidebar-menu-button>` is a link unless `as="button"` (shadcn's renders a
 button, and `asChild` makes it a link); `isActive` is `active`, and `th:active="${#slNav.current('/people')}"` asks the

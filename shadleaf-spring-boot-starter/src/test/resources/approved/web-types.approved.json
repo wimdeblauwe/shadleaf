@@ -2501,6 +2501,22 @@
           } ],
           "default" : "start"
         }, {
+          "name" : "variant",
+          "description" : "How it looks on a desktop: `sidebar` is a column along the edge with a border; `floating` a panel with a margin all round; `inset` lays the sidebar's ground around the page, which (`sl:sidebar-inset`) becomes a card on it. The phone panel looks the same for all three.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sidebar"
+          }, {
+            "name" : "floating"
+          }, {
+            "name" : "inset"
+          } ],
+          "default" : "sidebar"
+        }, {
           "name" : "collapsible",
           "description" : "How it collapses on a desktop: `offcanvas` moves it out of view entirely. Collapsing to icons comes later.",
           "value" : {
@@ -2522,6 +2538,13 @@
         }, {
           "name" : "th:side",
           "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

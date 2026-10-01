@@ -76,13 +76,16 @@ public String people(@RequestParam(required = false) String q,
   model.addAttribute("search", search);
   model.addAttribute("found", search.isEmpty() ? ""
       : people.getTotalElements() == 1 ? "1 person found" : people.getTotalElements() + " people found");
-  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest();
+  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
+      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
   model.addAttribute("fragment", fragment);
   return fragment ? "people :: results" : "people";
 }
 ```
 
-A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. htmx-spring-boot
+A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. So does a link
+that `hx-boost` on the body sends, such as the [sidebar's](../../components/sidebar/#htmx): it has `HX-Boosted` and no
+`HX-Target` (the body has no id), where the table's own boosted links target the results. htmx-spring-boot
 adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
 page. Limit the sortable properties and add a unique last sort key as the [table](../../components/table/#limit-what-can-be-sorted)
 explains; the sample does both.
@@ -325,7 +328,8 @@ The controller answers `HX-Request` with the fragment of one slice, and every ot
 @GetMapping("/people-load-more")
 public String loadMore(@PageableDefault(size = 20, sort = "name") Pageable pageable, HtmxRequest htmxRequest,
     Model model) {
-  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest();
+  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
+      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
   Slice<Person> people;
   if (fragment) {
     people = repository.findAllBy(pageable);

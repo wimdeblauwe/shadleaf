@@ -3,8 +3,14 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
       xmlns:hx="http://www.w3.org/1999/xhtml"
-      th:replace="~{layout/main :: layout('People, load more', ~{::#page-content})}">
+      th:replace="~{layout/main :: layout('People, load more', ~{::breadcrumb}, ~{::#page-content})}">
 <body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page>People, load more</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
 <div id="page-content">
   <p>The same people, read a <code>Slice</code> at a time: Spring Data asks for one row more than it shows to know
     whether there is a next slice, and never counts them all. Load more appends the next slice's rows with htmx and

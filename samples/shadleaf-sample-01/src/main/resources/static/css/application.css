@@ -4,7 +4,6 @@
 */
 body {
   font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  padding: 2rem;
 }
 
 h1 { font-size: 1.875rem; font-weight: 700; }
@@ -13,7 +12,23 @@ h3 { font-size: 1rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }
 p { margin: 0 0 0.75rem; }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.875em; }
 
-.page-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+/*
+  The shell (layout/main.html). Shadleaf draws the sidebar and the inset; the header in the inset and the page's padding
+  are the application's, as in shadcn/ui's sidebar-07: a 4rem row with the trigger, a short vertical separator and the
+  breadcrumb, the page below it with 1rem round it.
+*/
+.inset-header { display: flex; align-items: center; gap: 0.5rem; block-size: 4rem; flex-shrink: 0; padding-inline: 1rem; }
+.inset-header > .sidebar-trigger { margin-inline-start: -0.25rem; }
+.inset-header > .separator { block-size: 1rem; align-self: center; margin-inline-end: 0.5rem; }
+.inset-header-end { margin-inline-start: auto; }
+.page { padding: 0 1rem 1rem; }
+.page > h1 { margin-block-end: 1rem; }
+/* The application's logo in the sidebar's large menu button. */
+.app-logo {
+  display: grid; place-items: center; flex-shrink: 0; inline-size: 2rem; block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px); background: var(--sidebar-primary); color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
 .row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
 
 /* Ladder rung 3: token overrides, scoped here to one block; on :root they rebrand the whole page. */
@@ -27,7 +42,6 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .wide { min-inline-size: 14rem; }
 
 /* The form page. The page layout is the application's; the fields and their spacing are Shadleaf's. */
-.site-nav { display: flex; gap: 0.25rem; margin: 1rem 0; }
 .form { display: grid; gap: 2rem; max-inline-size: 32rem; margin-top: 1.5rem; }
 
 /* The dialog page. */

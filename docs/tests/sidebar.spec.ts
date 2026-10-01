@@ -2,6 +2,7 @@ import {expect, test, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import previews from '../src/generated/previews.json' with {type: 'json'};
 import {ORIGIN, openFixture, type FixtureOptions, type Request} from './fixture';
+import {openShowcase, skins} from './showcase';
 
 // The sidebar's panel mechanism: sl:sidebar-provider, sl:sidebar, sl:sidebar-trigger, sl:sidebar-inset and slSidebar.
 // Fixture pages under a strict Content-Security-Policy with the csp Alpine build, at a desktop width (the sidebar in the
@@ -16,20 +17,25 @@ const PHONE = {width: 390, height: 700};
 type Scenario = { id: string, html: string };
 const PREVIEW = (previews.scenarios as Scenario[]).find(scenario => scenario.id === 'sidebar--default')!.html;
 
-type ShellOptions = { state?: 'expanded' | 'collapsed', side?: 'start' | 'end', title?: string, current?: string };
+type Variant = 'sidebar' | 'floating' | 'inset';
+type ShellOptions = {
+  state?: 'expanded' | 'collapsed', side?: 'start' | 'end', variant?: Variant, title?: string, current?: string
+};
 
 /**
  * The preview's shell as a server renders it for a page: the state, the current page's menu button (as
  * #slNav.current marks it; the large brand button in the header never), the breadcrumb's page, a same-page link, a
- * control in main.
+ * control in main. The preview is the inset variant; the plain sidebar unless asked.
  */
-function shell({state = 'expanded', side = 'start', title = 'Home', current = '/'}: ShellOptions = {}) {
+function shell({state = 'expanded', side = 'start', variant = 'sidebar', title = 'Home', current = '/'}: ShellOptions = {}) {
   return PREVIEW
+      .replace(' data-variant="inset"', '')
       .replace(/(<a class="sidebar-menu-button"[^>]*?)\s*aria-current="page"/g, '$1')
       .replace(new RegExp(`(<a class="sidebar-menu-button")((?:(?!data-size)[^>])*? href="${current}")`),
           '$1 aria-current="page"$2')
       .replace('data-state="expanded"', `data-state="${state}"`)
-      .replace('aria-label="Main">', `aria-label="Main"${side === 'end' ? ' data-side="end"' : ''}>`)
+      .replace('aria-label="Main">', `aria-label="Main"${side === 'end' ? ' data-side="end"' : ''}${
+          variant === 'sidebar' ? '' : ` data-variant="${variant}"`}>`)
       .replace('</nav>', '<a class="btn" data-variant="ghost" href="#section">Section</a></nav>')
       .replace('aria-current="page">Home</span>', `aria-current="page">${title}</span>`)
       .replace('<h1>Home</h1>', `<h1>${title}</h1><button id="in-main" type="button">In main</button>`
@@ -40,15 +46,15 @@ function shell({state = 'expanded', side = 'start', title = 'Home', current = '/
 const stateFrom = (request: Request) =>
     /(?:^|;\s*)sl-sidebar-state=collapsed/.test(request.headers['cookie'] ?? '') ? 'collapsed' : 'expanded';
 
-type OpenOptions = FixtureOptions & { side?: 'start' | 'end', boost?: 'body' | 'main' };
+type OpenOptions = FixtureOptions & { side?: 'start' | 'end', variant?: Variant, boost?: 'body' | 'main' };
 
 /** Serves the shell at / and at /inbox, /calendar and /settings, each rendered from the cookie. */
-async function openShell(page: Page, {side, boost, ...options}: OpenOptions = {}) {
+async function openShell(page: Page, {side, variant, boost, ...options}: OpenOptions = {}) {
   const page_ = (title: string, current: string) => (request: Request) =>
-      ({body: shell({state: stateFrom(request), side, title, current})});
+      ({body: shell({state: stateFrom(request), side, variant, title, current})});
   const boostAttributes = boost === 'body' ? 'hx-boost="true"'
       : boost === 'main' ? 'hx-boost="true" hx-target="main" hx-select="main" hx-swap="outerHTML"' : '';
-  return openFixture(page, (url, request) => shell({state: stateFrom(request), side}), {
+  return openFixture(page, (url, request) => shell({state: stateFrom(request), side, variant}), {
     wrap: false,
     htmx: !!boost,
     bodyAttributes: boostAttributes,
@@ -607,6 +613,143 @@ test.describe('skip link', () => {
     expect(await focused(page), browserName).toBe('Toggle sidebar');
   });
 });
+
+const inset = (page: Page) => page.locator('#main');
+const rectOf = (locator: ReturnType<Page['locator']>) => locator.evaluate(element => {
+  const rect = element.getBoundingClientRect();
+  return {left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top),
+    bottom: Math.round(rect.bottom), width: Math.round(rect.width)};
+});
+const styleOf = (locator: ReturnType<Page['locator']>) => locator.evaluate(element => {
+  const style = getComputedStyle(element);
+  return {
+    background: style.backgroundColor, radius: parseFloat(style.borderStartStartRadius), shadow: style.boxShadow,
+    padding: parseFloat(style.paddingInlineStart), borders: [style.borderTopWidth, style.borderRightWidth,
+      style.borderBottomWidth, style.borderLeftWidth].map(parseFloat), borderStyle: style.borderTopStyle,
+  };
+});
+
+test.describe('variants', () => {
+  // [dir, side, where the sidebar is]: the inset card keeps an 8 px margin on every edge but the sidebar's.
+  const placements = [['ltr', 'start', 'left'], ['rtl', 'start', 'right'], ['ltr', 'end', 'right'],
+    ['rtl', 'end', 'left']] as const;
+
+  for (const [dir, side, edge] of placements) {
+    test(`inset, ${dir}, side ${side}: the page is a card on the sidebar's ground`, async ({page}) => {
+      await page.setViewportSize(DESKTOP);
+      await openShell(page, {variant: 'inset', side, htmlAttributes: `dir="${dir}"`});
+      const ground = await styleOf(page.locator('.sidebar-provider'));
+      expect(ground.background).toBe((await styleOf(sidebar(page))).background);
+      const card = await styleOf(inset(page));
+      expect(card.background).not.toBe(ground.background);
+      expect(card.radius).toBeGreaterThan(0);
+      expect(card.shadow).not.toBe('none');
+      expect(await rectOf(inset(page))).toMatchObject(edge === 'left'
+          ? {left: 256, right: DESKTOP.width - 8, top: 8, bottom: DESKTOP.height - 8}
+          : {left: 8, right: DESKTOP.width - 256, top: 8, bottom: DESKTOP.height - 8});
+      // The sidebar has no edge of its own; its content keeps the card's margin from the screen's edges.
+      expect(await styleOf(sidebar(page))).toMatchObject({borders: [0, 0, 0, 0], padding: 8});
+
+      await trigger(page).click();
+      await expect(sidebar(page)).toBeHidden();
+      await expect.poll(() => rectOf(inset(page))).toMatchObject({left: 8, right: DESKTOP.width - 8, top: 8});
+    });
+
+    test(`floating, ${dir}, side ${side}: a panel with a margin all round`, async ({page}) => {
+      await page.setViewportSize(DESKTOP);
+      await openShell(page, {variant: 'floating', side, htmlAttributes: `dir="${dir}"`});
+      expect(await rectOf(sidebar(page))).toMatchObject(edge === 'left'
+          ? {left: 8, width: 240, top: 8, bottom: DESKTOP.height - 8}
+          : {right: DESKTOP.width - 8, width: 240, top: 8, bottom: DESKTOP.height - 8});
+      const panel = await styleOf(sidebar(page));
+      expect(panel).toMatchObject({borders: [1, 1, 1, 1], borderStyle: 'solid'});
+      expect(panel.radius).toBeGreaterThan(0);
+      expect(panel.shadow).not.toBe('none');
+      // Its footprint is the plain sidebar's, and the page beside it is no card.
+      expect(await rectOf(inset(page))).toMatchObject(edge === 'left'
+          ? {left: 256, right: DESKTOP.width, top: 0} : {left: 0, right: DESKTOP.width - 256, top: 0});
+      expect((await styleOf(inset(page))).radius).toBe(0);
+
+      await trigger(page).click();
+      await expect(sidebar(page)).toBeHidden();
+      await expect.poll(() => rectOf(inset(page))).toMatchObject({left: 0, right: DESKTOP.width});
+      const collapsed = await rectOf(sidebar(page));
+      expect(edge === 'left' ? collapsed.right <= 0 : collapsed.left >= DESKTOP.width, JSON.stringify(collapsed))
+          .toBe(true);
+    });
+  }
+
+  for (const variant of ['floating', 'inset'] as const) {
+    test(`${variant} on a phone: the page and the panel as without a variant`, async ({page}) => {
+      await page.setViewportSize(PHONE);
+      await openShell(page, {variant});
+      expect(await rectOf(inset(page))).toMatchObject({left: 0, right: PHONE.width, top: 0});
+      expect((await styleOf(inset(page))).radius).toBe(0);
+      await trigger(page).click();
+      await expect.poll(() => rectOf(sidebar(page))).toMatchObject({left: 0, width: 288, top: 0, bottom: PHONE.height});
+      expect(await styleOf(sidebar(page))).toMatchObject({radius: 0, padding: 0, borders: [0, 1, 0, 0]});
+    });
+  }
+
+  test('inset: the card follows the collapse only without reduced motion', async ({page}) => {
+    for (const reducedMotion of ['no-preference', 'reduce'] as const) {
+      await page.emulateMedia({reducedMotion});
+      await page.setViewportSize(DESKTOP);
+      await openShell(page, {variant: 'inset'});
+      await trigger(page).click();
+      const moving = await inset(page).evaluate(element => element.getAnimations()
+          .map(animation => (animation as CSSTransition).transitionProperty));
+      expect(moving.includes('margin-inline-start') || moving.includes('margin-left'), `${reducedMotion}: ${moving}`)
+          .toBe(reducedMotion === 'no-preference');
+      await page.unrouteAll({behavior: 'ignoreErrors'});
+      await page.context().clearCookies();
+    }
+  });
+
+  test('forced colours: the inset card and the floating panel keep an edge', async ({page, browserName}) => {
+    test.skip(browserName !== 'chromium', 'forced colours emulation is Chromium only');
+    await page.emulateMedia({forcedColors: 'active'});
+    await page.setViewportSize(DESKTOP);
+    await openShell(page, {variant: 'inset'});
+    expect(await styleOf(inset(page))).toMatchObject({borders: [1, 1, 1, 1], borderStyle: 'solid'});
+    await page.unrouteAll({behavior: 'ignoreErrors'});
+    await openShell(page, {variant: 'floating'});
+    expect(await styleOf(sidebar(page))).toMatchObject({borders: [1, 1, 1, 1], borderStyle: 'solid'});
+  });
+
+  // The showcase's shell is the preview's, inset, in every skin: vega rounds the card, lyra keeps it square.
+  for (const skin of skins) {
+    test(`showcase, ${skin}: the inset card's corners`, async ({page}) => {
+      await page.setViewportSize({width: 1280, height: 720});
+      await openShowcase(page, skin, 'light');
+      const card = await styleOf(page.locator('.sidebar-inset'));
+      expect(card.radius > 0, `${skin}: ${card.radius}`).toBe(skin !== 'lyra');
+      expect(card.shadow).not.toBe('none');
+    });
+  }
+});
+
+// The button skins give an expanded secondary, outline or ghost button the hover look (an open menu's trigger), as
+// shadcn's. The sidebar's trigger is expanded whenever the sidebar is on a desktop, so it keeps its plain look.
+for (const skin of skins) {
+  test(`showcase, ${skin}: the expanded sidebar trigger does not look pressed, an open menu's trigger does`, async ({page}) => {
+    await page.setViewportSize({width: 1280, height: 720});
+    await openShowcase(page, skin, 'light');
+    const background = (selector: string) => page.locator(selector).first()
+        .evaluate(element => getComputedStyle(element).backgroundColor);
+    const sidebarTrigger = page.locator('.sidebar-provider .sidebar-trigger');
+    await expect(sidebarTrigger).toHaveAttribute('aria-expanded', 'true');
+    expect(await background('.sidebar-provider .sidebar-trigger')).toBe('rgba(0, 0, 0, 0)');
+
+    const menuTrigger = page.locator('.showcase .breadcrumb-ellipsis-trigger').first();
+    expect(await background('.showcase .breadcrumb-ellipsis-trigger')).toBe('rgba(0, 0, 0, 0)');
+    await menuTrigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(menuTrigger).toHaveAttribute('aria-expanded', 'true');
+    await page.mouse.move(0, 0);
+    expect(await background('.showcase .breadcrumb-ellipsis-trigger')).not.toBe('rgba(0, 0, 0, 0)');
+  });
+}
 
 test.describe('direction and side', () => {
   for (const [dir, side, edge] of [['ltr', 'start', 'left'], ['rtl', 'start', 'right'], ['ltr', 'end', 'right'],

@@ -40,7 +40,7 @@ public class HtmxFormController {
   public String submit(@Valid @ModelAttribute("contactForm") ContactForm contactForm, BindingResult bindingResult,
       HtmxRequest htmxRequest, Model model, RedirectAttributes redirectAttributes) {
     FormController.rejectLinks(contactForm, bindingResult);
-    if (htmxRequest.isHtmxRequest()) {
+    if (HtmxRequests.wantsFragment(htmxRequest)) {
       if (!bindingResult.hasErrors()) {
         model.addAttribute("sentTo", contactForm.getEmail());
       }
