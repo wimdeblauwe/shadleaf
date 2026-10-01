@@ -215,7 +215,11 @@ data table sorts in the browser with TanStack Table, <code dir="auto">&lt;sl:tab
 the page in another order (<code dir="auto">?sort=name,desc</code>), read from a Spring Data <code dir="auto">Page</code>. A cell’s alignment is <code dir="auto">data-align="end"</code>
 rather than a <code dir="auto">text-right</code> class. Filtering is a <code dir="auto">GET</code> form the server answers, with <code dir="auto">sl:query-params</code> keeping the
 order and page size, and htmx to search as the user types (<a href="../guides/tables-htmx/">Tables with htmx</a>). There is no
-column visibility or browser-side paging. See <a href="../components/table/">Table</a>.</p>
+column visibility or browser-side paging. Row selection is the application’s own checkboxes, which submit with a form:
+<code dir="auto">&lt;sl:table-select-all&gt;</code> takes the place of the header’s <code dir="auto">Checkbox</code> with <code dir="auto">table.getIsAllPageRowsSelected()</code>, and
+<code dir="auto">&lt;sl:table-selection-count&gt;</code> of <code dir="auto">"{n} of {total} row(s) selected."</code> (it reads “2 of 20 selected”). The selected row’s
+background comes from CSS (a checked checkbox in the row’s first cell), not from <code dir="auto">data-state="selected"</code>. The
+selection covers the page only; a sort or another page starts afresh. See <a href="../components/table/#selecting-rows">Table</a>.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="pagination-built-from-a-spring-data-page">Pagination: built from a Spring Data page</h3><a class="sl-anchor-link" href="#pagination-built-from-a-spring-data-page"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Pagination: built from a Spring Data page”</span></a></div>
 <p>The parts are shadcn’s (<code dir="auto">PaginationContent</code>, <code dir="auto">-Item</code>, <code dir="auto">-Link</code>, <code dir="auto">-Previous</code>, <code dir="auto">-Next</code>, <code dir="auto">-Ellipsis</code>), and
 <code dir="auto">&lt;sl:pagination th:page="${people}"/&gt;</code> with no content renders them all from a Spring Data <code dir="auto">Page</code>: links that keep the
@@ -291,7 +295,8 @@ buttons and switches are separate components, as in shadcn, but shadcn’s <code
 accent background, as in the dropdown menu.</li>
 <li>Checkbox, radio group and switch are the browser’s own inputs, styled, where shadcn builds them from buttons. They
 submit with the form without a hidden input of their own, <code dir="auto">th:field</code> binds them, and the keyboard works as it does
-on any radio button or checkbox. There is no indeterminate checkbox yet.</li>
+on any radio button or checkbox. The indeterminate state is the input’s own (<code dir="auto">indeterminate</code> prop, or the DOM
+property) and shows a minus; shadcn’s checkbox shows its check mark for <code dir="auto">checked="indeterminate"</code>.</li>
 <li>A disabled checkbox fades as a whole, check mark included. In the lyra skin a disabled native select gets the same
 grey background as a disabled input (shadcn’s lyra only gives it to input and textarea).</li>
 </ul>

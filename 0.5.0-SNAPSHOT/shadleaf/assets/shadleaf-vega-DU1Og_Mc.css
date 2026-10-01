@@ -897,18 +897,18 @@
     }
   }
 
-  .checkbox-indicator {
+  .checkbox-indicator, .checkbox-indeterminate-indicator {
     pointer-events: none;
     visibility: hidden;
   }
 
   @media (forced-colors: active) {
-    .checkbox-indicator {
+    .checkbox-indicator, .checkbox-indeterminate-indicator {
       display: none;
     }
   }
 
-  .checkbox:checked ~ .checkbox-indicator {
+  .checkbox:checked:not(:indeterminate) ~ .checkbox-indicator, .checkbox:indeterminate ~ .checkbox-indeterminate-indicator {
     visibility: visible;
   }
 
@@ -1997,6 +1997,10 @@
   .table > tbody > tr.table-empty > td {
     text-align: center;
     white-space: normal;
+  }
+
+  .table-select-all[x-cloak], .table-selection-count[x-cloak] {
+    visibility: hidden;
   }
 
   .tabs {
@@ -3870,7 +3874,7 @@
     border-radius: 4px;
   }
 
-  .checkbox:checked {
+  .checkbox:checked, .checkbox:indeterminate {
     border-color: var(--primary);
     background-color: var(--primary);
   }
@@ -3901,7 +3905,7 @@
     }
   }
 
-  .checkbox[aria-invalid="true"]:checked {
+  .checkbox[aria-invalid="true"]:checked, .checkbox[aria-invalid="true"]:indeterminate {
     border-color: var(--primary);
   }
 
@@ -3923,7 +3927,7 @@
     }
   }
 
-  .checkbox:where(.dark, .dark *):checked {
+  .checkbox:where(.dark, .dark *):checked, .checkbox:where(.dark, .dark *):indeterminate {
     background-color: var(--primary);
   }
 
@@ -3947,7 +3951,7 @@
     }
   }
 
-  .checkbox-indicator {
+  .checkbox-indicator, .checkbox-indeterminate-indicator {
     width: calc(var(--spacing) * 3.5);
     height: calc(var(--spacing) * 3.5);
     color: var(--primary-foreground);
@@ -5134,6 +5138,10 @@
     }
   }
 
+  .table > tbody > tr:has( > :first-child .checkbox:checked) {
+    background-color: var(--muted);
+  }
+
   .table > tbody > tr:last-child, .table > tfoot > tr:last-child {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 0;
@@ -5219,7 +5227,7 @@
     padding-inline-end: calc(var(--spacing) * 2);
   }
 
-  .pagination-summary {
+  .pagination-summary, .table-selection-count {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--muted-foreground);
