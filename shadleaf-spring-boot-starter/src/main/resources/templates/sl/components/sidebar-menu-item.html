@@ -1,0 +1,24 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One entry of a <code>sl:sidebar-menu</code>: an <code>li</code> holding a
+      <code>sl:sidebar-menu-button</code>, and optionally a <code>sl:sidebar-menu-badge</code> or a
+      <code>sl:sidebar-menu-action</code> beside it. With a badge, the button is described by it
+      (<code>aria-describedby</code>), so a screen reader says "Inbox, link, 12".</sl:description>
+    <sl:prop name="id">The item's id. Its badge gets <code>&lt;id&gt;-badge</code>; without an id, each render
+      generates one (<code>sl-sidebar-menu-item-</code> and eight random characters).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The button and the badge read slSidebarMenuBadgeId: the badge's id and the button's aria-describedby. Always set
+  (null without a badge), so an item nested in this one does not point at this item's badge. */-->
+<li th:fragment="sidebar-menu-item"
+    class="sidebar-menu-item"
+    th:with="slSidebarMenuBadgeId=${slots.contains('sidebar-menu-badge', 'sidebar-menu-item')
+               ? (props.id ?: 'sl-sidebar-menu-item-' + #strings.randomAlphanumeric(8).toLowerCase()) + '-badge'
+               : null}"
+    th:attr="id=${props.id}"
+    sl:attrs><sl:slot/></li>
+</body>
+</html>

@@ -7,8 +7,9 @@
       is a panel over the page, which the trigger opens. It is a <code>nav</code> named "Main"
       (<code>sl.sidebar.label</code>; an <code>aria-label</code> replaces it) and a popover: the browser opens the panel
       in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open
-      panel and makes the rest of the page inert, and closes it when a link in it is followed. Put the links in it
-      yourself for now.</sl:description>
+      panel and makes the rest of the page inert, and closes it when a link in it is followed. It holds
+      <code>sl:sidebar-header</code>, <code>sl:sidebar-content</code> (groups of menus) and
+      <code>sl:sidebar-footer</code>.</sl:description>
     <sl:prop name="id" default="sidebar">The id the trigger points at (<code>sl:sidebar-trigger</code>'s
       <code>for</code>).</sl:prop>
     <sl:prop name="side" default="start" values="start end">The edge it sits on: the start of a line (the left, or the

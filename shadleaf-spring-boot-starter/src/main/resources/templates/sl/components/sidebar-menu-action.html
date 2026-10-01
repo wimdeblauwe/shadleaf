@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>An icon button at the end of a <code>sl:sidebar-menu-item</code>, beside its
+      <code>sl:sidebar-menu-button</code>: a second action for that entry, such as "More" or "Remove from
+      favourites". It holds only an icon, so it needs an <code>aria-label</code> that names the entry too ("More for
+      Design Engineering"). Every other attribute passes through.</sl:description>
+    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
+      (<code>a</code>) to a page.</sl:prop>
+    <sl:prop name="type" default="button" values="button submit reset">Submit behaviour of the button; defaults to
+      <code>button</code>.</sl:prop>
+    <sl:prop name="show-on-hover" type="boolean">From 768&nbsp;px, show it only while the pointer is over the item,
+      the focus is in it, or its menu is open (<code>aria-expanded="true"</code>). Always shown on a
+      phone.</sl:prop>
+    <sl:accessible-name/>
+  </sl:props>
+</head>
+<body>
+<th:block th:fragment="sidebar-menu-action">
+  <button th:if="${props.as == 'button'}"
+          class="sidebar-menu-action"
+          th:type="${props.type}"
+          th:attr="data-show-on-hover=${props['show-on-hover'] ? 'true' : null}"
+          sl:attrs><sl:slot/></button>
+  <a th:unless="${props.as == 'button'}"
+     class="sidebar-menu-action"
+     th:attr="data-show-on-hover=${props['show-on-hover'] ? 'true' : null}"
+     sl:attrs><sl:slot/></a>
+</th:block>
+</body>
+</html>

@@ -37,9 +37,12 @@ for (const {skin, theme} of combinations) {
       // dialog or popover cannot be hovered; dialog.spec.ts and popup.spec.ts check them open, as disclosure.spec.ts and
       // tabs.spec.ts check closed sections and inactive panels. The button of a customizable
       // select is part of the select, not a control of its own.
+      // The shell scenario (the sidebar) follows the showcase region; on a desktop its popover is closed but shown in
+      // the page, so a closed popover only counts when it is no sidebar.
       const controls = page.locator(
-          '.showcase :is(a[href], button):not([disabled]):not([aria-disabled]):not(select > button)'
-          + ':not(dialog:not([open]) *):not([popover]:not(:popover-open) *)'
+          ':is(.showcase, .sidebar-provider) :is(a[href], button):not([disabled]):not([aria-disabled])'
+          + ':not(select > button)'
+          + ':not(dialog:not([open]) *):not([popover]:not(:popover-open):not(.sidebar) *)'
           // Nor those in a closed details element (accordion, collapsible) or an inactive tab panel.
           + ':not(details:not([open]) > :not(summary) *):not([hidden] *)');
       const count = await controls.count();

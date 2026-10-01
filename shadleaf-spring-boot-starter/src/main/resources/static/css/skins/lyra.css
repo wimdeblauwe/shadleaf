@@ -994,4 +994,126 @@
   .sidebar-inset {
     @apply bg-background;
   }
+
+  /*
+    The sidebar's content parts, after shadcn's lyra style. The current entry
+    ([aria-current]) and a hovered one take the accent; the focus ring is the sidebar's. A badge follows the
+    colour of the button it describes.
+  */
+  .sidebar-header,
+  .sidebar-footer {
+    @apply gap-2 p-2;
+  }
+
+  .sidebar-content {
+    @apply gap-0;
+  }
+
+  .sidebar-separator {
+    @apply mx-2 bg-sidebar-border;
+  }
+
+  .sidebar-group {
+    @apply p-2;
+  }
+
+  .sidebar-group-label {
+    @apply h-8 rounded-none px-2 text-xs text-sidebar-foreground/70 ring-sidebar-ring focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-group-content {
+    @apply text-xs;
+  }
+
+  .sidebar-menu {
+    @apply gap-0;
+  }
+
+  .sidebar-menu-button:not([data-variant]) {
+    @apply bg-transparent;
+  }
+
+  .sidebar-menu-button[data-variant='outline'] {
+    @apply bg-background hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      shadow-[0_0_0_1px_var(--sidebar-border)] hover:shadow-[0_0_0_1px_var(--sidebar-accent)];
+  }
+
+  /* After the variants, so hover and the current entry win over their background. */
+  .sidebar-menu-button {
+    @apply gap-2 rounded-none p-2 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      active:bg-sidebar-accent active:text-sidebar-accent-foreground focus-visible:ring-2
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-button:is([aria-current='page'], [aria-current='true']) {
+    @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground;
+  }
+
+  .sidebar-menu-button:not([data-size]) {
+    @apply h-8 text-xs;
+  }
+
+  .sidebar-menu-button[data-size='sm'] {
+    @apply h-7 text-xs;
+  }
+
+  .sidebar-menu-button[data-size='lg'] {
+    @apply h-12 text-xs;
+  }
+
+  .sidebar-menu-button-label > small {
+    @apply text-xs;
+  }
+
+  .sidebar-group-action {
+    @apply end-3 top-3.5 w-5 rounded-none p-0 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-action {
+    @apply end-1 top-1.5 w-5 rounded-none p-0 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-badge {
+    @apply end-1 top-1.5 h-5 min-w-5 rounded-none px-1 text-xs font-medium text-sidebar-foreground;
+  }
+
+  .sidebar-menu-button[data-size='sm'] ~ :is(.sidebar-menu-action, .sidebar-menu-badge) {
+    @apply top-1;
+  }
+
+  .sidebar-menu-button[data-size='lg'] ~ :is(.sidebar-menu-action, .sidebar-menu-badge) {
+    @apply top-3.5;
+  }
+
+  .sidebar-menu-button:is(:hover, [aria-current='page'], [aria-current='true']) ~ :is(.sidebar-menu-action, .sidebar-menu-badge) {
+    @apply text-sidebar-accent-foreground;
+  }
+
+  /*
+    On a phone the actions are 24px (WCAG 2.2's target size; shadcn's 20px with a larger pseudo-element hit area does not
+    count), centred on the button of each size.
+  */
+  @media (width < 48rem) {
+    .sidebar-group-action {
+      @apply top-3 w-6;
+    }
+
+    .sidebar-menu-action {
+      @apply top-1 w-6;
+    }
+
+    .sidebar-menu-button[data-size='sm'] ~ .sidebar-menu-action {
+      @apply top-0.5;
+    }
+
+    .sidebar-menu-button[data-size='lg'] ~ .sidebar-menu-action {
+      @apply top-3;
+    }
+  }
 }

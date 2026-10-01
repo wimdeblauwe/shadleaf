@@ -9,10 +9,9 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 <ComponentPreview id="sidebar--default" />
 
 :::note[Being built]
-This is the sidebar's frame: the provider, the sidebar, the trigger and the inset, with collapsing, the phone panel
-and the remembered state. The parts that go inside it (header, groups, menus with active items, badges), the
-breadcrumb, a skip link, collapsing to icons and a header layout follow in the next releases. Until then, put your own
-links in the sidebar.
+The sidebar's frame (provider, sidebar, trigger, inset: collapsing, the phone panel, the remembered state) and the
+parts that go inside it (header, groups, menus, the current page, badges, actions) are here. The breadcrumb, a skip
+link, collapsing to icons with sub-menus, and a header layout follow in the next releases.
 :::
 
 ## Built from parts
@@ -29,8 +28,7 @@ An application shell with a sidebar is four components, as in shadcn/ui:
 <body>
 <sl:sidebar-provider>
   <sl:sidebar>
-    <a th:href="@{/}">Home</a>
-    <a th:href="@{/people}">People</a>
+    <!-- header, content with groups and menus, footer: see "What goes inside" below -->
   </sl:sidebar>
   <sl:sidebar-inset id="content">
     <header>
@@ -44,6 +42,126 @@ An application shell with a sidebar is four components, as in shadcn/ui:
 
 Put the sidebar straight inside the provider (not in an element of your own): the CSS that collapses it looks for it
 there.
+
+## What goes inside
+
+The sidebar holds a header, the content and a footer, with shadcn/ui's names:
+
+- `<sl:sidebar-header>` at the top (the application or team) and `<sl:sidebar-footer>` at the bottom (settings, help,
+  later the signed-in user). They stay in view.
+- `<sl:sidebar-content>` between them, which scrolls when there is more than fits. It is a plain `div`: the sidebar
+  itself is the navigation landmark.
+- `<sl:sidebar-separator>` draws a line between parts; screen readers skip it.
+
+The content is made of groups, and each group of a menu:
+
+```html
+<sl:sidebar>
+  <sl:sidebar-header>
+    <sl:sidebar-menu>
+      <sl:sidebar-menu-item>
+        <sl:sidebar-menu-button th:href="@{/}" size="lg">
+          <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+          <strong>Acme Inc.</strong>
+          <small>Enterprise</small>
+        </sl:sidebar-menu-button>
+      </sl:sidebar-menu-item>
+    </sl:sidebar-menu>
+  </sl:sidebar-header>
+  <sl:sidebar-content>
+    <sl:sidebar-group id="platform">
+      <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+      <sl:sidebar-group-content>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+              <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
+              People
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group-content>
+    </sl:sidebar-group>
+  </sl:sidebar-content>
+  <sl:sidebar-footer>...</sl:sidebar-footer>
+</sl:sidebar>
+```
+
+- `<sl:sidebar-group>` with a `<sl:sidebar-group-label>` is a group named by its label: a screen reader says
+  "Platform, group" when the focus moves into it. The label's id is the group's `id` with `-label`; without an `id` the
+  group generates one on every render. Without a label, a group is a plain `div`.
+- `<sl:sidebar-group-content>` holds the group's menu, below the label.
+- `<sl:sidebar-menu>` is a list (`ul`), so a screen reader says how many entries it has, and
+  `<sl:sidebar-menu-item>` one entry (`li`).
+- `<sl:sidebar-menu-button>` is the link: an icon in the `icon-start` slot (and `icon-end` for one at the end), then
+  the label, which ends in an ellipsis when it does not fit. For two lines, put each in an element of its own, such as
+  `<strong>` and `<small>`.
+
+## Menu buttons
+
+A menu button is a link (`as="a"`, the default), or with `as="button"` a button, for an action that is no page of its
+own; every attribute that is no prop passes through, so `hx-get` or `commandfor` work as on any button. `size` is
+`default`, `sm` (a dense list, such as the footer's) or `lg` (two lines, such as the application's name in the
+header), and `variant="outline"` adds a background and a border. `disabled` works as on `<sl:button>`: a disabled link
+loses its `href` and leaves the tab order.
+
+<ComponentPreview id="sidebar--menu-button" />
+
+## The current page
+
+`active` marks the current page: the link gets `aria-current="page"`, which a screen reader says ("current page"), and
+the accent background. A menu button that is a button gets `aria-current="true"` ("current").
+
+A layout usually has no model attribute saying which page it shows. `#slNav.current(path)` asks the request:
+
+```html
+<sl:sidebar-menu-button th:href="@{/people}" th:active="${#slNav.current('/people')}">People</sl:sidebar-menu-button>
+```
+
+- The path is the application's own, as in `@{/people}`: a context path makes no difference.
+- It is the current page for `/people` and for every page below it, such as `/people/12/edit`, but not for
+  `/peoples`. `#slNav.current('/people', true)` is only `/people` itself.
+- `/` is only the current page for `/` itself, or Home would be current on every page.
+- A query string and a trailing slash are ignored: `/people?page=2` is `/people`.
+
+On a phone the panel opens with the focus on the current page's link. With `hx-boost` on the body every page comes
+from the server with the right link marked; an application that swaps only the main area leaves the old one marked,
+unless it swaps the menu too (out of band).
+
+## Badges
+
+`<sl:sidebar-menu-badge>` puts a count at the end of a menu button, inside the same menu item:
+
+```html
+<sl:sidebar-menu-item id="inbox">
+  <sl:sidebar-menu-button th:href="@{/inbox}">
+    <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+    Inbox
+  </sl:sidebar-menu-button>
+  <sl:sidebar-menu-badge th:label="${unread + ' unread'}">[[${unread}]]</sl:sidebar-menu-badge>
+</sl:sidebar-menu-item>
+```
+
+The button is described by the badge (`aria-describedby`), so when Tab reaches it a screen reader says "Inbox, link,
+12 unread". `label` is what it says instead of the bare number. The badge's id is the item's `id` with `-badge`;
+without an `id` the item generates one on every render.
+
+## Actions
+
+`<sl:sidebar-group-action>` is an icon button at the end of a group's label ("Add project"), and
+`<sl:sidebar-menu-action>` one at the end of a menu item, beside its button ("More"). Both hold only an icon, so they
+need an `aria-label`; name the entry too, as every item has one ("More for Design Engineering"). With `as="a"` they are
+links. `show-on-hover` on a menu action hides it on a desktop until the pointer is over its item or the focus is in
+it; on a phone it is always there. On a phone both are 24 px, the minimum target size of WCAG 2.2.
+
+```html
+<sl:sidebar-menu-item>
+  <sl:sidebar-menu-button th:href="@{/projects/{id}(id=${project.id})}">[[${project.name}]]</sl:sidebar-menu-button>
+  <sl:sidebar-menu-action th:aria-label="|More for ${project.name}|" show-on-hover>
+    <sl:icon name="ellipsis"/>
+  </sl:sidebar-menu-action>
+</sl:sidebar-menu-item>
+```
 
 ## One element for a desktop and a phone
 
@@ -103,7 +221,8 @@ backdrop fades. With reduced motion (`prefers-reduced-motion: reduce`) the chang
 
 ## Without JavaScript
 
-The phone panel still opens and closes: that is the browser's popover. It is not modal then (Tab can leave it), and it
+The parts inside the sidebar need none: the current page, the badges and the actions are all in the markup (an action
+does what its attributes say). The phone panel still opens and closes: that is the browser's popover. It is not modal then (Tab can leave it), and it
 stays open when one of its links goes to a place on the same page. On a desktop nothing can collapse the sidebar, so
 the trigger is hidden there (`@media (scripting: none)`); the sidebar shows in the state the cookie asked for.
 
@@ -118,8 +237,11 @@ part of the markup htmx saves, and the panel closes before htmx takes its snapsh
 
 For now:
 
-- the parts inside the sidebar, the breadcrumb, a skip link and the active page (next);
-- `collapsible="icon"` (collapsing to a strip of icons, with tooltips) and `collapsible="none"`;
+- the breadcrumb and a skip link (next);
+- `collapsible="icon"` (collapsing to a strip of icons, with tooltips on the menu buttons), collapsible groups and
+  sub-menus (`SidebarMenuSub`), and `collapsible="none"`;
+- a menu action that opens a dropdown menu;
+- `SidebarInput` (use `<sl:input>`) and `SidebarMenuSkeleton` (use `<sl:skeleton>`);
 - `variant="floating"` and `variant="inset"`;
 - `SidebarRail`, the strip along the sidebar's edge that toggles it;
 - a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page.
@@ -141,6 +263,58 @@ For now:
 ### sl:sidebar-inset
 
 <ComponentAttributes component="sidebar-inset" />
+
+### sl:sidebar-header
+
+<ComponentAttributes component="sidebar-header" />
+
+### sl:sidebar-content
+
+<ComponentAttributes component="sidebar-content" />
+
+### sl:sidebar-footer
+
+<ComponentAttributes component="sidebar-footer" />
+
+### sl:sidebar-separator
+
+<ComponentAttributes component="sidebar-separator" />
+
+### sl:sidebar-group
+
+<ComponentAttributes component="sidebar-group" />
+
+### sl:sidebar-group-label
+
+<ComponentAttributes component="sidebar-group-label" />
+
+### sl:sidebar-group-action
+
+<ComponentAttributes component="sidebar-group-action" />
+
+### sl:sidebar-group-content
+
+<ComponentAttributes component="sidebar-group-content" />
+
+### sl:sidebar-menu
+
+<ComponentAttributes component="sidebar-menu" />
+
+### sl:sidebar-menu-item
+
+<ComponentAttributes component="sidebar-menu-item" />
+
+### sl:sidebar-menu-button
+
+<ComponentAttributes component="sidebar-menu-button" />
+
+### sl:sidebar-menu-action
+
+<ComponentAttributes component="sidebar-menu-action" />
+
+### sl:sidebar-menu-badge
+
+<ComponentAttributes component="sidebar-menu-badge" />
 
 ## JavaScript
 

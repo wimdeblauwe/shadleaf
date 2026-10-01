@@ -16,11 +16,17 @@ const PHONE = {width: 390, height: 700};
 type Scenario = { id: string, html: string };
 const PREVIEW = (previews.scenarios as Scenario[]).find(scenario => scenario.id === 'sidebar--default')!.html;
 
-type ShellOptions = { state?: 'expanded' | 'collapsed', side?: 'start' | 'end', title?: string };
+type ShellOptions = { state?: 'expanded' | 'collapsed', side?: 'start' | 'end', title?: string, current?: string };
 
-/** The preview's shell as a server renders it for a page: the state, a same-page link, a control in main. */
-function shell({state = 'expanded', side = 'start', title = 'Home'}: ShellOptions = {}) {
+/**
+ * The preview's shell as a server renders it for a page: the state, the current page's menu button (as
+ * #slNav.current marks it; the large brand button in the header never), a same-page link, a control in main.
+ */
+function shell({state = 'expanded', side = 'start', title = 'Home', current = '/'}: ShellOptions = {}) {
   return PREVIEW
+      .replace(/\s*aria-current="page"/g, '')
+      .replace(new RegExp(`(<a class="sidebar-menu-button")((?:(?!data-size)[^>])*? href="${current}")`),
+          '$1 aria-current="page"$2')
       .replace('data-state="expanded"', `data-state="${state}"`)
       .replace('aria-label="Main">', `aria-label="Main"${side === 'end' ? ' data-side="end"' : ''}>`)
       .replace('</nav>', '<a class="btn" data-variant="ghost" href="#section">Section</a></nav>')
@@ -36,14 +42,18 @@ type OpenOptions = FixtureOptions & { side?: 'start' | 'end', boost?: 'body' | '
 
 /** Serves the shell at / and at /inbox, /calendar and /settings, each rendered from the cookie. */
 async function openShell(page: Page, {side, boost, ...options}: OpenOptions = {}) {
-  const page_ = (title: string) => (request: Request) => ({body: shell({state: stateFrom(request), side, title})});
+  const page_ = (title: string, current: string) => (request: Request) =>
+      ({body: shell({state: stateFrom(request), side, title, current})});
   const boostAttributes = boost === 'body' ? 'hx-boost="true"'
       : boost === 'main' ? 'hx-boost="true" hx-target="main" hx-select="main" hx-swap="outerHTML"' : '';
   return openFixture(page, (url, request) => shell({state: stateFrom(request), side}), {
     wrap: false,
     htmx: !!boost,
     bodyAttributes: boostAttributes,
-    routes: {'/inbox': page_('Inbox'), '/calendar': page_('Calendar'), '/settings': page_('Settings')},
+    routes: {
+      '/inbox': page_('Inbox', '/inbox'), '/calendar': page_('Calendar', '/calendar'),
+      '/settings': page_('Settings', '/settings'),
+    },
     ...options,
   });
 }
@@ -55,7 +65,7 @@ const focused = (page: Page) => page.evaluate(() => {
   const element = document.activeElement!;
   return element === document.body ? 'body'
       : `${element.closest('#sidebar') ? 'sidebar: ' : ''}${element.id ? '#' + element.id + ' ' : ''}${
-          element.textContent?.trim() || element.getAttribute('aria-label')}`;
+          element.textContent?.replace(/\s+/g, ' ').trim() || element.getAttribute('aria-label')}`;
 });
 const inertElements = (page: Page) => page.evaluate(() => document.querySelectorAll('[inert]').length);
 const box = (page: Page) => sidebar(page).evaluate(element => {
@@ -99,9 +109,10 @@ test.describe('desktop', () => {
       expect(roles).toContain('main:');
       expect(roles.filter(role => role.startsWith('dialog'))).toEqual([]);
     }
-    // The first Tab lands on the first link: the sidebar itself is no tab stop (Firefox made a dialog one).
+    // The first Tab lands on the first link, the application's name in the header: the sidebar itself is no tab stop
+    // (Firefox made a dialog one).
     await page.keyboard.press('Tab');
-    expect(await focused(page)).toBe('sidebar: Home');
+    expect(await focused(page)).toBe('sidebar: Acme Inc. Enterprise');
     const results = await new AxeBuilder({page}).withTags(TAGS).analyze();
     expect(results.violations.map(violation => violation.id)).toEqual([]);
     expect(messages).toEqual([]);
@@ -261,7 +272,10 @@ test.describe('phone', () => {
     if (browserName === 'chromium') {
       const {roles} = await accessibilityTree(page);
       expect(roles).toContain('navigation:Main');
-      expect(roles.filter(role => /^(main|button|heading):/.test(role))).toEqual([]);
+      // The panel's own buttons (Add project, More for ...) stay; the page's are gone.
+      expect(roles.filter(role => /^(main|heading):/.test(role)
+          || ['button:Toggle sidebar', 'button:In main'].includes(role))).toEqual([]);
+      expect(roles).toContain('button:Add project');
     }
     // A click beside the panel does not reach the page under it: inert content is not hit.
     expect(await page.evaluate(() => document.elementFromPoint(370, 300)?.closest('.sidebar-inset') ?? null)).toBeNull();
@@ -408,12 +422,102 @@ test.describe('phone', () => {
     expect(await inertElements(page)).toBe(0);
     // The browser puts a popover's content right after its trigger in the tab order: past it, into the page.
     const stops: string[] = [];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 20; i++) {
       await page.keyboard.press('Tab');
       stops.push(await focused(page));
     }
-    expect(stops.some(stop => !stop.startsWith('sidebar: '))).toBe(true);
+    expect(stops.some(stop => !stop.startsWith('sidebar: ')), stops.join(', ')).toBe(true);
     await expect(page.getByRole('button', {name: 'In main'})).toHaveCount(1);
+  });
+});
+
+test.describe('content parts', () => {
+  const link = (page: Page, name: string) => sidebar(page).getByRole('link', {name, exact: true});
+  const rect = (page: Page, selector: string) => page.locator(selector).first().evaluate(element => {
+    const box = element.getBoundingClientRect();
+    return {left: box.left, right: box.right, top: box.top, bottom: box.bottom};
+  });
+
+  test('groups are named by their labels, and a badge describes its link', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    await openShell(page);
+
+    await expect(sidebar(page).getByRole('group', {name: 'Platform'})).toBeVisible();
+    await expect(sidebar(page).getByRole('group', {name: 'Projects'})).toBeVisible();
+    await expect(sidebar(page).getByRole('group', {name: 'Platform'}).getByRole('listitem')).toHaveCount(3);
+    await expect(link(page, 'Inbox')).toHaveAccessibleDescription('12 unread');
+    await expect(link(page, 'Home')).toHaveAttribute('aria-current', 'page');
+    await expect(link(page, 'Home')).not.toHaveAttribute('aria-describedby');
+    await expect(sidebar(page).getByRole('button', {name: 'Add project'})).toBeVisible();
+    // The current page stands out: the accent behind it, a plain entry has none.
+    const background = (name: string) => link(page, name).evaluate(element => getComputedStyle(element).backgroundColor);
+    expect(await background('Home')).not.toBe(await background('Calendar'));
+    expect(await background('Calendar')).toBe('rgba(0, 0, 0, 0)');
+  });
+
+  test('the server marks the current page, and the panel opens on it', async ({page}) => {
+    await page.setViewportSize(PHONE);
+    await openShell(page, {path: '/calendar'});
+    // The panel is closed, so by its href: role queries skip hidden content.
+    await expect(sidebar(page).locator('a[href="/calendar"]')).toHaveAttribute('aria-current', 'page');
+    await expect(sidebar(page).locator('[aria-current]')).toHaveCount(1);
+
+    await trigger(page).click();
+    // Not the first link (the application's name), nor Home: the current page's menu button.
+    await expect.poll(() => focused(page)).toBe('sidebar: Calendar');
+  });
+
+  for (const viewport of [DESKTOP, PHONE]) {
+    const width = viewport === DESKTOP ? 'desktop' : 'phone';
+
+    test(`${width}: badges and actions lie at the end of their item, the label beside them`, async ({page}) => {
+      await page.setViewportSize(viewport);
+      await openShell(page);
+      if (viewport === PHONE) {
+        await trigger(page).click();
+        await expect(sidebar(page)).toBeVisible();
+      }
+      for (const [item, end] of [['#inbox', '.sidebar-menu-badge'],
+        ['.sidebar-menu-item:has(> .sidebar-menu-action)', '.sidebar-menu-action']] as const) {
+        const button = await rect(page, `${item} > .sidebar-menu-button`);
+        const label = await rect(page, `${item} .sidebar-menu-button-label`);
+        const at = await rect(page, `${item} > ${end}`);
+        expect(at.right).toBeLessThanOrEqual(button.right);
+        expect(at.right).toBeGreaterThan(button.right - 8);
+        expect(label.right).toBeLessThanOrEqual(at.left);
+        // Centred on the button, give or take a pixel.
+        expect(Math.abs((at.top + at.bottom) / 2 - (button.top + button.bottom) / 2)).toBeLessThanOrEqual(1);
+      }
+      // The header's two lines: one under the other, inside the large button.
+      const strong = await rect(page, '.sidebar-header strong');
+      const small = await rect(page, '.sidebar-header small');
+      expect(small.top).toBeGreaterThanOrEqual(strong.bottom - 1);
+    });
+  }
+
+  test('desktop: an action shown on hover appears on hover and on focus', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    await openShell(page);
+    const action = sidebar(page).getByRole('button', {name: 'More for Design Engineering'});
+    const opacity = () => action.evaluate(element => getComputedStyle(element).opacity);
+
+    expect(await opacity()).toBe('0');
+    await link(page, 'Design Engineering').hover();
+    expect(await opacity()).toBe('1');
+    await page.mouse.move(700, 600);
+    expect(await opacity()).toBe('0');
+    await link(page, 'Design Engineering').focus();
+    await page.keyboard.press('Tab');
+    await expect(action).toBeFocused();
+    expect(await opacity()).toBe('1');
+  });
+
+  test('phone: an action shown on hover is always there', async ({page}) => {
+    await page.setViewportSize(PHONE);
+    await openShell(page);
+    await trigger(page).click();
+    const action = sidebar(page).getByRole('button', {name: 'More for Design Engineering'});
+    expect(await action.evaluate(element => getComputedStyle(element).opacity)).toBe('1');
   });
 });
 
@@ -472,7 +576,7 @@ test.describe('motion', () => {
   });
 });
 
-test('forced colours: the sidebar keeps a border, and the panel its backdrop', async ({page, browserName}) => {
+test('forced colours: the sidebar keeps a border, the panel its backdrop, the current page an outline', async ({page, browserName}) => {
   test.skip(browserName !== 'chromium', 'forced colours emulation is Chromium only');
   await page.emulateMedia({forcedColors: 'active'});
   await page.setViewportSize(DESKTOP);
@@ -482,6 +586,17 @@ test('forced colours: the sidebar keeps a border, and the panel its backdrop', a
     return {style: style.borderInlineEndStyle, width: parseFloat(style.borderInlineEndWidth)};
   });
   expect(await border()).toMatchObject({style: 'solid', width: 1});
+  // Without backgrounds the current page keeps an outline; the focus gets a thicker one.
+  const outline = (name: string) => sidebar(page).getByRole('link', {name, exact: true}).evaluate(element => {
+    const style = getComputedStyle(element);
+    return {style: style.outlineStyle, width: parseFloat(style.outlineWidth)};
+  });
+  expect(await outline('Home')).toMatchObject({style: 'solid', width: 1});
+  expect((await outline('Calendar')).style).toBe('none');
+  await sidebar(page).getByRole('link', {name: 'Calendar', exact: true}).focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  expect(await outline('Calendar')).toMatchObject({style: 'solid', width: 2});
 
   await page.setViewportSize(PHONE);
   await trigger(page).click();

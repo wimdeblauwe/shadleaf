@@ -1,0 +1,285 @@
+<!-- <sl:sidebar-header>Acme</sl:sidebar-header> -->
+<div class="sidebar-header">Acme</div>
+
+<!-- <sl:sidebar-content>Groups</sl:sidebar-content> -->
+<div class="sidebar-content">Groups</div>
+
+<!-- <sl:sidebar-footer>Help</sl:sidebar-footer> -->
+<div class="sidebar-footer">Help</div>
+
+<!-- <sl:sidebar-separator/> -->
+<div class="sidebar-separator" role="none"></div>
+
+<!-- <sl:sidebar-group>Content</sl:sidebar-group> -->
+<div class="sidebar-group">Content</div>
+
+<!-- <sl:sidebar-group id="platform"><sl:sidebar-group-label>Platform</sl:sidebar-group-label></sl:sidebar-group> -->
+<div class="sidebar-group" id="platform" role="group" aria-labelledby="platform-label">
+  <div class="sidebar-group-label" id="platform-label">Platform</div>
+</div>
+
+<!-- <sl:sidebar-group-label>Platform</sl:sidebar-group-label> -->
+<div class="sidebar-group-label">Platform</div>
+
+<!-- <sl:sidebar-group-action aria-label="Add project"><sl:icon name="plus"/></sl:sidebar-group-action> -->
+<button class="sidebar-group-action" type="button" aria-label="Add project">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</button>
+
+<!-- <sl:sidebar-group-action as="button" type="submit" aria-label="Add project">+</sl:sidebar-group-action> -->
+<button class="sidebar-group-action" type="submit" aria-label="Add project">+</button>
+
+<!-- <sl:sidebar-group-action as="a" href="/projects/new" aria-label="Add project">+</sl:sidebar-group-action> -->
+<a class="sidebar-group-action" href="/projects/new" aria-label="Add project">+</a>
+
+<!-- <sl:sidebar-group-content>Menu</sl:sidebar-group-content> -->
+<div class="sidebar-group-content">Menu</div>
+
+<!-- <sl:sidebar-menu>Items</sl:sidebar-menu> -->
+<ul class="sidebar-menu">Items</ul>
+
+<!-- <sl:sidebar-menu-item>Button</sl:sidebar-menu-item> -->
+<li class="sidebar-menu-item">Button</li>
+
+<!-- <sl:sidebar-menu-item id="inbox">Button</sl:sidebar-menu-item> -->
+<li class="sidebar-menu-item" id="inbox">Button</li>
+
+<!-- <sl:sidebar-menu-button href="/">Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+</a>
+
+<!-- <sl:sidebar-menu-button as="a" href="/">Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+</a>
+
+<!-- <sl:sidebar-menu-button as="button">Compose</sl:sidebar-menu-button> -->
+<button class="sidebar-menu-button" type="button">
+  <span class="sidebar-menu-button-label">Compose</span>
+</button>
+
+<!-- <sl:sidebar-menu-button as="button" type="submit">Compose</sl:sidebar-menu-button> -->
+<button class="sidebar-menu-button" type="submit">
+  <span class="sidebar-menu-button-label">Compose</span>
+</button>
+
+<!-- <sl:sidebar-menu-button as="button" type="reset">Compose</sl:sidebar-menu-button> -->
+<button class="sidebar-menu-button" type="reset">
+  <span class="sidebar-menu-button-label">Compose</span>
+</button>
+
+<!-- <sl:sidebar-menu-button href="/" active>Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" aria-current="page" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+</a>
+
+<!-- <sl:sidebar-menu-button as="button" active>Drafts</sl:sidebar-menu-button> -->
+<button class="sidebar-menu-button" type="button" aria-current="true">
+  <span class="sidebar-menu-button-label">Drafts</span>
+</button>
+
+<!-- <sl:sidebar-menu-button href="/" variant="default">Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+</a>
+
+<!-- <sl:sidebar-menu-button href="/" variant="outline">Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" data-variant="outline" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+</a>
+
+<!-- <sl:sidebar-menu-button href="/" size="default">Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+</a>
+
+<!-- <sl:sidebar-menu-button href="/" size="sm">Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" data-size="sm" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+</a>
+
+<!-- <sl:sidebar-menu-button href="/" size="lg">Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" data-size="lg" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+</a>
+
+<!-- <sl:sidebar-menu-button href="/billing" disabled>Billing</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" aria-disabled="true" role="link" tabindex="-1">
+  <span class="sidebar-menu-button-label">Billing</span>
+</a>
+
+<!-- <sl:sidebar-menu-button as="button" disabled>Archive</sl:sidebar-menu-button> -->
+<button class="sidebar-menu-button" type="button" disabled>
+  <span class="sidebar-menu-button-label">Archive</span>
+</button>
+
+<!-- <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
+  <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+  Inbox
+  <sl:slot name="icon-end"><sl:icon name="chevron-right"/></sl:slot>
+</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" aria-current="page" href="/inbox">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <span class="sidebar-menu-button-label">Inbox</span>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</a>
+
+<!-- <sl:sidebar-menu-button href="/" size="lg">
+  <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+  <strong>Acme Inc.</strong>
+  <small>Enterprise</small>
+</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" data-size="lg" href="/">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <span class="sidebar-menu-button-label">
+    <strong>Acme Inc.</strong>
+    <small>Enterprise</small>
+  </span>
+</a>
+
+<!-- <sl:sidebar-menu-action aria-label="More for Design"><sl:icon name="ellipsis"/></sl:sidebar-menu-action> -->
+<button class="sidebar-menu-action" type="button" aria-label="More for Design">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</button>
+
+<!-- <sl:sidebar-menu-action aria-label="More for Design" show-on-hover>…</sl:sidebar-menu-action> -->
+<button class="sidebar-menu-action" type="button" data-show-on-hover="true" aria-label="More for Design">…</button>
+
+<!-- <sl:sidebar-menu-action as="button" type="submit" aria-label="Remove Design">×</sl:sidebar-menu-action> -->
+<button class="sidebar-menu-action" type="submit" aria-label="Remove Design">×</button>
+
+<!-- <sl:sidebar-menu-action as="a" href="/design" aria-label="Open Design">→</sl:sidebar-menu-action> -->
+<a class="sidebar-menu-action" href="/design" aria-label="Open Design">→</a>
+
+<!-- <sl:sidebar-menu-badge>12</sl:sidebar-menu-badge> -->
+<div class="sidebar-menu-badge">12</div>
+
+<!-- <sl:sidebar-menu-badge label="12 unread messages">12</sl:sidebar-menu-badge> -->
+<div class="sidebar-menu-badge">
+  <span aria-hidden="true">12</span>
+  <span class="sl-sr-only">12 unread messages</span>
+</div>
+
+<!-- <sl:sidebar>
+  <sl:sidebar-header>
+    <sl:sidebar-menu>
+      <sl:sidebar-menu-item>
+        <sl:sidebar-menu-button href="/" size="lg">
+          <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+          <strong>Acme Inc.</strong>
+          <small>Enterprise</small>
+        </sl:sidebar-menu-button>
+      </sl:sidebar-menu-item>
+    </sl:sidebar-menu>
+  </sl:sidebar-header>
+  <sl:sidebar-content>
+    <sl:sidebar-group id="platform">
+      <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+      <sl:sidebar-group-content>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}">
+              <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+              Home
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item id="inbox">
+            <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
+              <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+              Inbox
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-badge>12</sl:sidebar-menu-badge>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group-content>
+    </sl:sidebar-group>
+    <sl:sidebar-group id="projects">
+      <sl:sidebar-group-label>Projects</sl:sidebar-group-label>
+      <sl:sidebar-group-action aria-label="Add project"><sl:icon name="plus"/></sl:sidebar-group-action>
+      <sl:sidebar-group-content>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="/projects/design">Design</sl:sidebar-menu-button>
+            <sl:sidebar-menu-action aria-label="More for Design" show-on-hover>
+              <sl:icon name="ellipsis"/>
+            </sl:sidebar-menu-action>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group-content>
+    </sl:sidebar-group>
+  </sl:sidebar-content>
+  <sl:sidebar-separator/>
+  <sl:sidebar-footer>
+    <sl:sidebar-menu>
+      <sl:sidebar-menu-item>
+        <sl:sidebar-menu-button href="/help" size="sm">Help</sl:sidebar-menu-button>
+      </sl:sidebar-menu-item>
+    </sl:sidebar-menu>
+  </sl:sidebar-footer>
+</sl:sidebar> -->
+<nav class="sidebar" id="sidebar" popover aria-label="Main">
+  <div class="sidebar-header">
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" data-size="lg" href="/">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          <span class="sidebar-menu-button-label">
+            <strong>Acme Inc.</strong>
+            <small>Enterprise</small>
+          </span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="sidebar-content">
+    <div class="sidebar-group" id="platform" role="group" aria-labelledby="platform-label">
+      <div class="sidebar-group-label" id="platform-label">Platform</div>
+      <div class="sidebar-group-content">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a class="sidebar-menu-button" href="/">
+              <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+              <span class="sidebar-menu-button-label">Home</span>
+            </a>
+          </li>
+          <li class="sidebar-menu-item" id="inbox">
+            <a class="sidebar-menu-button" aria-current="page" aria-describedby="inbox-badge" href="/inbox">
+              <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+              <span class="sidebar-menu-button-label">Inbox</span>
+            </a>
+            <div class="sidebar-menu-badge" id="inbox-badge">12</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="sidebar-group" id="projects" role="group" aria-labelledby="projects-label">
+      <div class="sidebar-group-label" id="projects-label">Projects</div>
+      <button class="sidebar-group-action" type="button" aria-label="Add project">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+      <div class="sidebar-group-content">
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu-item">
+            <a class="sidebar-menu-button" href="/projects/design">
+              <span class="sidebar-menu-button-label">Design</span>
+            </a>
+            <button class="sidebar-menu-action" type="button" data-show-on-hover="true" aria-label="More for Design">
+              <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar-separator" role="none"></div>
+  <div class="sidebar-footer">
+    <ul class="sidebar-menu">
+      <li class="sidebar-menu-item">
+        <a class="sidebar-menu-button" data-size="sm" href="/help">
+          <span class="sidebar-menu-button-label">Help</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

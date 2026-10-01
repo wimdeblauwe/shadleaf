@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A count at the end of a <code>sl:sidebar-menu-button</code>, inside the same
+      <code>sl:sidebar-menu-item</code>. The button is described by it, so a screen reader says the count after the
+      link's name ("Inbox, link, 12"); the badge gets its id from the item (<code>&lt;item id&gt;-badge</code>).
+      Clicks go through it to the button.</sl:description>
+    <sl:prop name="label">What a screen reader says instead of the visible text, such as "12 unread messages". The
+      visible count is then hidden from it.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="sidebar-menu-badge"
+     class="sidebar-menu-badge"
+     th:attr="id=${slSidebarMenuBadgeId}"
+     sl:attrs><th:block th:if="${props.label == null}"><sl:slot/></th:block><th:block
+    th:unless="${props.label == null}"><span aria-hidden="true"><sl:slot/></span><span class="sl-sr-only"
+    th:text="${props.label}">Label</span></th:block></div>
+</body>
+</html>

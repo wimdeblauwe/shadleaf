@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The top of the <code>sl:sidebar</code>: the application or team, above the
+      <code>sl:sidebar-content</code>. It does not scroll with the content.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="sidebar-header" class="sidebar-header" sl:attrs><sl:slot/></div>
+</body>
+</html>

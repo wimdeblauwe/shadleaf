@@ -1,22 +1,103 @@
 # Scenarios for the sidebar's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
-# The sidebar's own content parts (groups, menus) come in a later step: these use ghost link buttons for the links.
 # A page holds one sidebar and one main, so only the first scenario is on the showcase (which puts it after its region
-# of other components, as a page's shell).
+# of other components, as a page's shell). docs/tests/sidebar.spec.ts builds its fixture pages from that scenario: it
+# expects Home to be the current page and links to /inbox, /calendar and /settings.
 component: sidebar
-parts: [sidebar-provider, sidebar-trigger, sidebar-inset]
+parts: [sidebar-provider, sidebar-trigger, sidebar-inset, sidebar-header, sidebar-content, sidebar-footer,
+        sidebar-separator, sidebar-group, sidebar-group-label, sidebar-group-action, sidebar-group-content,
+        sidebar-menu, sidebar-menu-item, sidebar-menu-button, sidebar-menu-action, sidebar-menu-badge]
 scenarios:
   - id: default
     title: Sidebar
     description: >-
       Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or
-      Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page.
+      Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered
+      for a request for /, so #slNav.current('/') marks Home as the current page.
+    request: /
     source: |-
       <sl:sidebar-provider>
         <sl:sidebar>
-          <sl:button as="a" href="/" variant="ghost" aria-current="page">Home</sl:button>
-          <sl:button as="a" href="/inbox" variant="ghost">Inbox</sl:button>
-          <sl:button as="a" href="/calendar" variant="ghost">Calendar</sl:button>
-          <sl:button as="a" href="/settings" variant="ghost">Settings</sl:button>
+          <sl:sidebar-header>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/" size="lg">
+                  <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+                  <strong>Acme Inc.</strong>
+                  <small>Enterprise</small>
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-header>
+          <sl:sidebar-content>
+            <sl:sidebar-group id="platform">
+              <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}">
+                      <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                      Home
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item id="inbox">
+                    <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
+                      <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+                      Inbox
+                    </sl:sidebar-menu-button>
+                    <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}">
+                      <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
+                      Calendar
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+            <sl:sidebar-group id="projects">
+              <sl:sidebar-group-label>Projects</sl:sidebar-group-label>
+              <sl:sidebar-group-action aria-label="Add project"><sl:icon name="plus"/></sl:sidebar-group-action>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/projects/design">
+                      <sl:slot name="icon-start"><sl:icon name="frame"/></sl:slot>
+                      Design Engineering
+                    </sl:sidebar-menu-button>
+                    <sl:sidebar-menu-action aria-label="More for Design Engineering" show-on-hover>
+                      <sl:icon name="ellipsis"/>
+                    </sl:sidebar-menu-action>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/projects/sales">
+                      <sl:slot name="icon-start"><sl:icon name="chart-pie"/></sl:slot>
+                      Sales &amp; Marketing
+                    </sl:sidebar-menu-button>
+                    <sl:sidebar-menu-action aria-label="More for Sales &amp; Marketing" show-on-hover>
+                      <sl:icon name="ellipsis"/>
+                    </sl:sidebar-menu-action>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+          </sl:sidebar-content>
+          <sl:sidebar-footer>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}">
+                  <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                  Settings
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/help" size="sm">
+                  <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+                  Help
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-footer>
         </sl:sidebar>
         <sl:sidebar-inset id="content">
           <header>
@@ -27,6 +108,74 @@ scenarios:
         </sl:sidebar-inset>
       </sl:sidebar-provider>
 
+  - id: menu-button
+    title: Menu buttons
+    description: >-
+      The sizes, the outline variant, a button marked as the current one (aria-current="true"), and disabled entries.
+    showcase: false
+    source: |-
+      <sl:sidebar-provider>
+        <sl:sidebar id="sidebar-buttons">
+          <sl:sidebar-content>
+            <sl:sidebar-group>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/" size="lg">
+                      <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+                      <strong>Large</strong>
+                      <small>Two lines</small>
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/">
+                      <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                      Default
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/" size="sm">
+                      <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                      Small
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/" variant="outline">
+                      <sl:slot name="icon-start"><sl:icon name="square-dashed"/></sl:slot>
+                      Outline
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button as="button" active>
+                      <sl:slot name="icon-start"><sl:icon name="file-pen"/></sl:slot>
+                      Drafts (a button)
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/billing" disabled>
+                      <sl:slot name="icon-start"><sl:icon name="credit-card"/></sl:slot>
+                      Disabled link
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/a-page-with-a-very-long-name">
+                      <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                      A label too long for the sidebar ends in an ellipsis
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+          </sl:sidebar-content>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <header>
+            <sl:sidebar-trigger for="sidebar-buttons"/>
+          </header>
+          <h1>Menu buttons</h1>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+
   - id: side
     title: On the end
     description: side="end" puts the sidebar on the end of the line (the right, or the left on a right-to-left page).
@@ -34,9 +183,23 @@ scenarios:
     source: |-
       <sl:sidebar-provider>
         <sl:sidebar id="sidebar-end" side="end">
-          <sl:button as="a" href="/" variant="ghost" aria-current="page">Home</sl:button>
-          <sl:button as="a" href="/inbox" variant="ghost">Inbox</sl:button>
-          <sl:button as="a" href="/settings" variant="ghost">Settings</sl:button>
+          <sl:sidebar-content>
+            <sl:sidebar-group>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/" active>Home</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/inbox">Inbox</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/settings">Settings</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+          </sl:sidebar-content>
         </sl:sidebar>
         <sl:sidebar-inset>
           <header>
@@ -55,8 +218,20 @@ scenarios:
     source: |-
       <sl:sidebar-provider state="collapsed">
         <sl:sidebar id="sidebar-collapsed">
-          <sl:button as="a" href="/" variant="ghost" aria-current="page">Home</sl:button>
-          <sl:button as="a" href="/settings" variant="ghost">Settings</sl:button>
+          <sl:sidebar-content>
+            <sl:sidebar-group>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/" active>Home</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/settings">Settings</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+          </sl:sidebar-content>
         </sl:sidebar>
         <sl:sidebar-inset>
           <header>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A link (or button) in a <code>sl:sidebar-menu-item</code>: an icon in the
+      <code>icon-start</code> slot, then the label. Mark the current page with <code>active</code>, for instance
+      <code>th:active="${#slNav.current('/people')}"</code>. The label is cut off with an ellipsis when it does not
+      fit; for two lines, put each in an element of its own (<code>&lt;strong&gt;</code>,
+      <code>&lt;small&gt;</code>). Every attribute that is not a prop passes through (<code>href</code>,
+      <code>hx-*</code>); <code>class</code> is appended to <code>sidebar-menu-button</code>.</sl:description>
+    <sl:prop name="as" default="a" values="a button">Element to render: an anchor (<code>a</code>) to a page, or a
+      <code>button</code> for an action.</sl:prop>
+    <sl:prop name="active" type="boolean">The current one: the link gets <code>aria-current="page"</code>, a button
+      <code>aria-current="true"</code>, and both the active look.</sl:prop>
+    <sl:prop name="variant" default="default" values="default outline">Visual style: <code>outline</code> adds a
+      background and a border.</sl:prop>
+    <sl:prop name="size" default="default" values="default sm lg">Height: <code>sm</code> for a dense list,
+      <code>lg</code> for an entry with two lines, such as the application's name in the
+      <code>sl:sidebar-header</code>.</sl:prop>
+    <sl:prop name="type" default="button" values="button submit reset">Submit behaviour of a button; defaults to
+      <code>button</code>.</sl:prop>
+    <sl:prop name="disabled" type="boolean">Disable it. A disabled link loses its <code>href</code> and leaves the
+      tab order.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* Two branches for `as`, as sl:button has. aria-describedby points at the item's badge (slSidebarMenuBadgeId, set by
+  sl:sidebar-menu-item); a caller's own replaces it. A disabled link is as sl:button's: no href, role="link" (an
+  anchor without href is generic), aria-disabled, out of the tab order. A tooltip prop for the icon mode comes with
+  collapsible="icon". */-->
+<th:block th:fragment="sidebar-menu-button">
+  <a th:if="${props.as == 'a'}"
+     class="sidebar-menu-button"
+     th:attr="data-variant=${props.unlessDefault('variant')},
+              data-size=${props.unlessDefault('size')},
+              aria-current=${props.active ? 'page' : null},
+              aria-describedby=${slSidebarMenuBadgeId},
+              aria-disabled=${props.disabled ? 'true' : null},
+              role=${props.disabled ? 'link' : null},
+              tabindex=${props.disabled ? '-1' : null}"
+     sl:attrs="${props.disabled ? attrs.without('href') : attrs}"
+     th:insert="~{sl/components/sidebar-menu-button :: sidebar-menu-button-content}"></a>
+  <button th:unless="${props.as == 'a'}"
+          class="sidebar-menu-button"
+          th:type="${props.type}"
+          th:disabled="${props.disabled}"
+          th:attr="data-variant=${props.unlessDefault('variant')},
+                   data-size=${props.unlessDefault('size')},
+                   aria-current=${props.active ? 'true' : null},
+                   aria-describedby=${slSidebarMenuBadgeId}"
+          sl:attrs
+          th:insert="~{sl/components/sidebar-menu-button :: sidebar-menu-button-content}"></button>
+</th:block>
+
+<!--/* The label in a span of its own: it takes the room left by the icons and is cut off with an ellipsis, and the
+  icon mode will hide it. */-->
+<th:block th:fragment="sidebar-menu-button-content"><sl:slot name="icon-start"/><span
+    class="sidebar-menu-button-label"><sl:slot/></span><sl:slot name="icon-end"/></th:block>
+</body>
+</html>

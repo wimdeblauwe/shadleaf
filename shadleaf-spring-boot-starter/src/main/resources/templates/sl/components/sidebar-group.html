@@ -1,0 +1,28 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A section of the <code>sl:sidebar</code>'s links: an optional <code>sl:sidebar-group-label</code>
+      and <code>sl:sidebar-group-action</code>, then <code>sl:sidebar-group-content</code> with a
+      <code>sl:sidebar-menu</code>. With a label it is a group named by that label (<code>role="group"</code>,
+      <code>aria-labelledby</code>), so a screen reader says "Platform, group" when the focus moves into it; without
+      one it is a plain <code>div</code>.</sl:description>
+    <sl:prop name="id">The group's id. Its label gets <code>&lt;id&gt;-label</code>; without an id, each render
+      generates one (<code>sl-sidebar-group-</code> and eight random characters).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The label part reads slSidebarGroupLabelId for its id. slots.contains looks for a label in this group's content,
+  not in a nested group. The local is always set (null without a label), so a group nested in a labelled one does not
+  take its label's id. */-->
+<div th:fragment="sidebar-group"
+     class="sidebar-group"
+     th:with="slSidebarGroupLabelId=${slots.contains('sidebar-group-label', 'sidebar-group')
+                ? (props.id ?: 'sl-sidebar-group-' + #strings.randomAlphanumeric(8).toLowerCase()) + '-label'
+                : null}"
+     th:attr="id=${props.id},
+              role=${slSidebarGroupLabelId != null ? 'group' : null},
+              aria-labelledby=${slSidebarGroupLabelId}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

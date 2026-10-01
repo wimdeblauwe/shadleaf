@@ -133,4 +133,109 @@
       display: none;
     }
   }
+
+  /*
+    The content parts: structure only, the same in the desktop column and the phone panel. Sizes, colours, the active
+    and hover looks and the positions of actions and badges are in the skins.
+  */
+  .sidebar-header,
+  .sidebar-footer {
+    @apply flex flex-col;
+  }
+
+  /* The part that scrolls, so header and footer stay in view. */
+  .sidebar-content {
+    @apply flex min-h-0 flex-1 flex-col overflow-auto;
+  }
+
+  .sidebar-separator {
+    @apply h-px w-auto shrink-0 forced-colors:bg-[CanvasText];
+  }
+
+  .sidebar-group {
+    @apply relative flex w-full min-w-0 flex-col;
+  }
+
+  .sidebar-group-label {
+    @apply flex shrink-0 items-center;
+  }
+
+  .sidebar-group-content {
+    @apply w-full;
+  }
+
+  .sidebar-menu {
+    @apply m-0 flex w-full min-w-0 list-none flex-col p-0;
+  }
+
+  .sidebar-menu-item {
+    @apply relative;
+  }
+
+  /*
+    The label takes the room the icons leave and ends in an ellipsis; with elements of its own (two lines) each one
+    does. Disabled: as a disabled button.
+  */
+  .sidebar-menu-button {
+    @apply flex w-full items-center overflow-hidden text-start no-underline outline-none
+      disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50;
+  }
+
+  :is(.sidebar-group-label, .sidebar-menu-button, .sidebar-group-action, .sidebar-menu-action) > svg {
+    @apply shrink-0;
+  }
+
+  .sidebar-menu-button-label {
+    @apply min-w-0 flex-1 truncate;
+  }
+
+  .sidebar-menu-button-label > * {
+    @apply block truncate;
+  }
+
+  /* Room for the action or badge that lies over the button's end. */
+  .sidebar-menu-item:has(> .sidebar-menu-action, > .sidebar-menu-badge) > .sidebar-menu-button {
+    @apply pe-8;
+  }
+
+  /*
+    Action and badge lie over the end of the button. On a phone the action's hit area is larger than the icon
+    (after: -inset-2), as shadcn's.
+  */
+  .sidebar-group-action,
+  .sidebar-menu-action {
+    @apply absolute flex aspect-square items-center justify-center outline-none no-underline
+      after:absolute after:-inset-2 md:after:hidden;
+  }
+
+  @media (width >= 48rem) {
+    .sidebar-menu-action[data-show-on-hover] {
+      @apply opacity-0;
+    }
+
+    .sidebar-menu-item:is(:hover, :focus-within) > .sidebar-menu-action[data-show-on-hover],
+    .sidebar-menu-action[data-show-on-hover][aria-expanded='true'] {
+      @apply opacity-100;
+    }
+  }
+
+  .sidebar-menu-badge {
+    @apply pointer-events-none absolute flex items-center justify-center tabular-nums select-none;
+  }
+
+  /*
+    Forced colours drop backgrounds and box shadows: the current entry gets an outline, focus a thicker one.
+  */
+  @media (forced-colors: active) {
+    .sidebar-menu-button:is([aria-current='page'], [aria-current='true']) {
+      @apply outline-1 -outline-offset-1 outline-solid;
+    }
+
+    .sidebar-menu-button:focus-visible,
+    .sidebar-group-action:focus-visible,
+    .sidebar-menu-action:focus-visible,
+    .sidebar-group-label:focus-visible {
+      @apply outline-2 -outline-offset-2 outline-solid;
+    }
+  }
 }

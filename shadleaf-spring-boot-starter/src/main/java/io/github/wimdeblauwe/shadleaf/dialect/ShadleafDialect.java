@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.shadleaf.dialect;
 
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
+import io.github.wimdeblauwe.shadleaf.nav.Navigation;
 import io.github.wimdeblauwe.shadleaf.paging.Paging;
 import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
 import io.github.wimdeblauwe.shadleaf.sidebar.SidebarState;
@@ -27,7 +28,8 @@ import org.thymeleaf.standard.StandardDialect;
  * And {@code #slFields}, the {@link FieldBindings} through which {@code <sl:field>} shares its {@code th:field} with
  * its parts and control. And {@code #slPaging}, the {@link Paging} that builds the sort links of a table from the
  * request, with Spring Data's parameter names ({@link PagingParameters}). And {@code #slSidebar}, the
- * {@link SidebarState} that {@code sl:sidebar-provider} reads from its cookie.
+ * {@link SidebarState} that {@code sl:sidebar-provider} reads from its cookie. And {@code #slNav}, the
+ * {@link Navigation} that tells a sidebar menu button whether its path is the current page.
  */
 public class ShadleafDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
 
@@ -37,6 +39,7 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
   public static final String FIELDS_EXPRESSION_OBJECT = "slFields";
   public static final String PAGING_EXPRESSION_OBJECT = "slPaging";
   public static final String SIDEBAR_EXPRESSION_OBJECT = "slSidebar";
+  public static final String NAV_EXPRESSION_OBJECT = "slNav";
   private static final String NAME = "Shadleaf";
 
   private final ComponentRegistry registry;
@@ -54,7 +57,7 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
       @Override
       public Set<String> getAllExpressionObjectNames() {
         return Set.of(ICONS_EXPRESSION_OBJECT, FIELDS_EXPRESSION_OBJECT, PAGING_EXPRESSION_OBJECT,
-            SIDEBAR_EXPRESSION_OBJECT);
+            SIDEBAR_EXPRESSION_OBJECT, NAV_EXPRESSION_OBJECT);
       }
 
       @Override
@@ -64,6 +67,7 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
           case FIELDS_EXPRESSION_OBJECT -> new FieldBindings(context);
           case PAGING_EXPRESSION_OBJECT -> new Paging(context, pagingParameters);
           case SIDEBAR_EXPRESSION_OBJECT -> new SidebarState(context);
+          case NAV_EXPRESSION_OBJECT -> new Navigation(context);
           default -> null;
         };
       }

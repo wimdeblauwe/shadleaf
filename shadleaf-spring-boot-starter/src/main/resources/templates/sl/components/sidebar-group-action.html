@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>An icon button at the end of a <code>sl:sidebar-group</code>'s label, such as "Add project". It
+      holds only an icon, so it needs an <code>aria-label</code>. Every other attribute passes through
+      (<code>hx-*</code>, <code>commandfor</code>, <code>href</code>).</sl:description>
+    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
+      (<code>a</code>) to a page.</sl:prop>
+    <sl:prop name="type" default="button" values="button submit reset">Submit behaviour of the button; defaults to
+      <code>button</code>.</sl:prop>
+    <sl:accessible-name/>
+  </sl:props>
+</head>
+<body>
+<th:block th:fragment="sidebar-group-action">
+  <button th:if="${props.as == 'button'}" class="sidebar-group-action" th:type="${props.type}"
+          sl:attrs><sl:slot/></button>
+  <a th:unless="${props.as == 'button'}" class="sidebar-group-action" sl:attrs><sl:slot/></a>
+</th:block>
+</body>
+</html>

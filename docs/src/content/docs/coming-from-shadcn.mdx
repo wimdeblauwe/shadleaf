@@ -241,6 +241,13 @@ server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there 
 the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
 the text direction. Only `collapsible="offcanvas"` so far. See [Sidebar](../components/sidebar/).
 
+The parts inside it keep shadcn's names. `<sl:sidebar-menu-button>` is a link unless `as="button"` (shadcn's renders a
+button, and `asChild` makes it a link); `isActive` is `active`, and `th:active="${#slNav.current('/people')}"` asks the
+request whether the link is the current page, so no controller has to say so. The icon goes in the `icon-start` slot
+and the text is wrapped for you (shadcn's `<span>` around the label); two lines are two elements, such as `<strong>`
+and `<small>`, as there are no utility classes. `<sl:sidebar-content>` is a `div`, as shadcn's: `<sl:sidebar>` is the
+`nav`.
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
@@ -309,6 +316,19 @@ takes keyboard focus, when it is a link (`as="a"`).
 - An error's icon takes the destructive colour; with Sonner every icon has the text colour unless `richColors` is on.
 - The toasts move into an open modal dialog, so one shown while a dialog is open can be used and is announced; a
   Sonner toast outside the dialog is inert there.
+
+### Sidebar menus
+
+- A group with a label is a group named by it (`role="group"`, `aria-labelledby`), so a screen reader says "Platform,
+  group" when the focus moves into it; shadcn's label is plain text.
+- The current page's menu button has `aria-current="page"` (`aria-current="true"` for a button), which a screen reader
+  says; shadcn sets only `data-active`. The skins style `aria-current`, and in Windows' high-contrast mode the current
+  entry keeps an outline, as its background is gone there.
+- A menu badge describes its button (`aria-describedby`), so a screen reader says "Inbox, link, 12 unread" when Tab
+  reaches the link; shadcn's badge is only read when reading through the list. `label` gives the words to say.
+- The group and menu actions need an `aria-label` (shadcn's examples put a visually hidden `<span>` in them). On a phone
+  they are 24 px, WCAG 2.2's minimum target size, instead of 20 px with a larger invisible hit area.
+- `show-on-hover` is `showOnHover`.
 
 ### Form controls
 

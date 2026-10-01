@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A list of links (or buttons) in the <code>sl:sidebar</code>: a <code>ul</code> of
+      <code>sl:sidebar-menu-item</code>s, so a screen reader says how many there are.</sl:description>
+  </sl:props>
+</head>
+<body>
+<ul th:fragment="sidebar-menu" class="sidebar-menu" sl:attrs><sl:slot/></ul>
+</body>
+</html>

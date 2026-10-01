@@ -1163,7 +1163,7 @@
   }, {
     "name" : "sidebar",
     "tag" : "sl:sidebar",
-    "description" : "The application's navigation, inside `sl:sidebar-provider`. One element serves both widths: from 768&nbsp;px up it is a column beside the page, which the trigger collapses and expands; below that it is a panel over the page, which the trigger opens. It is a `nav` named \"Main\" (`sl.sidebar.label`; an `aria-label` replaces it) and a popover: the browser opens the panel in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open panel and makes the rest of the page inert, and closes it when a link in it is followed. Put the links in it yourself for now.",
+    "description" : "The application's navigation, inside `sl:sidebar-provider`. One element serves both widths: from 768&nbsp;px up it is a column beside the page, which the trigger collapses and expands; below that it is a panel over the page, which the trigger opens. It is a `nav` named \"Main\" (`sl.sidebar.label`; an `aria-label` replaces it) and a popover: the browser opens the panel in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open panel and makes the rest of the page inert, and closes it when a link in it is followed. It holds `sl:sidebar-header`, `sl:sidebar-content` (groups of menus) and `sl:sidebar-footer`.",
     "declared" : true,
     "props" : [ {
       "name" : "id",
@@ -1185,11 +1185,170 @@
       "description" : "How it collapses on a desktop: `offcanvas` moves it out of view entirely. Collapsing to icons comes later."
     } ]
   }, {
+    "name" : "sidebar-content",
+    "tag" : "sl:sidebar-content",
+    "description" : "The part of the `sl:sidebar` that scrolls, between `sl:sidebar-header` and `sl:sidebar-footer`; it holds the `sl:sidebar-group`s. A plain `div`: the sidebar itself is the navigation landmark.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "sidebar-footer",
+    "tag" : "sl:sidebar-footer",
+    "description" : "The bottom of the `sl:sidebar`: settings, help or the signed-in user, below the `sl:sidebar-content`. It does not scroll with the content.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "sidebar-group",
+    "tag" : "sl:sidebar-group",
+    "description" : "A section of the `sl:sidebar`'s links: an optional `sl:sidebar-group-label` and `sl:sidebar-group-action`, then `sl:sidebar-group-content` with a `sl:sidebar-menu`. With a label it is a group named by that label (`role=\"group\"`, `aria-labelledby`), so a screen reader says \"Platform, group\" when the focus moves into it; without one it is a plain `div`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The group's id. Its label gets `&lt;id&gt;-label`; without an id, each render generates one (`sl-sidebar-group-` and eight random characters)."
+    } ]
+  }, {
+    "name" : "sidebar-group-action",
+    "tag" : "sl:sidebar-group-action",
+    "description" : "An icon button at the end of a `sl:sidebar-group`'s label, such as \"Add project\". It holds only an icon, so it needs an `aria-label`. Every other attribute passes through (`hx-*`, `commandfor`, `href`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`) to a page."
+    }, {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "submit", "reset" ],
+      "description" : "Submit behaviour of the button; defaults to `button`."
+    } ],
+    "accessibleName" : {
+      "values" : [ ]
+    }
+  }, {
+    "name" : "sidebar-group-content",
+    "tag" : "sl:sidebar-group-content",
+    "description" : "The content of a `sl:sidebar-group`, below its label: usually one `sl:sidebar-menu`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "sidebar-group-label",
+    "tag" : "sl:sidebar-group-label",
+    "description" : "The name of a `sl:sidebar-group`, in small muted text above its menu. The group is labelled by it, so it gets an id from the group (`&lt;group id&gt;-label`); give the group an `id` rather than the label.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "sidebar-header",
+    "tag" : "sl:sidebar-header",
+    "description" : "The top of the `sl:sidebar`: the application or team, above the `sl:sidebar-content`. It does not scroll with the content.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "sidebar-inset",
     "tag" : "sl:sidebar-inset",
     "description" : "The page's main content beside the `sl:sidebar`: the `main` element, which takes the rest of the width. Put the page header with the `sl:sidebar-trigger` at its top. Give it an `id` for a skip link.",
     "declared" : true,
     "props" : [ ]
+  }, {
+    "name" : "sidebar-menu",
+    "tag" : "sl:sidebar-menu",
+    "description" : "A list of links (or buttons) in the `sl:sidebar`: a `ul` of `sl:sidebar-menu-item`s, so a screen reader says how many there are.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "sidebar-menu-action",
+    "tag" : "sl:sidebar-menu-action",
+    "description" : "An icon button at the end of a `sl:sidebar-menu-item`, beside its `sl:sidebar-menu-button`: a second action for that entry, such as \"More\" or \"Remove from favourites\". It holds only an icon, so it needs an `aria-label` that names the entry too (\"More for Design Engineering\"). Every other attribute passes through.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`) to a page."
+    }, {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "submit", "reset" ],
+      "description" : "Submit behaviour of the button; defaults to `button`."
+    }, {
+      "name" : "show-on-hover",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "From 768&nbsp;px, show it only while the pointer is over the item, the focus is in it, or its menu is open (`aria-expanded=\"true\"`). Always shown on a phone."
+    } ],
+    "accessibleName" : {
+      "values" : [ ]
+    }
+  }, {
+    "name" : "sidebar-menu-badge",
+    "tag" : "sl:sidebar-menu-badge",
+    "description" : "A count at the end of a `sl:sidebar-menu-button`, inside the same `sl:sidebar-menu-item`. The button is described by it, so a screen reader says the count after the link's name (\"Inbox, link, 12\"); the badge gets its id from the item (`&lt;item id&gt;-badge`). Clicks go through it to the button.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "What a screen reader says instead of the visible text, such as \"12 unread messages\". The visible count is then hidden from it."
+    } ]
+  }, {
+    "name" : "sidebar-menu-button",
+    "tag" : "sl:sidebar-menu-button",
+    "description" : "A link (or button) in a `sl:sidebar-menu-item`: an icon in the `icon-start` slot, then the label. Mark the current page with `active`, for instance `th:active=\"${#slNav.current('/people')}\"`. The label is cut off with an ellipsis when it does not fit; for two lines, put each in an element of its own (`&lt;strong&gt;`, `&lt;small&gt;`). Every attribute that is not a prop passes through (`href`, `hx-*`); `class` is appended to `sidebar-menu-button`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "a",
+      "values" : [ "a", "button" ],
+      "description" : "Element to render: an anchor (`a`) to a page, or a `button` for an action."
+    }, {
+      "name" : "active",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "The current one: the link gets `aria-current=\"page\"`, a button `aria-current=\"true\"`, and both the active look."
+    }, {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "outline" ],
+      "description" : "Visual style: `outline` adds a background and a border."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "sm", "lg" ],
+      "description" : "Height: `sm` for a dense list, `lg` for an entry with two lines, such as the application's name in the `sl:sidebar-header`."
+    }, {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "submit", "reset" ],
+      "description" : "Submit behaviour of a button; defaults to `button`."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Disable it. A disabled link loses its `href` and leaves the tab order."
+    } ]
+  }, {
+    "name" : "sidebar-menu-item",
+    "tag" : "sl:sidebar-menu-item",
+    "description" : "One entry of a `sl:sidebar-menu`: an `li` holding a `sl:sidebar-menu-button`, and optionally a `sl:sidebar-menu-badge` or a `sl:sidebar-menu-action` beside it. With a badge, the button is described by it (`aria-describedby`), so a screen reader says \"Inbox, link, 12\".",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The item's id. Its badge gets `&lt;id&gt;-badge`; without an id, each render generates one (`sl-sidebar-menu-item-` and eight random characters)."
+    } ]
   }, {
     "name" : "sidebar-provider",
     "tag" : "sl:sidebar-provider",
@@ -1207,6 +1366,12 @@
       "values" : [ "expanded", "collapsed" ],
       "description" : "The state before the user chose one (no cookie yet)."
     } ]
+  }, {
+    "name" : "sidebar-separator",
+    "tag" : "sl:sidebar-separator",
+    "description" : "A line between parts of the `sl:sidebar`, in the sidebar's border colour. Decorative: screen readers skip it.",
+    "declared" : true,
+    "props" : [ ]
   }, {
     "name" : "sidebar-trigger",
     "tag" : "sl:sidebar-trigger",

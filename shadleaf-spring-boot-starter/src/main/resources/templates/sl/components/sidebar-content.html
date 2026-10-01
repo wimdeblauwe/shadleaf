@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The part of the <code>sl:sidebar</code> that scrolls, between
+      <code>sl:sidebar-header</code> and <code>sl:sidebar-footer</code>; it holds the
+      <code>sl:sidebar-group</code>s. A plain <code>div</code>: the sidebar itself is the navigation
+      landmark.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="sidebar-content" class="sidebar-content" sl:attrs><sl:slot/></div>
+</body>
+</html>
