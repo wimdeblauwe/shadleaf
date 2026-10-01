@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A link to a level above the page shown now. Give it an <code>href</code> or
+      <code>th:href</code>. A level without a page of its own is plain text in its <code>sl:breadcrumb-item</code>
+      instead.</sl:description>
+  </sl:props>
+</head>
+<body>
+<a th:fragment="breadcrumb-link" class="breadcrumb-link" sl:attrs><sl:slot/></a>
+</body>
+</html>

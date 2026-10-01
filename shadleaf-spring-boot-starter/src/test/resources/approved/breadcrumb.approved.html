@@ -1,0 +1,88 @@
+<!-- <sl:breadcrumb>Levels</sl:breadcrumb> -->
+<nav class="breadcrumb" aria-label="Breadcrumb">Levels</nav>
+
+<!-- <sl:breadcrumb aria-label="Folders">Levels</sl:breadcrumb> -->
+<nav class="breadcrumb" aria-label="Folders">Levels</nav>
+
+<!-- <sl:breadcrumb-list>Items</sl:breadcrumb-list> -->
+<ol class="breadcrumb-list">Items</ol>
+
+<!-- <sl:breadcrumb-item>Acme</sl:breadcrumb-item> -->
+<li class="breadcrumb-item">Acme</li>
+
+<!-- <sl:breadcrumb-link href="/">Home</sl:breadcrumb-link> -->
+<a class="breadcrumb-link" href="/">Home</a>
+
+<!-- <sl:breadcrumb-page>Breadcrumb</sl:breadcrumb-page> -->
+<span class="breadcrumb-page" aria-current="page">Breadcrumb</span>
+
+<!-- <sl:breadcrumb-separator/> -->
+<li class="breadcrumb-separator" role="presentation" aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon breadcrumb-separator-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</li>
+
+<!-- <sl:breadcrumb-separator>/</sl:breadcrumb-separator> -->
+<li class="breadcrumb-separator" role="presentation" aria-hidden="true">/</li>
+
+<!-- <sl:breadcrumb-ellipsis/> -->
+<span class="breadcrumb-ellipsis">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <span class="sl-sr-only">More levels</span>
+</span>
+
+<!-- <sl:breadcrumb-ellipsis>
+  <sl:dropdown-menu-item as="a" href="/docs">Documentation</sl:dropdown-menu-item>
+  <sl:dropdown-menu-item as="a" href="/themes">Themes</sl:dropdown-menu-item>
+</sl:breadcrumb-ellipsis> -->
+<button class="btn dropdown-menu-trigger breadcrumb-ellipsis-trigger" type="button" data-variant="ghost" data-size="icon-sm" id="breadcrumb-more-trigger" popovertarget="breadcrumb-more" aria-haspopup="menu" aria-label="Show more levels">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</button>
+<div class="dropdown-menu-content" id="breadcrumb-more" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="breadcrumb-more-trigger">
+  <a class="dropdown-menu-item" role="menuitem" href="/docs">Documentation</a>
+  <a class="dropdown-menu-item" role="menuitem" href="/themes">Themes</a>
+</div>
+
+<!-- <sl:breadcrumb-ellipsis id="path-more" aria-label="Folders above">
+  <sl:dropdown-menu-item as="a" href="/docs">Documentation</sl:dropdown-menu-item>
+</sl:breadcrumb-ellipsis> -->
+<button class="btn dropdown-menu-trigger breadcrumb-ellipsis-trigger" type="button" data-variant="ghost" data-size="icon-sm" id="path-more-trigger" popovertarget="path-more" aria-haspopup="menu" aria-label="Folders above">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</button>
+<div class="dropdown-menu-content" id="path-more" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="path-more-trigger">
+  <a class="dropdown-menu-item" role="menuitem" href="/docs">Documentation</a>
+</div>
+
+<!-- <sl:breadcrumb>
+  <sl:breadcrumb-list>
+    <sl:breadcrumb-item><sl:breadcrumb-link href="/">Home</sl:breadcrumb-link></sl:breadcrumb-item>
+    <sl:breadcrumb-separator/>
+    <sl:breadcrumb-item><sl:breadcrumb-link href="/components">Components</sl:breadcrumb-link></sl:breadcrumb-item>
+    <sl:breadcrumb-separator/>
+    <sl:breadcrumb-item><sl:breadcrumb-page>Breadcrumb</sl:breadcrumb-page></sl:breadcrumb-item>
+  </sl:breadcrumb-list>
+</sl:breadcrumb> -->
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item">
+      <a class="breadcrumb-link" href="/">Home</a>
+    </li>
+    <li class="breadcrumb-separator" role="presentation" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon breadcrumb-separator-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </li>
+    <li class="breadcrumb-item">
+      <a class="breadcrumb-link" href="/components">Components</a>
+    </li>
+    <li class="breadcrumb-separator" role="presentation" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon breadcrumb-separator-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </li>
+    <li class="breadcrumb-item">
+      <span class="breadcrumb-page" aria-current="page">Breadcrumb</span>
+    </li>
+  </ol>
+</nav>
+
+<!-- <sl:skip-link/> -->
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- <sl:skip-link for="content">Skip to the list</sl:skip-link> -->
+<a class="skip-link" href="#content">Skip to the list</a>

@@ -1,0 +1,67 @@
+---
+title: Skip Link
+description: A link past the navigation to the page's content, for keyboard users.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="skip-link--default" />
+
+## Usage
+
+A sidebar or a header puts many links before the content. A skip link lets a keyboard user jump past them
+([WCAG 2.4.1](https://www.w3.org/WAI/WCAG22/Understanding/bypass-blocks)). Put it first in the body:
+
+```html
+<body>
+  <sl:skip-link/>
+  <sl:sidebar-provider>
+    <sl:sidebar>...</sl:sidebar>
+    <sl:sidebar-inset>...</sl:sidebar-inset>
+  </sl:sidebar-provider>
+</body>
+```
+
+It is hidden until it has the focus, which the first Tab on the page gives it, and then shows at the top of the page.
+Following it moves the focus to the page's `main`, and the next Tab goes on from there.
+
+## The target
+
+The link goes to the element with `id="main"`; `for` points it at another id. [`<sl:sidebar-inset>`](../sidebar/) is
+`<main id="main" tabindex="-1">`, so with a sidebar there is nothing to set up.
+
+The target needs `tabindex="-1"` when it is no control of its own, as a `main` is. Without it, Chromium and Firefox
+only move the place the next Tab starts from: the focus itself goes to the page, and a screen reader stays where it
+was. `tabindex="-1"` lets the target take the focus without making it a tab stop. A target of your own:
+
+```html
+<sl:skip-link for="content"/>
+...
+<main id="content" tabindex="-1">...</main>
+```
+
+The focused `main` draws no focus ring: it is no control, and the page scrolling to it shows where the focus went.
+
+## Text
+
+The text is "Skip to main content" (the message `sl.skip-link`). Content of its own replaces it:
+
+```html
+<sl:skip-link for="results">Skip to the results</sl:skip-link>
+```
+
+## htmx
+
+With `hx-boost` on the body the skip link still works: htmx leaves links to a place on the same page alone, so
+following it makes no request.
+
+## Messages
+
+| Key | English |
+| --- | --- |
+| `sl.skip-link` | Skip to main content |
+
+## Attributes
+
+<ComponentAttributes component="skip-link" />

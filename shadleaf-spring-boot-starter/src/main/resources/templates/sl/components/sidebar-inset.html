@@ -3,11 +3,16 @@
 <head>
   <sl:props>
     <sl:description>The page's main content beside the <code>sl:sidebar</code>: the <code>main</code> element, which
-      takes the rest of the width. Put the page header with the <code>sl:sidebar-trigger</code> at its top. Give it an
-      <code>id</code> for a skip link.</sl:description>
+      takes the rest of the width. Put the page header with the <code>sl:sidebar-trigger</code> at its top. It is the
+      target of a <code>sl:skip-link</code>: <code>tabindex="-1"</code> lets the link move the focus to it.
+      </sl:description>
+    <sl:prop name="id" default="main">The element's id, which a <code>sl:skip-link</code> points at
+      (<code>main</code> is its default too).</sl:prop>
   </sl:props>
 </head>
 <body>
-<main th:fragment="sidebar-inset" class="sidebar-inset" sl:attrs><sl:slot/></main>
+<!--/* tabindex="-1": following a link to an element that cannot take the focus only moves where the next Tab starts;
+  Chromium and Firefox leave the focus on the body, so a screen reader is not taken to the content. Not a tab stop. */-->
+<main th:fragment="sidebar-inset" class="sidebar-inset" th:id="${props.id}" tabindex="-1" sl:attrs><sl:slot/></main>
 </body>
 </html>

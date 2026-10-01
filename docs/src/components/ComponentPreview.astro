@@ -58,6 +58,8 @@ const srcdoc = scenario && skins.length > 0
     /* An application shell is as tall as the screen, which in a frame sized to its content would grow without end. */
     .stage > .sidebar-provider { min-block-size: 20rem; }
     .stage > .sidebar-provider > .sidebar { block-size: auto; align-self: stretch; }
+    /* The inset's header as a page lays it out: trigger, vertical separator and breadcrumb in a row. */
+    .stage .sidebar-inset > header { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; }
     /* A modal dialog is laid out in the frame's viewport: make room for it while one is open. */
     body:has(dialog:modal) { min-block-size: 32rem; }
     /* So is an open menu or popover, below its trigger. A tooltip shows above its trigger: leave room for it. */

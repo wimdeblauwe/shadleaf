@@ -1,0 +1,38 @@
+/*
+  Breadcrumb: structure only. Text size, gaps, colours and the focus ring are identity and live in the skins.
+  The list wraps when there is no room (a phone), breaking a long level rather than overflowing.
+*/
+@layer components {
+  /* The embedded bundle has no preflight of its own: an application without one still gets a bare list. */
+  .breadcrumb-list {
+    @apply m-0 flex list-none flex-wrap items-center p-0 wrap-break-word;
+  }
+
+  .breadcrumb-item {
+    @apply inline-flex items-center;
+  }
+
+  .breadcrumb-link {
+    @apply text-inherit no-underline outline-none;
+  }
+
+  .breadcrumb-separator {
+    @apply select-none;
+  }
+
+  /* The chevron points to the next level: leftwards on a right-to-left page. */
+  .breadcrumb-separator-icon {
+    @apply rtl:-scale-x-100;
+  }
+
+  .breadcrumb-ellipsis {
+    @apply flex items-center justify-center;
+  }
+
+  /* Forced colours drop the focus ring (a box shadow): an outline instead. */
+  @media (forced-colors: active) {
+    .breadcrumb-link:focus-visible {
+      @apply outline-2 outline-offset-2 outline-solid;
+    }
+  }
+}

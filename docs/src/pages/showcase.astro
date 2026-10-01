@@ -12,8 +12,9 @@ const firstSkin = previews.skins[0]?.name ?? '';
 const scenarios = previews.scenarios.filter(s => s.showcase !== false);
 // An application shell (sl:sidebar-provider) holds the page's <main> and navigation, which cannot sit inside another
 // landmark. So the other scenarios go in a labelled region (axe wants all content in a landmark), and a shell scenario
-// follows it, at the top level, as a page's shell would be; its headings stay in the region. A page has one main, so
-// only one shell scenario may be on the showcase.
+// comes first, at the top level, as a page's shell would be; its headings stay in the region. First, so its skip link is
+// the page's first link: axe only takes a link for a skip link (outside any landmark) before the page's other links. A
+// page has one main, so only one shell scenario may be on the showcase.
 const isShell = (scenario: {html: string}) => scenario.html.includes('class="sidebar-provider"');
 const shells = scenarios.filter(isShell);
 if (shells.length > 1) {
@@ -57,9 +58,12 @@ const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : 
     /* An application shell is as tall as the screen; on the showcase, as tall as a few links need. */
     .stage > :global(.sidebar-provider) { min-block-size: 24rem; }
     .stage > :global(.sidebar-provider > .sidebar) { block-size: auto; align-self: stretch; }
+    /* The inset's header as a page lays it out: trigger, vertical separator and breadcrumb in a row. */
+    .stage :global(.sidebar-inset > header) { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; }
   </style>
 </head>
 <body>
+{shells.map(scenario => <div class="showcase stage" data-scenario={scenario.id} set:html={scenario.html}/>)}
 <div class="showcase" role="region" aria-label="Showcase">
   <h1>Shadleaf showcase</h1>
   {previews.scenarios.length === 0 && <p>No previews: run <code>pnpm run generate</code> in docs/.</p>}
@@ -75,6 +79,5 @@ const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : 
     </section>
   ))}
 </div>
-{shells.map(scenario => <div class="showcase stage" data-scenario={scenario.id} set:html={scenario.html}/>)}
 </body>
 </html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The mark between two items of a <code>sl:breadcrumb-list</code>: a chevron that points the other
+      way on a right-to-left page. Content of its own (another icon, a slash) replaces it; that content is not turned
+      around. Decorative: screen readers skip it, so the list holds only the levels.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* A list item, as in shadcn/ui, since an ol may only hold li elements; aria-hidden takes it out of the list a
+  screen reader counts. */-->
+<li th:fragment="breadcrumb-separator"
+    class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"
+    sl:attrs><sl:slot><sl:icon name="chevron-right" class="breadcrumb-separator-icon"/></sl:slot></li>
+</body>
+</html>

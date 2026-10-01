@@ -54,6 +54,10 @@ for (const {skin, theme} of combinations) {
           continue;
         }
         await control.evaluate(element => element.setAttribute('data-hovered', ''));
+        // A skip link is only drawn while it has the focus.
+        if (await control.evaluate(element => element.matches('.skip-link'))) {
+          await control.focus();
+        }
         await control.hover();
         // window.axe, not the imported binding: the function runs in the page, where the import does not exist
         const violations = await page.evaluate(async () => {
@@ -62,7 +66,10 @@ for (const {skin, theme} of combinations) {
           return results.violations;
         });
         failures.push(...describe(violations));
-        await control.evaluate(element => element.removeAttribute('data-hovered'));
+        await control.evaluate(element => {
+          element.removeAttribute('data-hovered');
+          (element as HTMLElement).blur();
+        });
       }
       expect(failures, failures.join('\n')).toEqual([]);
     });

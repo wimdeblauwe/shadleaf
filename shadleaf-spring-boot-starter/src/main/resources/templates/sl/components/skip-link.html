@@ -1,0 +1,20 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A link past the navigation to the page's content, for keyboard users: put it first in the body.
+      Hidden until it has the focus (the first Tab on the page), then drawn at the top of the page. Its text is
+      "Skip to main content" (the message <code>sl.skip-link</code>), which content of its own replaces. The target
+      should be able to take the focus: <code>sl:sidebar-inset</code> is <code>id="main"</code> with
+      <code>tabindex="-1"</code>, so the default target works with it.</sl:description>
+    <sl:prop name="for" default="main">The <code>id</code> of the element it skips to, usually the
+      <code>main</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<a th:fragment="skip-link"
+   class="skip-link"
+   th:href="${'#' + props.for}"
+   sl:attrs><sl:slot><th:block th:text="#{sl.skip-link}">Skip to main content</th:block></sl:slot></a>
+</body>
+</html>

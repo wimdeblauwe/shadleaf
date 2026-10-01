@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Stands for the levels a long trail leaves out. Without content it is an ellipsis, read as "More
+      levels" (the message <code>sl.breadcrumb.more</code>). With content, the
+      <code>sl:dropdown-menu-item</code>s of those levels (<code>as="a"</code>), it is a ghost icon button named "Show
+      more levels" (<code>sl.breadcrumb.more.trigger</code>; an <code>aria-label</code> replaces it) that opens a
+      <code>sl:dropdown-menu</code> of them; any other attribute then goes to the button.</sl:description>
+    <sl:prop name="id">With content: the menu's id, <code>breadcrumb-more</code> when not set (the button's is
+      <code>&lt;id&gt;-trigger</code>); give a second breadcrumb on the page another one. Without content: the
+      ellipsis's own id.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* Two branches. The menu's values come from local variables: attributes on a nested component are evaluated in its
+  template, where props and attrs are its own. A caller's aria-label replaces the message (a th:aria-label replaces
+  the one below, as sl:attrs replaces attributes). */-->
+<th:block th:fragment="breadcrumb-ellipsis"><span th:unless="${slots.hasDefault()}"
+    class="breadcrumb-ellipsis"
+    th:id="${props.id}"
+    sl:attrs><sl:icon name="ellipsis"/><span class="sl-sr-only" th:text="#{sl.breadcrumb.more}">More levels</span></span><th:block
+    th:if="${slots.hasDefault()}"
+    th:with="slBreadcrumbMenuId=${props.id ?: 'breadcrumb-more'},
+             slLabel=${attrs['aria-label'] ?: #messages.msg('sl.breadcrumb.more.trigger')},
+             slAttrs=${attrs.containsKey('th:aria-label') ? attrs : attrs.without('aria-label')}"><sl:dropdown-menu
+    th:id="${slBreadcrumbMenuId}">
+  <sl:dropdown-menu-trigger class="breadcrumb-ellipsis-trigger"
+                            variant="ghost"
+                            size="icon-sm"
+                            th:aria-label="${slLabel}"
+                            sl:attrs="${slAttrs}"><sl:icon name="ellipsis"/></sl:dropdown-menu-trigger>
+  <sl:dropdown-menu-content><sl:slot/></sl:dropdown-menu-content>
+</sl:dropdown-menu></th:block></th:block>
+</body>
+</html>

@@ -209,6 +209,53 @@
       "description" : "Element to render: a `span`, or an anchor (`a`) for a badge that links somewhere. Only a linked badge reacts to hover."
     } ]
   }, {
+    "name" : "breadcrumb",
+    "tag" : "sl:breadcrumb",
+    "description" : "The trail of pages above the one shown now, in a `nav` named \"Breadcrumb\" (the message `sl.breadcrumb.label`; an `aria-label` replaces it). Holds a `sl:breadcrumb-list` with `sl:breadcrumb-item`s, each a `sl:breadcrumb-link` or, last, the `sl:breadcrumb-page`, with a `sl:breadcrumb-separator` between them.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "breadcrumb-ellipsis",
+    "tag" : "sl:breadcrumb-ellipsis",
+    "description" : "Stands for the levels a long trail leaves out. Without content it is an ellipsis, read as \"More levels\" (the message `sl.breadcrumb.more`). With content, the `sl:dropdown-menu-item`s of those levels (`as=\"a\"`), it is a ghost icon button named \"Show more levels\" (`sl.breadcrumb.more.trigger`; an `aria-label` replaces it) that opens a `sl:dropdown-menu` of them; any other attribute then goes to the button.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "With content: the menu's id, `breadcrumb-more` when not set (the button's is `&lt;id&gt;-trigger`); give a second breadcrumb on the page another one. Without content: the ellipsis's own id."
+    } ]
+  }, {
+    "name" : "breadcrumb-item",
+    "tag" : "sl:breadcrumb-item",
+    "description" : "One level of a `sl:breadcrumb-list`: a `sl:breadcrumb-link`, the `sl:breadcrumb-page`, a `sl:breadcrumb-ellipsis`, or plain text for a level that has no page of its own.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "breadcrumb-link",
+    "tag" : "sl:breadcrumb-link",
+    "description" : "A link to a level above the page shown now. Give it an `href` or `th:href`. A level without a page of its own is plain text in its `sl:breadcrumb-item` instead.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "breadcrumb-list",
+    "tag" : "sl:breadcrumb-list",
+    "description" : "The ordered list of a `sl:breadcrumb`: its items and the separators between them, on one line that wraps when there is no room.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "breadcrumb-page",
+    "tag" : "sl:breadcrumb-page",
+    "description" : "The page shown now, last in the trail: text in the foreground colour, marked `aria-current=\"page\"`. Not a link.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "breadcrumb-separator",
+    "tag" : "sl:breadcrumb-separator",
+    "description" : "The mark between two items of a `sl:breadcrumb-list`: a chevron that points the other way on a right-to-left page. Content of its own (another icon, a slash) replaces it; that content is not turned around. Decorative: screen readers skip it, so the list holds only the levels.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "button",
     "tag" : "sl:button",
     "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`.",
@@ -1249,9 +1296,15 @@
   }, {
     "name" : "sidebar-inset",
     "tag" : "sl:sidebar-inset",
-    "description" : "The page's main content beside the `sl:sidebar`: the `main` element, which takes the rest of the width. Put the page header with the `sl:sidebar-trigger` at its top. Give it an `id` for a skip link.",
+    "description" : "The page's main content beside the `sl:sidebar`: the `main` element, which takes the rest of the width. Put the page header with the `sl:sidebar-trigger` at its top. It is the target of a `sl:skip-link`: `tabindex=\"-1\"` lets the link move the focus to it.",
     "declared" : true,
-    "props" : [ ]
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "defaultValue" : "main",
+      "values" : [ ],
+      "description" : "The element's id, which a `sl:skip-link` points at (`main` is its default too)."
+    } ]
   }, {
     "name" : "sidebar-menu",
     "tag" : "sl:sidebar-menu",
@@ -1407,6 +1460,18 @@
       "defaultValue" : "line",
       "values" : [ "line", "circle" ],
       "description" : "A line of text (full width, one line high) or a circle (an avatar)."
+    } ]
+  }, {
+    "name" : "skip-link",
+    "tag" : "sl:skip-link",
+    "description" : "A link past the navigation to the page's content, for keyboard users: put it first in the body. Hidden until it has the focus (the first Tab on the page), then drawn at the top of the page. Its text is \"Skip to main content\" (the message `sl.skip-link`), which content of its own replaces. The target should be able to take the focus: `sl:sidebar-inset` is `id=\"main\"` with `tabindex=\"-1\"`, so the default target works with it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "for",
+      "type" : "string",
+      "defaultValue" : "main",
+      "values" : [ ],
+      "description" : "The `id` of the element it skips to, usually the `main`."
     } ]
   }, {
     "name" : "switch",

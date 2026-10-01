@@ -1,0 +1,21 @@
+/*
+  Skip link: structure only. Visually hidden, but in the tab order and the accessibility tree, until it has the focus;
+  then it is drawn fixed at the top of the page, above the sticky sidebar. Its look is in the skins.
+*/
+@layer components {
+  .skip-link {
+    @apply sr-only no-underline outline-none;
+  }
+
+  /* Undoes sr-only by hand: not-sr-only would also set position: static. */
+  .skip-link:focus {
+    @apply fixed start-2 top-2 z-50 m-0 h-auto w-auto overflow-visible whitespace-nowrap;
+    clip-path: none;
+  }
+
+  @media (forced-colors: active) {
+    .skip-link:focus {
+      @apply border border-solid outline-2 outline-offset-2 outline-solid;
+    }
+  }
+}

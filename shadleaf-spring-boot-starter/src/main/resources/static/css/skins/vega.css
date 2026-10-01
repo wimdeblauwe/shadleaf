@@ -969,6 +969,48 @@
   }
 
   /*
+    Breadcrumb, after shadcn's vega style: muted levels, the current page in the foreground colour, a hovered link
+    too. The ellipsis's menu button is a ghost button (.btn rules).
+  */
+  .breadcrumb-list {
+    @apply gap-1.5 text-sm text-muted-foreground sm:gap-2.5;
+  }
+
+  .breadcrumb-item {
+    @apply gap-1.5;
+  }
+
+  .breadcrumb-link {
+    @apply rounded-sm transition-colors hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  .breadcrumb-page {
+    @apply font-normal text-foreground;
+  }
+
+  .breadcrumb-separator > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .breadcrumb-ellipsis {
+    @apply size-5;
+  }
+
+  .breadcrumb-ellipsis > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  /* Skip link: drawn as an outline button once it has the focus. */
+  .skip-link:focus {
+    @apply inline-flex h-9 rounded-md px-4 text-sm items-center border border-border bg-background font-medium
+      text-foreground shadow-md;
+  }
+
+  .skip-link:focus-visible {
+    @apply border-ring ring-[3px] ring-ring/50;
+  }
+
+  /*
     Sidebar. shadcn's widths: 16rem beside the page, 18rem as the panel on a phone. The sidebar has its own colours
     (--sidebar*), the inset the page's.
   */

@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The ordered list of a <code>sl:breadcrumb</code>: its items and the separators between them, on
+      one line that wraps when there is no room.</sl:description>
+  </sl:props>
+</head>
+<body>
+<ol th:fragment="breadcrumb-list" class="breadcrumb-list" sl:attrs><sl:slot/></ol>
+</body>
+</html>

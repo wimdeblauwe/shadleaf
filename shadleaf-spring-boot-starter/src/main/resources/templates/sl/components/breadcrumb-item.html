@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One level of a <code>sl:breadcrumb-list</code>: a <code>sl:breadcrumb-link</code>, the
+      <code>sl:breadcrumb-page</code>, a <code>sl:breadcrumb-ellipsis</code>, or plain text for a level that has no
+      page of its own.</sl:description>
+  </sl:props>
+</head>
+<body>
+<li th:fragment="breadcrumb-item" class="breadcrumb-item" sl:attrs><sl:slot/></li>
+</body>
+</html>

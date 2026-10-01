@@ -1,7 +1,8 @@
 # Scenarios for the sidebar's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
 # A page holds one sidebar and one main, so only the first scenario is on the showcase (which puts it after its region
 # of other components, as a page's shell). docs/tests/sidebar.spec.ts builds its fixture pages from that scenario: it
-# expects Home to be the current page and links to /inbox, /calendar and /settings.
+# expects Home to be the current page and links to /inbox, /calendar and /settings, a skip link before the provider and
+# a breadcrumb in the inset's header ending in the page "Home".
 component: sidebar
 parts: [sidebar-provider, sidebar-trigger, sidebar-inset, sidebar-header, sidebar-content, sidebar-footer,
         sidebar-separator, sidebar-group, sidebar-group-label, sidebar-group-action, sidebar-group-content,
@@ -12,9 +13,11 @@ scenarios:
     description: >-
       Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or
       Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered
-      for a request for /, so #slNav.current('/') marks Home as the current page.
+      for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to
+      the inset, whose header holds the trigger and the breadcrumb.
     request: /
     source: |-
+      <sl:skip-link/>
       <sl:sidebar-provider>
         <sl:sidebar>
           <sl:sidebar-header>
@@ -99,9 +102,17 @@ scenarios:
             </sl:sidebar-menu>
           </sl:sidebar-footer>
         </sl:sidebar>
-        <sl:sidebar-inset id="content">
+        <sl:sidebar-inset>
           <header>
             <sl:sidebar-trigger/>
+            <sl:separator orientation="vertical"/>
+            <sl:breadcrumb>
+              <sl:breadcrumb-list>
+                <sl:breadcrumb-item>Platform</sl:breadcrumb-item>
+                <sl:breadcrumb-separator/>
+                <sl:breadcrumb-item><sl:breadcrumb-page>Home</sl:breadcrumb-page></sl:breadcrumb-item>
+              </sl:breadcrumb-list>
+            </sl:breadcrumb>
           </header>
           <h1>Home</h1>
           <p>The page's content.</p>

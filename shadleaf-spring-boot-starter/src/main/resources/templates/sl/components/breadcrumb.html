@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The trail of pages above the one shown now, in a <code>nav</code> named "Breadcrumb" (the message
+      <code>sl.breadcrumb.label</code>; an <code>aria-label</code> replaces it). Holds a
+      <code>sl:breadcrumb-list</code> with <code>sl:breadcrumb-item</code>s, each a <code>sl:breadcrumb-link</code>
+      or, last, the <code>sl:breadcrumb-page</code>, with a <code>sl:breadcrumb-separator</code> between them.
+      </sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* A caller's aria-label replaces the message: sl:attrs runs after th:attr. */-->
+<nav th:fragment="breadcrumb"
+     class="breadcrumb"
+     th:attr="aria-label=#{sl.breadcrumb.label}"
+     sl:attrs><sl:slot/></nav>
+</body>
+</html>

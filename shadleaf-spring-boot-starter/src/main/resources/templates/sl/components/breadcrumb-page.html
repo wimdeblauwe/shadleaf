@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The page shown now, last in the trail: text in the foreground colour, marked
+      <code>aria-current="page"</code>. Not a link.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* No role="link" aria-disabled="true", unlike shadcn/ui's: a screen reader would announce a link that goes
+  nowhere. aria-current says what it is. */-->
+<span th:fragment="breadcrumb-page" class="breadcrumb-page" aria-current="page" sl:attrs><sl:slot/></span>
+</body>
+</html>

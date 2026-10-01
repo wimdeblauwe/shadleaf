@@ -9,9 +9,10 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 <ComponentPreview id="sidebar--default" />
 
 :::note[Being built]
-The sidebar's frame (provider, sidebar, trigger, inset: collapsing, the phone panel, the remembered state) and the
-parts that go inside it (header, groups, menus, the current page, badges, actions) are here. The breadcrumb, a skip
-link, collapsing to icons with sub-menus, and a header layout follow in the next releases.
+The sidebar's frame (provider, sidebar, trigger, inset: collapsing, the phone panel, the remembered state), the
+parts that go inside it (header, groups, menus, the current page, badges, actions), the page header's
+[breadcrumb](../breadcrumb/) and the [skip link](../skip-link/) are here. Collapsing to icons with sub-menus, and a
+header layout follow in the next releases.
 :::
 
 ## Built from parts
@@ -20,19 +21,23 @@ An application shell with a sidebar is four components, as in shadcn/ui:
 
 - `<sl:sidebar-provider>` wraps the whole page and holds the state: is the sidebar expanded or collapsed on a desktop.
 - `<sl:sidebar>` is the navigation itself: a `<nav>` landmark named "Main".
-- `<sl:sidebar-inset>` is the page's `<main>`, beside the sidebar.
+- `<sl:sidebar-inset>` is the page's `<main>`, beside the sidebar: `<main id="main" tabindex="-1">`, the target of
+  the [skip link](../skip-link/).
 - `<sl:sidebar-trigger>` is the icon button that collapses the sidebar, or opens it on a phone. It usually sits in a
   header at the top of the inset.
 
 ```html
 <body>
+<sl:skip-link/>
 <sl:sidebar-provider>
   <sl:sidebar>
     <!-- header, content with groups and menus, footer: see "What goes inside" below -->
   </sl:sidebar>
-  <sl:sidebar-inset id="content">
+  <sl:sidebar-inset>
     <header>
       <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>...</sl:breadcrumb>
     </header>
     <div th:replace="${content}"></div>
   </sl:sidebar-inset>
@@ -42,6 +47,11 @@ An application shell with a sidebar is four components, as in shadcn/ui:
 
 Put the sidebar straight inside the provider (not in an element of your own): the CSS that collapses it looks for it
 there.
+
+The [skip link](../skip-link/) comes first in the body: the sidebar puts many links before the content, and it lets a
+keyboard user jump past them to the inset. The header at the top of the inset holds the trigger, a vertical
+[separator](../separator/) and the [breadcrumb](../breadcrumb/), as shadcn's blocks have it. Lay it out as a row
+yourself (flex, the items centred, a small gap): the library's CSS styles its components, not the page around them.
 
 ## What goes inside
 
@@ -237,7 +247,6 @@ part of the markup htmx saves, and the panel closes before htmx takes its snapsh
 
 For now:
 
-- the breadcrumb and a skip link (next);
 - `collapsible="icon"` (collapsing to a strip of icons, with tooltips on the menu buttons), collapsible groups and
   sub-menus (`SidebarMenuSub`), and `collapsible="none"`;
 - a menu action that opens a dropdown menu;

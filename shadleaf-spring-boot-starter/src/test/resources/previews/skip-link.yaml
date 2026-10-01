@@ -1,0 +1,14 @@
+# Scenarios for the skip link's docs page. Rendered by PreviewGeneratorTest; see docs/README.md.
+# The showcase has the skip link in the sidebar's shell (sidebar.yaml), whose inset it skips to; a second one there
+# would point at the same main, so this one stays off it.
+component: skip-link
+scenarios:
+  - id: default
+    title: Skip link
+    description: >-
+      Hidden until it has the focus: click into the frame and press Tab. It skips to the element with id="main" (here
+      the paragraph below), which tabindex="-1" lets take the focus.
+    showcase: false
+    source: |-
+      <sl:skip-link/>
+      <p id="main" tabindex="-1">The page's content.</p>

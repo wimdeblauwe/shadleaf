@@ -20,16 +20,18 @@ type ShellOptions = { state?: 'expanded' | 'collapsed', side?: 'start' | 'end', 
 
 /**
  * The preview's shell as a server renders it for a page: the state, the current page's menu button (as
- * #slNav.current marks it; the large brand button in the header never), a same-page link, a control in main.
+ * #slNav.current marks it; the large brand button in the header never), the breadcrumb's page, a same-page link, a
+ * control in main.
  */
 function shell({state = 'expanded', side = 'start', title = 'Home', current = '/'}: ShellOptions = {}) {
   return PREVIEW
-      .replace(/\s*aria-current="page"/g, '')
+      .replace(/(<a class="sidebar-menu-button"[^>]*?)\s*aria-current="page"/g, '$1')
       .replace(new RegExp(`(<a class="sidebar-menu-button")((?:(?!data-size)[^>])*? href="${current}")`),
           '$1 aria-current="page"$2')
       .replace('data-state="expanded"', `data-state="${state}"`)
       .replace('aria-label="Main">', `aria-label="Main"${side === 'end' ? ' data-side="end"' : ''}>`)
       .replace('</nav>', '<a class="btn" data-variant="ghost" href="#section">Section</a></nav>')
+      .replace('aria-current="page">Home</span>', `aria-current="page">${title}</span>`)
       .replace('<h1>Home</h1>', `<h1>${title}</h1><button id="in-main" type="button">In main</button>`
           + '<p id="section">Section</p>');
 }
@@ -109,8 +111,10 @@ test.describe('desktop', () => {
       expect(roles).toContain('main:');
       expect(roles.filter(role => role.startsWith('dialog'))).toEqual([]);
     }
-    // The first Tab lands on the first link, the application's name in the header: the sidebar itself is no tab stop
-    // (Firefox made a dialog one).
+    // The first Tab lands on the skip link, the second on the first link, the application's name in the header: the
+    // sidebar itself is no tab stop (Firefox made a dialog one).
+    await page.keyboard.press('Tab');
+    expect(await focused(page)).toBe('Skip to main content');
     await page.keyboard.press('Tab');
     expect(await focused(page)).toBe('sidebar: Acme Inc. Enterprise');
     const results = await new AxeBuilder({page}).withTags(TAGS).analyze();
@@ -518,6 +522,89 @@ test.describe('content parts', () => {
     await trigger(page).click();
     const action = sidebar(page).getByRole('button', {name: 'More for Design Engineering'});
     expect(await action.evaluate(element => getComputedStyle(element).opacity)).toBe('1');
+  });
+});
+
+test.describe('skip link', () => {
+  const requests = (page: Page) => {
+    const urls: string[] = [];
+    page.on('request', request => urls.push(new URL(request.url()).pathname));
+    return urls;
+  };
+
+  for (const width of [DESKTOP, PHONE]) {
+    test(`the first Tab shows it, and following it moves the focus to main: ${width.width} px`, async ({page}) => {
+      await page.setViewportSize(width);
+      const messages = await openShell(page);
+      const link = page.locator('.skip-link');
+
+      // Hidden (one clipped pixel) until it has the focus, then drawn at the top of the page, above the sidebar.
+      expect((await link.boundingBox())!.width).toBeLessThanOrEqual(1);
+      await page.keyboard.press('Tab');
+      expect(await focused(page)).toBe('Skip to main content');
+      const box = (await link.boundingBox())!;
+      expect(box.width).toBeGreaterThan(100);
+      expect(box.y).toBeLessThan(20);
+      expect(await page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest('.skip-link') !== null,
+          [box.x + box.width / 2, box.y + box.height / 2])).toBe(true);
+
+      await page.keyboard.press('Enter');
+      await expect.poll(() => focused(page)).toMatch(/^#main /);
+      expect(page.url()).toBe(`${ORIGIN}/#main`);
+      // The skip link is hidden again, and the next Tab goes on inside main: the trigger in its header.
+      expect((await link.boundingBox())!.width).toBeLessThanOrEqual(1);
+      await page.keyboard.press('Tab');
+      expect(await focused(page)).toBe('Toggle sidebar');
+      expect(messages).toEqual([]);
+    });
+  }
+
+  test('main is no tab stop, and draws no ring when it has the focus', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    await openShell(page);
+    await page.locator('.skip-link').focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => focused(page)).toMatch(/^#main /);
+    expect(await page.locator('#main').evaluate(element =>
+        [element.matches(':focus-visible'), getComputedStyle(element).outlineStyle])).toEqual([true, 'none']);
+
+    // Shift+Tab from the trigger in main goes back to the sidebar's last link (the fixture's Section), not to main.
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Shift+Tab');
+    expect(await focused(page)).toBe('sidebar: Section');
+  });
+
+  test('with hx-boost on the body it moves the focus without a request', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    const messages = await openShell(page, {boost: 'body'});
+    const urls = requests(page);
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Enter');
+    await expect.poll(() => focused(page)).toMatch(/^#main /);
+    expect(urls).toEqual([]);
+    expect(page.url()).toBe(`${ORIGIN}/#main`);
+
+    // After a boosted navigation the new page's skip link works the same.
+    await page.locator('#sidebar a[href="/inbox"]').click();
+    await expect(page.locator('h1')).toHaveText('Inbox');
+    await page.locator('.skip-link').focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(() => focused(page)).toMatch(/^#main /);
+    expect(messages).toEqual([]);
+  });
+
+  // Both browsers blur the link and leave the focus on the body: nothing tells a screen reader the content was reached.
+  test('without tabindex on main the focus goes to the body (why sl:sidebar-inset renders it)', async ({page, browserName}) => {
+    await page.setViewportSize(DESKTOP);
+    await openFixture(page, PREVIEW.replace(' tabindex="-1"', ''), {wrap: false});
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => location.hash === '#main');
+    expect(await focused(page), browserName).toBe('body');
+    // Only where the next Tab starts has moved: into main.
+    await page.keyboard.press('Tab');
+    expect(await focused(page), browserName).toBe('Toggle sidebar');
   });
 });
 

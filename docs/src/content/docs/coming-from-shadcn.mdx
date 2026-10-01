@@ -248,6 +248,21 @@ and the text is wrapped for you (shadcn's `<span>` around the label); two lines 
 and `<small>`, as there are no utility classes. `<sl:sidebar-content>` is a `div`, as shadcn's: `<sl:sidebar>` is the
 `nav`.
 
+### Breadcrumb: the ellipsis opens its own menu
+
+The parts are shadcn's (`BreadcrumbList`, `-Item`, `-Link`, `-Page`, `-Separator`, `-Ellipsis`). `<sl:breadcrumb-link>`
+is always a link (shadcn's `asChild` makes it a router `Link`); a level without a page is plain text in its item.
+shadcn's example wraps the ellipsis in a `DropdownMenuTrigger` by hand; here `<sl:breadcrumb-ellipsis>` with
+`sl:dropdown-menu-item`s as its content renders that menu and its button itself. The ellipsis's hidden text is
+"More levels", not "More", and the separator turns around on a right-to-left page. See
+[Breadcrumb](../components/breadcrumb/).
+
+### Skip link and main
+
+shadcn/ui has no skip link; `<sl:skip-link>` goes first in the body and skips to `<sl:sidebar-inset>`, which therefore
+renders `id="main"` and `tabindex="-1"` (shadcn's `SidebarInset` is a bare `main`). See
+[Skip Link](../components/skip-link/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
@@ -316,6 +331,14 @@ takes keyboard focus, when it is a link (`as="a"`).
 - An error's icon takes the destructive colour; with Sonner every icon has the text colour unless `richColors` is on.
 - The toasts move into an open modal dialog, so one shown while a dialog is open can be used and is announced; a
   Sonner toast outside the dialog is inert there.
+
+### Breadcrumb
+
+- The page shown now is plain text with `aria-current="page"`. shadcn's also has `role="link"` and
+  `aria-disabled="true"`, which a screen reader announces as a link that goes nowhere.
+- An ellipsis without a menu is read as "More levels"; shadcn's is hidden from screen readers (`aria-hidden`) even
+  though it holds a visually hidden "More".
+- The ellipsis's menu button is named "Show more levels" rather than shadcn's example's "Toggle menu".
 
 ### Sidebar menus
 

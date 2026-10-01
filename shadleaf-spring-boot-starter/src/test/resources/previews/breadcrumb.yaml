@@ -1,0 +1,88 @@
+# Scenarios for the breadcrumb's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# Landmark names must be unique across the showcase. The sidebar's shell (sidebar.yaml) holds a breadcrumb named
+# "Breadcrumb", so the plain first scenario stays off the showcase (the shell shows that look there) and the others get
+# an aria-label.
+component: breadcrumb
+parts: [breadcrumb-list, breadcrumb-item, breadcrumb-link, breadcrumb-page, breadcrumb-separator, breadcrumb-ellipsis]
+scenarios:
+  - id: default
+    title: Breadcrumb
+    showcase: false
+    source: |-
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/">Home</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/components">Components</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-page>Breadcrumb</sl:breadcrumb-page></sl:breadcrumb-item>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+
+  - id: menu
+    title: With a menu
+    description: >-
+      An ellipsis with the hidden levels as its content is a button that opens a menu of them. Arrow keys move through
+      the menu, Escape closes it.
+    source: |-
+      <sl:breadcrumb aria-label="Breadcrumb with a menu">
+        <sl:breadcrumb-list>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/">Home</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item>
+            <sl:breadcrumb-ellipsis>
+              <sl:dropdown-menu-item as="a" href="/docs">Documentation</sl:dropdown-menu-item>
+              <sl:dropdown-menu-item as="a" href="/themes">Themes</sl:dropdown-menu-item>
+              <sl:dropdown-menu-item as="a" href="/github">GitHub</sl:dropdown-menu-item>
+            </sl:breadcrumb-ellipsis>
+          </sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/components">Components</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-page>Breadcrumb</sl:breadcrumb-page></sl:breadcrumb-item>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+
+  - id: ellipsis
+    title: Collapsed levels
+    description: An ellipsis without content stands for the levels left out; a screen reader says "More levels".
+    source: |-
+      <sl:breadcrumb aria-label="Breadcrumb with collapsed levels">
+        <sl:breadcrumb-list>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/">Home</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-ellipsis/></sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/components">Components</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-page>Breadcrumb</sl:breadcrumb-page></sl:breadcrumb-item>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+
+  - id: separator
+    title: Another separator
+    description: Content of its own replaces the chevron.
+    source: |-
+      <sl:breadcrumb aria-label="Breadcrumb with slashes">
+        <sl:breadcrumb-list>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/">Home</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator><sl:icon name="slash"/></sl:breadcrumb-separator>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/components">Components</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator><sl:icon name="slash"/></sl:breadcrumb-separator>
+          <sl:breadcrumb-item><sl:breadcrumb-page>Breadcrumb</sl:breadcrumb-page></sl:breadcrumb-item>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+
+  - id: plain-level
+    title: A level without a page
+    description: A level that has no page of its own is plain text in its item.
+    source: |-
+      <sl:breadcrumb aria-label="Breadcrumb with a plain level">
+        <sl:breadcrumb-list>
+          <sl:breadcrumb-item><sl:breadcrumb-link href="/">Home</sl:breadcrumb-link></sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item>Settings</sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-page>Notifications</sl:breadcrumb-page></sl:breadcrumb-item>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>

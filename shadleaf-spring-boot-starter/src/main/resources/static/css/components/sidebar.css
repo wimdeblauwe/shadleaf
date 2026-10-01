@@ -29,6 +29,14 @@
     @apply relative flex min-w-0 w-full flex-1 flex-col;
   }
 
+  /*
+    The inset takes the focus only from a skip link (tabindex="-1"). It is no control, so no ring around the whole
+    content: the page scrolls to it and the next Tab goes on from there.
+  */
+  .sidebar-inset:focus-visible {
+    @apply outline-none;
+  }
+
   /* The icon shows a panel on the left: on a right-to-left page the sidebar is on the right. */
   .sidebar-trigger-icon {
     @apply rtl:-scale-x-100;
