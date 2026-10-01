@@ -253,6 +253,9 @@ public final class PropsParser {
       if (required && type == PropType.BOOLEAN) {
         throw error("prop '" + name + "' is a boolean and cannot be required: leaving it out means false");
       }
+      if (type == PropType.OBJECT && attrs.containsKey("default")) {
+        throw error("prop '" + name + "' is an object and cannot have a default: a literal is text");
+      }
 
       Object defaultValue = null;
       String defaultAttribute = attrs.get("default");
@@ -308,13 +311,14 @@ public final class PropsParser {
         case "enum" -> PropType.ENUM;
         case "boolean" -> PropType.BOOLEAN;
         case "number" -> PropType.NUMBER;
+        case "object" -> PropType.OBJECT;
         default -> throw error("prop '" + propName + "' has unknown type '" + typeAttribute
-            + "'; use string, boolean or number, or list the legal values with values=\"...\"");
+            + "'; use string, boolean, number or object, or list the legal values with values=\"...\"");
       };
       if (type == PropType.ENUM && values.isEmpty()) {
         throw error("prop '" + propName + "' is an enum but declares no values=\"...\"");
       }
-      if ((type == PropType.BOOLEAN || type == PropType.NUMBER) && !values.isEmpty()) {
+      if ((type == PropType.BOOLEAN || type == PropType.NUMBER || type == PropType.OBJECT) && !values.isEmpty()) {
         throw error("prop '" + propName + "' is of type " + typeAttribute + " and cannot declare values");
       }
       return type;

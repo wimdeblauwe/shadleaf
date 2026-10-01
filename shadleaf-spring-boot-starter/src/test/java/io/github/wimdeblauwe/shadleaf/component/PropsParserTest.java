@@ -186,6 +186,26 @@ class PropsParserTest {
   }
 
   @Test
+  void parsesObjectProp() {
+    ComponentDefinition definition = parse("<sl:props><sl:prop name=\"page\" type=\"object\"/></sl:props>");
+
+    assertThat(definition.prop("page").type()).isEqualTo(PropType.OBJECT);
+    assertThat(definition.prop("page").defaultValue()).isNull();
+  }
+
+  @Test
+  void rejectsDefaultOnObject() {
+    assertThatThrownBy(() -> parse("<sl:props><sl:prop name=\"page\" type=\"object\" default=\"x\"/></sl:props>"))
+        .hasMessageContaining("prop 'page' is an object and cannot have a default");
+  }
+
+  @Test
+  void rejectsValuesOnObject() {
+    assertThatThrownBy(() -> parse("<sl:props><sl:prop name=\"page\" type=\"object\" values=\"a\"/></sl:props>"))
+        .hasMessageContaining("prop 'page' is of type object and cannot declare values");
+  }
+
+  @Test
   void rejectsValuesOnBoolean() {
     assertThatThrownBy(() -> parse("<sl:props><sl:prop name=\"open\" type=\"boolean\" values=\"a\"/></sl:props>"))
         .hasMessageContaining("prop 'open' is of type boolean and cannot declare values");

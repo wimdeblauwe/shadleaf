@@ -153,13 +153,15 @@ class SkinCompletenessTest {
 
   /** The rendered root element, or {@code null} for a component that renders none of its own. */
   private static @Nullable Element renderRoot(String component, @Nullable String prop, @Nullable String value) {
-    // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>; every other required prop gets "x".
+    // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>; every other required prop gets "x" (a
+    // number "1").
     // Inside a form object, for the components that read one (sl:form-errors).
     StringBuilder propAttribute = new StringBuilder(prop == null ? "" : "%s=\"%s\" ".formatted(prop, value));
     REGISTRY.get(component).props().values().stream()
         .filter(PropDefinition::required)
         .filter(required -> !required.name().equals(prop) && !required.name().equals("name"))
-        .forEach(required -> propAttribute.append("%s=\"x\" ".formatted(required.name())));
+        .forEach(required -> propAttribute.append("%s=\"%s\" ".formatted(required.name(),
+            required.type() == PropType.NUMBER ? "1" : "x")));
     Elements rendered = RENDERER.render(FormModel.wrap("<sl:%s %saria-label=\"x\" name=\"x\">x</sl:%s>"
         .formatted(component, propAttribute, component)), FORM.variables()).document().body().children();
     return rendered.isEmpty() ? null : rendered.first();

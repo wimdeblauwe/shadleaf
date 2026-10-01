@@ -1,0 +1,35 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A header cell (<code>th</code>) of a <code>sl:table</code>. With <code>sort</code> its label is a
+      link that sorts the table by that property on the server: ascending, or descending when it is sorted ascending
+      already. The link keeps the request's other parameters (filters, page size) and goes back to the first page.
+      The sorted column gets <code>aria-sort</code> and an arrow. A plain <code>th</code> works too, for a header that
+      does neither.</sl:description>
+    <sl:prop name="sort">The property to sort by, as the controller's <code>Sort</code> names it
+      (<code>name</code>, <code>address.city</code>). Only the first key of the current order is shown.</sl:prop>
+    <sl:prop name="align" default="start" values="start center end">Where the label sits in the cell. Put the same
+      <code>data-align</code> on the column's <code>td</code>s: <code>end</code> for amounts.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The link is a ghost button (its classes set the look), as the button in shadcn/ui's data table column header.
+  Its id lets htmx give the focus back to the new link after it swapped the table. */-->
+<th:block th:fragment="table-head">
+  <th th:if="${props.sort == null}"
+      class="table-head"
+      th:attr="data-align=${props.unlessDefault('align')}"
+      sl:attrs><sl:slot/></th>
+  <th th:unless="${props.sort == null}"
+      th:with="slSort=${#slPaging.sort(slTablePage, props.sort, slTableQualifier)}"
+      class="table-head"
+      th:attr="data-align=${props.unlessDefault('align')}, aria-sort=${slSort.ariaSort}"
+      sl:attrs><a class="btn table-sort"
+      data-variant="ghost"
+      data-size="sm"
+      th:href="${slSort.href}"
+      th:id="${slSort.id}"><sl:slot/><sl:icon th:name="${slSort.icon}"/></a></th>
+</th:block>
+</body>
+</html>

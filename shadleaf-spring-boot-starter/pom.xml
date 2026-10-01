@@ -29,6 +29,13 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-jackson</artifactId>
     </dependency>
+    <!-- sl:table and sl:pagination read a Page or Slice when the application has Spring Data; without it they take
+      their state from the request -->
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-commons</artifactId>
+      <optional>true</optional>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>

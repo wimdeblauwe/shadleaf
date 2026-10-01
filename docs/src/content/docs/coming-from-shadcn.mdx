@@ -201,6 +201,16 @@ has the theme script in the layout's `<head>` (the provider's part: the `dark` c
 is stored under `localStorage['shadleaf-theme']` (next-themes uses `theme`), and System removes it. There is no
 `useTheme()`: the `sl-theme-change` event tells a script about a change. See [Theme toggle](../components/theme-toggle/).
 
+### Table: plain rows and cells, sorted on the server
+
+`<sl:table>` styles the plain table elements inside it, so there is no `TableHeader`, `TableBody`, `TableFooter`,
+`TableRow`, `TableHead`, `TableCell` or `TableCaption`: write `thead`, `tbody`, `tfoot`, `tr`, `th`, `td` and
+`caption`, with `th:each` on the row. A page of 50 rows would otherwise be hundreds of components. Where shadcn's
+data table sorts in the browser with TanStack Table, `<sl:table-head sort="name">` is a link that asks the server for
+the page in another order (`?sort=name,desc`), read from a Spring Data `Page`. A cell's alignment is `data-align="end"`
+rather than a `text-right` class. There is no filtering, column visibility or browser-side paging. See
+[Table](../components/table/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a

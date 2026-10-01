@@ -866,4 +866,62 @@
   .toast-close {
     @apply -my-1 -me-2;
   }
+
+  /*
+    Table. Rows and cells are plain elements, reached through child combinators so a nested table keeps its own look.
+    The sort link's padding sticks out of the cell's, so its label lines up with the cells below, as in shadcn/ui's
+    data table.
+  */
+  .table {
+    @apply text-sm;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr {
+    @apply border-b border-border;
+  }
+
+  .table > tbody > tr {
+    @apply hover:bg-muted/50 motion-safe:transition-colors;
+  }
+
+  .table > tbody > tr:last-child,
+  .table > tfoot > tr:last-child {
+    @apply border-b-0;
+  }
+
+  .table > tfoot {
+    @apply border-t border-border bg-muted/50 font-medium;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > th {
+    @apply h-10 px-2 font-medium text-foreground;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > td {
+    @apply p-2;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td):has(> .checkbox-wrapper) {
+    @apply pe-0;
+  }
+
+  .table > caption {
+    @apply mt-4 text-sm text-muted-foreground;
+  }
+
+  .table-sort {
+    @apply -ms-2.5;
+  }
+
+  .table-head[data-align='center'] > .table-sort {
+    @apply ms-0;
+  }
+
+  .table-head[data-align='end'] > .table-sort {
+    @apply ms-0 -me-2.5;
+  }
+
+  .table > tbody > tr.table-empty > td {
+    @apply h-24;
+  }
 }

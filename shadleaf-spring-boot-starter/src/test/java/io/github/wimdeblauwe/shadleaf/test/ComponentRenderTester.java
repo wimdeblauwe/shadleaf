@@ -7,6 +7,8 @@ import io.github.wimdeblauwe.shadleaf.i18n.ShadleafMessageSource;
 import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
 import io.github.wimdeblauwe.shadleaf.icon.IconSource;
 import io.github.wimdeblauwe.shadleaf.icon.LucideIconSource;
+import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,6 +23,8 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.servlet.support.RequestContext;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.UriUtils;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -57,6 +61,7 @@ public final class ComponentRenderTester {
   private final MockServletContext servletContext;
   private final Locale locale;
   private final String contextPath;
+  private final String requestUri;
   private final Map<String, Object> requestAttributes;
 
   private ComponentRenderTester(Builder builder) {
@@ -76,7 +81,9 @@ public final class ComponentRenderTester {
     engine = new SpringTemplateEngine();
     engine.addTemplateResolver(componentResolver);
     engine.addTemplateResolver(snippetResolver);
-    engine.addDialect(builder.dialect != null ? builder.dialect : defaultDialect(builder.iconSources));
+    engine.addDialect(builder.dialect != null
+        ? builder.dialect
+        : defaultDialect(builder.iconSources, builder.pagingParameters));
     MessageSource messageSource = builder.messageSource != null ? builder.messageSource : new ShadleafMessageSource();
     engine.setTemplateEngineMessageSource(messageSource);
 
@@ -91,6 +98,7 @@ public final class ComponentRenderTester {
     webApplication = JakartaServletWebApplication.buildApplication(servletContext);
     locale = builder.locale;
     contextPath = builder.contextPath;
+    requestUri = builder.requestUri;
     requestAttributes = Map.copyOf(builder.requestAttributes);
   }
 
@@ -108,8 +116,17 @@ public final class ComponentRenderTester {
   }
 
   public Rendered render(String snippet, Map<String, ?> variables) {
-    MockHttpServletRequest request = new MockHttpServletRequest(servletContext, "GET", contextPath + "/");
+    int query = requestUri.indexOf('?');
+    String path = query < 0 ? requestUri : requestUri.substring(0, query);
+    MockHttpServletRequest request = new MockHttpServletRequest(servletContext, "GET", contextPath + path);
     request.setContextPath(contextPath);
+    if (query >= 0) {
+      String queryString = requestUri.substring(query + 1);
+      request.setQueryString(queryString);
+      UriComponentsBuilder.fromUriString("?" + queryString).build().getQueryParams().forEach((name, values) ->
+          values.forEach(value -> request.addParameter(UriUtils.decode(name, StandardCharsets.UTF_8),
+              value == null ? "" : UriUtils.decode(value, StandardCharsets.UTF_8))));
+    }
     request.addPreferredLocale(locale);
     requestAttributes.forEach(request::setAttribute);
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -128,12 +145,13 @@ public final class ComponentRenderTester {
     return engine;
   }
 
-  private static ShadleafDialect defaultDialect(List<IconSource> applicationIconSources) {
+  private static ShadleafDialect defaultDialect(List<IconSource> applicationIconSources,
+      PagingParameters pagingParameters) {
     ComponentRegistry registry = new ComponentRegistry(List.of(
         new ClasspathComponentDefinitionSource(ComponentRenderTester.class.getClassLoader())));
     List<IconSource> iconSources = new ArrayList<>(applicationIconSources);
     iconSources.add(new LucideIconSource(JsonMapper.builder().build()));
-    return new ShadleafDialect(registry, new IconRegistry(iconSources));
+    return new ShadleafDialect(registry, new IconRegistry(iconSources), pagingParameters);
   }
 
   public static final class Builder {
@@ -144,6 +162,8 @@ public final class ComponentRenderTester {
     private @Nullable MessageSource messageSource;
     private Locale locale = Locale.ENGLISH;
     private String contextPath = "";
+    private String requestUri = "/";
+    private PagingParameters pagingParameters = PagingParameters.defaults();
     private boolean cacheSnippets;
 
     private Builder() {
@@ -178,6 +198,21 @@ public final class ComponentRenderTester {
     /** The servlet context path, which {@code @{/...}} links start with. */
     public Builder contextPath(String contextPath) {
       this.contextPath = contextPath;
+      return this;
+    }
+
+    /**
+     * The path and query string of the request every render runs in ({@code /people?sort=name,desc}), within the
+     * context path. Defaults to {@code /}.
+     */
+    public Builder requestUri(String requestUri) {
+      this.requestUri = requestUri;
+      return this;
+    }
+
+    /** The request parameter names of the sort and page links, as {@code spring.data.web.*} sets them. */
+    public Builder pagingParameters(PagingParameters pagingParameters) {
+      this.pagingParameters = pagingParameters;
       return this;
     }
 

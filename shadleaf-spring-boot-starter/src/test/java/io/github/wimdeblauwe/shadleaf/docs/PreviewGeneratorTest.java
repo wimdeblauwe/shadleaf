@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -73,6 +74,7 @@ class PreviewGeneratorTest {
 
   private final JsonMapper jsonMapper = JsonMapper.builder().build();
   private final ComponentRenderTester tester = ComponentRenderTester.create();
+  private final Map<String, ComponentRenderTester> testersByRequest = new HashMap<>();
   private final Map<String, String> photos = loadPhotos();
 
   @Test
@@ -105,6 +107,10 @@ class PreviewGeneratorTest {
 
   private Preview render(Scenario scenario) {
     Rendered rendered;
+    ComponentRenderTester tester = scenario.request() == null
+        ? this.tester
+        : testersByRequest.computeIfAbsent(scenario.request(),
+            request -> ComponentRenderTester.builder().requestUri(request).build());
     try {
       if (scenario.form() == null) {
         rendered = tester.render(scenario.renderSource(), Map.of("photos", photos));
@@ -211,7 +217,7 @@ class PreviewGeneratorTest {
         String renderSource = (String) entry.getOrDefault("renderSource", source);
         scenarios.add(new Scenario(id, component, (String) entry.get("title"), (String) entry.get("description"),
             source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form")),
-            (Boolean) entry.getOrDefault("showcase", true)));
+            (Boolean) entry.getOrDefault("showcase", true), (String) entry.get("request")));
       }
     }
     assertThat(components).as("components with previews in %s", PREVIEWS_DIRECTORY)
@@ -249,9 +255,12 @@ class PreviewGeneratorTest {
    * @param form         the form object {@code th:field} binds to, if the scenario has one
    * @param showcase     whether the scenario is on the showcase page too; {@code false} for one that would get in the
    *                     way of the other components' tests there (a toast shown when the page loads)
+   * @param request      the path and query of the request it renders in ({@code /people?sort=name,desc}), for links
+   *                     built from the request such as a table's sort links; {@code /} when absent
    */
   private record Scenario(String id, String component, @Nullable String title, @Nullable String description,
-                          String source, String renderSource, @Nullable FormModel form, boolean showcase) {
+                          String source, String renderSource, @Nullable FormModel form, boolean showcase,
+                          @Nullable String request) {
 
   }
 

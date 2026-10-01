@@ -2,6 +2,8 @@ package io.github.wimdeblauwe.shadleaf.dialect;
 
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
+import io.github.wimdeblauwe.shadleaf.paging.Paging;
+import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
 import java.util.Set;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.dialect.AbstractProcessorDialect;
@@ -22,7 +24,8 @@ import org.thymeleaf.standard.StandardDialect;
  * It also provides the expression object {@code #slIcons}, the {@link IconRegistry} that {@code <sl:icon>} inlines
  * its SVG from. An expression object rather than a bean reference, so it works without a Spring application context.
  * And {@code #slFields}, the {@link FieldBindings} through which {@code <sl:field>} shares its {@code th:field} with
- * its parts and control.
+ * its parts and control. And {@code #slPaging}, the {@link Paging} that builds the sort links of a table from the
+ * request, with Spring Data's parameter names ({@link PagingParameters}).
  */
 public class ShadleafDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
 
@@ -30,18 +33,24 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
   public static final String NAMESPACE_URI = "https://shadleaf.dev/sl";
   public static final String ICONS_EXPRESSION_OBJECT = "slIcons";
   public static final String FIELDS_EXPRESSION_OBJECT = "slFields";
+  public static final String PAGING_EXPRESSION_OBJECT = "slPaging";
   private static final String NAME = "Shadleaf";
 
   private final ComponentRegistry registry;
   private final IExpressionObjectFactory expressionObjectFactory;
 
+  /** With Spring Data's default parameter names. */
   public ShadleafDialect(ComponentRegistry registry, IconRegistry iconRegistry) {
+    this(registry, iconRegistry, PagingParameters.defaults());
+  }
+
+  public ShadleafDialect(ComponentRegistry registry, IconRegistry iconRegistry, PagingParameters pagingParameters) {
     super(NAME, PREFIX, StandardDialect.PROCESSOR_PRECEDENCE);
     this.registry = registry;
     this.expressionObjectFactory = new IExpressionObjectFactory() {
       @Override
       public Set<String> getAllExpressionObjectNames() {
-        return Set.of(ICONS_EXPRESSION_OBJECT, FIELDS_EXPRESSION_OBJECT);
+        return Set.of(ICONS_EXPRESSION_OBJECT, FIELDS_EXPRESSION_OBJECT, PAGING_EXPRESSION_OBJECT);
       }
 
       @Override
@@ -49,6 +58,7 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
         return switch (expressionObjectName) {
           case ICONS_EXPRESSION_OBJECT -> iconRegistry;
           case FIELDS_EXPRESSION_OBJECT -> new FieldBindings(context);
+          case PAGING_EXPRESSION_OBJECT -> new Paging(context, pagingParameters);
           default -> null;
         };
       }

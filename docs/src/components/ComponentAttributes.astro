@@ -33,7 +33,7 @@ const accessibleName = component?.accessibleName;
         <tbody>
           {component.props.map(prop => (
             <tr>
-              <td><code>{prop.name}</code></td>
+              <td><code>{prop.type === 'object' ? `th:${prop.name}` : prop.name}</code></td>
               <td>
                 {prop.type === 'enum'
                     ? prop.values.map((value, i) => <>{i > 0 && ' '}<code>{value}</code></>)

@@ -62,6 +62,20 @@ class WebTypesTest {
   }
 
   @Test
+  void anObjectPropOnlyHasItsExpressionAttribute() {
+    JsonNode element = element("""
+        <sl:props>
+          <sl:prop name="page" type="object">The <code>Page</code> to show.</sl:prop>
+        </sl:props>
+        """);
+
+    assertThat(element.get("attributes").findValuesAsString("name")).containsExactly("th:page");
+    JsonNode page = attribute(element, "th:page");
+    assertThat(page.get("description").asString()).isEqualTo("The `Page` to show.");
+    assertThat(page.get("value").get("kind").asString()).isEqualTo("expression");
+  }
+
+  @Test
   void accessibleNameRuleIsPartOfTheDescription() {
     JsonNode element = element("""
         <sl:props>

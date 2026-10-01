@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The row a <code>sl:table</code> shows when there are no rows to show: one cell across every
+      column saying "No results." (the message <code>sl.table.empty</code>). Content of its own replaces the text.
+      Render it with <code>th:if</code>, e.g. <code>th:if="${people.empty}"</code>.</sl:description>
+    <sl:prop name="colspan" type="number" required>The number of columns the cell spans: all of the table's.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<tr th:fragment="table-empty"
+    class="table-empty"
+    sl:attrs><td th:colspan="${props.colspan}"><sl:slot><th:block
+    th:text="#{sl.table.empty}">No results.</th:block></sl:slot></td></tr>
+</body>
+</html>

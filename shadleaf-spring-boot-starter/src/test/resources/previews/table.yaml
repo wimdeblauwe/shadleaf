@@ -1,0 +1,115 @@
+# Scenarios for the table's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: table
+parts: [table-head, table-empty]
+scenarios:
+  - id: default
+    title: Table
+    source: |-
+      <sl:table>
+        <caption>A list of your recent invoices.</caption>
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Status</th>
+            <th>Method</th>
+            <sl:table-head align="end">Amount</sl:table-head>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>INV001</td>
+            <td><sl:badge variant="secondary">Paid</sl:badge></td>
+            <td>Credit card</td>
+            <td data-align="end">€250.00</td>
+          </tr>
+          <tr>
+            <td>INV002</td>
+            <td><sl:badge variant="outline">Pending</sl:badge></td>
+            <td>Bank transfer</td>
+            <td data-align="end">€150.00</td>
+          </tr>
+          <tr>
+            <td>INV003</td>
+            <td><sl:badge variant="destructive">Overdue</sl:badge></td>
+            <td>Credit card</td>
+            <td data-align="end">€350.00</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Total</td>
+            <td data-align="end">€750.00</td>
+          </tr>
+        </tfoot>
+      </sl:table>
+
+  - id: sort
+    title: Sorted on the server
+    description: Sorted by name, in a request for /people?q=a&sort=name,asc. Each link keeps q.
+    request: /people?q=a&sort=name,asc
+    source: |-
+      <sl:table th:page="${people}">
+        <thead>
+          <tr>
+            <sl:table-head sort="name">Name</sl:table-head>
+            <sl:table-head sort="email">Email</sl:table-head>
+            <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="person : ${people}">
+            <td th:text="${person.name}">Ada Lovelace</td>
+            <td th:text="${person.email}">ada@example.com</td>
+            <td data-align="end" th:text="${person.orders}">3</td>
+          </tr>
+        </tbody>
+      </sl:table>
+    renderSource: |-
+      <sl:table>
+        <thead>
+          <tr>
+            <sl:table-head sort="name">Name</sl:table-head>
+            <sl:table-head sort="email">Email</sl:table-head>
+            <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Ada Lovelace</td><td>ada@example.com</td><td data-align="end">3</td></tr>
+          <tr><td>Alan Turing</td><td>alan@example.com</td><td data-align="end">12</td></tr>
+          <tr><td>Grace Hopper</td><td>grace@example.com</td><td data-align="end">7</td></tr>
+        </tbody>
+      </sl:table>
+
+  - id: empty
+    title: Nothing found
+    source: |-
+      <sl:table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="person : ${people}">
+            <td th:text="${person.name}">Ada Lovelace</td>
+            <td th:text="${person.email}">ada@example.com</td>
+            <td th:text="${person.role}">Owner</td>
+          </tr>
+          <sl:table-empty colspan="3" th:if="${people.empty}"/>
+        </tbody>
+      </sl:table>
+    renderSource: |-
+      <sl:table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sl:table-empty colspan="3"/>
+        </tbody>
+      </sl:table>

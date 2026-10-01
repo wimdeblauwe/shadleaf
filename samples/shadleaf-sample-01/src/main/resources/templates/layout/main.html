@@ -36,6 +36,8 @@
                th:aria-current="${pageTitle == 'Dialog' ? 'page' : null}">Dialog</sl:button>
     <sl:button as="a" variant="ghost" size="sm" th:href="@{/settings}"
                th:aria-current="${pageTitle == 'Settings' ? 'page' : null}">Settings</sl:button>
+    <sl:button as="a" variant="ghost" size="sm" th:href="@{/people}"
+               th:aria-current="${pageTitle == 'People' ? 'page' : null}">People</sl:button>
   </nav>
   <div th:replace="${content}"></div>
 </main>

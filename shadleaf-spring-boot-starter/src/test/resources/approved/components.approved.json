@@ -1021,6 +1021,51 @@
       "description" : "Size of the switch."
     } ]
   }, {
+    "name" : "table",
+    "tag" : "sl:table",
+    "description" : "A table in shadcn/ui's look. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "page",
+      "type" : "object",
+      "values" : [ ],
+      "description" : "The Spring Data `Page` or `Slice` the table shows. Its `Sort` tells every `sl:table-head` inside how the rows are sorted now. Without it, the headers read the order from the request's sort parameter."
+    }, {
+      "name" : "qualifier",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its sort links use `members_sort` instead of `sort`."
+    } ]
+  }, {
+    "name" : "table-empty",
+    "tag" : "sl:table-empty",
+    "description" : "The row a `sl:table` shows when there are no rows to show: one cell across every column saying \"No results.\" (the message `sl.table.empty`). Content of its own replaces the text. Render it with `th:if`, e.g. `th:if=\"${people.empty}\"`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "colspan",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "The number of columns the cell spans: all of the table's.",
+      "required" : true
+    } ]
+  }, {
+    "name" : "table-head",
+    "tag" : "sl:table-head",
+    "description" : "A header cell (`th`) of a `sl:table`. With `sort` its label is a link that sorts the table by that property on the server: ascending, or descending when it is sorted ascending already. The link keeps the request's other parameters (filters, page size) and goes back to the first page. The sorted column gets `aria-sort` and an arrow. A plain `th` works too, for a header that does neither.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "sort",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property to sort by, as the controller's `Sort` names it (`name`, `address.city`). Only the first key of the current order is shown."
+    }, {
+      "name" : "align",
+      "type" : "enum",
+      "defaultValue" : "start",
+      "values" : [ "start", "center", "end" ],
+      "description" : "Where the label sits in the cell. Put the same `data-align` on the column's `td`s: `end` for amounts."
+    } ]
+  }, {
     "name" : "tabs",
     "tag" : "sl:tabs",
     "description" : "Panels of content shown one at a time, chosen from a row of tabs. Holds a `sl:tabs-list` of `sl:tabs-trigger`s and a `sl:tabs-content` per tab. The server renders the active tab's panel and hides the others, so the page is right before any script runs; Alpine adds switching in the browser and the keyboard (the ARIA tabs pattern). Give the triggers an `href` and the tabs work without JavaScript too.",

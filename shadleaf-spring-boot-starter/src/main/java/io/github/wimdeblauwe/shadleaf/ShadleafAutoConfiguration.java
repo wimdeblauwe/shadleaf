@@ -15,6 +15,7 @@ import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
 import io.github.wimdeblauwe.shadleaf.icon.IconSource;
 import io.github.wimdeblauwe.shadleaf.icon.LucideIconSource;
 import io.github.wimdeblauwe.shadleaf.i18n.ShadleafMessageSourcePostProcessor;
+import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
 import io.github.wimdeblauwe.shadleaf.theme.ShadleafThemeScript;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -31,6 +32,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.Ordered;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.util.StringUtils;
@@ -119,10 +121,22 @@ public class ShadleafAutoConfiguration {
     return new IconRegistry(sources);
   }
 
+  /**
+   * The request parameters the sort and page links use: Spring Boot's {@code spring.data.web.*} properties, which
+   * configure the resolver of the controller's {@code Pageable}. Declare a bean of this type when the resolvers are
+   * configured in code.
+   */
   @Bean
   @ConditionalOnMissingBean
-  public ShadleafDialect shadleafDialect(ComponentRegistry componentRegistry, IconRegistry iconRegistry) {
-    return new ShadleafDialect(componentRegistry, iconRegistry);
+  public PagingParameters shadleafPagingParameters(Environment environment) {
+    return PagingParameters.from(environment);
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ShadleafDialect shadleafDialect(ComponentRegistry componentRegistry, IconRegistry iconRegistry,
+      PagingParameters pagingParameters) {
+    return new ShadleafDialect(componentRegistry, iconRegistry, pagingParameters);
   }
 
   /**

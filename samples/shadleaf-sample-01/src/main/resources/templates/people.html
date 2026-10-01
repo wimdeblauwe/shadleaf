@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('People', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>Sorted on the server by Spring Data JPA, from an in-memory H2 database. Each column header is a link to
+    <code>?sort=…,asc</code> (or <code>desc</code> when that column is sorted ascending already); the controller's
+    <code>Pageable</code> reads it, and the <code>Page</code> it gets back tells the table which column is sorted.</p>
+  <p class="muted" th:text="|The first ${people.numberOfElements} of ${people.totalElements} people. Paging comes with the pagination component.|">
+    The first 20 of 270 people.</p>
+
+  <sl:table th:page="${people}">
+    <thead>
+      <tr>
+        <sl:table-head sort="name">Name</sl:table-head>
+        <sl:table-head sort="email">Email</sl:table-head>
+        <sl:table-head sort="role">Role</sl:table-head>
+        <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+        <sl:table-head sort="joined" align="end">Joined</sl:table-head>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="person : ${people}">
+        <td th:text="${person.name}">Ada Allen</td>
+        <td th:text="${person.email}">ada.allen@example.com</td>
+        <td><sl:badge th:variant="${person.role.name() == 'MEMBER' ? 'outline' : 'secondary'}"
+                      th:text="${#strings.capitalize(#strings.toLowerCase(person.role))}">Member</sl:badge></td>
+        <td data-align="end" th:text="${person.orders}">3</td>
+        <td data-align="end" th:text="${#temporals.format(person.joined, 'd MMM yyyy')}">6 Jan 2020</td>
+      </tr>
+      <sl:table-empty colspan="5" th:if="${people.empty}"/>
+    </tbody>
+  </sl:table>
+</div>
+</body>
+</html>

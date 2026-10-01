@@ -1,0 +1,42 @@
+/*
+  Table: structure only. sl:table renders a container that scrolls sideways around a table; the rows and cells are
+  the application's own plain elements. Every selector reaches them through child combinators, so a table nested in a
+  cell is not styled twice. The sort link is a button (.btn), whose rules set its look.
+*/
+@layer components {
+  .table-container {
+    @apply relative w-full overflow-x-auto;
+  }
+
+  .table {
+    @apply w-full caption-bottom;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+    @apply align-middle whitespace-nowrap;
+  }
+
+  /* data-align on a cell: sl:table-head renders it, and a column's td cells take the same. */
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td):not([data-align]),
+  .table-head:not([data-align]) {
+    @apply text-start;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td)[data-align='center'],
+  .table-head[data-align='center'] {
+    @apply text-center;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td)[data-align='end'],
+  .table-head[data-align='end'] {
+    @apply text-end;
+  }
+
+  .table-sort {
+    @apply align-middle;
+  }
+
+  .table > tbody > tr.table-empty > td {
+    @apply text-center whitespace-normal;
+  }
+}

@@ -1,0 +1,108 @@
+<!-- <sl:table><tbody><tr><td>Ada</td></tr></tbody></sl:table> -->
+<div class="table-container">
+  <table class="table">
+    <tbody>
+      <tr>
+        <td>Ada</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- <sl:table id="people" class="extra"><tbody><tr><td>Ada</td></tr></tbody></sl:table> -->
+<div class="table-container">
+  <table class="table extra" id="people">
+    <tbody>
+      <tr>
+        <td>Ada</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- <sl:table-head>Name</sl:table-head> -->
+<th class="table-head">Name</th>
+
+<!-- <sl:table-head align="center">Status</sl:table-head> -->
+<th class="table-head" data-align="center">Status</th>
+
+<!-- <sl:table-head align="end">Amount</sl:table-head> -->
+<th class="table-head" data-align="end">Amount</th>
+
+<!-- <sl:table-head sort="name">Name</sl:table-head> -->
+<th class="table-head" aria-sort="descending">
+  <a class="btn table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=name,asc" id="sort-name">
+    Name
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </a>
+</th>
+
+<!-- <sl:table-head sort="email">Email</sl:table-head> -->
+<th class="table-head">
+  <a class="btn table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=email,asc" id="sort-email">
+    Email
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </a>
+</th>
+
+<!-- <sl:table-head sort="amount" align="end">Amount</sl:table-head> -->
+<th class="table-head" data-align="end">
+  <a class="btn table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=amount,asc" id="sort-amount">
+    Amount
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </a>
+</th>
+
+<!-- <sl:table-empty colspan="3"/> -->
+<tr class="table-empty">
+  <td colspan="3">No results.</td>
+</tr>
+
+<!-- <sl:table-empty colspan="3">Nobody matches.</sl:table-empty> -->
+<tr class="table-empty">
+  <td colspan="3">Nobody matches.</td>
+</tr>
+
+<!-- <sl:table qualifier="members">
+  <caption>Members</caption>
+  <thead>
+    <tr>
+      <sl:table-head sort="name">Name</sl:table-head>
+      <sl:table-head align="end">Orders</sl:table-head>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Ada Lovelace</td><td data-align="end">3</td></tr>
+  </tbody>
+  <tfoot>
+    <tr><td>Total</td><td data-align="end">3</td></tr>
+  </tfoot>
+</sl:table> -->
+<div class="table-container">
+  <table class="table">
+    <caption>Members</caption>
+    <thead>
+      <tr>
+        <th class="table-head">
+          <a class="btn table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=name,desc&amp;page=2&amp;members_sort=name,asc" id="members-sort-name">
+            Name
+            <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </a>
+        </th>
+        <th class="table-head" data-align="end">Orders</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Ada Lovelace</td>
+        <td data-align="end">3</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Total</td>
+        <td data-align="end">3</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

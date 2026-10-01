@@ -35,6 +35,7 @@ public final class PropCoercer {
       case BOOLEAN -> coerceBoolean(componentName, propName, raw);
       case NUMBER -> coerceNumber(componentName, propName, raw);
       case ENUM -> coerceEnum(componentName, propName, values, raw);
+      case OBJECT -> raw;
     };
   }
 

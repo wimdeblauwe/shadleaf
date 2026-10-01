@@ -23,7 +23,8 @@ To add examples for a component, add or edit its YAML file, then embed a scenari
 `globalErrors` for the whole form) renders inside `th:object="${form}"`, so `th:field` binds and shows errors as in an
 application (see `field.yaml` and `form-errors.yaml`). `showcase: false` keeps a scenario off the showcase page, for
 one that would get in the way of the other components' tests there (a toast shown when the page loads, in
-`toaster.yaml`).
+`toaster.yaml`). `request` (`/people?sort=name,asc`) renders the scenario in a request for that path and query, for
+links built from the request, such as a table's sort links (see `table.yaml`).
 
 ## Commands
 

@@ -1,5 +1,8 @@
 package io.github.wimdeblauwe.shadleaf.test;
 
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Document;
@@ -7,6 +10,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Entities;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.jspecify.annotations.Nullable;
 
@@ -47,12 +51,33 @@ public final class Rendered {
    * and renamed back.
    */
   private static Document parse(String html) {
-    Document parsed = Jsoup.parseBodyFragment(html
+    String source = html
         .replaceAll("<select(?=[\\s>])", "<" + SELECT_STAND_IN)
-        .replace("</select>", "</" + SELECT_STAND_IN + ">"));
+        .replace("</select>", "</" + SELECT_STAND_IN + ">");
+    Document parsed = tableContext(source)
+        .map(context -> {
+          Document document = Document.createShell("");
+          document.body().appendChildren(Parser.parseFragment(source, new Element(context), ""));
+          return document;
+        })
+        .orElseGet(() -> Jsoup.parseBodyFragment(source));
     parsed.select(SELECT_STAND_IN).forEach(select -> select.tagName("select"));
     return parsed;
   }
+
+  /**
+   * The element a fragment that starts with a row or a cell ({@code sl:table-empty}, {@code sl:table-head}) is parsed
+   * in. In a body, jsoup drops a {@code tr}, {@code th} or {@code td} outside a table, as browsers do.
+   */
+  private static Optional<String> tableContext(String html) {
+    Matcher matcher = TABLE_PART.matcher(html);
+    if (!matcher.lookingAt()) {
+      return Optional.empty();
+    }
+    return Optional.of(matcher.group(1).equals("tr") ? "tbody" : "tr");
+  }
+
+  private static final Pattern TABLE_PART = Pattern.compile("\\s*<(tr|th|td)[\\s>]");
 
   private static final String SELECT_STAND_IN = "sl-parsed-select";
 

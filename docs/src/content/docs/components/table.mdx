@@ -1,0 +1,179 @@
+---
+title: Table
+description: A table in shadcn/ui's look, whose column headers sort it on the server.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="table--default" />
+
+## Plain rows and cells
+
+`<sl:table>` styles the plain table elements you write inside it: `caption`, `thead`, `tbody`, `tfoot`, `tr`, `th` and
+`td`. There is no component per row or cell, as there is in shadcn/ui, so a row is the `th:each` you already write:
+
+```html
+<sl:table>
+  <thead>
+    <tr><th>Name</th><th>Email</th></tr>
+  </thead>
+  <tbody>
+    <tr th:each="person : ${people}">
+      <td th:text="${person.name}">Ada Lovelace</td>
+      <td th:text="${person.email}">ada@example.com</td>
+    </tr>
+  </tbody>
+</sl:table>
+```
+
+Attributes on `<sl:table>` go to the `table`; it sits in a container that scrolls sideways when the table is wider
+than the page. A table nested in a cell keeps its own look, so put it in an `<sl:table>` of its own.
+
+## Alignment
+
+`<sl:table-head align="end">` puts a header's label at the end of its cell. The cells below take the same with
+`data-align="end"` (or `"center"`), which works without utility classes, so also with the standalone stylesheet. Use
+it for amounts and other numbers, so their digits line up.
+
+## Sorting on the server
+
+The rows of a Spring application live on the server, which sends one page of them. So a sortable header is a link that
+asks the server for the page in another order, not a script that reorders the rows in the browser:
+
+<ComponentPreview id="table--sort" />
+
+`<sl:table-head sort="name">` links to the same page with `sort=name,asc`, or `sort=name,desc` when the table is
+sorted by name ascending already. The link keeps every other parameter in the address (a search, the page size) and
+drops the page number, so a new order starts on the first page. The sorted column gets `aria-sort`, which screen
+readers announce, and an arrow; the others show both chevrons. A click on the sorted column reverses it; there is no
+unsorted state, because the default order is the controller's.
+
+The controller takes a `Pageable`, which Spring Data fills from those parameters, and puts the page in the model:
+
+```java
+@GetMapping("/people")
+String people(@PageableDefault(sort = "name") Pageable pageable, Model model) {
+  model.addAttribute("people", personRepository.findAll(pageable));
+  return "people";
+}
+```
+
+```html
+<sl:table th:page="${people}">
+  <thead>
+    <tr>
+      <sl:table-head sort="name">Name</sl:table-head>
+      <sl:table-head sort="email">Email</sl:table-head>
+    </tr>
+  </thead>
+  ...
+</sl:table>
+```
+
+`th:page` takes the `Page` (or `Slice`), whose `Sort` tells the headers how the rows are sorted, the default from
+`@PageableDefault` included. Only the first sort key is shown. `spring-data-commons` is all it needs, not a Spring Data
+module: rows that do not come from a repository can be wrapped in a
+`new PageImpl<>(rows, pageable, total)`.
+
+Without `th:page` the headers read the order from the request's `sort` parameter, so a table sorts without Spring Data
+too; the controller then reads that parameter itself.
+
+### Parameter names
+
+The links use the parameter names your `Pageable` reads. Shadleaf takes them from Spring Boot's properties:
+`spring.data.web.sort.sort-parameter`, and for the page and size links
+`spring.data.web.pageable.page-parameter`, `size-parameter`, `prefix`, `qualifier-delimiter` and
+`one-indexed-parameters`. If you configure Spring Data's resolvers in code instead, declare a `PagingParameters` bean
+with the same values.
+
+### Two tables on one page
+
+Two sortable tables on one page need their own parameters. Give the controller's second `Pageable` a `@Qualifier`, and
+the table the same `qualifier`:
+
+```java
+@GetMapping("/team")
+String team(Pageable pageable, @Qualifier("members") Pageable members, Model model) { ... }
+```
+
+```html
+<sl:table th:page="${members}" qualifier="members"> ... </sl:table>
+```
+
+Its headers then link to `members_sort=email,asc` and leave the other table's `sort` and `page` alone.
+
+### Limit what can be sorted
+
+The sort parameter is part of the address, so anyone can edit it. Spring Data passes an unknown property on to the
+repository, which fails with an error page (`?sort=password` is an error at best). So the controller checks the order
+against the columns the table offers before it queries, and falls back to the default order when it asks for anything
+else:
+
+```java
+@Controller
+class PeopleController {
+
+  // The properties of the table's <sl:table-head sort="..."> columns.
+  private static final Set<String> SORTABLE = Set.of("name", "email", "orders");
+
+  private final PersonRepository personRepository;
+
+  PeopleController(PersonRepository personRepository) {
+    this.personRepository = personRepository;
+  }
+
+  @GetMapping("/people")
+  String people(@PageableDefault(sort = "name") Pageable pageable, Model model) {
+    model.addAttribute("people", personRepository.findAll(sortable(pageable)));
+    return "people";
+  }
+
+  /** The pageable as requested, or sorted by name when it names a property the table does not offer. */
+  private static Pageable sortable(Pageable pageable) {
+    boolean allowed = pageable.getSort().stream().allMatch(order -> SORTABLE.contains(order.getProperty()));
+    return allowed
+        ? pageable
+        : PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("name"));
+  }
+}
+```
+
+The page the repository returns carries the order it was sorted by, so the table shows the fallback correctly too.
+
+### Focus after an htmx swap
+
+Each sort link has an id (`sort-name`, or `members-sort-name` with a qualifier), so when htmx replaces the table it
+gives the focus back to the link that was clicked.
+
+## Nothing found
+
+`<sl:table-empty>` is the row to show when there are no rows: one cell across the table's `colspan` columns, saying
+"No results." (the message `sl.table.empty`, which your `messages.properties` can reword). Content of its own replaces
+the text.
+
+<ComponentPreview id="table--empty" />
+
+```html
+<sl:table-empty colspan="3" th:if="${people.empty}">Nobody matches your search.</sl:table-empty>
+```
+
+## Left out
+
+shadcn's data table runs TanStack Table in the browser. These parts of it are not in Shadleaf: sorting and filtering
+in the browser, column visibility, resizing, reordering and pinning, drag handles, expandable rows, editable cells and
+virtual scrolling.
+
+## Attributes
+
+### sl:table
+
+<ComponentAttributes component="table" />
+
+### sl:table-head
+
+<ComponentAttributes component="table-head" />
+
+### sl:table-empty
+
+<ComponentAttributes component="table-empty" />

@@ -5,6 +5,7 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentDefinition;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.component.PropCoercer;
 import io.github.wimdeblauwe.shadleaf.component.PropDefinition;
+import io.github.wimdeblauwe.shadleaf.component.PropType;
 import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -161,6 +162,9 @@ public class ComponentElementProcessor implements IElementModelProcessor {
     Object raw;
     if (hasExpression) {
       raw = evaluate(context, definition, prop, expression);
+    } else if (hasLiteral && prop.type() == PropType.OBJECT) {
+      throw new ShadleafComponentException("<sl:%s> takes %s as an object: write th:%s=\"${...}\", not %s=\"...\"."
+          .formatted(definition.name(), prop.name(), prop.name(), prop.name()));
     } else if (hasLiteral) {
       // A bare attribute (<sl:button disabled>) has no value.
       raw = literal == null ? "" : literal;

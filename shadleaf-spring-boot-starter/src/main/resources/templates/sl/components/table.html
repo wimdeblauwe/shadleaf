@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A table in shadcn/ui's look. Write the plain table elements inside it (<code>caption</code>,
+      <code>thead</code>, <code>tbody</code>, <code>tfoot</code>, <code>tr</code>, <code>th</code>, <code>td</code>),
+      with <code>th:each</code> on a row; there is no component per row or cell. Use <code>sl:table-head</code> for a
+      header cell that sorts or aligns, and <code>sl:table-empty</code> for the row that says nothing was found. The
+      table scrolls sideways inside its own container when it is wider than the page. Attributes go to the
+      <code>table</code>.</sl:description>
+    <sl:prop name="page" type="object">The Spring Data <code>Page</code> or <code>Slice</code> the table shows. Its
+      <code>Sort</code> tells every <code>sl:table-head</code> inside how the rows are sorted now. Without it, the
+      headers read the order from the request's sort parameter.</sl:prop>
+    <sl:prop name="qualifier">The <code>@Qualifier</code> of the controller's <code>Pageable</code>, for a second
+      table on the page: its sort links use <code>members_sort</code> instead of <code>sort</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The headers read slTablePage and slTableQualifier: slot content sees this template's local variables. */-->
+<div th:fragment="table"
+     class="table-container"
+     th:with="slTablePage=${props.page}, slTableQualifier=${props.qualifier}"><table class="table"
+    sl:attrs><sl:slot/></table></div>
+</body>
+</html>

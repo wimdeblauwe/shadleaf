@@ -11,5 +11,10 @@ public enum PropType {
   /** A decimal number, coerced to {@link java.math.BigDecimal}. */
   NUMBER,
   /** One of a fixed set of values, declared with {@code values="a b c"}. */
-  ENUM
+  ENUM,
+  /**
+   * Any object, passed to the template as the expression returned it, such as a Spring Data {@code Page}. Only
+   * {@code th:<prop>} can set it: a literal attribute is text.
+   */
+  OBJECT
 }

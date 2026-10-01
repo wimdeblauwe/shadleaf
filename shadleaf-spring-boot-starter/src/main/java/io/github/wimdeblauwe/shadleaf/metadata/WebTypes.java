@@ -67,7 +67,10 @@ public final class WebTypes {
     }
     List<Object> attributes = new ArrayList<>();
     for (Prop prop : component.props()) {
-      attributes.add(attribute(prop));
+      // An object prop can only be set with th:<prop>; its plain attribute would fail.
+      if (!prop.type().equals("object")) {
+        attributes.add(attribute(prop));
+      }
     }
     for (Prop prop : component.props()) {
       attributes.add(expressionAttribute(prop));
@@ -122,8 +125,10 @@ public final class WebTypes {
   private static Map<String, Object> expressionAttribute(Prop prop) {
     Map<String, Object> attribute = new LinkedHashMap<>();
     attribute.put("name", "th:" + prop.name());
-    attribute.put("description", "`" + prop.name() + "` from a Thymeleaf expression, e.g. `th:" + prop.name()
-        + "=\"${...}\"`.");
+    // An object prop has no plain attribute to carry its description, so this one does.
+    attribute.put("description", prop.type().equals("object") && !prop.description().isEmpty()
+        ? prop.description()
+        : "`" + prop.name() + "` from a Thymeleaf expression, e.g. `th:" + prop.name() + "=\"${...}\"`.");
     attribute.put("value", value("expression"));
     return attribute;
   }
