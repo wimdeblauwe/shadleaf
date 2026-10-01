@@ -21,7 +21,9 @@ clone) the site still builds, and each page says which command to run.
 To add examples for a component, add or edit its YAML file, then embed a scenario with
 `<ComponentPreview id="button--variants" />`. A scenario with a `form` (`values` and `errors`, by field name, and
 `globalErrors` for the whole form) renders inside `th:object="${form}"`, so `th:field` binds and shows errors as in an
-application (see `field.yaml` and `form-errors.yaml`).
+application (see `field.yaml` and `form-errors.yaml`). `showcase: false` keeps a scenario off the showcase page, for
+one that would get in the way of the other components' tests there (a toast shown when the page loads, in
+`toaster.yaml`).
 
 ## Commands
 

@@ -1,0 +1,65 @@
+# Scenarios for the toast's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# The buttons send the sl-toast event with Alpine's $dispatch, as an application's own markup can; an htmx response
+# sends the same event with HX-Trigger. Each scenario has a toaster of its own (a docs preview is a page of its own);
+# on the showcase, where they share a page, the first one takes every event.
+component: toaster
+parts: [toast]
+scenarios:
+  - id: default
+    title: Toast
+    description: The button sends an sl-toast event; the toaster shows it, and a screen reader announces it.
+    source: |-
+      <sl:button variant="outline" x-data
+                 x-on:click="$dispatch('sl-toast', {title: 'Event has been created', description: 'Monday, January 3rd at 6:00pm'})">
+        Show toast
+      </sl:button>
+
+      <sl:toaster id="toaster-default"/>
+
+  - id: variants
+    title: Variants
+    description: The variant sets the icon; a screen reader announces an error at once.
+    source: |-
+      <sl:button variant="outline" x-data x-on:click="$dispatch('sl-toast', {title: 'Event has been created'})">
+        Default
+      </sl:button>
+      <sl:button variant="outline" x-data
+                 x-on:click="$dispatch('sl-toast', {title: 'Event has been created', variant: 'success'})">
+        Success
+      </sl:button>
+      <sl:button variant="outline" x-data
+                 x-on:click="$dispatch('sl-toast', {title: 'Be at the area 10 minutes before the event time', variant: 'info'})">
+        Info
+      </sl:button>
+      <sl:button variant="outline" x-data
+                 x-on:click="$dispatch('sl-toast', {title: 'Event start time cannot be earlier than 8am', variant: 'warning'})">
+        Warning
+      </sl:button>
+      <sl:button variant="outline" x-data
+                 x-on:click="$dispatch('sl-toast', {title: 'Event has not been created', variant: 'error'})">
+        Error
+      </sl:button>
+
+      <sl:toaster id="toaster-variants"/>
+
+  - id: stack
+    title: Several at once
+    description: Newer toasts stack in front; hover or focus them to spread them out, which also stops their time.
+    source: |-
+      <sl:button variant="outline" x-data
+                 x-on:click="$dispatch('sl-toast', [{title: 'Invitation sent to Ada'}, {title: 'Invitation sent to Grace'}, {title: 'Invitation sent to Alan', description: 'They get an email with a link to join the team.'}])">
+        Invite three members
+      </sl:button>
+
+      <sl:toaster id="toaster-stack"/>
+
+  - id: server
+    title: Rendered by the server
+    description: A toast the page renders, such as a flash attribute after a redirect. duration="0" keeps this one here.
+    # Shown as soon as the page loads, it would sit in the corner of the showcase through every other test.
+    showcase: false
+    source: |-
+      <sl:toaster id="toaster-server">
+        <sl:toast variant="success" title="Message sent" description="We answer within one working day."
+                  duration="0"/>
+      </sl:toaster>

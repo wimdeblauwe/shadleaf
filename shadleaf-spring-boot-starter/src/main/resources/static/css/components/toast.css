@@ -1,0 +1,175 @@
+/*
+  Toaster and toast: structure only. Colour, radius, padding, type and shadow are identity and live in the skins.
+
+  The viewport is fixed to a corner or edge (data-position; right and left are the inline end and start). It is a
+  popover="manual", which slToaster shows so that it is in the top layer; without the script it is not shown, so these
+  rules override the user agent's display: none and a server-rendered toast still shows, in a plain column.
+
+  With the script (data-stacked on the list) the toasts stack as Sonner's do: the newest in front, at most
+  visible-toasts behind it, each 14px further back and 5% smaller, with only the front one's content showing. Hovering
+  or focusing them spreads them out (data-expanded). slToaster sets the numbers the rules need: --toast-index (0 is the
+  newest), --toast-offset (the heights of the newer toasts), --toast-front-height, --toast-stack-sum and --toast-count.
+  --toast-lift is -1 at the bottom (the stack grows upwards) and 1 at the top. The motion (slide in, spread out) only
+  runs where motion is fine; elsewhere toasts only fade.
+*/
+@layer components {
+  .toaster {
+    @apply contents;
+  }
+
+  .toaster-viewport {
+    @apply pointer-events-none fixed m-0 block h-auto w-89 max-w-[calc(100%-2rem)] overflow-visible border-0
+      bg-transparent p-0 text-inherit;
+    inset: auto;
+    --toaster-offset: 1.5rem;
+    --toast-gap: 0.875rem;
+    --toast-peek: 0.875rem;
+    --toast-lift: -1;
+  }
+
+  .toaster-viewport:not([data-position]),
+  .toaster-viewport[data-position='bottom-right'],
+  .toaster-viewport[data-position='bottom-left'],
+  .toaster-viewport[data-position='bottom-center'] {
+    inset-block-end: var(--toaster-offset);
+  }
+
+  .toaster-viewport[data-position='top-right'],
+  .toaster-viewport[data-position='top-left'],
+  .toaster-viewport[data-position='top-center'] {
+    inset-block-start: var(--toaster-offset);
+    --toast-lift: 1;
+  }
+
+  .toaster-viewport:not([data-position]),
+  .toaster-viewport[data-position='bottom-right'],
+  .toaster-viewport[data-position='top-right'] {
+    inset-inline-end: var(--toaster-offset);
+  }
+
+  .toaster-viewport[data-position='bottom-left'],
+  .toaster-viewport[data-position='top-left'] {
+    inset-inline-start: var(--toaster-offset);
+  }
+
+  .toaster-viewport[data-position='bottom-center'],
+  .toaster-viewport[data-position='top-center'] {
+    @apply mx-auto;
+    inset-inline: 0;
+  }
+
+  /* On a narrow screen, as with Sonner: the full width, less a gutter. */
+  @media (width < 40rem) {
+    .toaster-viewport {
+      @apply mx-0 w-auto max-w-none;
+      --toaster-offset: 1rem;
+      inset-inline: var(--toaster-offset);
+    }
+  }
+
+  .toaster-list {
+    @apply pointer-events-auto relative m-0 flex list-none flex-col p-0;
+    gap: var(--toast-gap);
+  }
+
+  /* Without the script, the newest toast is the one nearest the edge. */
+  .toaster-viewport[data-position^='top'] > .toaster-list {
+    @apply flex-col-reverse;
+  }
+
+  .toaster-list[data-stacked] {
+    @apply block;
+    block-size: var(--toast-front-height, auto);
+  }
+
+  .toaster-list[data-stacked][data-expanded] {
+    block-size: calc(var(--toast-stack-sum, 0px) + (var(--toast-count, 1) - 1) * var(--toast-gap));
+  }
+
+  .toast {
+    @apply relative box-border flex w-full items-center wrap-anywhere outline-none
+      forced-colors:border forced-colors:border-solid
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid;
+  }
+
+  .toast > svg {
+    @apply shrink-0;
+  }
+
+  .toast-content {
+    @apply flex min-w-0 flex-1 flex-col;
+  }
+
+  .toast-close {
+    @apply shrink-0 self-start;
+  }
+
+  /* The close button needs slToaster, which marks the toasts it knows. */
+  .toast:not([data-enhanced]) > .toast-close {
+    @apply hidden;
+  }
+
+  .toaster-list[data-stacked] > .toast {
+    @apply absolute inset-x-0 transition-[opacity,translate,scale] duration-400 ease-out;
+    z-index: calc(100 - var(--toast-index, 0));
+    translate: 0 calc(var(--toast-lift) * var(--toast-index, 0) * var(--toast-peek));
+    scale: calc(1 - var(--toast-index, 0) * 0.05);
+  }
+
+  .toaster-viewport:not([data-position^='top']) > .toaster-list[data-stacked] > .toast {
+    @apply bottom-0 origin-top;
+  }
+
+  .toaster-viewport[data-position^='top'] > .toaster-list[data-stacked] > .toast {
+    @apply top-0 origin-bottom;
+  }
+
+  /* Collapsed, a toast behind the front one takes its height and hides its content. */
+  .toaster-list[data-stacked]:not([data-expanded]) > .toast[data-behind] {
+    @apply overflow-hidden;
+    block-size: var(--toast-front-height);
+  }
+
+  .toaster-list[data-stacked]:not([data-expanded]) > .toast[data-behind] > * {
+    @apply opacity-0;
+  }
+
+  .toaster-list[data-stacked][data-expanded] > .toast {
+    translate: 0 calc(var(--toast-lift) * (var(--toast-offset, 0px) + var(--toast-index, 0) * var(--toast-gap)));
+    scale: 1;
+  }
+
+  /* Waiting for a place: more toasts than visible-toasts. */
+  .toaster-list[data-stacked] > .toast[data-hidden] {
+    @apply invisible opacity-0;
+  }
+
+  .toaster-list[data-stacked] > .toast[data-removed] {
+    @apply pointer-events-none opacity-0;
+  }
+
+  @starting-style {
+    .toaster-list[data-stacked] > .toast {
+      opacity: 0;
+    }
+  }
+
+  /* Where motion is fine, a toast slides in from the edge and out towards it. */
+  @media (prefers-reduced-motion: no-preference) {
+    @starting-style {
+      .toaster-list[data-stacked] > .toast {
+        translate: 0 calc(var(--toast-lift) * -100%);
+      }
+    }
+
+    .toaster-list[data-stacked] > .toast[data-removed] {
+      translate: 0 calc(var(--toast-lift) * (var(--toast-offset, 0px) + var(--toast-index, 0) * var(--toast-gap)) - var(--toast-lift) * 100%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toaster-list[data-stacked] > .toast {
+      @apply transition-opacity;
+    }
+  }
+}

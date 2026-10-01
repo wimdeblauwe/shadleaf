@@ -831,4 +831,44 @@
   .tabs-content {
     @apply rounded-none text-xs/relaxed focus-visible:ring-[3px] focus-visible:ring-ring/50;
   }
+
+  /*
+    Toast: Sonner's look as shadcn sets it up (the popover's colours, a border, 13px type, a shadow). Only the icon tells
+    the variants apart, as in shadcn; an error's icon takes the destructive colour.
+  */
+  .toast {
+    @apply gap-1.5 border bg-popover p-4 text-[13px] text-popover-foreground shadow-lg
+      focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50 rounded-none;
+  }
+
+  .toast > svg {
+    @apply size-4;
+  }
+
+  .toast:not([data-variant]) > svg,
+  .toast[data-variant='success'] > svg,
+  .toast[data-variant='info'] > svg,
+  .toast[data-variant='warning'] > svg {
+    @apply text-current;
+  }
+
+  .toast[data-variant='error'] > svg {
+    @apply text-destructive-legible;
+  }
+
+  .toast-content {
+    @apply gap-0.5;
+  }
+
+  .toast-title {
+    @apply leading-normal font-medium;
+  }
+
+  .toast-description {
+    @apply leading-snug text-muted-foreground;
+  }
+
+  .toast-close {
+    @apply -my-1 -me-2;
+  }
 }

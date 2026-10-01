@@ -499,18 +499,29 @@ test('without closedby, an alert dialog still ignores a click outside', async ({
   await expect(d).toHaveJSProperty('open', false);
 });
 
-/** The htmx confirm pattern of the alert dialog's docs page and sample-01's /dialog page. */
+/** The markup <sl:toaster/> renders, from its default preview scenario (a button, then the toaster). */
+const TOASTER = (() => {
+  const html = (previews.scenarios as { id: string, html: string }[])
+      .find(scenario => scenario.id === 'toaster--default')!.html;
+  return html.slice(html.indexOf('<div class="toaster"')).replace('id="toaster-default"', 'id="toaster"');
+})();
+
+function memberRow(id: number, name: string, {oob = false, autofocus = false} = {}): string {
+  return `<tr id="member-${id}"${oob ? ' hx-swap-oob="true"' : ''}><td>${name}</td><td><button type="button"
+      id="delete-${id}" hx-get="/members/${id}/delete" hx-target="#modal-root"${autofocus ? ' autofocus' : ''}>Delete</button></td></tr>`;
+}
+
+/**
+ * The htmx confirm pattern of the alert dialog's docs page and sample-01's /dialog page. The answer to the delete
+ * closes the alert dialog and shows a toast (HX-Trigger), replaces the row by nothing and re-renders the next row out
+ * of band with autofocus on its button: the row's own button, where the focus returns, is gone.
+ */
 async function openConfirmFixture(page: Page) {
   const deleted: string[] = [];
   const messages = await openFixture(page, `
-      <p id="member-status" hidden></p>
-      <table><tbody>
-        <tr id="member-1"><td>Ada</td><td><button type="button" id="delete-1" hx-get="/members/1/delete"
-            hx-target="#modal-root">Delete</button></td></tr>
-        <tr id="member-2"><td>Grace</td><td><button type="button" id="delete-2" hx-get="/members/2/delete"
-            hx-target="#modal-root">Delete</button></td></tr>
-      </tbody></table>
-      <div id="modal-root"></div>`, {
+      <table><tbody>${memberRow(1, 'Ada')}${memberRow(2, 'Grace')}</tbody></table>
+      <div id="modal-root"></div>
+      ${TOASTER}`, {
     htmx: true,
     routes: {
       '/members/1/delete': () => ({
@@ -520,8 +531,11 @@ async function openConfirmFixture(page: Page) {
       '/members/1': () => {
         deleted.push('1');
         return {
-          body: '<p id="member-status" hx-swap-oob="true" tabindex="-1" autofocus>Ada was deleted.</p>',
-          headers: {'HX-Trigger': 'sl-dialog-close'},
+          body: `<table>${memberRow(2, 'Grace', {oob: true, autofocus: true})}</table>`,
+          headers: {'HX-Trigger': JSON.stringify({
+            'sl-dialog-close': null,
+            'sl-toast': {title: 'Ada was deleted', description: null, variant: 'success', duration: null},
+          })},
         };
       },
     },
@@ -529,7 +543,8 @@ async function openConfirmFixture(page: Page) {
   return {deleted, messages};
 }
 
-test('htmx: confirming a delete closes the alert dialog, removes the row and focuses the message', async ({page}) => {
+test('htmx: confirming a delete closes the alert dialog, removes the row, shows a toast and focuses the next row',
+    async ({page}) => {
   const {deleted, messages} = await openConfirmFixture(page);
   const dialog = page.locator('#delete-member');
 
@@ -543,8 +558,10 @@ test('htmx: confirming a delete closes the alert dialog, removes the row and foc
   await expect(dialog).toHaveJSProperty('open', false);
   await expect(page.locator('#member-1')).toHaveCount(0);
   await expect(page.locator('#member-2')).toBeVisible();
-  await expect(page.locator('#member-status')).toHaveText('Ada was deleted.');
-  await expect(page.locator('#member-status')).toBeFocused();
+  await expect(page.locator('.toaster-list > .toast')).toHaveText([/Ada was deleted/]);
+  await expect.poll(() => page.locator('.toaster-announcer[role="status"]').textContent()).toBe('Ada was deleted');
+  await expect(page.locator('#delete-2'), 'the focus moves to the next row, not the top of the page').toBeFocused();
+  expect(await page.locator('.toaster-viewport').evaluate(viewport => viewport.parentElement?.id)).toBe('toaster');
   expect(deleted).toEqual(['1']);
   expect(messages).toEqual([]);
 });

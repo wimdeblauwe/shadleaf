@@ -22,7 +22,7 @@ headers, and htmx itself from its webjar, pinned in the pom:
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>htmx-spring-boot-thymeleaf</artifactId>
-  <version>5.1.0</version>
+  <version>5.1.1</version>
 </dependency>
 <dependency>
   <groupId>org.webjars.npm</groupId>
@@ -159,8 +159,8 @@ save. Open dialogs close before htmx snapshots a page for its history, so back n
 [Dialog](../../components/dialog/#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.
 
 The same works for an [alert dialog](../../components/alert-dialog/#confirming-with-htmx) that confirms a delete: its
-destructive button sends `hx-delete`, and the response closes it with the same event, removes the row and puts a
-message out of band that takes the focus. A [sheet](../../components/sheet/) is a dialog too, with the same `open`
+destructive button sends `hx-delete`, and the response closes it with the same event, shows a toast saying what
+happened, removes the row and moves the focus to the next row. A [sheet](../../components/sheet/) is a dialog too, with the same `open`
 and `sl-dialog-close`.
 
 ## Menus and popovers
@@ -172,3 +172,11 @@ place when the trigger has an id, which it gets from the menu's (`th:id="|order-
 it with `HX-Trigger: sl-popover-close`. A swap that replaces an open menu or popover leaves nothing open behind it,
 and back never restores one open: whether a popover is open is not part of the markup htmx saves.
 
+## Toasts
+
+An `HX-Trigger: sl-toast` response header shows a [toast](../../components/toast/), whatever the response swaps:
+`htmxResponse.addTrigger("sl-toast", Toast.success("Member deleted"))`. A response can also swap `<sl:toast>`s into
+the toaster out of band. Use `HX-Trigger` rather than `HX-Trigger-After-Swap`/`-After-Settle`, whose events are lost
+when the swap removed the element that sent the request, and a flash attribute rather than a toast when the response
+redirects. Toasts are removed before htmx saves a page in its history cache, so back never shows one again. A toast
+never takes the focus: it goes away.

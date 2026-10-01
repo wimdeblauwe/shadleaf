@@ -49,5 +49,12 @@
 </main>
 <!--/* Where htmx puts a dialog the server renders (the dialog page's edit dialog). */-->
 <div id="modal-root"></div>
+<!--/* The toasts: those a controller put in the toasts flash attribute before a redirect (the form page), those an htmx
+  response sends with HX-Trigger: sl-toast (a delete on the dialog page), and those it swaps in out of band (an
+  invite). */-->
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
 </body>
 </html>

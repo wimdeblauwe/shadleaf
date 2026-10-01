@@ -54,11 +54,13 @@
     them and the dialog stays open; after a valid save the response header <code>HX-Trigger: sl-dialog-close</code>
     closes it and the row is updated, with the focus back on the row's menu button.</p>
   <p>Delete fetches an alert dialog the same way. Its Delete button sends <code>hx-delete</code>; the response closes
-    the alert dialog with the same event, removes the row and moves focus to a message saying what happened. Cancel,
-    which has the focus when it opens, sends nothing.</p>
+    the alert dialog with the same event, shows a toast saying what happened (<code>HX-Trigger: sl-toast</code>),
+    removes the row and moves the focus to the next row's menu button. Cancel, which has the focus when it opens, sends
+    nothing.</p>
   <p>Sort by is a menu of radio items: links that load the page sorted, which marks the chosen one. Invite member opens
     a sheet that is in the page. Its form posts with htmx and swaps itself: with errors the sheet stays open; after a
-    valid invite an empty form comes back, the sheet closes and the new member is added to the table.</p>
+    valid invite an empty form comes back, the sheet closes, the new member is added to the table and a toast, swapped
+    in out of band, says the invitation was sent.</p>
   <div class="row">
     <sl:dropdown-menu id="sort-members">
       <sl:dropdown-menu-trigger variant="outline">
@@ -73,11 +75,8 @@
         </sl:dropdown-menu-radio-group>
       </sl:dropdown-menu-content>
     </sl:dropdown-menu>
-    <sl:button variant="outline" commandfor="invite-member" command="show-modal">
-      <sl:slot name="icon-start"><sl:icon name="user-plus"/></sl:slot>Invite member</sl:button>
+    <sl:button th:replace="~{dialog :: invite-button}">Invite member</sl:button>
   </div>
-  <!--/* Where the response to a delete puts its message (member-deleted). */-->
-  <p id="member-status" hidden></p>
   <table class="members">
     <thead>
     <tr>
@@ -104,7 +103,8 @@
   </sl:sheet>
 </div>
 
-<!--/* One row; hx-swap-oob when it is the out-of-band update after a save (member-row-oob). */-->
+<!--/* One row; hx-swap-oob when it is the out-of-band update after a save (member-row-oob), and autofocus on its menu
+  button when the row before it was deleted (member-row-focus). */-->
 <table>
   <tr th:fragment="member-row"
       th:id="|member-${member.id}|"
@@ -115,7 +115,8 @@
       <!--/* The row actions. The trigger's id (member-1-actions-trigger) lets htmx put the focus back on it when the row
         is replaced after a save. */-->
       <sl:dropdown-menu th:id="|member-${member.id}-actions|">
-        <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" th:aria-label="|Actions for ${member.name}|">
+        <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" th:aria-label="|Actions for ${member.name}|"
+                                  th:autofocus="${focus != null and focus}">
           <sl:icon name="ellipsis"/>
         </sl:dropdown-menu-trigger>
         <sl:dropdown-menu-content align="end">
@@ -138,14 +139,30 @@
 <th:block th:fragment="member-row-oob" th:with="oob=true">
   <tr th:replace="~{dialog :: member-row}"></tr>
 </th:block>
+<th:block th:fragment="member-row-focus" th:with="oob=true, focus=true">
+  <tr th:replace="~{dialog :: member-row}"></tr>
+</th:block>
 
-<!--/* The answer to a valid invite: an empty form in place of the filled one, and the new row at the end of the table
-  (a beforeend swap inserts the children of the tbody, not the tbody itself). */-->
+<!--/* Opens the invite sheet; out of band with autofocus after the last member was deleted (invite-button-focus). */-->
+<sl:button th:fragment="invite-button" id="invite-member-button" variant="outline" commandfor="invite-member"
+           command="show-modal" th:attr="hx-swap-oob=${oob != null and oob ? 'true' : null}"
+           th:autofocus="${focus != null and focus}">
+  <sl:slot name="icon-start"><sl:icon name="user-plus"/></sl:slot>Invite member</sl:button>
+<th:block th:fragment="invite-button-focus" th:with="oob=true, focus=true">
+  <sl:button th:replace="~{dialog :: invite-button}"></sl:button>
+</th:block>
+
+<!--/* The answer to a valid invite: an empty form in place of the filled one, the new row at the end of the table and a
+  toast in the toaster (a beforeend swap inserts the children of the tbody and the ol, not those elements). */-->
 <th:block th:fragment="invited">
   <form th:replace="~{dialog :: invite-form}"></form>
   <table>
     <tbody hx-swap-oob="beforeend:#members-body"><tr th:replace="~{dialog :: member-row}"></tr></tbody>
   </table>
+  <ol hx-swap-oob="beforeend:#toaster">
+    <sl:toast variant="success" th:title="|Invitation sent to ${member.name}|"
+              description="They get an email with a link to join the team."/>
+  </ol>
 </th:block>
 
 <!--/* The team's name; out of band after a valid rename (team-name-oob). */-->
@@ -235,10 +252,5 @@
                th:hx-target="|#member-${member.id}|" hx-swap="outerHTML">Delete</sl:button>
   </sl:alert-dialog-footer>
 </sl:alert-dialog>
-
-<!--/* After a delete: the message takes the focus, which would otherwise fall to the top of the page with the row's
-  Delete button gone, and focus reads it out. */-->
-<p th:fragment="member-deleted" id="member-status" class="member-status" hx-swap-oob="true" tabindex="-1" autofocus
-   th:text="|${member.name} was deleted.|">Ada Lovelace was deleted.</p>
 </body>
 </html>

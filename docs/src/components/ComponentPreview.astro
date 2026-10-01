@@ -63,6 +63,8 @@ const srcdoc = scenario && skins.length > 0
        Two rules: a browser that does not know :open would drop a rule that names it. */
     body:has(.select-content:popover-open) { min-block-size: 28rem; }
     body:has(select:open) { min-block-size: 28rem; }
+    /* Toasts are fixed to a corner of the frame: make room for a stack of them while there are any. */
+    body:has(.toaster-list > .toast) { min-block-size: 16rem; }
     body:has(.tooltip) { padding-block: 3rem; }
     /* Centred, so a tooltip or popover has room on every side of its trigger and flips only where the docs say so. */
     .stage:has(.tooltip, .popover-content) { justify-content: center; }

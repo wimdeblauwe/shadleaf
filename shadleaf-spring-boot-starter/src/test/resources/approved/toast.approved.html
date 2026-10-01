@@ -1,0 +1,483 @@
+<!-- <sl:toaster>
+  <sl:toast title="Event created" description="Monday, January 3rd at 6:00pm"/>
+</sl:toaster> -->
+<div class="toaster" x-data="slToaster" id="toaster">
+  <div class="toaster-viewport" popover="manual" role="region" aria-label="Notifications (Alt+T)">
+    <ol class="toaster-list">
+      <li class="toast" tabindex="-1">
+        <div class="toast-content">
+          <div class="toast-title">Event created</div>
+          <div class="toast-description">Monday, January 3rd at 6:00pm</div>
+        </div>
+        <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </button>
+      </li>
+    </ol>
+    <div class="toaster-announcer sl-sr-only" role="status" aria-live="polite"></div>
+    <div class="toaster-announcer sl-sr-only" role="alert" aria-live="assertive"></div>
+  </div>
+  <template class="toaster-template" data-variant="default">
+    <li class="toast" tabindex="-1">
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="success">
+    <li class="toast" tabindex="-1" data-variant="success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="info">
+    <li class="toast" tabindex="-1" data-variant="info">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="warning">
+    <li class="toast" tabindex="-1" data-variant="warning">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="error">
+    <li class="toast" tabindex="-1" data-variant="error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+</div>
+
+<!-- <sl:toaster id="notes" position="top-left" duration="0" visible-toasts="1"/> -->
+<div class="toaster" x-data="slToaster" id="notes" data-duration="0" data-visible-toasts="1">
+  <div class="toaster-viewport" popover="manual" role="region" aria-label="Notifications (Alt+T)" data-position="top-left">
+    <ol class="toaster-list"></ol>
+    <div class="toaster-announcer sl-sr-only" role="status" aria-live="polite"></div>
+    <div class="toaster-announcer sl-sr-only" role="alert" aria-live="assertive"></div>
+  </div>
+  <template class="toaster-template" data-variant="default">
+    <li class="toast" tabindex="-1">
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="success">
+    <li class="toast" tabindex="-1" data-variant="success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="info">
+    <li class="toast" tabindex="-1" data-variant="info">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="warning">
+    <li class="toast" tabindex="-1" data-variant="warning">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="error">
+    <li class="toast" tabindex="-1" data-variant="error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+</div>
+
+<!-- <sl:toaster position="top-center"/> -->
+<div class="toaster" x-data="slToaster" id="toaster">
+  <div class="toaster-viewport" popover="manual" role="region" aria-label="Notifications (Alt+T)" data-position="top-center">
+    <ol class="toaster-list"></ol>
+    <div class="toaster-announcer sl-sr-only" role="status" aria-live="polite"></div>
+    <div class="toaster-announcer sl-sr-only" role="alert" aria-live="assertive"></div>
+  </div>
+  <template class="toaster-template" data-variant="default">
+    <li class="toast" tabindex="-1">
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="success">
+    <li class="toast" tabindex="-1" data-variant="success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="info">
+    <li class="toast" tabindex="-1" data-variant="info">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="warning">
+    <li class="toast" tabindex="-1" data-variant="warning">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="error">
+    <li class="toast" tabindex="-1" data-variant="error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+</div>
+
+<!-- <sl:toaster position="top-right"/> -->
+<div class="toaster" x-data="slToaster" id="toaster">
+  <div class="toaster-viewport" popover="manual" role="region" aria-label="Notifications (Alt+T)" data-position="top-right">
+    <ol class="toaster-list"></ol>
+    <div class="toaster-announcer sl-sr-only" role="status" aria-live="polite"></div>
+    <div class="toaster-announcer sl-sr-only" role="alert" aria-live="assertive"></div>
+  </div>
+  <template class="toaster-template" data-variant="default">
+    <li class="toast" tabindex="-1">
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="success">
+    <li class="toast" tabindex="-1" data-variant="success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="info">
+    <li class="toast" tabindex="-1" data-variant="info">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="warning">
+    <li class="toast" tabindex="-1" data-variant="warning">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="error">
+    <li class="toast" tabindex="-1" data-variant="error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+</div>
+
+<!-- <sl:toaster position="bottom-left"/> -->
+<div class="toaster" x-data="slToaster" id="toaster">
+  <div class="toaster-viewport" popover="manual" role="region" aria-label="Notifications (Alt+T)" data-position="bottom-left">
+    <ol class="toaster-list"></ol>
+    <div class="toaster-announcer sl-sr-only" role="status" aria-live="polite"></div>
+    <div class="toaster-announcer sl-sr-only" role="alert" aria-live="assertive"></div>
+  </div>
+  <template class="toaster-template" data-variant="default">
+    <li class="toast" tabindex="-1">
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="success">
+    <li class="toast" tabindex="-1" data-variant="success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="info">
+    <li class="toast" tabindex="-1" data-variant="info">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="warning">
+    <li class="toast" tabindex="-1" data-variant="warning">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="error">
+    <li class="toast" tabindex="-1" data-variant="error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+</div>
+
+<!-- <sl:toaster position="bottom-center"/> -->
+<div class="toaster" x-data="slToaster" id="toaster">
+  <div class="toaster-viewport" popover="manual" role="region" aria-label="Notifications (Alt+T)" data-position="bottom-center">
+    <ol class="toaster-list"></ol>
+    <div class="toaster-announcer sl-sr-only" role="status" aria-live="polite"></div>
+    <div class="toaster-announcer sl-sr-only" role="alert" aria-live="assertive"></div>
+  </div>
+  <template class="toaster-template" data-variant="default">
+    <li class="toast" tabindex="-1">
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="success">
+    <li class="toast" tabindex="-1" data-variant="success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="info">
+    <li class="toast" tabindex="-1" data-variant="info">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="warning">
+    <li class="toast" tabindex="-1" data-variant="warning">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+  <template class="toaster-template" data-variant="error">
+    <li class="toast" tabindex="-1" data-variant="error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="toast-content">
+        <div class="toast-title"></div>
+        <div class="toast-description"></div>
+      </div>
+      <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </li>
+  </template>
+</div>
+
+<!-- <sl:toast variant="success" title="Saved"/> -->
+<li class="toast" tabindex="-1" data-variant="success">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <div class="toast-content">
+    <div class="toast-title">Saved</div>
+  </div>
+  <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</li>
+
+<!-- <sl:toast variant="info" title="Heads up" duration="10000"/> -->
+<li class="toast" tabindex="-1" data-variant="info" data-duration="10000">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <div class="toast-content">
+    <div class="toast-title">Heads up</div>
+  </div>
+  <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</li>
+
+<!-- <sl:toast variant="warning" title="Almost full" description="90% of your storage is used."/> -->
+<li class="toast" tabindex="-1" data-variant="warning">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <div class="toast-content">
+    <div class="toast-title">Almost full</div>
+    <div class="toast-description">90% of your storage is used.</div>
+  </div>
+  <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</li>
+
+<!-- <sl:toast variant="error" title="Could not save"/> -->
+<li class="toast" tabindex="-1" data-variant="error">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <div class="toast-content">
+    <div class="toast-title">Could not save</div>
+  </div>
+  <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</li>
+
+<!-- <sl:toast title="Invitation sent" class="invite">
+  <sl:slot name="icon"><sl:icon name="mail"/></sl:slot>
+  Sent to <a href="/members">the new member</a>.
+</sl:toast> -->
+<li class="toast invite" tabindex="-1">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <div class="toast-content">
+    <div class="toast-title">Invitation sent</div>
+    <div class="toast-description">
+      Sent to
+      <a href="/members">the new member</a>
+      .
+    </div>
+  </div>
+  <button class="btn toast-close" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</li>

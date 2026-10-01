@@ -1,14 +1,18 @@
 package io.github.wimdeblauwe.shadleaf.sample01;
 
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxReswap;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
+import io.github.wimdeblauwe.shadleaf.toast.Toast;
 import jakarta.validation.Valid;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * The dialog page. A dialog on the page itself, opened by a button, and an edit dialog per team member that htmx
@@ -29,9 +34,9 @@ import org.springframework.web.server.ResponseStatusException;
  * of band.
  * <p>
  * Delete fetches an alert dialog the same way; its Delete button sends {@code hx-delete}, and the answer closes it with
- * the same event, removes the row and puts a message out of band that takes the focus. Invite member opens a sheet in
- * the page, whose form swaps itself too; a valid invite answers with an empty form, closes the sheet and appends the
- * new row.
+ * the same event, shows a toast ({@code HX-Trigger: sl-toast}), removes the row and moves the focus to the next row.
+ * Invite member opens a sheet in the page, whose form swaps itself too; a valid invite answers with an empty form,
+ * closes the sheet, appends the new row and shows a toast, both out of band.
  * <p>
  * The row actions are a dropdown menu per member, whose items fetch the edit and delete dialogs. A second menu sorts
  * the table: its radio items are links, and the page marks the chosen one. Rename opens a popover with a form that
@@ -57,7 +62,7 @@ public class DialogController {
   @GetMapping("/dialog")
   public String page(@RequestParam(defaultValue = "added") String sort, Model model) {
     String order = SORT_ORDERS.containsKey(sort) ? sort : "added";
-    model.addAttribute("members", members.values().stream().sorted(SORT_ORDERS.get(order)).toList());
+    model.addAttribute("members", sorted(order));
     model.addAttribute("sort", order);
     model.addAttribute("sortOptions", SORT_OPTIONS);
     model.addAttribute("inviteForm", new MemberForm());
@@ -116,13 +121,23 @@ public class DialogController {
 
   @HxRequest
   @DeleteMapping("/dialog/members/{id}")
-  public String delete(@PathVariable long id, HtmxResponse htmxResponse, Model model) {
+  public String delete(@PathVariable long id, HtmxRequest htmxRequest, HtmxResponse htmxResponse, Model model) {
     Member member = member(id);
+    // The rows as the page shows them: htmx sends the page's address, sort order included, in HX-Current-URL.
+    List<Member> rows = sorted(sortOf(htmxRequest.getCurrentUrl()));
+    int index = rows.indexOf(member);
     members.remove(id);
-    model.addAttribute("member", member);
     htmxResponse.addTrigger("sl-dialog-close");
-    // Only the message, out of band: the row, the request's target, is replaced by nothing.
-    return "dialog :: member-deleted";
+    htmxResponse.addTrigger("sl-toast", Toast.success("%s was deleted".formatted(member.name())));
+    // The row goes with the menu button the focus returns to when the alert dialog closes, so the focus moves to the
+    // next row's menu button (the previous row's after the last one), or to Invite member once the table is empty:
+    // re-rendered out of band with autofocus, which htmx focuses after the swap. The toast says what happened.
+    Member neighbour = index + 1 < rows.size() ? rows.get(index + 1) : index > 0 ? rows.get(index - 1) : null;
+    if (neighbour == null) {
+      return "dialog :: invite-button-focus";
+    }
+    model.addAttribute("member", neighbour);
+    return "dialog :: member-row-focus";
   }
 
   @HxRequest
@@ -137,6 +152,7 @@ public class DialogController {
     model.addAttribute("member", member);
     model.addAttribute("inviteForm", new MemberForm());
     htmxResponse.addTrigger("sl-dialog-close");
+    // The row and a toast, both out of band.
     return "dialog :: invited";
   }
 
@@ -146,6 +162,19 @@ public class DialogController {
     options.put("name", "Name");
     options.put("email", "Email");
     return options;
+  }
+
+  private List<Member> sorted(String order) {
+    return members.values().stream().sorted(SORT_ORDERS.getOrDefault(order, SORT_ORDERS.get("added"))).toList();
+  }
+
+  /** The sort order in the address of the page a request came from. */
+  private static String sortOf(@Nullable String currentUrl) {
+    if (currentUrl == null) {
+      return "added";
+    }
+    String sort = UriComponentsBuilder.fromUriString(currentUrl).build().getQueryParams().getFirst("sort");
+    return sort != null ? sort : "added";
   }
 
   private Member member(long id) {

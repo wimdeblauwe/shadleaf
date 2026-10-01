@@ -1,0 +1,253 @@
+---
+title: Toast
+description: A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="toaster--default" />
+
+## One toaster, toasts from the server
+
+A toast says what just happened, such as "Member deleted", and goes away by itself. shadcn/ui uses
+[Sonner](https://sonner.emilkowal.ski/) for it, with a `<Toaster />` in the layout and `toast("...")` calls in the
+browser. In Shadleaf the layout has one `<sl:toaster>`, and the toasts come from the server, in one of three ways:
+
+| Where the message comes from | How it gets to the toaster |
+| --- | --- |
+| An htmx request | The response header `HX-Trigger` sends the `sl-toast` event with the toast as its detail. |
+| A full page load, e.g. after a redirect | The page renders `<sl:toast>`s in the toaster, from a flash attribute. |
+| An htmx response that renders markup anyway | An out-of-band swap puts `<sl:toast>`s into the toaster. |
+
+Put the toaster at the end of the layout's `<body>`, and let it render the toasts of a flash attribute:
+
+```html
+<body>
+  ...
+  <sl:toaster>
+    <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+              th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+  </sl:toaster>
+</body>
+```
+
+`Toast` (`io.github.wimdeblauwe.shadleaf.toast.Toast`) is what a controller writes for either path: a title, an
+optional description, a variant and an optional duration.
+
+```java
+Toast.success("Member deleted")
+Toast.error("Could not reach the mail server").withDescription("Your message was saved as a draft.")
+Toast.of("Copied").withDuration(Duration.ofSeconds(2))
+Toast.warning("Your session ends in 5 minutes").untilClosed()
+```
+
+### From an htmx response: `HX-Trigger`
+
+This is what the toast is for: a controller answering an htmx request says what happened, whatever the response
+swaps. With [htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot):
+
+```java
+@HxRequest
+@DeleteMapping("/members/{id}")
+public String delete(@PathVariable long id, HtmxResponse htmxResponse, Model model) {
+  Member member = memberService.delete(id);
+  htmxResponse.addTrigger("sl-toast", Toast.success("%s was deleted".formatted(member.name())));
+  return "members :: deleted";
+}
+```
+
+The response gets `HX-Trigger: {"sl-toast": {"title": "Ada Lovelace was deleted", "description": null,
+"variant": "success", "duration": null}}`; htmx dispatches the event when the response arrives, and the toaster shows
+it. Several toasts in one response are a list: `htmxResponse.addTrigger("sl-toast", List.of(first, second))`.
+
+- **The text is only ever text.** The toaster puts the title and description in with `textContent`, so a name such as
+  `<b>Ada</b>` shows as typed and can never inject markup.
+- **Use `HX-Trigger`**, not `HX-Trigger-After-Swap` or `-After-Settle`: those are dispatched on the element that sent
+  the request, and when the swap removed it (a deleted row), the event reaches no one.
+- **Not with a redirect.** An `HX-Redirect` or `HX-Location` loads another page, and the toast with it is gone. Put
+  it in a flash attribute instead (next section).
+
+### After a redirect: a flash attribute
+
+A plain form post that redirects (post/redirect/get) puts the toast in a flash attribute, which the toaster in the
+layout renders on the page the redirect loads:
+
+```java
+@PostMapping("/contact")
+public String send(@Valid ContactForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+  if (bindingResult.hasErrors()) {
+    return "contact";
+  }
+  contactService.send(form);
+  redirectAttributes.addFlashAttribute("toasts", List.of(
+      Toast.success("Message sent").withDescription("We answer within one working day.")));
+  return "redirect:/contact";
+}
+```
+
+The page the redirect loads then renders this toast in the layout's toaster (the `th:each` above), as below. Only
+here in the docs does it stay (`duration="0"`), so you can look at it; in your application it closes after the
+toaster's duration like any other.
+
+<ComponentPreview id="toaster--server" />
+
+A screen reader announces such a toast a moment after the page loads (see [Announcement](#announcement)), but that
+moment is also when it starts reading the new page, and not every screen reader lets one interrupt the other. When
+the outcome is the whole point of the page, say it in the page too: in the title, or in an
+[alert](../alert/).
+
+### Out of band
+
+A response that renders markup anyway can put a toast into the toaster itself, whose id is `toaster` unless you give it
+another. Wrap the toasts in an element whose children a `beforeend` swap appends (an `ol` suits `li` toasts):
+
+```html
+<th:block th:fragment="invited">
+  <form th:replace="~{members :: invite-form}"></form>
+  <ol hx-swap-oob="beforeend:#toaster">
+    <sl:toast variant="success" th:title="|Invitation sent to ${member.name}|"
+              description="They get an email with a link to join the team."/>
+  </ol>
+</th:block>
+```
+
+A toast rendered this way can hold markup of its own, such as a link: content in `<sl:toast>` replaces the
+description. Remember that the toast goes away (see [No action button](#no-action-button)).
+
+### From your own script
+
+The toaster listens for the event on the document, so your own Alpine markup (or any script) can send one too:
+
+```html
+<sl:button x-data x-on:click="$dispatch('sl-toast', {title: 'Link copied'})">Copy link</sl:button>
+```
+
+The detail is a toast (`{title, description, variant, duration}`), a list of them, or a string, the title.
+
+## Variants
+
+The variant only changes the icon, as in shadcn: none, a check (`success`), an i (`info`), a triangle (`warning`) and
+an x (`error`), whose icon takes the destructive colour. A screen reader announces an `error` at once, interrupting
+what it was reading; the others when it is done. Give a toast a title that says what happened on its own ("Could not
+save"), since the icon is decoration and is not read out.
+
+<ComponentPreview id="toaster--variants" />
+
+An icon of your own replaces the variant's:
+
+```html
+<sl:toast title="Invitation sent">
+  <sl:slot name="icon"><sl:icon name="mail"/></sl:slot>
+</sl:toast>
+```
+
+## Timing, pausing and closing
+
+A toast closes after 5 seconds (`duration` on the toaster, or on one toast; `0` keeps it until it is closed). The
+time stops while the pointer is on the toasts, while one of them has the focus and while the page is in another tab,
+and at least a second is left afterwards, so nobody loses a toast while reading it. Choose a longer duration, or `0`,
+for a toast with a long description.
+
+- **The close button** closes one toast. It needs Alpine, so it only shows once Alpine runs; its label comes from the
+  message `sl.toast.close`.
+- **Alt+T** moves the focus to the newest toast, as in Sonner, from anywhere on the page; the toaster's name,
+  "Notifications (Alt+T)" (message `sl.toaster.label`), tells screen reader users so. **Tab** then reaches the close
+  buttons.
+- **Escape** closes the toast that has the focus, and nothing else: an open dialog around it stays open.
+- When the toast with the focus closes, the focus moves to the next toast, and after the last one back to where it was
+  before.
+
+## Several at once
+
+Newer toasts stack in front of older ones, as Sonner's do; hovering or focusing them spreads them out. At most three
+show (`visible-toasts`); the older ones wait, with their time stopped, and show again when a newer one closes.
+
+<ComponentPreview id="toaster--stack" />
+
+Where the user prefers reduced motion, toasts only fade in and out; they do not slide.
+
+## Position
+
+`position` puts the toasts in a corner or at the middle of the top or bottom edge: `top-left`, `top-center`,
+`top-right`, `bottom-left`, `bottom-center` or `bottom-right` (the default, as Sonner's). Right and left are the end
+and the start of a line, so they swap on a right-to-left page. On a narrow screen the toasts take the full width.
+
+```html
+<sl:toaster position="top-center"/>
+```
+
+## Above a modal dialog
+
+A modal dialog makes the rest of the page inert: it can be seen but not clicked, focused or read by a screen reader,
+and the dialog is drawn above everything else. The toasts are a popover (in the top layer, above everything), and while
+a modal dialog is open they move into it, so a toast about something done in a dialog that stays open shows above it,
+can be closed and is announced. When the dialog closes they move back. A response that closes the dialog and shows a
+toast (`HX-Trigger: {"sl-dialog-close": null, "sl-toast": {...}}`) works whichever event comes first.
+
+## Announcement
+
+The toasts themselves are not a live region, so a screen reader does not read them twice. The toaster has two empty
+live regions from the start, one polite (`role="status"`) and one assertive (`role="alert"`, for errors), and writes
+each toast's title and description into one of them when it arrives. A live region has to be on the page before its
+content changes for a screen reader to notice, which is why they are in the toaster's markup rather than added with
+the toast; a toast rendered with the page is written into them a moment after it loads. The messages are removed from
+the live regions after a few seconds, so reading the page later finds each toast once, in the "Notifications" region,
+while it shows. The region is only a landmark while it holds toasts.
+
+## Focus after the thing is gone
+
+A toast must not take the focus: it goes away, and the focus would fall to the top of the page with it. When an action
+removes the element that had the focus, such as a Delete button in a table row, move the focus to what comes next and
+let the toast say what happened. The [alert dialog's htmx example](../alert-dialog/#confirming-with-htmx) moves it to
+the next row.
+
+## No action button
+
+Sonner's toast can hold an action button ("Undo"). Shadleaf's has none: a toast closes by itself, and whatever it offers
+is gone with it, for someone who reads slowly, uses a screen reader or looked away. WCAG asks that a time limit on
+something the user has to do can be turned off or extended. Put the action in the page (an Undo in the row's place, a
+link in the confirmation), and use the toast to say what happened. If a toast you render out of band holds a link, the
+same must be reachable elsewhere, or give it `duration="0"`.
+
+## Left out
+
+- **`toast()` in the browser.** The server sends toasts; a script can dispatch `sl-toast` (see above).
+- **Action and cancel buttons**, and **promise and loading toasts**: see above; a loading state belongs on the button
+  that started the request.
+- **Swipe to dismiss.** The close button, Escape and the time do it.
+- **Rich colours** (`richColors`), **`expand`** (always spread out), **`invert`**, **`offset`** and **`gap`** as
+  props: the skins set the look, and the CSS custom properties `--toaster-offset` and `--toast-gap` on
+  `.toaster-viewport` the spacing.
+- **Updating a toast by id.**
+
+## Without JavaScript
+
+Without Alpine a toast rendered with the page still shows, in its corner, but it has no close button and does not go
+away; events and out-of-band toasts need htmx or a script anyway.
+
+## Attributes
+
+### sl:toaster
+
+<ComponentAttributes component="toaster" />
+
+### sl:toast
+
+<ComponentAttributes component="toast" />
+
+## JavaScript
+
+A small Alpine component, `slToaster`, is on `<sl:toaster>`: it renders as
+`<div class="toaster" x-data="slToaster">`.
+
+- **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
+  enough. See [Alpine](../../guides/alpine/).
+- **Keep your own `x-data` off `<sl:toaster>`.** An element has one `x-data`.
+- **One toaster per page.** A second one works, but the first takes every event.
+- **htmx history:** the toaster removes its toasts before htmx saves the page in its history cache, so going back never
+  shows an old toast again.
+
+| Event | On | Effect |
+| --- | --- | --- |
+| `sl-toast` | anything (it bubbles to the document), or the document | Shows the toast in its detail: `{title, description, variant, duration}`, a list of them, or a string. |

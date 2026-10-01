@@ -179,6 +179,16 @@ works without JavaScript:
 `activationMode` is `activation-mode`; there is no `onValueChange` (an `sl-tabs-show` event fires on the panel that is
 shown). See [Tabs](../components/tabs/).
 
+### Toast: the server sends the toasts
+
+shadcn's toast is Sonner: a `<Toaster />` in the layout and `toast("...")` calls in the browser. Shadleaf has
+`<sl:toaster>` in the layout, and the toasts come from the server: an htmx response sends the `sl-toast` event with
+`HX-Trigger` (`htmxResponse.addTrigger("sl-toast", Toast.success("Saved"))`), a page renders `<sl:toast>`s from a flash
+attribute after a redirect, or a response swaps them in out of band. A script can dispatch `sl-toast` itself, with the
+same detail as Sonner's options: `{title, description, variant, duration}`. `toast.success()` and friends are the
+`variant` (`success`, `info`, `warning`, `error`); `visibleToasts` is `visible-toasts`. See
+[Toast](../components/toast/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
@@ -237,6 +247,16 @@ takes keyboard focus, when it is a link (`as="a"`).
   across a toolbar does not flash every tooltip on the way. Keyboard focus, and the next tooltip right after one hid,
   still show at once.
 - The pointer can move onto a tooltip without it hiding, and Escape hides it, as WCAG 1.4.13 asks.
+
+### Toasts
+
+- A toast shows for 5 seconds, not Sonner's 4, and its time stops while it has the focus as well as on hover. Every
+  toast has a close button (Sonner's `closeButton` is off by default), and there is no swipe to dismiss.
+- There is no action or cancel button: a toast goes away by itself, so it must not hold the only way to do something.
+- An error toast is announced at once (assertive); the others politely, as all of Sonner's are.
+- An error's icon takes the destructive colour; with Sonner every icon has the text colour unless `richColors` is on.
+- The toasts move into an open modal dialog, so one shown while a dialog is open can be used and is announced; a
+  Sonner toast outside the dialog is inert there.
 
 ### Form controls
 

@@ -14,6 +14,8 @@ export type Scenario = {
   source: string;
   html: string;
   normalizedHtml: string;
+  /** false: only on its docs page, not on the showcase. */
+  showcase?: boolean;
 };
 
 export type Prop = {

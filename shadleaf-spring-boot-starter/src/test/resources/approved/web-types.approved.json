@@ -2321,6 +2321,160 @@
         "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:toast",
+        "description" : "One toast in a `sl:toaster`: a title, an optional description and a close button. The server renders it for a message that has to show when the page loads, such as a flash attribute after a redirect, or in an out-of-band swap. Content of its own replaces the description. A toast goes away by itself, so it must never hold the only way to do something.",
+        "attributes" : [ {
+          "name" : "title",
+          "description" : "What happened, in a few words: \"Member deleted\".",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "description",
+          "description" : "More about it, under the title.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "variant",
+          "description" : "The kind of message, shown by its icon: none, a check, an i, a warning triangle or an x. A screen reader announces an `error` at once, interrupting what it reads; the others when it is done.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "success"
+          }, {
+            "name" : "info"
+          }, {
+            "name" : "warning"
+          }, {
+            "name" : "error"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "duration",
+          "description" : "How long this toast shows, in milliseconds, instead of the toaster's `duration`. `0` keeps it until it is closed.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "th:title",
+          "description" : "`title` from a Thymeleaf expression, e.g. `th:title=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:description",
+          "description" : "`description` from a Thymeleaf expression, e.g. `th:description=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:duration",
+          "description" : "`duration` from a Thymeleaf expression, e.g. `th:duration=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:toaster",
+        "description" : "Where toasts show: short messages in a corner of the page that close themselves, such as \"Member deleted\". Put one at the end of the layout's `body`. Toasts get there three ways: as `sl:toast`s inside it, which the server renders (e.g. from a flash attribute after a redirect); from an `sl-toast` event, which an htmx response sends with the `HX-Trigger` header; or swapped in out of band. A screen reader announces each toast, and toasts show above an open modal dialog and can be used there. Needs Alpine.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The toaster's id, which an out-of-band swap targets (`hx-swap-oob=\"beforeend:#toaster\"`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "toaster"
+        }, {
+          "name" : "position",
+          "description" : "The corner or edge the toasts show in. `right` and `left` are the end and the start of a line.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top-left"
+          }, {
+            "name" : "top-center"
+          }, {
+            "name" : "top-right"
+          }, {
+            "name" : "bottom-left"
+          }, {
+            "name" : "bottom-center"
+          }, {
+            "name" : "bottom-right"
+          } ],
+          "default" : "bottom-right"
+        }, {
+          "name" : "duration",
+          "description" : "How long a toast shows, in milliseconds, unless it sets its own. The time stops while the pointer is on the toasts, while one of them has the focus and while the page is hidden. `0` keeps toasts until they are closed.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "5000"
+        }, {
+          "name" : "visible-toasts",
+          "description" : "How many toasts show at once, the newest ones. Older ones wait, with their time stopped, and show again when a newer one closes.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "3"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:position",
+          "description" : "`position` from a Thymeleaf expression, e.g. `th:position=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:duration",
+          "description" : "`duration` from a Thymeleaf expression, e.g. `th:duration=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:visible-toasts",
+          "description" : "`visible-toasts` from a Thymeleaf expression, e.g. `th:visible-toasts=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:tooltip",
         "description" : "A short text that shows while the pointer rests on an element or the keyboard focuses it, on the browser's Popover API. The first element inside is the trigger, any focusable element (a `sl:button`, a link); the `sl:tooltip-content` after it describes it (`aria-describedby`). Escape hides it. Needs Alpine.",
         "attributes" : [ {

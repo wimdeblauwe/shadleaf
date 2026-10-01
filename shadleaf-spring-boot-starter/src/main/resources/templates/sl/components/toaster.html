@@ -1,0 +1,48 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Where toasts show: short messages in a corner of the page that close themselves, such as
+      "Member deleted". Put one at the end of the layout's <code>body</code>. Toasts get there three ways: as
+      <code>sl:toast</code>s inside it, which the server renders (e.g. from a flash attribute after a redirect); from an
+      <code>sl-toast</code> event, which an htmx response sends with the <code>HX-Trigger</code> header; or swapped in
+      out of band. A screen reader announces each toast, and toasts show above an open modal dialog and can be used
+      there. Needs Alpine.</sl:description>
+    <sl:prop name="id" default="toaster">The toaster's id, which an out-of-band swap targets
+      (<code>hx-swap-oob="beforeend:#toaster"</code>).</sl:prop>
+    <sl:prop name="position" default="bottom-right"
+             values="top-left top-center top-right bottom-left bottom-center bottom-right">The corner or edge the
+      toasts show in. <code>right</code> and <code>left</code> are the end and the start of a line.</sl:prop>
+    <sl:prop name="duration" type="number" default="5000">How long a toast shows, in milliseconds, unless it sets its
+      own. The time stops while the pointer is on the toasts, while one of them has the focus and while the page is
+      hidden. <code>0</code> keeps toasts until they are closed.</sl:prop>
+    <sl:prop name="visible-toasts" type="number" default="3">How many toasts show at once, the newest ones. Older
+      ones wait, with their time stopped, and show again when a newer one closes.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The root has no box; slToaster lives on it and stays in place. The viewport is a popover="manual" that slToaster
+  shows, so it is in the top layer, and moves into the top-most open modal dialog while there is one: outside it, the
+  dialog would make it inert, unclickable and hidden from screen readers. The toasts are not a live region (so they are
+  not read twice); the two announcers are, polite and assertive (error toasts), and exist before any toast, so that
+  what slToaster writes into them is announced. slToaster keeps the region's role and name only while it holds toasts.
+  The templates are the toasts slToaster fills in for an sl-toast event:
+  the text is set as text, never as HTML. */-->
+<div th:fragment="toaster"
+     class="toaster"
+     x-data="slToaster"
+     th:attr="id=${props.id},
+              data-duration=${props.unlessDefault('duration')},
+              data-visible-toasts=${props.unlessDefault('visible-toasts')}"
+     sl:attrs><div class="toaster-viewport"
+                   popover="manual"
+                   role="region"
+                   th:aria-label="#{sl.toaster.label}"
+                   th:attr="data-position=${props.unlessDefault('position')}"><ol class="toaster-list"><sl:slot/></ol><div
+    class="toaster-announcer sl-sr-only" role="status" aria-live="polite"></div><div
+    class="toaster-announcer sl-sr-only" role="alert" aria-live="assertive"></div></div><template
+    th:each="slVariant : ${ {'default', 'success', 'info', 'warning', 'error'} }"
+    class="toaster-template"
+    th:attr="data-variant=${slVariant}"><sl:toast th:variant="${slVariant}" title="" description=""/></template></div>
+</body>
+</html>

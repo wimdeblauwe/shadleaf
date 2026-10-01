@@ -24,7 +24,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
  * The dialog page: a dialog on the page, opened by an icon button with a tooltip, and an edit dialog htmx fetches from
  * a row's menu of actions, whose form swaps itself while it has errors and closes the dialog with
  * {@code HX-Trigger: sl-dialog-close} after a valid save. An alert dialog confirms a delete, a sheet in the page holds
- * an invite form, a menu of radio items sorts the table, and a popover renames the team.
+ * an invite form, a menu of radio items sorts the table, and a popover renames the team. A confirmed delete shows a
+ * toast and moves the focus to the next row; a valid invite shows one out of band.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -47,7 +48,11 @@ class DialogPageTest {
     assertThat(dialog.attr("aria-labelledby")).isEqualTo("shortcuts-title");
     assertThat(dialog.hasAttr("data-show-modal")).isFalse();
     assertThat(page.select("#modal-root")).hasSize(1);
-    assertThat(page.select("tbody tr")).hasSize(3);
+    Element toaster = page.getElementById("toaster");
+    assertThat(toaster.attr("x-data")).isEqualTo("slToaster");
+    assertThat(toaster.select(".toaster-list > li")).isEmpty();
+    // Other tests delete and invite members; these two stay.
+    assertThat(page.select("tbody tr")).extracting(Element::id).contains("member-1", "member-2");
     // The page holds several forms, a sheet and a popover: a label must never point into another one.
     assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
   }
@@ -214,7 +219,6 @@ class DialogPageTest {
     assertThat(deleteButton.attr("role")).isEqualTo("menuitem");
     assertThat(deleteButton.attr("hx-get")).isEqualTo("/dialog/members/2/delete");
     assertThat(deleteButton.attr("hx-target")).isEqualTo("#modal-root");
-    assertThat(page.getElementById("member-status").hasAttr("hidden")).isTrue();
 
     Document fragment = fragment(mockMvc.perform(htmx(get("/dialog/members/2/delete")))
         .andExpect(status().isOk())
@@ -238,23 +242,41 @@ class DialogPageTest {
   }
 
   @Test
-  void aConfirmedDeleteClosesTheAlertDialogAndLeavesOnlyAMessageThatTakesTheFocus() throws Exception {
-    String html = mockMvc.perform(htmx(delete("/dialog/members/3")))
+  void aConfirmedDeleteClosesTheAlertDialogShowsAToastAndFocusesTheNextRow() throws Exception {
+    // Sorted by name, Alan comes before Grace: she is the next row the page shows.
+    String html = mockMvc.perform(htmx(delete("/dialog/members/3"))
+            .header("HX-Current-URL", "http://localhost/dialog?sort=name"))
         .andExpect(status().isOk())
-        .andExpect(header().string("HX-Trigger", "sl-dialog-close"))
+        // htmx-spring-boot keeps the order of addTrigger (since 5.1.1): the dialog closes, then the toast shows.
+        .andExpect(header().string("HX-Trigger", "{\"sl-dialog-close\":null,\"sl-toast\":{\"title\":"
+            + "\"Alan Turing was deleted\",\"description\":null,\"variant\":\"success\",\"duration\":null}}"))
         .andReturn().getResponse().getContentAsString();
 
-    Document fragment = fragment(html);
-    assertThat(fragment.body().children()).hasSize(1);
-    Element status = fragment.getElementById("member-status");
-    assertThat(status.attr("hx-swap-oob")).isEqualTo("true");
-    assertThat(status.attr("tabindex")).isEqualTo("-1");
-    assertThat(status.hasAttr("autofocus")).isTrue();
-    assertThat(status.text()).isEqualTo("Alan Turing was deleted.");
+    // Nothing for the deleted row, the request's target: only the next row, out of band, its menu button focused.
+    Document fragment = Jsoup.parseBodyFragment("<table>" + html + "</table>");
+    assertThat(fragment.select("tr")).extracting(Element::id).containsExactly("member-2");
+    assertThat(fragment.getElementById("member-2").attr("hx-swap-oob")).isEqualTo("true");
+    assertThat(fragment.select("[autofocus]")).extracting(Element::id).containsExactly("member-2-actions-trigger");
 
     Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
     assertThat(page.getElementById("member-3")).isNull();
+    assertThat(page.select("[autofocus], [hx-swap-oob]")).isEmpty();
     mockMvc.perform(htmx(get("/dialog/members/3/delete"))).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void theToastInHxTriggerIsAsciiSoTomcatKeepsTheHeader() throws Exception {
+    // Tomcat drops a header with a character outside Latin-1, taking sl-dialog-close with it.
+    String html = mockMvc.perform(htmx(post("/dialog/members")
+            .param("name", "Zo\u00eb \u0141ukasiewicz").param("email", "zoe@example.com")))
+        .andReturn().getResponse().getContentAsString();
+    String id = Jsoup.parseBodyFragment("<table>" + html + "</table>").selectFirst("#members-body tr, tbody tr").id();
+
+    String trigger = mockMvc.perform(htmx(delete("/dialog/members/" + id.substring("member-".length()))))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getHeader("HX-Trigger");
+    assertThat(trigger).contains("\"title\":\"Zo\\u00eb \\u0141ukasiewicz was deleted\"");
+    assertThat(trigger.chars()).allMatch(character -> character >= 0x20 && character <= 0x7e);
   }
 
   @Test
@@ -286,7 +308,7 @@ class DialogPageTest {
   }
 
   @Test
-  void aValidInviteClosesTheSheetEmptiesTheFormAndAppendsTheRow() throws Exception {
+  void aValidInviteClosesTheSheetEmptiesTheFormAppendsTheRowAndShowsAToast() throws Exception {
     String html = mockMvc.perform(htmx(post("/dialog/members")
             .param("name", "Katherine Johnson").param("email", "katherine@example.com")))
         .andExpect(status().isOk())
@@ -303,6 +325,12 @@ class DialogPageTest {
     Element row = tbody.child(0);
     assertThat(row.child(0).text()).isEqualTo("Katherine Johnson");
     assertThat(row.hasAttr("hx-swap-oob")).isFalse();
+    Element toasts = fragment.selectFirst("ol[hx-swap-oob]");
+    assertThat(toasts.attr("hx-swap-oob")).isEqualTo("beforeend:#toaster");
+    Element toast = toasts.child(0);
+    assertThat(toast.hasClass("toast")).isTrue();
+    assertThat(toast.attr("data-variant")).isEqualTo("success");
+    assertThat(toast.selectFirst(".toast-title").text()).isEqualTo("Invitation sent to Katherine Johnson");
 
     Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
     assertThat(page.select("#members-body tr").last().child(0).text()).isEqualTo("Katherine Johnson");

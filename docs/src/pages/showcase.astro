@@ -8,7 +8,9 @@ import {previews, withBase} from '../lib/generated';
 
 const skins = Object.fromEntries(previews.skins.map(skin => [skin.name, withBase(skin.css)]));
 const firstSkin = previews.skins[0]?.name ?? '';
-const components = [...new Set(previews.scenarios.map(s => s.component))];
+// A scenario can stay off the showcase (showcase: false): a toast shown at load would get in other tests' way.
+const scenarios = previews.scenarios.filter(s => s.showcase !== false);
+const components = [...new Set(scenarios.map(s => s.component))];
 const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : undefined;
 ---
 
@@ -51,7 +53,7 @@ const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : 
   {components.map(component => (
     <section>
       <h2>{component}</h2>
-      {previews.scenarios.filter(s => s.component === component).map(scenario => (
+      {scenarios.filter(s => s.component === component).map(scenario => (
         <>
           <h3>{scenario.title ?? scenario.id}</h3>
           <div class="stage" data-scenario={scenario.id} set:html={scenario.html}/>

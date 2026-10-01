@@ -1099,6 +1099,64 @@
     "declared" : true,
     "props" : [ ]
   }, {
+    "name" : "toast",
+    "tag" : "sl:toast",
+    "description" : "One toast in a `sl:toaster`: a title, an optional description and a close button. The server renders it for a message that has to show when the page loads, such as a flash attribute after a redirect, or in an out-of-band swap. Content of its own replaces the description. A toast goes away by itself, so it must never hold the only way to do something.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "title",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "What happened, in a few words: \"Member deleted\".",
+      "required" : true
+    }, {
+      "name" : "description",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "More about it, under the title."
+    }, {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "success", "info", "warning", "error" ],
+      "description" : "The kind of message, shown by its icon: none, a check, an i, a warning triangle or an x. A screen reader announces an `error` at once, interrupting what it reads; the others when it is done."
+    }, {
+      "name" : "duration",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "How long this toast shows, in milliseconds, instead of the toaster's `duration`. `0` keeps it until it is closed."
+    } ]
+  }, {
+    "name" : "toaster",
+    "tag" : "sl:toaster",
+    "description" : "Where toasts show: short messages in a corner of the page that close themselves, such as \"Member deleted\". Put one at the end of the layout's `body`. Toasts get there three ways: as `sl:toast`s inside it, which the server renders (e.g. from a flash attribute after a redirect); from an `sl-toast` event, which an htmx response sends with the `HX-Trigger` header; or swapped in out of band. A screen reader announces each toast, and toasts show above an open modal dialog and can be used there. Needs Alpine.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "defaultValue" : "toaster",
+      "values" : [ ],
+      "description" : "The toaster's id, which an out-of-band swap targets (`hx-swap-oob=\"beforeend:#toaster\"`)."
+    }, {
+      "name" : "position",
+      "type" : "enum",
+      "defaultValue" : "bottom-right",
+      "values" : [ "top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right" ],
+      "description" : "The corner or edge the toasts show in. `right` and `left` are the end and the start of a line."
+    }, {
+      "name" : "duration",
+      "type" : "number",
+      "defaultValue" : "5000",
+      "values" : [ ],
+      "description" : "How long a toast shows, in milliseconds, unless it sets its own. The time stops while the pointer is on the toasts, while one of them has the focus and while the page is hidden. `0` keeps toasts until they are closed."
+    }, {
+      "name" : "visible-toasts",
+      "type" : "number",
+      "defaultValue" : "3",
+      "values" : [ ],
+      "description" : "How many toasts show at once, the newest ones. Older ones wait, with their time stopped, and show again when a newer one closes."
+    } ]
+  }, {
     "name" : "tooltip",
     "tag" : "sl:tooltip",
     "description" : "A short text that shows while the pointer rests on an element or the keyboard focuses it, on the browser's Popover API. The first element inside is the trigger, any focusable element (a `sl:button`, a link); the `sl:tooltip-content` after it describes it (`aria-describedby`). Escape hides it. Needs Alpine.",

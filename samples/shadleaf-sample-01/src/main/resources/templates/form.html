@@ -11,14 +11,9 @@
     (<code>https://...</code>) is rejected by the controller as a whole: that global error shows at the top of the
     form. The reference is read-only: it can be focused and copied, and it is posted with the form. The topic is a
     <code>sl:select</code>: the browser's customizable select where it has one, a list box elsewhere. Chat is a
-    disabled option. The <a th:href="@{/htmx-form}">form with htmx</a> is the same form, posted without a page
-    load.</p>
-
-  <sl:alert th:if="${sentTo}" role="status">
-    <sl:icon name="circle-check"/>
-    <sl:alert-title>Message sent</sl:alert-title>
-    <sl:alert-description th:text="|We will reply to ${sentTo}.|">We will reply to you.</sl:alert-description>
-  </sl:alert>
+    disabled option. After a valid submit the page loads again, empty, with a toast saying the message was sent: the
+    controller puts it in a flash attribute, and the layout's <code>sl:toaster</code> renders it. The
+    <a th:href="@{/htmx-form}">form with htmx</a> is the same form, posted without a page load.</p>
 
   <form class="form" th:object="${contactForm}" th:action="@{/form}" method="post" novalidate>
     <sl:form-errors autofocus/>

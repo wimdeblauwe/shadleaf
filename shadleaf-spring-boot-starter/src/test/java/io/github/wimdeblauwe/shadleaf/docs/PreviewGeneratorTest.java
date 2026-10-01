@@ -107,7 +107,7 @@ class PreviewGeneratorTest {
     }
     assertThat(rendered.html()).as("preview %s", scenario.id()).isNotBlank();
     return new Preview(scenario.id(), scenario.component(), scenario.title(), scenario.description(),
-        scenario.source(), rendered.html().strip(), rendered.normalizedHtml());
+        scenario.source(), rendered.html().strip(), rendered.normalizedHtml(), scenario.showcase());
   }
 
   /** The standalone bundle of every skin, default first: the embedded ones carry no reset, so they cannot preview. */
@@ -181,7 +181,8 @@ class PreviewGeneratorTest {
         assertThat(source).as("source of %s", id).isNotBlank();
         String renderSource = (String) entry.getOrDefault("renderSource", source);
         scenarios.add(new Scenario(id, component, (String) entry.get("title"), (String) entry.get("description"),
-            source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form"))));
+            source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form")),
+            (Boolean) entry.getOrDefault("showcase", true)));
       }
     }
     assertThat(components).as("components with previews in %s", PREVIEWS_DIRECTORY)
@@ -217,9 +218,11 @@ class PreviewGeneratorTest {
    * @param renderSource what is rendered, when it has to differ from the snippet (e.g. model variables replaced by
    *                     literals); the {@code source} otherwise
    * @param form         the form object {@code th:field} binds to, if the scenario has one
+   * @param showcase     whether the scenario is on the showcase page too; {@code false} for one that would get in the
+   *                     way of the other components' tests there (a toast shown when the page loads)
    */
   private record Scenario(String id, String component, @Nullable String title, @Nullable String description,
-                          String source, String renderSource, @Nullable FormModel form) {
+                          String source, String renderSource, @Nullable FormModel form, boolean showcase) {
 
   }
 
@@ -241,9 +244,10 @@ class PreviewGeneratorTest {
   /**
    * @param html           the rendered markup, as it goes into the preview frame
    * @param normalizedHtml one element per line, for the "rendered HTML" disclosure
+   * @param showcase       whether the showcase page shows it
    */
   private record Preview(String id, String component, @Nullable String title, @Nullable String description,
-                         String source, String html, String normalizedHtml) {
+                         String source, String html, String normalizedHtml, boolean showcase) {
 
   }
 

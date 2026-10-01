@@ -1,0 +1,41 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One toast in a <code>sl:toaster</code>: a title, an optional description and a close button. The
+      server renders it for a message that has to show when the page loads, such as a flash attribute after a redirect,
+      or in an out-of-band swap. Content of its own replaces the description. A toast goes away by itself, so it must
+      never hold the only way to do something.</sl:description>
+    <sl:prop name="title" required>What happened, in a few words: "Member deleted".</sl:prop>
+    <sl:prop name="description">More about it, under the title.</sl:prop>
+    <sl:prop name="variant" default="default" values="default success info warning error">The kind of message, shown
+      by its icon: none, a check, an i, a warning triangle or an x. A screen reader announces an <code>error</code> at
+      once, interrupting what it reads; the others when it is done.</sl:prop>
+    <sl:prop name="duration" type="number">How long this toast shows, in milliseconds, instead of the toaster's
+      <code>duration</code>. <code>0</code> keeps it until it is closed.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The icon slot replaces the variant's icon. tabindex="-1": Alt+T, and closing another toast, move the focus to a
+  toast. The close button only works with slToaster, which marks the toasts it knows with data-enhanced; the CSS hides
+  it before. */-->
+<li th:fragment="toast"
+    class="toast"
+    tabindex="-1"
+    th:with="slToastIcon=${props.variant == 'success' ? 'circle-check'
+                         : (props.variant == 'info' ? 'info'
+                         : (props.variant == 'warning' ? 'triangle-alert'
+                         : (props.variant == 'error' ? 'octagon-x' : null)))}"
+    th:attr="data-variant=${props.unlessDefault('variant')},
+             data-duration=${props.duration}"
+    sl:attrs><sl:slot name="icon"><sl:icon th:if="${slToastIcon != null}" th:name="${slToastIcon}"/></sl:slot><div
+    class="toast-content"><div class="toast-title" th:text="${props.title}">Title</div><div
+    class="toast-description"
+    th:if="${props.description != null or slots.hasDefault()}"><sl:slot><th:block
+    th:text="${props.description}"/></sl:slot></div></div><sl:button variant="ghost"
+                                                                     size="icon-xs"
+                                                                     class="toast-close"
+                                                                     th:aria-label="#{sl.toast.close}"><sl:icon
+    name="x"/></sl:button></li>
+</body>
+</html>

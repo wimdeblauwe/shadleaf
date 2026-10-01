@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import io.github.wimdeblauwe.shadleaf.toast.Toast;
+import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 /** The form page: Shadleaf's fields, each bound with one th:field, validated on the server, posted as a plain form. */
 @SpringBootTest
@@ -158,8 +161,8 @@ class FormPageTest {
   }
 
   @Test
-  void validSubmitRedirectsWithTheConfirmation() throws Exception {
-    mockMvc.perform(post("/form")
+  void validSubmitRedirectsWithAToast() throws Exception {
+    MvcResult result = mockMvc.perform(post("/form")
             .param("name", "Wim")
             .param("email", "wim@example.com")
             .param("topic", "support")
@@ -167,10 +170,20 @@ class FormPageTest {
             .param("replyBy", "phone")
             .param("terms", "true"))
         .andExpect(redirectedUrl("/form"))
-        .andExpect(flash().attribute("sentTo", "wim@example.com"));
+        .andExpect(flash().attribute("toasts",
+            List.of(Toast.success("Message sent").withDescription("We will reply to wim@example.com."))))
+        .andReturn();
 
-    Document page = Jsoup.parse(mockMvc.perform(get("/form").flashAttr("sentTo", "wim@example.com"))
+    // The page the redirect loads renders the flash attribute's toast in the layout's toaster.
+    Document page = Jsoup.parse(mockMvc.perform(get("/form").flashAttrs(result.getFlashMap()))
         .andReturn().getResponse().getContentAsString());
-    assertThat(page.selectFirst(".alert[role=status]").text()).contains("wim@example.com");
+    Element toast = page.selectFirst("#toaster .toaster-list > li.toast");
+    assertThat(toast.attr("data-variant")).isEqualTo("success");
+    assertThat(toast.selectFirst(".toast-title").text()).isEqualTo("Message sent");
+    assertThat(toast.selectFirst(".toast-description").text()).isEqualTo("We will reply to wim@example.com.");
+    assertThat(toast.hasAttr("data-duration")).isFalse();
+
+    Document next = Jsoup.parse(mockMvc.perform(get("/form")).andReturn().getResponse().getContentAsString());
+    assertThat(next.select("#toaster .toaster-list > li")).isEmpty();
   }
 }

@@ -92,28 +92,50 @@ The fragment has the question, and the destructive button sends the request:
 </sl:alert-dialog>
 ```
 
-The controller deletes, closes the dialog with the `sl-dialog-close` event (the same one that closes a dialog) and
-answers with nothing for the row, which removes it:
+The controller deletes, closes the dialog with the `sl-dialog-close` event (the same one that closes a dialog), says
+what happened in a [toast](../toast/) and answers with nothing for the row, which removes it:
 
 ```java
 @HxRequest
 @DeleteMapping("/members/{id}")
-public String delete(@PathVariable long id, HtmxResponse htmxResponse, Model model) {
-  model.addAttribute("member", memberService.delete(id));
+public String delete(@PathVariable long id, HtmxRequest htmxRequest, HtmxResponse htmxResponse, Model model) {
+  List<Member> rows = memberService.list(sortOf(htmxRequest.getCurrentUrl()));  // as the page shows them
+  Member member = memberService.delete(id);
   htmxResponse.addTrigger("sl-dialog-close");
-  return "members :: deleted";  // only the out-of-band message below: the row is replaced by nothing
+  htmxResponse.addTrigger("sl-toast", Toast.success("%s was deleted".formatted(member.name())));
+  Member next = neighbour(rows, member);  // the next row, the previous one after the last, or null
+  if (next == null) {
+    return "members :: invite-button-focus";
+  }
+  model.addAttribute("member", next);
+  return "members :: member-row-focus";  // the next row, out of band, its button focused
 }
 ```
 
 Closing returns focus to the Delete button that opened the dialog, but the swap then removes that button with its
-row, and focus would fall back to the top of the page. So let the response say what happened and take the focus
-itself: an out-of-band message with `tabindex="-1"` and `autofocus`, which htmx focuses after the swap, and which is
-read out as it gets the focus.
+row, and focus would fall back to the top of the page. The toast cannot take it instead: it goes away after a few
+seconds, and the focus would fall with it. So the response moves the focus to what comes next: the next row's button,
+re-rendered out of band with `autofocus`, which htmx focuses after the swap. After the last row that is the row before
+it, and once the table is empty, the button that adds a member. The toast is announced, so a screen reader user hears
+what happened and is where they can go on.
 
 ```html
-<p th:fragment="deleted" id="member-status" hx-swap-oob="true" tabindex="-1" autofocus
-   th:text="|${member.name} was deleted.|">Ada Lovelace was deleted.</p>
+<th:block th:fragment="member-row-focus" th:with="oob=true, focus=true">
+  <tr th:replace="~{members :: member-row}"></tr>
+</th:block>
+
+<tr th:fragment="member-row" th:id="|member-${member.id}|"
+    th:attr="hx-swap-oob=${oob != null and oob ? 'true' : null}">
+  <td th:text="${member.name}">Ada Lovelace</td>
+  <td>
+    <sl:button variant="outline" hx:get="@{/members/{id}/delete(id=${member.id})}" hx-target="#modal-root"
+               th:autofocus="${focus != null and focus}">Delete</sl:button>
+  </td>
+</tr>
 ```
+
+"Next" is the next row as the page shows it: htmx sends the page's address in the `HX-Current-URL` header, so the
+controller can read the sort order from it, as sample-01's `/dialog` page does.
 
 Without JavaScript the same buttons need a page of their own for the question, or a form per row with
 `<sl:alert-dialog>` in the page and a `type="submit"` action.
