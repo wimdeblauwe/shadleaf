@@ -14,8 +14,6 @@ p { margin: 0 0 0.75rem; }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.875em; }
 
 .page-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-.theme-toggle { display: flex; gap: 0.25rem; }
-.theme-toggle [aria-pressed='true'] { background: var(--muted); }
 .row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
 
 /* Ladder rung 3: token overrides, scoped here to one block; on :root they rebrand the whole page. */

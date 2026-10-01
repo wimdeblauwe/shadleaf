@@ -189,6 +189,15 @@ same detail as Sonner's options: `{title, description, variant, duration}`. `toa
 `variant` (`success`, `info`, `warning`, `error`); `visibleToasts` is `visible-toasts`. See
 [Toast](../components/toast/).
 
+### Theme toggle: a component, no `ThemeProvider`
+
+shadcn's dark mode is next-themes: a `ThemeProvider` around the app and a `ModeToggle` you copy from the docs. Shadleaf
+has the theme script in the layout's `<head>` (the provider's part: the `dark` class before the first paint) and
+`<sl:theme-toggle/>`, the same menu with Light, Dark and System, its items checked by the current choice
+(`menuitemradio`s; shadcn's are plain items). `as="button"` is the one-button switch of shadcn's own site. The choice
+is stored under `localStorage['shadleaf-theme']` (next-themes uses `theme`), and System removes it. There is no
+`useTheme()`: the `sl-theme-change` event tells a script about a change. See [Theme toggle](../components/theme-toggle/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a

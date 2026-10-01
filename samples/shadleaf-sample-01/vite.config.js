@@ -21,8 +21,7 @@ export default defineConfig({
         manifest: true,
         rollupOptions: {
             input: [
-                '/static/css/application.css',
-                '/static/js/theme-toggle.js'
+                '/static/css/application.css'
             ]
         },
         outDir: path.join(projectDir, `./target/classes/static`),

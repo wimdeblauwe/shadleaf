@@ -2321,6 +2321,148 @@
         "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:theme-toggle",
+        "description" : "Switches the page between the light and the dark theme, and remembers the choice in the browser under the key the theme script (`sl/layout :: theme-script`) reads before the first paint, so the next page starts in it. By default an icon button opening a menu with Light, Dark and System; with `as=\"button\"` one button that switches between light and dark. Its icon shows the theme the page is in. Needs Alpine; without JavaScript it is not shown. Every attribute that is not a prop passes through to the button.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "`menu`: a menu with Light, Dark and System (`menuitemradio`s). `button`: one toggle button for dark mode (`aria-pressed`), which cannot go back to following the system.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "menu"
+          }, {
+            "name" : "button"
+          } ],
+          "default" : "menu"
+        }, {
+          "name" : "id",
+          "description" : "The menu's id (its button gets the id with `-trigger` added). Two menus on a page need different ids. With `as=\"button\"` it is the button's id, rendered only when set.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "theme-toggle"
+        }, {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "outline"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button: one of `sl:button`'s icon sizes.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "icon"
+        }, {
+          "name" : "side",
+          "description" : "The side of the button the menu opens on, as on `sl:dropdown-menu-content`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ],
+          "default" : "bottom"
+        }, {
+          "name" : "align",
+          "description" : "How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`: `end` lines up the end edges.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "end"
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:toast",
         "description" : "One toast in a `sl:toaster`: a title, an optional description and a close button. The server renders it for a message that has to show when the page loads, such as a flash attribute after a redirect, or in an out-of-band swap. Content of its own replaces the description. A toast goes away by itself, so it must never hold the only way to do something.",
         "attributes" : [ {

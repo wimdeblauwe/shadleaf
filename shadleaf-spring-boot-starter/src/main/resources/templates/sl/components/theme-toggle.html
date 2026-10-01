@@ -1,0 +1,68 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Switches the page between the light and the dark theme, and remembers the choice in the browser
+      under the key the theme script (<code>sl/layout :: theme-script</code>) reads before the first paint, so the
+      next page starts in it. By default an icon button opening a menu with Light, Dark and System; with
+      <code>as="button"</code> one button that switches between light and dark. Its icon shows the theme the page is
+      in. Needs Alpine; without JavaScript it is not shown. Every attribute that is not a prop passes through to the
+      button.</sl:description>
+    <sl:prop name="as" default="menu" values="menu button"><code>menu</code>: a menu with Light, Dark and System
+      (<code>menuitemradio</code>s). <code>button</code>: one toggle button for dark mode
+      (<code>aria-pressed</code>), which cannot go back to following the system.</sl:prop>
+    <sl:prop name="id" default="theme-toggle">The menu's id (its button gets the id with <code>-trigger</code> added). Two menus
+      on a page need different ids. With <code>as="button"</code> it is the button's id, rendered only when set.
+      </sl:prop>
+    <sl:prop name="variant" default="outline" values="default outline ghost destructive secondary link">Visual style
+      of the button, as on <code>sl:button</code>.</sl:prop>
+    <sl:prop name="size" default="icon" values="icon icon-xs icon-sm icon-lg">Size of the button: one of
+      <code>sl:button</code>'s icon sizes.</sl:prop>
+    <sl:prop name="side" default="bottom" values="top right bottom left">The side of the button the menu opens on,
+      as on <code>sl:dropdown-menu-content</code>.</sl:prop>
+    <sl:prop name="align" default="end" values="start center end">How the menu lines up with the button along that
+      side, as on <code>sl:dropdown-menu-content</code>: <code>end</code> lines up the end edges.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* A wrapper without a box (display: contents) for slThemeToggle, which marks the stored choice (aria-checked) or
+  the dark mode (aria-pressed) once it runs: the server cannot know either. The icon needs no script: CSS shows the
+  sun or the moon from the dark class the theme script set before the first paint. The name is a message, or the
+  caller's aria-label (a th:aria-label replaces the one below, as sl:attrs replaces attributes). Attributes on a nested component are evaluated in its template, where props are its own: so
+  the values come from local variables. */-->
+<div th:fragment="theme-toggle"
+     class="theme-toggle"
+     x-data="slThemeToggle"
+     th:with="slLabel=${attrs['aria-label'] ?: #messages.msg(props.as == 'menu' ? 'sl.theme-toggle.label' : 'sl.theme-toggle.dark-mode')},
+              slAttrs=${attrs.containsKey('th:aria-label') ? attrs : attrs.without('aria-label')},
+              slButtonId=${props.unlessDefault('id')}">
+  <sl:dropdown-menu th:if="${props.as == 'menu'}" th:id="${props.id}">
+    <sl:dropdown-menu-trigger class="theme-toggle-trigger"
+                              th:variant="${props.variant}"
+                              th:size="${props.size}"
+                              th:aria-label="${slLabel}"
+                              sl:attrs="${slAttrs}"><th:block
+        th:replace="~{sl/components/theme-toggle :: theme-icons}"/></sl:dropdown-menu-trigger>
+    <sl:dropdown-menu-content th:side="${props.side}" th:align="${props.align}">
+      <sl:dropdown-menu-radio-group>
+        <sl:dropdown-menu-radio-item data-theme-choice="light"><sl:icon name="sun"/>[[#{sl.theme-toggle.light}]]</sl:dropdown-menu-radio-item>
+        <sl:dropdown-menu-radio-item data-theme-choice="dark"><sl:icon name="moon"/>[[#{sl.theme-toggle.dark}]]</sl:dropdown-menu-radio-item>
+        <sl:dropdown-menu-radio-item data-theme-choice="system"><sl:icon name="monitor"/>[[#{sl.theme-toggle.system}]]</sl:dropdown-menu-radio-item>
+      </sl:dropdown-menu-radio-group>
+    </sl:dropdown-menu-content>
+  </sl:dropdown-menu>
+  <sl:button th:unless="${props.as == 'menu'}"
+             class="theme-toggle-trigger theme-toggle-button"
+             th:variant="${props.variant}"
+             th:size="${props.size}"
+             th:id="${slButtonId}"
+             th:aria-label="${slLabel}"
+             sl:attrs="${slAttrs}"><th:block
+      th:replace="~{sl/components/theme-toggle :: theme-icons}"/></sl:button>
+</div>
+
+<!--/* Both icons, decorative; CSS shows the one for the theme the page is in. */-->
+<th:block th:fragment="theme-icons"><sl:icon name="sun" class="theme-toggle-light"/><sl:icon name="moon"
+    class="theme-toggle-dark"/></th:block>
+</body>
+</html>

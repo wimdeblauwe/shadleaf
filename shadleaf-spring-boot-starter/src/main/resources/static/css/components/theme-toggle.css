@@ -1,0 +1,26 @@
+/*
+  Theme toggle: structure only. The button and the menu are sl:button and sl:dropdown-menu, styled by the skins.
+
+  The wrapper has no box, so the button keeps its place in the layout. The button shows the sun in the light theme and
+  the moon in the dark one, from the dark class on <html> that the theme script sets before the first paint, so it is
+  right before any other script runs. Without JavaScript nothing can store a choice, so the toggle is not shown.
+*/
+@layer components {
+  .theme-toggle {
+    @apply contents;
+  }
+
+  .theme-toggle-light {
+    @apply dark:hidden;
+  }
+
+  .theme-toggle-dark {
+    @apply hidden dark:block;
+  }
+
+  @media (scripting: none) {
+    .theme-toggle {
+      display: none;
+    }
+  }
+}

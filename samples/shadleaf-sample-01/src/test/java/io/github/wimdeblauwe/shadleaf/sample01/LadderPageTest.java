@@ -83,10 +83,15 @@ class LadderPageTest {
   }
 
   @Test
-  void themeToggleUsesTheButton() {
-    assertThat(page.select(".theme-toggle .btn[data-theme-choice]"))
-        .hasSize(3)
-        .allSatisfy(button -> assertThat(button.attr("data-size")).isEqualTo("sm"));
+  void headerHasTheLibrarysThemeToggle() {
+    assertThat(page.select("header .theme-toggle[x-data=slThemeToggle] > button.theme-toggle-trigger"))
+        .singleElement()
+        .satisfies(button -> {
+          assertThat(button.attr("popovertarget")).isEqualTo("theme-toggle");
+          assertThat(button.attr("aria-label")).isEqualTo("Theme");
+        });
+    assertThat(page.select("#theme-toggle [data-theme-choice]")).extracting(item -> item.attr("data-theme-choice"))
+        .containsExactly("light", "dark", "system");
   }
 
   @Test

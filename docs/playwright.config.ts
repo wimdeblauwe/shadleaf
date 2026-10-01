@@ -15,8 +15,9 @@ export default defineConfig({
     // Firefox has no customizable select (appearance: base-select), so sl:select shows slSelect's list box there; it
     // cannot animate a height to auto (interpolate-size), and was later with find-in-page opening details and
     // hidden="until-found", which the accordion and the tabs use. The toaster moves into a modal dialog on its toggle
-    // and close events, and reads Alt+T by its key code.
-    {name: 'firefox', use: {...devices['Desktop Firefox']}, testMatch: /(select|disclosure|tabs|toast)\.spec\.ts/},
+    // and close events, and reads Alt+T by its key code. The theme toggle depends on the storage event between tabs, on
+    // matchMedia change events and on the scripting media feature.
+    {name: 'firefox', use: {...devices['Desktop Firefox']}, testMatch: /(select|disclosure|tabs|toast|theme-toggle)\.spec\.ts/},
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

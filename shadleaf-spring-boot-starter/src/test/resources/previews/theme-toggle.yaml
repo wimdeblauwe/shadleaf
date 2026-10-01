@@ -1,0 +1,16 @@
+# Scenarios for the theme toggle's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# Choosing in a preview stores the choice for this site, as it would in an application, and every toggle on the page
+# follows it.
+component: theme-toggle
+scenarios:
+  - id: default
+    title: Theme toggle
+    description: An icon button opening a menu with Light, Dark and System; the icon shows the page's theme.
+    source: |-
+      <sl:theme-toggle/>
+
+  - id: button
+    title: One button
+    description: as="button" switches between light and dark with one press (aria-pressed is on while dark).
+    source: |-
+      <sl:theme-toggle as="button" variant="ghost"/>

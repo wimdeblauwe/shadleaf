@@ -1,8 +1,9 @@
 import {type Page} from '@playwright/test';
 import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
+import themeScript from '../src/generated/theme-script.json' with {type: 'json'};
 
-// Fixture pages for disclosure.spec.ts and tabs.spec.ts, served from a made-up origin under a strict
+// Fixture pages for disclosure.spec.ts, tabs.spec.ts and theme-toggle.spec.ts, served from a made-up origin under a strict
 // Content-Security-Policy, with the csp Alpine build (or no Alpine at all) and optionally htmx. The page at / and every
 // route get the request's URL, so a fixture can render what a server would for ?tab=...
 
@@ -27,11 +28,13 @@ export type FixtureOptions = {
   routes?: Routes,
   /** Where to go first, e.g. '/#refunds' or '/?tab=b'. */
   path?: string,
+  /** Put the theme script (sl/layout :: theme-script) first in the head, allowed by its hash. */
+  theme?: boolean,
 };
 
 /** Serves `main` at /, and `routes` for other paths; returns what the console said (errors, warnings, CSP). */
 export async function openFixture(page: Page, main: string | ((url: URL) => string),
-    {alpine = true, htmx = false, routes = {}, path = '/'}: FixtureOptions = {}): Promise<string[]> {
+    {alpine = true, htmx = false, routes = {}, path = '/', theme = false}: FixtureOptions = {}): Promise<string[]> {
   const messages: string[] = [];
   page.on('console', message => {
     // Firefox warns about deprecated globals when Alpine scans window; that is not the fixture's doing.
@@ -43,6 +46,7 @@ export async function openFixture(page: Page, main: string | ((url: URL) => stri
   await page.addInitScript(() => document.addEventListener('securitypolicyviolation',
       event => console.error(`CSP violation: ${event.violatedDirective}`)));
   const document = (content: string) => `<!doctype html><html lang="en"><head><title>Fixture</title>`
+      + (theme ? `<script>${themeScript.script}</script>` : '')
       + `<link rel="stylesheet" href="/${css}">`
       + (htmx ? `${HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
       + (alpine ? `<script type="module" src="/${scripts.csp}"></script>` : '')
@@ -56,7 +60,8 @@ export async function openFixture(page: Page, main: string | ((url: URL) => stri
     if (url.pathname.startsWith('/shadleaf/')) {
       return route.fulfill({path: join(PUBLIC_DIR, url.pathname)});
     }
-    const headers = {'Content-Security-Policy': STRICT_CSP};
+    const headers = {'Content-Security-Policy': theme
+        ? STRICT_CSP.replace("script-src 'self'", `script-src 'self' ${themeScript.cspHash}`) : STRICT_CSP};
     if (url.pathname === '/') {
       const content = typeof main === 'string' ? main : main(url);
       return route.fulfill({contentType: 'text/html', headers, body: document(content)});

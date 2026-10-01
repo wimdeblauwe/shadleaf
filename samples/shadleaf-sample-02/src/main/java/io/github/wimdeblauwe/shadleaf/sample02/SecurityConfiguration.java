@@ -17,7 +17,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(requests -> requests
             // Everything Shadleaf serves lives under /shadleaf/**: one matcher for the library's assets.
             .requestMatchers("/shadleaf/**").permitAll()
-            .requestMatchers("/css/**", "/js/**").permitAll()
+            .requestMatchers("/css/**").permitAll()
             .anyRequest().authenticated())
         .formLogin(login -> login.loginPage("/login").permitAll())
         .headers(headers -> headers.addHeaderWriter(new CspHeaderWriter(csp.mode(), themeScript)));
