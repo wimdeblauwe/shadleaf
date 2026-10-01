@@ -10,6 +10,16 @@ const skins = Object.fromEntries(previews.skins.map(skin => [skin.name, withBase
 const firstSkin = previews.skins[0]?.name ?? '';
 // A scenario can stay off the showcase (showcase: false): a toast shown at load would get in other tests' way.
 const scenarios = previews.scenarios.filter(s => s.showcase !== false);
+// An application shell (sl:sidebar-provider) holds the page's <main> and navigation, which cannot sit inside another
+// landmark. So the other scenarios go in a labelled region (axe wants all content in a landmark), and a shell scenario
+// follows it, at the top level, as a page's shell would be; its headings stay in the region. A page has one main, so
+// only one shell scenario may be on the showcase.
+const isShell = (scenario: {html: string}) => scenario.html.includes('class="sidebar-provider"');
+const shells = scenarios.filter(isShell);
+if (shells.length > 1) {
+  throw new Error(`Only one application shell fits on the showcase; set showcase: false on all but one of ${
+      shells.map(s => s.id).join(', ')}`);
+}
 const components = [...new Set(scenarios.map(s => s.component))];
 const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : undefined;
 ---
@@ -44,10 +54,13 @@ const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : 
     /* An accordion fills its container, tabs and a collapsible fit their content: give them a width too. */
     .stage > :global(.accordion) { max-inline-size: 32rem; }
     .stage > :global(:is(.tabs, .collapsible)) { inline-size: 24rem; max-inline-size: 100%; }
+    /* An application shell is as tall as the screen; on the showcase, as tall as a few links need. */
+    .stage > :global(.sidebar-provider) { min-block-size: 24rem; }
+    .stage > :global(.sidebar-provider > .sidebar) { block-size: auto; align-self: stretch; }
   </style>
 </head>
 <body>
-<main>
+<div class="showcase" role="region" aria-label="Showcase">
   <h1>Shadleaf showcase</h1>
   {previews.scenarios.length === 0 && <p>No previews: run <code>pnpm run generate</code> in docs/.</p>}
   {components.map(component => (
@@ -56,11 +69,12 @@ const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : 
       {scenarios.filter(s => s.component === component).map(scenario => (
         <>
           <h3>{scenario.title ?? scenario.id}</h3>
-          <div class="stage" data-scenario={scenario.id} set:html={scenario.html}/>
+          {!isShell(scenario) && <div class="stage" data-scenario={scenario.id} set:html={scenario.html}/>}
         </>
       ))}
     </section>
   ))}
-</main>
+</div>
+{shells.map(scenario => <div class="showcase stage" data-scenario={scenario.id} set:html={scenario.html}/>)}
 </body>
 </html>

@@ -23,16 +23,16 @@ for (const {skin, theme} of combinations) {
   test(`every dialog, alert dialog and sheet works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
     await page.waitForFunction(() => 'Alpine' in window);
-    const ids = await page.locator('main dialog:is(.dialog, .alert-dialog, .sheet)')
+    const ids = await page.locator('.showcase dialog:is(.dialog, .alert-dialog, .sheet)')
         .evaluateAll(dialogs => dialogs.map(dialog => dialog.id));
     for (const kind of ['dialog', 'alert-dialog', 'sheet']) {
-      expect(await page.locator(`main dialog.${kind}`).count(), `the showcase has a ${kind}`).toBeGreaterThan(0);
+      expect(await page.locator(`.showcase dialog.${kind}`).count(), `the showcase has a ${kind}`).toBeGreaterThan(0);
     }
 
     const failures: string[] = [];
     for (const id of ids) {
       const dialog = page.locator(`#${id}`);
-      const trigger = page.locator(`main button[commandfor="${id}"][command="show-modal"]`);
+      const trigger = page.locator(`.showcase button[commandfor="${id}"][command="show-modal"]`);
       await trigger.focus();
       await page.keyboard.press('Enter');
       await waitUntilOpen(dialog);
@@ -82,7 +82,7 @@ test('a click outside, the close button and a close command close a dialog', asy
   await openShowcase(page, 'vega', 'light');
   await page.waitForFunction(() => 'Alpine' in window);
   const dialog = page.locator('#edit-profile');
-  const trigger = page.locator('main button[commandfor="edit-profile"][command="show-modal"]');
+  const trigger = page.locator('.showcase button[commandfor="edit-profile"][command="show-modal"]');
 
   await trigger.click();
   await waitUntilOpen(dialog);
@@ -106,7 +106,7 @@ test('an alert dialog stays open on a click outside; Cancel closes it', async ({
   await openShowcase(page, 'vega', 'light');
   await page.waitForFunction(() => 'Alpine' in window);
   const dialog = page.locator('#delete-account');
-  const trigger = page.locator('main button[commandfor="delete-account"][command="show-modal"]');
+  const trigger = page.locator('.showcase button[commandfor="delete-account"][command="show-modal"]');
 
   await trigger.click();
   await waitUntilOpen(dialog);
@@ -128,7 +128,7 @@ test('a click outside and the close buttons close a sheet', async ({page}) => {
   await openShowcase(page, 'vega', 'light');
   await page.waitForFunction(() => 'Alpine' in window);
   const sheet = page.locator('#sheet-right');
-  const trigger = page.locator('main button[commandfor="sheet-right"][command="show-modal"]');
+  const trigger = page.locator('.showcase button[commandfor="sheet-right"][command="show-modal"]');
 
   await trigger.click();
   await waitUntilOpen(sheet);
@@ -148,7 +148,7 @@ test('a click outside and the close buttons close a sheet', async ({page}) => {
 
 /** Where an open sheet sits in the viewport. */
 async function edges(page: Page, id: string) {
-  await page.locator(`main button[commandfor="${id}"][command="show-modal"]`).click();
+  await page.locator(`.showcase button[commandfor="${id}"][command="show-modal"]`).click();
   const sheet = page.locator(`#${id}`);
   await waitUntilOpen(sheet);
   const viewport = page.viewportSize()!;
@@ -197,7 +197,7 @@ test('a sheet slides in from its edge only where motion is fine', async ({page})
   await page.evaluate(() => document.documentElement.removeAttribute('dir'));
 
   await page.waitForFunction(() => 'Alpine' in window);
-  await page.locator('main button[commandfor="sheet-right"][command="show-modal"]').click();
+  await page.locator('.showcase button[commandfor="sheet-right"][command="show-modal"]').click();
   const sheet = page.locator('#sheet-right');
   await waitUntilOpen(sheet);
   await expect.poll(() => translate('sheet-right')).toBe('0px');

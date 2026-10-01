@@ -1,0 +1,158 @@
+---
+title: Sidebar
+description: The application's navigation beside the page, and a panel over it on a phone.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="sidebar--default" />
+
+:::note[Being built]
+This is the sidebar's frame: the provider, the sidebar, the trigger and the inset, with collapsing, the phone panel
+and the remembered state. The parts that go inside it (header, groups, menus with active items, badges), the
+breadcrumb, a skip link, collapsing to icons and a header layout follow in the next releases. Until then, put your own
+links in the sidebar.
+:::
+
+## Built from parts
+
+An application shell with a sidebar is four components, as in shadcn/ui:
+
+- `<sl:sidebar-provider>` wraps the whole page and holds the state: is the sidebar expanded or collapsed on a desktop.
+- `<sl:sidebar>` is the navigation itself: a `<nav>` landmark named "Main".
+- `<sl:sidebar-inset>` is the page's `<main>`, beside the sidebar.
+- `<sl:sidebar-trigger>` is the icon button that collapses the sidebar, or opens it on a phone. It usually sits in a
+  header at the top of the inset.
+
+```html
+<body>
+<sl:sidebar-provider>
+  <sl:sidebar>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/people}">People</a>
+  </sl:sidebar>
+  <sl:sidebar-inset id="content">
+    <header>
+      <sl:sidebar-trigger/>
+    </header>
+    <div th:replace="${content}"></div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+</body>
+```
+
+Put the sidebar straight inside the provider (not in an element of your own): the CSS that collapses it looks for it
+there.
+
+## One element for a desktop and a phone
+
+The server does not know how wide the screen is, so the sidebar is one element for both:
+
+- **From 768 px** (shadcn's `md`) it is a column beside the page, as tall as the screen and sticky while the page
+  scrolls. The trigger, or **Ctrl+B** (**⌘B** on a Mac), collapses it out of view and expands it again. A collapsed
+  sidebar's links leave the tab order.
+- **Below 768 px** it is hidden, and the trigger opens it as a panel over the page, with the page dimmed behind it.
+  The focus moves to the current page's link (`aria-current="page"`) or the first link. Tab stays in the panel, and the
+  rest of the page is inert, so a screen reader finds only the navigation. Escape, a click outside, Ctrl/⌘B, following
+  one of its links and widening the window past 768 px close it, and the focus goes back to the trigger.
+
+The sidebar is a [popover](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) (`<nav popover>`): the
+browser shows the panel in the top layer and closes it on Escape or a click outside, without script. On a desktop the
+CSS shows it in the page instead, where it is a plain navigation landmark.
+
+Ctrl/⌘B does nothing while the focus is in a rich text editor (`contenteditable`), where it means bold.
+
+## The state is remembered
+
+When the user collapses or expands the sidebar, the browser stores the choice in a cookie, `sl-sidebar-state`
+(`expanded` or `collapsed`, for a year, the whole site). `<sl:sidebar-provider>` reads it on the server, so the next
+page renders in the same state from the first paint: nothing jumps, with or without htmx.
+
+- `default-state="collapsed"` starts collapsed until the user chooses.
+- `state` renders a state whatever the cookie says, for an application that keeps the choice itself, such as in the
+  user's settings: `<sl:sidebar-provider th:state="${settings.sidebar}">`. Listen to `sl-sidebar-toggle` (below) to
+  save it.
+
+<ComponentPreview id="sidebar--collapsed" />
+
+The phone panel ignores the state: it always opens with everything in it.
+
+## Side
+
+`side="end"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
+The default, `start`, is the left, or the right on a right-to-left page. The panel slides in from the same edge.
+
+<ComponentPreview id="sidebar--side" />
+
+## Trigger
+
+The trigger is a ghost icon button with a panel icon (turned around on a right-to-left page), named "Toggle sidebar"
+(the message `sl.sidebar.trigger`). An `aria-label` replaces the name, and content of its own replaces the icon:
+
+```html
+<sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+```
+
+`for` points it at a sidebar with another `id` than `sidebar`. `variant` and `size` are the button's (icon sizes only).
+
+## Motion
+
+On a desktop the sidebar slides out and the page widens with it; on a phone the panel slides in from its edge and the
+backdrop fades. With reduced motion (`prefers-reduced-motion: reduce`) the changes are immediate.
+
+## Without JavaScript
+
+The phone panel still opens and closes: that is the browser's popover. It is not modal then (Tab can leave it), and it
+stays open when one of its links goes to a place on the same page. On a desktop nothing can collapse the sidebar, so
+the trigger is hidden there (`@media (scripting: none)`); the sidebar shows in the state the cookie asked for.
+
+## htmx
+
+With `hx-boost` on the body, every page comes from the server with the sidebar in the cookie's state and the panel
+closed. Boosting only the main area works too: following a link in the panel closes it, and a trigger htmx swaps in is
+set up again. Going back through htmx's history shows the page with the panel closed (whether a popover is open is not
+part of the markup htmx saves, and the panel closes before htmx takes its snapshot).
+
+## Left out
+
+For now:
+
+- the parts inside the sidebar, the breadcrumb, a skip link and the active page (next);
+- `collapsible="icon"` (collapsing to a strip of icons, with tooltips) and `collapsible="none"`;
+- `variant="floating"` and `variant="inset"`;
+- `SidebarRail`, the strip along the sidebar's edge that toggles it;
+- a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page.
+
+## Attributes
+
+### sl:sidebar-provider
+
+<ComponentAttributes component="sidebar-provider" />
+
+### sl:sidebar
+
+<ComponentAttributes component="sidebar" />
+
+### sl:sidebar-trigger
+
+<ComponentAttributes component="sidebar-trigger" />
+
+### sl:sidebar-inset
+
+<ComponentAttributes component="sidebar-inset" />
+
+## JavaScript
+
+A small Alpine component, `slSidebar`, does the work: `<sl:sidebar-provider>` renders as
+`<div class="sidebar-provider" x-data="slSidebar" data-state="expanded">`.
+
+- **It needs Alpine**, and no Alpine plugin. It writes the cookie itself (a plain cookie, not `$persist`, which would
+  store JSON in the browser where the server cannot read it). Alpine is included by default; see
+  [Alpine](../../guides/alpine/).
+- **On a desktop it takes `popovertarget` off the trigger** and sets `aria-expanded` from the state instead: browsers
+  report a `popovertarget` button as collapsed while its popover is closed, which the sidebar on a desktop always is.
+  Below 768 px it puts it back. It finds the trigger by its `aria-controls`.
+- **It fires `sl-sidebar-toggle`** on the provider (it bubbles) after the user collapses or expands the sidebar and when
+  the panel opens or closes: `detail` is `{state: 'expanded' | 'collapsed', open, mobile}`.
+- **Keep your own `x-data` off `<sl:sidebar-provider>`**: it would replace `slSidebar`. Put it on an element inside.

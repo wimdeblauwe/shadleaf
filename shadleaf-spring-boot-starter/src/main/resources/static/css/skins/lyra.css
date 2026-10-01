@@ -972,4 +972,26 @@
   .pagination-size-label {
     @apply text-xs font-medium;
   }
+
+  /*
+    Sidebar. shadcn's widths: 16rem beside the page, 18rem as the panel on a phone. The sidebar has its own colours
+    (--sidebar*), the inset the page's.
+  */
+  .sidebar-provider {
+    --sidebar-width: 16rem;
+    --sidebar-width-mobile: 18rem;
+  }
+
+  .sidebar {
+    @apply border-sidebar-border bg-sidebar text-xs/relaxed text-sidebar-foreground duration-200 ease-linear
+      backdrop:bg-black/10 backdrop:duration-200 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .sidebar:popover-open {
+    @apply shadow-lg;
+  }
+
+  .sidebar-inset {
+    @apply bg-background;
+  }
 }

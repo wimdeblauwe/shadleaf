@@ -43,7 +43,7 @@ for (const {skin, theme} of combinations) {
   test(`every tabs works with the keyboard and passes axe: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
     await page.waitForFunction(() => 'Alpine' in window);
-    const ids = await page.locator('main .tabs').evaluateAll(all => all.map(tabs => tabs.id));
+    const ids = await page.locator('.showcase .tabs').evaluateAll(all => all.map(tabs => tabs.id));
     expect(ids.length, 'the showcase has tabs').toBeGreaterThan(0);
 
     const failures: string[] = [];

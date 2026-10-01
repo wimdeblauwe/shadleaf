@@ -1,0 +1,67 @@
+# Scenarios for the sidebar's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# The sidebar's own content parts (groups, menus) come in a later step: these use ghost link buttons for the links.
+# A page holds one sidebar and one main, so only the first scenario is on the showcase (which puts it after its region
+# of other components, as a page's shell).
+component: sidebar
+parts: [sidebar-provider, sidebar-trigger, sidebar-inset]
+scenarios:
+  - id: default
+    title: Sidebar
+    description: >-
+      Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or
+      Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page.
+    source: |-
+      <sl:sidebar-provider>
+        <sl:sidebar>
+          <sl:button as="a" href="/" variant="ghost" aria-current="page">Home</sl:button>
+          <sl:button as="a" href="/inbox" variant="ghost">Inbox</sl:button>
+          <sl:button as="a" href="/calendar" variant="ghost">Calendar</sl:button>
+          <sl:button as="a" href="/settings" variant="ghost">Settings</sl:button>
+        </sl:sidebar>
+        <sl:sidebar-inset id="content">
+          <header>
+            <sl:sidebar-trigger/>
+          </header>
+          <h1>Home</h1>
+          <p>The page's content.</p>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+
+  - id: side
+    title: On the end
+    description: side="end" puts the sidebar on the end of the line (the right, or the left on a right-to-left page).
+    showcase: false
+    source: |-
+      <sl:sidebar-provider>
+        <sl:sidebar id="sidebar-end" side="end">
+          <sl:button as="a" href="/" variant="ghost" aria-current="page">Home</sl:button>
+          <sl:button as="a" href="/inbox" variant="ghost">Inbox</sl:button>
+          <sl:button as="a" href="/settings" variant="ghost">Settings</sl:button>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <header>
+            <sl:sidebar-trigger for="sidebar-end"/>
+          </header>
+          <h1>Home</h1>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+
+  - id: collapsed
+    title: Collapsed
+    description: >-
+      state="collapsed" renders the sidebar collapsed whatever the cookie says, for an application that keeps the
+      choice itself; default-state="collapsed" only until the user chose.
+    showcase: false
+    source: |-
+      <sl:sidebar-provider state="collapsed">
+        <sl:sidebar id="sidebar-collapsed">
+          <sl:button as="a" href="/" variant="ghost" aria-current="page">Home</sl:button>
+          <sl:button as="a" href="/settings" variant="ghost">Settings</sl:button>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <header>
+            <sl:sidebar-trigger for="sidebar-collapsed"/>
+          </header>
+          <h1>Home</h1>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>

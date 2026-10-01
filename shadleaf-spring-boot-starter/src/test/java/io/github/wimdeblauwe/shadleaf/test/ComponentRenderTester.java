@@ -8,6 +8,7 @@ import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
 import io.github.wimdeblauwe.shadleaf.icon.IconSource;
 import io.github.wimdeblauwe.shadleaf.icon.LucideIconSource;
 import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
+import jakarta.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -63,6 +64,7 @@ public final class ComponentRenderTester {
   private final String contextPath;
   private final String requestUri;
   private final Map<String, Object> requestAttributes;
+  private final Map<String, String> cookies;
 
   private ComponentRenderTester(Builder builder) {
     ClassLoaderTemplateResolver componentResolver = new ClassLoaderTemplateResolver();
@@ -100,6 +102,7 @@ public final class ComponentRenderTester {
     contextPath = builder.contextPath;
     requestUri = builder.requestUri;
     requestAttributes = Map.copyOf(builder.requestAttributes);
+    cookies = Map.copyOf(builder.cookies);
   }
 
   /** The library's components, the bundled lucide icons and the built-in messages, at context path {@code ""}. */
@@ -129,6 +132,11 @@ public final class ComponentRenderTester {
     }
     request.addPreferredLocale(locale);
     requestAttributes.forEach(request::setAttribute);
+    if (!cookies.isEmpty()) {
+      request.setCookies(cookies.entrySet().stream()
+          .map(cookie -> new Cookie(cookie.getKey(), cookie.getValue()))
+          .toArray(Cookie[]::new));
+    }
     MockHttpServletResponse response = new MockHttpServletResponse();
     WebContext context = new WebContext(webApplication.buildExchange(request, response), locale);
     variables.forEach(context::setVariable);
@@ -158,6 +166,7 @@ public final class ComponentRenderTester {
 
     private final List<IconSource> iconSources = new ArrayList<>();
     private final Map<String, Object> requestAttributes = new LinkedHashMap<>();
+    private final Map<String, String> cookies = new LinkedHashMap<>();
     private @Nullable IDialect dialect;
     private @Nullable MessageSource messageSource;
     private Locale locale = Locale.ENGLISH;
@@ -219,6 +228,12 @@ public final class ComponentRenderTester {
     /** A request attribute, visible to templates as a context variable, like a CSP nonce. */
     public Builder requestAttribute(String name, Object value) {
       requestAttributes.put(name, value);
+      return this;
+    }
+
+    /** A cookie the request sends, such as the sidebar's {@code sl-sidebar-state}. */
+    public Builder cookie(String name, String value) {
+      cookies.put(name, value);
       return this;
     }
 

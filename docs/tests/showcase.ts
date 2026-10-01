@@ -4,6 +4,15 @@ import previews from '../src/generated/previews.json' with {type: 'json'};
 export const skins: string[] = previews.skins.map(skin => skin.name);
 export const themes = ['light', 'dark'] as const;
 
+/**
+ * The widths the showcase is checked at: Playwright's desktop, and a phone, where the sidebar is a closed panel and its
+ * trigger opens it (768 px is the sidebar's breakpoint).
+ */
+export const widths = [
+  {name: 'desktop', viewport: {width: 1280, height: 720}},
+  {name: 'phone', viewport: {width: 390, height: 844}},
+] as const;
+
 /** Every skin in both themes: the combinations the showcase is checked in. */
 export const combinations = skins.flatMap(skin => themes.map(theme => ({skin, theme})));
 

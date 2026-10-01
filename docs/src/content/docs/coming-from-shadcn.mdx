@@ -229,6 +229,18 @@ hidden screen-reader text is never read. The labels are messages (`sl.pagination
 Previous's `text`. The data table's footer pieces are components: `sl:pagination-summary` ("11–20 of 270") and
 `sl:pagination-size` (a menu of links rather than a select). See [Pagination](../components/pagination/).
 
+### Sidebar: one element instead of a Sheet on a phone
+
+shadcn's `Sidebar` renders a `Sheet` on a phone and a separate sidebar on a desktop, chosen in the browser by
+`useIsMobile()`. The server does not know the screen's width, and rendering the navigation twice would double its
+markup and its ids, so `<sl:sidebar>` is one `<nav popover>`: CSS shows it beside the page from 768 px, and below that
+the trigger opens it as the panel (focus in, the rest of the page inert while it is open). The state lives on
+`<sl:sidebar-provider>`'s `data-state` (shadcn also puts it on the sidebar), the cookie is `sl-sidebar-state` with
+`expanded` or `collapsed` (shadcn's `sidebar_state` holds `true` or `false`) for a year instead of a week, and the
+server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
+the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
+the text direction. Only `collapsible="offcanvas"` so far. See [Sidebar](../components/sidebar/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a

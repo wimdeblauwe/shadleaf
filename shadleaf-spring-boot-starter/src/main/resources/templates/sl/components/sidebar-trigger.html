@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The icon button that collapses and expands the <code>sl:sidebar</code> on a desktop and opens its
+      panel on a phone. Named "Toggle sidebar" (<code>sl.sidebar.trigger</code>; an <code>aria-label</code> replaces
+      it); content of its own replaces the icon. Without JavaScript it is hidden on a desktop, where it could not do
+      anything, and still opens the panel on a phone. Any other attribute passes through to the
+      <code>sl:button</code>.</sl:description>
+    <sl:prop name="for" default="sidebar">The <code>id</code> of the sidebar it toggles.</sl:prop>
+    <sl:prop name="variant" default="ghost" values="default outline ghost destructive secondary link">Visual style
+      of the button, as on <code>sl:button</code>.</sl:prop>
+    <sl:prop name="size" default="icon-sm" values="icon icon-xs icon-sm icon-lg">Size of the button: one of
+      <code>sl:button</code>'s icon sizes.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* A sl:button: sl:attrs puts this part's other attributes on it before it is rendered, so they reach the
+  button's props. popovertarget opens the phone panel without script; on a desktop slSidebar takes it off (a
+  popovertarget would make browsers report the button as collapsed) and sets aria-expanded instead. aria-controls
+  stays, so slSidebar finds the trigger at both widths. Its own th:with values: attributes on a nested component are
+  evaluated in its template, where props are its own. A caller's aria-label replaces the message (a th:aria-label
+  replaces the one below, as sl:attrs replaces attributes). */-->
+<th:block th:fragment="sidebar-trigger"
+          th:with="slSidebarFor=${props.for},
+                   slSidebarLabel=${attrs['aria-label'] ?: #messages.msg('sl.sidebar.trigger')},
+                   slAttrs=${attrs.containsKey('th:aria-label') ? attrs : attrs.without('aria-label')}"><sl:button
+    class="sidebar-trigger"
+    th:variant="${props.variant}"
+    th:size="${props.size}"
+    th:popovertarget="${slSidebarFor}"
+    th:aria-controls="${slSidebarFor}"
+    th:aria-label="${slSidebarLabel}"
+    sl:attrs="${slAttrs}"><sl:slot><sl:icon name="panel-left" class="sidebar-trigger-icon"/></sl:slot></sl:button></th:block>
+</body>
+</html>

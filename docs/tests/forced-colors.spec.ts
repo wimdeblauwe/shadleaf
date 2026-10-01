@@ -38,24 +38,24 @@ for (const skin of skins) {
         }
       };
 
-      const controls = [...document.querySelectorAll('main :is(input:not([type=hidden]), select, textarea)')]
+      const controls = [...document.querySelectorAll('.showcase :is(input:not([type=hidden]), select, textarea)')]
           .filter(control => control.matches(':disabled'));
       for (const control of controls) {
         check(control, !control.matches('[type=checkbox], [type=radio]'));
       }
-      for (const label of document.querySelectorAll<HTMLLabelElement>('main label')) {
+      for (const label of document.querySelectorAll<HTMLLabelElement>('.showcase label')) {
         if (label.control?.matches(':disabled')) {
           check(label, true);
         }
       }
-      for (const legend of document.querySelectorAll('main fieldset:disabled > legend')) {
+      for (const legend of document.querySelectorAll('.showcase fieldset:disabled > legend')) {
         check(legend, true);
       }
-      for (const icon of document.querySelectorAll('main :is(.native-select-wrapper, .select-wrapper):has(> select:disabled) > svg')) {
+      for (const icon of document.querySelectorAll('.showcase :is(.native-select-wrapper, .select-wrapper):has(> select:disabled) > svg')) {
         check(icon, true);
       }
       // A disabled accordion item's or collapsible's trigger, and a disabled tab.
-      for (const trigger of document.querySelectorAll('main :is(details[data-disabled] > summary, '
+      for (const trigger of document.querySelectorAll('.showcase :is(details[data-disabled] > summary, '
           + '[role=tab]:is(:disabled, [aria-disabled=true]))')) {
         check(trigger, true);
       }
@@ -73,7 +73,7 @@ test('a focused menu item draws an outline in forced-colors mode', async ({page}
   await page.emulateMedia({forcedColors: 'active'});
   await openShowcase(page, skins[0], 'light');
   await page.waitForFunction(() => 'Alpine' in window);
-  const id = await page.locator('main .dropdown-menu-content').first().evaluate(menu => menu.id);
+  const id = await page.locator('.showcase .dropdown-menu-content').first().evaluate(menu => menu.id);
   await page.locator(`#${id}-trigger`).focus();
   await page.keyboard.press('Enter');
   await expect(page.locator(`#${id} [role^="menuitem"]`).first()).toBeFocused();
@@ -93,8 +93,8 @@ test('accordion, collapsible and tabs show focus and the active tab in forced-co
   await openShowcase(page, skins[0], 'light');
   await page.waitForFunction(() => 'Alpine' in window);
 
-  const selectors = ['main .accordion-trigger:not([tabindex="-1"])', 'main .collapsible-trigger:not([tabindex="-1"])',
-    'main .tabs-trigger[aria-selected=true]', 'main .tabs-content:not([hidden])'];
+  const selectors = ['.showcase .accordion-trigger:not([tabindex="-1"])', '.showcase .collapsible-trigger:not([tabindex="-1"])',
+    '.showcase .tabs-trigger[aria-selected=true]', '.showcase .tabs-content:not([hidden])'];
   for (const selector of selectors) {
     const element = page.locator(selector).first();
     await element.focus();
@@ -110,7 +110,7 @@ test('accordion, collapsible and tabs show focus and the active tab in forced-co
     expect(outline.width, selector).toBeGreaterThan(0);
   }
 
-  const decoration = await page.locator('main .tabs-trigger[aria-selected=true]').first()
+  const decoration = await page.locator('.showcase .tabs-trigger[aria-selected=true]').first()
       .evaluate(tab => getComputedStyle(tab).textDecorationLine);
   expect(decoration).toBe('underline');
 });

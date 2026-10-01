@@ -1,0 +1,72 @@
+<!-- <sl:sidebar-provider>Content</sl:sidebar-provider> -->
+<div class="sidebar-provider" x-data="slSidebar" data-state="collapsed">Content</div>
+
+<!-- <sl:sidebar-provider state="expanded">Content</sl:sidebar-provider> -->
+<div class="sidebar-provider" x-data="slSidebar" data-state="expanded">Content</div>
+
+<!-- <sl:sidebar-provider state="collapsed">Content</sl:sidebar-provider> -->
+<div class="sidebar-provider" x-data="slSidebar" data-state="collapsed">Content</div>
+
+<!-- <sl:sidebar-provider default-state="expanded">Content</sl:sidebar-provider> -->
+<div class="sidebar-provider" x-data="slSidebar" data-state="collapsed">Content</div>
+
+<!-- <sl:sidebar>Links</sl:sidebar> -->
+<nav class="sidebar" id="sidebar" popover aria-label="Main">Links</nav>
+
+<!-- <sl:sidebar side="start">Links</sl:sidebar> -->
+<nav class="sidebar" id="sidebar" popover aria-label="Main">Links</nav>
+
+<!-- <sl:sidebar side="end">Links</sl:sidebar> -->
+<nav class="sidebar" id="sidebar" popover aria-label="Main" data-side="end">Links</nav>
+
+<!-- <sl:sidebar collapsible="offcanvas">Links</sl:sidebar> -->
+<nav class="sidebar" id="sidebar" popover aria-label="Main">Links</nav>
+
+<!-- <sl:sidebar id="docs-nav" aria-label="Documentation">Links</sl:sidebar> -->
+<nav class="sidebar" id="docs-nav" popover aria-label="Documentation">Links</nav>
+
+<!-- <sl:sidebar-trigger/> -->
+<button class="btn sidebar-trigger" type="button" data-variant="ghost" data-size="icon-sm" popovertarget="sidebar" aria-controls="sidebar" aria-label="Toggle sidebar">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</button>
+
+<!-- <sl:sidebar-trigger for="docs-nav" variant="outline" size="icon" aria-label="Menu"/> -->
+<button class="btn sidebar-trigger" type="button" data-variant="outline" data-size="icon" popovertarget="docs-nav" aria-controls="docs-nav" aria-label="Menu">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</button>
+
+<!-- <sl:sidebar-inset>Content</sl:sidebar-inset> -->
+<main class="sidebar-inset">Content</main>
+
+<!-- <sl:sidebar-provider>
+  <sl:sidebar>
+    <ul>
+      <li><a href="/" aria-current="page">Home</a></li>
+      <li><a href="/people">People</a></li>
+    </ul>
+  </sl:sidebar>
+  <sl:sidebar-inset id="main">
+    <header><sl:sidebar-trigger/></header>
+    <h1>Home</h1>
+  </sl:sidebar-inset>
+</sl:sidebar-provider> -->
+<div class="sidebar-provider" x-data="slSidebar" data-state="collapsed">
+  <nav class="sidebar" id="sidebar" popover aria-label="Main">
+    <ul>
+      <li>
+        <a href="/" aria-current="page">Home</a>
+      </li>
+      <li>
+        <a href="/people">People</a>
+      </li>
+    </ul>
+  </nav>
+  <main class="sidebar-inset" id="main">
+    <header>
+      <button class="btn sidebar-trigger" type="button" data-variant="ghost" data-size="icon-sm" popovertarget="sidebar" aria-controls="sidebar" aria-label="Toggle sidebar">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </header>
+    <h1>Home</h1>
+  </main>
+</div>

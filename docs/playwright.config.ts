@@ -21,7 +21,7 @@ export default defineConfig({
     // runs on the form's submit when Enter is pressed. Row selection relies on :indeterminate, change events and the
     // scripting media feature. Firefox makes a scrolling table container a tab stop of its own.
     {name: 'firefox', use: {...devices['Desktop Firefox']},
-      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|table-scroll)\.spec\.ts/},
+      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|table-scroll|sidebar)\.spec\.ts/},
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The wrapper of an application shell with a sidebar: it holds <code>sl:sidebar</code>, and
+      <code>sl:sidebar-inset</code> with the page's content (and the <code>sl:sidebar-trigger</code>), and it holds
+      whether the sidebar is expanded or collapsed on a desktop. The server renders that state from the
+      <code>sl-sidebar-state</code> cookie, which the browser writes when the user collapses or expands the sidebar
+      (the trigger, or Ctrl/⌘+B), so every page starts in it without a jump. Below 768&nbsp;px the sidebar is a panel
+      the trigger opens instead, and the state does not apply. Needs Alpine for the trigger and the shortcut; without
+      JavaScript the sidebar stays as the server rendered it.</sl:description>
+    <sl:prop name="state" values="expanded collapsed">The state to render, whatever the cookie says: for an
+      application that keeps the choice itself, such as in the user's settings. Without it, the cookie decides.</sl:prop>
+    <sl:prop name="default-state" default="expanded" values="expanded collapsed">The state before the user chose one
+      (no cookie yet).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* data-state is the one place the state lives: the CSS for the sidebar and the inset reads it here, and slSidebar
+  changes it here. #slSidebar reads the cookie. */-->
+<div th:fragment="sidebar-provider"
+     class="sidebar-provider"
+     x-data="slSidebar"
+     th:attr="data-state=${props.state ?: #slSidebar.state(props['default-state'])}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

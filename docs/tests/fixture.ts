@@ -3,10 +3,12 @@ import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
 import themeScript from '../src/generated/theme-script.json' with {type: 'json'};
 
-// Fixture pages for disclosure.spec.ts, tabs.spec.ts, theme-toggle.spec.ts, avatar.spec.ts and table-htmx.spec.ts,
+// Fixture pages for disclosure.spec.ts, tabs.spec.ts, theme-toggle.spec.ts, avatar.spec.ts, table-htmx.spec.ts and
+// sidebar.spec.ts,
 // served from a made-up origin under a strict Content-Security-Policy, with the csp Alpine build (or shadleaf.js
 // without any Alpine, or no script of Shadleaf's at all) and optionally htmx. The page at / and every route get the
-// request's URL, so a fixture can render what a server would for ?tab=... A route can also answer with something other
+// request (URL and headers, cookies included), so a fixture can render what a server would for ?tab=... or a cookie. The
+// content goes in a <main>, unless it brings its own (wrap: false). A route can also answer with something other
 // than a page (an image), a status and after a delay. An htmx request to a route gets the route's markup alone, as a
 // fragment; any other request, a history restore included, gets it as a page.
 
@@ -46,11 +48,17 @@ export type FixtureOptions = {
   path?: string,
   /** Put the theme script (sl/layout :: theme-script) first in the head, allowed by its hash. */
   theme?: boolean,
+  /** Put the content in a <main> (true, the default), or straight into the body: an application shell has its own. */
+  wrap?: boolean,
+  /** Attributes for <html> and <body>, e.g. 'dir="rtl"' or 'hx-boost="true"'. */
+  htmlAttributes?: string,
+  bodyAttributes?: string,
 };
 
 /** Serves `main` at /, and `routes` for other paths; returns what the console said (errors, warnings, CSP). */
-export async function openFixture(page: Page, main: string | ((url: URL) => string),
-    {alpine = true, htmx = false, routes = {}, path = '/', theme = false, scriptDelay = 0}: FixtureOptions = {})
+export async function openFixture(page: Page, main: string | ((url: URL, request: Request) => string),
+    {alpine = true, htmx = false, routes = {}, path = '/', theme = false, scriptDelay = 0, wrap = true,
+      htmlAttributes = '', bodyAttributes = ''}: FixtureOptions = {})
     : Promise<string[]> {
   const messages: string[] = [];
   page.on('console', message => {
@@ -62,12 +70,12 @@ export async function openFixture(page: Page, main: string | ((url: URL) => stri
   page.on('pageerror', error => messages.push(error.message));
   await page.addInitScript(() => document.addEventListener('securitypolicyviolation',
       event => console.error(`CSP violation: ${event.violatedDirective}`)));
-  const document = (content: string) => `<!doctype html><html lang="en"><head><title>Fixture</title>`
+  const document = (content: string) => `<!doctype html><html lang="en" ${htmlAttributes}><head><title>Fixture</title>`
       + (theme ? `<script>${themeScript.script}</script>` : '')
       + `<link rel="stylesheet" href="/${css}">`
       + (htmx ? `${HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
       + (alpine ? `<script type="module" src="/${alpine === 'external' ? scripts.external : scripts.csp}"></script>` : '')
-      + `</head><body><main>${content}</main></body></html>`;
+      + `</head><body ${bodyAttributes}>${wrap ? `<main>${content}</main>` : content}</body></html>`;
   await page.route(`${ORIGIN}/**`, async route => {
     const request = route.request();
     const url = new URL(request.url());
@@ -83,7 +91,8 @@ export async function openFixture(page: Page, main: string | ((url: URL) => stri
     const headers = {'Content-Security-Policy': theme
         ? STRICT_CSP.replace("script-src 'self'", `script-src 'self' ${themeScript.cspHash}`) : STRICT_CSP};
     if (url.pathname === '/') {
-      const content = typeof main === 'string' ? main : main(url);
+      const content = typeof main === 'string' ? main
+          : main(url, {url, body: request.postData() ?? '', headers: request.headers()});
       return route.fulfill({contentType: 'text/html', headers, body: document(content)});
     }
     const handler = routes[url.pathname];

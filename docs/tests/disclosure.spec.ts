@@ -34,7 +34,7 @@ for (const {skin, theme} of combinations) {
   test(`every accordion and collapsible works with the keyboard and passes axe open: ${skin}, ${theme}`,
       async ({page}) => {
         await openShowcase(page, skin, theme);
-        const items = page.locator('main :is(.accordion-item, .collapsible)');
+        const items = page.locator('.showcase :is(.accordion-item, .collapsible)');
         const count = await items.count();
         expect(count, 'the showcase has accordions and collapsibles').toBeGreaterThan(0);
 

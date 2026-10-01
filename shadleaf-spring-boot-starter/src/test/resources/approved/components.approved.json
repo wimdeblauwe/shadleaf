@@ -1161,6 +1161,77 @@
       "description" : "Heading level (`role=\"heading\"` and `aria-level`). A sheet starts an outline of its own, so the default, 2, rarely needs changing."
     } ]
   }, {
+    "name" : "sidebar",
+    "tag" : "sl:sidebar",
+    "description" : "The application's navigation, inside `sl:sidebar-provider`. One element serves both widths: from 768&nbsp;px up it is a column beside the page, which the trigger collapses and expands; below that it is a panel over the page, which the trigger opens. It is a `nav` named \"Main\" (`sl.sidebar.label`; an `aria-label` replaces it) and a popover: the browser opens the panel in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open panel and makes the rest of the page inert, and closes it when a link in it is followed. Put the links in it yourself for now.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "id",
+      "type" : "string",
+      "defaultValue" : "sidebar",
+      "values" : [ ],
+      "description" : "The id the trigger points at (`sl:sidebar-trigger`'s `for`)."
+    }, {
+      "name" : "side",
+      "type" : "enum",
+      "defaultValue" : "start",
+      "values" : [ "start", "end" ],
+      "description" : "The edge it sits on: the start of a line (the left, or the right on a right-to-left page) or the end."
+    }, {
+      "name" : "collapsible",
+      "type" : "enum",
+      "defaultValue" : "offcanvas",
+      "values" : [ "offcanvas" ],
+      "description" : "How it collapses on a desktop: `offcanvas` moves it out of view entirely. Collapsing to icons comes later."
+    } ]
+  }, {
+    "name" : "sidebar-inset",
+    "tag" : "sl:sidebar-inset",
+    "description" : "The page's main content beside the `sl:sidebar`: the `main` element, which takes the rest of the width. Put the page header with the `sl:sidebar-trigger` at its top. Give it an `id` for a skip link.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "sidebar-provider",
+    "tag" : "sl:sidebar-provider",
+    "description" : "The wrapper of an application shell with a sidebar: it holds `sl:sidebar`, and `sl:sidebar-inset` with the page's content (and the `sl:sidebar-trigger`), and it holds whether the sidebar is expanded or collapsed on a desktop. The server renders that state from the `sl-sidebar-state` cookie, which the browser writes when the user collapses or expands the sidebar (the trigger, or Ctrl/⌘+B), so every page starts in it without a jump. Below 768&nbsp;px the sidebar is a panel the trigger opens instead, and the state does not apply. Needs Alpine for the trigger and the shortcut; without JavaScript the sidebar stays as the server rendered it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "state",
+      "type" : "enum",
+      "values" : [ "expanded", "collapsed" ],
+      "description" : "The state to render, whatever the cookie says: for an application that keeps the choice itself, such as in the user's settings. Without it, the cookie decides."
+    }, {
+      "name" : "default-state",
+      "type" : "enum",
+      "defaultValue" : "expanded",
+      "values" : [ "expanded", "collapsed" ],
+      "description" : "The state before the user chose one (no cookie yet)."
+    } ]
+  }, {
+    "name" : "sidebar-trigger",
+    "tag" : "sl:sidebar-trigger",
+    "description" : "The icon button that collapses and expands the `sl:sidebar` on a desktop and opens its panel on a phone. Named \"Toggle sidebar\" (`sl.sidebar.trigger`; an `aria-label` replaces it); content of its own replaces the icon. Without JavaScript it is hidden on a desktop, where it could not do anything, and still opens the panel on a phone. Any other attribute passes through to the `sl:button`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "for",
+      "type" : "string",
+      "defaultValue" : "sidebar",
+      "values" : [ ],
+      "description" : "The `id` of the sidebar it toggles."
+    }, {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "ghost",
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
+      "description" : "Visual style of the button, as on `sl:button`."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "icon-sm",
+      "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ],
+      "description" : "Size of the button: one of `sl:button`'s icon sizes."
+    } ]
+  }, {
     "name" : "skeleton",
     "tag" : "sl:skeleton",
     "description" : "A placeholder that pulses while content loads. It is hidden from assistive technology; mark the region that is loading with `aria-busy=\"true\"` instead. Give it the size of what it stands in for with a class of your own.",

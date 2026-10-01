@@ -2434,6 +2434,187 @@
           }
         } ]
       }, {
+        "name" : "sl:sidebar",
+        "description" : "The application's navigation, inside `sl:sidebar-provider`. One element serves both widths: from 768&nbsp;px up it is a column beside the page, which the trigger collapses and expands; below that it is a panel over the page, which the trigger opens. It is a `nav` named \"Main\" (`sl.sidebar.label`; an `aria-label` replaces it) and a popover: the browser opens the panel in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open panel and makes the rest of the page inert, and closes it when a link in it is followed. Put the links in it yourself for now.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The id the trigger points at (`sl:sidebar-trigger`'s `for`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "sidebar"
+        }, {
+          "name" : "side",
+          "description" : "The edge it sits on: the start of a line (the left, or the right on a right-to-left page) or the end.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "start"
+        }, {
+          "name" : "collapsible",
+          "description" : "How it collapses on a desktop: `offcanvas` moves it out of view entirely. Collapsing to icons comes later.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "offcanvas"
+          } ],
+          "default" : "offcanvas"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:collapsible",
+          "description" : "`collapsible` from a Thymeleaf expression, e.g. `th:collapsible=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-inset",
+        "description" : "The page's main content beside the `sl:sidebar`: the `main` element, which takes the rest of the width. Put the page header with the `sl:sidebar-trigger` at its top. Give it an `id` for a skip link.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-provider",
+        "description" : "The wrapper of an application shell with a sidebar: it holds `sl:sidebar`, and `sl:sidebar-inset` with the page's content (and the `sl:sidebar-trigger`), and it holds whether the sidebar is expanded or collapsed on a desktop. The server renders that state from the `sl-sidebar-state` cookie, which the browser writes when the user collapses or expands the sidebar (the trigger, or Ctrl/⌘+B), so every page starts in it without a jump. Below 768&nbsp;px the sidebar is a panel the trigger opens instead, and the state does not apply. Needs Alpine for the trigger and the shortcut; without JavaScript the sidebar stays as the server rendered it.",
+        "attributes" : [ {
+          "name" : "state",
+          "description" : "The state to render, whatever the cookie says: for an application that keeps the choice itself, such as in the user's settings. Without it, the cookie decides.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "expanded"
+          }, {
+            "name" : "collapsed"
+          } ]
+        }, {
+          "name" : "default-state",
+          "description" : "The state before the user chose one (no cookie yet).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "expanded"
+          }, {
+            "name" : "collapsed"
+          } ],
+          "default" : "expanded"
+        }, {
+          "name" : "th:state",
+          "description" : "`state` from a Thymeleaf expression, e.g. `th:state=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:default-state",
+          "description" : "`default-state` from a Thymeleaf expression, e.g. `th:default-state=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-trigger",
+        "description" : "The icon button that collapses and expands the `sl:sidebar` on a desktop and opens its panel on a phone. Named \"Toggle sidebar\" (`sl.sidebar.trigger`; an `aria-label` replaces it); content of its own replaces the icon. Without JavaScript it is hidden on a desktop, where it could not do anything, and still opens the panel on a phone. Any other attribute passes through to the `sl:button`.",
+        "attributes" : [ {
+          "name" : "for",
+          "description" : "The `id` of the sidebar it toggles.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "sidebar"
+        }, {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "ghost"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button: one of `sl:button`'s icon sizes.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "icon-sm"
+        }, {
+          "name" : "th:for",
+          "description" : "`for` from a Thymeleaf expression, e.g. `th:for=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:skeleton",
         "description" : "A placeholder that pulses while content loads. It is hidden from assistive technology; mark the region that is loading with `aria-busy=\"true\"` instead. Give it the size of what it stands in for with a class of your own.",
         "attributes" : [ {

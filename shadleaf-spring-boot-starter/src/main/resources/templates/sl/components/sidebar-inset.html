@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The page's main content beside the <code>sl:sidebar</code>: the <code>main</code> element, which
+      takes the rest of the width. Put the page header with the <code>sl:sidebar-trigger</code> at its top. Give it an
+      <code>id</code> for a skip link.</sl:description>
+  </sl:props>
+</head>
+<body>
+<main th:fragment="sidebar-inset" class="sidebar-inset" sl:attrs><sl:slot/></main>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The application's navigation, inside <code>sl:sidebar-provider</code>. One element serves both
+      widths: from 768&nbsp;px up it is a column beside the page, which the trigger collapses and expands; below that it
+      is a panel over the page, which the trigger opens. It is a <code>nav</code> named "Main"
+      (<code>sl.sidebar.label</code>; an <code>aria-label</code> replaces it) and a popover: the browser opens the panel
+      in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open
+      panel and makes the rest of the page inert, and closes it when a link in it is followed. Put the links in it
+      yourself for now.</sl:description>
+    <sl:prop name="id" default="sidebar">The id the trigger points at (<code>sl:sidebar-trigger</code>'s
+      <code>for</code>).</sl:prop>
+    <sl:prop name="side" default="start" values="start end">The edge it sits on: the start of a line (the left, or the
+      right on a right-to-left page) or the end.</sl:prop>
+    <sl:prop name="collapsible" default="offcanvas" values="offcanvas">How it collapses on a desktop:
+      <code>offcanvas</code> moves it out of view entirely. Collapsing to icons comes later.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* popover (auto): the phone panel's top layer, ::backdrop, light dismiss and focus back on the trigger. From
+  768 px the CSS shows it in the page flow instead, where it is a plain navigation landmark. */-->
+<nav th:fragment="sidebar"
+     class="sidebar"
+     th:id="${props.id}"
+     popover
+     th:attr="aria-label=#{sl.sidebar.label},
+              data-side=${props.unlessDefault('side')},
+              data-collapsible=${props.unlessDefault('collapsible')}"
+     sl:attrs><sl:slot/></nav>
+</body>
+</html>

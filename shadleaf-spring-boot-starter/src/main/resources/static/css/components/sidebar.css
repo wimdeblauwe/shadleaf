@@ -1,0 +1,136 @@
+/*
+  Sidebar provider, sidebar, trigger and inset: structure only. Colour, border colour, the widths (--sidebar-width,
+  --sidebar-width-mobile) and the speed of the transitions are identity and live in the skins.
+
+  The sidebar is one <nav popover> for both widths (768 px, Tailwind's md, is the breakpoint, as in shadcn and
+  slSidebar):
+  - from 768 px it is a column in the page flow beside the inset, sticky at the top and as tall as the screen. The
+    provider's data-state (rendered from the cookie) collapses it: offcanvas moves it out past its edge with a negative
+    margin, so the inset takes the room and the sidebar's content never reflows, and hides it, so its links leave the
+    tab order and the accessibility tree. The user agent's popover styles (fixed, centred, display: none) are undone.
+  - below 768 px it is what the popover is: hidden until the trigger opens it in the top layer, then fixed to its edge
+    with the ::backdrop over the page. data-state does not apply there.
+  start and end are logical, so they swap on a right-to-left page, and the slide follows. Motion (the slide on a phone,
+  the collapse on a desktop) only where the user has not asked for less: without it the change is immediate.
+*/
+@layer components {
+  .sidebar-provider {
+    @apply flex min-h-svh w-full;
+    /* Not hidden: clip makes no scroll container, so the sidebar stays sticky. */
+    overflow-x: clip;
+  }
+
+  /* No transition unless the motion rules below name one: the skins' duration would otherwise animate everything. */
+  .sidebar {
+    @apply m-0 flex-col overflow-y-auto overscroll-contain p-0 transition-none forced-colors:border-solid;
+  }
+
+  .sidebar-inset {
+    @apply relative flex min-w-0 w-full flex-1 flex-col;
+  }
+
+  /* The icon shows a panel on the left: on a right-to-left page the sidebar is on the right. */
+  .sidebar-trigger-icon {
+    @apply rtl:-scale-x-100;
+  }
+
+  /* Phone: the panel. */
+  @media (width < 48rem) {
+    .sidebar {
+      @apply fixed inset-y-0 h-full max-h-none max-w-[calc(100%-3rem)] border-0;
+      inline-size: var(--sidebar-width-mobile);
+    }
+
+    .sidebar:popover-open {
+      @apply flex;
+    }
+
+    .sidebar:not([data-side]) {
+      @apply start-0 end-auto border-e;
+      --sidebar-from: -100%;
+    }
+
+    .sidebar[data-side='end'] {
+      @apply start-auto end-0 border-s;
+      --sidebar-from: 100%;
+    }
+
+    .sidebar:not([data-side]):dir(rtl) {
+      --sidebar-from: 100%;
+    }
+
+    .sidebar[data-side='end']:dir(rtl) {
+      --sidebar-from: -100%;
+    }
+
+    /* The page behind the open panel does not scroll, as behind a sheet. */
+    :root:has(.sidebar:popover-open) {
+      @apply overflow-hidden;
+    }
+  }
+
+  @media (width < 48rem) and (prefers-reduced-motion: no-preference) {
+    .sidebar {
+      @apply transition-[translate,overlay,display] transition-discrete
+        backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete
+        open:backdrop:opacity-100 starting:open:backdrop:opacity-0;
+      translate: var(--sidebar-from) 0;
+    }
+
+    .sidebar:popover-open {
+      translate: 0 0;
+    }
+
+    @starting-style {
+      .sidebar:popover-open {
+        translate: var(--sidebar-from) 0;
+      }
+    }
+  }
+
+  /* Desktop: a column in the page flow. */
+  @media (width >= 48rem) {
+    .sidebar {
+      @apply sticky inset-auto top-0 flex h-svh max-h-none max-w-none flex-none self-start border-0 translate-none;
+      inline-size: var(--sidebar-width);
+    }
+
+    .sidebar:not([data-side]) {
+      @apply border-e;
+    }
+
+    .sidebar[data-side='end'] {
+      @apply order-1 border-s;
+    }
+
+    .sidebar-provider[data-state='expanded'] > .sidebar {
+      @apply visible;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar {
+      @apply invisible;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-side]) {
+      margin-inline-start: calc(-1 * var(--sidebar-width));
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-side='end'] {
+      margin-inline-end: calc(-1 * var(--sidebar-width));
+    }
+  }
+
+  @media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
+    /* visibility changes at the end of a collapse and at the start of an expansion, so the slide is seen both ways. */
+    .sidebar {
+      @apply transition-[margin,visibility];
+    }
+  }
+
+  /* Without JavaScript nothing can collapse the sidebar on a desktop; the panel still opens on a phone. */
+  @media (scripting: none) and (width >= 48rem) {
+    .sidebar-trigger {
+      display: none;
+    }
+  }
+}

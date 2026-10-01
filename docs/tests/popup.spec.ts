@@ -48,7 +48,7 @@ for (const {skin, theme} of combinations) {
   test(`every dropdown menu works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
     await page.waitForFunction(() => 'Alpine' in window);
-    const ids = await page.locator('main .dropdown-menu-content').evaluateAll(menus => menus.map(menu => menu.id));
+    const ids = await page.locator('.showcase .dropdown-menu-content').evaluateAll(menus => menus.map(menu => menu.id));
     expect(ids.length, 'the showcase has dropdown menus').toBeGreaterThan(0);
 
     const failures: string[] = [];
@@ -87,13 +87,13 @@ for (const {skin, theme} of combinations) {
   test(`every popover works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
     await page.waitForFunction(() => 'Alpine' in window);
-    const ids = await page.locator('main .popover-content').evaluateAll(popovers => popovers.map(popover => popover.id));
+    const ids = await page.locator('.showcase .popover-content').evaluateAll(popovers => popovers.map(popover => popover.id));
     expect(ids.length, 'the showcase has popovers').toBeGreaterThan(0);
 
     const failures: string[] = [];
     for (const id of ids) {
       const popover = page.locator(`#${id}`);
-      const trigger = page.locator(`main button[popovertarget="${id}"]`);
+      const trigger = page.locator(`.showcase button[popovertarget="${id}"]`);
       await trigger.focus();
       await page.keyboard.press('Enter');
       await waitUntilOpen(popover);
@@ -127,7 +127,7 @@ for (const {skin, theme} of combinations) {
   test(`every tooltip shows on keyboard focus and passes axe: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
     await page.waitForFunction(() => 'Alpine' in window);
-    const tooltips = page.locator('main .tooltip');
+    const tooltips = page.locator('.showcase .tooltip');
     const count = await tooltips.count();
     expect(count, 'the showcase has tooltips').toBeGreaterThan(0);
 
@@ -312,7 +312,7 @@ test('placement: sides and the tooltip arrow follow a flip', async ({page}) => {
   });
   await page.locator('#popover-left').evaluate(element => element.previousElementSibling!.scrollIntoView({block: 'center'}));
   for (const [id, side] of Object.entries(sides)) {
-    const trigger = page.locator(`main button[popovertarget="${id}"]`);
+    const trigger = page.locator(`.showcase button[popovertarget="${id}"]`);
     await trigger.click();
     const popover = page.locator(`#${id}`);
     await waitUntilOpen(popover);
@@ -341,7 +341,7 @@ test('popover: focus moving out closes it; a click outside closes it', async ({p
   await openShowcase(page, 'vega', 'light');
   await page.waitForFunction(() => 'Alpine' in window);
   const popover = page.locator('#dimensions');
-  const trigger = page.locator('main button[popovertarget="dimensions"]');
+  const trigger = page.locator('.showcase button[popovertarget="dimensions"]');
 
   await trigger.click();
   await waitUntilOpen(popover);

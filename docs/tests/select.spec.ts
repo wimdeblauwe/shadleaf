@@ -142,7 +142,7 @@ for (const {skin, theme} of combinations) {
     {
       await openShowcase(page, skin, theme);
       await page.waitForFunction(() => 'Alpine' in window);
-      const wrappers = page.locator('main .select-wrapper:not(:has(> select:disabled))');
+      const wrappers = page.locator('.showcase .select-wrapper:not(:has(> select:disabled))');
       const count = await wrappers.count();
       expect(count, 'the showcase has selects').toBeGreaterThan(0);
 
