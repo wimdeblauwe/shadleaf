@@ -1445,9 +1445,13 @@
   }
 
   .dropdown-menu-content, .popover-content, .select-content, .tooltip-content {
-    opacity: 0;
+    text-align: start;
+    --tw-font-weight: var(--font-weight-normal);
     max-width: none;
     max-height: none;
+    font-weight: var(--font-weight-normal);
+    white-space: normal;
+    opacity: 0;
     transition-property: opacity, scale, translate, overlay, display;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
