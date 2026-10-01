@@ -8,9 +8,9 @@
 <div id="page-content">
   <p>The same people, read a <code>Slice</code> at a time: Spring Data asks for one row more than it shows to know
     whether there is a next slice, and never counts them all. Load more appends the next slice's rows with htmx and
-    moves the focus to the first of them; the address follows (<code>?page=…</code>), so a reload shows the same
-    rows. Without JavaScript, Load more is a link to that address, which the server renders with every slice up to
-    it, and the browser scrolls to the first new row.</p>
+    moves the focus to the first of them; a spinner shows while the request takes longer than a moment. The address
+    follows (<code>?page=…</code>), so a reload shows the same rows. Without JavaScript, Load more is a link to that
+    address, which the server renders with every slice up to it, and the browser scrolls to the first new row.</p>
 
   <sl:table th:page="${people}">
     <thead>
@@ -35,11 +35,16 @@
                         th:text="${person.role.label}">Member</sl:badge></td>
           <td data-align="end" th:text="${person.orders}">3</td>
         </tr>
+        <!--/* While the request is in flight htmx puts htmx-request on the link, which shows its spinner
+          (htmx-indicator, application.css; on a wrapper, as its fade-in would replace the icon's spin animation). The
+          spinner sits in the default slot rather than icon-start, whose wrapper would change the padding while it is
+          hidden. */-->
         <tr th:if="${people.hasNext()}" class="load-more-row">
           <td colspan="4" th:with="next=${#slPaging.pages(people, null, null, 0, null).next.href}">
             <sl:button as="a" variant="outline"
                        th:href="|${next}#people-row-${(people.number + 1) * people.size + 1}|"
                        th:hx-get="${next}" hx-target="closest tr" hx-swap="outerHTML" hx-replace-url="true">
+              <span class="btn-icon htmx-indicator"><sl:icon name="loader-circle" class="btn-spinner"/></span>
               Load more
             </sl:button>
           </td>

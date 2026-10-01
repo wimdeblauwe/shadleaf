@@ -72,3 +72,21 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 /* The load more page: the first row of each slice takes the focus when it arrives. */
 .load-more-row > td { text-align: center; }
 .people-rows > tr:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; }
+
+/*
+  htmx's indicator, written here because the htmx config turns off the styles htmx would inject (a <style> element,
+  which a strict CSP blocks). display: none rather than htmx's opacity: 0, so a hidden spinner takes no room in its
+  button; revert-layer gives back the display the element's own (layered) styles set, inline-flex for .btn-icon. It
+  appears after 200 ms, so a quick answer shows no spinner and leaves the button's width alone: an
+  animation, because a display transition does not hold display: none through its delay. Firefox ignores display in
+  keyframes too, so there the button makes room at once and the spinner only fades in after 200 ms.
+*/
+.htmx-indicator { display: none; }
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: revert-layer;
+  animation: htmx-indicator-in 150ms ease-in 200ms backwards;
+}
+@keyframes htmx-indicator-in {
+  from { display: none; opacity: 0; }
+}

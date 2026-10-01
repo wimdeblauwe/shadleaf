@@ -63,6 +63,8 @@ class PeopleLoadMorePageTest {
     assertThat(link.attr("hx-target")).isEqualTo("closest tr");
     assertThat(link.attr("hx-swap")).isEqualTo("outerHTML");
     assertThat(link.attr("hx-replace-url")).isEqualTo("true");
+    // The spinner htmx shows while the request is in flight (htmx-indicator inside the requesting link).
+    assertThat(link.select("> .htmx-indicator > svg.btn-spinner[aria-hidden=true]")).hasSize(1);
     // A Slice has no total: no pagination summary, and the sort links still work.
     assertThat(page.getElementById("sort-email").attr("href")).isEqualTo("/people-load-more?sort=email,asc");
     assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
