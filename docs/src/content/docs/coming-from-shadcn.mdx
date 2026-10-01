@@ -210,7 +210,11 @@ data table sorts in the browser with TanStack Table, `<sl:table-head sort="name"
 the page in another order (`?sort=name,desc`), read from a Spring Data `Page`. A cell's alignment is `data-align="end"`
 rather than a `text-right` class. Filtering is a `GET` form the server answers, with `sl:query-params` keeping the
 order and page size, and htmx to search as the user types ([Tables with htmx](../guides/tables-htmx/)). There is no
-column visibility or browser-side paging. See [Table](../components/table/).
+column visibility or browser-side paging. Row selection is the application's own checkboxes, which submit with a form:
+`<sl:table-select-all>` takes the place of the header's `Checkbox` with `table.getIsAllPageRowsSelected()`, and
+`<sl:table-selection-count>` of `"{n} of {total} row(s) selected."` (it reads "2 of 20 selected"). The selected row's
+background comes from CSS (a checked checkbox in the row's first cell), not from `data-state="selected"`. The
+selection covers the page only; a sort or another page starts afresh. See [Table](../components/table/#selecting-rows).
 
 ### Pagination: built from a Spring Data page
 
@@ -301,7 +305,8 @@ takes keyboard focus, when it is a link (`as="a"`).
   accent background, as in the dropdown menu.
 - Checkbox, radio group and switch are the browser's own inputs, styled, where shadcn builds them from buttons. They
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
-  on any radio button or checkbox. There is no indeterminate checkbox yet.
+  on any radio button or checkbox. The indeterminate state is the input's own (`indeterminate` prop, or the DOM
+  property) and shows a minus; shadcn's checkbox shows its check mark for `checked="indeterminate"`.
 - A disabled checkbox fades as a whole, check mark included. In the lyra skin a disabled native select gets the same
   grey background as a disabled input (shadcn's lyra only gives it to input and textarea).
 

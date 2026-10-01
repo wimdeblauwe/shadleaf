@@ -138,6 +138,39 @@ links in the headers, the page links and the rows-per-page menu's items. They in
 - **The search.** The links are built from the request, so they keep `q`: sorting the search results sorts the search
   results.
 
+## Selection and a bulk action
+
+Sample-01's `/people-multiselect` page is the same page with a form around the table, with a checkbox per row, [select-all](../../components/table/#selecting-rows)
+in the header, the selection count in the footer, and a Delete selected button that opens an alert dialog:
+
+```html
+<form id="people-bulk" method="post" th:action="${selfUrl}">
+  <sl:button id="people-delete-trigger" type="button" variant="outline" size="sm"
+             commandfor="people-delete" command="show-modal">Delete selected</sl:button>
+  <sl:table id="people-table" th:page="${people}">...</sl:table>
+  <sl:alert-dialog id="people-delete" size="sm">
+    ...
+    <sl:alert-dialog-footer>
+      <sl:alert-dialog-cancel/>
+      <sl:button variant="destructive" type="submit" hx:post="${selfUrl}">Delete</sl:button>
+    </sl:alert-dialog-footer>
+  </sl:alert-dialog>
+</form>
+```
+
+- **Post to the page's own URL.** `selfUrl` is the request's path and query string (`/people-multiselect?q=a&sort=orders,desc&page=1`),
+  so the action knows the search, order and page to come back to, and the links in the fragment it answers with are
+  built from that same address. Without htmx the controller redirects there with a toast; with htmx it renders the
+  `results` fragment of that page, as a search would.
+- **`hx-post` on the confirm button, not the form.** htmx dispatches the events of `HX-Trigger` on the element that
+  made the request. The answer sends `sl-dialog-close` and `sl-toast`; the dialog only closes on an event from inside
+  it, so the button inside the dialog makes the request (a non-`GET` request from inside a form sends the form's
+  values). Without JavaScript the same button submits the form.
+- **Focus.** `HX-Trigger`'s events run before the swap: the dialog closes and gives the focus back to Delete selected,
+  and htmx then finds the new Delete selected by its id. The toast says how many people were deleted.
+- **The selection resets.** The swap brings new checkboxes, unchecked; select-all and the count follow them. So does
+  every sort, page and search: the selection is per page.
+
 ## Back and forward
 
 htmx keeps a snapshot of the page for each address it pushed, and puts it back on the back button. The snapshot is the
@@ -159,6 +192,7 @@ links are links. Every step is a page load, and every address is one the control
 
 Sample-01's `PeoplePageTest` checks the server side over HTTP: the search on name and email, the links and hidden
 inputs keeping `q`, sort and size and dropping the page, the empty result, the fragment for `HX-Request` and the whole
-page for a history restore. The docs' `table-htmx.spec.ts` runs the same markup in Chromium and Firefox under a strict
+page for a history restore; `PeopleMultiselectPageTest` the bulk delete with and without htmx. The docs' `table-htmx.spec.ts` runs the same markup in Chromium and Firefox under a strict
 Content-Security-Policy: the debounce, one request for a burst of typing, what is typed while a request is out, Enter,
-the pushed address, the focus after a sort or page link, back and forward, and the form without htmx.
+the pushed address, the focus after a sort or page link, back and forward, and the form without htmx;
+`table-selection.spec.ts` the selection through htmx swaps and history.

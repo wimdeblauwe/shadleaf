@@ -59,4 +59,5 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 }
 .table-footer-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
 .table-footer .pagination { inline-size: auto; margin: 0; }
+.table-toolbar { display: flex; justify-content: flex-end; padding-block-end: 0.5rem; }
 .people-search { max-inline-size: 24rem; margin-block: 1.5rem 1rem; }

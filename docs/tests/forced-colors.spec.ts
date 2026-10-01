@@ -114,3 +114,22 @@ test('accordion, collapsible and tabs show focus and the active tab in forced-co
       .evaluate(tab => getComputedStyle(tab).textDecorationLine);
   expect(decoration).toBe('underline');
 });
+
+// The indeterminate checkbox (sl:checkbox indeterminate, sl:table-select-all): the browser draws its own, with its own
+// dash, so neither icon is drawn over it.
+for (const skin of skins) {
+  test(`an indeterminate checkbox is the browser's own in forced-colors mode: ${skin}`, async ({page}) => {
+    await page.emulateMedia({forcedColors: 'active'});
+    await openShowcase(page, skin, 'light');
+    await page.waitForFunction(() => 'Alpine' in window);
+
+    for (const scope of ['[data-scenario="checkbox--indeterminate"]', '[data-scenario="table--selection"] thead']) {
+      const wrapper = page.locator(`${scope} .checkbox-wrapper`).first();
+      await expect.poll(() => wrapper.locator('input').evaluate(input => input.matches(':indeterminate'))).toBe(true);
+      expect(await wrapper.evaluate(root => ({
+        appearance: getComputedStyle(root.querySelector('input')!).appearance,
+        icons: [...root.querySelectorAll('svg')].map(svg => getComputedStyle(svg).display),
+      }))).toEqual({appearance: 'auto', icons: ['none', 'none']});
+    }
+  });
+}

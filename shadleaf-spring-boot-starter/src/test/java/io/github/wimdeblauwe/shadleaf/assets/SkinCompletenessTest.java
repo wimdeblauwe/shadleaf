@@ -39,8 +39,8 @@ import tools.jackson.databind.json.JsonMapper;
  * {@code data-*} attribute, each compiled bundle has a rule selecting that value, and a component that can render a
  * focusable element (a link, a button, a form control or anything with a {@code tabindex}) has a
  * {@code :focus-visible} rule for it. A card or an alert takes no focus, so it needs none. A form control also needs a
- * {@code :disabled} rule, and one that takes {@code readonly} (a textarea, a text-like input) a {@code [readonly]}
- * rule. The focusable element can sit inside the root: the checkbox's {@code .checkbox} in its wrapper.
+ * {@code :disabled} rule, one that takes {@code readonly} (a textarea, a text-like input) a {@code [readonly]} rule,
+ * and a checkbox (not a switch) an {@code :indeterminate} rule. The focusable element can sit inside the root: the checkbox's {@code .checkbox} in its wrapper.
  * <p>
  * The expected selectors come from rendering the component, not from a list kept here: {@code variant="outline"}
  * renders {@code data-variant="outline"} and needs {@code .btn[data-variant="outline"]}, while the default renders no
@@ -112,6 +112,10 @@ class SkinCompletenessTest {
           }
           if (takesReadonly(element)) {
             arguments.add(Arguments.of(bundle, selector + "[readonly]"));
+          }
+          if (element.tagName().equals("input") && element.attr("type").equals("checkbox")
+              && !element.attr("role").equals("switch")) {
+            arguments.add(Arguments.of(bundle, selector + ":indeterminate"));
           }
         });
       }

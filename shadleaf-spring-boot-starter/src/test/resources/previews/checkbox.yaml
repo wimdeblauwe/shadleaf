@@ -21,6 +21,12 @@ scenarios:
       <sl:checkbox id="checkbox-notify" name="notify"/>
       <sl:label for="checkbox-notify">Notify me by email</sl:label>
 
+  - id: indeterminate
+    title: Indeterminate
+    description: Some of a group selected. A click clears the state, as on any checkbox; a script can set it again.
+    source: |-
+      <sl:label><sl:checkbox name="toppings-all" indeterminate/>All toppings</sl:label>
+
   - id: invalid
     title: Invalid
     description: With th:field, a field that has errors marks the checkbox aria-invalid by itself.

@@ -1,0 +1,37 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A checkbox for a header cell of a <code>sl:table</code> that selects every row on the page. The
+      rows are the application's own checkboxes (a <code>sl:checkbox</code> with <code>name="ids"</code> and
+      <code>th:value="${person.id}"</code>) in the cells of the table's body; they submit without JavaScript. This one is checked when every row is,
+      indeterminate when some are, and checks or unchecks them all when clicked; it is named "Select all rows on this
+      page" (the message <code>sl.table.select-all</code>) unless it gets an <code>aria-label</code>. It needs
+      JavaScript, so it stays hidden until Alpine starts. It fires <code>sl-table-selection-change</code> on the
+      table (<code>{selected, total}</code>), which <code>sl:table-selection-count</code> shows. It submits nothing
+      itself (no <code>name</code>); other attributes go to its <code>input</code>, <code>class</code> to its
+      wrapper.</sl:description>
+    <sl:prop name="name">The <code>name</code> of the row checkboxes, when the body has checkboxes of another kind
+      too. Without it, every checkbox in a body cell is a row.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* A checkbox as sl:checkbox draws it (the same classes), plus a status region that announces the count after a
+  click on this checkbox: a row's own checkbox announces its state already. x-cloak: hidden (keeping its space) until
+  Alpine starts, so without JavaScript or without Alpine there is no checkbox that does nothing. */-->
+<span th:fragment="table-select-all"
+      class="checkbox-wrapper table-select-all"
+      x-data="slTableSelection"
+      x-cloak
+      th:attr="data-name=${props.name}, data-format=#{sl.table.selection.count('{0}', '{1}')}"
+      sl:attrs="${attrs.only('class', 'classappend')}">
+  <input type="checkbox"
+         class="checkbox"
+         th:attr="aria-label=#{sl.table.select-all}"
+         sl:attrs="${attrs.without('class', 'classappend')}">
+  <sl:icon name="check" class="checkbox-indicator"/>
+  <sl:icon name="minus" class="checkbox-indeterminate-indicator"/>
+  <span class="sl-sr-only" role="status"></span>
+</span>
+</body>
+</html>

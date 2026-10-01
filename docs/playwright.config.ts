@@ -18,9 +18,10 @@ export default defineConfig({
     // and close events, and reads Alt+T by its key code. The theme toggle depends on the storage event between tabs, on
     // matchMedia change events and on the scripting media feature. Firefox draws nothing for a broken image with
     // alt="", where Chromium draws an icon, which the avatar hides. Firefox has no search event, so a live search
-    // runs on the form's submit when Enter is pressed.
+    // runs on the form's submit when Enter is pressed. Row selection relies on :indeterminate, change events and the
+    // scripting media feature.
     {name: 'firefox', use: {...devices['Desktop Firefox']},
-      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx)\.spec\.ts/},
+      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection)\.spec\.ts/},
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

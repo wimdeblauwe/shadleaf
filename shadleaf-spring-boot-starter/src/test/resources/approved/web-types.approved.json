@@ -686,8 +686,22 @@
         } ]
       }, {
         "name" : "sl:checkbox",
-        "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors.",
-        "attributes" : [ ]
+        "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors. A checkbox in the indeterminate state (neither checked nor unchecked: some of a group selected) shows a minus.",
+        "attributes" : [ {
+          "name" : "indeterminate",
+          "description" : "Start in the indeterminate state. HTML has no attribute for it, only the DOM property `indeterminate`: this renders `data-indeterminate`, from which Shadleaf's script sets the property when the page loads (or htmx swaps the checkbox in). A click clears it, as it does on every checkbox. A script can set the property on any checkbox; the minus follows it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:indeterminate",
+          "description" : "`indeterminate` from a Thymeleaf expression, e.g. `th:indeterminate=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:collapsible",
         "description" : "Content that a button shows and hides. Built on the browser's `details` element, so it needs no JavaScript. Holds a `sl:collapsible-trigger` (first) and a `sl:collapsible-content`.",
@@ -2549,6 +2563,42 @@
         }, {
           "name" : "th:align",
           "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:table-select-all",
+        "description" : "A checkbox for a header cell of a `sl:table` that selects every row on the page. The rows are the application's own checkboxes (a `sl:checkbox` with `name=\"ids\"` and `th:value=\"${person.id}\"`) in the cells of the table's body; they submit without JavaScript. This one is checked when every row is, indeterminate when some are, and checks or unchecks them all when clicked; it is named \"Select all rows on this page\" (the message `sl.table.select-all`) unless it gets an `aria-label`. It needs JavaScript, so it stays hidden until Alpine starts. It fires `sl-table-selection-change` on the table (`{selected, total}`), which `sl:table-selection-count` shows. It submits nothing itself (no `name`); other attributes go to its `input`, `class` to its wrapper.",
+        "attributes" : [ {
+          "name" : "name",
+          "description" : "The `name` of the row checkboxes, when the body has checkboxes of another kind too. Without it, every checkbox in a body cell is a row.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:name",
+          "description" : "`name` from a Thymeleaf expression, e.g. `th:name=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:table-selection-count",
+        "description" : "How many rows of a `sl:table` are selected: \"2 of 20 selected\" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as shadcn/ui's data table does. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.",
+        "attributes" : [ {
+          "name" : "table",
+          "description" : "The `id` of the table whose rows it counts (`sl:table` puts its `id` on the `table`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:table",
+          "description" : "`table` from a Thymeleaf expression, e.g. `th:table=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

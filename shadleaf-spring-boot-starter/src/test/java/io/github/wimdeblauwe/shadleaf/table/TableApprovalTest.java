@@ -6,7 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * {@code <sl:table>}, {@code <sl:table-head>} and {@code <sl:table-empty>}, rendered into
+ * {@code <sl:table>}, {@code <sl:table-head>}, {@code <sl:table-empty>}, {@code <sl:table-select-all>} and
+ * {@code <sl:table-selection-count>}, rendered into
  * {@code src/test/resources/approved/table.approved.html}, in a request sorted by name.
  */
 class TableApprovalTest {
@@ -28,6 +29,11 @@ class TableApprovalTest {
         "<sl:table-head sort=\"amount\" align=\"end\">Amount</sl:table-head>",
         "<sl:table-empty colspan=\"3\"/>",
         "<sl:table-empty colspan=\"3\">Nobody matches.</sl:table-empty>",
+        "<sl:table-select-all/>",
+        "<sl:table-select-all name=\"ids\" id=\"people-select-all\" form=\"bulk\" class=\"extra\"/>",
+        "<sl:table-select-all aria-label=\"Select all people on this page\"/>",
+        "<sl:table-selection-count table=\"people\"/>",
+        "<sl:table-selection-count table=\"people\" id=\"people-count\" class=\"extra\"/>",
         """
             <sl:table qualifier="members">
               <caption>Members</caption>

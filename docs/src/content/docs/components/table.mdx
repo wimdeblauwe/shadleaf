@@ -219,11 +219,131 @@ the text.
 <sl:table-empty colspan="3" th:if="${people.empty}">Nobody matches your search.</sl:table-empty>
 ```
 
+## Selecting rows
+
+For a bulk action (delete, change a role), give each row a checkbox of your own and put
+`<sl:table-select-all/>` in the header cell above them. Select-all checks or unchecks every row on the page, and is
+checked when they all are, indeterminate (a minus) when some are. `<sl:table-selection-count>` says how many are
+selected; place it where it fits, e.g. at the start of the footer, as shadcn's data table does.
+
+<ComponentPreview id="table--selection" />
+
+```html
+<form id="people-bulk" method="post" th:action="${selfUrl}">
+  <sl:table id="people-table" th:page="${people}">
+    <thead>
+      <tr>
+        <th><sl:table-select-all/></th>
+        <sl:table-head sort="name">Name</sl:table-head>
+        <sl:table-head sort="email">Email</sl:table-head>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="person : ${people}">
+        <td><sl:checkbox name="ids" th:value="${person.id}"
+                         th:aria-label="#{sl.table.select-row(${person.name})}"/></td>
+        <td th:text="${person.name}">Ada Lovelace</td>
+        <td th:text="${person.email}">ada@example.com</td>
+      </tr>
+    </tbody>
+  </sl:table>
+  <sl:button type="submit" variant="destructive">Delete selected</sl:button>
+</form>
+<div class="table-footer">
+  <sl:table-selection-count table="people-table"/>
+  <sl:pagination th:page="${people}"/>
+</div>
+```
+
+- **The rows are yours.** Plain `sl:checkbox`es (`name="ids"`, the row's id as value) submit with the form, also
+  without JavaScript; the controller gets `@RequestParam List<Long> ids`. The table can sit inside the form, or the
+  checkboxes can name a form elsewhere with `form="..."`.
+- **Which checkboxes are rows.** Select-all works on the checkboxes in the body cells of the table it is in (not of a
+  table nested in a cell), leaving out disabled ones, which would not be submitted. When the body has other
+  checkboxes too, `name="ids"` on select-all narrows it to those.
+- **The selected look** comes from CSS: a row whose first cell holds a checked checkbox gets the muted background
+  (shadcn's `data-state="selected"`), with or without JavaScript. Put the selection in the first column.
+- **Names.** Every row checkbox needs an accessible name, telling the rows apart. `aria-label` with the message
+  `sl.table.select-row` (`Select {0}`) as above, or point at the cell that names the row:
+
+  ```html
+  <td><sl:checkbox name="ids" th:value="${person.id}"
+                   th:aria-labelledby="|person-${person.id}-name|"/></td>
+  <td th:id="|person-${person.id}-name|" th:text="${person.name}">Ada Lovelace</td>
+  ```
+
+  Select-all is named "Select all rows on this page" (`sl.table.select-all`); an `aria-label` of yours replaces it.
+- **The count** reads "2 of 20 selected" (`sl.table.selection.count`; keep `{0}` and `{1}` as they are, the browser
+  fills them in). Its `table` prop is the table's `id`, which `sl:table` puts on the `table`. It is not a live region:
+  a row's checkbox announces its own state, so the count is only announced after a click on select-all, which
+  changes rows the user did not touch.
+
+### Without JavaScript
+
+Select-all and the count need Alpine, so they keep their place but stay hidden until it starts (`x-cloak`). Without
+JavaScript the user checks the rows one by one, and the form submits them as before.
+
+### The bulk action
+
+Post the form to the page's own URL, query string included, so the action knows the search, order and page to come
+back to. The controller below puts that URL in the model; after the action it redirects back there with a toast
+(post/redirect/get):
+
+```java
+@PostMapping("/people")
+public String delete(@RequestParam(name = "ids", required = false) List<Long> ids,
+    HttpServletRequest request, RedirectAttributes redirectAttributes) {
+  repository.deleteAllByIdInBatch(ids == null ? List.of() : ids);
+  redirectAttributes.addFlashAttribute("toasts", List.of(Toast.success("People deleted")));
+  String query = request.getQueryString();
+  return "redirect:/people" + (query == null ? "" : "?" + query);
+}
+```
+
+Ask before a destructive action with an [alert dialog](../alert-dialog/) inside the form: its destructive button is a
+submit button. With htmx, answer with the table alone; [Tables with htmx](../../guides/tables-htmx/#selection-and-a-bulk-action)
+shows how, and sample-01's `/people-multiselect` page does both.
+
+### Selection across pages
+
+Select-all selects the rows on the page, and a sort, another page or a new search (with htmx too) starts with nothing
+selected: the selection lives in the checkboxes, and those are replaced. Keeping it across pages is the server's
+business. Two ways:
+
+- **Keep the ids on the server**, e.g. in the session: each page posts its selection (or a checkbox posts on change
+  with htmx), and the page renders `checked` on the rows that were selected before. Select-all and the count then
+  start from those.
+- **Select everything that matches** instead of ids: after select-all, offer "Select all 270 people", which posts the
+  search itself (`q`) for the action to apply to every match.
+
+Sample-01 keeps the selection per page.
+
+### JavaScript
+
+`<sl:table-select-all>` renders `x-data="slTableSelection"` and `<sl:table-selection-count>`
+`x-data="slTableSelectionCount"`. They need no Alpine plugin. They follow the rows' `change` events (Space or a click),
+a form reset, and rows being added or replaced (an htmx swap). Changing the rows from select-all fires `input` and
+`change` on every row it changes, as a click would.
+
+| Event | On | Detail |
+| --- | --- | --- |
+| `sl-table-selection-change` | the `table`, bubbling | `{selected, total}`, after every change, and when select-all starts |
+
+A bulk action can listen to it, for instance to show how many people it would delete:
+
+```html
+<div x-data="{selected: 0}" @sl-table-selection-change.document="selected = $event.detail.selected">...</div>
+```
+
+A checkbox of your own can be indeterminate too: set its `indeterminate` property, or render
+[`<sl:checkbox indeterminate>`](../checkbox/#indeterminate).
+
 ## Left out
 
 shadcn's data table runs TanStack Table in the browser. These parts of it are not in Shadleaf: sorting and filtering
-in the browser, column visibility, resizing, reordering and pinning, drag handles, expandable rows, editable cells and
-virtual scrolling.
+in the browser, column visibility, resizing, reordering and pinning, drag handles, expandable rows, editable cells,
+virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts across pages (see
+above).
 
 ## Attributes
 
@@ -238,3 +358,11 @@ virtual scrolling.
 ### sl:table-empty
 
 <ComponentAttributes component="table-empty" />
+
+### sl:table-select-all
+
+<ComponentAttributes component="table-select-all" />
+
+### sl:table-selection-count
+
+<ComponentAttributes component="table-selection-count" />

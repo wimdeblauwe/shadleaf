@@ -39,4 +39,13 @@
   .table > tbody > tr.table-empty > td {
     @apply text-center whitespace-normal;
   }
+
+  /*
+    sl:table-select-all and sl:table-selection-count only work with Alpine, which removes their x-cloak. Until then,
+    and for good without JavaScript, they keep their space but do not show (and take no focus).
+  */
+  .table-select-all[x-cloak],
+  .table-selection-count[x-cloak] {
+    @apply invisible;
+  }
 }

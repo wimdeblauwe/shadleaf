@@ -34,6 +34,19 @@ label points at it. The field also shows the error message.
 
 <ComponentPreview id="checkbox--checked" />
 
+## Indeterminate
+
+Neither checked nor unchecked: some of a group is selected. HTML has no attribute for it, only the DOM property
+`indeterminate`. `indeterminate` on `<sl:checkbox>` renders `data-indeterminate="true"`, from which Shadleaf's script
+sets the property when the page loads or htmx swaps the checkbox in; the box then shows a minus, and a screen reader
+says "mixed". A click clears it and checks the box, as with any checkbox. A script of yours can set the property on
+any checkbox at any time; the minus follows it (the CSS reads `:indeterminate`). The script is not an Alpine
+component, so it also runs with `shadleaf.assets.alpine=external`; without JavaScript the checkbox is unchecked.
+
+<ComponentPreview id="checkbox--indeterminate" />
+
+[Select-all in a table](../table/#selecting-rows) is the common case, and sets the state itself.
+
 ## Invalid
 
 A field with errors marks the checkbox `aria-invalid="true"`, as with the [input](../input/).
@@ -50,9 +63,9 @@ to. In Windows' high-contrast mode the browser draws its own disabled checkbox. 
 
 ## How it is drawn
 
-The check mark is an icon inside a wrapper around the `<input>`, not a CSS background image, so the checkbox renders
+The check mark and the minus are icons inside a wrapper around the `<input>`, not CSS background images, so the checkbox renders
 under a strict `img-src` policy. `class` goes to that wrapper; every other attribute to the `<input>`. In Windows'
-high-contrast mode the browser draws its own checkbox.
+high-contrast mode the browser draws its own checkbox, with its own dash when it is indeterminate.
 
 ## Attributes
 

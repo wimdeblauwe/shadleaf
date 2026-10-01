@@ -421,15 +421,16 @@
   .checkbox {
     @apply size-4 rounded-none border border-input bg-transparent
       motion-safe:transition-colors
-      checked:border-primary checked:bg-primary
+      checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary
       focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50
       aria-invalid:border-destructive aria-invalid:ring-1 aria-invalid:ring-destructive/20
-      aria-invalid:checked:border-primary
-      dark:bg-input/30 dark:checked:bg-primary
+      aria-invalid:checked:border-primary aria-invalid:indeterminate:border-primary
+      dark:bg-input/30 dark:checked:bg-primary dark:indeterminate:bg-primary
       dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
   }
 
-  .checkbox-indicator {
+  .checkbox-indicator,
+  .checkbox-indeterminate-indicator {
     @apply size-3.5 text-primary-foreground;
   }
 
@@ -889,6 +890,11 @@
     @apply hover:bg-muted/50 motion-safe:transition-colors;
   }
 
+  /* A selected row, as shadcn/ui's data-state=selected: one whose first cell holds a checked checkbox. */
+  .table > tbody > tr:has(> :first-child .checkbox:checked) {
+    @apply bg-muted;
+  }
+
   .table > tbody > tr:last-child,
   .table > tfoot > tr:last-child {
     @apply border-b-0;
@@ -954,7 +960,8 @@
     @apply pe-1.5;
   }
 
-  .pagination-summary {
+  .pagination-summary,
+  .table-selection-count {
     @apply text-xs text-muted-foreground;
   }
 

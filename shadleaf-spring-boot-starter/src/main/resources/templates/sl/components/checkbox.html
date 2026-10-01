@@ -7,21 +7,29 @@
       <code>input</code>, except <code>class</code>, which goes to the wrapper that holds the check mark. With
       <code>th:field</code>, Spring numbers the id (<code>terms1</code>), so put the checkbox inside its label, in a
       <code>sl:field</code> (which gives it the field's name as id), or give it an explicit <code>id</code>; the
-      checkbox is marked <code>aria-invalid</code> when its field has errors.</sl:description>
+      checkbox is marked <code>aria-invalid</code> when its field has errors. A checkbox in the indeterminate state
+      (neither checked nor unchecked: some of a group selected) shows a minus.</sl:description>
+    <sl:prop name="indeterminate" type="boolean">Start in the indeterminate state. HTML has no attribute for it, only
+      the DOM property <code>indeterminate</code>: this renders <code>data-indeterminate</code>, from which Shadleaf's
+      script sets the property when the page loads (or htmx swaps the checkbox in). A click clears it, as it does on
+      every checkbox. A script can set the property on any checkbox; the minus follows it.</sl:prop>
   </sl:props>
 </head>
 <body>
-<!--/* The check mark is an icon over the input, not a CSS background image, which a strict img-src would block. th:field
-  adds a hidden marker input after the checkbox, so the CSS uses ~, not +. */-->
+<!--/* The check mark and the minus are icons over the input, not CSS background images, which a strict img-src would
+  block; the CSS shows one of them from :checked or :indeterminate. th:field adds a hidden marker input after the
+  checkbox, so the CSS uses ~, not +. */-->
 <span th:fragment="checkbox"
       th:with="slAttrs=${#slFields.control(attrs, slField)}"
       class="checkbox-wrapper"
       sl:attrs="${attrs.only('class', 'classappend')}">
   <input type="checkbox"
          class="checkbox"
-         th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+         th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null},
+                  data-indeterminate=${props.indeterminate ? 'true' : null}"
          sl:attrs="${slAttrs.without('class', 'classappend')}">
   <sl:icon name="check" class="checkbox-indicator"/>
+  <sl:icon name="minus" class="checkbox-indeterminate-indicator"/>
 </span>
 </body>
 </html>

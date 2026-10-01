@@ -63,6 +63,36 @@
   <td colspan="3">Nobody matches.</td>
 </tr>
 
+<!-- <sl:table-select-all/> -->
+<span class="checkbox-wrapper table-select-all" x-data="slTableSelection" x-cloak data-format="{0} of {1} selected">
+  <input type="checkbox" class="checkbox" aria-label="Select all rows on this page">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <span class="sl-sr-only" role="status"></span>
+</span>
+
+<!-- <sl:table-select-all name="ids" id="people-select-all" form="bulk" class="extra"/> -->
+<span class="checkbox-wrapper table-select-all extra" x-data="slTableSelection" x-cloak data-name="ids" data-format="{0} of {1} selected">
+  <input type="checkbox" class="checkbox" aria-label="Select all rows on this page" id="people-select-all" form="bulk">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <span class="sl-sr-only" role="status"></span>
+</span>
+
+<!-- <sl:table-select-all aria-label="Select all people on this page"/> -->
+<span class="checkbox-wrapper table-select-all" x-data="slTableSelection" x-cloak data-format="{0} of {1} selected">
+  <input type="checkbox" class="checkbox" aria-label="Select all people on this page">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <span class="sl-sr-only" role="status"></span>
+</span>
+
+<!-- <sl:table-selection-count table="people"/> -->
+<span class="table-selection-count" x-data="slTableSelectionCount" x-cloak data-table="people" data-format="{0} of {1} selected"></span>
+
+<!-- <sl:table-selection-count table="people" id="people-count" class="extra"/> -->
+<span class="table-selection-count extra" x-data="slTableSelectionCount" x-cloak data-table="people" data-format="{0} of {1} selected" id="people-count"></span>
+
 <!-- <sl:table qualifier="members">
   <caption>Members</caption>
   <thead>

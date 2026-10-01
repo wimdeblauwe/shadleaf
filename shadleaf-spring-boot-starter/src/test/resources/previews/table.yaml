@@ -1,6 +1,6 @@
 # Scenarios for the table's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
 component: table
-parts: [table-head, table-empty]
+parts: [table-head, table-empty, table-select-all, table-selection-count]
 scenarios:
   - id: default
     title: Table
@@ -113,3 +113,54 @@ scenarios:
           <sl:table-empty colspan="3"/>
         </tbody>
       </sl:table>
+
+  - id: selection
+    title: Selecting rows
+    description: The rows are plain checkboxes named ids; one is selected, so select-all starts indeterminate.
+    source: |-
+      <sl:table id="people-selection">
+        <thead>
+          <tr>
+            <th><sl:table-select-all/></th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="person : ${people}">
+            <td><sl:checkbox name="ids" th:value="${person.id}"
+                             th:aria-label="#{sl.table.select-row(${person.name})}"/></td>
+            <td th:text="${person.name}">Ada Lovelace</td>
+            <td th:text="${person.email}">ada@example.com</td>
+          </tr>
+        </tbody>
+      </sl:table>
+      <sl:table-selection-count table="people-selection"/>
+    renderSource: |-
+      <sl:table id="people-selection">
+        <thead>
+          <tr>
+            <th><sl:table-select-all/></th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><sl:checkbox name="ids" value="1" aria-label="Select Ada Lovelace" checked/></td>
+            <td>Ada Lovelace</td>
+            <td>ada@example.com</td>
+          </tr>
+          <tr>
+            <td><sl:checkbox name="ids" value="2" aria-label="Select Alan Turing"/></td>
+            <td>Alan Turing</td>
+            <td>alan@example.com</td>
+          </tr>
+          <tr>
+            <td><sl:checkbox name="ids" value="3" aria-label="Select Grace Hopper"/></td>
+            <td>Grace Hopper</td>
+            <td>grace@example.com</td>
+          </tr>
+        </tbody>
+      </sl:table>
+      <sl:table-selection-count table="people-selection"/>

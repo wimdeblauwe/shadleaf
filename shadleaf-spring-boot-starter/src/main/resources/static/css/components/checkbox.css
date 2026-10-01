@@ -1,7 +1,8 @@
 /*
   Checkbox: structure only. Size, radius, border, colours and focus ring are identity and live in the skins.
 
-  The input and the check icon share one grid cell; the icon shows while the input is checked. th:field puts a hidden
+  The input, the check icon and the minus icon share one grid cell; the check shows while the input is checked, the
+  minus while it is indeterminate (the DOM property, which wins over checked, as in the browser's own checkbox). th:field puts a hidden
   marker input between them, hence ~. In forced-colors mode the browser draws its own checkbox, as it drops the
   backgrounds the skins use.
 
@@ -24,11 +25,13 @@
       forced-colors:appearance-auto;
   }
 
-  .checkbox-indicator {
+  .checkbox-indicator,
+  .checkbox-indeterminate-indicator {
     @apply pointer-events-none invisible forced-colors:hidden;
   }
 
-  .checkbox:checked ~ .checkbox-indicator {
+  .checkbox:checked:not(:indeterminate) ~ .checkbox-indicator,
+  .checkbox:indeterminate ~ .checkbox-indeterminate-indicator {
     @apply visible;
   }
 }

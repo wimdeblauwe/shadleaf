@@ -98,7 +98,8 @@ class FormControlsBindingTest {
     assertThat(checkbox.hasAttr("checked")).isTrue();
     assertThat(checkbox.hasAttr("aria-invalid")).isFalse();
     assertThat(wrapper.select("input[type=hidden][name=_newsletter]")).hasSize(1);
-    assertThat(checkbox.nextElementSiblings().last().hasClass("checkbox-indicator")).isTrue();
+    assertThat(checkbox.nextElementSiblings().eachAttr("class"))
+        .containsExactly("sl-icon checkbox-indicator", "sl-icon checkbox-indeterminate-indicator");
   }
 
   @Test

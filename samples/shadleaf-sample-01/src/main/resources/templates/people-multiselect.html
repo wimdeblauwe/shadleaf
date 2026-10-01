@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      xmlns:hx="http://www.w3.org/1999/xhtml"
+      th:replace="~{layout/main :: layout('People with multiselect', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>The <a th:href="@{/people}">people</a> table, with a checkbox per row. The one in the header selects every
+    person on this page, and the footer counts them (both need JavaScript). Delete selected posts the selected ids after
+    a confirmation, and comes back to the same search, order and page. A sort, page or search starts with nothing
+    selected: the selection is per page.</p>
+
+  <!--/* A GET form: without JavaScript, Enter sends it (one field needs no button). With htmx it asks for the results
+    300 ms after the last keystroke, at once on Enter (submit) or on clearing the field (search), and only the
+    latest request counts (hx-sync replace). It asks for this page's own URL, so the address it pushes and the links
+    the response builds from the request agree. The field stays outside what is swapped, so it keeps the focus and
+    whatever was typed while a request was out. hx-history="false": htmx's snapshot would keep the field's value of
+    the first load, not the search of that history entry, so going back asks the server for the page instead. */-->
+  <form id="people-search" class="people-search" role="search" method="get" th:action="@{/people-multiselect}"
+        hx:get="@{/people-multiselect}" hx-trigger="input changed delay:300ms, search, submit" hx-sync="this:replace"
+        hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none" hx-push-url="true"
+        hx-history="false">
+    <sl:input type="search" id="people-q" name="q" th:value="${search}" aria-label="Search people"
+              placeholder="Filter by name or email…" autocomplete="off"/>
+    <!--/* What a screen reader announces after a search; the response updates it out of band. */-->
+    <p id="people-status" class="visually-hidden" role="status" th:text="${found}"></p>
+  </form>
+
+  <!--/* Swapped by htmx: the boosted links inherit the target and select, and keep their ids, so htmx gives the focus
+    back to the link that was followed. The form's hidden inputs live here (form="people-search"), so they follow the
+    order and size of the table they came with. */-->
+  <div id="people-results" th:fragment="results"
+       hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+    <sl:query-params except="q" form="people-search"/>
+    <p th:if="${fragment}" id="people-status" hx-swap-oob="innerHTML" th:text="${found}"></p>
+    <!--/* The selection: the row checkboxes (ids) belong to this form, which posts to this page's own URL, so the
+      delete knows the search, order and page to come back to. The confirm dialog's Delete button submits it; with
+      htmx it posts itself (hx-post includes the form's values), so the HX-Trigger sl-dialog-close of the answer reaches
+      its dialog, and the focus goes back to Delete selected, which htmx finds again by its id after the swap. */-->
+    <form id="people-bulk" method="post" th:action="${selfUrl}">
+      <div class="table-toolbar">
+        <sl:button id="people-delete-trigger" type="button" variant="outline" size="sm"
+                   commandfor="people-delete" command="show-modal">
+          <sl:slot name="icon-start"><sl:icon name="trash-2"/></sl:slot>
+          Delete selected
+        </sl:button>
+      </div>
+    <sl:table id="people-table" th:page="${people}">
+      <thead>
+        <tr>
+          <th><sl:table-select-all/></th>
+          <sl:table-head sort="name">Name</sl:table-head>
+          <sl:table-head sort="email">Email</sl:table-head>
+          <sl:table-head sort="role">Role</sl:table-head>
+          <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+          <sl:table-head sort="joined" align="end">Joined</sl:table-head>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="person : ${people}">
+          <td><sl:checkbox name="ids" th:value="${person.id}"
+                           th:aria-label="#{sl.table.select-row(${person.name})}"/></td>
+          <td th:text="${person.name}">Ada Allen</td>
+          <td th:text="${person.email}">ada.allen@example.com</td>
+          <td><sl:badge th:variant="${person.role.name() == 'MEMBER' ? 'outline' : 'secondary'}"
+                        th:text="${#strings.capitalize(#strings.toLowerCase(person.role))}">Member</sl:badge></td>
+          <td data-align="end" th:text="${person.orders}">3</td>
+          <td data-align="end" th:text="${#temporals.format(person.joined, 'd MMM yyyy')}">6 Jan 2020</td>
+        </tr>
+        <sl:table-empty colspan="6" th:if="${people.empty and search.isEmpty()}"/>
+        <sl:table-empty colspan="6" th:if="${people.empty and !search.isEmpty()}">No one matches
+          “[[${search}]]”.</sl:table-empty>
+      </tbody>
+    </sl:table>
+      <sl:alert-dialog id="people-delete" size="sm">
+        <sl:alert-dialog-header>
+          <sl:alert-dialog-media variant="destructive"><sl:icon name="trash-2"/></sl:alert-dialog-media>
+          <sl:alert-dialog-title>Delete the selected people?</sl:alert-dialog-title>
+          <sl:alert-dialog-description>They are removed for good. This cannot be undone.</sl:alert-dialog-description>
+        </sl:alert-dialog-header>
+        <sl:alert-dialog-footer>
+          <sl:alert-dialog-cancel/>
+          <sl:button variant="destructive" type="submit" hx:post="${selfUrl}">Delete</sl:button>
+        </sl:alert-dialog-footer>
+      </sl:alert-dialog>
+    </form>
+    <!--/* Laid out as shadcn/ui's data table footer: the selection count at the start, the summary, rows per page and
+      the pages at the end. */-->
+    <div class="table-footer">
+      <sl:table-selection-count table="people-table"/>
+      <div class="table-footer-controls">
+        <sl:pagination-summary th:page="${people}"/>
+        <sl:pagination-size th:page="${people}"/>
+        <sl:pagination th:page="${people}"/>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

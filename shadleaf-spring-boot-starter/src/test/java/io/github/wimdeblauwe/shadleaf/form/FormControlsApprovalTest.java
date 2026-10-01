@@ -85,6 +85,7 @@ class FormControlsApprovalTest {
         "<sl:checkbox name=\"terms\"/>",
         "<sl:checkbox id=\"terms\" name=\"terms\" value=\"yes\" checked required/>",
         "<sl:checkbox name=\"terms\" disabled aria-invalid=\"true\" class=\"ms-2\"/>",
+        "<sl:checkbox name=\"toppings\" indeterminate/>",
         "<sl:label><sl:checkbox name=\"newsletter\"/>Send me the newsletter</sl:label>"));
   }
 

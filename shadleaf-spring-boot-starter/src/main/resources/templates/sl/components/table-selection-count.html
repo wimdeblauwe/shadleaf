@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>How many rows of a <code>sl:table</code> are selected: "2 of 20 selected" (the message
+      <code>sl.table.selection.count</code>), kept up to date in the browser as rows are checked, as rows are
+      replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as
+      shadcn/ui's data table does. It is not a live region: a click on <code>sl:table-select-all</code> announces the
+      count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.</sl:description>
+    <sl:prop name="table" required>The <code>id</code> of the table whose rows it counts (<code>sl:table</code> puts
+      its <code>id</code> on the <code>table</code>).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<span th:fragment="table-selection-count"
+      class="table-selection-count"
+      x-data="slTableSelectionCount"
+      x-cloak
+      th:attr="data-table=${props.table}, data-format=#{sl.table.selection.count('{0}', '{1}')}"
+      sl:attrs></span>
+</body>
+</html>

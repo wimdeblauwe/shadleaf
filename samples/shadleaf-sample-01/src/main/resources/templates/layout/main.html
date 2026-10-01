@@ -38,6 +38,8 @@
                th:aria-current="${pageTitle == 'Settings' ? 'page' : null}">Settings</sl:button>
     <sl:button as="a" variant="ghost" size="sm" th:href="@{/people}"
                th:aria-current="${pageTitle == 'People' ? 'page' : null}">People</sl:button>
+    <sl:button as="a" variant="ghost" size="sm" th:href="@{/people-multiselect}"
+               th:aria-current="${pageTitle == 'People with multiselect' ? 'page' : null}">People with multiselect</sl:button>
   </nav>
   <div th:replace="${content}"></div>
 </main>
