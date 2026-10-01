@@ -1,0 +1,196 @@
+---
+title: Pagination
+description: Links to the other pages of a list, built from the Spring Data Page the controller returns.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="pagination--default" />
+
+## From a page
+
+Give `<sl:pagination>` the Spring Data `Page` the controller put in the model, and nothing else:
+
+```html
+<sl:pagination th:page="${people}"/>
+```
+
+It renders Previous, the first and the last page, the current page with one page on each side, an ellipsis for the
+pages it leaves out, and Next. A gap of a single page shows that page instead of an ellipsis, which would take the same
+room. `siblings` sets how many pages show on each side of the current one:
+
+<ComponentPreview id="pagination--siblings" />
+
+Each link is the request that rendered the page with another page number: every other parameter in the address (the
+sort, the page size, a search) is kept as it was. The controller needs nothing new, as the `Pageable` that sorts the
+[table](../table/) also reads the page:
+
+```java
+@GetMapping("/people")
+String people(@PageableDefault(size = 20, sort = "name") Pageable pageable, Model model) {
+  model.addAttribute("people", personRepository.findAll(pageable));
+  return "people";
+}
+```
+
+Sort the rows by a unique key last, or a row can show up on two pages or on none: see
+[a stable order across pages](../table/#a-stable-order-across-pages).
+
+The page shown now is an outline button with `aria-current="page"`. On the first page Previous is disabled, and on the
+last page Next, the way a disabled link button is: no `href`, `aria-disabled="true"`, out of the tab order. An empty
+result still has one page, the one saying so.
+
+<ComponentPreview id="pagination--first" />
+
+### A Slice
+
+A `Slice` knows whether there is a next page, not how many pages there are, so it gets Previous and Next only. It
+saves the count query on a large table:
+
+<ComponentPreview id="pagination--slice" />
+
+### Without Spring Data
+
+Without a `Page`, pass the page shown now (counting from 1) and the number of pages:
+
+<ComponentPreview id="pagination--numbers" />
+
+The links ask for the page with the same parameter Spring Data would read, zero-based unless
+`spring.data.web.pageable.one-indexed-parameters` is set (see [parameter names](../table/#parameter-names)); the
+controller reads it itself. `sl:pagination-summary` and `sl:pagination-size` need a `Page` or `Slice`: without Spring
+Data, write the summary with `#messages` and the sizes as links of your own.
+
+### Two lists on one page
+
+The `qualifier` of the controller's second `Pageable` (`@Qualifier("members")`) gives a pagination its own parameter
+(`members_page`) and its links their own ids (`members-page-2`), as it does for the
+[table's headers](../table/#two-tables-on-one-page).
+
+## Written by hand
+
+With content of its own, `<sl:pagination>` is the `nav` around a pagination of parts, as in shadcn/ui:
+
+<ComponentPreview id="pagination--hand-written" />
+
+`sl:pagination-link` takes `active` for the page shown now and `disabled` for nowhere to go; `sl:pagination-previous`
+and `sl:pagination-next` take `disabled`, and content of their own replaces their text.
+
+## Summary
+
+`<sl:pagination-summary>` says which rows the page shows, or with `format="page"` which page it is:
+
+<ComponentPreview id="pagination--summary" />
+
+<ComponentPreview id="pagination--summary-page" />
+
+A `Slice` has no total, so it reads "11–20" or "Page 2". The words are messages, so your `messages.properties` rewords
+or translates them; the numbers are formatted for the locale ("1,001–1,010 of 12,345").
+
+## Rows per page
+
+`<sl:pagination-size>` is a label and a [dropdown menu](../dropdown-menu/) of sizes, as in shadcn/ui's data table:
+
+<ComponentPreview id="pagination--size" />
+
+Each size is a link to the same request with that size, every other parameter kept except the page number, so the list
+starts on its first page. It works without JavaScript: the menu is a popover. `sizes="10,20,50"` is the default; a size
+the page has that is not in the list is added to it, so the menu always shows a checked one. Limit what the controller
+accepts with `spring.data.web.pageable.max-page-size`.
+
+## A table footer
+
+Summary, size and pagination are separate, so you lay out the footer. shadcn/ui's data table puts the summary at the
+start and the controls at the end:
+
+```html
+<div class="table-footer">
+  <sl:pagination-summary th:page="${people}"/>
+  <div class="table-footer-controls">
+    <sl:pagination-size th:page="${people}"/>
+    <sl:pagination th:page="${people}"/>
+  </div>
+</div>
+```
+
+```css
+.table-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.table-footer-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+/* The pagination centres itself across the full width by default. */
+.table-footer .pagination { inline-size: auto; margin: 0; }
+```
+
+Sample-01's `/people` page does this.
+
+## Focus after an htmx swap
+
+Every link has an id: `page-previous`, `page-next` and `page-<number>` (prefixed with the qualifier). When htmx replaces
+the list and its pagination, it gives the focus back to the element with the id that had it, so after Next the focus is
+on the new Next. The size menu's button is `page-size-trigger`: the menu gives the focus back to it before the chosen
+link is followed.
+
+## Accessibility
+
+- The `nav` is named "Pagination" (`sl.pagination.label`); an `aria-label` of your own replaces it, which two
+  paginations on one page need.
+- Previous and Next are named "Go to previous page" and "Go to next page". On a narrow screen only their chevron shows.
+- The ellipsis reads "More pages", where shadcn/ui hides it from screen readers: a list item that says nothing is
+  harder to follow.
+- The size menu's button reads "Rows per page" followed by the size.
+
+## Messages
+
+| Key | English |
+| --- | --- |
+| `sl.pagination.label` | Pagination |
+| `sl.pagination.previous`, `sl.pagination.previous.label` | Previous, Go to previous page |
+| `sl.pagination.next`, `sl.pagination.next.label` | Next, Go to next page |
+| `sl.pagination.more` | More pages |
+| `sl.pagination.summary` | `{0}–{1} of {2}` |
+| `sl.pagination.summary.slice` | `{0}–{1}` |
+| `sl.pagination.summary.empty` | 0 of 0 |
+| `sl.pagination.summary.page`, `sl.pagination.summary.page.slice` | `Page {0} of {1}`, `Page {0}` |
+| `sl.pagination-size.label` | Rows per page |
+
+## Left out
+
+First and last page buttons (shadcn's dashboard has them; the first and the last page are always among the numbers),
+a field to type a page number, and paging in the browser.
+
+## Attributes
+
+### sl:pagination
+
+<ComponentAttributes component="pagination" />
+
+### sl:pagination-content
+
+<ComponentAttributes component="pagination-content" />
+
+### sl:pagination-item
+
+<ComponentAttributes component="pagination-item" />
+
+### sl:pagination-link
+
+<ComponentAttributes component="pagination-link" />
+
+### sl:pagination-previous
+
+<ComponentAttributes component="pagination-previous" />
+
+### sl:pagination-next
+
+<ComponentAttributes component="pagination-next" />
+
+### sl:pagination-ellipsis
+
+<ComponentAttributes component="pagination-ellipsis" />
+
+### sl:pagination-summary
+
+<ComponentAttributes component="pagination-summary" />
+
+### sl:pagination-size
+
+<ComponentAttributes component="pagination-size" />

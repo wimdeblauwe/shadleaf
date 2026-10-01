@@ -1665,6 +1665,276 @@
           }
         } ]
       }, {
+        "name" : "sl:pagination",
+        "description" : "Links to the other pages of a list, in a `nav`. Given the Spring Data `Page` it shows (`th:page=\"${people}\"`) and no content of its own, it renders them all: Previous, the first and the last page, the current page with `siblings` on each side, an ellipsis for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and has a stable id, so htmx can give the focus back after a swap. A `Slice`, which does not know how many pages there are, gets Previous and Next only. Without Spring Data, pass `current` and `total` instead. With content of its own it is the frame for a hand-written pagination of `sl:pagination-content`, `-item`, `-link`, `-previous`, `-next` and `-ellipsis`, as in shadcn/ui.",
+        "attributes" : [ {
+          "name" : "current",
+          "description" : "Without a `page`: the page shown now, counting from 1.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "total",
+          "description" : "Without a `page`: the number of pages.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "siblings",
+          "description" : "How many pages to show on each side of the current one.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "1"
+        }, {
+          "name" : "qualifier",
+          "description" : "The `@Qualifier` of the controller's `Pageable`, for a second list on the page: its links use `members_page` instead of `page`, and their ids start with `members-`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:page",
+          "description" : "The Spring Data `Page` or `Slice` shown now.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:current",
+          "description" : "`current` from a Thymeleaf expression, e.g. `th:current=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:total",
+          "description" : "`total` from a Thymeleaf expression, e.g. `th:total=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:siblings",
+          "description" : "`siblings` from a Thymeleaf expression, e.g. `th:siblings=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:qualifier",
+          "description" : "`qualifier` from a Thymeleaf expression, e.g. `th:qualifier=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-content",
+        "description" : "The list (`ul`) of a hand-written `sl:pagination`, holding `sl:pagination-item`s.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:pagination-ellipsis",
+        "description" : "Stands for the pages a `sl:pagination` leaves out: an ellipsis, read as \"More pages\" (the message `sl.pagination.more`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:pagination-item",
+        "description" : "One entry (`li`) of a `sl:pagination-content`: holds a link, Previous, Next or an ellipsis.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:pagination-link",
+        "description" : "A link to one page, drawn as a ghost button, or an outline one for the page shown now (`active`). Give it an `href` or `th:href`, and the page number as content.",
+        "attributes" : [ {
+          "name" : "active",
+          "description" : "Whether it is the page shown now: `aria-current=\"page\"` and the outline look.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "size",
+          "description" : "Size of the link, as on `sl:button`: square by default, for a number.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "icon"
+        }, {
+          "name" : "disabled",
+          "description" : "There is nowhere to go: the link loses its `href`, gets `aria-disabled` and leaves the tab order, as a disabled `sl:button as=\"a\"`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:active",
+          "description" : "`active` from a Thymeleaf expression, e.g. `th:active=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-next",
+        "description" : "The link to the next page: a `sl:pagination-link` with a chevron and the text \"Next\" (the message `sl.pagination.next`), which content of its own replaces. Its name is \"Go to next page\" (`sl.pagination.next.label`); an `aria-label` replaces it. On a narrow screen only the chevron shows.",
+        "attributes" : [ {
+          "name" : "disabled",
+          "description" : "There is no next page: the link loses its `href`, gets `aria-disabled` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-previous",
+        "description" : "The link to the previous page: a `sl:pagination-link` with a chevron and the text \"Previous\" (the message `sl.pagination.previous`), which content of its own replaces. Its name is \"Go to previous page\" (`sl.pagination.previous.label`); an `aria-label` replaces it. On a narrow screen only the chevron shows.",
+        "attributes" : [ {
+          "name" : "disabled",
+          "description" : "There is no previous page: the link loses its `href`, gets `aria-disabled` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-size",
+        "description" : "\"Rows per page\" and a menu of page sizes, as in shadcn/ui's data table. The sizes are `sl:dropdown-menu-radio-item` links: each asks for the same request with that size, every other parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the menu is a popover). Takes the Spring Data `Page` shown now, whose size is the checked one; a size the page has but `sizes` does not list is added. The label is the message `sl.pagination-size.label`. Attributes go to the wrapper.",
+        "attributes" : [ {
+          "name" : "sizes",
+          "description" : "The sizes to choose from, separated by commas.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "10,20,50"
+        }, {
+          "name" : "qualifier",
+          "description" : "The `@Qualifier` of the controller's `Pageable`, for a second list on the page: its links use `members_size` instead of `size`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "id",
+          "description" : "The menu's id; its button gets `-trigger` added, its label `-label`. `page-size` when not set, prefixed with the qualifier (`members-page-size`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:page",
+          "description" : "The Spring Data `Page` or `Slice` shown now.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:sizes",
+          "description" : "`sizes` from a Thymeleaf expression, e.g. `th:sizes=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:qualifier",
+          "description" : "`qualifier` from a Thymeleaf expression, e.g. `th:qualifier=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-summary",
+        "description" : "Where the page is in the results, as text: \"11–20 of 270\", or with `format=\"page\"` \"Page 2 of 27\". Takes the Spring Data `Page` shown now (`th:page`); for a `Slice`, which does not know the total, \"11–20\" or \"Page 2\". The words are messages (`sl.pagination.summary*`), so an application rewords or translates them; numbers are formatted for the locale.",
+        "attributes" : [ {
+          "name" : "format",
+          "description" : "`range`: the rows shown and the total. `page`: the page number and the number of pages.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "range"
+          }, {
+            "name" : "page"
+          } ],
+          "default" : "range"
+        }, {
+          "name" : "th:page",
+          "description" : "The Spring Data `Page` or `Slice` shown now.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:format",
+          "description" : "`format` from a Thymeleaf expression, e.g. `th:format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:popover",
         "description" : "Rich content in a panel that opens from a button, on the browser's Popover API: it sits above the page next to its trigger, and Escape, a click outside or moving the focus out of it closes it. Holds a `sl:popover-trigger` and a `sl:popover-content`. Renders no element of its own.",
         "attributes" : [ {

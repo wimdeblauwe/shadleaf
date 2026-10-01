@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One entry (<code>li</code>) of a <code>sl:pagination-content</code>: holds a link, Previous,
+      Next or an ellipsis.</sl:description>
+  </sl:props>
+</head>
+<body>
+<li th:fragment="pagination-item" class="pagination-item" sl:attrs><sl:slot/></li>
+</body>
+</html>

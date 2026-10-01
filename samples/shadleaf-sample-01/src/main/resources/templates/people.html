@@ -5,11 +5,13 @@
       th:replace="~{layout/main :: layout('People', ~{::#page-content})}">
 <body>
 <div id="page-content">
-  <p>Sorted on the server by Spring Data JPA, from an in-memory H2 database. Each column header is a link to
-    <code>?sort=…,asc</code> (or <code>desc</code> when that column is sorted ascending already); the controller's
-    <code>Pageable</code> reads it, and the <code>Page</code> it gets back tells the table which column is sorted.</p>
-  <p class="muted" th:text="|The first ${people.numberOfElements} of ${people.totalElements} people. Paging comes with the pagination component.|">
-    The first 20 of 270 people.</p>
+  <p>Sorted and paged on the server by Spring Data JPA, from an in-memory H2 database. Each column header is a link
+    to <code>?sort=…,asc</code> (or <code>desc</code> when that column is sorted ascending already), each page to
+    <code>?page=…</code> and each size to <code>?size=…</code>, keeping the other parameters. The controller's
+    <code>Pageable</code> reads them, and the <code>Page</code> it gets back tells the table which column is sorted and
+    the pagination which page it is on.</p>
+  <p>The controller adds the id as the last sort key, so people with the same number of orders keep one order and
+    every person is on exactly one page. Roles are stored as their rank, so they sort Owner, Admin, Member, Guest.</p>
 
   <sl:table th:page="${people}">
     <thead>
@@ -33,6 +35,14 @@
       <sl:table-empty colspan="5" th:if="${people.empty}"/>
     </tbody>
   </sl:table>
+  <!--/* Laid out as shadcn/ui's data table footer: the summary at the start, rows per page and the pages at the end. */-->
+  <div class="table-footer">
+    <sl:pagination-summary th:page="${people}"/>
+    <div class="table-footer-controls">
+      <sl:pagination-size th:page="${people}"/>
+      <sl:pagination th:page="${people}"/>
+    </div>
+  </div>
 </div>
 </body>
 </html>

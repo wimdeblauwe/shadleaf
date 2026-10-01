@@ -1,0 +1,54 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Links to the other pages of a list, in a <code>nav</code>. Given the Spring Data
+      <code>Page</code> it shows (<code>th:page="${people}"</code>) and no content of its own, it renders them all:
+      Previous, the first and the last page, the current page with <code>siblings</code> on each side, an ellipsis
+      for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and
+      has a stable id, so htmx can give the focus back after a swap. A <code>Slice</code>, which does not know how
+      many pages there are, gets Previous and Next only. Without Spring Data, pass <code>current</code> and
+      <code>total</code> instead. With content of its own it is the frame for a hand-written pagination of
+      <code>sl:pagination-content</code>, <code>-item</code>, <code>-link</code>, <code>-previous</code>,
+      <code>-next</code> and <code>-ellipsis</code>, as in shadcn/ui.</sl:description>
+    <sl:prop name="page" type="object">The Spring Data <code>Page</code> or <code>Slice</code> shown now.</sl:prop>
+    <sl:prop name="current" type="number">Without a <code>page</code>: the page shown now, counting from 1.</sl:prop>
+    <sl:prop name="total" type="number">Without a <code>page</code>: the number of pages.</sl:prop>
+    <sl:prop name="siblings" type="number" default="1">How many pages to show on each side of the current one.
+      </sl:prop>
+    <sl:prop name="qualifier">The <code>@Qualifier</code> of the controller's <code>Pageable</code>, for a second
+      list on the page: its links use <code>members_page</code> instead of <code>page</code>, and their ids start
+      with <code>members-</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The nav is named by a message; a caller's aria-label replaces it (sl:attrs runs after th:attr). The parts read
+  the links from slPages, a local variable, since attributes on a nested component are evaluated in its template. */-->
+<nav th:fragment="pagination"
+     class="pagination"
+     th:attr="aria-label=#{sl.pagination.label}"
+     sl:attrs><th:block th:if="${slots.hasDefault()}"><sl:slot/></th:block><th:block
+    th:unless="${slots.hasDefault()}"
+    th:with="slPages=${#slPaging.pages(props.page, props.current, props.total, props.siblings, props.qualifier)}">
+  <sl:pagination-content>
+    <sl:pagination-item>
+      <sl:pagination-previous th:href="${slPages.previous.href}"
+                              th:id="${slPages.previous.id}"
+                              th:disabled="${slPages.previous.disabled}"/>
+    </sl:pagination-item>
+    <sl:pagination-item th:each="slItem : ${slPages.items}">
+      <sl:pagination-ellipsis th:if="${slItem.ellipsis}"/>
+      <sl:pagination-link th:unless="${slItem.ellipsis}"
+                          th:href="${slItem.href}"
+                          th:id="${slItem.id}"
+                          th:active="${slItem.current}">[[${slItem.number}]]</sl:pagination-link>
+    </sl:pagination-item>
+    <sl:pagination-item>
+      <sl:pagination-next th:href="${slPages.next.href}"
+                          th:id="${slPages.next.id}"
+                          th:disabled="${slPages.next.disabled}"/>
+    </sl:pagination-item>
+  </sl:pagination-content>
+</th:block></nav>
+</body>
+</html>

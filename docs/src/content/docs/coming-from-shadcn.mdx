@@ -211,6 +211,16 @@ the page in another order (`?sort=name,desc`), read from a Spring Data `Page`. A
 rather than a `text-right` class. There is no filtering, column visibility or browser-side paging. See
 [Table](../components/table/).
 
+### Pagination: built from a Spring Data page
+
+The parts are shadcn's (`PaginationContent`, `-Item`, `-Link`, `-Previous`, `-Next`, `-Ellipsis`), and
+`<sl:pagination th:page="${people}"/>` with no content renders them all from a Spring Data `Page`: links that keep the
+request's other parameters, first and last page, ellipses, Previous and Next disabled at the ends (no `href`,
+`aria-disabled`). `isActive` is `active`. The ellipsis is not `aria-hidden`: it reads "More pages", where shadcn's
+hidden screen-reader text is never read. The labels are messages (`sl.pagination.*`) rather than props such as
+Previous's `text`. The data table's footer pieces are components: `sl:pagination-summary` ("11–20 of 270") and
+`sl:pagination-size` (a menu of links rather than a select). See [Pagination](../components/pagination/).
+
 ### Markup
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a

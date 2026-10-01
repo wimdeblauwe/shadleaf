@@ -1,0 +1,101 @@
+# Scenarios for the pagination's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# Ids and landmark names must be unique across the showcase: scenarios after the first use a qualifier, which prefixes
+# their links' ids, and an aria-label, as two paginations on one page would.
+component: pagination
+parts: [pagination-content, pagination-item, pagination-link, pagination-previous, pagination-next,
+        pagination-ellipsis, pagination-summary, pagination-size]
+scenarios:
+  - id: default
+    title: From a page
+    description: Page 5 of 27, in a request for /people?sort=name,asc&page=4. Each link keeps the sort.
+    request: /people?sort=name,asc&page=4
+    pages:
+      people: {number: 4, size: 10, total: 270}
+    source: |-
+      <sl:pagination th:page="${people}"/>
+
+  - id: first
+    title: On the first page
+    description: Previous is disabled. A gap of one page shows that page rather than an ellipsis.
+    request: /team
+    pages:
+      team: {number: 0, size: 10, total: 50}
+    source: |-
+      <sl:pagination th:page="${team}" qualifier="team" aria-label="Team pages"/>
+
+  - id: siblings
+    title: More pages around the current one
+    request: /orders?orders_page=9
+    pages:
+      orders: {number: 9, size: 10, total: 270}
+    source: |-
+      <sl:pagination th:page="${orders}" siblings="2" qualifier="orders" aria-label="Order pages"/>
+
+  - id: slice
+    title: A Slice
+    description: A Slice does not know how many pages there are, so it gets Previous and Next only.
+    request: /activity?activity_page=1
+    pages:
+      activity: {number: 1, size: 10, slice: true}
+    source: |-
+      <sl:pagination th:page="${activity}" qualifier="activity" aria-label="Activity pages"/>
+
+  - id: numbers
+    title: Without Spring Data
+    request: /search?q=thymeleaf
+    source: |-
+      <sl:pagination th:current="${results.page}" th:total="${results.pages}" qualifier="results"
+                     aria-label="Result pages"/>
+    renderSource: |-
+      <sl:pagination current="3" total="8" qualifier="results" aria-label="Result pages"/>
+
+  - id: hand-written
+    title: Written by hand
+    description: The parts, as in shadcn/ui's example.
+    source: |-
+      <sl:pagination aria-label="Invoice pages">
+        <sl:pagination-content>
+          <sl:pagination-item>
+            <sl:pagination-previous href="#"/>
+          </sl:pagination-item>
+          <sl:pagination-item>
+            <sl:pagination-link href="#">1</sl:pagination-link>
+          </sl:pagination-item>
+          <sl:pagination-item>
+            <sl:pagination-link href="#" active>2</sl:pagination-link>
+          </sl:pagination-item>
+          <sl:pagination-item>
+            <sl:pagination-link href="#">3</sl:pagination-link>
+          </sl:pagination-item>
+          <sl:pagination-item>
+            <sl:pagination-ellipsis/>
+          </sl:pagination-item>
+          <sl:pagination-item>
+            <sl:pagination-next href="#"/>
+          </sl:pagination-item>
+        </sl:pagination-content>
+      </sl:pagination>
+
+  - id: summary
+    title: Summary
+    pages:
+      people: {number: 1, size: 10, total: 270}
+    source: |-
+      <sl:pagination-summary th:page="${people}"/>
+
+  - id: summary-page
+    title: Summary as the page number
+    pages:
+      people: {number: 1, size: 10, total: 270}
+    source: |-
+      <sl:pagination-summary th:page="${people}" format="page"/>
+
+  - id: size
+    title: Rows per page
+    description: In a request for /people?sort=name,asc&page=3&size=20. Each size keeps the sort and starts on the
+      first page.
+    request: /people?sort=name,asc&page=3&size=20
+    pages:
+      people: {number: 3, size: 20, total: 270}
+    source: |-
+      <sl:pagination-size th:page="${people}"/>

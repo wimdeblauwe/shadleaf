@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Stands for the pages a <code>sl:pagination</code> leaves out: an ellipsis, read as "More pages"
+      (the message <code>sl.pagination.more</code>).</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* Not aria-hidden, unlike shadcn/ui's: a list item that says nothing is harder to follow than "More pages". */-->
+<span th:fragment="pagination-ellipsis" class="pagination-ellipsis" sl:attrs><sl:icon name="ellipsis"/><span
+    class="sl-sr-only" th:text="#{sl.pagination.more}">More pages</span></span>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The list (<code>ul</code>) of a hand-written <code>sl:pagination</code>, holding
+      <code>sl:pagination-item</code>s.</sl:description>
+  </sl:props>
+</head>
+<body>
+<ul th:fragment="pagination-content" class="pagination-content" sl:attrs><sl:slot/></ul>
+</body>
+</html>

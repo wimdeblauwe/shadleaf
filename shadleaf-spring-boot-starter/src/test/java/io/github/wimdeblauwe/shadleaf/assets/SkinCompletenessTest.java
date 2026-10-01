@@ -29,6 +29,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
@@ -57,6 +60,9 @@ class SkinCompletenessTest {
       "summary");
   private static final Set<String> FORM_CONTROLS = Set.of("input", "select", "textarea");
   // Input types that ignore readonly.
+  /** The page an object prop ({@code th:page}) gets: page 2 of 3, so every pagination link is there. */
+  private static final Page<String> SAMPLE_PAGE = new PageImpl<>(List.of("x"), PageRequest.of(1, 1), 3);
+
   private static final Set<String> WITHOUT_READONLY = Set.of("checkbox", "radio", "file", "range", "color", "hidden");
 
   // A rule's selector list: the text before a "{" back to the previous "{", "}" or ";", skipping at-rules. A selector
@@ -154,7 +160,7 @@ class SkinCompletenessTest {
   /** The rendered root element, or {@code null} for a component that renders none of its own. */
   private static @Nullable Element renderRoot(String component, @Nullable String prop, @Nullable String value) {
     // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>; every other required prop gets "x" (a
-    // number "1").
+    // number "1"); an object prop gets the page of SAMPLE_PAGE (the only object props are th:page).
     // Inside a form object, for the components that read one (sl:form-errors).
     StringBuilder propAttribute = new StringBuilder(prop == null ? "" : "%s=\"%s\" ".formatted(prop, value));
     REGISTRY.get(component).props().values().stream()
@@ -162,8 +168,13 @@ class SkinCompletenessTest {
         .filter(required -> !required.name().equals(prop) && !required.name().equals("name"))
         .forEach(required -> propAttribute.append("%s=\"%s\" ".formatted(required.name(),
             required.type() == PropType.NUMBER ? "1" : "x")));
+    REGISTRY.get(component).props().values().stream()
+        .filter(object -> object.type() == PropType.OBJECT && !object.name().equals(prop))
+        .forEach(object -> propAttribute.append("th:%s=\"${samplePage}\" ".formatted(object.name())));
+    Map<String, Object> variables = new LinkedHashMap<>(FORM.variables());
+    variables.put("samplePage", SAMPLE_PAGE);
     Elements rendered = RENDERER.render(FormModel.wrap("<sl:%s %saria-label=\"x\" name=\"x\">x</sl:%s>"
-        .formatted(component, propAttribute, component)), FORM.variables()).document().body().children();
+        .formatted(component, propAttribute, component)), variables).document().body().children();
     return rendered.isEmpty() ? null : rendered.first();
   }
 

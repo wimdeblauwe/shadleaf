@@ -24,7 +24,9 @@ To add examples for a component, add or edit its YAML file, then embed a scenari
 application (see `field.yaml` and `form-errors.yaml`). `showcase: false` keeps a scenario off the showcase page, for
 one that would get in the way of the other components' tests there (a toast shown when the page loads, in
 `toaster.yaml`). `request` (`/people?sort=name,asc`) renders the scenario in a request for that path and query, for
-links built from the request, such as a table's sort links (see `table.yaml`).
+links built from the request, such as a table's sort links (see `table.yaml`). `pages` puts Spring Data pages in the
+model by name (`people: {number: 4, size: 10, total: 270}`, `number` zero-based; `slice: true` for a `Slice`), for a
+pagination (see `pagination.yaml`).
 
 ## Commands
 

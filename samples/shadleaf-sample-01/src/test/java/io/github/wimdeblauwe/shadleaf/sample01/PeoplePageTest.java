@@ -4,18 +4,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import org.jsoup.nodes.Element;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * The people page: a table sorted by Spring Data JPA from the {@code sort} parameter its column headers link to.
+ * The people page: a table sorted and paged by Spring Data JPA from the parameters its column headers, pagination
+ * and size menu link to.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -62,5 +67,67 @@ class PeoplePageTest {
 
     assertThat(column(page, 1)).isSorted();
     assertThat(page.select("th[aria-sort] > a").attr("id")).isEqualTo("sort-name");
+  }
+
+  @Test
+  void theFooterShowsWhereThePageIs() throws Exception {
+    Document page = page("/people?sort=orders,desc&page=1");
+
+    assertThat(page.select(".table-footer .pagination-summary").text()).isEqualTo("21–40 of 270");
+    assertThat(page.select(".pagination [aria-current=page]").text()).isEqualTo("2");
+    assertThat(page.getElementById("page-previous").attr("href")).isEqualTo("/people?sort=orders,desc&page=0");
+    assertThat(page.getElementById("page-next").attr("href")).isEqualTo("/people?sort=orders,desc&page=2");
+    assertThat(page.getElementById("page-14").attr("href")).isEqualTo("/people?sort=orders,desc&page=13");
+    assertThat(page.getElementById("sort-orders").attr("href")).isEqualTo("/people?sort=orders,asc");
+    assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
+  }
+
+  @Test
+  void theSizeMenuChangesTheRowsPerPage() throws Exception {
+    Document page = page("/people?sort=name,asc&page=3&size=50");
+
+    assertThat(column(page, 1)).hasSize(50);
+    assertThat(page.select(".pagination-size-trigger").text()).isEqualTo("50");
+    assertThat(page.select("#page-size [aria-checked=true]").attr("href")).isEqualTo("/people?sort=name,asc&size=50");
+    assertThat(page.select("#page-size [role=menuitemradio]").eachAttr("href")).containsExactly(
+        "/people?sort=name,asc&size=10", "/people?sort=name,asc&size=20", "/people?sort=name,asc&size=50");
+    assertThat(page.select(".pagination-summary").text()).isEqualTo("151–200 of 270");
+  }
+
+  /**
+   * Many people share a number of orders, a role or a join year: following Next from the first page to the last must
+   * still show every person exactly once, which takes the id as the controller's last sort key.
+   */
+  @ParameterizedTest
+  @ValueSource(strings = {"/people?sort=orders,asc&size=20", "/people?sort=orders,desc&size=20",
+      "/people?sort=role,asc&size=10", "/people?sort=role,desc&size=50", "/people"})
+  void everyPersonIsOnExactlyOnePage(String firstPage) throws Exception {
+    List<String> emails = new ArrayList<>();
+    String url = firstPage;
+    int pages = 0;
+    while (url != null) {
+      Document page = page(url);
+      emails.addAll(column(page, 2));
+      Element next = page.getElementById("page-next");
+      url = next.hasAttr("href") ? next.attr("href") : null;
+      pages++;
+      assertThat(pages).as("pages followed from %s", firstPage).isLessThanOrEqualTo(270);
+    }
+
+    assertThat(emails).hasSize(270).doesNotHaveDuplicates();
+  }
+
+  @Test
+  void rolesSortByRankNotByName() throws Exception {
+    Document page = page("/people?sort=role,asc&size=50");
+
+    List<String> roles = column(page, 3);
+    List<String> ranked = List.of("Owner", "Admin", "Member", "Guest");
+    assertThat(roles).isSortedAccordingTo(Comparator.comparing(ranked::indexOf));
+    assertThat(roles.get(0)).isEqualTo("Owner");
+    assertThat(page.select("th[aria-sort]").eachAttr("aria-sort")).containsExactly("ascending");
+
+    List<String> descending = column(page("/people?sort=role,desc&size=50"), 3);
+    assertThat(descending.get(0)).isEqualTo("Guest");
   }
 }

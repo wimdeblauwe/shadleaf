@@ -929,4 +929,40 @@
   .table > tbody > tr.table-empty > td {
     @apply h-24;
   }
+
+  /*
+    Pagination. The links are ghost buttons, the current page an outline one (.btn rules). Previous and Next keep
+    their own padding on the chevron's side, as shadcn/ui's.
+  */
+  .pagination-content {
+    @apply gap-0.5;
+  }
+
+  .pagination-ellipsis {
+    @apply size-8;
+  }
+
+  .pagination-ellipsis > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .btn.pagination-previous:has(> [data-icon]) {
+    @apply ps-1.5;
+  }
+
+  .btn.pagination-next:has(> [data-icon]) {
+    @apply pe-1.5;
+  }
+
+  .pagination-summary {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .pagination-size {
+    @apply gap-2;
+  }
+
+  .pagination-size-label {
+    @apply text-xs font-medium;
+  }
 }

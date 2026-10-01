@@ -1,7 +1,10 @@
 package io.github.wimdeblauwe.shadleaf.paging;
 
 import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.TreeSet;
 import java.util.function.UnaryOperator;
 import org.jspecify.annotations.Nullable;
 import org.thymeleaf.context.IExpressionContext;
@@ -10,8 +13,9 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.IWebRequest;
 
 /**
- * The expression object {@code #slPaging}: the links of {@code sl:table-head} (and, later, the pagination), built
- * from the request that renders the page.
+ * The expression object {@code #slPaging}: the links of {@code sl:table-head}, {@code sl:pagination} and
+ * {@code sl:pagination-size}, built from the request that renders the page, and the numbers of
+ * {@code sl:pagination-summary}.
  * <p>
  * A link replaces only its own parameters and keeps every other one, so a filter in the query string survives
  * sorting and paging. Parameter names are Spring Data's, as the application configured them
@@ -75,11 +79,135 @@ public final class Paging {
     if (page == null) {
       return requestOrder(sortParameter);
     }
+    requireSlice(page);
+    return SpringDataPages.firstOrder(page);
+  }
+
+  /**
+   * The links of a pagination: Previous, the page numbers, Next.
+   *
+   * @param page      the {@code Page} or {@code Slice} shown now; a {@code Slice} gets Previous and Next only
+   * @param current   without a {@code page}: the page shown now, one-based
+   * @param total     without a {@code page}: the number of pages
+   * @param siblings  how many pages to show on each side of the current one ({@code 1} when {@code null})
+   * @param qualifier the {@code @Qualifier} of the controller's {@code Pageable}, for a second table on the page
+   */
+  public PageLinks pages(@Nullable Object page, @Nullable Number current, @Nullable Number total,
+      @Nullable Number siblings, @Nullable String qualifier) {
+    PageState state = state(page, current, total);
+    int shown = state.number() + 1;
+    // An empty result still has a page: the one saying so.
+    Integer totalPages = state.totalPages() == null ? null : Math.max(state.totalPages(), 1);
+    // Past the end (a hand-edited ?page=99), Previous leads back to the last page.
+    PageLink previous = shown > 1
+        ? pageLink(totalPages == null ? shown - 1 : Math.min(shown - 1, totalPages), "previous", false, qualifier)
+        : PageLink.page(shown - 1, null, id(qualifier, "page-previous"), false);
+    PageLink next = state.hasNext()
+        ? pageLink(shown + 1, "next", false, qualifier)
+        : PageLink.page(shown + 1, null, id(qualifier, "page-next"), false);
+    List<PageLink> items = new ArrayList<>();
+    if (totalPages != null) {
+      int around = siblings == null ? 1 : Math.max(siblings.intValue(), 0);
+      TreeSet<Integer> numbers = new TreeSet<>(List.of(1, totalPages));
+      for (int number = Math.max(shown - around, 1); number <= Math.min(shown + around, totalPages); number++) {
+        numbers.add(number);
+      }
+      Integer before = null;
+      for (int number : numbers) {
+        if (before != null && number - before == 2) {
+          items.add(pageLink(before + 1, null, false, qualifier));
+        } else if (before != null && number - before > 2) {
+          items.add(PageLink.ellipsis());
+        }
+        items.add(pageLink(number, null, number == shown, qualifier));
+        before = number;
+      }
+    }
+    return new PageLinks(previous, items, next);
+  }
+
+  /**
+   * The choices of a page size menu.
+   *
+   * @param page      the {@code Page} or {@code Slice} shown now, whose size is the checked one
+   * @param sizes     the sizes to offer, separated by commas or spaces ({@code 10,20,50})
+   * @param qualifier the {@code @Qualifier} of the controller's {@code Pageable}, for a second table on the page
+   */
+  public SizeLinks sizes(@Nullable Object page, @Nullable String sizes, @Nullable String qualifier) {
+    if (page == null) {
+      throw new ShadleafComponentException(
+          "sl:pagination-size needs the page shown now, e.g. th:page=\"${people}\".");
+    }
+    requireSlice(page);
+    int current = SpringDataPages.state(page).size();
+    TreeSet<Integer> offered = new TreeSet<>();
+    offered.add(current);
+    for (String size : (sizes == null ? "" : sizes).trim().split("[,\\s]+")) {
+      if (size.isEmpty()) {
+        continue;
+      }
+      try {
+        offered.add(Integer.parseInt(size));
+      } catch (NumberFormatException e) {
+        throw new ShadleafComponentException("sl:pagination-size: '" + size + "' in sizes=\"" + sizes
+            + "\" is no number.");
+      }
+    }
+    String sizeParameter = parameters.size(qualifier);
+    List<SizeLink> items = offered.stream()
+        .map(size -> new SizeLink(size, urlTransformer.apply(query.without(sizeParameter, parameters.page(qualifier))
+            .with(sizeParameter, String.valueOf(size))
+            .href()), size == current))
+        .toList();
+    return new SizeLinks(current, items);
+  }
+
+  /**
+   * The numbers of a summary such as "11–20 of 270".
+   *
+   * @param page the {@code Page} or {@code Slice} shown now
+   */
+  public PageSummary summary(@Nullable Object page) {
+    if (page == null) {
+      throw new ShadleafComponentException(
+          "sl:pagination-summary needs the page shown now, e.g. th:page=\"${people}\".");
+    }
+    requireSlice(page);
+    PageState state = SpringDataPages.state(page);
+    long offset = (long) state.number() * state.size();
+    int rows = state.numberOfElements();
+    return new PageSummary(rows == 0 ? 0 : offset + 1, rows == 0 ? 0 : offset + rows, state.totalElements(),
+        state.number() + 1, state.totalPages() == null ? null : Math.max(state.totalPages(), 1));
+  }
+
+  private PageState state(@Nullable Object page, @Nullable Number current, @Nullable Number total) {
+    if (page != null) {
+      requireSlice(page);
+      return SpringDataPages.state(page);
+    }
+    if (current == null || total == null) {
+      throw new ShadleafComponentException("sl:pagination needs the page shown now: th:page=\"${people}\" with a "
+          + "Spring Data Page or Slice, or the numbers current (one-based) and total (the number of pages).");
+    }
+    int shown = Math.max(current.intValue(), 1);
+    int pages = Math.max(total.intValue(), 0);
+    return new PageState(shown - 1, null, null, pages, null, shown < pages);
+  }
+
+  /** A link to a page, one-based; {@code name} is the id's last part, the number when {@code null}. */
+  private PageLink pageLink(int number, @Nullable String name, boolean current, @Nullable String qualifier) {
+    String pageParameter = parameters.page(qualifier);
+    int value = parameters.oneIndexedParameters() ? number : number - 1;
+    String href = query.without(pageParameter).with(pageParameter, String.valueOf(value)).href();
+    return PageLink.page(number, urlTransformer.apply(href),
+        id(qualifier, "page-" + (name == null ? String.valueOf(number) : name)), current);
+  }
+
+  private static void requireSlice(Object page) {
     if (!SpringDataPages.PRESENT || !SpringDataPages.isSlice(page)) {
       throw new ShadleafComponentException("th:page takes a Spring Data Page or Slice, not a "
           + page.getClass().getName() + ".");
     }
-    return SpringDataPages.firstOrder(page);
   }
 
   /**

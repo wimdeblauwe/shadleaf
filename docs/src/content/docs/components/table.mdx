@@ -141,6 +141,60 @@ class PeopleController {
 
 The page the repository returns carries the order it was sorted by, so the table shows the fallback correctly too.
 
+### A stable order across pages
+
+Rows with the same value in the sorted column (two people with 59 orders) come back from the database in no particular
+order, and not necessarily the same one for every page. Once the table has [pages](../pagination/), such a row can
+show up on two pages, or on none. Add a unique key the reader does not see, such as the id, as the last sort key before
+you query:
+
+```java
+@GetMapping("/people")
+String people(@PageableDefault(sort = "name") Pageable pageable, Model model) {
+  Pageable stable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+      sortable(pageable).getSort().and(Sort.by("id")));
+  model.addAttribute("people", personRepository.findAll(stable));
+  return "people";
+}
+```
+
+The headers show only the first sort key, and the links are built from the request rather than from the page's
+`Sort`, so the id never shows up in the address. Sample-01's `/people` page does this, and its test follows Next from
+the first page to the last and finds every person exactly once.
+
+### Sorting an enum column
+
+An enum stored as a string (`@Enumerated(EnumType.STRING)`) sorts alphabetically: Admin, Guest, Member, Owner. To sort
+roles by rank, sort the database by the rank:
+
+- **Store the rank.** An `AttributeConverter` writes the enum as a number, so `sort=role` sorts by rank and the header
+  needs nothing else. Sample-01 does this:
+
+  ```java
+  public enum Role {
+    OWNER(1), ADMIN(2), MEMBER(3), GUEST(4);
+    ...
+  }
+
+  @Converter
+  class RoleConverter implements AttributeConverter<Role, Integer> {
+    public Integer convertToDatabaseColumn(Role role) { return role == null ? null : role.getRank(); }
+    public Role convertToEntityAttribute(Integer rank) { return rank == null ? null : Role.ofRank(rank); }
+  }
+  ```
+
+  ```java
+  @Convert(converter = RoleConverter.class)
+  private Role role;
+  ```
+
+  An explicit rank, unlike `EnumType.ORDINAL`, survives reordering the enum's constants.
+- **Sort by an expression.** Keep the string column and order by a `CASE` expression in a query of your own
+  (`order by case p.role when 'OWNER' then 1 when 'ADMIN' then 2 ... end`), or with `JpaSort.unsafe(...)`. The
+  controller then maps the `role` property of the requested `Sort` to that expression, and the `Page` it gets back
+  carries the expression, not `role`: build the page the template gets with the requested `Pageable`
+  (`new PageImpl<>(page.getContent(), pageable, page.getTotalElements())`) so the header still shows the order.
+
 ### Focus after an htmx swap
 
 Each sort link has an id (`sort-name`, or `members-sort-name` with a qualifier), so when htmx replaces the table it

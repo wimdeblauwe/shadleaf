@@ -1,0 +1,31 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Where the page is in the results, as text: "11–20 of 270", or with <code>format="page"</code>
+      "Page 2 of 27". Takes the Spring Data <code>Page</code> shown now (<code>th:page</code>); for a
+      <code>Slice</code>, which does not know the total, "11–20" or "Page 2". The words are messages
+      (<code>sl.pagination.summary*</code>), so an application rewords or translates them; numbers are formatted for
+      the locale.</sl:description>
+    <sl:prop name="page" type="object">The Spring Data <code>Page</code> or <code>Slice</code> shown now.
+      </sl:prop>
+    <sl:prop name="format" default="range" values="range page"><code>range</code>: the rows shown and the total.
+      <code>page</code>: the page number and the number of pages.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="pagination-summary"
+     class="pagination-summary"
+     th:with="slSummary=${#slPaging.summary(props.page)}"
+     th:text="${props.format == 'page'
+       ? (slSummary.totalPages == null
+         ? #messages.msg('sl.pagination.summary.page.slice', slSummary.number)
+         : #messages.msg('sl.pagination.summary.page', slSummary.number, slSummary.totalPages))
+       : (slSummary.empty
+         ? #messages.msg('sl.pagination.summary.empty')
+         : (slSummary.total == null
+           ? #messages.msg('sl.pagination.summary.slice', slSummary.first, slSummary.last)
+           : #messages.msg('sl.pagination.summary', slSummary.first, slSummary.last, slSummary.total)))}"
+     sl:attrs>11–20 of 270</div>
+</body>
+</html>

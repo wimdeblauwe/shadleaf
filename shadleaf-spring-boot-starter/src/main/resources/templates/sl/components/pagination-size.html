@@ -1,0 +1,53 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>"Rows per page" and a menu of page sizes, as in shadcn/ui's data table. The sizes are
+      <code>sl:dropdown-menu-radio-item</code> links: each asks for the same request with that size, every other
+      parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the
+      menu is a popover). Takes the Spring Data <code>Page</code> shown now, whose size is the checked one; a size
+      the page has but <code>sizes</code> does not list is added. The label is the message
+      <code>sl.pagination-size.label</code>. Attributes go to the wrapper.</sl:description>
+    <sl:prop name="page" type="object">The Spring Data <code>Page</code> or <code>Slice</code> shown now.
+      </sl:prop>
+    <sl:prop name="sizes" default="10,20,50">The sizes to choose from, separated by commas.</sl:prop>
+    <sl:prop name="qualifier">The <code>@Qualifier</code> of the controller's <code>Pageable</code>, for a second
+      list on the page: its links use <code>members_size</code> instead of <code>size</code>.</sl:prop>
+    <sl:prop name="id">The menu's id; its button gets <code>-trigger</code> added, its label <code>-label</code>.
+      <code>page-size</code> when not set, prefixed with the qualifier (<code>members-page-size</code>).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The button reads "Rows per page 20" (the label, then its own text); the menu is named by the label. Values for
+  the nested components go through sl-prefixed local variables: attributes on a nested component are evaluated in
+  its template, where props are its own. After a choice the menu gives the focus back to its button before the link
+  is followed, so htmx restores it to the button by its id. */-->
+<div th:fragment="pagination-size"
+     class="pagination-size"
+     th:with="slSizes=${#slPaging.sizes(props.page, props.sizes, props.qualifier)},
+              slSizeId=${props.id != null ? props.id
+                : (props.qualifier == null or props.qualifier.isEmpty() ? 'page-size' : props.qualifier + '-page-size')}"
+     sl:attrs>
+  <span class="pagination-size-label"
+        th:id="${slSizeId + '-label'}"
+        th:text="#{sl.pagination-size.label}">Rows per page</span>
+  <sl:dropdown-menu th:id="${slSizeId}">
+    <sl:dropdown-menu-trigger class="pagination-size-trigger"
+                              variant="outline"
+                              size="sm"
+                              th:aria-labelledby="${slSizeId + '-label ' + slSizeId + '-trigger'}">[[${slSizes.current}]]<span
+        class="btn-icon" data-icon="inline-end"><sl:icon name="chevron-down"/></span></sl:dropdown-menu-trigger>
+    <sl:dropdown-menu-content class="pagination-size-content"
+                              side="top"
+                              th:aria-labelledby="${slSizeId + '-label'}">
+      <sl:dropdown-menu-radio-group>
+        <sl:dropdown-menu-radio-item th:each="slSize : ${slSizes.items}"
+                                     as="a"
+                                     th:href="${slSize.href}"
+                                     th:checked="${slSize.checked}">[[${slSize.size}]]</sl:dropdown-menu-radio-item>
+      </sl:dropdown-menu-radio-group>
+    </sl:dropdown-menu-content>
+  </sl:dropdown-menu>
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A link to one page, drawn as a ghost button, or an outline one for the page shown now
+      (<code>active</code>). Give it an <code>href</code> or <code>th:href</code>, and the page number as content.
+      </sl:description>
+    <sl:prop name="active" type="boolean">Whether it is the page shown now: <code>aria-current="page"</code> and the
+      outline look.</sl:prop>
+    <sl:prop name="size" default="icon" values="xs sm default lg icon icon-xs icon-sm icon-lg">Size of the link, as
+      on <code>sl:button</code>: square by default, for a number.</sl:prop>
+    <sl:prop name="disabled" type="boolean">There is nowhere to go: the link loses its <code>href</code>, gets
+      <code>aria-disabled</code> and leaves the tab order, as a disabled <code>sl:button as="a"</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* Drawn by the button's rules (.btn), as shadcn/ui's PaginationLink takes buttonVariants. Not a nested sl:button:
+  an icon-size button must have an aria-label, and a number is name enough. role="link" keeps a link without href
+  announced as a (disabled) link. */-->
+<a th:fragment="pagination-link"
+   class="btn pagination-link"
+   th:attr="data-variant=${props.active ? 'outline' : 'ghost'},
+            data-size=${props.size == 'default' ? null : props.size},
+            aria-current=${props.active ? 'page' : null},
+            aria-disabled=${props.disabled ? 'true' : null},
+            role=${props.disabled ? 'link' : null},
+            tabindex=${props.disabled ? '-1' : null}"
+   sl:attrs="${props.disabled ? attrs.without('href') : attrs}"><sl:slot/></a>
+</body>
+</html>

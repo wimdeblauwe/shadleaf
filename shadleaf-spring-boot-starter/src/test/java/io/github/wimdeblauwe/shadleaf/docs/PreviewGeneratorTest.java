@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -36,6 +37,9 @@ import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.util.FileSystemUtils;
 import org.yaml.snakeyaml.Yaml;
 import tools.jackson.databind.json.JsonMapper;
@@ -54,7 +58,9 @@ import tools.jackson.databind.json.JsonMapper;
  *   <li>{@code theme-script.json}: the theme script and its CSP hash, for the CSP page.</li>
  * </ul>
  * A scenario's {@code renderSource} can show a photo from {@code previews/photos/} as {@code ${photos.<name>}}, a data:
- * URI, so the previews and the showcase checks never fetch an image.
+ * URI, so the previews and the showcase checks never fetch an image. A scenario's {@code pages} are Spring Data
+ * pages by variable name ({@code people: {number: 4, size: 10, total: 270}}, {@code number} zero-based, {@code slice:
+ * true} for a {@code Slice}), so a pagination renders from a real {@code Page}.
  * {@code docs/scripts/sync.mjs} copies them into the docs project. Adding examples for a component means adding a
  * YAML file; every library component must have one, or be listed under the {@code parts} of its family's file.
  */
@@ -112,11 +118,12 @@ class PreviewGeneratorTest {
         : testersByRequest.computeIfAbsent(scenario.request(),
             request -> ComponentRenderTester.builder().requestUri(request).build());
     try {
+      Map<String, Object> variables = new LinkedHashMap<>(scenario.pages());
+      variables.put("photos", photos);
       if (scenario.form() == null) {
-        rendered = tester.render(scenario.renderSource(), Map.of("photos", photos));
+        rendered = tester.render(scenario.renderSource(), variables);
       } else {
-        Map<String, Object> variables = new LinkedHashMap<>(scenario.form().variables());
-        variables.put("photos", photos);
+        variables.putAll(scenario.form().variables());
         rendered = tester.render(FormModel.wrap(scenario.renderSource()), variables);
       }
     } catch (RuntimeException e) {
@@ -217,7 +224,8 @@ class PreviewGeneratorTest {
         String renderSource = (String) entry.getOrDefault("renderSource", source);
         scenarios.add(new Scenario(id, component, (String) entry.get("title"), (String) entry.get("description"),
             source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form")),
-            (Boolean) entry.getOrDefault("showcase", true), (String) entry.get("request")));
+            (Boolean) entry.getOrDefault("showcase", true), (String) entry.get("request"),
+            pages((Map<String, Map<String, Object>>) entry.getOrDefault("pages", Map.of()))));
       }
     }
     assertThat(components).as("components with previews in %s", PREVIEWS_DIRECTORY)
@@ -243,6 +251,23 @@ class PreviewGeneratorTest {
         globalErrors instanceof List<?> list ? (List<String>) list : List.of((String) globalErrors));
   }
 
+  /** A scenario's {@code pages}: a {@code Page} (or with {@code slice: true} a {@code Slice}) by variable name. */
+  private static Map<String, Object> pages(Map<String, Map<String, Object>> pages) {
+    Map<String, Object> variables = new LinkedHashMap<>();
+    pages.forEach((name, page) -> {
+      int number = (Integer) page.get("number");
+      int size = (Integer) page.get("size");
+      if (Boolean.TRUE.equals(page.get("slice"))) {
+        variables.put(name, new SliceImpl<>(Collections.nCopies(size, name), PageRequest.of(number, size), true));
+      } else {
+        long total = ((Number) page.get("total")).longValue();
+        int rows = (int) Math.max(0, Math.min(size, total - (long) number * size));
+        variables.put(name, new PageImpl<>(Collections.nCopies(rows, name), PageRequest.of(number, size), total));
+      }
+    });
+    return variables;
+  }
+
   private void write(String name, Object value) throws IOException {
     Files.writeString(OUTPUT_DIRECTORY.resolve(name),
         jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value) + "\n", StandardCharsets.UTF_8);
@@ -257,10 +282,11 @@ class PreviewGeneratorTest {
    *                     way of the other components' tests there (a toast shown when the page loads)
    * @param request      the path and query of the request it renders in ({@code /people?sort=name,desc}), for links
    *                     built from the request such as a table's sort links; {@code /} when absent
+   * @param pages        Spring Data pages by variable name, for a pagination
    */
   private record Scenario(String id, String component, @Nullable String title, @Nullable String description,
                           String source, String renderSource, @Nullable FormModel form, boolean showcase,
-                          @Nullable String request) {
+                          @Nullable String request, Map<String, Object> pages) {
 
   }
 
