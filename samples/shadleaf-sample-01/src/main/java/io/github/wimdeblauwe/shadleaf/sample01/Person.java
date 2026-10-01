@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
+import java.util.Locale;
 
 /** A row of the people page. */
 @Entity
@@ -25,6 +26,11 @@ public class Person {
 
     public int getRank() {
       return rank;
+    }
+
+    /** The role as the page shows it: Owner, Admin, Member, Guest. */
+    public String getLabel() {
+      return name().charAt(0) + name().substring(1).toLowerCase(Locale.ROOT);
     }
 
     static Role ofRank(int rank) {
@@ -80,5 +86,9 @@ public class Person {
 
   public LocalDate getJoined() {
     return joined;
+  }
+
+  public void changeRole(Role role) {
+    this.role = role;
   }
 }

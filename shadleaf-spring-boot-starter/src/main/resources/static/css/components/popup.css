@@ -9,6 +9,9 @@
   side, or the other end, when it would overflow the viewport. right and left are the inline end and start, so they
   swap on a right-to-left page. The gap is a margin on the side facing the trigger, which a flip mirrors.
 
+  A popup inherits from where it sits in the markup, not from where it shows: in a table cell (a row's menu) that is
+  text-align: end, white-space: nowrap and a header's font weight. It starts from the defaults instead.
+
   Opening and closing fade through @starting-style, with display and overlay transitioned discretely so the closing
   transition is seen; where motion is fine, the popup also zooms from 95% and slides in from its trigger.
 */
@@ -21,7 +24,8 @@
       transition-[opacity,scale,translate,overlay,display] transition-discrete
       open:opacity-100 starting:open:opacity-0
       motion-safe:scale-95 motion-safe:open:scale-100 motion-safe:starting:open:scale-95
-      forced-colors:border forced-colors:border-solid;
+      forced-colors:border forced-colors:border-solid
+      text-start font-normal whitespace-normal;
     inset: auto;
     margin-block: var(--popup-margin-block);
     margin-inline: var(--popup-margin-inline);

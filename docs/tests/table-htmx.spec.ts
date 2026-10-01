@@ -1,4 +1,5 @@
 import {expect, test, type Page} from '@playwright/test';
+import previews from '../src/generated/previews.json' with {type: 'json'};
 import {openFixture, ORIGIN, type Request} from './fixture';
 
 // A table with live search, as the guide "Tables with htmx" and sample-01's /people page build it, in a fixture page
@@ -10,6 +11,10 @@ import {openFixture, ORIGIN, type Request} from './fixture';
 // and gives the focus back to the link by its id; the next search keeps that order; back and forward show each
 // search with its text in the field; without htmx the form still submits. Runs in Chromium and Firefox (no search
 // event there, so Enter is the form's submit).
+//
+// Further down: "load more" for a Slice (a link or hx-trigger="revealed" appending the next slice's rows, with the
+// focus on the first new row, select-all and the count following them, and the link without htmx), and a row menu
+// in a table cell (from the table--row-actions preview) whose items post with htmx and keep the focus.
 
 const PEOPLE = ['Ada Lovelace', 'Alan Turing', 'Grace Hopper', 'Adele Goldberg', 'Barbara Liskov', 'Edsger Dijkstra',
   'Donald Knuth', 'Frances Allen', 'Margaret Hamilton', 'Radia Perlman', 'Ken Thompson', 'Dana Scott'];
@@ -215,4 +220,225 @@ test('without htmx the form submits and keeps the order', async ({page}) => {
 
   await expect(page).toHaveURL(`${ORIGIN}/people?q=ada&sort=name%2Cdesc`);
   expect(await names(page)).toEqual(['Ada Lovelace']);
+});
+
+// --- load more ---------------------------------------------------------------------------------------------------------
+
+type Scenario = { id: string, html: string };
+const scenarios = previews.scenarios as Scenario[];
+const SELECTION = scenarios.find(scenario => scenario.id === 'table--selection')!.html;
+const SELECT_ALL = SELECTION.match(/<span class="checkbox-wrapper table-select-all"[\s\S]*?role="status"><\/span>\s*<\/span>/)![0];
+const COUNT = SELECTION.match(/<span class="table-selection-count"[\s\S]*?<\/span>/)![0]
+    .replace('data-table="people-selection"', 'data-table="feed"');
+const ROW_CHECKBOX = SELECTION.match(/<span class="checkbox-wrapper">[\s\S]*?<\/span>/)![0]
+    .replace(/name="ids" value="1" aria-label="Select Ada Lovelace" checked/, '{attributes}');
+
+type Feed = { revealed?: boolean, selection?: boolean };
+let feedRequests: Request[] = [];
+
+/**
+ * The rows of one slice of PEOPLE (sorted) and, while there is a next one, a row with the Load more link: what
+ * sample-01's /people-load-more renders. The first row of each slice after the first can take the focus; in an htmx
+ * answer it has autofocus, unless the next slice comes on its own (revealed).
+ */
+function feedRows(url: URL, {revealed = false, selection = false}: Feed, from: number, to: number, fragment: boolean) {
+  const people = [...PEOPLE].sort();
+  const columns = selection ? 2 : 1;
+  const rows = people.slice(from, to).map((name, index) => {
+    const position = from + index;
+    const first = position > 0 && position % SIZE === 0;
+    const checkbox = selection ? `<td>${ROW_CHECKBOX.replace('{attributes}',
+        `name="ids" value="${position + 1}" aria-label="Select ${name}"`)}</td>` : '';
+    return `<tr id="row-${position + 1}"${first ? ' tabindex="-1"' : ''}${first && fragment && !revealed
+        ? ' autofocus' : ''}>${checkbox}<td>${name}</td></tr>`;
+  }).join('');
+  if (to >= people.length) {
+    return rows;
+  }
+  const params = new URLSearchParams(url.search);
+  params.set('page', String(to / SIZE));
+  const next = escape(`/feed?${params}`);
+  const trigger = revealed
+      ? `<span class="sl-sr-only" hx-get="${next}" hx-trigger="revealed" hx-target="closest tr" hx-swap="outerHTML"
+          hx-replace-url="true">Loading more</span>`
+      : `<a class="btn" data-variant="outline" href="${next}#row-${to + 1}" hx-get="${next}" hx-target="closest tr"
+          hx-swap="outerHTML" hx-replace-url="true">Load more</a>`;
+  return `${rows}<tr class="load-more-row"><td colspan="${columns}">${trigger}</td></tr>`;
+}
+
+function feed(options: Feed) {
+  return ({url, headers}: Request) => {
+    feedRequests.push({url, headers, body: ''});
+    const page = Number(url.searchParams.get('page') ?? 0);
+    if (headers['hx-request'] === 'true' && headers['hx-history-restore-request'] !== 'true') {
+      return {body: feedRows(url, options, page * SIZE, page * SIZE + SIZE, true)};
+    }
+    // A page load gets every slice up to the asked one, as htmx would have appended them.
+    return {
+      body: `<div class="table-container"><table class="table" id="feed"><thead><tr>
+          ${options.selection ? `<th>${SELECT_ALL}</th>` : ''}<th>Name</th></tr></thead>
+        <tbody>${feedRows(url, options, 0, page * SIZE + SIZE, false)}</tbody></table></div>
+        ${options.selection ? COUNT : ''}`,
+    };
+  };
+}
+
+async function openFeed(page: Page, options: Feed = {}, htmx = true, path = '/feed') {
+  feedRequests = [];
+  return openFixture(page, '', {htmx, path, routes: {'/feed': feed(options)}});
+}
+
+const feedNames = (page: Page) => page.locator('#feed tbody tr:not(.load-more-row) td:last-child').allTextContents();
+const SORTED = [...PEOPLE].sort();
+
+test('load more appends the next slice, replaces its own row and focuses the first new row', async ({page}) => {
+  const messages = await openFeed(page);
+  const entries = await page.evaluate(() => history.length);
+  expect(await feedNames(page)).toEqual(SORTED.slice(0, 3));
+
+  await page.getByRole('link', {name: 'Load more'}).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#feed tbody tr:not(.load-more-row)')).toHaveCount(6);
+  expect(await feedNames(page)).toEqual(SORTED.slice(0, 6));
+  await expect(page.locator('.load-more-row')).toHaveCount(1);
+  await expect(page.locator('.load-more-row a')).toHaveAttribute('hx-get', '/feed?page=2');
+  await expect.poll(() => focused(page)).toBe('row-4');
+  // The address follows, without a history entry: a reload shows the same rows.
+  await expect(page).toHaveURL(`${ORIGIN}/feed?page=1`);
+  expect(await page.evaluate(() => history.length)).toBe(entries);
+
+  // Tab from the new row goes on to the next Load more; the next one appends the following slice. The browser focuses
+  // the autofocus row when it is inserted, and htmx again when the swap settles (20 ms later): a person cannot press
+  // Tab in between, a test can.
+  await expect(page.locator('.htmx-settling')).toHaveCount(0);
+  await page.keyboard.press('Tab');
+  expect(await page.evaluate(() => document.activeElement?.textContent?.trim())).toBe('Load more');
+  await page.keyboard.press('Enter');
+  await expect.poll(() => focused(page)).toBe('row-7');
+  await page.getByRole('link', {name: 'Load more'}).click();
+  await expect.poll(() => focused(page)).toBe('row-10');
+  expect(await feedNames(page)).toEqual(SORTED);
+  await expect(page.locator('.load-more-row')).toHaveCount(0);
+  expect(feedRequests.filter(request => request.headers['hx-request'] === 'true')).toHaveLength(3);
+
+  await page.reload();
+  expect(await feedNames(page)).toEqual(SORTED);
+  expect(messages).toEqual([]);
+});
+
+test('hx-trigger="revealed" loads the next slice when its row scrolls into view, without moving the focus',
+    async ({page}) => {
+  // Short enough that the first slice's trigger row starts below the fold.
+  await page.setViewportSize({width: 800, height: 150});
+  await openFeed(page, {revealed: true});
+  expect(await feedNames(page)).toEqual(SORTED.slice(0, 3));
+  await page.evaluate(() => document.body.insertAdjacentHTML('afterbegin', '<button id="before">Before</button>'));
+  await page.locator('#before').focus();
+  const loaded = () => page.locator('#feed tbody tr:not(.load-more-row)').count();
+
+  // Each slice's last row brings the next one into view, until the list ends.
+  for (let rows = 3; rows < PEOPLE.length; rows += 3) {
+    await page.locator('#feed tbody tr').last().scrollIntoViewIfNeeded();
+    await expect.poll(loaded).toBeGreaterThan(rows);
+  }
+  expect(await feedNames(page)).toEqual(SORTED);
+  await expect(page.locator('.load-more-row')).toHaveCount(0);
+  expect(await focused(page)).toBe('before');
+  await expect(page).toHaveURL(`${ORIGIN}/feed?page=3`);
+});
+
+test('select-all and the count follow the appended rows', async ({page}) => {
+  const messages = await openFeed(page, {selection: true});
+  const selectAll = page.locator('.table-select-all input');
+  const count = page.locator('.table-selection-count');
+  await expect(count).toHaveText('0 of 3 selected');
+
+  await selectAll.check();
+  await expect(count).toHaveText('3 of 3 selected');
+  await page.getByRole('link', {name: 'Load more'}).click();
+  await expect(page.locator('#feed tbody tr:not(.load-more-row)')).toHaveCount(6);
+
+  // The new rows are not selected: select-all is now mixed, and the count says so.
+  await expect(count).toHaveText('3 of 6 selected');
+  await expect.poll(() => selectAll.evaluate(input => (input as HTMLInputElement).indeterminate)).toBe(true);
+  await selectAll.click();
+  await expect(count).toHaveText('6 of 6 selected');
+  expect(await page.locator('#feed tbody input[name=ids]:checked').count()).toBe(6);
+  expect(messages).toEqual([]);
+});
+
+test('without htmx Load more is a link to the page with one slice more, at the first new row', async ({page}) => {
+  await openFeed(page, {}, false);
+
+  await page.getByRole('link', {name: 'Load more'}).click();
+  await expect(page).toHaveURL(`${ORIGIN}/feed?page=1#row-4`);
+  expect(await feedNames(page)).toEqual(SORTED.slice(0, 6));
+  // The browser moves the focus to the target of the address's fragment, as it can take it (tabindex="-1").
+  await expect.poll(() => focused(page)).toBe('row-4');
+  await page.keyboard.press('Tab');
+  expect(await page.evaluate(() => document.activeElement?.textContent?.trim())).toBe('Load more');
+});
+
+// --- a row menu --------------------------------------------------------------------------------------------------------
+
+const ROW_ACTIONS = scenarios.find(scenario => scenario.id === 'table--row-actions')!.html;
+/** The first row's menu (Ada Lovelace's), as sl:dropdown-menu renders it. */
+const ROW_MENU = ROW_ACTIONS.match(/<td data-align="end">([\s\S]*?)<\/td>/)![1];
+
+/**
+ * A table of people with a role each and, as sample-01's /people renders it, a menu per row in a form posting its
+ * person: the role items submit it, and with htmx post it themselves; the results replace themselves.
+ */
+function rowMenus(people: [string, string][]) {
+  const rows = people.map(([name, role], index) => {
+    const id = `row-actions-${index + 1}`;
+    const menu = ROW_MENU.replaceAll('row-actions-1', id)
+        .replace('Actions for Ada Lovelace', `Actions for ${name}`)
+        .replace(/aria-checked="true"/g, 'aria-checked="false"')
+        .replace(`aria-checked="false" name="role" value="${role.toUpperCase()}"`,
+            `aria-checked="true" name="role" value="${role.toUpperCase()}"`)
+        .replace(/type="button"(\s+)class="dropdown-menu-radio-item"/g,
+            'type="submit" hx-post="/people"$1class="dropdown-menu-radio-item"');
+    return `<tr><td>${name}</td><td><span class="badge">${role}</span></td><td data-align="end">
+      <form method="post" action="/people"><input type="hidden" name="person" value="${index + 1}">${menu}</form></td></tr>`;
+  }).join('');
+  return `<div id="results" hx-target="#results" hx-select="#results" hx-swap="outerHTML">
+    <div class="table-container"><table class="table"><tbody>${rows}</tbody></table></div></div>`;
+}
+
+test('a row menu in an end-aligned cell, whose role items post with htmx and keep the focus', async ({page}) => {
+  const people: [string, string][] = [['Ada Lovelace', 'Owner'], ['Alan Turing', 'Member'], ['Grace Hopper', 'Admin']];
+  const posts: string[] = [];
+  const messages = await openFixture(page, rowMenus(people), {
+    htmx: true,
+    routes: {
+      '/people': ({body}) => {
+        posts.push(body);
+        const params = new URLSearchParams(body);
+        const role = params.get('role')!;
+        people[Number(params.get('person')) - 1][1] = role.charAt(0) + role.slice(1).toLowerCase();
+        return {body: rowMenus(people)};
+      },
+    },
+  });
+
+  const trigger = page.locator('#row-actions-2-trigger');
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  const menu = page.locator('#row-actions-2');
+  await expect(menu).toBeVisible();
+  // The keyboard opened it, so the focus moves to its first item (a moment after it opens).
+  await expect.poll(() => menu.evaluate(element => element.contains(document.activeElement))).toBe(true);
+  // The cell is end-aligned and does not wrap; the menu starts from the defaults.
+  expect(await menu.locator('.dropdown-menu-label').evaluate(label => getComputedStyle(label).textAlign))
+      .toMatch(/^(start|left)$/);
+  expect(await menu.evaluate(element => getComputedStyle(element).whiteSpace)).toBe('normal');
+
+  await page.keyboard.type('Ad');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('tbody tr').nth(1).locator('.badge')).toHaveText('Admin');
+  expect(posts).toEqual(['person=2&role=ADMIN']);
+  await expect.poll(() => focused(page)).toBe('row-actions-2-trigger');
+  await expect(page.locator('#row-actions-2 [aria-checked=true]')).toHaveText('Admin');
+  expect(messages).toEqual([]);
 });

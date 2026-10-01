@@ -50,6 +50,9 @@ saves the count query on a large table:
 
 <ComponentPreview id="pagination--slice" />
 
+A list read a `Slice` at a time can also grow instead: [Load more](../../guides/tables-htmx/#load-more) appends the
+next slice's rows with htmx, and is a link to the next page without it.
+
 ### Without Spring Data
 
 Without a `Page`, pass the page shown now (counting from 1) and the number of pages:

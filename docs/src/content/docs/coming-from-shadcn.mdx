@@ -215,6 +215,9 @@ column visibility or browser-side paging. Row selection is the application's own
 `<sl:table-selection-count>` of `"{n} of {total} row(s) selected."` (it reads "2 of 20 selected"). The selected row's
 background comes from CSS (a checked checkbox in the row's first cell), not from `data-state="selected"`. The
 selection covers the page only; a sort or another page starts afresh. See [Table](../components/table/#selecting-rows).
+The row actions are the same dropdown menu in the last cell, but its items post a form around the menu rather than
+call a function (the data table's "Copy payment ID" writes to the clipboard), and the column's header cell has a
+screen-reader name ("Actions") where shadcn's is empty. See [Actions per row](../components/table/#actions-per-row).
 
 ### Pagination: built from a Spring Data page
 

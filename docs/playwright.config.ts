@@ -19,9 +19,9 @@ export default defineConfig({
     // matchMedia change events and on the scripting media feature. Firefox draws nothing for a broken image with
     // alt="", where Chromium draws an icon, which the avatar hides. Firefox has no search event, so a live search
     // runs on the form's submit when Enter is pressed. Row selection relies on :indeterminate, change events and the
-    // scripting media feature.
+    // scripting media feature. Firefox makes a scrolling table container a tab stop of its own.
     {name: 'firefox', use: {...devices['Desktop Firefox']},
-      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection)\.spec\.ts/},
+      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|table-scroll)\.spec\.ts/},
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

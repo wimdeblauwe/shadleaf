@@ -36,6 +36,19 @@ than the page. A table nested in a cell keeps its own look, so put it in an `<sl
 `data-align="end"` (or `"center"`), which works without utility classes, so also with the standalone stylesheet. Use
 it for amounts and other numbers, so their digits line up.
 
+## Wide tables
+
+A table wider than the page scrolls sideways inside its container. A keyboard user can scroll it too: Chromium and
+Firefox make the container a tab stop of its own when nothing in it can take the focus, and the arrow keys then scroll
+it; when a sort link, a checkbox or a row's menu button in it takes the focus, the browser scrolls it into view. The
+container has no `tabindex` of its own, which would add a tab stop to every table that fits.
+
+WebKit, checked with Playwright's build of it, does neither for a container of plain text: there a wide table with
+nothing to focus in it cannot be reached with the keyboard, and with Option+Tab (Safari's *Press Tab to highlight each
+item*) its links can, as above. axe reports such a table as
+`scrollable-region-focusable`. Keep a table that is only text from growing wider than a phone, or give its rows
+something to focus.
+
 ## Sorting on the server
 
 The rows of a Spring application live on the server, which sends one page of them. So a sortable header is a link that
@@ -218,6 +231,23 @@ the text.
 ```html
 <sl:table-empty colspan="3" th:if="${people.empty}">Nobody matches your search.</sl:table-empty>
 ```
+
+## Actions per row
+
+Put a [dropdown menu](../dropdown-menu/) in the last cell, as shadcn's data table does. Give each menu an id built
+from its row, so every trigger has a stable id of its own (`people-12-actions-trigger`), and name the trigger after the
+row: a screen reader user tabbing through the table hears "Actions for Ada Lovelace, menu button". The header cell
+above the menus needs a name too, read out with each cell: `<span class="sl-sr-only">Actions</span>`.
+
+<ComponentPreview id="table--row-actions" />
+
+An item that changes something is a submit button of a `post` form. A `role="menu"` may only hold menu items, so the
+form goes around the menu: a hidden input names the row, and each item sends its own `name` and `value` (`role=ADMIN`).
+View is a link; Delete is a link to a page that asks first. [Tables with htmx](../../guides/tables-htmx/#actions-per-row)
+turns the same menu into htmx requests, with an alert dialog for Delete, and keeps the focus on the row's menu button.
+
+A menu per row is markup per row: 50 rows with a badge and the menu above render in about 9 ms and 222 KB of HTML,
+5 KB once compressed (see [the cost](../../guides/tables-htmx/#the-cost-of-a-menu-per-row)).
 
 ## Selecting rows
 

@@ -13,6 +13,10 @@
     the pagination which page it is on.</p>
   <p>The controller adds the id as the last sort key, so people with the same number of orders keep one order and
     every person is on exactly one page. Roles are stored as their rank, so they sort Owner, Admin, Member, Guest.</p>
+  <p>Each row has a menu. View opens the person's page. Change role posts the new role to this page's own address, so
+    the page comes back with its search, order and page, and a toast says what changed. Delete asks first: with htmx
+    in an alert dialog, without JavaScript on a page of its own. After a change made with htmx the focus is back on
+    the row's menu button, or on the next row's when the row is gone.</p>
   <p>The search filters on name and email. With htmx it searches while you type, and the headers, pages and sizes
     replace only the table; without JavaScript, Enter sends the form. Either way the order and the page size stay, and
     a search starts on the first page.</p>
@@ -48,6 +52,7 @@
           <sl:table-head sort="role">Role</sl:table-head>
           <sl:table-head sort="orders" align="end">Orders</sl:table-head>
           <sl:table-head sort="joined" align="end">Joined</sl:table-head>
+          <th data-align="end"><span class="visually-hidden">Actions</span></th>
         </tr>
       </thead>
       <tbody>
@@ -55,12 +60,13 @@
           <td th:text="${person.name}">Ada Allen</td>
           <td th:text="${person.email}">ada.allen@example.com</td>
           <td><sl:badge th:variant="${person.role.name() == 'MEMBER' ? 'outline' : 'secondary'}"
-                        th:text="${#strings.capitalize(#strings.toLowerCase(person.role))}">Member</sl:badge></td>
+                        th:text="${person.role.label}">Member</sl:badge></td>
           <td data-align="end" th:text="${person.orders}">3</td>
           <td data-align="end" th:text="${#temporals.format(person.joined, 'd MMM yyyy')}">6 Jan 2020</td>
+          <td data-align="end" th:insert="~{people :: row-menu}"></td>
         </tr>
-        <sl:table-empty colspan="5" th:if="${people.empty and search.isEmpty()}"/>
-        <sl:table-empty colspan="5" th:if="${people.empty and !search.isEmpty()}">No one matches
+        <sl:table-empty colspan="6" th:if="${people.empty and search.isEmpty()}"/>
+        <sl:table-empty colspan="6" th:if="${people.empty and !search.isEmpty()}">No one matches
           “[[${search}]]”.</sl:table-empty>
       </tbody>
     </sl:table>
@@ -74,5 +80,41 @@
     </div>
   </div>
 </div>
+
+<!--/* A person's row actions. The form around the menu (a role="menu" may only hold menu items, so it cannot go inside)
+  posts to this page's own URL, query string included; Change role's items are its submit buttons, each sending its
+  role. With htmx, hx-post on the item itself: htmx then sends the item's role with the form's person, and the
+  results come back into #people-results (inherited). The trigger's id (people-12-actions-trigger) lets htmx put the
+  focus back on it after the swap; focusPerson gives it autofocus when the row it was in is gone. View is a link out of
+  the boosted results (hx-boost="false"). Delete links to a confirm page; with htmx the same URL brings an alert
+  dialog into #modal-root, overriding what the results would make it inherit. */-->
+<form th:fragment="row-menu" class="row-menu" method="post" th:action="${selfUrl}">
+  <input type="hidden" name="person" th:value="${person.id}">
+  <sl:dropdown-menu th:id="|people-${person.id}-actions|">
+    <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" th:aria-label="|Actions for ${person.name}|"
+                              th:autofocus="${focusPerson != null and person.id == focusPerson}">
+      <sl:icon name="ellipsis"/>
+    </sl:dropdown-menu-trigger>
+    <sl:dropdown-menu-content align="end">
+      <sl:dropdown-menu-item as="a" th:href="@{/people/{id}(id=${person.id})}" hx-boost="false">
+        <sl:icon name="eye"/>View
+      </sl:dropdown-menu-item>
+      <sl:dropdown-menu-separator/>
+      <sl:dropdown-menu-label>Change role</sl:dropdown-menu-label>
+      <sl:dropdown-menu-radio-group aria-label="Change role">
+        <sl:dropdown-menu-radio-item th:each="role : ${roles}"
+                                     type="submit" name="role" th:value="${role}" th:checked="${person.role == role}"
+                                     hx:post="${selfUrl}">[[${role.label}]]
+        </sl:dropdown-menu-radio-item>
+      </sl:dropdown-menu-radio-group>
+      <sl:dropdown-menu-separator/>
+      <sl:dropdown-menu-item as="a" variant="destructive" th:href="@{|/people/${person.id}/delete${query}|}"
+                             hx:get="@{|/people/${person.id}/delete${query}|}" hx-target="#modal-root"
+                             hx-select="unset" hx-swap="innerHTML">
+        <sl:icon name="trash-2"/>Delete
+      </sl:dropdown-menu-item>
+    </sl:dropdown-menu-content>
+  </sl:dropdown-menu>
+</form>
 </body>
 </html>

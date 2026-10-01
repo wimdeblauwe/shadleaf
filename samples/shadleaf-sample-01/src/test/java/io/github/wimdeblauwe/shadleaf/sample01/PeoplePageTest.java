@@ -2,8 +2,13 @@ package io.github.wimdeblauwe.shadleaf.sample01;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import io.github.wimdeblauwe.shadleaf.toast.Toast;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -18,12 +23,17 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 /**
  * The people page: a table sorted and paged by Spring Data JPA from the parameters its column headers, pagination
- * and size menu link to, filtered by the search form above it; with htmx, only the table and its footer.
+ * and size menu link to, filtered by the search form above it; with htmx, only the table and its footer. Each row has
+ * a menu of actions (view, change role, delete), which work with and without htmx and come back to the same search,
+ * order and page. The tests that change people reset the database afterwards (a new context).
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,6 +41,9 @@ class PeoplePageTest {
 
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private PersonRepository repository;
 
   private Document page(String url) throws Exception {
     return Jsoup.parse(mockMvc.perform(get(URI.create(url)))
@@ -230,5 +243,213 @@ class PeoplePageTest {
 
     assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
     assertThat(page.select("#people-status[hx-swap-oob]")).isEmpty();
+  }
+
+  // --- the row menus ------------------------------------------------------------------------------------------------
+
+  private static String personId(Document page, int row) {
+    return page.select(".table > tbody > tr").get(row).select("input[name=person]").attr("value");
+  }
+
+  @Test
+  void everyRowHasAMenuNamedAfterItsPerson() throws Exception {
+    Document page = page("/people?q=a&sort=orders,desc&page=1");
+
+    Element row = page.select(".table > tbody > tr").first();
+    String id = personId(page, 0);
+    String name = row.child(0).text();
+    Element trigger = page.getElementById("people-" + id + "-actions-trigger");
+    assertThat(trigger.attr("aria-label")).isEqualTo("Actions for " + name);
+    assertThat(trigger.attr("popovertarget")).isEqualTo("people-" + id + "-actions");
+    assertThat(trigger.hasAttr("autofocus")).isFalse();
+    assertThat(page.select(".table > thead th").last().text()).isEqualTo("Actions");
+    assertThat(page.select(".table > tbody .dropdown-menu-trigger")).hasSize(PeopleController.PAGE_SIZE);
+
+    Element form = trigger.closest("form");
+    assertThat(form.attr("method")).isEqualTo("post");
+    assertThat(form.attr("action")).isEqualTo("/people?q=a&sort=orders,desc&page=1");
+    Element menu = page.getElementById("people-" + id + "-actions");
+    assertThat(menu.closest("form")).isEqualTo(form);
+    assertThat(menu.select("form")).isEmpty();
+
+    Element view = menu.select("a[role=menuitem]").first();
+    assertThat(view.text()).isEqualTo("View");
+    assertThat(view.attr("href")).isEqualTo("/people/" + id);
+    assertThat(view.attr("hx-boost")).isEqualTo("false");
+
+    List<Element> roles = menu.select("[role=menuitemradio]");
+    assertThat(roles).extracting(Element::text).containsExactly("Owner", "Admin", "Member", "Guest");
+    assertThat(roles).allSatisfy(item -> {
+      assertThat(item.attr("type")).isEqualTo("submit");
+      assertThat(item.attr("name")).isEqualTo("role");
+      assertThat(item.attr("hx-post")).isEqualTo("/people?q=a&sort=orders,desc&page=1");
+    });
+    assertThat(roles).extracting(item -> item.attr("value")).containsExactly("OWNER", "ADMIN", "MEMBER", "GUEST");
+    assertThat(menu.select("[role=menuitemradio][aria-checked=true]").text()).isEqualTo(row.child(2).text());
+
+    Element delete = menu.select("a[role=menuitem][data-variant=destructive]").first();
+    assertThat(delete.attr("href")).isEqualTo("/people/" + id + "/delete?q=a&sort=orders,desc&page=1");
+    assertThat(delete.attr("hx-get")).isEqualTo(delete.attr("href"));
+    assertThat(delete.attr("hx-target")).isEqualTo("#modal-root");
+    assertThat(delete.attr("hx-select")).isEqualTo("unset");
+    assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
+  }
+
+  @Test
+  void viewShowsThePerson() throws Exception {
+    Person person = repository.findAll().get(0);
+    Document page = page("/people/" + person.getId());
+
+    assertThat(page.select("h1").text()).isEqualTo(person.getName());
+    assertThat(page.select(".person-details").text()).contains(person.getEmail(), person.getRole().getLabel());
+    assertThat(page.select("a.btn").last().attr("href")).isEqualTo("/people");
+    mockMvc.perform(get("/people/999999")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+  void changeRoleWithoutHtmxComesBackToTheSamePage() throws Exception {
+    Person person = repository.findAll().get(0);
+    Person.Role role = person.getRole() == Person.Role.GUEST ? Person.Role.ADMIN : Person.Role.GUEST;
+
+    MvcResult result = mockMvc.perform(post(URI.create("/people?q=a&sort=orders,desc&page=1"))
+            .param("person", String.valueOf(person.getId())).param("role", role.name()))
+        .andExpect(redirectedUrl("/people?q=a&sort=orders,desc&page=1"))
+        .andExpect(flash().attributeExists("toasts"))
+        .andReturn();
+
+    assertThat(repository.findById(person.getId()).orElseThrow().getRole()).isEqualTo(role);
+    @SuppressWarnings("unchecked")
+    List<Toast> toasts = (List<Toast>) result.getFlashMap().get("toasts");
+    assertThat(toasts).extracting(Toast::title).containsExactly(person.getName() + " is now "
+        + (role == Person.Role.ADMIN ? "an admin" : "a guest"));
+  }
+
+  /** The person stays on the page (sorted by name): htmx gives the focus back to their menu button by its id. */
+  @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+  void changeRoleWithHtmxAnswersWithTheResultsAndAToast() throws Exception {
+    Document before = page("/people?sort=name,asc");
+    String id = personId(before, 3);
+
+    String html = mockMvc.perform(post(URI.create("/people?sort=name,asc")).header("HX-Request", "true")
+            .param("person", id).param("role", "OWNER"))
+        .andExpect(status().isOk())
+        .andExpect(header().string("HX-Trigger", org.hamcrest.Matchers.allOf(
+            org.hamcrest.Matchers.containsString("sl-toast"), org.hamcrest.Matchers.containsString("is now an owner"))))
+        .andReturn().getResponse().getContentAsString();
+    Document fragment = Jsoup.parseBodyFragment(html);
+
+    assertThat(fragment.body().child(0).id()).isEqualTo("people-results");
+    assertThat(fragment.select("h1, #people-search")).isEmpty();
+    Element trigger = fragment.getElementById("people-" + id + "-actions-trigger");
+    assertThat(trigger.hasAttr("autofocus")).isTrue();
+    assertThat(fragment.select("[autofocus]")).hasSize(1);
+    assertThat(trigger.closest("tr").child(2).text()).isEqualTo("Owner");
+    // The links in the answer are this page's, not the POST's.
+    assertThat(fragment.getElementById("sort-name").attr("href")).isEqualTo("/people?sort=name,desc");
+    assertThat(trigger.closest("form").attr("action")).isEqualTo("/people?sort=name,asc");
+  }
+
+  /** Sorted by role, the changed person leaves the page: the menu button of the person now in their place gets it. */
+  @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+  void whenTheRowLeavesThePageTheFocusGoesToTheRowInItsPlace() throws Exception {
+    Document before = page("/people?sort=role,asc&size=10");
+    String id = personId(before, 2);
+    String next = personId(before, 3);
+
+    Document fragment = Jsoup.parseBodyFragment(mockMvc.perform(post(URI.create("/people?sort=role,asc&size=10"))
+            .header("HX-Request", "true").param("person", id).param("role", "GUEST"))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString());
+
+    assertThat(fragment.getElementById("people-" + id + "-actions-trigger")).isNull();
+    assertThat(fragment.select("[autofocus]").eachAttr("id")).containsExactly("people-" + next + "-actions-trigger");
+  }
+
+  @Test
+  void deleteAsksOnAPageWithoutHtmxAndInAnAlertDialogWithIt() throws Exception {
+    Person person = repository.findAll().get(0);
+    String url = "/people/" + person.getId() + "/delete?q=a&sort=orders,desc&page=1";
+
+    Document page = page(url);
+    assertThat(page.select(".card-title").text()).isEqualTo("Delete " + person.getName() + "?");
+    Element form = page.select(".person-card form").first();
+    assertThat(form.attr("method")).isEqualTo("post");
+    assertThat(form.attr("action")).isEqualTo("/people?q=a&sort=orders,desc&page=1");
+    assertThat(form.select("button[type=submit][name=delete]").attr("value")).isEqualTo(String.valueOf(person.getId()));
+    assertThat(form.select("a.btn").attr("href")).isEqualTo("/people?q=a&sort=orders,desc&page=1");
+    assertThat(page.select("dialog")).isEmpty();
+
+    Document dialog = Jsoup.parseBodyFragment(html(url, "HX-Request", "true"));
+    Element root = dialog.body().child(0);
+    assertThat(root.tagName()).isEqualTo("dialog");
+    assertThat(root.attr("role")).isEqualTo("alertdialog");
+    assertThat(root.attr("data-show-modal")).isEqualTo("true");
+    assertThat(root.select(".alert-dialog-title").text()).isEqualTo("Delete " + person.getName() + "?");
+    Element delete = root.select("button[name=delete]").first();
+    assertThat(delete.attr("value")).isEqualTo(String.valueOf(person.getId()));
+    assertThat(delete.attr("hx-post")).isEqualTo("/people?q=a&sort=orders,desc&page=1");
+    assertThat(delete.attr("hx-target")).isEqualTo("#people-results");
+    assertThat(delete.attr("hx-select")).isEqualTo("#people-results");
+    assertThat(root.select(".alert-dialog-cancel[autofocus]")).hasSize(1);
+  }
+
+  @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+  void deleteWithoutHtmxComesBackToTheSamePage() throws Exception {
+    Person person = repository.findAll().get(0);
+
+    MvcResult result = mockMvc.perform(post(URI.create("/people?sort=email,asc&page=2"))
+            .param("delete", String.valueOf(person.getId())))
+        .andExpect(redirectedUrl("/people?sort=email,asc&page=2"))
+        .andReturn();
+
+    assertThat(repository.findById(person.getId())).isEmpty();
+    @SuppressWarnings("unchecked")
+    List<Toast> toasts = (List<Toast>) result.getFlashMap().get("toasts");
+    assertThat(toasts).extracting(Toast::title).containsExactly(person.getName() + " was deleted");
+  }
+
+  /** The dialog closes first (its focus goes back to the row's menu button), then the next row's button takes it. */
+  @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+  void deleteWithHtmxClosesTheDialogAndFocusesTheNextRow() throws Exception {
+    Document before = page("/people?sort=orders,desc&page=1");
+    String id = personId(before, 5);
+    String next = personId(before, 6);
+
+    MvcResult result = mockMvc.perform(post(URI.create("/people?sort=orders,desc&page=1"))
+            .header("HX-Request", "true").param("delete", id))
+        .andExpect(status().isOk())
+        .andReturn();
+    String trigger = result.getResponse().getHeader("HX-Trigger");
+    assertThat(trigger).contains("sl-dialog-close", "sl-toast", "was deleted");
+    assertThat(trigger.indexOf("sl-dialog-close")).isLessThan(trigger.indexOf("sl-toast"));
+    Document fragment = Jsoup.parseBodyFragment(result.getResponse().getContentAsString());
+
+    assertThat(fragment.body().child(0).id()).isEqualTo("people-results");
+    assertThat(fragment.select("input[name=person]").eachAttr("value")).doesNotContain(id).hasSize(20);
+    assertThat(fragment.select("[autofocus]").eachAttr("id")).containsExactly("people-" + next + "-actions-trigger");
+    assertThat(fragment.getElementById("page-next").attr("href")).isEqualTo("/people?sort=orders,desc&page=2");
+  }
+
+  /** The last row of the last page: the row before it takes the focus. */
+  @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+  void deletingTheLastRowFocusesTheOneBefore() throws Exception {
+    Document before = page("/people?page=13");
+    List<Element> rows = before.select(".table > tbody > tr");
+    assertThat(rows).hasSize(10);
+    String id = personId(before, 9);
+    String previous = personId(before, 8);
+
+    Document fragment = Jsoup.parseBodyFragment(mockMvc.perform(post(URI.create("/people?page=13"))
+            .header("HX-Request", "true").param("delete", id))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString());
+
+    assertThat(fragment.select("[autofocus]").eachAttr("id")).containsExactly("people-" + previous + "-actions-trigger");
   }
 }

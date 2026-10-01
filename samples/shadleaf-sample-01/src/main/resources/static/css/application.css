@@ -61,3 +61,14 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .table-footer .pagination { inline-size: auto; margin: 0; }
 .table-toolbar { display: flex; justify-content: flex-end; padding-block-end: 0.5rem; }
 .people-search { max-inline-size: 24rem; margin-block: 1.5rem 1rem; }
+
+/* The people page's row menus and the person page. */
+.row-menu { display: contents; }
+.person-card { max-inline-size: 32rem; margin-block-start: 1.5rem; }
+.person-details { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1.5rem; margin: 0; }
+.person-details dt { color: var(--muted-foreground); }
+.person-details dd { margin: 0; }
+
+/* The load more page: the first row of each slice takes the focus when it arrives. */
+.load-more-row > td { text-align: center; }
+.people-rows > tr:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; }

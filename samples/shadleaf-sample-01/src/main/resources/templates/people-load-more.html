@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      xmlns:hx="http://www.w3.org/1999/xhtml"
+      th:replace="~{layout/main :: layout('People, load more', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>The same people, read a <code>Slice</code> at a time: Spring Data asks for one row more than it shows to know
+    whether there is a next slice, and never counts them all. Load more appends the next slice's rows with htmx and
+    moves the focus to the first of them; the address follows (<code>?page=…</code>), so a reload shows the same
+    rows. Without JavaScript, Load more is a link to that address, which the server renders with every slice up to
+    it, and the browser scrolls to the first new row.</p>
+
+  <sl:table th:page="${people}">
+    <thead>
+      <tr>
+        <sl:table-head sort="name">Name</sl:table-head>
+        <sl:table-head sort="email">Email</sl:table-head>
+        <sl:table-head sort="role">Role</sl:table-head>
+        <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+      </tr>
+    </thead>
+    <tbody class="people-rows">
+      <!--/* With htmx the answer is this fragment alone: the next slice's rows and a new Load more row, which replace
+        the old Load more row (hx-target="closest tr"). The first row of each slice can take the focus (tabindex -1):
+        autofocus in the fragment, the address's #people-row-21 on a page load. */-->
+      <th:block th:fragment="rows">
+        <tr th:each="person, row : ${people}" th:id="|people-row-${offset + row.count}|"
+            th:tabindex="${offset + row.index > 0 and (offset + row.index) % people.size == 0 ? -1 : null}"
+            th:autofocus="${fragment and row.first}">
+          <td th:text="${person.name}">Ada Allen</td>
+          <td th:text="${person.email}">ada.allen@example.com</td>
+          <td><sl:badge th:variant="${person.role.name() == 'MEMBER' ? 'outline' : 'secondary'}"
+                        th:text="${person.role.label}">Member</sl:badge></td>
+          <td data-align="end" th:text="${person.orders}">3</td>
+        </tr>
+        <tr th:if="${people.hasNext()}" class="load-more-row">
+          <td colspan="4" th:with="next=${#slPaging.pages(people, null, null, 0, null).next.href}">
+            <sl:button as="a" variant="outline"
+                       th:href="|${next}#people-row-${(people.number + 1) * people.size + 1}|"
+                       th:hx-get="${next}" hx-target="closest tr" hx-swap="outerHTML" hx-replace-url="true">
+              Load more
+            </sl:button>
+          </td>
+        </tr>
+      </th:block>
+    </tbody>
+  </sl:table>
+</div>
+</body>
+</html>

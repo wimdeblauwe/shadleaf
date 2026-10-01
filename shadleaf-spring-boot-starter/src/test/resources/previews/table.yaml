@@ -164,3 +164,137 @@ scenarios:
         </tbody>
       </sl:table>
       <sl:table-selection-count table="people-selection"/>
+
+  - id: row-actions
+    title: Actions per row
+    description: A menu in the last cell of each row, named after its row. In an application its items post or link (see Tables with htmx); here they do nothing.
+    source: |-
+      <sl:table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th data-align="end"><span class="sl-sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="person : ${people}">
+            <td th:text="${person.name}">Ada Lovelace</td>
+            <td><sl:badge variant="secondary" th:text="${person.role.label}">Owner</sl:badge></td>
+            <td data-align="end">
+              <!--/* A role="menu" holds menu items only, so the form goes around the menu. */-->
+              <form method="post" th:action="${selfUrl}">
+                <input type="hidden" name="person" th:value="${person.id}">
+                <sl:dropdown-menu th:id="|people-${person.id}-actions|">
+                  <sl:dropdown-menu-trigger variant="ghost" size="icon-sm"
+                                            th:aria-label="|Actions for ${person.name}|">
+                    <sl:icon name="ellipsis"/>
+                  </sl:dropdown-menu-trigger>
+                  <sl:dropdown-menu-content align="end">
+                    <sl:dropdown-menu-item as="a" th:href="@{/people/{id}(id=${person.id})}">
+                      <sl:icon name="eye"/>View
+                    </sl:dropdown-menu-item>
+                    <sl:dropdown-menu-separator/>
+                    <sl:dropdown-menu-label>Change role</sl:dropdown-menu-label>
+                    <sl:dropdown-menu-radio-group aria-label="Change role">
+                      <sl:dropdown-menu-radio-item th:each="role : ${roles}" type="submit" name="role"
+                                                   th:value="${role}" th:checked="${person.role == role}">
+                        [[${role.label}]]
+                      </sl:dropdown-menu-radio-item>
+                    </sl:dropdown-menu-radio-group>
+                    <sl:dropdown-menu-separator/>
+                    <sl:dropdown-menu-item as="a" variant="destructive"
+                                           th:href="@{/people/{id}/delete(id=${person.id})}">
+                      <sl:icon name="trash-2"/>Delete
+                    </sl:dropdown-menu-item>
+                  </sl:dropdown-menu-content>
+                </sl:dropdown-menu>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </sl:table>
+    renderSource: |-
+      <sl:table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Role</th>
+            <th data-align="end"><span class="sl-sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ada Lovelace</td>
+            <td><sl:badge variant="secondary">Owner</sl:badge></td>
+            <td data-align="end">
+              <sl:dropdown-menu id="row-actions-1">
+                <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" aria-label="Actions for Ada Lovelace">
+                  <sl:icon name="ellipsis"/>
+                </sl:dropdown-menu-trigger>
+                <sl:dropdown-menu-content align="end">
+                  <sl:dropdown-menu-item as="a" href="#row-actions"><sl:icon name="eye"/>View</sl:dropdown-menu-item>
+                  <sl:dropdown-menu-separator/>
+                  <sl:dropdown-menu-label>Change role</sl:dropdown-menu-label>
+                  <sl:dropdown-menu-radio-group aria-label="Change role">
+                    <sl:dropdown-menu-radio-item name="role" value="OWNER" checked>Owner</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="ADMIN">Admin</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="MEMBER">Member</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="GUEST">Guest</sl:dropdown-menu-radio-item>
+                  </sl:dropdown-menu-radio-group>
+                  <sl:dropdown-menu-separator/>
+                  <sl:dropdown-menu-item variant="destructive"><sl:icon name="trash-2"/>Delete</sl:dropdown-menu-item>
+                </sl:dropdown-menu-content>
+              </sl:dropdown-menu>
+            </td>
+          </tr>
+          <tr>
+            <td>Alan Turing</td>
+            <td><sl:badge variant="outline">Member</sl:badge></td>
+            <td data-align="end">
+              <sl:dropdown-menu id="row-actions-2">
+                <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" aria-label="Actions for Alan Turing">
+                  <sl:icon name="ellipsis"/>
+                </sl:dropdown-menu-trigger>
+                <sl:dropdown-menu-content align="end">
+                  <sl:dropdown-menu-item as="a" href="#row-actions"><sl:icon name="eye"/>View</sl:dropdown-menu-item>
+                  <sl:dropdown-menu-separator/>
+                  <sl:dropdown-menu-label>Change role</sl:dropdown-menu-label>
+                  <sl:dropdown-menu-radio-group aria-label="Change role">
+                    <sl:dropdown-menu-radio-item name="role" value="OWNER">Owner</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="ADMIN">Admin</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="MEMBER" checked>Member</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="GUEST">Guest</sl:dropdown-menu-radio-item>
+                  </sl:dropdown-menu-radio-group>
+                  <sl:dropdown-menu-separator/>
+                  <sl:dropdown-menu-item variant="destructive"><sl:icon name="trash-2"/>Delete</sl:dropdown-menu-item>
+                </sl:dropdown-menu-content>
+              </sl:dropdown-menu>
+            </td>
+          </tr>
+          <tr>
+            <td>Grace Hopper</td>
+            <td><sl:badge variant="secondary">Admin</sl:badge></td>
+            <td data-align="end">
+              <sl:dropdown-menu id="row-actions-3">
+                <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" aria-label="Actions for Grace Hopper">
+                  <sl:icon name="ellipsis"/>
+                </sl:dropdown-menu-trigger>
+                <sl:dropdown-menu-content align="end">
+                  <sl:dropdown-menu-item as="a" href="#row-actions"><sl:icon name="eye"/>View</sl:dropdown-menu-item>
+                  <sl:dropdown-menu-separator/>
+                  <sl:dropdown-menu-label>Change role</sl:dropdown-menu-label>
+                  <sl:dropdown-menu-radio-group aria-label="Change role">
+                    <sl:dropdown-menu-radio-item name="role" value="OWNER">Owner</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="ADMIN" checked>Admin</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="MEMBER">Member</sl:dropdown-menu-radio-item>
+                    <sl:dropdown-menu-radio-item name="role" value="GUEST">Guest</sl:dropdown-menu-radio-item>
+                  </sl:dropdown-menu-radio-group>
+                  <sl:dropdown-menu-separator/>
+                  <sl:dropdown-menu-item variant="destructive"><sl:icon name="trash-2"/>Delete</sl:dropdown-menu-item>
+                </sl:dropdown-menu-content>
+              </sl:dropdown-menu>
+            </td>
+          </tr>
+        </tbody>
+      </sl:table>

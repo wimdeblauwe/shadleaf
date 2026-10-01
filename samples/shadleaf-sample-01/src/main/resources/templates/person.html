@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      xmlns:hx="http://www.w3.org/1999/xhtml"
+      th:replace="~{layout/main :: layout(${person.name}, ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <!--/* View in a row menu of the people page. */-->
+  <sl:card th:unless="${confirm}" class="person-card">
+    <sl:card-header>
+      <sl:card-title level="2">Details</sl:card-title>
+    </sl:card-header>
+    <sl:card-content>
+      <dl class="person-details">
+        <dt>Email</dt>
+        <dd th:text="${person.email}">ada.allen@example.com</dd>
+        <dt>Role</dt>
+        <dd><sl:badge th:variant="${person.role.name() == 'MEMBER' ? 'outline' : 'secondary'}"
+                      th:text="${person.role.label}">Member</sl:badge></dd>
+        <dt>Orders</dt>
+        <dd th:text="${person.orders}">3</dd>
+        <dt>Joined</dt>
+        <dd th:text="${#temporals.format(person.joined, 'd MMMM yyyy')}">6 January 2020</dd>
+      </dl>
+    </sl:card-content>
+    <sl:card-footer>
+      <sl:button as="a" variant="outline" th:href="@{/people}">All people</sl:button>
+    </sl:card-footer>
+  </sl:card>
+
+  <!--/* Delete in a row menu, without JavaScript: the same question as the alert dialog, as a page. The form posts to
+    the people page's URL (pageUrl: its search, order and page), which redirects back there with a toast. */-->
+  <sl:card th:if="${confirm}" class="person-card">
+    <sl:card-header>
+      <sl:card-title level="2" th:text="|Delete ${person.name}?|">Delete Ada Allen?</sl:card-title>
+      <sl:card-description>They are removed for good. This cannot be undone.</sl:card-description>
+    </sl:card-header>
+    <sl:card-footer>
+      <form class="row" method="post" th:action="${pageUrl}">
+        <sl:button as="a" variant="outline" th:href="${pageUrl}">Cancel</sl:button>
+        <sl:button variant="destructive" type="submit" name="delete" th:value="${person.id}">Delete</sl:button>
+      </form>
+    </sl:card-footer>
+  </sl:card>
+</div>
+
+<!--/* Delete in a row menu, with htmx: fetched into #modal-root, shown as a modal at once (open). Its Delete button posts
+  the person's id to the people page's URL and swaps the results; the answer closes the dialog (HX-Trigger:
+  sl-dialog-close), which only listens to events from inside it, so the request comes from this button. */-->
+<sl:alert-dialog th:fragment="delete-dialog" id="people-delete" size="sm" open>
+  <sl:alert-dialog-header>
+    <sl:alert-dialog-media variant="destructive"><sl:icon name="trash-2"/></sl:alert-dialog-media>
+    <sl:alert-dialog-title th:text="|Delete ${person.name}?|">Delete Ada Allen?</sl:alert-dialog-title>
+    <sl:alert-dialog-description>They are removed for good. This cannot be undone.</sl:alert-dialog-description>
+  </sl:alert-dialog-header>
+  <sl:alert-dialog-footer>
+    <sl:alert-dialog-cancel/>
+    <sl:button variant="destructive" name="delete" th:value="${person.id}" hx:post="${pageUrl}"
+               hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">Delete</sl:button>
+  </sl:alert-dialog-footer>
+</sl:alert-dialog>
+</body>
+</html>
