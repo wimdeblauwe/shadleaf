@@ -41,9 +41,12 @@ application compiles Tailwind. See [the adjustability ladder](../guides/adjustab
 
 ### The avatar decides on the server
 
-shadcn's avatar waits in the browser for the image to load and shows the fallback until it has. Shadleaf renders the
-image and the fallback, and the stylesheet shows the fallback when the image has no `src` or an empty one, which is
-what `th:src` gives for a user without a photo. An image URL that fails to load is not detected yet.
+shadcn's avatar renders the image only once it has loaded in the browser, and the fallback until then. Shadleaf
+always renders both, and the stylesheet picks one: the fallback when the image has no `src` or an empty one, which is
+what `th:src` gives for a user without a photo, needs no script at all. For a photo that is loading or fails to load,
+Shadleaf's script marks the image `data-status="loaded"` or `"error"` (where Radix has `onLoadingStatusChange`), and the
+fallback shows until it is loaded, as in shadcn. There is no `delayMs`. Without JavaScript the image simply lies over
+the fallback.
 
 ### Dialogs open with invoker commands
 

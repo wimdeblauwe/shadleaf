@@ -13,7 +13,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.jspecify.annotations.Nullable;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -42,6 +46,10 @@ import org.springframework.web.util.UriComponentsBuilder;
  * the table: its radio items are links, and the page marks the chosen one. Rename opens a popover with a form that
  * swaps itself; a valid rename closes it through {@code HX-Trigger: sl-popover-close} and updates the name out of
  * band.
+ * <p>
+ * Each row has an avatar. Ada Lovelace has a photo, Grace Hopper's photo URL answers 404 (the photo was removed), so
+ * Shadleaf's script shows her initials instead of a broken image, and Alan Turing has none, so {@code th:src} renders an
+ * empty {@code src} and the stylesheet shows his initials.
  */
 @Controller
 public class DialogController {
@@ -53,8 +61,8 @@ public class DialogController {
       "email", Comparator.comparing(Member::email, String.CASE_INSENSITIVE_ORDER));
 
   private final Map<Long, Member> members = new ConcurrentSkipListMap<>(Map.of(
-      1L, new Member(1, "Ada Lovelace", "ada@example.com"),
-      2L, new Member(2, "Grace Hopper", "grace@example.com"),
+      1L, new Member(1, "Ada Lovelace", "ada@example.com", "/dialog/members/1/photo"),
+      2L, new Member(2, "Grace Hopper", "grace@example.com", "/dialog/members/2/photo"),
       3L, new Member(3, "Alan Turing", "alan@example.com")));
   private final AtomicLong nextId = new AtomicLong(4);
   private volatile String teamName = "Team Shadleaf";
@@ -104,12 +112,23 @@ public class DialogController {
       model.addAttribute("member", member);
       return "dialog :: edit-form";
     }
-    Member updated = new Member(id, memberForm.getName(), memberForm.getEmail());
+    Member updated = member.withNameAndEmail(memberForm.getName(), memberForm.getEmail());
     members.put(id, updated);
     model.addAttribute("member", updated);
     htmxResponse.addTrigger("sl-dialog-close");
     htmxResponse.setReswap(HtmxReswap.none());
     return "dialog :: member-row-oob";
+  }
+
+  /** Ada Lovelace's photo (photos/member-1.jpg); for everyone else 404, as for a photo that was removed. */
+  @GetMapping(value = "/dialog/members/{id}/photo", produces = MediaType.IMAGE_JPEG_VALUE)
+  @ResponseBody
+  public Resource photo(@PathVariable long id) {
+    Resource photo = new ClassPathResource("photos/member-%d.jpg".formatted(id));
+    if (!photo.exists()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+    return photo;
   }
 
   @HxRequest

@@ -110,6 +110,9 @@ needs one yet: the dialog family, the dropdown menu, the popover and the tooltip
 and tooltip are placed with CSS anchor positioning, not with `@alpinejs/anchor`: every current browser supports it, and
 for older ones their components set the position themselves.
 
+The avatar's broken-image fallback is in the same script but is no Alpine component: it works with every value of
+`shadleaf.assets.alpine`, and with `external` also before, or without, your Alpine.
+
 ## Pages without interactive components
 
 The script is on every page that includes the `assets` fragment, whether that page uses an interactive component or

@@ -18,10 +18,45 @@ user without a photo needs no `th:if`:
 <ComponentPreview id="avatar--fallback" />
 
 Both parts are always rendered, and the stylesheet decides which one shows. The hidden one is also hidden from
-assistive technology.
+assistive technology. The image lies over the fallback at the same size, so nothing moves when one replaces the other.
 
-An image URL that fails to load still shows a broken image for now; falling back in that case needs a script, which
-comes with the interactive components.
+## A photo that fails to load
+
+A photo URL that fails to load shows the fallback too: a 404, a URL your Content-Security-Policy's `img-src` blocks, a
+file that is no image, or no network. So does a photo that is still loading, as in shadcn/ui; the picture replaces the
+fallback once it is there.
+
+<ComponentPreview id="avatar--broken" />
+
+Shadleaf's script marks each avatar image with `data-status="loaded"` when its picture has loaded, or
+`data-status="error"`, and the stylesheet only shows an image that is marked loaded. So a broken image never shows, not
+even for a moment before the script runs. The script also marks images htmx swaps in, and an image whose `src` changes
+later (htmx swapping the attribute, or a script of yours): the fallback shows while the new picture loads.
+
+Your own CSS can use the mark, for instance to fade the picture in:
+
+```css
+@media (prefers-reduced-motion: no-preference) {
+  .avatar-image[data-status='loaded'] {
+    animation: avatar-fade-in 150ms;
+  }
+}
+
+@keyframes avatar-fade-in {
+  from { opacity: 0; }
+}
+```
+
+### Without the script
+
+- **Without JavaScript**, nothing marks the images, so they lie over the fallback as plain images: a picture that loads
+  covers it. One that fails shows the fallback through it in Firefox, which draws nothing for a broken image with an
+  empty `alt`; Chromium draws its broken-image icon over it.
+- **With JavaScript but without Shadleaf's script** (your policy blocks it, say), every avatar shows its fallback.
+
+The script is part of the one in the `assets` fragment, whatever `shadleaf.assets.alpine` is: it is not an Alpine
+component, and works without Alpine on the page. One listener on the document handles every avatar, so a long list of
+them costs nothing extra.
 
 ## Sizes
 
@@ -34,6 +69,12 @@ When there is no name next to it, give it a `label`: it is then announced as an 
 shows. `aria-labelledby`, pointing at a name elsewhere on the page, works too.
 
 <ComponentPreview id="avatar--decorative" />
+
+## Left out
+
+- **A delay before the fallback shows** (Radix's `delayMs`): the fallback shows at once while a photo loads. A photo
+  from the browser's cache is there before the first paint, so it does not flash.
+- **A loading status event** (Radix's `onLoadingStatusChange`): read `data-status` on the image instead.
 
 ## Attributes
 

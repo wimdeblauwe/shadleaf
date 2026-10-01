@@ -1,19 +1,21 @@
 # Scenarios for the avatar's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
-# renderSource uses a data: URI, so the previews and the showcase checks never fetch an image.
+# renderSource takes the photo from previews/photos/ (${photos.shadcn}, a data: URI; shadcn's GitHub avatar, the one
+# shadcn/ui's and basecoat's docs show), so the previews and the showcase checks never fetch an image. The broken URL
+# is a data: URI holding bytes that are no image, which fails to load like a 404 does.
 component: avatar
 parts: [avatar-image, avatar-fallback]
 scenarios:
   - id: default
     title: Avatar
     source: |-
-      <sl:avatar label="Jane Doe">
+      <sl:avatar label="shadcn">
         <sl:avatar-image th:src="@{/users/{id}/photo(id=${user.id})}"/>
-        <sl:avatar-fallback>JD</sl:avatar-fallback>
+        <sl:avatar-fallback>CN</sl:avatar-fallback>
       </sl:avatar>
     renderSource: |-
-      <sl:avatar label="Jane Doe">
-        <sl:avatar-image src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23b08968'/%3E%3Ccircle cx='20' cy='16' r='7' fill='%23f5ebe0'/%3E%3Cpath d='M6 40a14 14 0 0 1 28 0' fill='%23f5ebe0'/%3E%3C/svg%3E"/>
-        <sl:avatar-fallback>JD</sl:avatar-fallback>
+      <sl:avatar label="shadcn">
+        <sl:avatar-image th:src="${photos.shadcn}"/>
+        <sl:avatar-fallback>CN</sl:avatar-fallback>
       </sl:avatar>
 
   - id: fallback
@@ -34,6 +36,20 @@ scenarios:
       </sl:avatar>
       <sl:avatar label="Unknown user">
         <sl:avatar-fallback><sl:icon name="user"/></sl:avatar-fallback>
+      </sl:avatar>
+
+  - id: broken
+    title: Broken image
+    description: A photo URL that fails to load (a 404, a URL the Content-Security-Policy blocks, offline) shows the fallback, as does one that is still loading.
+    source: |-
+      <sl:avatar label="Grace Hopper">
+        <sl:avatar-image th:src="@{/users/{id}/photo(id=${user.id})}"/>
+        <sl:avatar-fallback>GH</sl:avatar-fallback>
+      </sl:avatar>
+    renderSource: |-
+      <sl:avatar label="Grace Hopper">
+        <sl:avatar-image src="data:image/png;base64,AAAA"/>
+        <sl:avatar-fallback>GH</sl:avatar-fallback>
       </sl:avatar>
 
   - id: sizes

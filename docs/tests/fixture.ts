@@ -3,9 +3,11 @@ import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
 import themeScript from '../src/generated/theme-script.json' with {type: 'json'};
 
-// Fixture pages for disclosure.spec.ts, tabs.spec.ts and theme-toggle.spec.ts, served from a made-up origin under a strict
-// Content-Security-Policy, with the csp Alpine build (or no Alpine at all) and optionally htmx. The page at / and every
-// route get the request's URL, so a fixture can render what a server would for ?tab=...
+// Fixture pages for disclosure.spec.ts, tabs.spec.ts, theme-toggle.spec.ts and avatar.spec.ts, served from a made-up
+// origin under a strict Content-Security-Policy, with the csp Alpine build (or shadleaf.js without any Alpine, or no
+// script of Shadleaf's at all) and optionally htmx. The page at / and every route get the request's URL, so a fixture
+// can render what a server would for ?tab=... A route can also answer with something other than a page (an image), a
+// status and after a delay.
 
 export const ORIGIN = 'http://app.test';
 const PUBLIC_DIR = join(import.meta.dirname, '..', 'public');
@@ -18,12 +20,25 @@ const scripts = (previews as unknown as { scripts: Scripts }).scripts;
 const css = previews.skins[0].css;
 
 export type Request = { url: URL, body: string, headers: Record<string, string> };
-export type Response = { body: string, headers?: Record<string, string> };
+export type Response = {
+  body: string | Buffer,
+  headers?: Record<string, string>,
+  /** Anything but text/html is sent as it is, not wrapped in a page. */
+  contentType?: string,
+  status?: number,
+  /** Milliseconds before the response is sent. */
+  delay?: number,
+};
 export type Routes = Record<string, (request: Request) => Response>;
 
 export type FixtureOptions = {
-  /** Load the csp Alpine build (the default), or no script of Shadleaf's at all. */
-  alpine?: boolean,
+  /**
+   * Load the csp Alpine build (true, the default), shadleaf.js with no Alpine on the page ('external': what an
+   * application on shadleaf.assets.alpine=external has before it loads its own), or no script of Shadleaf's at all.
+   */
+  alpine?: boolean | 'external',
+  /** Milliseconds before Shadleaf's scripts are sent, so the page is parsed and painted before they run. */
+  scriptDelay?: number,
   htmx?: boolean,
   routes?: Routes,
   /** Where to go first, e.g. '/#refunds' or '/?tab=b'. */
@@ -34,7 +49,8 @@ export type FixtureOptions = {
 
 /** Serves `main` at /, and `routes` for other paths; returns what the console said (errors, warnings, CSP). */
 export async function openFixture(page: Page, main: string | ((url: URL) => string),
-    {alpine = true, htmx = false, routes = {}, path = '/', theme = false}: FixtureOptions = {}): Promise<string[]> {
+    {alpine = true, htmx = false, routes = {}, path = '/', theme = false, scriptDelay = 0}: FixtureOptions = {})
+    : Promise<string[]> {
   const messages: string[] = [];
   page.on('console', message => {
     // Firefox warns about deprecated globals when Alpine scans window; that is not the fixture's doing.
@@ -49,15 +65,18 @@ export async function openFixture(page: Page, main: string | ((url: URL) => stri
       + (theme ? `<script>${themeScript.script}</script>` : '')
       + `<link rel="stylesheet" href="/${css}">`
       + (htmx ? `${HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
-      + (alpine ? `<script type="module" src="/${scripts.csp}"></script>` : '')
+      + (alpine ? `<script type="module" src="/${alpine === 'external' ? scripts.external : scripts.csp}"></script>` : '')
       + `</head><body><main>${content}</main></body></html>`;
-  await page.route(`${ORIGIN}/**`, route => {
+  await page.route(`${ORIGIN}/**`, async route => {
     const request = route.request();
     const url = new URL(request.url());
     if (url.pathname === '/webjars/htmx.min.js') {
       return route.fulfill({contentType: 'text/javascript', path: HTMX});
     }
     if (url.pathname.startsWith('/shadleaf/')) {
+      if (scriptDelay && url.pathname.endsWith('.js')) {
+        await new Promise(resolve => setTimeout(resolve, scriptDelay));
+      }
       return route.fulfill({path: join(PUBLIC_DIR, url.pathname)});
     }
     const headers = {'Content-Security-Policy': theme
@@ -69,13 +88,21 @@ export async function openFixture(page: Page, main: string | ((url: URL) => stri
     const handler = routes[url.pathname];
     if (handler) {
       const response = handler({url, body: request.postData() ?? '', headers: request.headers()});
-      const html = request.headers()['hx-request'] === 'true' ? response.body : document(response.body);
-      return route.fulfill({contentType: 'text/html', headers: {...headers, ...response.headers}, body: html});
+      if (response.delay) {
+        await new Promise(resolve => setTimeout(resolve, response.delay));
+      }
+      const {status = 200, contentType = 'text/html'} = response;
+      if (contentType !== 'text/html') {
+        return route.fulfill({status, contentType, headers: response.headers, body: response.body});
+      }
+      const body = String(response.body);
+      const html = request.headers()['hx-request'] === 'true' ? body : document(body);
+      return route.fulfill({status, contentType, headers: {...headers, ...response.headers}, body: html});
     }
     return route.fulfill({status: 404});
   });
   await page.goto(`${ORIGIN}${path}`);
-  if (alpine) {
+  if (alpine === true) {
     await page.waitForFunction(() => 'Alpine' in window);
   }
   if (htmx) {

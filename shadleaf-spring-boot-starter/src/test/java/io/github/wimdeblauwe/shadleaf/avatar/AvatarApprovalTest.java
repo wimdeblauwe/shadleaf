@@ -6,8 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * {@code <sl:avatar>} and its parts, named and decorative, with and without an image source, rendered into
- * {@code src/test/resources/approved/avatar.approved.html}.
+ * {@code <sl:avatar>} and its parts, named and decorative, with and without an image source (also a lazy one),
+ * rendered into {@code src/test/resources/approved/avatar.approved.html}.
  */
 class AvatarApprovalTest {
 
@@ -31,6 +31,12 @@ class AvatarApprovalTest {
             <sl:avatar>
               <sl:avatar-image th:src="${null}"/>
               <sl:avatar-fallback>JD</sl:avatar-fallback>
+            </sl:avatar>""",
+        // The server never marks the load state (data-status): Shadleaf's script does, in the browser.
+        """
+            <sl:avatar>
+              <sl:avatar-image src="/users/7/photo" loading="lazy"/>
+              <sl:avatar-fallback>GH</sl:avatar-fallback>
             </sl:avatar>""",
         "<sl:avatar><sl:avatar-fallback><sl:icon name=\"user\"/></sl:avatar-fallback></sl:avatar>",
         "<sl:avatar-image src=\"/users/42/photo\" alt=\"Jane Doe\" class=\"grayscale\"/>"));

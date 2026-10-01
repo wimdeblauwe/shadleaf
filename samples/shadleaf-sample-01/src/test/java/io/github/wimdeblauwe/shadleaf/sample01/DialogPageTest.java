@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,6 +59,39 @@ class DialogPageTest {
   }
 
   @Test
+  void eachMemberHasAnAvatarWhosePhotoMayFailToLoad() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
+
+    // Decorative next to the name; the initials show without a photo, and while one loads or after it failed.
+    Element grace = page.selectFirst("#member-2 .avatar");
+    assertThat(grace.attr("aria-hidden")).isEqualTo("true");
+    assertThat(grace.selectFirst("> img.avatar-image").attr("src")).isEqualTo("/dialog/members/2/photo");
+    assertThat(grace.selectFirst("> .avatar-fallback").text()).isEqualTo("GH");
+    assertThat(page.selectFirst("#member-2 .member-name").text()).isEqualTo("Grace Hopper");
+    assertThat(page.selectFirst("#member-1 .avatar-image").attr("src")).isEqualTo("/dialog/members/1/photo");
+
+    // Ada's photo is there; Grace's answers 404, which Shadleaf's script turns into her initials in the browser.
+    mockMvc.perform(get("/dialog/members/1/photo"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith("image/jpeg"));
+    mockMvc.perform(get("/dialog/members/2/photo")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void aMemberWithoutAPhotoGetsAnEmptySrc() throws Exception {
+    // Invited members have no photo: th:src with null renders src="", which the stylesheet hides without any script.
+    mockMvc.perform(post("/dialog/members").header("HX-Request", "true")
+            .param("name", "Mary Somerville").param("email", "mary@example.com"))
+        .andExpect(status().isOk());
+    Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
+
+    Element row = page.select("#members-body tr").stream()
+        .filter(tr -> tr.selectFirst(".member-name").text().equals("Mary Somerville")).findFirst().orElseThrow();
+    assertThat(row.selectFirst(".avatar-image").attr("src")).isEmpty();
+    assertThat(row.selectFirst(".avatar-fallback").text()).isEqualTo("MS");
+  }
+
+  @Test
   void theShortcutsButtonHasATooltip() throws Exception {
     Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
 
@@ -109,12 +143,12 @@ class DialogPageTest {
     List<Long> ids = byAdded.select("#members-body tr").stream()
         .map(row -> Long.parseLong(row.id().substring("member-".length()))).toList();
     assertThat(ids).isSorted();
-    List<String> names = byAdded.select("#members-body tr > td:first-child").eachText();
+    List<String> names = byAdded.select("#members-body tr > td:first-child .member-name").eachText();
 
     Document byName = Jsoup.parse(mockMvc.perform(get("/dialog").param("sort", "name"))
         .andReturn().getResponse().getContentAsString());
     assertThat(byName.select("#sort-members [aria-checked=true]")).extracting(Element::text).containsExactly("Name");
-    assertThat(byName.select("#members-body tr > td:first-child").eachText())
+    assertThat(byName.select("#members-body tr > td:first-child .member-name").eachText())
         .isEqualTo(names.stream().sorted(String.CASE_INSENSITIVE_ORDER).toList());
     assertThat(byName.getElementById("sort-members").attr("aria-labelledby")).isEqualTo("sort-members-trigger");
   }
@@ -205,10 +239,10 @@ class DialogPageTest {
 
     Element row = Jsoup.parseBodyFragment("<table>" + html + "</table>").getElementById("member-1");
     assertThat(row.attr("hx-swap-oob")).isEqualTo("true");
-    assertThat(row.child(0).text()).isEqualTo("Ada King");
+    assertThat(row.selectFirst(".member-name").text()).isEqualTo("Ada King");
 
     Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
-    assertThat(page.getElementById("member-1").child(0).text()).isEqualTo("Ada King");
+    assertThat(page.getElementById("member-1").selectFirst(".member-name").text()).isEqualTo("Ada King");
     assertThat(page.getElementById("member-1").hasAttr("hx-swap-oob")).isFalse();
   }
 
@@ -323,7 +357,7 @@ class DialogPageTest {
     Element tbody = fragment.selectFirst("tbody[hx-swap-oob]");
     assertThat(tbody.attr("hx-swap-oob")).isEqualTo("beforeend:#members-body");
     Element row = tbody.child(0);
-    assertThat(row.child(0).text()).isEqualTo("Katherine Johnson");
+    assertThat(row.selectFirst(".member-name").text()).isEqualTo("Katherine Johnson");
     assertThat(row.hasAttr("hx-swap-oob")).isFalse();
     Element toasts = fragment.selectFirst("ol[hx-swap-oob]");
     assertThat(toasts.attr("hx-swap-oob")).isEqualTo("beforeend:#toaster");
@@ -333,7 +367,7 @@ class DialogPageTest {
     assertThat(toast.selectFirst(".toast-title").text()).isEqualTo("Invitation sent to Katherine Johnson");
 
     Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
-    assertThat(page.select("#members-body tr").last().child(0).text()).isEqualTo("Katherine Johnson");
+    assertThat(page.select("#members-body tr").last().selectFirst(".member-name").text()).isEqualTo("Katherine Johnson");
   }
 
   private static Document fragment(String html) {

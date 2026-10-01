@@ -164,7 +164,7 @@
   }, {
     "name" : "avatar",
     "tag" : "sl:avatar",
-    "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead when the image has no `src`. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
+    "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead while the image has no `src`, is loading or fails to load. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
     "declared" : true,
     "props" : [ {
       "name" : "size",
@@ -181,13 +181,13 @@
   }, {
     "name" : "avatar-fallback",
     "tag" : "sl:avatar-fallback",
-    "description" : "What `sl:avatar` shows when its image has no `src`: usually the person's initials, or an `sl:icon`.",
+    "description" : "What `sl:avatar` shows when its image has no `src`, while it loads and when it fails to load: usually the person's initials, or an `sl:icon`.",
     "declared" : true,
     "props" : [ ]
   }, {
     "name" : "avatar-image",
     "tag" : "sl:avatar-image",
-    "description" : "The picture inside `sl:avatar`. Pass `src` or `th:src`; when it is empty or null the image is hidden and the `sl:avatar-fallback` shows instead. The avatar's `label` names it, so the image itself has an empty `alt`.",
+    "description" : "The picture inside `sl:avatar`. Pass `src` or `th:src`; when it is empty or null, while the picture loads, and when it fails to load (marked by Shadleaf's script), the image is hidden and the `sl:avatar-fallback` shows instead. The avatar's `label` names it, so the image itself has an empty `alt`.",
     "declared" : true,
     "props" : [ ]
   }, {

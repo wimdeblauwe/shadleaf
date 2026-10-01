@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -51,6 +52,8 @@ import tools.jackson.databind.json.JsonMapper;
  *   IDE metadata offered for download;</li>
  *   <li>{@code theme-script.json}: the theme script and its CSP hash, for the CSP page.</li>
  * </ul>
+ * A scenario's {@code renderSource} can show a photo from {@code previews/photos/} as {@code ${photos.<name>}}, a data:
+ * URI, so the previews and the showcase checks never fetch an image.
  * {@code docs/scripts/sync.mjs} copies them into the docs project. Adding examples for a component means adding a
  * YAML file; every library component must have one, or be listed under the {@code parts} of its family's file.
  */
@@ -60,6 +63,9 @@ class PreviewGeneratorTest {
 
   private static final Path OUTPUT_DIRECTORY = Path.of(OUTPUT);
   private static final Path PREVIEWS_DIRECTORY = Path.of("src", "test", "resources", "previews");
+  private static final Path PHOTOS_DIRECTORY = PREVIEWS_DIRECTORY.resolve("photos");
+  private static final Map<String, String> PHOTO_TYPES = Map.of("jpg", "image/jpeg", "png", "image/png",
+      "svg", "image/svg+xml");
   private static final Path BUILT_ASSETS = Path.of("target", "classes", "META-INF", "resources", "shadleaf");
   private static final Path MANIFEST = Path.of("target", "classes").resolve(ShadleafAssets.MANIFEST_LOCATION);
   private static final Pattern STANDALONE_ENTRY = Pattern.compile("css/entries/shadleaf-([^.]+)\\.css");
@@ -67,6 +73,7 @@ class PreviewGeneratorTest {
 
   private final JsonMapper jsonMapper = JsonMapper.builder().build();
   private final ComponentRenderTester tester = ComponentRenderTester.create();
+  private final Map<String, String> photos = loadPhotos();
 
   @Test
   void generatesDocsArtifacts() throws IOException {
@@ -99,15 +106,37 @@ class PreviewGeneratorTest {
   private Preview render(Scenario scenario) {
     Rendered rendered;
     try {
-      rendered = scenario.form() == null
-          ? tester.render(scenario.renderSource())
-          : tester.render(FormModel.wrap(scenario.renderSource()), scenario.form().variables());
+      if (scenario.form() == null) {
+        rendered = tester.render(scenario.renderSource(), Map.of("photos", photos));
+      } else {
+        Map<String, Object> variables = new LinkedHashMap<>(scenario.form().variables());
+        variables.put("photos", photos);
+        rendered = tester.render(FormModel.wrap(scenario.renderSource()), variables);
+      }
     } catch (RuntimeException e) {
       throw new AssertionError("Preview " + scenario.id() + " does not render: " + e.getMessage(), e);
     }
     assertThat(rendered.html()).as("preview %s", scenario.id()).isNotBlank();
     return new Preview(scenario.id(), scenario.component(), scenario.title(), scenario.description(),
         scenario.source(), rendered.html().strip(), rendered.normalizedHtml(), scenario.showcase());
+  }
+
+  /** Every photo in {@code previews/photos/}, by file name without extension, as a data: URI. */
+  private static Map<String, String> loadPhotos() {
+    Map<String, String> photos = new LinkedHashMap<>();
+    try (Stream<Path> files = Files.list(PHOTOS_DIRECTORY)) {
+      for (Path file : files.sorted().toList()) {
+        String name = file.getFileName().toString();
+        int dot = name.lastIndexOf('.');
+        String type = PHOTO_TYPES.get(name.substring(dot + 1));
+        assertThat(type).as("type of %s", file).isNotNull();
+        photos.put(name.substring(0, dot),
+            "data:" + type + ";base64," + Base64.getEncoder().encodeToString(Files.readAllBytes(file)));
+      }
+    } catch (IOException e) {
+      throw new AssertionError("Cannot read " + PHOTOS_DIRECTORY, e);
+    }
+    return photos;
   }
 
   /** The standalone bundle of every skin, default first: the embedded ones carry no reset, so they cannot preview. */

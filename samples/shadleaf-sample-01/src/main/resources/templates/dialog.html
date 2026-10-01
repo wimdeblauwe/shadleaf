@@ -109,7 +109,16 @@
   <tr th:fragment="member-row"
       th:id="|member-${member.id}|"
       th:attr="hx-swap-oob=${oob != null and oob ? 'true' : null}">
-    <td th:text="${member.name}">Ada Lovelace</td>
+    <td>
+      <!--/* Decorative next to the name. A photo URL that fails to load shows the initials too. */-->
+      <span class="member">
+        <sl:avatar size="sm">
+          <sl:avatar-image th:src="${member.photoUrl}"/>
+          <sl:avatar-fallback>[[${member.initials()}]]</sl:avatar-fallback>
+        </sl:avatar>
+        <span class="member-name" th:text="${member.name}">Ada Lovelace</span>
+      </span>
+    </td>
     <td th:text="${member.email}">ada@example.com</td>
     <td>
       <!--/* The row actions. The trigger's id (member-1-actions-trigger) lets htmx put the focus back on it when the row
