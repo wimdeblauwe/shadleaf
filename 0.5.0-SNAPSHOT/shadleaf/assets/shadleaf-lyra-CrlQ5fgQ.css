@@ -1380,6 +1380,48 @@
     display: none;
   }
 
+  .pagination {
+    justify-content: center;
+    width: 100%;
+    margin-inline: auto;
+    display: flex;
+  }
+
+  .pagination-content {
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+  }
+
+  .pagination-ellipsis {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+  }
+
+  .pagination-previous-text, .pagination-next-text {
+    display: none;
+  }
+
+  @media (min-width: 40rem) {
+    .pagination-previous-text, .pagination-next-text {
+      display: block;
+    }
+  }
+
+  :is(.pagination-previous > .btn-icon, .pagination-next > .btn-icon):where(:dir(rtl), [dir="rtl"], [dir="rtl"] *) {
+    --tw-scale-x: calc(100% * -1);
+    scale: var(--tw-scale-x) var(--tw-scale-y);
+  }
+
+  .pagination-size {
+    align-items: center;
+    display: flex;
+  }
+
   .popover-content {
     border-style: var(--tw-border-style);
     --tw-outline-style: none;
@@ -1909,6 +1951,43 @@
 
   .switch:dir(rtl):checked {
     background-position: 0;
+  }
+
+  .table-container {
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+  }
+
+  .table {
+    caption-side: bottom;
+    width: 100%;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td):not([data-align]), .table-head:not([data-align]) {
+    text-align: start;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td)[data-align="center"], .table-head[data-align="center"] {
+    text-align: center;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td)[data-align="end"], .table-head[data-align="end"] {
+    text-align: end;
+  }
+
+  .table-sort {
+    vertical-align: middle;
+  }
+
+  .table > tbody > tr.table-empty > td {
+    text-align: center;
+    white-space: normal;
   }
 
   .tabs {
@@ -4999,6 +5078,139 @@
   .toast-close {
     margin-block: calc(var(--spacing) * -1);
     margin-inline-end: calc(var(--spacing) * -2);
+  }
+
+  .table {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
+    border-color: var(--border);
+  }
+
+  @media (hover: hover) {
+    .table > tbody > tr:hover {
+      background-color: var(--muted);
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .table > tbody > tr:hover {
+        background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .table > tbody > tr {
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+      transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+      transition-duration: var(--tw-duration, var(--default-transition-duration));
+    }
+  }
+
+  .table > tbody > tr:last-child, .table > tfoot > tr:last-child {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 0;
+  }
+
+  .table > tfoot {
+    border-top-style: var(--tw-border-style);
+    border-top-width: 1px;
+    border-color: var(--border);
+    background-color: var(--muted);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .table > tfoot {
+      background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+    }
+  }
+
+  .table > tfoot {
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > th {
+    height: calc(var(--spacing) * 10);
+    padding-inline: calc(var(--spacing) * 2);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+    color: var(--foreground);
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > td {
+    padding: calc(var(--spacing) * 2);
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td):has( > .checkbox-wrapper) {
+    padding-inline-end: 0;
+  }
+
+  .table > caption {
+    margin-top: calc(var(--spacing) * 4);
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+    color: var(--muted-foreground);
+  }
+
+  .table-sort {
+    margin-inline-start: calc(var(--spacing) * -2.5);
+  }
+
+  .table-head[data-align="center"] > .table-sort {
+    margin-inline-start: 0;
+  }
+
+  .table-head[data-align="end"] > .table-sort {
+    margin-inline-start: 0;
+    margin-inline-end: calc(var(--spacing) * -2.5);
+  }
+
+  .table > tbody > tr.table-empty > td {
+    height: calc(var(--spacing) * 24);
+  }
+
+  .pagination-content {
+    gap: calc(var(--spacing) * .5);
+  }
+
+  .pagination-ellipsis {
+    width: calc(var(--spacing) * 8);
+    height: calc(var(--spacing) * 8);
+  }
+
+  .pagination-ellipsis > svg:not([class*="size-"], [data-icon-size]) {
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+  }
+
+  .btn.pagination-previous:has( > [data-icon]) {
+    padding-inline-start: calc(var(--spacing) * 1.5);
+  }
+
+  .btn.pagination-next:has( > [data-icon]) {
+    padding-inline-end: calc(var(--spacing) * 1.5);
+  }
+
+  .pagination-summary {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+    color: var(--muted-foreground);
+  }
+
+  .pagination-size {
+    gap: calc(var(--spacing) * 2);
+  }
+
+  .pagination-size-label {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 }
 
