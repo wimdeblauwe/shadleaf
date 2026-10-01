@@ -2111,6 +2111,38 @@
           }
         } ]
       }, {
+        "name" : "sl:query-params",
+        "description" : "Hidden inputs that copy the current request's query parameters into a `GET` form, so sending a search keeps the table's order, page size and other filters. Name the form's own fields in `except`, or they are sent twice. The page number is always left out, so a new search starts on the first page. Values are decoded once and escaped like any other attribute; a repeated parameter (several `sort` values) stays repeated. Renders no element of its own. Other attributes go to every input: `form=\"search\"` ties them to a form elsewhere on the page.",
+        "attributes" : [ {
+          "name" : "except",
+          "description" : "The parameters not to copy, separated by commas: the fields the form has itself (`q`, `q,status`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "qualifier",
+          "description" : "The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its page parameter (`members_page`) is the one left out.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:except",
+          "description" : "`except` from a Thymeleaf expression, e.g. `th:except=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:qualifier",
+          "description" : "`qualifier` from a Thymeleaf expression, e.g. `th:qualifier=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:radio-group",
         "description" : "A group of `sl:radio-group-item`s, announced as a radio group. Name it with `aria-labelledby` (pointing at the question) or `aria-label`. The items share their `name`, or their `th:field`, which is what makes them one choice.",
         "attributes" : [ {

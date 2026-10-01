@@ -1,0 +1,24 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Hidden inputs that copy the current request's query parameters into a <code>GET</code> form, so
+      sending a search keeps the table's order, page size and other filters. Name the form's own fields in
+      <code>except</code>, or they are sent twice. The page number is always left out, so a new search starts on the
+      first page. Values are decoded once and escaped like any other attribute; a repeated parameter (several
+      <code>sort</code> values) stays repeated. Renders no element of its own. Other attributes go to every input:
+      <code>form="search"</code> ties them to a form elsewhere on the page.</sl:description>
+    <sl:prop name="except">The parameters not to copy, separated by commas: the fields the form has itself
+      (<code>q</code>, <code>q,status</code>).</sl:prop>
+    <sl:prop name="qualifier">The <code>@Qualifier</code> of the controller's <code>Pageable</code>, for a second
+      table on the page: its page parameter (<code>members_page</code>) is the one left out.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<th:block th:fragment="query-params"><input th:each="slParam : ${#slPaging.queryParams(props.except, props.qualifier)}"
+    type="hidden"
+    th:name="${slParam.name}"
+    th:value="${slParam.value}"
+    sl:attrs></th:block>
+</body>
+</html>

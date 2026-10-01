@@ -198,7 +198,14 @@ roles by rank, sort the database by the rank:
 ### Focus after an htmx swap
 
 Each sort link has an id (`sort-name`, or `members-sort-name` with a qualifier), so when htmx replaces the table it
-gives the focus back to the link that was clicked.
+gives the focus back to the link that was clicked. [Tables with htmx](../../guides/tables-htmx/) puts it together.
+
+## Search and filters
+
+A search or filter above the table is a `GET` form the controller reads (`?q=ada`). Put
+[`<sl:query-params except="q"/>`](../query-params/) in it, so sending it keeps the table's order and page size and
+starts on the first page; the sort and page links keep `q` by themselves. To search as the user types, see
+[Tables with htmx](../../guides/tables-htmx/).
 
 ## Nothing found
 

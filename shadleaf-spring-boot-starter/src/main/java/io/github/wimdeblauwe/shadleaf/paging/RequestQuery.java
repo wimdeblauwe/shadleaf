@@ -49,9 +49,25 @@ final class RequestQuery {
     return values;
   }
 
+  /** Every parameter, its name and value decoded, in the order they appear; repeated ones repeated. */
+  List<QueryParam> decoded() {
+    return parameters.stream()
+        .map(parameter -> {
+          int equals = parameter.indexOf('=');
+          return equals < 0
+              ? new QueryParam(decode(parameter), "")
+              : new QueryParam(decode(parameter.substring(0, equals)), decode(parameter.substring(equals + 1)));
+        })
+        .toList();
+  }
+
   /** The same query without any of these parameters. */
   RequestQuery without(String... names) {
-    Set<String> removed = Set.of(names);
+    return without(Set.of(names));
+  }
+
+  /** The same query without any of these parameters. */
+  RequestQuery without(Set<String> removed) {
     List<String> kept = parameters.stream()
         .filter(parameter -> {
           int equals = parameter.indexOf('=');

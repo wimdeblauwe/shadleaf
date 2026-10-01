@@ -996,6 +996,22 @@
       "description" : "Size of the button, as on `sl:button`. The `icon` sizes need an `aria-label`."
     } ]
   }, {
+    "name" : "query-params",
+    "tag" : "sl:query-params",
+    "description" : "Hidden inputs that copy the current request's query parameters into a `GET` form, so sending a search keeps the table's order, page size and other filters. Name the form's own fields in `except`, or they are sent twice. The page number is always left out, so a new search starts on the first page. Values are decoded once and escaped like any other attribute; a repeated parameter (several `sort` values) stays repeated. Renders no element of its own. Other attributes go to every input: `form=\"search\"` ties them to a form elsewhere on the page.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "except",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The parameters not to copy, separated by commas: the fields the form has itself (`q`, `q,status`)."
+    }, {
+      "name" : "qualifier",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its page parameter (`members_page`) is the one left out."
+    } ]
+  }, {
     "name" : "radio-group",
     "tag" : "sl:radio-group",
     "description" : "A group of `sl:radio-group-item`s, announced as a radio group. Name it with `aria-labelledby` (pointing at the question) or `aria-label`. The items share their `name`, or their `th:field`, which is what makes them one choice.",

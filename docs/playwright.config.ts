@@ -17,9 +17,10 @@ export default defineConfig({
     // hidden="until-found", which the accordion and the tabs use. The toaster moves into a modal dialog on its toggle
     // and close events, and reads Alt+T by its key code. The theme toggle depends on the storage event between tabs, on
     // matchMedia change events and on the scripting media feature. Firefox draws nothing for a broken image with
-    // alt="", where Chromium draws an icon, which the avatar hides.
+    // alt="", where Chromium draws an icon, which the avatar hides. Firefox has no search event, so a live search
+    // runs on the form's submit when Enter is pressed.
     {name: 'firefox', use: {...devices['Desktop Firefox']},
-      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar)\.spec\.ts/},
+      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx)\.spec\.ts/},
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

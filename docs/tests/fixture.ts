@@ -3,11 +3,12 @@ import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
 import themeScript from '../src/generated/theme-script.json' with {type: 'json'};
 
-// Fixture pages for disclosure.spec.ts, tabs.spec.ts, theme-toggle.spec.ts and avatar.spec.ts, served from a made-up
-// origin under a strict Content-Security-Policy, with the csp Alpine build (or shadleaf.js without any Alpine, or no
-// script of Shadleaf's at all) and optionally htmx. The page at / and every route get the request's URL, so a fixture
-// can render what a server would for ?tab=... A route can also answer with something other than a page (an image), a
-// status and after a delay.
+// Fixture pages for disclosure.spec.ts, tabs.spec.ts, theme-toggle.spec.ts, avatar.spec.ts and table-htmx.spec.ts,
+// served from a made-up origin under a strict Content-Security-Policy, with the csp Alpine build (or shadleaf.js
+// without any Alpine, or no script of Shadleaf's at all) and optionally htmx. The page at / and every route get the
+// request's URL, so a fixture can render what a server would for ?tab=... A route can also answer with something other
+// than a page (an image), a status and after a delay. An htmx request to a route gets the route's markup alone, as a
+// fragment; any other request, a history restore included, gets it as a page.
 
 export const ORIGIN = 'http://app.test';
 const PUBLIC_DIR = join(import.meta.dirname, '..', 'public');
@@ -96,7 +97,10 @@ export async function openFixture(page: Page, main: string | ((url: URL) => stri
         return route.fulfill({status, contentType, headers: response.headers, body: response.body});
       }
       const body = String(response.body);
-      const html = request.headers()['hx-request'] === 'true' ? body : document(body);
+      // htmx asks for a page it did not keep in its history cache with HX-Request too: that gets the whole page.
+      const fragment = request.headers()['hx-request'] === 'true'
+          && request.headers()['hx-history-restore-request'] !== 'true';
+      const html = fragment ? body : document(body);
       return route.fulfill({status, contentType, headers: {...headers, ...response.headers}, body: html});
     }
     return route.fulfill({status: 404});

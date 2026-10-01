@@ -2,8 +2,10 @@ package io.github.wimdeblauwe.shadleaf.paging;
 
 import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.UnaryOperator;
 import org.jspecify.annotations.Nullable;
@@ -14,8 +16,8 @@ import org.thymeleaf.web.IWebRequest;
 
 /**
  * The expression object {@code #slPaging}: the links of {@code sl:table-head}, {@code sl:pagination} and
- * {@code sl:pagination-size}, built from the request that renders the page, and the numbers of
- * {@code sl:pagination-summary}.
+ * {@code sl:pagination-size}, built from the request that renders the page, the numbers of
+ * {@code sl:pagination-summary}, and the parameters {@code sl:query-params} keeps in a search form.
  * <p>
  * A link replaces only its own parameters and keeps every other one, so a filter in the query string survives
  * sorting and paging. Parameter names are Spring Data's, as the application configured them
@@ -178,6 +180,26 @@ public final class Paging {
     int rows = state.numberOfElements();
     return new PageSummary(rows == 0 ? 0 : offset + 1, rows == 0 ? 0 : offset + rows, state.totalElements(),
         state.number() + 1, state.totalPages() == null ? null : Math.max(state.totalPages(), 1));
+  }
+
+  /**
+   * The parameters {@code sl:query-params} copies into a {@code GET} form, so sending it keeps the order, the page
+   * size and the other filters: every parameter of the request, decoded and in its order (a repeated one repeated),
+   * except the ones named and the page number, so a new search starts on the first page. Outside a web request there
+   * is no query to copy, so the list is empty.
+   *
+   * @param except    the names the form has fields of its own for, separated by commas or spaces ({@code q})
+   * @param qualifier the {@code @Qualifier} of the controller's {@code Pageable}, whose page parameter is dropped
+   */
+  public List<QueryParam> queryParams(@Nullable String except, @Nullable String qualifier) {
+    Set<String> dropped = new HashSet<>();
+    dropped.add(parameters.page(qualifier));
+    for (String name : (except == null ? "" : except).trim().split("[,\\s]+")) {
+      if (!name.isEmpty()) {
+        dropped.add(name);
+      }
+    }
+    return query.without(dropped).decoded();
   }
 
   private PageState state(@Nullable Object page, @Nullable Number current, @Nullable Number total) {

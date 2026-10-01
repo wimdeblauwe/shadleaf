@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
+      xmlns:hx="http://www.w3.org/1999/xhtml"
       th:replace="~{layout/main :: layout('People', ~{::#page-content})}">
 <body>
 <div id="page-content">
@@ -12,35 +13,64 @@
     the pagination which page it is on.</p>
   <p>The controller adds the id as the last sort key, so people with the same number of orders keep one order and
     every person is on exactly one page. Roles are stored as their rank, so they sort Owner, Admin, Member, Guest.</p>
+  <p>The search filters on name and email. With htmx it searches while you type, and the headers, pages and sizes
+    replace only the table; without JavaScript, Enter sends the form. Either way the order and the page size stay, and
+    a search starts on the first page.</p>
 
-  <sl:table th:page="${people}">
-    <thead>
-      <tr>
-        <sl:table-head sort="name">Name</sl:table-head>
-        <sl:table-head sort="email">Email</sl:table-head>
-        <sl:table-head sort="role">Role</sl:table-head>
-        <sl:table-head sort="orders" align="end">Orders</sl:table-head>
-        <sl:table-head sort="joined" align="end">Joined</sl:table-head>
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="person : ${people}">
-        <td th:text="${person.name}">Ada Allen</td>
-        <td th:text="${person.email}">ada.allen@example.com</td>
-        <td><sl:badge th:variant="${person.role.name() == 'MEMBER' ? 'outline' : 'secondary'}"
-                      th:text="${#strings.capitalize(#strings.toLowerCase(person.role))}">Member</sl:badge></td>
-        <td data-align="end" th:text="${person.orders}">3</td>
-        <td data-align="end" th:text="${#temporals.format(person.joined, 'd MMM yyyy')}">6 Jan 2020</td>
-      </tr>
-      <sl:table-empty colspan="5" th:if="${people.empty}"/>
-    </tbody>
-  </sl:table>
-  <!--/* Laid out as shadcn/ui's data table footer: the summary at the start, rows per page and the pages at the end. */-->
-  <div class="table-footer">
-    <sl:pagination-summary th:page="${people}"/>
-    <div class="table-footer-controls">
-      <sl:pagination-size th:page="${people}"/>
-      <sl:pagination th:page="${people}"/>
+  <!--/* A GET form: without JavaScript, Enter sends it (one field needs no button). With htmx it asks for the results
+    300 ms after the last keystroke, at once on Enter (submit) or on clearing the field (search), and only the
+    latest request counts (hx-sync replace). It asks for this page's own URL, so the address it pushes and the links
+    the response builds from the request agree. The field stays outside what is swapped, so it keeps the focus and
+    whatever was typed while a request was out. hx-history="false": htmx's snapshot would keep the field's value of
+    the first load, not the search of that history entry, so going back asks the server for the page instead. */-->
+  <form id="people-search" class="people-search" role="search" method="get" th:action="@{/people}"
+        hx:get="@{/people}" hx-trigger="input changed delay:300ms, search, submit" hx-sync="this:replace"
+        hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none" hx-push-url="true"
+        hx-history="false">
+    <sl:input type="search" id="people-q" name="q" th:value="${search}" aria-label="Search people"
+              placeholder="Filter by name or email…" autocomplete="off"/>
+    <!--/* What a screen reader announces after a search; the response updates it out of band. */-->
+    <p id="people-status" class="visually-hidden" role="status" th:text="${found}"></p>
+  </form>
+
+  <!--/* Swapped by htmx: the boosted links inherit the target and select, and keep their ids, so htmx gives the focus
+    back to the link that was followed. The form's hidden inputs live here (form="people-search"), so they follow the
+    order and size of the table they came with. */-->
+  <div id="people-results" th:fragment="results"
+       hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+    <sl:query-params except="q" form="people-search"/>
+    <p th:if="${fragment}" id="people-status" hx-swap-oob="innerHTML" th:text="${found}"></p>
+    <sl:table th:page="${people}">
+      <thead>
+        <tr>
+          <sl:table-head sort="name">Name</sl:table-head>
+          <sl:table-head sort="email">Email</sl:table-head>
+          <sl:table-head sort="role">Role</sl:table-head>
+          <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+          <sl:table-head sort="joined" align="end">Joined</sl:table-head>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="person : ${people}">
+          <td th:text="${person.name}">Ada Allen</td>
+          <td th:text="${person.email}">ada.allen@example.com</td>
+          <td><sl:badge th:variant="${person.role.name() == 'MEMBER' ? 'outline' : 'secondary'}"
+                        th:text="${#strings.capitalize(#strings.toLowerCase(person.role))}">Member</sl:badge></td>
+          <td data-align="end" th:text="${person.orders}">3</td>
+          <td data-align="end" th:text="${#temporals.format(person.joined, 'd MMM yyyy')}">6 Jan 2020</td>
+        </tr>
+        <sl:table-empty colspan="5" th:if="${people.empty and search.isEmpty()}"/>
+        <sl:table-empty colspan="5" th:if="${people.empty and !search.isEmpty()}">No one matches
+          “[[${search}]]”.</sl:table-empty>
+      </tbody>
+    </sl:table>
+    <!--/* Laid out as shadcn/ui's data table footer: the summary at the start, rows per page and the pages at the end. */-->
+    <div class="table-footer">
+      <sl:pagination-summary th:page="${people}"/>
+      <div class="table-footer-controls">
+        <sl:pagination-size th:page="${people}"/>
+        <sl:pagination th:page="${people}"/>
+      </div>
     </div>
   </div>
 </div>

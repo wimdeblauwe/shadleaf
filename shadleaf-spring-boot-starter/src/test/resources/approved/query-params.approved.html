@@ -1,0 +1,31 @@
+<!-- <form><sl:query-params/></form> -->
+<form>
+  <input type="hidden" name="q" value="ada lé">
+  <input type="hidden" name="sort" value="name,desc">
+  <input type="hidden" name="sort" value="email">
+  <input type="hidden" name="size" value="50">
+  <input type="hidden" name="members_page" value="1">
+</form>
+
+<!-- <form><sl:query-params except="q"/></form> -->
+<form>
+  <input type="hidden" name="sort" value="name,desc">
+  <input type="hidden" name="sort" value="email">
+  <input type="hidden" name="size" value="50">
+  <input type="hidden" name="members_page" value="1">
+</form>
+
+<!-- <form><sl:query-params except="q,size" qualifier="members"/></form> -->
+<form>
+  <input type="hidden" name="sort" value="name,desc">
+  <input type="hidden" name="sort" value="email">
+  <input type="hidden" name="page" value="2">
+</form>
+
+<!-- <div><sl:query-params except="q" form="people-search"/></div> -->
+<div>
+  <input type="hidden" name="sort" value="name,desc" form="people-search">
+  <input type="hidden" name="sort" value="email" form="people-search">
+  <input type="hidden" name="size" value="50" form="people-search">
+  <input type="hidden" name="members_page" value="1" form="people-search">
+</div>

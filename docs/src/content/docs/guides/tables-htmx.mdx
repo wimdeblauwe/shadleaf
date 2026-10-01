@@ -1,0 +1,164 @@
+---
+title: Tables with htmx
+description: Search as you type, sort and page a server-side table with htmx, keep the focus and the back button, and keep it working without JavaScript.
+sidebar:
+  order: 6
+---
+
+A Shadleaf [table](../../components/table/) sorts and pages on the server through plain links: its column headers,
+its [pagination](../../components/pagination/) and the rows-per-page menu all link to the same page with other
+parameters, built from the request that rendered it. A search above it is a plain `GET` form, which
+[`sl:query-params`](../../components/query-params/) keeps in step with the table's order and size. None of it needs
+JavaScript, and none of the library's templates has an `hx-*` attribute. htmx makes it faster: it searches while the
+user types and replaces only the table, and the links and the address bar stay what they would be without it.
+
+This guide follows sample-01's `/people` page (`samples/shadleaf-sample-01`): 270 people in an H2 database, sorted,
+paged and searched by Spring Data JPA. Loading htmx is in [Forms with htmx](../htmx/#loading-htmx).
+
+## The page
+
+Two parts: the search form, which htmx never replaces, and the results (the table and its footer), which it does.
+
+```html
+<form id="people-search" role="search" method="get" th:action="@{/people}"
+      hx:get="@{/people}" hx-trigger="input changed delay:300ms, search, submit" hx-sync="this:replace"
+      hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none"
+      hx-push-url="true" hx-history="false">
+  <sl:input type="search" id="people-q" name="q" th:value="${search}" aria-label="Search people"
+            placeholder="Filter by name or email…" autocomplete="off"/>
+  <p id="people-status" class="visually-hidden" role="status" th:text="${found}"></p>
+</form>
+
+<div id="people-results" th:fragment="results"
+     hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+  <sl:query-params except="q" form="people-search"/>
+  <p th:if="${fragment}" id="people-status" hx-swap-oob="innerHTML" th:text="${found}"></p>
+  <sl:table th:page="${people}">
+    <thead>
+      <tr>
+        <sl:table-head sort="name">Name</sl:table-head>
+        <sl:table-head sort="email">Email</sl:table-head>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="person : ${people}">...</tr>
+      <sl:table-empty colspan="2" th:if="${people.empty}">No one matches “[[${search}]]”.</sl:table-empty>
+    </tbody>
+  </sl:table>
+  <div class="table-footer">
+    <sl:pagination-summary th:page="${people}"/>
+    <div class="table-footer-controls">
+      <sl:pagination-size th:page="${people}"/>
+      <sl:pagination th:page="${people}"/>
+    </div>
+  </div>
+</div>
+```
+
+(`hx:get` is htmx-spring-boot's dialect, which runs the URL through `@{...}`; a plain `hx-get="/people"` does the
+same without a context path.)
+
+## The controller
+
+The controller answers an htmx request with the results alone, as the [htmx form](../htmx/) does, and every other
+request with the page:
+
+```java
+@GetMapping("/people")
+public String people(@RequestParam(required = false) String q,
+    @PageableDefault(size = 20, sort = "name") Pageable pageable, HtmxRequest htmxRequest, Model model) {
+  String search = q == null ? "" : q.strip();
+  Page<Person> people = search.isEmpty()
+      ? repository.findAll(pageable)
+      : repository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable);
+  model.addAttribute("people", people);
+  model.addAttribute("search", search);
+  model.addAttribute("found", search.isEmpty() ? ""
+      : people.getTotalElements() == 1 ? "1 person found" : people.getTotalElements() + " people found");
+  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest();
+  model.addAttribute("fragment", fragment);
+  return fragment ? "people :: results" : "people";
+}
+```
+
+A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. htmx-spring-boot
+adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
+page. Limit the sortable properties and add a unique last sort key as the [table](../../components/table/#limit-what-can-be-sorted)
+explains; the sample does both.
+
+## Ask for the page's own URL
+
+The links in the results are built from the request that rendered them: a sort link is that request's path and query
+with another `sort`. So htmx must ask for the page's own URL (`/people?q=ada&sort=email,asc`), not for an endpoint of
+its own such as `/people/table`. Then the address htmx pushes, the links in the fragment and the page a reload shows
+all agree, and a link copied from the address bar opens the same table. An endpoint of its own would put
+`/people/table?...` into every sort and page link, and the next click would push that address.
+
+## Search as you type
+
+The form's `hx-get` asks for `/people` with the form's fields: the search field and the hidden inputs of
+`sl:query-params`, so the order and the size stay, and the page number is left out, so the results start on the first
+page.
+
+- `input changed delay:300ms` sends the search 300 ms after the last keystroke; each keystroke starts the wait again,
+  and `changed` skips an input that leaves the value as it was.
+- `search` sends it at once when the field is cleared with its clear button (or Enter, in Chromium and Safari).
+- `submit` sends it at once on Enter. Without it, Enter would submit the form the normal way and load the whole page;
+  Firefox has no `search` event, so `submit` is what catches Enter there.
+- `hx-sync="this:replace"` aborts a request still out when the next one starts, so a slow answer to "ad" never
+  replaces the answer to "ada".
+- `hx-push-url="true"` puts the search into the address: `/people?q=ada&sort=email,asc&size=50`.
+
+The field is outside `#people-results`, so a swap never touches it: it keeps the focus, the caret and whatever the
+user typed while a request was out. The hidden inputs are inside: `form="people-search"` ties them to the form from
+there, so each swap brings the ones that belong to the table it shows. Hidden inputs inside the form would keep the
+order of the first load after a sort link changed it.
+
+### What a screen reader hears
+
+A sighted user sees the rows change; a screen reader user hears nothing unless the page says so. The form holds an
+empty `role="status"` region, and the fragment updates its text out of band (`hx-swap-oob="innerHTML"` keeps the
+region itself, which a screen reader is listening to): "15 people found". It is only rendered in the fragment, so the
+whole page has the id once. Keep the region out of the swapped part: a live region that is replaced is not announced.
+
+## Sort, page and size links
+
+`hx-boost="true"` on `#people-results` turns every link inside it into an htmx request for that link's URL: the sort
+links in the headers, the page links and the rows-per-page menu's items. They inherit `hx-target`, `hx-select` and
+`hx-swap` from the same element, so each replaces the results and pushes its address, as following the link would.
+
+- **Focus.** htmx gives the focus back to the element with the id of the one that had it, if the swap replaced that
+  element. Every link Shadleaf builds has a stable id (`sort-name`, `page-next`, `page-3`, and the size menu's button
+  `page-size-trigger`, which the menu focuses before it follows the chosen size), so after a click on Next the focus is
+  on the new Next, and the keyboard user can press Enter again. Ids get the [qualifier](../../components/table/#two-tables-on-one-page)
+  as a prefix, so two tables on a page keep theirs apart.
+- **Scrolling.** A boosted link scrolls to the top of the target by default (`scrollIntoViewOnBoost`). `show:none` in
+  `hx-swap` keeps the page where it is, which suits a pagination at the bottom of a long table; the focused link stays
+  in view.
+- **The search.** The links are built from the request, so they keep `q`: sorting the search results sorts the search
+  results.
+
+## Back and forward
+
+htmx keeps a snapshot of the page for each address it pushed, and puts it back on the back button. The snapshot is the
+markup, and a field's typed value is not in the markup: going back from "grace" to "ada" would show the results for
+"ada" under a field reading whatever the first load put there. So the form has `hx-history="false"`: htmx keeps no
+snapshot of this page and, on back and forward, asks the server for the page at that address instead
+(`HX-History-Restore-Request`), which renders the field and the table for it. That is one request per step back.
+
+An application that would rather keep the snapshots can update the field's `value` attribute as the user types, in a
+script of its own; Shadleaf ships none for it.
+
+## Without JavaScript
+
+The form is a `GET` form with one field, so Enter sends it without a button, and the browser asks for
+`/people?q=ada&sort=email,asc&size=50` (the hidden inputs are part of the form through `form="people-search"`). The
+links are links. Every step is a page load, and every address is one the controller answers with the whole page.
+
+## Tests
+
+Sample-01's `PeoplePageTest` checks the server side over HTTP: the search on name and email, the links and hidden
+inputs keeping `q`, sort and size and dropping the page, the empty result, the fragment for `HX-Request` and the whole
+page for a history restore. The docs' `table-htmx.spec.ts` runs the same markup in Chromium and Firefox under a strict
+Content-Security-Policy: the debounce, one request for a burst of typing, what is typed while a request is out, Enter,
+the pushed address, the focus after a sort or page link, back and forward, and the form without htmx.

@@ -1,0 +1,15 @@
+# Scenarios for the query params' docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: query-params
+scenarios:
+  - id: default
+    title: Query params
+    description: >-
+      In a request for /people?q=ada&sort=email,desc&size=50&page=2. Sending the form asks for
+      /people?q=…&sort=email,desc&size=50: the order and the size stay, the page starts again at the first.
+    request: /people?q=ada&sort=email,desc&size=50&page=2
+    source: |-
+      <form action="/people" method="get">
+        <sl:label for="query-params-q">Search people</sl:label>
+        <sl:input type="search" id="query-params-q" name="q" th:value="${param.q}" placeholder="Name or email"/>
+        <sl:query-params except="q"/>
+      </form>
