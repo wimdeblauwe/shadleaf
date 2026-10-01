@@ -81,6 +81,11 @@ export default function toaster() {
 
       /** Puts the viewport where it is usable (in the top-most modal dialog, or back home) and shows it. */
       const place = () => {
+        // Removed from the page (an htmx swap, a history restore): Alpine destroys this toaster in a microtask, and
+        // until then it must not show a viewport that is no longer in the document.
+        if (!root.isConnected) {
+          return;
+        }
         const target = topModal() ?? root;
         if (viewport.parentElement !== target) {
           if (target === root) {
@@ -271,7 +276,8 @@ export default function toaster() {
       cleanups.push(() => observer.disconnect());
 
       listen(document, 'sl-toast', event => {
-        if (!handled.has(event)) {
+        // A toaster that was just removed leaves the event to one that is still on the page.
+        if (root.isConnected && !handled.has(event)) {
           handled.add(event);
           add(event.detail);
         }

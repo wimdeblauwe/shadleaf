@@ -387,6 +387,18 @@ test('htmx: a toast does not come back from the history cache', async ({page}) =
   expect(messages).toEqual([]);
 });
 
+test('a toaster removed in the same task as a toast arrives stays quiet', async ({page}) => {
+  // Alpine destroys a removed component in a microtask; until then the old toaster still hears sl-toast. Found as a
+  // flaky "showPopover: Element is not connected" in Firefox after an htmx history restore.
+  const messages = await openFixture(page, `<div id="area">${toaster('data-duration="0"')}</div>`);
+  await page.evaluate(() => {
+    document.getElementById('area')!.replaceChildren();
+    document.dispatchEvent(new CustomEvent('sl-toast', {detail: {title: 'Lost'}}));
+  });
+  await page.waitForTimeout(300);
+  expect(messages).toEqual([]);
+});
+
 test('a toast slides in from the edge only where motion is fine', async ({page}) => {
   await openFixture(page, toaster('data-duration="0"'));
   const transition = () => toasts(page).last().evaluate(element => getComputedStyle(element).transitionProperty);
