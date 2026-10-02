@@ -2,6 +2,7 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout/main :: layout('Data', ~{::#page-content})}">
 <body>
 <div id="page-content">
@@ -11,6 +12,13 @@
       <sl:tabs-trigger tab="about" th:href="@{/data(tab='about')}">About</sl:tabs-trigger>
     </sl:tabs-list>
     <sl:tabs-content tab="projects">
+      <!--/* Only for admins, like the Admin link in the header. Hiding it is a courtesy; /admin/** refuses everyone else. */-->
+      <div class="row" sec:authorize="hasRole('ADMIN')">
+        <sl:button as="a" th:href="@{/admin}" variant="outline" size="sm" id="manage-access">
+          <sl:slot name="icon-start"><sl:icon name="shield"/></sl:slot>
+          Manage access
+        </sl:button>
+      </div>
       <sl:table>
         <caption class="visually-hidden">Projects</caption>
         <thead>

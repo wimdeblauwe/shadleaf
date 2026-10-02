@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Admin', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>Only admins see the Admin link in the header (and in the phone panel, which is the same navigation): the layout
+    wraps its menu item in <code>sec:authorize="hasRole('ADMIN')"</code>. That only hides the link. What keeps everyone
+    else out is the rule on the URL, <code>.requestMatchers("/admin/**").hasRole("ADMIN")</code> in
+    <code>SecurityConfiguration</code>: a user without the role who types the address gets a 403.</p>
+
+  <sl:table>
+    <caption class="visually-hidden">Users</caption>
+    <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Username</th>
+      <th scope="col">Roles</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="account : ${accounts}">
+      <td th:text="${account.name}">Ada Lovelace</td>
+      <td th:text="${account.username}">ada</td>
+      <td>
+        <th:block th:each="role : ${account.roles}">
+          <sl:badge th:variant="${role == 'ADMIN' ? 'default' : 'secondary'}" th:text="${role}">ADMIN</sl:badge>
+        </th:block>
+      </td>
+    </tr>
+    </tbody>
+  </sl:table>
+</div>
+</body>
+</html>

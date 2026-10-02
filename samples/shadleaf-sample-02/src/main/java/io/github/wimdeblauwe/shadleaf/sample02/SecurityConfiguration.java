@@ -1,6 +1,9 @@
 package io.github.wimdeblauwe.shadleaf.sample02;
 
 import io.github.wimdeblauwe.shadleaf.sample02.CspProperties.Mode;
+import io.github.wimdeblauwe.shadleaf.security.CurrentUserResolver;
+import io.github.wimdeblauwe.shadleaf.security.DefaultCurrentUserResolver;
+import io.github.wimdeblauwe.shadleaf.security.ShadleafUser;
 import io.github.wimdeblauwe.shadleaf.theme.ShadleafThemeScript;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +21,8 @@ public class SecurityConfiguration {
             // Everything Shadleaf serves lives under /shadleaf/**: one matcher for the library's assets.
             .requestMatchers("/shadleaf/**").permitAll()
             .requestMatchers("/css/**").permitAll()
+            // This rule is the security: the layout only hides the Admin link from users who would get a 403 here.
+            .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated())
         .formLogin(login -> login.loginPage("/login").permitAll())
         .headers(headers -> headers.addHeaderWriter(new CspHeaderWriter(csp.mode(), themeScript)));
@@ -25,5 +30,22 @@ public class SecurityConfiguration {
       http.addFilterBefore(new CspNonceFilter(), HeaderWriterFilter.class);
     }
     return http.build();
+  }
+
+  @Bean
+  SampleUsers userDetailsService() {
+    return new SampleUsers();
+  }
+
+  /**
+   * Shadleaf's default resolver only knows a {@code UserDetails}' username; this one shows a {@link SampleUser}'s name
+   * and email in the user menu, and leaves anything else (a test's plain {@code User}) to the default.
+   */
+  @Bean
+  CurrentUserResolver currentUserResolver() {
+    CurrentUserResolver fallback = new DefaultCurrentUserResolver();
+    return authentication -> authentication.getPrincipal() instanceof SampleUser user
+        ? ShadleafUser.of(user.getDisplayName(), user.getUsername(), user.getEmail(), null)
+        : fallback.resolve(authentication);
   }
 }

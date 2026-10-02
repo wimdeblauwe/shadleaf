@@ -5,8 +5,8 @@
       th:replace="~{layout/plain :: layout('Sign in', ~{::#page-content})}">
 <body>
 <div id="page-content">
-  <p>This page is public, so the Shadleaf stylesheet under <code>/shadleaf/**</code> has to be too. Sign in with
-    <code>user</code> / <code>password</code>.</p>
+  <p>This page is public, so the Shadleaf stylesheet under <code>/shadleaf/**</code> has to be too. Sign in as
+    <code>ada</code> (an admin) or <code>grace</code>, both with the password <code>password</code>.</p>
 
   <p th:if="${param.error}" class="message error" role="alert">Wrong username or password.</p>
   <p th:if="${param.logout}" class="message" role="status">You have been signed out.</p>

@@ -75,6 +75,22 @@ CurrentUserResolver currentUserResolver(MemberRepository members) {
 
 It is only asked for an authenticated user; returning `null` treats the visitor as anonymous.
 
+When your own `UserDetailsService` already loads the name (a subclass of Spring Security's `User` with a display
+name, say), read it from the principal and leave other sign-ins to the default. Sample-02 does this for its two users:
+
+```java
+@Bean
+CurrentUserResolver currentUserResolver() {
+  CurrentUserResolver fallback = new DefaultCurrentUserResolver();
+  return authentication -> authentication.getPrincipal() instanceof AppUser user
+      ? ShadleafUser.of(user.getDisplayName(), user.getUsername(), user.getEmail(), null)
+      : fallback.resolve(authentication);
+}
+```
+
+Load a new user object on every `loadUserByUsername` call: Spring Security erases the password of the user it signs
+in, so handing out the same object twice breaks the second sign-in.
+
 ### Sign-in and sign-out URLs
 
 ```properties
@@ -100,4 +116,6 @@ Security 7):
 </sl:sidebar-menu-item>
 ```
 
-Hiding the link is no security: protect the URL itself in the security configuration.
+Hiding the link is no security: protect the URL itself in the security configuration. The
+[Application shell](../application-shell/#navigation-by-role) guide shows both in a layout, and the same check on
+content inside a page.

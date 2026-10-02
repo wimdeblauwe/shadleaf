@@ -36,6 +36,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
+    <!-- sec:authorize in the templates (navigation by role); Spring Boot manages its version and configures it -->
+    <dependency>
+      <groupId>org.thymeleaf.extras</groupId>
+      <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.github.wimdeblauwe</groupId>
       <artifactId>shadleaf-spring-boot-starter</artifactId>

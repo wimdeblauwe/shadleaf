@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <!--/* The header layout, for the signed-in pages: the application's name, its pages as a row of links in the site header
-  from 768 px (the same nav is the panel the menu button opens on a phone), the theme toggle and Sign out at the end,
-  and the page as a card below it. More (Settings, Help) is only in the phone panel. */-->
+  from 768 px (the same nav is the panel the menu button opens on a phone), the theme toggle and the user menu at the
+  end, and the page as a card below it. More (Settings, Help) is only in the phone panel. Admin is only there for
+  admins (sec:authorize); SecurityConfiguration protects its URL. */-->
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="layout(pageTitle, content)">
 <head th:replace="~{layout/head :: head(${pageTitle})}"></head>
 <body>
@@ -54,6 +56,12 @@
                 <sl:sidebar-menu-button th:href="@{/data}" th:active="${#slNav.current('/data')}">
                   <sl:slot name="icon-start"><sl:icon name="table"/></sl:slot>
                   Data
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item sec:authorize="hasRole('ADMIN')">
+                <sl:sidebar-menu-button th:href="@{/admin}" th:active="${#slNav.current('/admin')}">
+                  <sl:slot name="icon-start"><sl:icon name="shield"/></sl:slot>
+                  Admin
                 </sl:sidebar-menu-button>
               </sl:sidebar-menu-item>
             </sl:sidebar-menu>

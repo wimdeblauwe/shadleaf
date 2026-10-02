@@ -5,7 +5,7 @@
       th:replace="~{layout/main :: layout('Home', ~{::#page-content})}">
 <body>
 <div id="page-content">
-  <p>Signed in as <strong th:text="${username}">user</strong>. The page's Content-Security-Policy allows no inline
+  <p>Signed in as <strong th:text="${#slUser.current.name}">Ada Lovelace</strong>. The page's Content-Security-Policy allows no inline
     script or style; open the browser console to confirm nothing was blocked. The header holds the application's pages
     as a row of links; on a narrow screen the menu button opens them as a panel, with Settings and Help too.</p>
 

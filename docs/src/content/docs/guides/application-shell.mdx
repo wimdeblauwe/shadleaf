@@ -217,9 +217,10 @@ of to icons, the sidebar at the end of the line, badges and actions.
 
 For an application with a handful of pages: the layout of the second sample application (sample-02's
 `layout/main.html`, which runs under a strict Content-Security-Policy), after Flux's header-inset layout. The header
-holds the menu button (on a phone), the application's name, the pages as a row of links, and the theme toggle and Sign
-out at the end; More (Settings, Help) and the panel's own header are panel-only. The page is a card below the header
-(`variant="inset"`).
+holds the menu button (on a phone), the application's name, the pages as a row of links, and the theme toggle and the
+user menu at the end; More (Settings, Help) and the panel's own header are panel-only. The page is a card below the
+header (`variant="inset"`). Sample-02 also has an Admin link for admins only, left out here: see
+[Navigation by role](#navigation-by-role).
 
 On a phone the menu button opens the same navigation as a panel, with the icons, the group labels and the panel-only
 parts:
@@ -409,3 +410,55 @@ Spring Security with a menu that signs out, or a Sign in link for an anonymous v
 pages too. Sign out posts a form with the CSRF token; `hx-boost="false"` on it keeps a boosted body from sending it
 with htmx. Where the user comes from, and how to change it, is in the [Spring Security](../spring-security/#the-signed-in-user)
 guide.
+
+## Navigation by role
+
+Some pages are only for some users. Hide their links with the Thymeleaf extras for Spring Security, which Spring Boot
+configures when the dependency is there (also with Spring Security 7, under its `springsecurity6` name):
+
+```xml
+<dependency>
+  <groupId>org.thymeleaf.extras</groupId>
+  <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+</dependency>
+```
+
+Declare the `sec` namespace on the layout's `<html>` (`xmlns:sec="http://www.thymeleaf.org/extras/spring-security"`)
+and put `sec:authorize` on the menu item, so no empty list item is left behind:
+
+```html
+<sl:sidebar-menu-item sec:authorize="hasRole('ADMIN')">
+  <sl:sidebar-menu-button th:href="@{/admin}" th:active="${#slNav.current('/admin')}">
+    <sl:slot name="icon-start"><sl:icon name="shield"/></sl:slot>
+    Admin
+  </sl:sidebar-menu-button>
+</sl:sidebar-menu-item>
+```
+
+There is one navigation, so the phone panel follows the same rule as the sidebar or the header row. A group whose
+items are all for one role takes the attribute on the `<sl:sidebar-group>` instead, label included.
+
+**Hiding a link is no security.** Anyone can type the address. What keeps other users out is the rule on the URL:
+
+```java
+.authorizeHttpRequests(requests -> requests
+    .requestMatchers("/shadleaf/**").permitAll()
+    .requestMatchers("/admin/**").hasRole("ADMIN")
+    .anyRequest().authenticated())
+```
+
+A user without the role who opens `/admin` gets a 403. The same attribute works on content inside a page: a button
+only admins may use, a column only they may see. Sample-02 has both: an Admin page in its header row, and a Manage
+access button on its Data page, shown to Ada (an admin) and not to Grace. With `sec:authorize-url="/admin"` instead,
+the template asks whether the URL rule lets the user in, so link and rule cannot disagree.
+
+Test both sides with spring-security-test: the link is in the page for one user and not for another, and the URL
+answers 403 without the role.
+
+```java
+mockMvc.perform(get("/admin").with(user("grace").roles("USER")))
+    .andExpect(status().isForbidden());
+```
+
+The [Spring Security](../spring-security/#navigation-by-role) guide has the same in short, next to where the
+signed-in user comes from.
