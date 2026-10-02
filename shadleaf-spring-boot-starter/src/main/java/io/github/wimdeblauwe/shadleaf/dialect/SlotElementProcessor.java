@@ -20,8 +20,9 @@ import org.thymeleaf.templatemode.TemplateMode;
  * Content the caller provided is evaluated in the caller's scope for {@code props}, {@code attrs} and {@code slots}:
  * a library template that passes {@code ${props.title}} into another component's slot means its own props, not the
  * receiving component's. This also lets a template pass its own slot on ({@code <sl:x><sl:slot/></sl:x>}), which
- * would otherwise resolve to itself forever. The fallback content belongs to the receiving template and keeps its
- * scope. Other local variables of the receiving template still hide the caller's, so component templates give their
+ * would otherwise resolve to itself forever. A slot passed on that the caller left empty counts as not given, so the
+ * receiving template's fallback shows ({@link Slots#isFilled}). The fallback content belongs to the receiving
+ * template and keeps its scope. Other local variables of the receiving template still hide the caller's, so component templates give their
  * {@code th:with} names an {@code sl} prefix.
  */
 public class SlotElementProcessor extends AbstractElementModelProcessor {
@@ -37,7 +38,7 @@ public class SlotElementProcessor extends AbstractElementModelProcessor {
     Slots slots = context.getVariable(ComponentElementProcessor.SLOTS_VARIABLE) instanceof Slots s ? s : null;
     IModel provided = getProvidedContent(slots, getSlotName(model));
     IModel content;
-    if (slots != null && Slots.hasContent(provided)) {
+    if (slots != null && slots.isFilled(provided)) {
       content = provided;
       restoreCallerScope(slots.callerScope(), structureHandler);
     } else {

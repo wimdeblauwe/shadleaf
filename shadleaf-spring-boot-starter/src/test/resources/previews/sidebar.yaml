@@ -3,11 +3,13 @@
 # of other components, as a page's shell). docs/tests/sidebar.spec.ts builds its fixture pages from that scenario: it
 # expects Home to be the current page and links to /inbox, /calendar and /settings, a skip link before the provider and
 # a breadcrumb in the inset's header ending in the page "Home", variant="inset" and collapsible="icon" (it sets both
-# itself), a tooltip on every menu button, and a closed collapsible item "Documents" with links to /documents and
-# /documents/shared. The header layout (scenario header, also at a phone's width as header-phone) is on its own showcase
+# itself), a tooltip on every menu button, a closed collapsible item "Documents" with links to /documents and
+# /documents/shared, a team switcher in the header (menu team-switcher, opened beside the sidebar) and a "More" menu
+# (project-design-more) on Design Engineering. The header layout (scenario header, also at a phone's width as header-phone) is on its own showcase
 # page, /showcase/header/, and docs/tests/sidebar-header.spec.ts builds its fixtures from it: it expects Home to be the
-# current page, links to /inbox, /calendar and /documents in the row, a panel-only header, a panel-only Favorites group
-# and a panel-only footer with /settings and /help.
+# current page, links to /inbox, /calendar and /documents in the row, a "More" menu on Documents
+# (header-documents-more), a panel-only header, a panel-only Favorites group and a panel-only footer with /settings
+# and /help.
 component: sidebar
 parts: [sidebar-provider, sidebar-trigger, sidebar-inset, sidebar-header, sidebar-content, sidebar-footer,
         sidebar-separator, sidebar-group, sidebar-group-label, sidebar-group-action, sidebar-group-content,
@@ -22,7 +24,9 @@ scenarios:
       for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to
       the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the
       sidebar's ground (from 768 px), and collapsible="icon" collapses it to a strip of icons whose tooltips show the
-      labels, as sample-01's layout. Documents opens a sub-menu.
+      labels, as sample-01's layout. Documents opens a sub-menu. The large button in the header is a team switcher: it
+      opens a dropdown menu beside the sidebar (below it in the panel) with the current team checked, and "More" beside
+      Design Engineering opens one too.
     request: /
     source: |-
       <sl:skip-link/>
@@ -31,11 +35,33 @@ scenarios:
           <sl:sidebar-header>
             <sl:sidebar-menu>
               <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/" size="lg" tooltip="Acme Inc.">
-                  <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
-                  <strong>Acme Inc.</strong>
-                  <small>Enterprise</small>
-                </sl:sidebar-menu-button>
+                <sl:dropdown-menu id="team-switcher">
+                  <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg" tooltip="Acme Inc.">
+                    <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+                    <strong>Acme Inc.</strong>
+                    <small>Enterprise</small>
+                    <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+                  </sl:dropdown-menu-trigger>
+                  <sl:dropdown-menu-content side="right">
+                    <sl:dropdown-menu-label id="team-switcher-label">Teams</sl:dropdown-menu-label>
+                    <sl:dropdown-menu-radio-group aria-labelledby="team-switcher-label">
+                      <sl:dropdown-menu-radio-item as="a" href="/teams/acme-inc" checked>
+                        Acme Inc.
+                      </sl:dropdown-menu-radio-item>
+                      <sl:dropdown-menu-radio-item as="a" href="/teams/acme-corp">
+                        Acme Corp.
+                      </sl:dropdown-menu-radio-item>
+                      <sl:dropdown-menu-radio-item as="a" href="/teams/evil-corp">
+                        Evil Corp.
+                      </sl:dropdown-menu-radio-item>
+                    </sl:dropdown-menu-radio-group>
+                    <sl:dropdown-menu-separator/>
+                    <sl:dropdown-menu-item as="a" href="/teams/new">
+                      <sl:icon name="plus"/>
+                      Add team
+                    </sl:dropdown-menu-item>
+                  </sl:dropdown-menu-content>
+                </sl:dropdown-menu>
               </sl:sidebar-menu-item>
             </sl:sidebar-menu>
           </sl:sidebar-header>
@@ -96,9 +122,27 @@ scenarios:
                       <sl:slot name="icon-start"><sl:icon name="frame"/></sl:slot>
                       Design Engineering
                     </sl:sidebar-menu-button>
-                    <sl:sidebar-menu-action aria-label="More for Design Engineering" show-on-hover>
-                      <sl:icon name="ellipsis"/>
-                    </sl:sidebar-menu-action>
+                    <sl:dropdown-menu id="project-design-more">
+                      <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover
+                                                aria-label="More for Design Engineering">
+                        <sl:icon name="ellipsis"/>
+                      </sl:dropdown-menu-trigger>
+                      <sl:dropdown-menu-content side="right">
+                        <sl:dropdown-menu-item as="a" href="/projects/design">
+                          <sl:icon name="folder"/>
+                          View project
+                        </sl:dropdown-menu-item>
+                        <sl:dropdown-menu-item as="a" href="/projects/design/share">
+                          <sl:icon name="forward"/>
+                          Share project
+                        </sl:dropdown-menu-item>
+                        <sl:dropdown-menu-separator/>
+                        <sl:dropdown-menu-item as="a" href="/projects/design/delete" variant="destructive">
+                          <sl:icon name="trash-2"/>
+                          Delete project
+                        </sl:dropdown-menu-item>
+                      </sl:dropdown-menu-content>
+                    </sl:dropdown-menu>
                   </sl:sidebar-menu-item>
                   <sl:sidebar-menu-item>
                     <sl:sidebar-menu-button href="/projects/sales" tooltip="Sales &amp; Marketing">
@@ -213,6 +257,61 @@ scenarios:
             <sl:sidebar-trigger for="sidebar-buttons"/>
           </sl:site-header>
           <h1>Menu buttons</h1>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+
+  - id: version-switcher
+    title: Version switcher
+    description: >-
+      A dropdown menu opened from a large menu button in the header (sl:dropdown-menu-trigger as="sidebar-menu-button"),
+      as shadcn's version switcher. The versions are links, and the server checks the current one, so it works without
+      JavaScript. In the phone panel it opens below the button.
+    showcase: false
+    source: |-
+      <sl:sidebar-provider>
+        <sl:sidebar id="sidebar-versions">
+          <sl:sidebar-header>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:dropdown-menu id="version-switcher">
+                  <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg">
+                    <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+                    <strong>Documentation</strong>
+                    <small>v1.0.1</small>
+                    <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+                  </sl:dropdown-menu-trigger>
+                  <sl:dropdown-menu-content>
+                    <sl:dropdown-menu-radio-group aria-label="Versions">
+                      <sl:dropdown-menu-radio-item as="a" href="/docs/1.0.1" checked>v1.0.1</sl:dropdown-menu-radio-item>
+                      <sl:dropdown-menu-radio-item as="a" href="/docs/1.1.0-alpha">v1.1.0-alpha</sl:dropdown-menu-radio-item>
+                      <sl:dropdown-menu-radio-item as="a" href="/docs/2.0.0-beta1">v2.0.0-beta1</sl:dropdown-menu-radio-item>
+                    </sl:dropdown-menu-radio-group>
+                  </sl:dropdown-menu-content>
+                </sl:dropdown-menu>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-header>
+          <sl:sidebar-content>
+            <sl:sidebar-group>
+              <sl:sidebar-group-label>Getting started</sl:sidebar-group-label>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/docs/installation">Installation</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/docs/project-structure">Project structure</sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+          </sl:sidebar-content>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <sl:site-header>
+            <sl:sidebar-trigger for="sidebar-versions"/>
+          </sl:site-header>
+          <h1>Installation</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>
 
@@ -464,7 +563,7 @@ scenarios:
       placement="header" puts the same navigation in a sl:site-header: from 768 px a row of links (the current page
       marked as in the sidebar), with the application's name before it and search and the theme toggle at the end.
       Favorites, Settings and Help are panel-only, so the row stays short; the panel's own header with the name is
-      panel-only too. variant="inset" makes the page a card below the header. Narrower, the menu button opens the
+      panel-only too. "More" beside Documents opens a dropdown menu below it. variant="inset" makes the page a card below the header. Narrower, the menu button opens the
       same nav as the panel: see the next example.
     showcase: false
     request: /
@@ -517,6 +616,15 @@ scenarios:
                         <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
                         Documents
                       </sl:sidebar-menu-button>
+                      <sl:dropdown-menu id="header-documents-more">
+                        <sl:dropdown-menu-trigger as="sidebar-menu-action" aria-label="More for Documents">
+                          <sl:icon name="ellipsis"/>
+                        </sl:dropdown-menu-trigger>
+                        <sl:dropdown-menu-content side="right">
+                          <sl:dropdown-menu-item as="a" href="/documents/new">New document</sl:dropdown-menu-item>
+                          <sl:dropdown-menu-item as="a" href="/documents/shared">Shared with me</sl:dropdown-menu-item>
+                        </sl:dropdown-menu-content>
+                      </sl:dropdown-menu>
                     </sl:sidebar-menu-item>
                   </sl:sidebar-menu>
                 </sl:sidebar-group-content>

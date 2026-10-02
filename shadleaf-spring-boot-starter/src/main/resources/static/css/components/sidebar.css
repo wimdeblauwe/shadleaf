@@ -286,7 +286,8 @@
     scrolls sideways when its links do not fit (a link that takes the focus scrolls into view). It never collapses,
     so there is no trigger on a desktop and data-state does not apply (the provider's collapsed rules only reach a
     sidebar that is its child). In the row: groups and menus run along it, group labels are visually hidden (they
-    still name their groups), icons, group actions, separators and collapsible items are left out, and every entry
+    still name their groups), icons (but the end icon of a menu button that opens a menu: its chevron), group actions,
+    separators and collapsible items are left out, and every entry
     keeps its width. With variant="inset" the inset is a card below the header. Below 768 px it is the panel above,
     unchanged.
   */
@@ -321,7 +322,8 @@
     }
 
     .sidebar[data-placement='header'] :is(.sidebar-group-action, .sidebar-separator, .sidebar-menu-tooltip,
-      .sidebar-menu-button > svg),
+      .sidebar-menu-button:not([aria-haspopup]) > svg,
+      .sidebar-menu-button[aria-haspopup] > svg:not(.sidebar-menu-button-label ~ svg)),
     .sidebar[data-placement='header'] .sidebar-menu-item:has(> .sidebar-menu-collapsible) {
       display: none;
     }
@@ -345,6 +347,40 @@
     /* Panel-only parts, in either placement. */
     .sidebar [data-panel-only] {
       display: none;
+    }
+  }
+
+  /*
+    A dropdown menu opened from the sidebar (sl:dropdown-menu-trigger as="sidebar-menu-button" or
+    "sidebar-menu-action"). In the column it opens on the side its content asks for (side="right": beside the sidebar,
+    as shadcn's team switcher and user menu). In the phone panel and in the header row there is no room beside the
+    trigger, so a right or left menu opens below it instead, lined up with its end (shadcn's isMobile choice), and
+    flips above it as usual when there is no room below. Older browsers' positioning stand-in (popup.js) still reads
+    data-side. A menu button's menu is at least as wide as the button, as shadcn's team switcher.
+  */
+  .sidebar-menu-button[aria-haspopup='menu'] ~ .dropdown-menu-content {
+    min-inline-size: max(anchor-size(inline), --spacing(56));
+  }
+
+  @media (width < 48rem) {
+    .sidebar .dropdown-menu-content:is([data-side='right'], [data-side='left']) {
+      --popup-side: block-end;
+      --popup-align: span-inline-start;
+      --popup-margin-block: var(--popup-offset) 0;
+      --popup-margin-inline: 0;
+      --popup-from: 0 calc(-1 * var(--popup-slide));
+      transform-origin: top;
+    }
+  }
+
+  @media (width >= 48rem) {
+    .sidebar[data-placement='header'] .dropdown-menu-content:is([data-side='right'], [data-side='left']) {
+      --popup-side: block-end;
+      --popup-align: span-inline-start;
+      --popup-margin-block: var(--popup-offset) 0;
+      --popup-margin-inline: 0;
+      --popup-from: 0 calc(-1 * var(--popup-slide));
+      transform-origin: top;
     }
   }
 

@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<!-- Test-only component: passes its own slots straight on to test-card, as sl:dropdown-menu-trigger passes them on to
+     the part it renders. The footer has a fallback of its own. -->
+<head>
+  <sl:props></sl:props>
+</head>
+<body>
+<div th:fragment="test-relay" class="relay">
+  <sl:test-card>
+    <sl:slot name="header"><sl:slot name="header"/></sl:slot>
+    <sl:slot name="footer"><sl:slot name="footer">Relay footer</sl:slot></sl:slot>
+    <sl:slot/>
+  </sl:test-card>
+</div>
+</body>
+</html>

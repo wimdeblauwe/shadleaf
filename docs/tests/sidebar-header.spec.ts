@@ -134,12 +134,12 @@ test.describe('desktop', () => {
     expect(await link(page, 'Home').evaluate(element => getComputedStyle(element).fontWeight)).toBe('500');
 
     const stops: string[] = [];
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 10; i++) {
       await page.keyboard.press('Tab');
       stops.push(await focused(page));
     }
     expect(stops).toEqual(['Skip to main content', 'Acme Inc.', 'nav: Home', 'nav: Inbox', 'nav: Calendar',
-      'nav: Documents', 'nav: Section', 'Search', 'Theme']);
+      'nav: Documents', 'nav: More for Documents', 'nav: Section', 'Search', 'Theme']);
   });
 
   test('the badge stays beside its link and describes it', async ({page}) => {
@@ -408,4 +408,66 @@ test('forced colours: the current page keeps an outline in the row, the focus a 
   await trigger(page).click();
   expect(await nav(page).evaluate(element => getComputedStyle(element, '::backdrop').backgroundColor))
       .not.toBe('rgba(0, 0, 0, 0)');
+});
+
+// A dropdown menu opened from the row (sl:dropdown-menu-trigger as="sidebar-menu-action" on Documents, side="right"):
+// below its trigger in the row, lined up with its end, as in the phone panel; the row's scrolling does not clip it.
+test.describe('menus', () => {
+  const moreTrigger = (page: Page) => page.locator('#header-documents-more-trigger');
+  const moreMenu = (page: Page) => page.locator('#header-documents-more');
+
+  test('desktop: "More" in the row opens its menu below it, and Escape gives the focus back', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    const messages = await openLayout(page);
+    await expect(moreTrigger(page)).toBeVisible();
+    expect((await rect(page, '#header-documents-more-trigger')).width).toBe(24);
+    await moreTrigger(page).focus();
+    await page.keyboard.press('Enter');
+    await expect(moreMenu(page)).toBeVisible();
+    await expect.poll(() => focused(page)).toBe('nav: New document');
+    const action = await rect(page, '#header-documents-more-trigger');
+    const menu = await rect(page, '#header-documents-more');
+    expect(menu.top).toBeGreaterThanOrEqual(action.bottom);
+    expect(Math.abs(menu.right - action.right)).toBeLessThanOrEqual(1);
+    // Painted above the row: the row's horizontal scrolling does not clip it.
+    expect(menu.bottom).toBeGreaterThan(await nav(page).evaluate(element => element.getBoundingClientRect().bottom));
+    const results = await new AxeBuilder({page}).withTags(TAGS).analyze();
+    expect(results.violations.map(violation => violation.id)).toEqual([]);
+    await page.keyboard.press('Escape');
+    await expect(moreMenu(page)).toBeHidden();
+    await expect(moreTrigger(page)).toBeFocused();
+    expect(messages).toEqual([]);
+  });
+
+  test('desktop: the menu follows its trigger when the row scrolls', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    await openLayout(page, {more: 8});
+    await nav(page).evaluate(element => element.scrollLeft = 40);
+    await moreTrigger(page).click();
+    await expect(moreMenu(page)).toBeVisible();
+    const action = await rect(page, '#header-documents-more-trigger');
+    const menu = await rect(page, '#header-documents-more');
+    expect(Math.abs(menu.right - action.right)).toBeLessThanOrEqual(1);
+  });
+
+  test('phone: in the panel the menu opens below "More", and Escape closes it before the panel', async ({page}) => {
+    await page.setViewportSize(PHONE);
+    await openLayout(page);
+    await trigger(page).click();
+    await expect(nav(page)).toBeVisible();
+    await moreTrigger(page).click();
+    await expect(moreMenu(page)).toBeVisible();
+    const action = await rect(page, '#header-documents-more-trigger');
+    const menu = await rect(page, '#header-documents-more');
+    expect(menu.top).toBeGreaterThanOrEqual(action.bottom);
+    expect(Math.abs(menu.right - action.right)).toBeLessThanOrEqual(1);
+    expect(await moreMenu(page).evaluate(element => !!element.closest('[inert]'))).toBe(false);
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Escape');
+    await expect(moreMenu(page)).toBeHidden();
+    expect(await isOpen(page)).toBe(true);
+    await expect(moreTrigger(page)).toBeFocused();
+    await page.keyboard.press('Escape');
+    expect(await isOpen(page)).toBe(false);
+  });
 });

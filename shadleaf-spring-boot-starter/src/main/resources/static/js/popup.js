@@ -5,6 +5,7 @@
   - aria-expanded on the buttons that point at a popover with popovertarget;
   - a stand-in for anchor positioning in browsers without it (Safari before 26, Firefox before 147), which sets the
     position from the trigger's box while the popup is open;
+  - the focus back on the trigger after Escape where the browser loses it (a popup inside another popover);
   - small helpers for the listeners a component removes again in destroy(), and typeahead.
 */
 
@@ -29,6 +30,35 @@ export function trackExpanded(popup, listen) {
   const update = open => triggersOf(popup).forEach(trigger => trigger.setAttribute('aria-expanded', String(open)));
   update(popup.matches(':popover-open'));
   listen(popup, 'beforetoggle', event => update(event.newState === 'open'));
+}
+
+/**
+ * After Escape closes the popup, puts the focus back on `triggerOf()` when the browser left it nowhere. The browser
+ * returns it by itself for a popup opened at the top level, but not for one opened inside another open popover, such
+ * as a menu in the sidebar's phone panel (Chromium and Firefox, checked 2 October 2026): the focus ends on the body
+ * (in Chromium only once the closing transition has ended).
+ */
+export function restoreFocusAfterEscape(popup, triggerOf, listen) {
+  let escaping = false;
+  listen(popup, 'keydown', event => {
+    if (event.key === 'Escape') {
+      escaping = true;
+      setTimeout(() => escaping = false);
+    }
+  });
+  listen(popup, 'beforetoggle', event => {
+    if (event.newState !== 'closed' || !escaping) {
+      return;
+    }
+    setTimeout(() => {
+      const trigger = triggerOf();
+      const active = document.activeElement;
+      // Chromium leaves it on the closed popup's item until its closing transition ends, then on the body.
+      if (trigger && (!active || active === document.body || popup.contains(active))) {
+        trigger.focus();
+      }
+    });
+  });
 }
 
 export function hide(popup) {

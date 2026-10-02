@@ -5,11 +5,14 @@
   - focus on the first control inside when it opens (an element with autofocus wins, as the browser focuses that
     itself), or on the panel when it has none;
   - closing when the focus moves out, e.g. Tab past its last control;
-  - the sl-popover-close event, e.g. from an htmx HX-Trigger response header on a request from inside it, closes it.
+  - the sl-popover-close event, e.g. from an htmx HX-Trigger response header on a request from inside it, closes it;
+  - the focus back on the trigger after Escape inside another popover, where the browser does not return it.
   Nothing is needed for htmx's history cache: whether a popover is open is not in the markup it saves, and Alpine
   initialises the restored markup again, which resets aria-expanded.
 */
-import {firstTabbable, hide, listener, positionWithoutAnchoring, trackExpanded, triggersOf} from '../popup.js';
+import {
+  firstTabbable, hide, listener, positionWithoutAnchoring, restoreFocusAfterEscape, trackExpanded, triggersOf,
+} from '../popup.js';
 
 export default function popover() {
   return {
@@ -20,6 +23,7 @@ export default function popover() {
 
       trackExpanded(popup, listen);
       positionWithoutAnchoring(popup, () => triggersOf(popup)[0], {side: 'bottom', align: 'center'}, listen);
+      restoreFocusAfterEscape(popup, () => triggersOf(popup)[0], listen);
 
       // Once it is shown (beforetoggle, then a timeout: the browser drops a toggle event when the popover closed and
       // opened again before it fired).

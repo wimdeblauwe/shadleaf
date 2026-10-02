@@ -103,6 +103,15 @@ their trigger with CSS anchor positioning, so there are no portals and no `open`
 <sl:dropdown-menu-trigger variant="outline">Open</sl:dropdown-menu-trigger>
 ```
 
+`asChild` around a sidebar part is `as` on the trigger, which renders that part with the menu's attributes:
+
+```html
+<!-- shadcn: <DropdownMenuTrigger asChild><SidebarMenuButton size="lg">…</SidebarMenuButton></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg">…</sl:dropdown-menu-trigger>
+<!-- shadcn: <DropdownMenuTrigger asChild><SidebarMenuAction showOnHover>…</SidebarMenuAction></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Design">…</sl:dropdown-menu-trigger>
+```
+
 - A menu item is a button or, with `as="a"`, a link; there is no `onSelect`. It does what its attributes say (`href`,
   `hx-*`, `type="submit"`, `commandfor`) and the menu closes.
 - Checkbox and radio items show the state the server renders (`checked`); there is no `onCheckedChange` or `value`.
@@ -257,6 +266,16 @@ and its sub-menu: `<sl:sidebar-menu-item collapsible>` is a `details` element, i
 `th:open="${#slNav.current('/settings')}"`. `SidebarMenuSubButton`'s `isActive` is `active`, `size` is shadcn's
 (`sm`, `md`), and it is a link unless `as="button"`.
 
+A dropdown menu opened from a menu button or a menu action (shadcn's team switcher, version switcher, `NavUser` and
+the projects' "More") is `<sl:dropdown-menu-trigger as="sidebar-menu-button">` or `as="sidebar-menu-action"` (see
+above). shadcn picks the side in React, `side={isMobile ? "bottom" : "right"}`; here `side="right"` is enough: in the
+phone panel (and in the header layout's row) CSS opens a right or left menu below its trigger, lined up with its end.
+shadcn's `data-[state=open]:bg-sidebar-accent` on the team switcher is built in: an open trigger has the active look,
+and its menu is at least as wide as the trigger (`w-(--radix-dropdown-menu-trigger-width) min-w-56`). The current team
+is a checked radio item (shadcn's team switcher marks none, its version switcher draws a check icon). A menu action is
+24 px, shadcn's 20 px being too small a target once it shows (WCAG 2.2). See
+[Sidebar](../components/sidebar/#menus-in-the-sidebar).
+
 ### Site header and the header placement
 
 shadcn/ui has no site header component: sidebar-16 and the dashboard write theirs in each block. `<sl:site-header>` is
@@ -372,8 +391,10 @@ takes keyboard focus, when it is a link (`as="a"`).
   entry keeps an outline, as its background is gone there.
 - A menu badge describes its button (`aria-describedby`), so a screen reader says "Inbox, link, 12 unread" when Tab
   reaches the link; shadcn's badge is only read when reading through the list. `label` gives the words to say.
-- The group and menu actions need an `aria-label` (shadcn's examples put a visually hidden `<span>` in them). On a phone
-  they are 24 px, WCAG 2.2's minimum target size, instead of 20 px with a larger invisible hit area.
+- The group and menu actions need an `aria-label` (shadcn's examples put a visually hidden `<span>` in them). A menu
+  action is 24 px at every width, and a group action on a phone, WCAG 2.2's minimum target size, instead of 20 px with
+  a larger invisible hit area.
+- Collapsed to icons, a menu button's tooltip and its dropdown menu are never shown together.
 - `show-on-hover` is `showOnHover`.
 - Collapsed to icons, a menu button's tooltip repeats its name, so it is hidden from screen readers and describes
   nothing (`sl:tooltip`'s `mode="label"`); Radix's tooltip makes it the button's description, which a screen reader

@@ -136,7 +136,7 @@ test.describe('desktop', () => {
     await page.keyboard.press('Tab');
     expect(await focused(page)).toBe('Skip to main content');
     await page.keyboard.press('Tab');
-    expect(await focused(page)).toBe('sidebar: Acme Inc. Enterprise');
+    expect(await focused(page)).toBe('sidebar: #team-switcher-trigger Acme Inc. Enterprise');
     const results = await new AxeBuilder({page}).withTags(TAGS).analyze();
     expect(results.violations.map(violation => violation.id)).toEqual([]);
     expect(messages).toEqual([]);
@@ -639,7 +639,7 @@ test.describe('skip link', () => {
   // Both browsers blur the link and leave the focus on the body: nothing tells a screen reader the content was reached.
   test('without tabindex on main the focus goes to the body (why sl:sidebar-inset renders it)', async ({page, browserName}) => {
     await page.setViewportSize(DESKTOP);
-    await openFixture(page, PREVIEW.replace(' tabindex="-1"', ''), {wrap: false});
+    await openFixture(page, PREVIEW.replace(/(<main[^>]*?) tabindex="-1"/, '$1'), {wrap: false});
     await page.keyboard.press('Tab');
     await page.keyboard.press('Enter');
     await page.waitForFunction(() => location.hash === '#main');
@@ -898,13 +898,16 @@ test.describe('collapsed to icons', () => {
     await expect.poll(async () => (await inset(page).boundingBox())!.width).toBe(DESKTOP.width - ICON);
     await expect(sidebar(page)).toBeVisible();
     // Every menu button is a 32 px square showing only its icon, in the middle of the strip; the label is hidden from
-    // view but still the link's name. The large header button too, whose icon is smaller than the square.
+    // view but still the link's name. The large header button too (the team switcher, a button that opens a menu),
+    // whose icon is smaller than the square.
     for (const name of ['Acme Inc. Enterprise', 'Home', 'Inbox', 'Calendar', 'Design Engineering', 'Settings', 'Help']) {
-      await expect(link(page, name)).toBeVisible();
-      expect(await rectOf(link(page, name)), name).toMatchObject({width: 32});
-      expect(await link(page, name).locator('.sidebar-menu-button-label').evaluate(label => label.clientWidth), name)
+      const entry = name === 'Acme Inc. Enterprise'
+          ? sidebar(page).getByRole('button', {name, exact: true}) : link(page, name);
+      await expect(entry).toBeVisible();
+      expect(await rectOf(entry), name).toMatchObject({width: 32});
+      expect(await entry.locator('.sidebar-menu-button-label').evaluate(label => label.clientWidth), name)
           .toBeLessThanOrEqual(1);
-      const icon = await rectOf(link(page, name).locator('> svg').first());
+      const icon = await rectOf(entry.locator('> svg').first());
       expect(Math.abs((icon.left + icon.right) / 2 - ICON / 2), name).toBeLessThanOrEqual(1);
     }
     // No text of a menu button is painted anywhere in the strip.
@@ -947,7 +950,8 @@ test.describe('collapsed to icons', () => {
       await page.keyboard.press('Tab');
       stops.push(await focused(page));
     }
-    expect(stops).toEqual(['Skip to main content', 'sidebar: Acme Inc. Enterprise', 'sidebar: Home', 'sidebar: Inbox',
+    expect(stops).toEqual(['Skip to main content', 'sidebar: #team-switcher-trigger Acme Inc. Enterprise', 'sidebar: Home',
+      'sidebar: Inbox',
       'sidebar: Calendar', 'sidebar: Documents', 'sidebar: Design Engineering', 'sidebar: Sales & Marketing',
       'sidebar: Settings', 'sidebar: Help', 'sidebar: Section']);
   });
@@ -1261,3 +1265,291 @@ test.describe('collapsible none', () => {
     expect(await isOpen(page)).toBe(false);
   });
 });
+
+// Dropdown menus opened from sidebar parts (sl:dropdown-menu-trigger as="sidebar-menu-button" and
+// as="sidebar-menu-action"): the preview's team switcher in the header and the "More" menu on Design Engineering, both
+// side="right". Beside the sidebar on a desktop, expanded or collapsed to icons; below the trigger in the phone panel,
+// above it, spared by the panel's inert, and closed by Escape before the panel.
+test.describe('menus', () => {
+  const teamTrigger = (page: Page) => page.locator('#team-switcher-trigger');
+  const teamMenu = (page: Page) => page.locator('#team-switcher');
+  const moreTrigger = (page: Page) => page.locator('#project-design-more-trigger');
+  const moreMenu = (page: Page) => page.locator('#project-design-more');
+  const menuOpen = (locator: ReturnType<Page['locator']>) => locator.evaluate(element => element.matches(':popover-open'));
+  const rectOf = (locator: ReturnType<Page['locator']>) => locator.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    return {left: Math.round(rect.left), right: Math.round(rect.right), top: Math.round(rect.top),
+      bottom: Math.round(rect.bottom), width: Math.round(rect.width)};
+  });
+  const collapseCookie = (page: Page) => page.context().addCookies([
+    {name: 'sl-sidebar-state', value: 'collapsed', url: `${ORIGIN}/`}]);
+  const teamTooltip = (page: Page) => teamTrigger(page).locator('> .sidebar-menu-tooltip');
+  /** The element painted at the middle of `locator`: what a click there reaches. */
+  const hit = (locator: ReturnType<Page['locator']>) => locator.evaluate(element => {
+    const rect = element.getBoundingClientRect();
+    const top = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    return !!top && (top === element || element.contains(top));
+  });
+
+  test.describe('desktop', () => {
+    test.beforeEach(async ({page}) => {
+      await page.setViewportSize(DESKTOP);
+    });
+
+    test('the team switcher opens beside the sidebar, the current team checked', async ({page}) => {
+      const messages = await openShell(page);
+      await expect(teamTrigger(page)).toHaveRole('button');
+      await expect(teamTrigger(page)).toHaveAttribute('aria-haspopup', 'menu');
+      await expect(teamTrigger(page)).toHaveAttribute('aria-expanded', 'false');
+      const restBackground = await teamTrigger(page).evaluate(element => getComputedStyle(element).backgroundColor);
+
+      await teamTrigger(page).focus();
+      await page.keyboard.press('ArrowDown');
+      await expect(teamMenu(page)).toBeVisible();
+      await expect(teamTrigger(page)).toHaveAttribute('aria-expanded', 'true');
+      await expect.poll(() => page.evaluate(() => document.activeElement?.textContent?.trim())).toBe('Acme Inc.');
+      await expect(teamMenu(page).getByRole('menuitemradio', {name: 'Acme Inc.'})).toHaveAttribute('aria-checked', 'true');
+      await expect(teamMenu(page).getByRole('menuitemradio', {name: 'Evil Corp.'})).toHaveAttribute('aria-checked', 'false');
+      await expect(teamMenu(page).getByRole('group', {name: 'Teams'})).toHaveCount(1);
+
+      // To the right of the trigger, its top lined up, at least as wide as the trigger.
+      const button = await rectOf(teamTrigger(page));
+      const menu = await rectOf(teamMenu(page));
+      expect(menu.left).toBeGreaterThanOrEqual(button.right);
+      expect(Math.abs(menu.top - button.top)).toBeLessThanOrEqual(1);
+      expect(menu.width).toBeGreaterThanOrEqual(button.width);
+      // The open trigger has the active look, also when the pointer is elsewhere.
+      await page.mouse.move(DESKTOP.width - 10, DESKTOP.height - 10);
+      expect(await teamTrigger(page).evaluate(element => getComputedStyle(element).backgroundColor)).not.toBe(restBackground);
+
+      const results = await new AxeBuilder({page}).withTags(TAGS).analyze();
+      expect(results.violations.map(violation => violation.id)).toEqual([]);
+
+      await page.keyboard.press('Escape');
+      await expect(teamMenu(page)).toBeHidden();
+      await expect(teamTrigger(page)).toBeFocused();
+      await expect(teamTrigger(page)).toHaveAttribute('aria-expanded', 'false');
+      // The sidebar stays expanded: the menu is not the sidebar's trigger.
+      await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'expanded');
+      expect(messages).toEqual([]);
+    });
+
+    test('a pointer opens the team switcher on the menu, and a click outside closes it', async ({page}) => {
+      await openShell(page);
+      await teamTrigger(page).click();
+      await expect(teamMenu(page)).toBeVisible();
+      await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('team-switcher');
+      await page.locator('#in-main').click();
+      await expect(teamMenu(page)).toBeHidden();
+    });
+
+    test('"More" is shown on hover, and stays while its menu is open', async ({page}) => {
+      await openShell(page);
+      const opacity = () => moreTrigger(page).evaluate(element => getComputedStyle(element).opacity);
+      expect(await opacity()).toBe('0');
+      await moreTrigger(page).focus();
+      expect(await opacity()).toBe('1');
+      await page.keyboard.press('Enter');
+      await expect(moreMenu(page)).toBeVisible();
+      await expect.poll(() => page.evaluate(() => document.activeElement?.textContent?.trim())).toBe('View project');
+      await page.mouse.move(DESKTOP.width - 10, DESKTOP.height - 10);
+      expect(await opacity()).toBe('1');
+      const action = await rectOf(moreTrigger(page));
+      const menu = await rectOf(moreMenu(page));
+      expect(menu.left).toBeGreaterThanOrEqual(action.right);
+      await page.keyboard.press('Escape');
+      await expect(moreMenu(page)).toBeHidden();
+      await expect(moreTrigger(page)).toBeFocused();
+    });
+
+    test('collapsed to icons: the menu opens beside the strip, and never with the tooltip', async ({page}) => {
+      await collapseCookie(page);
+      const messages = await openShell(page, {collapsible: 'icon'});
+      expect((await rectOf(teamTrigger(page))).width).toBe(32);
+
+      // Hover shows the tooltip; pressing the button hides it and opens the menu.
+      await teamTrigger(page).hover();
+      await expect(teamTooltip(page)).toBeVisible();
+      await teamTrigger(page).click();
+      await expect(teamMenu(page)).toBeVisible();
+      await expect(teamTooltip(page)).toBeHidden();
+      const button = await rectOf(teamTrigger(page));
+      const menu = await rectOf(teamMenu(page));
+      expect(menu.left).toBeGreaterThanOrEqual(button.right);
+      // shadcn's team switcher menu: at least 14rem, though the trigger is a 32px square.
+      expect(menu.width).toBeGreaterThanOrEqual(224);
+
+      // The pointer leaves for the menu and comes back: still no tooltip while the menu is open.
+      await page.mouse.move(menu.left + 20, menu.top + 20);
+      await teamTrigger(page).hover();
+      await page.waitForTimeout(600);
+      await expect(teamTooltip(page)).toBeHidden();
+      await page.keyboard.press('Escape');
+      await expect(teamMenu(page)).toBeHidden();
+
+      // Keyboard: focus shows the tooltip, opening the menu hides it.
+      await page.locator('.skip-link').focus();
+      await page.keyboard.press('Tab');
+      await expect(teamTrigger(page)).toBeFocused();
+      await expect(teamTooltip(page)).toBeVisible();
+      await page.keyboard.press('Enter');
+      await expect(teamMenu(page)).toBeVisible();
+      await expect(teamTooltip(page)).toBeHidden();
+      await expect.poll(() => page.evaluate(() => document.activeElement?.textContent?.trim())).toBe('Acme Inc.');
+      await expect(teamTooltip(page)).toBeHidden();
+      // Escape gives the focus back; the menu is closed, so the tooltip may show again.
+      await page.keyboard.press('Escape');
+      await expect(teamMenu(page)).toBeHidden();
+      await expect(teamTrigger(page)).toBeFocused();
+      await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'collapsed');
+      // The "More" action is not in the strip.
+      await expect(moreTrigger(page)).toBeHidden();
+      expect(messages).toEqual([]);
+    });
+
+    test('without JavaScript the trigger still opens the menu', async ({browser}) => {
+      const context = await browser.newContext({javaScriptEnabled: false, viewport: DESKTOP});
+      const page = await context.newPage();
+      await openShell(page, {alpine: false});
+      await teamTrigger(page).click();
+      await expect(teamMenu(page)).toBeVisible();
+      await page.keyboard.press('Escape');
+      await expect(teamMenu(page)).toBeHidden();
+      await context.close();
+    });
+  });
+
+  test.describe('phone', () => {
+    test.beforeEach(async ({page}) => {
+      await page.setViewportSize(PHONE);
+    });
+
+    test('in the panel the menu opens below its trigger, above the panel and outside its inert', async ({page, browserName}) => {
+      const messages = await openShell(page);
+      await trigger(page).click();
+      await expect(sidebar(page)).toBeVisible();
+      await teamTrigger(page).click();
+      await expect(teamMenu(page)).toBeVisible();
+      expect(await isOpen(page)).toBe(true);
+
+      const button = await rectOf(teamTrigger(page));
+      const menu = await rectOf(teamMenu(page));
+      expect(menu.top).toBeGreaterThanOrEqual(button.bottom);
+      expect(Math.abs(menu.right - button.right)).toBeLessThanOrEqual(1);
+      expect(menu.right).toBeLessThanOrEqual(PHONE.width);
+      expect(await teamMenu(page).evaluate(element => !!element.closest('[inert]'))).toBe(false);
+      for (const name of ['Acme Inc.', 'Evil Corp.', 'Add team']) {
+        expect(await hit(teamMenu(page).getByRole(name === 'Add team' ? 'menuitem' : 'menuitemradio', {name})), name)
+            .toBe(true);
+      }
+      if (browserName === 'chromium') {
+        const {roles} = await accessibilityTree(page);
+        expect(roles).toEqual(expect.arrayContaining(['menu:Acme Inc. Enterprise', 'menuitemradio:Acme Inc.']));
+        expect(roles).not.toContain('button:In main');
+      }
+      const results = await new AxeBuilder({page}).withTags(TAGS)
+          .disableRules(['landmark-one-main', 'page-has-heading-one']).analyze();
+      expect(results.violations.map(violation => violation.id)).toEqual([]);
+      expect(messages).toEqual([]);
+    });
+
+    test('Escape closes the menu first, the focus back on its trigger, then the panel', async ({page}) => {
+      await openShell(page);
+      await trigger(page).click();
+      await teamTrigger(page).focus();
+      await page.keyboard.press('ArrowDown');
+      await expect(teamMenu(page)).toBeVisible();
+      await expect.poll(() => page.evaluate(() => document.activeElement?.textContent?.trim())).toBe('Acme Inc.');
+      await page.keyboard.press('Escape');
+      await expect(teamMenu(page)).toBeHidden();
+      expect(await isOpen(page)).toBe(true);
+      // The browser leaves the focus on the body for a popover inside another; slDropdownMenu puts it back.
+      await expect(teamTrigger(page)).toBeFocused();
+      await page.keyboard.press('Escape');
+      await expect(sidebar(page)).toBeHidden();
+      await expect(trigger(page)).toBeFocused();
+    });
+
+    test('"More" is always shown, and its menu lines up with its end below it; a click in the panel closes only the menu', async ({page}) => {
+      await openShell(page);
+      await trigger(page).click();
+      expect(await moreTrigger(page).evaluate(element => getComputedStyle(element).opacity)).toBe('1');
+      expect((await rectOf(moreTrigger(page))).width).toBe(24);
+      await moreTrigger(page).click();
+      await expect(moreMenu(page)).toBeVisible();
+      const action = await rectOf(moreTrigger(page));
+      const menu = await rectOf(moreMenu(page));
+      expect(menu.top).toBeGreaterThanOrEqual(action.bottom);
+      expect(Math.abs(menu.right - action.right)).toBeLessThanOrEqual(1);
+      expect(menu.left).toBeGreaterThanOrEqual(0);
+
+      await sidebar(page).locator('.sidebar-group-label').first().click();
+      await expect(moreMenu(page)).toBeHidden();
+      expect(await isOpen(page)).toBe(true);
+    });
+  });
+
+  test('right to left: beside the sidebar on its left, below in the panel', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    await openShell(page, {htmlAttributes: 'dir="rtl"'});
+    await teamTrigger(page).click();
+    await expect(teamMenu(page)).toBeVisible();
+    let button = await rectOf(teamTrigger(page));
+    let menu = await rectOf(teamMenu(page));
+    expect(menu.right).toBeLessThanOrEqual(button.left);
+    await page.keyboard.press('Escape');
+
+    await page.setViewportSize(PHONE);
+    await trigger(page).click();
+    await expect(sidebar(page)).toBeVisible();
+    await teamTrigger(page).click();
+    await expect(teamMenu(page)).toBeVisible();
+    button = await rectOf(teamTrigger(page));
+    menu = await rectOf(teamMenu(page));
+    expect(menu.top).toBeGreaterThanOrEqual(button.bottom);
+    expect(Math.abs(menu.left - button.left)).toBeLessThanOrEqual(1);
+  });
+});
+
+// The showcase's shell, in every skin and theme: the team switcher's menu opens beside the sidebar on a desktop and
+// below its trigger in the phone panel, with no axe violation, and its open trigger looks pressed.
+for (const skin of skins) {
+  for (const theme of ['light', 'dark'] as const) {
+    test(`showcase, ${skin}, ${theme}: the team switcher and "More" menus`, async ({page}) => {
+      await page.setViewportSize({width: 1280, height: 720});
+      await openShowcase(page, skin, theme);
+      const switcher = page.locator('#team-switcher-trigger');
+      const rest = await switcher.evaluate(element => getComputedStyle(element).backgroundColor);
+      await switcher.focus();
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#team-switcher')).toBeVisible();
+      await page.mouse.move(1270, 710);
+      expect(await switcher.evaluate(element => getComputedStyle(element).backgroundColor)).not.toBe(rest);
+      let results = await new AxeBuilder({page}).withTags(TAGS).include('.sidebar-provider').analyze();
+      expect(results.violations.map(violation => violation.id)).toEqual([]);
+      await page.keyboard.press('Escape');
+      await expect(switcher).toBeFocused();
+
+      const more = page.locator('#project-design-more-trigger');
+      await more.focus();
+      await page.keyboard.press('Enter');
+      await expect(page.locator('#project-design-more')).toBeVisible();
+      results = await new AxeBuilder({page}).withTags(TAGS).include('.sidebar-provider').analyze();
+      expect(results.violations.map(violation => violation.id)).toEqual([]);
+      await page.keyboard.press('Escape');
+      await expect(more).toBeFocused();
+
+      await page.setViewportSize({width: 390, height: 720});
+      await page.locator('.sidebar-provider .sidebar-trigger').click();
+      await expect(page.locator('#sidebar')).toBeVisible();
+      await switcher.click();
+      await expect(page.locator('#team-switcher')).toBeVisible();
+      const button = (await switcher.boundingBox())!;
+      const menu = (await page.locator('#team-switcher').boundingBox())!;
+      expect(menu.y).toBeGreaterThanOrEqual(button.y + button.height);
+      results = await new AxeBuilder({page}).withTags(TAGS).include('#sidebar')
+          .disableRules(['landmark-one-main', 'page-has-heading-one']).analyze();
+      expect(results.violations.map(violation => violation.id)).toEqual([]);
+    });
+  }
+}

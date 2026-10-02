@@ -8,11 +8,15 @@
     text focuses it;
   - the item under the pointer takes the focus, so pointer and keyboard highlight the same way;
   - closing after an item is chosen (a click, Enter, or Space, which a link does not react to by itself), with the focus
-    back on the trigger, and when Tab moves the focus out.
+    back on the trigger, and when Tab moves the focus out;
+  - the focus back on the trigger after Escape inside another popover (a menu in the sidebar's phone panel), where the
+    browser does not return it.
   Nothing is needed for htmx's history cache: whether a popover is open is not in the markup it saves, and Alpine
   initialises the restored markup again, which resets aria-expanded.
 */
-import {hide, listener, positionWithoutAnchoring, show, trackExpanded, triggersOf, typeaheadMatch} from '../popup.js';
+import {
+  hide, listener, positionWithoutAnchoring, restoreFocusAfterEscape, show, trackExpanded, triggersOf, typeaheadMatch,
+} from '../popup.js';
 
 const ITEM = '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
 const TYPEAHEAD_RESET_MS = 500;
@@ -34,6 +38,7 @@ export default function dropdownMenu() {
       menu.querySelectorAll(ITEM).forEach(item => item.setAttribute('tabindex', '-1'));
       trackExpanded(menu, listen);
       positionWithoutAnchoring(menu, () => triggersOf(menu)[0], {side: 'bottom', align: 'start'}, listen);
+      restoreFocusAfterEscape(menu, () => lastTrigger ?? triggersOf(menu)[0], listen);
 
       // Focus into the menu once it is open: on the first (or last) item when the keyboard opened it, on the menu itself
       // for a pointer. beforetoggle, not toggle: the browser merges a toggle event into one still pending, and drops it

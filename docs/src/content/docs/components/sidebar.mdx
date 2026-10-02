@@ -161,7 +161,9 @@ without an `id` the item generates one on every render.
 `<sl:sidebar-menu-action>` one at the end of a menu item, beside its button ("More"). Both hold only an icon, so they
 need an `aria-label`; name the entry too, as every item has one ("More for Design Engineering"). With `as="a"` they are
 links. `show-on-hover` on a menu action hides it on a desktop until the pointer is over its item or the focus is in
-it; on a phone it is always there. On a phone both are 24 px, the minimum target size of WCAG 2.2.
+it; on a phone it is always there. A menu action is 24 px, the minimum target size of WCAG 2.2 (shadcn's is 20 px);
+a group action is 20 px on a desktop, where nothing is close to it, and 24 px on a phone. A "More" that opens a menu is
+a [menu trigger](#menus-in-the-sidebar).
 
 ```html
 <sl:sidebar-menu-item>
@@ -171,6 +173,75 @@ it; on a phone it is always there. On a phone both are 24 px, the minimum target
   </sl:sidebar-menu-action>
 </sl:sidebar-menu-item>
 ```
+
+## Menus in the sidebar
+
+A dropdown menu opens from a sidebar part when its trigger says so: `<sl:dropdown-menu-trigger as="sidebar-menu-button">`
+renders a menu button, `as="sidebar-menu-action"` a menu action (shadcn's `<DropdownMenuTrigger asChild>`). The trigger
+takes the part's props (`size`, `variant`, `tooltip`; `show-on-hover`) and its `icon-start` and `icon-end` slots, and
+any other attribute passes through. Put the `<sl:dropdown-menu>` in the `<sl:sidebar-menu-item>`, where the part would
+be. The default example above has two: a team switcher in the header and "More" beside Design Engineering.
+
+```html
+<sl:sidebar-header>
+  <sl:sidebar-menu>
+    <sl:sidebar-menu-item>
+      <sl:dropdown-menu id="team-switcher">
+        <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg" th:tooltip="${team.name}">
+          <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+          <strong>[[${team.name}]]</strong>
+          <small>[[${team.plan}]]</small>
+          <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+        </sl:dropdown-menu-trigger>
+        <sl:dropdown-menu-content side="right">
+          <sl:dropdown-menu-label id="team-switcher-label">Teams</sl:dropdown-menu-label>
+          <sl:dropdown-menu-radio-group aria-labelledby="team-switcher-label">
+            <sl:dropdown-menu-radio-item as="a" th:each="t : ${teams}" th:href="@{/teams/{id}(id=${t.id})}"
+                                         th:checked="${t.id == team.id}">[[${t.name}]]</sl:dropdown-menu-radio-item>
+          </sl:dropdown-menu-radio-group>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-item as="a" th:href="@{/teams/new}"><sl:icon name="plus"/>Add team</sl:dropdown-menu-item>
+        </sl:dropdown-menu-content>
+      </sl:dropdown-menu>
+    </sl:sidebar-menu-item>
+  </sl:sidebar-menu>
+</sl:sidebar-header>
+```
+
+```html
+<sl:sidebar-menu-item th:each="project : ${projects}">
+  <sl:sidebar-menu-button th:href="@{/projects/{id}(id=${project.id})}">[[${project.name}]]</sl:sidebar-menu-button>
+  <sl:dropdown-menu th:id="|project-${project.id}-more|">
+    <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover th:aria-label="|More for ${project.name}|">
+      <sl:icon name="ellipsis"/>
+    </sl:dropdown-menu-trigger>
+    <sl:dropdown-menu-content side="right">
+      <sl:dropdown-menu-item as="a" th:href="@{/projects/{id}(id=${project.id})}">View project</sl:dropdown-menu-item>
+      <sl:dropdown-menu-separator/>
+      <sl:dropdown-menu-item variant="destructive" hx:get="@{/projects/{id}/delete(id=${project.id})}"
+                             hx-target="#modal-root">Delete project</sl:dropdown-menu-item>
+    </sl:dropdown-menu-content>
+  </sl:dropdown-menu>
+</sl:sidebar-menu-item>
+```
+
+**The current team or version** is a checked radio item: a menu of links, one per team, the current one checked by the
+server. A screen reader says "Acme Inc., radio menu item, checked", the check mark shows it, and it works without
+JavaScript, as the [radio items](../dropdown-menu/#checkbox-and-radio-items) of a sort menu do. The menu is labelled by its
+trigger; the group of teams by the label above it.
+
+<ComponentPreview id="sidebar--version-switcher" />
+
+**Where it opens**, in each state of the sidebar:
+
+| State | The menu |
+| --- | --- |
+| Expanded, on a desktop | On the side its content asks for: `side="right"` puts it beside the sidebar, its top lined up with the trigger, as shadcn's team switcher and user menu. A menu from a menu button is at least as wide as the button, and 14 rem. |
+| Collapsed to icons | Beside the strip, the same way. The button's tooltip and its menu are never shown together: the tooltip hides when the menu opens and does not show while it is open. A "More" action is not in the strip, like every action. |
+| The phone panel | Below its trigger, lined up with its end, whatever `side` says (there is no room beside a panel as wide as the screen); above it when there is no room below. The menu is drawn above the panel and the panel's `inert` leaves it alone. Escape closes the menu first, with the focus back on its trigger, and the panel on the next Escape. A click elsewhere in the panel closes only the menu. |
+| The header layout's row | Below its trigger, lined up with its end, as in the panel. The row's sideways scrolling does not clip it. A menu button that opens a menu keeps its `icon-end` (a chevron) in the row, where other icons are left out. |
+
+The trigger looks active while its menu is open, and a `show-on-hover` action stays shown.
 
 ## Collapsible groups
 
@@ -290,6 +361,8 @@ margin around it.
   to icons; never while it is expanded or on a phone. It repeats the button's name, so it is hidden from screen
   readers and describes nothing (as a [tooltip](../tooltip/#when-it-repeats-the-name) with `mode="label"`). Give every
   menu button one: without it, the icon alone has to say where the link goes.
+- A menu button that [opens a menu](#menus-in-the-sidebar) still does, beside the strip; its tooltip never shows
+  while the menu is open.
 - A click (or Enter) on a [collapsible group's](#collapsible-groups) icon expands the sidebar and opens the group, as
   the sub-menu has no room in the strip. A group that holds the current page shows it on its icon.
 - The server renders the strip from the cookie, so the first paint is right with and without JavaScript. On a phone
@@ -416,7 +489,6 @@ For now:
 
 - a collapsible group whose chevron is a menu action beside a link (shadcn's sidebar-08), and sub-menus that open as
   dropdown menus while collapsed to icons (sidebar-06);
-- a menu action that opens a dropdown menu;
 - `SidebarInput` (use `<sl:input>`) and `SidebarMenuSkeleton` (use `<sl:skeleton>`);
 - `SidebarRail`, the strip along the sidebar's edge that toggles it;
 - a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page;

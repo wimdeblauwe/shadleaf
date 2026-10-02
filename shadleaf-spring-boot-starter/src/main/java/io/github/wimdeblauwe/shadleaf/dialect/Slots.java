@@ -10,6 +10,7 @@ import org.thymeleaf.model.IComment;
 import org.thymeleaf.model.IElementTag;
 import org.thymeleaf.model.IModel;
 import org.thymeleaf.model.IOpenElementTag;
+import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.model.ITemplateEvent;
 import org.thymeleaf.model.IText;
 
@@ -40,13 +41,81 @@ public final class Slots {
 
   /** Whether the named slot was given non-blank content. */
   public boolean has(String name) {
-    return hasContent(namedSlots.get(name));
+    return isFilled(namedSlots.get(name));
   }
 
   /** Whether the default slot (the content outside any named slot) is non-blank. */
   public boolean hasDefault() {
-    return hasContent(defaultSlot);
+    return isFilled(defaultSlot);
   }
+
+  /**
+   * Whether slot content counts as given. Content that is only an {@code <sl:slot>} passes a slot of the caller's on
+   * ({@code <sl:sidebar-menu-button><sl:slot name="icon-start"><sl:slot name="icon-start"/></sl:slot>}): it counts
+   * only when that slot of the caller's was given, or the passing slot's own fallback is not blank. Otherwise a
+   * component that passes its slots on would make every one of them look given.
+   */
+  boolean isFilled(@Nullable IModel model) {
+    if (!hasContent(model)) {
+      return false;
+    }
+    PassedOn passedOn = passedOn(model);
+    if (passedOn == null) {
+      return true;
+    }
+    if (callerScope.slots() instanceof Slots caller
+        && (passedOn.name() == null ? caller.hasDefault() : caller.has(passedOn.name()))) {
+      return true;
+    }
+    return hasContent(passedOn.fallback());
+  }
+
+  /** The slot that {@code model} passes on, when it holds nothing but one {@code <sl:slot>} element. */
+  private @Nullable PassedOn passedOn(IModel model) {
+    String slotElement = elementName("slot");
+    int start = -1;
+    int end = -1;
+    int depth = 0;
+    for (int i = 0; i < model.size(); i++) {
+      ITemplateEvent event = model.get(i);
+      if (depth == 0 && isBlank(event)) {
+        continue;
+      }
+      boolean slotTag = event instanceof IElementTag tag
+          && tag.getElementCompleteName().toLowerCase(Locale.ROOT).equals(slotElement);
+      if (depth == 0) {
+        if (start >= 0 || !slotTag || event instanceof ICloseElementTag) {
+          return null;
+        }
+        start = i;
+        if (event instanceof IOpenElementTag) {
+          depth = 1;
+        } else {
+          end = i;
+        }
+      } else if (slotTag && event instanceof IOpenElementTag) {
+        depth++;
+      } else if (slotTag && event instanceof ICloseElementTag && --depth == 0) {
+        end = i;
+      }
+    }
+    if (start < 0 || depth != 0 || !(model.get(start) instanceof IProcessableElementTag tag)) {
+      return null;
+    }
+    String name = tag.getAttributeValue("name");
+    IModel fallback = model.cloneModel();
+    fallback.reset();
+    for (int i = start + 1; i < end; i++) {
+      fallback.add(model.get(i));
+    }
+    return new PassedOn(name == null || name.isBlank() ? null : name, fallback);
+  }
+
+  private static boolean isBlank(ITemplateEvent event) {
+    return event instanceof IComment || (event instanceof IText text && text.getText().isBlank());
+  }
+
+  private record PassedOn(@Nullable String name, IModel fallback) {}
 
   /**
    * Whether the content passed in, in any slot and at any depth, holds a use of the component {@code name}, not
@@ -114,14 +183,9 @@ public final class Slots {
       return false;
     }
     for (int i = 0; i < model.size(); i++) {
-      ITemplateEvent event = model.get(i);
-      if (event instanceof IComment) {
-        continue;
+      if (!isBlank(model.get(i))) {
+        return true;
       }
-      if (event instanceof IText text && text.getText().isBlank()) {
-        continue;
-      }
-      return true;
     }
     return false;
   }

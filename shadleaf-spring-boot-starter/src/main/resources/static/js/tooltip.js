@@ -93,11 +93,13 @@ export function attachTooltip(trigger, content, {delay, describe = true, when = 
     suppressed = true;
     self.hide();
   });
-  listen(trigger, 'focus', () => {
-    if (trigger.matches(':focus-visible')) {
+  // A task later: focus can come back while the browser is still closing a popover (a menu the trigger opened, on
+  // Escape), and showing another one then throws.
+  listen(trigger, 'focus', () => setTimeout(() => {
+    if (document.activeElement === trigger && trigger.matches(':focus-visible')) {
       open();
     }
-  });
+  }));
   listen(trigger, 'blur', () => self.hide());
   listen(content, 'pointerenter', () => clearTimeout(hideTimer));
   listen(content, 'pointerleave', hideSoon);

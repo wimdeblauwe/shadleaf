@@ -33,11 +33,41 @@ holding the items, as in shadcn/ui. `<sl:dropdown-menu>` renders no element of i
 The menu is a [popover](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), so the browser does the hard
 parts: the menu is drawn above everything else (no `z-index` to manage, no portal), Escape or a click outside closes
 it, and closing returns focus to the trigger. The trigger is a `<sl:button>` with `popovertarget` set to the menu's
-`id`; it takes the button's `variant` and `size`, and any other attribute passes through. Any other button can open
-the menu the same way: `<sl:button popovertarget="account-menu">`.
+`id`; it takes the button's `variant` and `size`, its `icon-start` and `icon-end` slots, and any other attribute passes
+through. Any other button can open the menu the same way: `<sl:button popovertarget="account-menu">`.
 
 The menu is labelled by its trigger. A menu opened by a button of your own needs an `aria-label` on
 `<sl:dropdown-menu-content>`.
+
+## Opened from the sidebar
+
+`as` makes the trigger a sidebar part instead of a button: shadcn's `<DropdownMenuTrigger asChild>` around a
+`SidebarMenuButton` or a `SidebarMenuAction`.
+
+| `as` | Renders | For |
+| --- | --- | --- |
+| `button` (default) | `<sl:button>` | Any menu |
+| `sidebar-menu-button` | `<sl:sidebar-menu-button as="button">`, with its `variant`, `size`, `tooltip` and `icon-start`/`icon-end` slots | A team or version switcher in the sidebar header, a user menu in its footer |
+| `sidebar-menu-action` | `<sl:sidebar-menu-action>`, with `show-on-hover` | "More" beside a project's link |
+
+```html
+<sl:sidebar-menu-item>
+  <sl:dropdown-menu id="team-switcher">
+    <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg" tooltip="Acme Inc.">
+      <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+      <strong>Acme Inc.</strong>
+      <small>Enterprise</small>
+      <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+    </sl:dropdown-menu-trigger>
+    <sl:dropdown-menu-content side="right">...</sl:dropdown-menu-content>
+  </sl:dropdown-menu>
+</sl:sidebar-menu-item>
+```
+
+The trigger is the same element the part renders on its own, with the menu's `popovertarget`, `aria-haspopup` and
+id, so it looks and lines up like the entries around it. The [Sidebar](../sidebar/#menus-in-the-sidebar) page shows
+the team switcher, the version switcher and the "More" menu, and where each opens: beside the sidebar on a desktop
+(`side="right"`), below its trigger in the phone panel and in the header layout's row.
 
 ## Items: links and buttons
 
@@ -97,7 +127,7 @@ follows the server. Nothing changes the check mark in the browser: it always sho
 | Arrow up | Opens the menu on its last item | Previous item |
 | Home, End | | First, last item |
 | A letter | | The next item whose text starts with it; typing quickly matches a prefix |
-| Escape | | Closes the menu; focus returns to the trigger |
+| Escape | | Closes the menu; focus returns to the trigger (also inside another popover, such as the sidebar's phone panel, where the browser itself does not return it) |
 | Tab | | Closes the menu and moves on |
 
 Disabled items, labels and separators are skipped. The item under the pointer takes the focus, so pointer and
@@ -107,7 +137,9 @@ keyboard highlight items the same way; only keyboard focus draws the focus ring.
 
 The menu opens below its trigger, lined up with its start. `side="top|right|bottom|left"` and
 `align="start|center|end"` on `<sl:dropdown-menu-content>` change that, and the menu flips to the other side when there
-is no room. `right` and `left` are the end and the start of a line, so they swap on a right-to-left page.
+is no room. `right` and `left` are the end and the start of a line, so they swap on a right-to-left page. Inside the
+sidebar's phone panel and its header row a `right` or `left` menu opens below its trigger instead (see
+[Sidebar](../sidebar/#menus-in-the-sidebar)).
 
 It is placed with [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning),
 which every current browser supports (Chrome and Edge 133, Safari 26, Firefox 147). In older ones the menu's small

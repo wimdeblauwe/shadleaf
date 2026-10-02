@@ -196,6 +196,40 @@ class SlotsTest {
   }
 
   @Test
+  void aSlotPassedOnThatTheCallerLeftEmptyIsNotGiven() {
+    Element relay = render("<sl:test-relay></sl:test-relay>");
+
+    assertThat(relay.select(".card-header")).isEmpty();
+    assertThat(relay.selectFirst(".card-body").text()).isEqualTo("Empty card");
+  }
+
+  @Test
+  void aSlotPassedOnThatTheCallerFilledIsGiven() {
+    Element relay = render("""
+        <sl:test-relay>
+          <sl:slot name="header"><b>Title</b></sl:slot>
+          <p>Body</p>
+        </sl:test-relay>""");
+
+    assertThat(relay.selectFirst(".card-header").html()).isEqualTo("<b>Title</b>");
+    assertThat(relay.selectFirst(".card-body").html()).isEqualTo("<p>Body</p>");
+  }
+
+  @Test
+  void aSlotPassedOnWithAFallbackOfItsOwnIsGiven() {
+    Element relay = render("<sl:test-relay></sl:test-relay>");
+
+    assertThat(relay.selectFirst(".card-footer").text()).isEqualTo("Relay footer");
+  }
+
+  @Test
+  void aSlotPassedOnWithAFallbackShowsTheCallersContentWhenGiven() {
+    Element relay = render("<sl:test-relay><sl:slot name=\"footer\">Mine</sl:slot></sl:test-relay>");
+
+    assertThat(relay.selectFirst(".card-footer").text()).isEqualTo("Mine");
+  }
+
+  @Test
   void slotContentInAnApplicationTemplateSeesTheApplicationsOwnPropsVariable() {
     Element chip = render("""
             <sl:test-chip variant="danger"><span th:text="${props}">x</span></sl:test-chip>""",

@@ -659,20 +659,37 @@
   }, {
     "name" : "dropdown-menu-trigger",
     "tag" : "sl:dropdown-menu-trigger",
-    "description" : "The button that opens and closes a `sl:dropdown-menu`: a `sl:button` with `popovertarget` set to the menu, which names the menu. Arrow down opens the menu on its first item, arrow up on its last. Any other attribute passes through to the `sl:button`.",
+    "description" : "What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part (shadcn's `&lt;DropdownMenuTrigger asChild&gt;`). It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.",
     "declared" : true,
     "props" : [ {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "sidebar-menu-button", "sidebar-menu-action" ],
+      "description" : "The part to render: a `sl:button`, a `sl:sidebar-menu-button` (a team switcher or user menu in a `sl:sidebar-menu-item`), or a `sl:sidebar-menu-action` (a \"More\" beside a menu button, which needs an `aria-label`)."
+    }, {
       "name" : "variant",
       "type" : "enum",
       "defaultValue" : "default",
       "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
-      "description" : "Visual style of the button, as on `sl:button`."
+      "description" : "Visual style, as on `sl:button`, or `default` and `outline` as on `sl:sidebar-menu-button`. Not for a sidebar menu action."
     }, {
       "name" : "size",
       "type" : "enum",
       "defaultValue" : "default",
       "values" : [ "xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm", "icon-lg" ],
-      "description" : "Size of the button, as on `sl:button`. The `icon` sizes need an `aria-label`."
+      "description" : "Size, as on `sl:button` (the `icon` sizes need an `aria-label`), or `sm`, `default` and `lg` as on `sl:sidebar-menu-button`. Not for a sidebar menu action."
+    }, {
+      "name" : "tooltip",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "With `as=\"sidebar-menu-button\"`: the label shown beside it while the sidebar is collapsed to icons, as on `sl:sidebar-menu-button`. Never shown while the menu is open."
+    }, {
+      "name" : "show-on-hover",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "With `as=\"sidebar-menu-action\"`: from 768&nbsp;px, show it only while the pointer is over its item, the focus is in it, or the menu is open."
     } ]
   }, {
     "name" : "field",

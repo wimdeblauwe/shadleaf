@@ -1,0 +1,95 @@
+<!-- <sl:dropdown-menu id="sort">
+  <sl:dropdown-menu-trigger variant="outline" size="sm">
+    <sl:slot name="icon-start"><sl:icon name="arrow-up-down"/></sl:slot>
+    Sort
+    <sl:slot name="icon-end"><sl:icon name="chevron-down"/></sl:slot>
+  </sl:dropdown-menu-trigger>
+</sl:dropdown-menu> -->
+<button class="btn dropdown-menu-trigger" type="button" data-variant="outline" data-size="sm" id="sort-trigger" popovertarget="sort" aria-haspopup="menu">
+  <span class="btn-icon" data-icon="inline-start">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </span>
+  Sort
+  <span class="btn-icon" data-icon="inline-end">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </span>
+</button>
+
+<!-- <sl:sidebar-menu-item>
+  <sl:dropdown-menu id="teams">
+    <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg" tooltip="Acme Inc.">
+      <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+      <strong>Acme Inc.</strong>
+      <small>Enterprise</small>
+      <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+    </sl:dropdown-menu-trigger>
+    <sl:dropdown-menu-content side="right">
+      <sl:dropdown-menu-label>Teams</sl:dropdown-menu-label>
+      <sl:dropdown-menu-radio-group aria-label="Teams">
+        <sl:dropdown-menu-radio-item as="a" href="/teams/acme" checked>Acme Inc.</sl:dropdown-menu-radio-item>
+        <sl:dropdown-menu-radio-item as="a" href="/teams/evil">Evil Corp.</sl:dropdown-menu-radio-item>
+      </sl:dropdown-menu-radio-group>
+    </sl:dropdown-menu-content>
+  </sl:dropdown-menu>
+</sl:sidebar-menu-item> -->
+<li class="sidebar-menu-item">
+  <button class="sidebar-menu-button dropdown-menu-trigger" type="button" data-size="lg" id="teams-trigger" popovertarget="teams" aria-haspopup="menu">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    <span class="sidebar-menu-button-label">
+      <strong>Acme Inc.</strong>
+      <small>Enterprise</small>
+    </span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    <span class="tooltip-content sidebar-menu-tooltip" role="tooltip" popover="manual" data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">
+      Acme Inc.
+      <span class="tooltip-arrow" aria-hidden="true"></span>
+    </span>
+  </button>
+  <div class="dropdown-menu-content" id="teams" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="teams-trigger" data-side="right">
+    <div class="dropdown-menu-label">Teams</div>
+    <div class="dropdown-menu-radio-group" role="group" aria-label="Teams">
+      <a class="dropdown-menu-radio-item" role="menuitemradio" aria-checked="true" href="/teams/acme">
+        Acme Inc.
+        <span class="dropdown-menu-item-indicator">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </span>
+      </a>
+      <a class="dropdown-menu-radio-item" role="menuitemradio" aria-checked="false" href="/teams/evil">
+        Evil Corp.
+        <span class="dropdown-menu-item-indicator">
+          <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</li>
+
+<!-- <sl:dropdown-menu id="version">
+  <sl:dropdown-menu-trigger as="sidebar-menu-button" variant="outline" size="sm">v1.0.0</sl:dropdown-menu-trigger>
+</sl:dropdown-menu> -->
+<button class="sidebar-menu-button dropdown-menu-trigger" type="button" data-variant="outline" data-size="sm" id="version-trigger" popovertarget="version" aria-haspopup="menu">
+  <span class="sidebar-menu-button-label">v1.0.0</span>
+</button>
+
+<!-- <sl:sidebar-menu-item>
+  <sl:sidebar-menu-button href="/projects/design">Design Engineering</sl:sidebar-menu-button>
+  <sl:dropdown-menu id="design-more">
+    <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Design Engineering">
+      <sl:icon name="ellipsis"/>
+    </sl:dropdown-menu-trigger>
+    <sl:dropdown-menu-content side="right">
+      <sl:dropdown-menu-item as="a" href="/projects/design">View project</sl:dropdown-menu-item>
+    </sl:dropdown-menu-content>
+  </sl:dropdown-menu>
+</sl:sidebar-menu-item> -->
+<li class="sidebar-menu-item">
+  <a class="sidebar-menu-button" href="/projects/design">
+    <span class="sidebar-menu-button-label">Design Engineering</span>
+  </a>
+  <button class="sidebar-menu-action dropdown-menu-trigger" type="button" data-show-on-hover="true" id="design-more-trigger" popovertarget="design-more" aria-haspopup="menu" aria-label="More for Design Engineering">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+  <div class="dropdown-menu-content" id="design-more" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="design-more-trigger" data-side="right">
+    <a class="dropdown-menu-item" role="menuitem" href="/projects/design">View project</a>
+  </div>
+</li>
