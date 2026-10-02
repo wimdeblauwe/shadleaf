@@ -1,16 +1,290 @@
-<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/current/shadleaf/assets/shadleaf-vega-D7D-0-zM.css"><script>(function(){const skins = {"vega":"/shadleaf/current/shadleaf/assets/shadleaf-vega-D7D-0-zM.css","lyra":"/shadleaf/current/shadleaf/assets/shadleaf-lyra-BIpuZPYZ.css"};
+<!DOCTYPE html><html lang="en" class="astro-6felt6qx"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Shadleaf showcase</title><link rel="stylesheet" id="shadleaf-skin" href="/shadleaf/current/shadleaf/assets/shadleaf-vega-DrQ2L9md.css"><script>(function(){const skins = {"vega":"/shadleaf/current/shadleaf/assets/shadleaf-vega-DrQ2L9md.css","lyra":"/shadleaf/current/shadleaf/assets/shadleaf-lyra-BaTEbSWg.css"};
 const firstSkin = "vega";
 
-    const params = new URLSearchParams(location.search);
-    const skin = params.get('skin') ?? firstSkin;
-    if (!(skin in skins)) {
-      throw new Error(`Unknown skin ${skin}; known: ${Object.keys(skins).join(', ')}`);
-    }
-    document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
-    document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
-    document.documentElement.dataset.skin = skin;
-  })();</script><script type="module" src="/shadleaf/current/shadleaf/assets/shadleaf.alpine-BDl2pLXv.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}.stage:where(.astro-6felt6qx)>.accordion{max-inline-size:32rem}.stage:where(.astro-6felt6qx)>:is(.tabs,.collapsible){inline-size:24rem;max-inline-size:100%}
-</style><script type="module" src="/shadleaf/current/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><main class="astro-6felt6qx"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">accordion</h2><h3 class="astro-6felt6qx">Accordion</h3><div class="stage astro-6felt6qx" data-scenario="accordion--default"><div class="accordion">
+  const params = new URLSearchParams(location.search);
+  const skin = params.get('skin') ?? firstSkin;
+  if (!(skin in skins)) {
+    throw new Error(`Unknown skin ${skin}; known: ${Object.keys(skins).join(', ')}`);
+  }
+  document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
+  document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
+  document.documentElement.dataset.skin = skin;
+})();</script><script type="module" src="/shadleaf/current/shadleaf/assets/shadleaf.alpine-D2XLr9wd.js"></script><style>body{padding:2rem;font-family:system-ui,sans-serif}@media (width<48rem){body{padding:1rem}}h1:where(.astro-6felt6qx){margin-bottom:1.5rem;font-size:1.5rem;font-weight:600}h2:where(.astro-6felt6qx){margin:2rem 0 1rem;font-size:1.25rem;font-weight:600}h3:where(.astro-6felt6qx){margin:1.25rem 0 .5rem;font-size:.875rem;font-weight:500}.stage:where(.astro-6felt6qx){flex-wrap:wrap;align-items:center;gap:.75rem;display:flex}.stage:where(.astro-6felt6qx)>.card{inline-size:24rem;max-inline-size:100%}.stage:where(.astro-6felt6qx)>.accordion{max-inline-size:32rem}.stage:where(.astro-6felt6qx)>:is(.tabs,.collapsible){inline-size:24rem;max-inline-size:100%}.stage:where(.astro-6felt6qx)>.sidebar-provider{min-block-size:24rem}.stage:where(.astro-6felt6qx)>.sidebar-provider>.sidebar{align-self:stretch;block-size:auto}
+</style><script type="module" src="/shadleaf/current/_astro/page.Dwipeu-R.js"></script></head><body class="astro-6felt6qx"><div class="showcase stage astro-6felt6qx" data-scenario="sidebar--default"><a class="skip-link"
+   href="#main">Skip to main content</a>
+<div class="sidebar-provider"
+     x-data="slSidebar"
+     data-state="expanded">
+  <nav class="sidebar"
+     id="sidebar"
+     popover
+     aria-label="Main" data-variant="inset" data-collapsible="icon">
+    <div class="sidebar-header">
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-item">
+          
+  
+  <a class="sidebar-menu-button"
+     data-size="lg" href="/"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg><span
+    class="sidebar-menu-button-label">
+            
+            <strong>Acme Inc.</strong>
+            <small>Enterprise</small>
+          </span><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Acme Inc.<span class="tooltip-arrow" aria-hidden="true"></span></span></a>
+  
+
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-content">
+      <div class="sidebar-group"
+     id="platform" role="group" aria-labelledby="platform-label">
+        <div class="sidebar-group-label"
+     id="platform-label">Platform</div>
+        <div class="sidebar-group-content">
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              
+  
+  <a class="sidebar-menu-button"
+     aria-current="page" href="/"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span
+    class="sidebar-menu-button-label">
+                
+                Home
+              </span><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Home<span class="tooltip-arrow" aria-hidden="true"></span></span></a>
+  
+
+            </li>
+            <li class="sidebar-menu-item"
+    id="inbox">
+              
+  
+  <a class="sidebar-menu-button"
+     aria-describedby="inbox-badge" href="/inbox"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span
+    class="sidebar-menu-button-label">
+                
+                Inbox
+              </span><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Inbox<span class="tooltip-arrow" aria-hidden="true"></span></span></a>
+  
+
+              <div class="sidebar-menu-badge"
+     id="inbox-badge"><span aria-hidden="true">12</span><span class="sl-sr-only">12 unread</span></div>
+            </li>
+            <li class="sidebar-menu-item">
+              
+  
+  <a class="sidebar-menu-button" href="/calendar"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg><span
+    class="sidebar-menu-button-label">
+                
+                Calendar
+              </span><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Calendar<span class="tooltip-arrow" aria-hidden="true"></span></span></a>
+  
+
+            </li>
+            <li class="sidebar-menu-item"><details class="sidebar-menu-collapsible">
+              
+  <summary class="sidebar-menu-button"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg><span
+    class="sidebar-menu-button-label">
+                
+                Documents
+              </span><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon sidebar-menu-button-chevron"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Documents<span class="tooltip-arrow" aria-hidden="true"></span></span></summary>
+  
+  
+
+              <ul class="sidebar-menu-sub">
+                <li class="sidebar-menu-sub-item">
+                  
+  <a class="sidebar-menu-sub-button" href="/documents"><span
+    class="sidebar-menu-sub-button-label">
+                    Recent
+                  </span></a>
+  
+
+                </li>
+                <li class="sidebar-menu-sub-item">
+                  
+  <a class="sidebar-menu-sub-button" href="/documents/shared"><span
+    class="sidebar-menu-sub-button-label">
+                    Shared with me
+                  </span></a>
+  
+
+                </li>
+              </ul>
+            </details></li>
+          </ul>
+        </div>
+      </div>
+      <div class="sidebar-group"
+     id="projects" role="group" aria-labelledby="projects-label">
+        <div class="sidebar-group-label"
+     id="projects-label">Projects</div>
+        
+  <button class="sidebar-group-action" type="button" aria-label="Add project"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+  
+
+        <div class="sidebar-group-content">
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+              
+  
+  <a class="sidebar-menu-button" href="/projects/design"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><line x1="22" x2="2" y1="6" y2="6"/><line x1="22" x2="2" y1="18" y2="18"/><line x1="6" x2="6" y1="2" y2="22"/><line x1="18" x2="18" y1="2" y2="22"/></svg><span
+    class="sidebar-menu-button-label">
+                
+                Design Engineering
+              </span><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Design Engineering<span class="tooltip-arrow" aria-hidden="true"></span></span></a>
+  
+
+              
+  <button class="sidebar-menu-action"
+          type="button"
+          data-show-on-hover="true" aria-label="More for Design Engineering">
+                <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+              </button>
+  
+
+            </li>
+            <li class="sidebar-menu-item">
+              
+  
+  <a class="sidebar-menu-button" href="/projects/sales"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"/><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/></svg><span
+    class="sidebar-menu-button-label">
+                
+                Sales &amp; Marketing
+              </span><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Sales &amp;amp; Marketing<span class="tooltip-arrow" aria-hidden="true"></span></span></a>
+  
+
+              
+  <button class="sidebar-menu-action"
+          type="button"
+          data-show-on-hover="true" aria-label="More for Sales &amp; Marketing">
+                <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+              </button>
+  
+
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-item">
+          
+  
+  <a class="sidebar-menu-button"
+     data-size="sm" href="/settings"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/></svg><span
+    class="sidebar-menu-button-label">
+            
+            Settings
+          </span><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Settings<span class="tooltip-arrow" aria-hidden="true"></span></span></a>
+  
+
+        </li>
+        <li class="sidebar-menu-item">
+          
+  
+  <a class="sidebar-menu-button"
+     data-size="sm" href="/help"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg><span
+    class="sidebar-menu-button-label">
+            
+            Help
+          </span><span class="tooltip-content sidebar-menu-tooltip"
+      role="tooltip"
+      popover="manual"
+      data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">Help<span class="tooltip-arrow" aria-hidden="true"></span></span></a>
+  
+
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <main class="sidebar-inset" id="main" tabindex="-1">
+    <header class="site-header">
+      
+  <button class="btn sidebar-trigger"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" popovertarget="sidebar" aria-controls="sidebar" aria-label="Toggle sidebar">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon sidebar-trigger-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+  
+</button>
+  
+  
+
+      <div class="separator"
+     data-orientation="vertical" role="none"></div>
+      <nav class="breadcrumb"
+     aria-label="Breadcrumb">
+        <ol class="breadcrumb-list">
+          <li class="breadcrumb-item">Platform</li>
+          <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+          <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">Home</span></li>
+        </ol>
+      </nav>
+    </header>
+    <h1>Home</h1>
+    <p>The page's content.</p>
+  </main>
+</div></div><div class="showcase astro-6felt6qx" role="region" aria-label="Showcase"><h1 class="astro-6felt6qx">Shadleaf showcase</h1><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">accordion</h2><h3 class="astro-6felt6qx">Accordion</h3><div class="stage astro-6felt6qx" data-scenario="accordion--default"><div class="accordion">
   <details class="accordion-item"
          name="accordion-demo" open="open">
     <summary class="accordion-trigger"><span class="accordion-trigger-text" role="heading" aria-level="3">Is it accessible?</span><svg xmlns="http://www.w3.org/2000/svg"
@@ -503,7 +777,127 @@ const firstSkin = "vega";
   
   Late
   
-</span></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">button</h2><h3 class="astro-6felt6qx">Button</h3><div class="stage astro-6felt6qx" data-scenario="button--default"><button class="btn"
+</span></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">breadcrumb</h2><h3 class="astro-6felt6qx">With a menu</h3><div class="stage astro-6felt6qx" data-scenario="breadcrumb--menu"><nav class="breadcrumb"
+     aria-label="Breadcrumb with a menu">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">Home</a></li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+    <li class="breadcrumb-item">
+      
+  
+  <button class="btn dropdown-menu-trigger breadcrumb-ellipsis-trigger"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" id="breadcrumb-more-trigger" popovertarget="breadcrumb-more" aria-haspopup="menu" aria-label="Show more levels">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+  
+</button>
+  
+  
+
+  <div class="dropdown-menu-content"
+     id="breadcrumb-more"
+     role="menu"
+     popover
+     tabindex="-1"
+     x-data="slDropdownMenu"
+     aria-labelledby="breadcrumb-more-trigger">
+        
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/docs">Documentation</a>
+
+        
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/themes">Themes</a>
+
+        
+  
+  <a class="dropdown-menu-item" role="menuitem" href="/github">GitHub</a>
+
+      </div>
+
+    </li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/components">Components</a></li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+    <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">Breadcrumb</span></li>
+  </ol>
+</nav></div><h3 class="astro-6felt6qx">Collapsed levels</h3><div class="stage astro-6felt6qx" data-scenario="breadcrumb--ellipsis"><nav class="breadcrumb"
+     aria-label="Breadcrumb with collapsed levels">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">Home</a></li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+    <li class="breadcrumb-item"><span class="breadcrumb-ellipsis"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg><span class="sl-sr-only">More levels</span></span></li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/components">Components</a></li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+    <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">Breadcrumb</span></li>
+  </ol>
+</nav></div><h3 class="astro-6felt6qx">Another separator</h3><div class="stage astro-6felt6qx" data-scenario="breadcrumb--separator"><nav class="breadcrumb"
+     aria-label="Breadcrumb with slashes">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">Home</a></li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 2 2 22"/></svg></li>
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/components">Components</a></li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M22 2 2 22"/></svg></li>
+    <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">Breadcrumb</span></li>
+  </ol>
+</nav></div><h3 class="astro-6felt6qx">A level without a page</h3><div class="stage astro-6felt6qx" data-scenario="breadcrumb--plain-level"><nav class="breadcrumb"
+     aria-label="Breadcrumb with a plain level">
+  <ol class="breadcrumb-list">
+    <li class="breadcrumb-item"><a class="breadcrumb-link" href="/">Home</a></li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+    <li class="breadcrumb-item">Settings</li>
+    <li class="breadcrumb-separator"
+    role="presentation"
+    aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon breadcrumb-separator-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg></li>
+    <li class="breadcrumb-item"><span class="breadcrumb-page" aria-current="page">Notifications</span></li>
+  </ol>
+</nav></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">button</h2><h3 class="astro-6felt6qx">Button</h3><div class="stage astro-6felt6qx" data-scenario="button--default"><button class="btn"
           type="button">
   
   
@@ -2861,7 +3255,55 @@ const firstSkin = "vega";
   
   
 </div>
-</dialog></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">skeleton</h2><h3 class="astro-6felt6qx">Skeleton</h3><div class="stage astro-6felt6qx" data-scenario="skeleton--default"><div class="skeleton"
+</dialog></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">sidebar</h2><h3 class="astro-6felt6qx">Sidebar</h3></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">site-header</h2><h3 class="astro-6felt6qx">Site header</h3><div class="stage astro-6felt6qx" data-scenario="site-header--default"><header class="site-header">
+  
+  
+  
+  <a class="btn"
+     data-variant="ghost" href="/">
+  
+  
+  <span class="btn-icon" data-icon="inline-start"><svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 2h10"/><path d="M5 6h14"/><rect width="18" height="12" x="3" y="10" rx="2"/></svg></span>
+  
+    
+    Acme Inc.
+  
+  
+</a>
+
+  
+<div class="site-header-end">
+    
+  <button class="btn"
+          type="button"
+          data-variant="ghost" data-size="icon-sm" aria-label="Search">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+  
+</button>
+  
+  
+
+    
+  <button class="btn"
+          type="button"
+          data-variant="outline" data-size="sm">
+  
+  
+  
+  Sign in
+  
+</button>
+  
+  
+
+  </div></header></div></section><section class="astro-6felt6qx"><h2 class="astro-6felt6qx">skeleton</h2><h3 class="astro-6felt6qx">Skeleton</h3><div class="stage astro-6felt6qx" data-scenario="skeleton--default"><div class="skeleton"
      aria-hidden="true"></div>
 <div class="skeleton"
      aria-hidden="true"></div></div><h3 class="astro-6felt6qx">In a card</h3><div class="stage astro-6felt6qx" data-scenario="skeleton--card"><div class="card" aria-busy="true">
@@ -4244,4 +4686,47 @@ const firstSkin = "vega";
       popover="manual">
     Save changes <kbd class="kbd-group"><kbd class="kbd">Ctrl</kbd><kbd class="kbd">S</kbd></kbd>
   <span class="tooltip-arrow" aria-hidden="true"></span></span>
-</span></div></section></main></body></html>
+</span></div><h3 class="astro-6felt6qx">Repeating the name</h3><div class="stage astro-6felt6qx" data-scenario="tooltip--label"><span class="tooltip"
+      x-data="slTooltip">
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline" data-size="icon" aria-label="Edit">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+  
+</button>
+  
+  
+
+  <span class="tooltip-content"
+      role="tooltip"
+      popover="manual"
+      aria-hidden="true">Edit<span class="tooltip-arrow" aria-hidden="true"></span></span>
+</span>
+<span class="tooltip"
+      x-data="slTooltip">
+  
+  <button class="btn"
+          type="button"
+          data-variant="outline" data-size="icon" aria-label="Delete">
+  
+  
+  
+  <svg xmlns="http://www.w3.org/2000/svg"
+     class="sl-icon"
+     viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+  
+</button>
+  
+  
+
+  <span class="tooltip-content"
+      role="tooltip"
+      popover="manual"
+      aria-hidden="true">Delete<span class="tooltip-arrow" aria-hidden="true"></span></span>
+</span></div></section></div></body></html>
