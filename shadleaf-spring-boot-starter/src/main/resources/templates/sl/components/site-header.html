@@ -1,0 +1,19 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A header bar: a <code>header</code> laying out its content in a row. Across the top of the page
+      (inside <code>sl:sidebar-provider</code>, before <code>sl:sidebar-inset</code>) it is the header layout's: a
+      <code>sl:sidebar-trigger</code> that opens the menu on a phone, the application's name, the
+      <code>sl:sidebar</code> with <code>placement="header"</code> as a row of links, and the <code>end</code> slot.
+      At the top of <code>sl:sidebar-inset</code> it is the page's header in the sidebar layout: the trigger, a
+      vertical <code>sl:separator</code> and a <code>sl:breadcrumb</code>. The <code>end</code> slot (search, the theme
+      toggle, the signed-in user) goes to the end of the row.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* A banner landmark at the top level of the page; inside the inset's main it is no landmark. */-->
+<header th:fragment="site-header" class="site-header" sl:attrs><sl:slot/><div th:if="${slots.has('end')}"
+    class="site-header-end"><sl:slot name="end"/></div></header>
+</body>
+</html>

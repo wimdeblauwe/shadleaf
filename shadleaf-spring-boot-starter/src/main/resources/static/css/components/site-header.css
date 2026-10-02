@@ -1,0 +1,22 @@
+/*
+  Site header: structure only. Height (--site-header-height), padding, gap, colour and border are identity and live in
+  the skins.
+
+  A row: its content from the start, the end slot pushed to the end. A vertical separator in it is a short line in the
+  middle (as shadcn's page headers), not the full height a separator takes in a flex row. Its height is a minimum, so
+  a breadcrumb that wraps on a narrow screen makes it taller rather than spilling out.
+*/
+@layer components {
+  .site-header {
+    @apply flex w-full min-w-0 shrink-0 items-center;
+    min-block-size: var(--site-header-height);
+  }
+
+  .site-header-end {
+    @apply ms-auto flex shrink-0 items-center;
+  }
+
+  .site-header > .separator[data-orientation='vertical'] {
+    @apply h-4 self-center;
+  }
+}

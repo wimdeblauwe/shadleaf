@@ -22,6 +22,7 @@ export default function sidebarMenuTooltip() {
       const listen = listener(cleanups);
       const collapsedToIcons = () => desktop.matches
           && trigger.closest('.sidebar')?.dataset.collapsible === 'icon'
+          && trigger.closest('.sidebar')?.dataset.placement !== 'header'
           && trigger.closest('.sidebar-provider')?.dataset.state === 'collapsed';
       const self = attachTooltip(trigger, content, {delay: DELAY_MS, describe: false, when: collapsedToIcons}, listen);
       listen(content, 'click', event => {

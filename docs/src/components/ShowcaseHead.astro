@@ -1,0 +1,31 @@
+---
+// The showcase pages' head: the skin's stylesheet and the dark class from the query (?skin=lyra&theme=dark), set
+// before the first paint, and the bundled script, as an application with the default shadleaf.assets.alpine loads it.
+import {previews, withBase} from '../lib/generated';
+
+interface Props {
+  title: string;
+}
+
+const {title} = Astro.props;
+const skins = Object.fromEntries(previews.skins.map(skin => [skin.name, withBase(skin.css)]));
+const firstSkin = previews.skins[0]?.name ?? '';
+const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : undefined;
+---
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{title}</title>
+<link rel="stylesheet" id="shadleaf-skin" href={skins[firstSkin]}>
+<script is:inline define:vars={{skins, firstSkin}}>
+  const params = new URLSearchParams(location.search);
+  const skin = params.get('skin') ?? firstSkin;
+  if (!(skin in skins)) {
+    throw new Error(`Unknown skin ${skin}; known: ${Object.keys(skins).join(', ')}`);
+  }
+  document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
+  document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
+  document.documentElement.dataset.skin = skin;
+</script>
+{script && <script is:inline type="module" src={script}></script>}

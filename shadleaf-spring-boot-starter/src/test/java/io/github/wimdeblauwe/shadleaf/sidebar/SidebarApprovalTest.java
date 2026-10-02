@@ -32,6 +32,8 @@ class SidebarApprovalTest {
         "<sl:sidebar variant=\"sidebar\">Links</sl:sidebar>",
         "<sl:sidebar variant=\"floating\">Links</sl:sidebar>",
         "<sl:sidebar variant=\"inset\" side=\"end\">Links</sl:sidebar>",
+        "<sl:sidebar placement=\"sidebar\">Links</sl:sidebar>",
+        "<sl:sidebar placement=\"header\" variant=\"inset\">Links</sl:sidebar>",
         "<sl:sidebar id=\"docs-nav\" aria-label=\"Documentation\">Links</sl:sidebar>",
         "<sl:sidebar-trigger/>",
         "<sl:sidebar-trigger for=\"docs-nav\" variant=\"outline\" size=\"icon\" aria-label=\"Menu\"/>",
@@ -46,6 +48,24 @@ class SidebarApprovalTest {
               </sl:sidebar>
               <sl:sidebar-inset id="main">
                 <header><sl:sidebar-trigger/></header>
+                <h1>Home</h1>
+              </sl:sidebar-inset>
+            </sl:sidebar-provider>""",
+        """
+            <sl:sidebar-provider>
+              <sl:site-header>
+                <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+                <a href="/">Acme</a>
+                <sl:sidebar placement="header">
+                  <sl:sidebar-header panel-only><a href="/">Acme</a></sl:sidebar-header>
+                  <ul>
+                    <li><a href="/" aria-current="page">Home</a></li>
+                    <li><a href="/people">People</a></li>
+                  </ul>
+                </sl:sidebar>
+                <sl:slot name="end"><button type="button">Search</button></sl:slot>
+              </sl:site-header>
+              <sl:sidebar-inset>
                 <h1>Home</h1>
               </sl:sidebar-inset>
             </sl:sidebar-provider>"""));

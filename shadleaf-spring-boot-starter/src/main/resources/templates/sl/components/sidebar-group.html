@@ -9,6 +9,8 @@
       one it is a plain <code>div</code>.</sl:description>
     <sl:prop name="id">The group's id. Its label gets <code>&lt;id&gt;-label</code>; without an id, each render
       generates one (<code>sl-sidebar-group-</code> and eight random characters).</sl:prop>
+    <sl:prop name="panel-only" type="boolean">Show it only in the phone panel: from 768&nbsp;px it is left out
+      (<code>display: none</code>), so a header row or a sidebar stays short.</sl:prop>
   </sl:props>
 </head>
 <body>
@@ -22,7 +24,8 @@
                 : null}"
      th:attr="id=${props.id},
               role=${slSidebarGroupLabelId != null ? 'group' : null},
-              aria-labelledby=${slSidebarGroupLabelId}"
+              aria-labelledby=${slSidebarGroupLabelId},
+              data-panel-only=${props['panel-only'] ? 'true' : null}"
      sl:attrs><sl:slot/></div>
 </body>
 </html>

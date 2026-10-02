@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Data', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <sl:tabs id="data" th:active="${tab}">
+    <sl:tabs-list aria-label="Data">
+      <sl:tabs-trigger tab="projects" th:href="@{/data(tab='projects')}">Projects</sl:tabs-trigger>
+      <sl:tabs-trigger tab="about" th:href="@{/data(tab='about')}">About</sl:tabs-trigger>
+    </sl:tabs-list>
+    <sl:tabs-content tab="projects">
+      <sl:table>
+        <caption class="visually-hidden">Projects</caption>
+        <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Status</th>
+          <th scope="col" data-align="end">Members</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="project : ${projects}">
+          <td th:text="${project.name}">Marketing site</td>
+          <td><sl:badge th:variant="${project.active ? 'default' : 'secondary'}"
+                        th:text="${project.active ? 'Active' : 'Archived'}">Active</sl:badge></td>
+          <td data-align="end" th:text="${project.members}">4</td>
+        </tr>
+        </tbody>
+      </sl:table>
+    </sl:tabs-content>
+    <sl:tabs-content tab="about">
+      <p>Tabs whose triggers are links: without JavaScript each loads the page with its tab active.</p>
+    </sl:tabs-content>
+  </sl:tabs>
+</div>
+</body>
+</html>

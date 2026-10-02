@@ -89,6 +89,18 @@ class SidebarComponentTest {
   }
 
   @Test
+  void theHeaderPlacementIsRenderedOnlyWhenNotTheDefault() {
+    assertThat(tester.render("<sl:sidebar placement=\"sidebar\">x</sl:sidebar>")).root()
+        .hasNoAttribute("data-placement");
+    assertThat(tester.render("<sl:sidebar placement=\"header\" variant=\"inset\">x</sl:sidebar>")).root()
+        .hasTag("nav")
+        .hasAttribute("popover", "")
+        .hasAttribute("aria-label", "Main")
+        .hasAttribute("data-placement", "header")
+        .hasAttribute("data-variant", "inset");
+  }
+
+  @Test
   void theTriggerIsAnIconButtonThatOpensTheSidebarPanel() {
     Rendered rendered = tester.render("<sl:sidebar-trigger/>");
 

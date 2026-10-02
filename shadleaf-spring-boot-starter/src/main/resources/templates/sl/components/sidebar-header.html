@@ -4,9 +4,14 @@
   <sl:props>
     <sl:description>The top of the <code>sl:sidebar</code>: the application or team, above the
       <code>sl:sidebar-content</code>. It does not scroll with the content.</sl:description>
+    <sl:prop name="panel-only" type="boolean">Show it only in the phone panel: from 768&nbsp;px it is left out
+      (<code>display: none</code>), so a header row or a sidebar stays short.</sl:prop>
   </sl:props>
 </head>
 <body>
-<div th:fragment="sidebar-header" class="sidebar-header" sl:attrs><sl:slot/></div>
+<div th:fragment="sidebar-header"
+     class="sidebar-header"
+     th:attr="data-panel-only=${props['panel-only'] ? 'true' : null}"
+     sl:attrs><sl:slot/></div>
 </body>
 </html>

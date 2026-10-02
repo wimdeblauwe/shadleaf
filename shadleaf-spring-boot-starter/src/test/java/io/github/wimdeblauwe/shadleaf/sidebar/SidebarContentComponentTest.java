@@ -248,4 +248,15 @@ class SidebarContentComponentTest {
     assertThat(tester.render("<sl:%s th:aria-label=\"${'Add'}\">x</sl:%s>".formatted(part, part))).root()
         .hasAttribute("aria-label", "Add");
   }
+
+  @Test
+  void panelOnlyPartsAreMarked() {
+    for (String part : new String[]{"sidebar-header", "sidebar-footer", "sidebar-group", "sidebar-menu-item"}) {
+      assertThat(tester.render("<sl:%s panel-only>x</sl:%s>".formatted(part, part))).root()
+          .hasClassName(part)
+          .hasAttribute("data-panel-only", "true");
+      assertThat(tester.render("<sl:%s>x</sl:%s>".formatted(part, part))).root()
+          .hasNoAttribute("data-panel-only");
+    }
+  }
 }

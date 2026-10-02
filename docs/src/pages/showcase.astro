@@ -4,10 +4,11 @@
 // bundled script, as an application with the default shadleaf.assets.alpine does, so interactive components work.
 //
 //   showcase/?skin=lyra&theme=dark    skin: a skin name (default: the first); theme: light (default) or dark
-import {previews, withBase} from '../lib/generated';
+//
+// The header layout, a second application shell, is on showcase/header/ (a page holds one main).
+import ShowcaseHead from '../components/ShowcaseHead.astro';
+import {previews} from '../lib/generated';
 
-const skins = Object.fromEntries(previews.skins.map(skin => [skin.name, withBase(skin.css)]));
-const firstSkin = previews.skins[0]?.name ?? '';
 // A scenario can stay off the showcase (showcase: false): a toast shown at load would get in other tests' way.
 const scenarios = previews.scenarios.filter(s => s.showcase !== false);
 // An application shell (sl:sidebar-provider) holds the page's <main> and navigation, which cannot sit inside another
@@ -22,28 +23,12 @@ if (shells.length > 1) {
       shells.map(s => s.id).join(', ')}`);
 }
 const components = [...new Set(scenarios.map(s => s.component))];
-const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : undefined;
 ---
 
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>Shadleaf showcase</title>
-  <link rel="stylesheet" id="shadleaf-skin" href={skins[firstSkin]}>
-  <script is:inline define:vars={{skins, firstSkin}}>
-    const params = new URLSearchParams(location.search);
-    const skin = params.get('skin') ?? firstSkin;
-    if (!(skin in skins)) {
-      throw new Error(`Unknown skin ${skin}; known: ${Object.keys(skins).join(', ')}`);
-    }
-    document.getElementById('shadleaf-skin').setAttribute('href', skins[skin]);
-    document.documentElement.classList.toggle('dark', params.get('theme') === 'dark');
-    document.documentElement.dataset.skin = skin;
-  </script>
-  {script && <script is:inline type="module" src={script}></script>}
+  <ShowcaseHead title="Shadleaf showcase"/>
   <style>
     body { padding: 2rem; font-family: system-ui, sans-serif; }
     h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; }
@@ -58,8 +43,6 @@ const script = previews.scripts?.bundled ? withBase(previews.scripts.bundled) : 
     /* An application shell is as tall as the screen; on the showcase, as tall as a few links need. */
     .stage > :global(.sidebar-provider) { min-block-size: 24rem; }
     .stage > :global(.sidebar-provider > .sidebar) { block-size: auto; align-self: stretch; }
-    /* The inset's header as a page lays it out: trigger, vertical separator and breadcrumb in a row. */
-    .stage :global(.sidebar-inset > header) { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; }
   </style>
 </head>
 <body>

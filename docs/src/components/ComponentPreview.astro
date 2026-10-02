@@ -58,8 +58,6 @@ const srcdoc = scenario && skins.length > 0
     /* An application shell is as tall as the screen, which in a frame sized to its content would grow without end. */
     .stage > .sidebar-provider { min-block-size: 20rem; }
     .stage > .sidebar-provider > .sidebar { block-size: auto; align-self: stretch; }
-    /* The inset's header as a page lays it out: trigger, vertical separator and breadcrumb in a row. */
-    .stage .sidebar-inset > header { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; }
     /* A modal dialog is laid out in the frame's viewport: make room for it while one is open. */
     body:has(dialog:modal) { min-block-size: 32rem; }
     /* So is an open menu or popover, below its trigger. A tooltip shows above its trigger: leave room for it. */
@@ -106,7 +104,9 @@ ${resize}
         )}
       </div>
       <div class="sl-docs-preview__stage">
-        <iframe class="sl-docs-preview__frame" loading="lazy" title={`Preview: ${scenario.title ?? id}`} srcdoc={srcdoc}></iframe>
+        <iframe class="sl-docs-preview__frame" loading="lazy" title={`Preview: ${scenario.title ?? id}`} srcdoc={srcdoc}
+                style={scenario.width ? `max-width: ${scenario.width}px` : undefined}
+                data-width={scenario.width ?? undefined}></iframe>
       </div>
       <details class="sl-docs-preview__code">
         <summary>Thymeleaf source</summary>
@@ -179,8 +179,14 @@ ${resize}
   .sl-docs-preview__frame {
     display: block;
     width: 100%;
+    margin-inline: auto;
     height: 5.5rem;
     border: 0;
+  }
+
+  /* A frame as narrow as a phone, outlined so its edges show where the page's column goes on. */
+  .sl-docs-preview__frame[data-width] {
+    border-inline: 1px dashed var(--sl-color-gray-5);
   }
 
   .sl-docs-preview__code {

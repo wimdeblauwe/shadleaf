@@ -131,7 +131,7 @@ class PreviewGeneratorTest {
     }
     assertThat(rendered.html()).as("preview %s", scenario.id()).isNotBlank();
     return new Preview(scenario.id(), scenario.component(), scenario.title(), scenario.description(),
-        scenario.source(), rendered.html().strip(), rendered.normalizedHtml(), scenario.showcase());
+        scenario.source(), rendered.html().strip(), rendered.normalizedHtml(), scenario.showcase(), scenario.width());
   }
 
   /** Every photo in {@code previews/photos/}, by file name without extension, as a data: URI. */
@@ -225,7 +225,8 @@ class PreviewGeneratorTest {
         scenarios.add(new Scenario(id, component, (String) entry.get("title"), (String) entry.get("description"),
             source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form")),
             (Boolean) entry.getOrDefault("showcase", true), (String) entry.get("request"),
-            pages((Map<String, Map<String, Object>>) entry.getOrDefault("pages", Map.of()))));
+            pages((Map<String, Map<String, Object>>) entry.getOrDefault("pages", Map.of())),
+            (Integer) entry.get("width")));
       }
     }
     assertThat(components).as("components with previews in %s", PREVIEWS_DIRECTORY)
@@ -286,7 +287,7 @@ class PreviewGeneratorTest {
    */
   private record Scenario(String id, String component, @Nullable String title, @Nullable String description,
                           String source, String renderSource, @Nullable FormModel form, boolean showcase,
-                          @Nullable String request, Map<String, Object> pages) {
+                          @Nullable String request, Map<String, Object> pages, @Nullable Integer width) {
 
   }
 
@@ -311,7 +312,8 @@ class PreviewGeneratorTest {
    * @param showcase       whether the showcase page shows it
    */
   private record Preview(String id, String component, @Nullable String title, @Nullable String description,
-                         String source, String html, String normalizedHtml, boolean showcase) {
+                         String source, String html, String normalizedHtml, boolean showcase,
+                         @Nullable Integer width) {
 
   }
 

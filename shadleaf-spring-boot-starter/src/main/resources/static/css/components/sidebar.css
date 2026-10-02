@@ -101,22 +101,22 @@
     }
   }
 
-  /* Desktop: a column in the page flow. */
+  /* Desktop: a column in the page flow (the header placement is further down). */
   @media (width >= 48rem) {
-    .sidebar {
+    .sidebar:not([data-placement]) {
       @apply sticky inset-auto top-0 flex h-svh max-h-none max-w-none flex-none self-start border-0 translate-none;
       inline-size: var(--sidebar-width);
     }
 
-    .sidebar:not([data-variant]):not([data-side]) {
+    .sidebar:not([data-variant]):not([data-side]):not([data-placement]) {
       @apply border-e;
     }
 
-    .sidebar[data-side='end'] {
+    .sidebar:not([data-placement])[data-side='end'] {
       @apply order-1;
     }
 
-    .sidebar[data-side='end']:not([data-variant]) {
+    .sidebar:not([data-placement])[data-side='end']:not([data-variant]) {
       @apply border-s;
     }
 
@@ -124,7 +124,7 @@
       Floating: a panel with a margin all round, its footprint as wide as the plain sidebar's (--sidebar-width), so a
       page lays out the same with either.
     */
-    .sidebar[data-variant='floating'] {
+    .sidebar:not([data-placement])[data-variant='floating'] {
       @apply border;
       top: --spacing(2);
       block-size: calc(100svh - --spacing(4));
@@ -133,7 +133,7 @@
     }
 
     /* Inset: no edge of its own, the content inside the same margin the inset card keeps. */
-    .sidebar[data-variant='inset'] {
+    .sidebar:not([data-placement])[data-variant='inset'] {
       @apply p-2;
     }
 
@@ -277,6 +277,74 @@
 
     .sidebar-provider:has(> .sidebar[data-variant='inset']) > .sidebar-inset {
       @apply transition-[margin];
+    }
+  }
+
+  /*
+    The header placement (data-placement="header", inside sl:site-header): the provider stacks the header above the
+    inset. From 768 px the sidebar is a row of links in the header, which takes the room the header leaves and
+    scrolls sideways when its links do not fit (a link that takes the focus scrolls into view). It never collapses,
+    so there is no trigger on a desktop and data-state does not apply (the provider's collapsed rules only reach a
+    sidebar that is its child). In the row: groups and menus run along it, group labels are visually hidden (they
+    still name their groups), icons, group actions, separators and collapsible items are left out, and every entry
+    keeps its width. With variant="inset" the inset is a card below the header. Below 768 px it is the panel above,
+    unchanged.
+  */
+  .sidebar-provider:has(> .site-header) {
+    @apply flex-col;
+  }
+
+  /* In a column the inset stretches across: a full width would add the card's margin to it. */
+  .sidebar-provider:has(> .site-header) > .sidebar-inset {
+    @apply w-auto;
+  }
+
+  @media (width >= 48rem) {
+    .sidebar[data-placement='header'] {
+      @apply static inset-auto flex h-auto max-h-none max-w-none min-w-0 flex-auto flex-row items-center self-stretch
+        overflow-x-auto overflow-y-hidden border-0 bg-transparent translate-none;
+      inline-size: auto;
+      scrollbar-width: thin;
+    }
+
+    .sidebar[data-placement='header'] :is(.sidebar-header, .sidebar-content, .sidebar-footer, .sidebar-group,
+      .sidebar-menu) {
+      @apply w-auto flex-none flex-row items-center overflow-visible p-0;
+    }
+
+    .sidebar[data-placement='header'] .sidebar-group-content {
+      @apply w-auto;
+    }
+
+    .sidebar[data-placement='header'] .sidebar-group-label {
+      @apply sr-only;
+    }
+
+    .sidebar[data-placement='header'] :is(.sidebar-group-action, .sidebar-separator, .sidebar-menu-tooltip,
+      .sidebar-menu-button > svg),
+    .sidebar[data-placement='header'] .sidebar-menu-item:has(> .sidebar-menu-collapsible) {
+      display: none;
+    }
+
+    .sidebar[data-placement='header'] .sidebar-menu-item {
+      @apply flex-none;
+    }
+
+    .sidebar[data-placement='header'] .sidebar-menu-button {
+      @apply w-auto whitespace-nowrap;
+    }
+
+    .sidebar-provider:has(.sidebar[data-placement='header']) .sidebar-trigger {
+      display: none;
+    }
+
+    .sidebar-provider:has(> .site-header > .sidebar[data-variant='inset']) > .sidebar-inset {
+      @apply m-2 mt-0 forced-colors:border forced-colors:border-solid;
+    }
+
+    /* Panel-only parts, in either placement. */
+    .sidebar [data-panel-only] {
+      display: none;
     }
   }
 

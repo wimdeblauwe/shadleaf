@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(pageTitle)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${pageTitle} - Shadleaf Sample App 2|">Shadleaf Sample App 2</title>
+  <!--/* Inline, so the policy must allow it: by this request's nonce, or by the published hash. */-->
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <!--/* The application's own stylesheet: a plain static resource, no Node in this build. */-->
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+</html>

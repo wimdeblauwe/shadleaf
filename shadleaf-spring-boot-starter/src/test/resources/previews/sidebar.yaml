@@ -4,7 +4,10 @@
 # expects Home to be the current page and links to /inbox, /calendar and /settings, a skip link before the provider and
 # a breadcrumb in the inset's header ending in the page "Home", variant="inset" and collapsible="icon" (it sets both
 # itself), a tooltip on every menu button, and a closed collapsible item "Documents" with links to /documents and
-# /documents/shared.
+# /documents/shared. The header layout (scenario header, also at a phone's width as header-phone) is on its own showcase
+# page, /showcase/header/, and docs/tests/sidebar-header.spec.ts builds its fixtures from it: it expects Home to be the
+# current page, links to /inbox, /calendar and /documents in the row, a panel-only header, a panel-only Favorites group
+# and a panel-only footer with /settings and /help.
 component: sidebar
 parts: [sidebar-provider, sidebar-trigger, sidebar-inset, sidebar-header, sidebar-content, sidebar-footer,
         sidebar-separator, sidebar-group, sidebar-group-label, sidebar-group-action, sidebar-group-content,
@@ -129,7 +132,7 @@ scenarios:
           </sl:sidebar-footer>
         </sl:sidebar>
         <sl:sidebar-inset>
-          <header>
+          <sl:site-header>
             <sl:sidebar-trigger/>
             <sl:separator orientation="vertical"/>
             <sl:breadcrumb>
@@ -139,7 +142,7 @@ scenarios:
                 <sl:breadcrumb-item><sl:breadcrumb-page>Home</sl:breadcrumb-page></sl:breadcrumb-item>
               </sl:breadcrumb-list>
             </sl:breadcrumb>
-          </header>
+          </sl:site-header>
           <h1>Home</h1>
           <p>The page's content.</p>
         </sl:sidebar-inset>
@@ -206,9 +209,9 @@ scenarios:
           </sl:sidebar-content>
         </sl:sidebar>
         <sl:sidebar-inset>
-          <header>
+          <sl:site-header>
             <sl:sidebar-trigger for="sidebar-buttons"/>
-          </header>
+          </sl:site-header>
           <h1>Menu buttons</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>
@@ -239,9 +242,9 @@ scenarios:
           </sl:sidebar-content>
         </sl:sidebar>
         <sl:sidebar-inset>
-          <header>
+          <sl:site-header>
             <sl:sidebar-trigger for="sidebar-end"/>
-          </header>
+          </sl:site-header>
           <h1>Home</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>
@@ -271,9 +274,9 @@ scenarios:
           </sl:sidebar-content>
         </sl:sidebar>
         <sl:sidebar-inset>
-          <header>
+          <sl:site-header>
             <sl:sidebar-trigger for="sidebar-collapsed"/>
-          </header>
+          </sl:site-header>
           <h1>Home</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>
@@ -306,9 +309,9 @@ scenarios:
           </sl:sidebar-content>
         </sl:sidebar>
         <sl:sidebar-inset>
-          <header>
+          <sl:site-header>
             <sl:sidebar-trigger for="sidebar-floating"/>
-          </header>
+          </sl:site-header>
           <h1>Floating</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>
@@ -380,9 +383,9 @@ scenarios:
           </sl:sidebar-content>
         </sl:sidebar>
         <sl:sidebar-inset>
-          <header>
+          <sl:site-header>
             <sl:sidebar-trigger for="sidebar-icon"/>
-          </header>
+          </sl:site-header>
           <h1>Billing</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>
@@ -449,9 +452,129 @@ scenarios:
           </sl:sidebar-content>
         </sl:sidebar>
         <sl:sidebar-inset>
-          <header>
+          <sl:site-header>
             <sl:sidebar-trigger for="sidebar-sub"/>
-          </header>
+          </sl:site-header>
           <h1>Billing</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>
+  - id: header
+    title: Header layout
+    description: >-
+      placement="header" puts the same navigation in a sl:site-header: from 768 px a row of links (the current page
+      marked as in the sidebar), with the application's name before it and search and the theme toggle at the end.
+      Favorites, Settings and Help are panel-only, so the row stays short; the panel's own header with the name is
+      panel-only too. variant="inset" makes the page a card below the header. Narrower, the menu button opens the
+      same nav as the panel: see the next example.
+    showcase: false
+    request: /
+    source: &header-source |-
+      <sl:skip-link/>
+      <sl:sidebar-provider>
+        <sl:site-header>
+          <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+          <sl:button as="a" href="/" variant="ghost">
+            <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+            Acme Inc.
+          </sl:button>
+          <sl:sidebar placement="header" variant="inset">
+            <sl:sidebar-header panel-only>
+              <sl:sidebar-menu>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button href="/" size="lg">
+                    <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+                    <strong>Acme Inc.</strong>
+                    <small>Enterprise</small>
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+              </sl:sidebar-menu>
+            </sl:sidebar-header>
+            <sl:sidebar-content>
+              <sl:sidebar-group>
+                <sl:sidebar-group-content>
+                  <sl:sidebar-menu>
+                    <sl:sidebar-menu-item>
+                      <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}">
+                        <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                        Home
+                      </sl:sidebar-menu-button>
+                    </sl:sidebar-menu-item>
+                    <sl:sidebar-menu-item id="header-inbox">
+                      <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
+                        <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+                        Inbox
+                      </sl:sidebar-menu-button>
+                      <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
+                    </sl:sidebar-menu-item>
+                    <sl:sidebar-menu-item>
+                      <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}">
+                        <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
+                        Calendar
+                      </sl:sidebar-menu-button>
+                    </sl:sidebar-menu-item>
+                    <sl:sidebar-menu-item>
+                      <sl:sidebar-menu-button href="/documents" th:active="${#slNav.current('/documents')}">
+                        <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                        Documents
+                      </sl:sidebar-menu-button>
+                    </sl:sidebar-menu-item>
+                  </sl:sidebar-menu>
+                </sl:sidebar-group-content>
+              </sl:sidebar-group>
+              <sl:sidebar-group id="favorites" panel-only>
+                <sl:sidebar-group-label>Favorites</sl:sidebar-group-label>
+                <sl:sidebar-group-content>
+                  <sl:sidebar-menu>
+                    <sl:sidebar-menu-item>
+                      <sl:sidebar-menu-button href="/projects/marketing">
+                        <sl:slot name="icon-start"><sl:icon name="globe"/></sl:slot>
+                        Marketing site
+                      </sl:sidebar-menu-button>
+                    </sl:sidebar-menu-item>
+                    <sl:sidebar-menu-item>
+                      <sl:sidebar-menu-button href="/projects/android">
+                        <sl:slot name="icon-start"><sl:icon name="smartphone"/></sl:slot>
+                        Android app
+                      </sl:sidebar-menu-button>
+                    </sl:sidebar-menu-item>
+                  </sl:sidebar-menu>
+                </sl:sidebar-group-content>
+              </sl:sidebar-group>
+            </sl:sidebar-content>
+            <sl:sidebar-footer panel-only>
+              <sl:sidebar-menu>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}">
+                    <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                    Settings
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button href="/help" size="sm">
+                    <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+                    Help
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+              </sl:sidebar-menu>
+            </sl:sidebar-footer>
+          </sl:sidebar>
+          <sl:slot name="end">
+            <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
+            <sl:theme-toggle/>
+          </sl:slot>
+        </sl:site-header>
+        <sl:sidebar-inset>
+          <h1>Home</h1>
+          <p>The page's content.</p>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+  - id: header-phone
+    title: Header layout on a phone
+    description: >-
+      The same markup in a frame 390 px wide: the row is gone and the menu button opens the nav as a panel, with the
+      panel-only parts (the name, Favorites, Settings and Help) in it. The panel takes the focus and makes the page
+      behind it inert; Escape, a click outside or a followed link closes it.
+    showcase: false
+    request: /
+    width: 390
+    source: *header-source

@@ -2477,7 +2477,7 @@
         } ]
       }, {
         "name" : "sl:sidebar",
-        "description" : "The application's navigation, inside `sl:sidebar-provider`. One element serves both widths: from 768&nbsp;px up it is a column beside the page, which the trigger collapses and expands; below that it is a panel over the page, which the trigger opens. It is a `nav` named \"Main\" (`sl.sidebar.label`; an `aria-label` replaces it) and a popover: the browser opens the panel in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open panel and makes the rest of the page inert, and closes it when a link in it is followed. It holds `sl:sidebar-header`, `sl:sidebar-content` (groups of menus) and `sl:sidebar-footer`.",
+        "description" : "The application's navigation, inside `sl:sidebar-provider`. One element serves both widths: from 768&nbsp;px up it is a column beside the page, which the trigger collapses and expands; below that it is a panel over the page, which the trigger opens. It is a `nav` named \"Main\" (`sl.sidebar.label`; an `aria-label` replaces it) and a popover: the browser opens the panel in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open panel and makes the rest of the page inert, and closes it when a link in it is followed. It holds `sl:sidebar-header`, `sl:sidebar-content` (groups of menus) and `sl:sidebar-footer`. With `placement=\"header\"` it goes inside `sl:site-header` instead, where from 768&nbsp;px it is a row of links; on a phone it is the same panel.",
         "attributes" : [ {
           "name" : "id",
           "description" : "The id the trigger points at (`sl:sidebar-trigger`'s `for`).",
@@ -2501,8 +2501,22 @@
           } ],
           "default" : "start"
         }, {
+          "name" : "placement",
+          "description" : "Where it sits on a desktop: `sidebar` is a column beside the page; `header` a row of links inside `sl:site-header` (the header layout), which never collapses: `collapsible`, the collapsed state and the trigger do not apply there (the trigger is hidden), and `side` only picks the phone panel's edge. Collapsible items and the parts marked `panel-only` are left out of the row; the phone panel is the same for both.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sidebar"
+          }, {
+            "name" : "header"
+          } ],
+          "default" : "sidebar"
+        }, {
           "name" : "variant",
-          "description" : "How it looks on a desktop: `sidebar` is a column along the edge with a border; `floating` a panel with a margin all round; `inset` lays the sidebar's ground around the page, which (`sl:sidebar-inset`) becomes a card on it. The phone panel looks the same for all three.",
+          "description" : "How it looks on a desktop: `sidebar` is a column along the edge with a border; `floating` a panel with a margin all round; `inset` lays the sidebar's ground around the page, which (`sl:sidebar-inset`) becomes a card on it. The phone panel looks the same for all three. In the header placement only `inset` counts: the page becomes a card below the header.",
           "value" : {
             "kind" : "plain",
             "type" : "enum",
@@ -2547,6 +2561,13 @@
             "required" : false
           }
         }, {
+          "name" : "th:placement",
+          "description" : "`placement` from a Thymeleaf expression, e.g. `th:placement=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
           "name" : "th:variant",
           "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
           "value" : {
@@ -2568,7 +2589,21 @@
       }, {
         "name" : "sl:sidebar-footer",
         "description" : "The bottom of the `sl:sidebar`: settings, help or the signed-in user, below the `sl:sidebar-content`. It does not scroll with the content.",
-        "attributes" : [ ]
+        "attributes" : [ {
+          "name" : "panel-only",
+          "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:panel-only",
+          "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:sidebar-group",
         "description" : "A section of the `sl:sidebar`'s links: an optional `sl:sidebar-group-label` and `sl:sidebar-group-action`, then `sl:sidebar-group-content` with a `sl:sidebar-menu`. With a label it is a group named by that label (`role=\"group\"`, `aria-labelledby`), so a screen reader says \"Platform, group\" when the focus moves into it; without one it is a plain `div`.",
@@ -2580,8 +2615,22 @@
             "required" : false
           }
         }, {
+          "name" : "panel-only",
+          "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
           "name" : "th:id",
           "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:panel-only",
+          "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -2646,7 +2695,21 @@
       }, {
         "name" : "sl:sidebar-header",
         "description" : "The top of the `sl:sidebar`: the application or team, above the `sl:sidebar-content`. It does not scroll with the content.",
-        "attributes" : [ ]
+        "attributes" : [ {
+          "name" : "panel-only",
+          "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:panel-only",
+          "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:sidebar-inset",
         "description" : "The page's main content beside the `sl:sidebar`: the `main` element, which takes the rest of the width. Put the page header with the `sl:sidebar-trigger` at its top. It is the target of a `sl:skip-link`: `tabindex=\"-1\"` lets the link move the focus to it.",
@@ -2909,6 +2972,13 @@
             "required" : false
           }
         }, {
+          "name" : "panel-only",
+          "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
           "name" : "th:id",
           "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
           "value" : {
@@ -2925,6 +2995,13 @@
         }, {
           "name" : "th:open",
           "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:panel-only",
+          "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -3157,6 +3234,10 @@
             "required" : false
           }
         } ]
+      }, {
+        "name" : "sl:site-header",
+        "description" : "A header bar: a `header` laying out its content in a row. Across the top of the page (inside `sl:sidebar-provider`, before `sl:sidebar-inset`) it is the header layout's: a `sl:sidebar-trigger` that opens the menu on a phone, the application's name, the `sl:sidebar` with `placement=\"header\"` as a row of links, and the `end` slot. At the top of `sl:sidebar-inset` it is the page's header in the sidebar layout: the trigger, a vertical `sl:separator` and a `sl:breadcrumb`. The `end` slot (search, the theme toggle, the signed-in user) goes to the end of the row.",
+        "attributes" : [ ]
       }, {
         "name" : "sl:skeleton",
         "description" : "A placeholder that pulses while content loads. It is hidden from assistive technology; mark the region that is loading with `aria-busy=\"true\"` instead. Give it the size of what it stands in for with a class of your own.",

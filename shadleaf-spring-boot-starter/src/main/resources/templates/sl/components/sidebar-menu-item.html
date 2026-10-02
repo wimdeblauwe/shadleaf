@@ -17,6 +17,8 @@
       hide them with the sub-menu.</sl:prop>
     <sl:prop name="open" type="boolean">Render a collapsible item open, for instance when it holds the current page:
       <code>th:open="${#slNav.current('/settings')}"</code>.</sl:prop>
+    <sl:prop name="panel-only" type="boolean">Show it only in the phone panel: from 768&nbsp;px it is left out
+      (<code>display: none</code>), so a header row or a sidebar stays short.</sl:prop>
   </sl:props>
 </head>
 <body>
@@ -29,7 +31,8 @@
                ? (props.id ?: 'sl-sidebar-menu-item-' + #strings.randomAlphanumeric(8).toLowerCase()) + '-badge'
                : null},
              slSidebarMenuCollapsible=${props.collapsible}"
-    th:attr="id=${props.id}"
+    th:attr="id=${props.id},
+             data-panel-only=${props['panel-only'] ? 'true' : null}"
     sl:attrs><details th:if="${props.collapsible}"
                       class="sidebar-menu-collapsible"
                       th:attr="open=${props.open ? 'open' : null}"><sl:slot/></details><th:block

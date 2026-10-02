@@ -18,10 +18,13 @@ class SidebarContentApprovalTest {
   void contentParts() {
     HtmlApproval.verifyRenders("sidebar-content", tester, List.of(
         "<sl:sidebar-header>Acme</sl:sidebar-header>",
+        "<sl:sidebar-header panel-only>Acme</sl:sidebar-header>",
         "<sl:sidebar-content>Groups</sl:sidebar-content>",
         "<sl:sidebar-footer>Help</sl:sidebar-footer>",
+        "<sl:sidebar-footer panel-only>Help</sl:sidebar-footer>",
         "<sl:sidebar-separator/>",
         "<sl:sidebar-group>Content</sl:sidebar-group>",
+        "<sl:sidebar-group panel-only>Content</sl:sidebar-group>",
         "<sl:sidebar-group id=\"platform\"><sl:sidebar-group-label>Platform</sl:sidebar-group-label></sl:sidebar-group>",
         "<sl:sidebar-group-label>Platform</sl:sidebar-group-label>",
         "<sl:sidebar-group-action aria-label=\"Add project\"><sl:icon name=\"plus\"/></sl:sidebar-group-action>",
@@ -31,6 +34,7 @@ class SidebarContentApprovalTest {
         "<sl:sidebar-menu>Items</sl:sidebar-menu>",
         "<sl:sidebar-menu-item>Button</sl:sidebar-menu-item>",
         "<sl:sidebar-menu-item id=\"inbox\">Button</sl:sidebar-menu-item>",
+        "<sl:sidebar-menu-item panel-only>Button</sl:sidebar-menu-item>",
         "<sl:sidebar-menu-button href=\"/\">Home</sl:sidebar-menu-button>",
         "<sl:sidebar-menu-button as=\"a\" href=\"/\">Home</sl:sidebar-menu-button>",
         "<sl:sidebar-menu-button as=\"button\">Compose</sl:sidebar-menu-button>",

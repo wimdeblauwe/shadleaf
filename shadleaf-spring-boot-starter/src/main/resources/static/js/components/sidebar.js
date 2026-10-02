@@ -9,6 +9,8 @@
     link followed right after sees it). Not a sidebar with collapsible="none";
   - collapsed to icons (collapsible="icon"), a click on a collapsible item's button (its summary) expands the sidebar
     and opens the item, instead of opening a sub-menu the icon strip hides;
+  - a sidebar with placement="header" is a row of links in the site header there: it never collapses (the trigger is
+    hidden by CSS and Ctrl/Cmd+B does nothing), and its trigger has neither popovertarget nor aria-expanded;
   - the trigger loses popovertarget (browsers would report it as collapsed from the closed popover, and ignore an
     explicit aria-expanded) and gets aria-expanded from data-state; it gets popovertarget back below 768 px. The
     trigger keeps aria-controls, which is how this finds it at both widths, also after htmx swapped it.
@@ -66,13 +68,17 @@ export default function sidebar() {
           : [];
       const isOpen = sidebar => sidebar.matches(':popover-open');
       const state = () => provider.dataset.state === 'collapsed' ? 'collapsed' : 'expanded';
-      const collapsible = sidebar => sidebar.dataset.collapsible ?? 'offcanvas';
+      const inHeader = sidebar => sidebar.dataset.placement === 'header';
+      const collapsible = sidebar => inHeader(sidebar) ? 'none' : sidebar.dataset.collapsible ?? 'offcanvas';
 
       const syncTriggers = () => {
         const sidebar = sidebarOf();
         for (const trigger of triggersOf(sidebar)) {
           trigger.setAttribute('aria-controls', sidebar.id);
-          if (desktop.matches) {
+          if (desktop.matches && inHeader(sidebar)) {
+            trigger.removeAttribute('popovertarget');
+            trigger.removeAttribute('aria-expanded');
+          } else if (desktop.matches) {
             trigger.removeAttribute('popovertarget');
             trigger.setAttribute('aria-expanded', String(state() === 'expanded'));
           } else {

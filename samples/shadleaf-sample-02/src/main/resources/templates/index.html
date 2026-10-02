@@ -6,7 +6,8 @@
 <body>
 <div id="page-content">
   <p>Signed in as <strong th:text="${username}">user</strong>. The page's Content-Security-Policy allows no inline
-    script or style; open the browser console to confirm nothing was blocked.</p>
+    script or style; open the browser console to confirm nothing was blocked. The header holds the application's pages
+    as a row of links; on a narrow screen the menu button opens them as a panel, with Settings and Help too.</p>
 
   <div class="row">
     <sl:button th:each="variant : ${ {'default', 'outline', 'ghost', 'destructive', 'secondary', 'link'} }"
@@ -17,13 +18,6 @@
     <sl:button size="icon" variant="outline" aria-label="Delete"><sl:icon name="trash"/></sl:button>
     <sl:button as="a" variant="link" th:href="@{/}">Reload</sl:button>
   </div>
-
-  <form method="post" th:action="@{/logout}">
-    <sl:button type="submit" variant="outline">
-      <sl:slot name="icon-start"><sl:icon name="log-out"/></sl:slot>
-      Sign out
-    </sl:button>
-  </form>
 </div>
 </body>
 </html>

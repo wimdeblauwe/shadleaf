@@ -9,15 +9,23 @@
       in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open
       panel and makes the rest of the page inert, and closes it when a link in it is followed. It holds
       <code>sl:sidebar-header</code>, <code>sl:sidebar-content</code> (groups of menus) and
-      <code>sl:sidebar-footer</code>.</sl:description>
+      <code>sl:sidebar-footer</code>. With <code>placement="header"</code> it goes inside <code>sl:site-header</code>
+      instead, where from 768&nbsp;px it is a row of links; on a phone it is the same panel.</sl:description>
     <sl:prop name="id" default="sidebar">The id the trigger points at (<code>sl:sidebar-trigger</code>'s
       <code>for</code>).</sl:prop>
     <sl:prop name="side" default="start" values="start end">The edge it sits on: the start of a line (the left, or the
       right on a right-to-left page) or the end.</sl:prop>
+    <sl:prop name="placement" default="sidebar" values="sidebar header">Where it sits on a desktop:
+      <code>sidebar</code> is a column beside the page; <code>header</code> a row of links inside
+      <code>sl:site-header</code> (the header layout), which never collapses: <code>collapsible</code>, the collapsed
+      state and the trigger do not apply there (the trigger is hidden), and <code>side</code> only picks the phone
+      panel's edge. Collapsible items and the parts marked <code>panel-only</code> are left out of the row; the phone
+      panel is the same for both.</sl:prop>
     <sl:prop name="variant" default="sidebar" values="sidebar floating inset">How it looks on a desktop:
       <code>sidebar</code> is a column along the edge with a border; <code>floating</code> a panel with a
       margin all round; <code>inset</code> lays the sidebar's ground around the page, which
-      (<code>sl:sidebar-inset</code>) becomes a card on it. The phone panel looks the same for all three.</sl:prop>
+      (<code>sl:sidebar-inset</code>) becomes a card on it. The phone panel looks the same for all three. In the
+      header placement only <code>inset</code> counts: the page becomes a card below the header.</sl:prop>
     <sl:prop name="collapsible" default="offcanvas" values="offcanvas icon none">How it collapses on a desktop:
       <code>offcanvas</code> moves it out of view entirely; <code>icon</code> narrows it to a strip of its menu
       buttons' icons (labels, badges, actions and sub-menus hidden; a menu button's <code>tooltip</code> shows its
@@ -33,6 +41,7 @@
      th:id="${props.id}"
      popover
      th:attr="aria-label=#{sl.sidebar.label},
+              data-placement=${props.unlessDefault('placement')},
               data-side=${props.unlessDefault('side')},
               data-variant=${props.unlessDefault('variant')},
               data-collapsible=${props.unlessDefault('collapsible')}"

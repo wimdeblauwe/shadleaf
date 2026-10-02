@@ -1025,6 +1025,34 @@
   }
 
   /*
+    Site header, after shadcn's page headers (sidebar-16's site header, sidebar-07's inset header): 3.5rem high,
+    px-4, gap-2. Across the top of the page it is the page's ground with a border below; inside the inset, or above an
+    inset card (it then lies on the sidebar's ground), it has neither. The trigger sits a little outside the padding,
+    and a vertical separator keeps some room before what follows.
+  */
+  .site-header {
+    --site-header-height: 3.5rem;
+    @apply gap-2 border-b border-border bg-background px-4;
+  }
+
+  .sidebar-inset > .site-header,
+  .sidebar-provider > .site-header:has(> .sidebar[data-variant='inset']) {
+    @apply border-b-0 bg-transparent;
+  }
+
+  .site-header-end {
+    @apply gap-2;
+  }
+
+  .site-header > .sidebar-trigger {
+    @apply -ms-1;
+  }
+
+  .site-header > .separator[data-orientation='vertical'] {
+    @apply me-2;
+  }
+
+  /*
     Sidebar. shadcn's widths: 16rem beside the page, 18rem as the panel on a phone. The sidebar has its own colours
     (--sidebar*), the inset the page's.
   */
@@ -1055,11 +1083,11 @@
     @apply md:rounded-lg md:shadow-sm;
   }
 
-  .sidebar-provider:has(> .sidebar[data-variant='inset']) {
+  .sidebar-provider:has(> .sidebar[data-variant='inset'], > .site-header > .sidebar[data-variant='inset']) {
     @apply bg-sidebar;
   }
 
-  .sidebar-provider:has(> .sidebar[data-variant='inset']) > .sidebar-inset {
+  .sidebar-provider:has(> .sidebar[data-variant='inset'], > .site-header > .sidebar[data-variant='inset']) > .sidebar-inset {
     @apply duration-200 ease-linear md:rounded-xl md:shadow-sm;
   }
 

@@ -1,0 +1,21 @@
+# Scenarios for the site header's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# The header layout (a sl:sidebar with placement="header" inside it) and the sidebar layout's inset header are
+# scenarios of sidebar.yaml: an application shell holds the page's main, and the showcase has room for one.
+component: site-header
+scenarios:
+  - id: default
+    title: Site header
+    description: >-
+      A header bar: its content in a row from the start, the end slot at the end. Across the top of a page it has the
+      page's ground and a border below.
+    source: |-
+      <sl:site-header>
+        <sl:button as="a" href="/" variant="ghost">
+          <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+          Acme Inc.
+        </sl:button>
+        <sl:slot name="end">
+          <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
+          <sl:button variant="outline" size="sm">Sign in</sl:button>
+        </sl:slot>
+      </sl:site-header>

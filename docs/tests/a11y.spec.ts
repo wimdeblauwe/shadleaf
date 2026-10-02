@@ -1,7 +1,7 @@
 import {expect, test} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import axe, {type Result} from 'axe-core';
-import {combinations, openShowcase, widths} from './showcase';
+import {combinations, openShowcase, showcasePages, widths} from './showcase';
 
 // axe-core over every preview scenario, in each skin, light and dark: contrast, names, roles, ARIA. It does not check
 // that focus is visible; focus.spec.ts does.
@@ -13,65 +13,67 @@ function describe(violations: Result[]): string[] {
 }
 for (const {skin, theme} of combinations) {
   for (const width of widths) {
-    test(`showcase has no axe violations: ${skin}, ${theme}, ${width.name}`, async ({page}) => {
-      await page.setViewportSize(width.viewport);
-      await openShowcase(page, skin, theme);
+    for (const showcase of showcasePages) {
+      test(`showcase has no axe violations: ${skin}, ${theme}, ${width.name}, ${showcase.name}`, async ({page}) => {
+        await page.setViewportSize(width.viewport);
+        await openShowcase(page, skin, theme, showcase.path);
 
-      const results = await new AxeBuilder({page})
-          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
-          .analyze();
+        const results = await new AxeBuilder({page})
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
+            .analyze();
 
-      const summary = describe(results.violations);
-      expect(summary, summary.join('\n')).toEqual([]);
-    });
+        const summary = describe(results.violations);
+        expect(summary, summary.join('\n')).toEqual([]);
+      });
 
-    // axe sees the resting state only. A hover background is a different colour, so check the text on it as well: a real
-    // hover per control (styles from a hovered ancestor count too), then axe on that control alone. axe is injected once
-    // and run in the page directly; an AxeBuilder per control injects and sets it up again every time (~100 ms each).
-    test(`text keeps its contrast on hover: ${skin}, ${theme}, ${width.name}`, async ({page}) => {
-      await page.setViewportSize(width.viewport);
-      await openShowcase(page, skin, theme);
-      // evaluate, not addScriptTag: a page's Content-Security-Policy does not apply to it
-      await page.evaluate(axe.source);
-      // Every enabled link and button: only an interactive element has a hover state of its own. Those in a closed
-      // dialog or popover cannot be hovered; dialog.spec.ts and popup.spec.ts check them open, as disclosure.spec.ts and
-      // tabs.spec.ts check closed sections and inactive panels. The button of a customizable
-      // select is part of the select, not a control of its own.
-      // The shell scenario (the sidebar) follows the showcase region; on a desktop its popover is closed but shown in
-      // the page, so a closed popover only counts when it is no sidebar.
-      const controls = page.locator(
-          ':is(.showcase, .sidebar-provider) :is(a[href], button):not([disabled]):not([aria-disabled])'
-          + ':not(select > button)'
-          + ':not(dialog:not([open]) *):not([popover]:not(:popover-open):not(.sidebar) *)'
-          // Nor those in a closed details element (accordion, collapsible) or an inactive tab panel.
-          + ':not(details:not([open]) > :not(summary) *):not([hidden] *)');
-      const count = await controls.count();
-      const failures: string[] = [];
-      for (let i = 0; i < count; i++) {
-        const control = controls.nth(i);
-        // Nor those not shown at this width: the links of the closed sidebar panel on a phone.
-        if (!await control.evaluate(element => element.checkVisibility())) {
-          continue;
+      // axe sees the resting state only. A hover background is a different colour, so check the text on it as well: a real
+      // hover per control (styles from a hovered ancestor count too), then axe on that control alone. axe is injected once
+      // and run in the page directly; an AxeBuilder per control injects and sets it up again every time (~100 ms each).
+      test(`text keeps its contrast on hover: ${skin}, ${theme}, ${width.name}, ${showcase.name}`, async ({page}) => {
+        await page.setViewportSize(width.viewport);
+        await openShowcase(page, skin, theme, showcase.path);
+        // evaluate, not addScriptTag: a page's Content-Security-Policy does not apply to it
+        await page.evaluate(axe.source);
+        // Every enabled link and button: only an interactive element has a hover state of its own. Those in a closed
+        // dialog or popover cannot be hovered; dialog.spec.ts and popup.spec.ts check them open, as disclosure.spec.ts and
+        // tabs.spec.ts check closed sections and inactive panels. The button of a customizable
+        // select is part of the select, not a control of its own.
+        // The shell scenario (the sidebar) follows the showcase region; on a desktop its popover is closed but shown in
+        // the page, so a closed popover only counts when it is no sidebar.
+        const controls = page.locator(
+            ':is(.showcase, .sidebar-provider) :is(a[href], button):not([disabled]):not([aria-disabled])'
+            + ':not(select > button)'
+            + ':not(dialog:not([open]) *):not([popover]:not(:popover-open):not(.sidebar) *)'
+            // Nor those in a closed details element (accordion, collapsible) or an inactive tab panel.
+            + ':not(details:not([open]) > :not(summary) *):not([hidden] *)');
+        const count = await controls.count();
+        const failures: string[] = [];
+        for (let i = 0; i < count; i++) {
+          const control = controls.nth(i);
+          // Nor those not shown at this width: the links of the closed sidebar panel on a phone.
+          if (!await control.evaluate(element => element.checkVisibility())) {
+            continue;
+          }
+          await control.evaluate(element => element.setAttribute('data-hovered', ''));
+          // A skip link is only drawn while it has the focus.
+          if (await control.evaluate(element => element.matches('.skip-link'))) {
+            await control.focus();
+          }
+          await control.hover();
+          // window.axe, not the imported binding: the function runs in the page, where the import does not exist
+          const violations = await page.evaluate(async () => {
+            const results = await (window as unknown as {axe: typeof axe}).axe.run(
+                {include: [['[data-hovered]']]}, {runOnly: {type: 'rule', values: ['color-contrast']}});
+            return results.violations;
+          });
+          failures.push(...describe(violations));
+          await control.evaluate(element => {
+            element.removeAttribute('data-hovered');
+            (element as HTMLElement).blur();
+          });
         }
-        await control.evaluate(element => element.setAttribute('data-hovered', ''));
-        // A skip link is only drawn while it has the focus.
-        if (await control.evaluate(element => element.matches('.skip-link'))) {
-          await control.focus();
-        }
-        await control.hover();
-        // window.axe, not the imported binding: the function runs in the page, where the import does not exist
-        const violations = await page.evaluate(async () => {
-          const results = await (window as unknown as {axe: typeof axe}).axe.run(
-              {include: [['[data-hovered]']]}, {runOnly: {type: 'rule', values: ['color-contrast']}});
-          return results.violations;
-        });
-        failures.push(...describe(violations));
-        await control.evaluate(element => {
-          element.removeAttribute('data-hovered');
-          (element as HTMLElement).blur();
-        });
-      }
-      expect(failures, failures.join('\n')).toEqual([]);
-    });
+        expect(failures, failures.join('\n')).toEqual([]);
+      });
+    }
   }
 }

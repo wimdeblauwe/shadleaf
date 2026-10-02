@@ -2,26 +2,57 @@
  * The application's own stylesheet: plain CSS, served as a static file. It uses Shadleaf's tokens (--border,
  * --radius, ...), so it follows the theme. Unlayered, so it wins over the library's layered rules.
  */
-main {
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+body {
   font-family: system-ui, sans-serif;
   line-height: 1.5;
 }
 
-.page-header {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
+/* The page's content: in the inset card below the header, or on its own on the sign-in page. */
+.page {
+  max-width: 48rem;
+  padding: 1.5rem 1rem 2rem;
 }
 
-h1 {
+.plain-page {
+  margin: 0 auto;
+}
+
+.page > h1 {
   font-size: 1.75rem;
   font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* The application's logo in the panel's large menu button. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+
+.app-logo > svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.form {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 28rem;
 }
 
 .row {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Forms', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>Form controls bound with <code>th:field</code>, under the strict policy. The plan is a <code>sl:select</code>: the
+    browser's customizable select where it has one, a list box built by the csp Alpine build elsewhere. Submit it
+    without a name to see an error; a valid submit comes back with a toast.</p>
+
+  <form class="form" th:object="${profileForm}" th:action="@{/forms}" method="post" novalidate>
+    <sl:form-errors autofocus/>
+    <sl:field-group>
+      <sl:field th:field="*{name}">
+        <sl:field-label>Name</sl:field-label>
+        <sl:input autocomplete="name"/>
+        <sl:field-error/>
+      </sl:field>
+      <sl:field th:field="*{email}">
+        <sl:field-label>Email</sl:field-label>
+        <sl:input type="email" autocomplete="email"/>
+        <sl:field-description>Shown to your team only.</sl:field-description>
+      </sl:field>
+      <sl:field th:field="*{plan}">
+        <sl:field-label>Plan</sl:field-label>
+        <sl:select>
+          <sl:select-item th:each="plan : ${plans}" th:value="${plan}" th:text="${#strings.capitalize(plan)}">Free</sl:select-item>
+        </sl:select>
+      </sl:field>
+      <sl:field th:field="*{newsletter}">
+        <sl:label><sl:checkbox/> Send me the monthly newsletter</sl:label>
+      </sl:field>
+    </sl:field-group>
+    <div class="row">
+      <sl:button type="submit">Save</sl:button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

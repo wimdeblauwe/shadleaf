@@ -13,14 +13,10 @@ p { margin: 0 0 0.75rem; }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.875em; }
 
 /*
-  The shell (layout/main.html). Shadleaf draws the sidebar and the inset; the header in the inset and the page's padding
-  are the application's, as in shadcn/ui's sidebar-07: a 4rem row with the trigger, a short vertical separator and the
-  breadcrumb, the page below it with 1rem round it.
+  The shell (layout/main.html). Shadleaf draws the sidebar, the inset and the header in it (sl:site-header: the trigger,
+  a short vertical separator and the breadcrumb, as in shadcn/ui's sidebar-07); the page's padding is the
+  application's: 1rem round it below the header.
 */
-.inset-header { display: flex; align-items: center; gap: 0.5rem; block-size: 4rem; flex-shrink: 0; padding-inline: 1rem; }
-.inset-header > .sidebar-trigger { margin-inline-start: -0.25rem; }
-.inset-header > .separator { block-size: 1rem; align-self: center; margin-inline-end: 0.5rem; }
-.inset-header-end { margin-inline-start: auto; }
 .page { padding: 0 1rem 1rem; }
 .page > h1 { margin-block-end: 1rem; }
 /* The application's logo in the sidebar's large menu button. */

@@ -1,0 +1,28 @@
+---
+// The header layout (sidebar.yaml's header scenario) alone, as a page: a second application shell, which cannot share
+// the showcase page with the sidebar layout's (a page holds one main and one skip link). The same checks run here as on
+// the showcase (tests/showcase.ts lists both pages).
+//
+//   showcase/header/?skin=lyra&theme=dark
+import ShowcaseHead from '../../components/ShowcaseHead.astro';
+import {previews} from '../../lib/generated';
+
+const scenario = previews.scenarios.find(s => s.id === 'sidebar--header');
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <ShowcaseHead title="Shadleaf showcase: header layout"/>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; }
+    .stage :global(.sidebar-inset) { padding: 1rem 1.5rem; }
+    .stage :global(.sidebar-inset h1) { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+{scenario
+  ? <div class="showcase stage" data-scenario={scenario.id} set:html={scenario.html}/>
+  : <main><h1>No previews</h1><p>Run <code>pnpm run generate</code> in docs/.</p></main>}
+</body>
+</html>

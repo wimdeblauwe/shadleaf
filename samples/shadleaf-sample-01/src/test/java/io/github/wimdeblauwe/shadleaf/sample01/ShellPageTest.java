@@ -99,16 +99,16 @@ class ShellPageTest {
 
   @Test
   void theHeaderHoldsTheTriggerSeparatorBreadcrumbAndThemeToggle() throws Exception {
-    Element header = page(get("/form")).selectFirst("main#main > header.inset-header");
+    Element header = page(get("/form")).selectFirst("main#main > header.site-header");
 
     assertThat(header).isNotNull();
     assertThat(header.children().stream().map(Element::className))
-        .containsExactly("btn sidebar-trigger", "separator", "breadcrumb", "inset-header-end");
+        .containsExactly("btn sidebar-trigger", "separator", "breadcrumb", "site-header-end");
     Element trigger = header.selectFirst(".sidebar-trigger");
     assertThat(trigger.attr("popovertarget")).isEqualTo("sidebar");
     assertThat(trigger.attr("aria-label")).isEqualTo("Toggle sidebar");
     assertThat(header.selectFirst(".separator").attr("data-orientation")).isEqualTo("vertical");
-    assertThat(header.select(".inset-header-end .theme-toggle")).hasSize(1);
+    assertThat(header.select(".site-header-end .theme-toggle")).hasSize(1);
   }
 
   @Test

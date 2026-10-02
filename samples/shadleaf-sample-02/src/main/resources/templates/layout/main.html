@@ -1,25 +1,106 @@
 <!DOCTYPE html>
+<!--/* The header layout, for the signed-in pages: the application's name, its pages as a row of links in the site header
+  from 768 px (the same nav is the panel the menu button opens on a phone), the theme toggle and Sign out at the end,
+  and the page as a card below it. More (Settings, Help) is only in the phone panel. */-->
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
       th:fragment="layout(pageTitle, content)">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:text="|${pageTitle} - Shadleaf Sample App 2|">Shadleaf Sample App 2</title>
-  <!--/* Inline, so the policy must allow it: by this request's nonce, or by the published hash. */-->
-  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
-  <th:block th:replace="~{sl/layout :: assets}"></th:block>
-  <!--/* The application's own stylesheet: a plain static resource, no Node in this build. */-->
-  <link rel="stylesheet" th:href="@{/css/app.css}">
-</head>
+<head th:replace="~{layout/head :: head(${pageTitle})}"></head>
 <body>
-<main>
-  <header class="page-header">
-    <h1 th:text="${pageTitle}"></h1>
-    <sl:theme-toggle/>
-  </header>
-  <div th:replace="${content}"></div>
-</main>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:site-header>
+    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+    <sl:button as="a" th:href="@{/}" variant="ghost" class="app-name">
+      <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+      Shadleaf
+    </sl:button>
+    <sl:sidebar placement="header" variant="inset">
+      <sl:sidebar-header panel-only>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/}" size="lg">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+              <strong>Shadleaf</strong>
+              <small>Sample App 2</small>
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-header>
+      <sl:sidebar-content>
+        <sl:sidebar-group>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
+                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                  Home
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/forms}" th:active="${#slNav.current('/forms')}">
+                  <sl:slot name="icon-start"><sl:icon name="text-cursor-input"/></sl:slot>
+                  Forms
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/overlays}" th:active="${#slNav.current('/overlays')}">
+                  <sl:slot name="icon-start"><sl:icon name="layers"/></sl:slot>
+                  Overlays
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/data}" th:active="${#slNav.current('/data')}">
+                  <sl:slot name="icon-start"><sl:icon name="table"/></sl:slot>
+                  Data
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+        <sl:sidebar-group id="nav-more" panel-only>
+          <sl:sidebar-group-label>More</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
+                  <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                  Settings
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/help}" th:active="${#slNav.current('/help')}">
+                  <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+                  Help
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+      </sl:sidebar-content>
+    </sl:sidebar>
+    <sl:slot name="end">
+      <sl:theme-toggle/>
+      <!--/* Until the signed-in user's menu (0.7.0): a plain form, so th:action adds the CSRF token. */-->
+      <form method="post" th:action="@{/logout}">
+        <sl:button type="submit" variant="ghost" size="sm">
+          <sl:slot name="icon-start"><sl:icon name="log-out"/></sl:slot>
+          Sign out
+        </sl:button>
+      </form>
+    </sl:slot>
+  </sl:site-header>
+  <sl:sidebar-inset>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
 </body>
 </html>

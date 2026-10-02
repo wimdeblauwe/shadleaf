@@ -37,6 +37,12 @@
 <!-- <sl:sidebar variant="inset" side="end">Links</sl:sidebar> -->
 <nav class="sidebar" id="sidebar" popover aria-label="Main" data-side="end" data-variant="inset">Links</nav>
 
+<!-- <sl:sidebar placement="sidebar">Links</sl:sidebar> -->
+<nav class="sidebar" id="sidebar" popover aria-label="Main">Links</nav>
+
+<!-- <sl:sidebar placement="header" variant="inset">Links</sl:sidebar> -->
+<nav class="sidebar" id="sidebar" popover aria-label="Main" data-placement="header" data-variant="inset">Links</nav>
+
 <!-- <sl:sidebar id="docs-nav" aria-label="Documentation">Links</sl:sidebar> -->
 <nav class="sidebar" id="docs-nav" popover aria-label="Documentation">Links</nav>
 
@@ -82,6 +88,51 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-trigger-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
       </button>
     </header>
+    <h1>Home</h1>
+  </main>
+</div>
+
+<!-- <sl:sidebar-provider>
+  <sl:site-header>
+    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+    <a href="/">Acme</a>
+    <sl:sidebar placement="header">
+      <sl:sidebar-header panel-only><a href="/">Acme</a></sl:sidebar-header>
+      <ul>
+        <li><a href="/" aria-current="page">Home</a></li>
+        <li><a href="/people">People</a></li>
+      </ul>
+    </sl:sidebar>
+    <sl:slot name="end"><button type="button">Search</button></sl:slot>
+  </sl:site-header>
+  <sl:sidebar-inset>
+    <h1>Home</h1>
+  </sl:sidebar-inset>
+</sl:sidebar-provider> -->
+<div class="sidebar-provider" x-data="slSidebar" data-state="collapsed">
+  <header class="site-header">
+    <button class="btn sidebar-trigger" type="button" data-variant="ghost" data-size="icon-sm" popovertarget="sidebar" aria-controls="sidebar" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </button>
+    <a href="/">Acme</a>
+    <nav class="sidebar" id="sidebar" popover aria-label="Main" data-placement="header">
+      <div class="sidebar-header" data-panel-only="true">
+        <a href="/">Acme</a>
+      </div>
+      <ul>
+        <li>
+          <a href="/" aria-current="page">Home</a>
+        </li>
+        <li>
+          <a href="/people">People</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="site-header-end">
+      <button type="button">Search</button>
+    </div>
+  </header>
+  <main class="sidebar-inset" id="main" tabindex="-1">
     <h1>Home</h1>
   </main>
 </div>

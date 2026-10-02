@@ -22,7 +22,7 @@ export default defineConfig({
     // scripting media feature. Firefox makes a scrolling table container a tab stop of its own. Skip links and the
     // breadcrumb's menu depend on how each browser moves the focus.
     {name: 'firefox', use: {...devices['Desktop Firefox']},
-      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|table-scroll|sidebar|breadcrumb)\.spec\.ts/},
+      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|table-scroll|sidebar|sidebar-header|breadcrumb)\.spec\.ts/},
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

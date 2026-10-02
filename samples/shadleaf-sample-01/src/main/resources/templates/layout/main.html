@@ -148,7 +148,7 @@
   <sl:sidebar-inset>
     <!--/* The page header: the trigger, a separator and the page's breadcrumb (the levels are the page's own, passed in
       as a fragment), with the theme toggle at the end. */-->
-    <header class="inset-header">
+    <sl:site-header>
       <sl:sidebar-trigger/>
       <sl:separator orientation="vertical"/>
       <sl:breadcrumb>
@@ -156,10 +156,8 @@
           <th:block th:replace="${breadcrumb}"></th:block>
         </sl:breadcrumb-list>
       </sl:breadcrumb>
-      <div class="inset-header-end">
-        <sl:theme-toggle/>
-      </div>
-    </header>
+      <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+    </sl:site-header>
     <div class="page">
       <h1 th:text="${pageTitle}"></h1>
       <div th:replace="${content}"></div>

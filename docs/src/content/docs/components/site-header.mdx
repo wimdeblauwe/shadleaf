@@ -1,0 +1,66 @@
+---
+title: Site Header
+description: A header bar across the top of the page, or at the top of the sidebar layout's page.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="site-header--default" />
+
+## Usage
+
+`<sl:site-header>` is a `header` that lays out its content in a row. Whatever you put in it starts at the start of the
+line; the `end` slot goes to the end:
+
+```html
+<sl:site-header>
+  <sl:button as="a" th:href="@{/}" variant="ghost">Acme Inc.</sl:button>
+  <sl:slot name="end">
+    <sl:theme-toggle/>
+  </sl:slot>
+</sl:site-header>
+```
+
+Across the top of the page it is the page's banner landmark, on the page's colour with a border below. It has no
+`sticky` option yet; the header scrolls with the page.
+
+## In the header layout
+
+With a [`<sl:sidebar placement="header">`](../sidebar/#in-the-header) in it, it is the header layout's header: from
+768 px the sidebar is a row of links in it, and on a phone a menu button (`<sl:sidebar-trigger>`) opens the same
+navigation as a panel. It then goes first in `<sl:sidebar-provider>`, above `<sl:sidebar-inset>`. With
+`variant="inset"` on the sidebar the header lies on the sidebar's colour without a border, and the page is a card below
+it.
+
+<ComponentPreview id="sidebar--header" />
+
+The [Sidebar](../sidebar/#header-layout) page has the whole layout to copy.
+
+## As the page's header
+
+At the top of `<sl:sidebar-inset>`, in the sidebar layout, it is the page's header (shadcn's sidebar-07): the trigger,
+a vertical [separator](../separator/), the [breadcrumb](../breadcrumb/), and the theme toggle at the end. Inside the
+`main` it is no landmark, and it has no border or colour of its own. The separator is a short line in the middle of the
+row there.
+
+```html
+<sl:sidebar-inset>
+  <sl:site-header>
+    <sl:sidebar-trigger/>
+    <sl:separator orientation="vertical"/>
+    <sl:breadcrumb>...</sl:breadcrumb>
+    <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+  </sl:site-header>
+  ...
+</sl:sidebar-inset>
+```
+
+## Height
+
+The skins make it 3.5rem high (`--site-header-height`, set on `.site-header`): a minimum, so a breadcrumb that wraps on
+a narrow screen makes it taller.
+
+## Attributes
+
+<ComponentAttributes component="site-header" />

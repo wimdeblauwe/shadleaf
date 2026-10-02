@@ -16,6 +16,8 @@ export type Scenario = {
   normalizedHtml: string;
   /** false: only on its docs page, not on the showcase. */
   showcase?: boolean;
+  /** The frame's width in px, for a scenario shown as on a phone; otherwise the page's column. */
+  width?: number | null;
 };
 
 export type Prop = {

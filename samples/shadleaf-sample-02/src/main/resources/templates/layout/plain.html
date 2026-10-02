@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--/* The sign-in page: the same header with only the name and the theme toggle, as nothing else is open to a visitor
+  who has not signed in. */-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, content)">
+<head th:replace="~{layout/head :: head(${pageTitle})}"></head>
+<body>
+<sl:skip-link/>
+<sl:site-header>
+  <sl:button as="a" th:href="@{/}" variant="ghost" class="app-name">
+    <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+    Shadleaf
+  </sl:button>
+  <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+</sl:site-header>
+<main id="main" class="page plain-page" tabindex="-1">
+  <h1 th:text="${pageTitle}"></h1>
+  <div th:replace="${content}"></div>
+</main>
+</body>
+</html>

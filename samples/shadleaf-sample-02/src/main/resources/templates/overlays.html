@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Overlays', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>The interactive components, run by Alpine's CSP build: no <code>'unsafe-eval'</code> in the policy, and nothing
+    blocked in the browser console.</p>
+
+  <div class="row">
+    <sl:button variant="outline" commandfor="about-dialog" command="show-modal">Open dialog</sl:button>
+
+    <sl:dropdown-menu id="actions">
+      <sl:dropdown-menu-trigger variant="outline">Actions</sl:dropdown-menu-trigger>
+      <sl:dropdown-menu-content>
+        <sl:dropdown-menu-label>Project</sl:dropdown-menu-label>
+        <sl:dropdown-menu-item>Rename</sl:dropdown-menu-item>
+        <sl:dropdown-menu-item>Duplicate</sl:dropdown-menu-item>
+        <sl:dropdown-menu-separator/>
+        <sl:dropdown-menu-item variant="destructive">Delete</sl:dropdown-menu-item>
+      </sl:dropdown-menu-content>
+    </sl:dropdown-menu>
+
+    <sl:popover id="details">
+      <sl:popover-trigger variant="outline">Details</sl:popover-trigger>
+      <sl:popover-content>
+        <sl:popover-header>
+          <sl:popover-title>Details</sl:popover-title>
+          <sl:popover-description>A popover: Escape or a click outside closes it.</sl:popover-description>
+        </sl:popover-header>
+      </sl:popover-content>
+    </sl:popover>
+
+    <sl:tooltip>
+      <sl:button variant="outline" size="icon" aria-label="Help"><sl:icon name="circle-question-mark"/></sl:button>
+      <sl:tooltip-content>Opens the help</sl:tooltip-content>
+    </sl:tooltip>
+
+    <sl:button variant="outline" x-data x-on:click="$dispatch('sl-toast', {title: 'Saved', variant: 'success'})">
+      Show a toast
+    </sl:button>
+  </div>
+
+  <sl:dialog id="about-dialog">
+    <sl:dialog-header>
+      <sl:dialog-title>About this sample</sl:dialog-title>
+      <sl:dialog-description>A modal dialog on the browser's own dialog element.</sl:dialog-description>
+    </sl:dialog-header>
+    <sl:dialog-footer close-button/>
+  </sl:dialog>
+</div>
+</body>
+</html>
