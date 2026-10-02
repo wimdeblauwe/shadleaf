@@ -16,13 +16,21 @@ import io.github.wimdeblauwe.shadleaf.icon.IconSource;
 import io.github.wimdeblauwe.shadleaf.icon.LucideIconSource;
 import io.github.wimdeblauwe.shadleaf.i18n.ShadleafMessageSourcePostProcessor;
 import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
+import io.github.wimdeblauwe.shadleaf.security.CurrentUserResolver;
+import io.github.wimdeblauwe.shadleaf.security.DefaultCurrentUserResolver;
+import io.github.wimdeblauwe.shadleaf.security.OAuth2LoginUrl;
+import io.github.wimdeblauwe.shadleaf.security.SpringSecurityUserSource;
+import io.github.wimdeblauwe.shadleaf.security.UserSource;
 import io.github.wimdeblauwe.shadleaf.theme.ShadleafThemeScript;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.SearchStrategy;
@@ -30,11 +38,16 @@ import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfigura
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.util.StringUtils;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
@@ -132,11 +145,17 @@ public class ShadleafAutoConfiguration {
     return PagingParameters.from(environment);
   }
 
+  /**
+   * The dialect. {@code #slUser} reads the {@link UserSource} that {@link SecurityConfiguration} declares when Spring
+   * Security is on the classpath; without it nobody is signed in.
+   */
   @Bean
   @ConditionalOnMissingBean
   public ShadleafDialect shadleafDialect(ComponentRegistry componentRegistry, IconRegistry iconRegistry,
-      PagingParameters pagingParameters) {
-    return new ShadleafDialect(componentRegistry, iconRegistry, pagingParameters);
+      PagingParameters pagingParameters, ObjectProvider<UserSource> userSource, ShadleafProperties properties) {
+    return new ShadleafDialect(componentRegistry, iconRegistry, pagingParameters,
+        userSource.getIfAvailable(() -> UserSource.anonymous(loginUrl(properties, null),
+            properties.security().logoutUrl())));
   }
 
   /**
@@ -166,5 +185,40 @@ public class ShadleafAutoConfiguration {
     resolver.setCheckExistence(true);
     resolver.setOrder(Ordered.HIGHEST_PRECEDENCE);
     return resolver;
+  }
+
+  private static String loginUrl(ShadleafProperties properties, @Nullable String oauth2LoginUrl) {
+    String loginUrl = properties.security().loginUrl();
+    if (StringUtils.hasText(loginUrl)) {
+      return loginUrl;
+    }
+    return oauth2LoginUrl != null ? oauth2LoginUrl : UserSource.DEFAULT_LOGIN_URL;
+  }
+
+  /**
+   * Who is signed in, for {@code #slUser}: only with Spring Security on the classpath, so the starter never needs it.
+   */
+  @Configuration(proxyBeanMethods = false)
+  @ConditionalOnClass(name = "org.springframework.security.core.Authentication")
+  static class SecurityConfiguration {
+
+    /** Turns the authentication into a {@code ShadleafUser}; an application's own bean of this type replaces it. */
+    @Bean
+    @ConditionalOnMissingBean
+    public CurrentUserResolver shadleafCurrentUserResolver() {
+      return new DefaultCurrentUserResolver();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public UserSource shadleafUserSource(ShadleafProperties properties, CurrentUserResolver currentUserResolver,
+        ObjectProvider<SecurityContextHolderStrategy> strategy,
+        ObjectProvider<AuthenticationTrustResolver> trustResolver, BeanFactory beanFactory) {
+      SecurityContextHolderStrategy applicationStrategy = strategy.getIfAvailable();
+      return new SpringSecurityUserSource(
+          applicationStrategy != null ? () -> applicationStrategy : SecurityContextHolder::getContextHolderStrategy,
+          trustResolver.getIfAvailable(AuthenticationTrustResolverImpl::new), currentUserResolver,
+          loginUrl(properties, OAuth2LoginUrl.find(beanFactory)), properties.security().logoutUrl());
+    }
   }
 }

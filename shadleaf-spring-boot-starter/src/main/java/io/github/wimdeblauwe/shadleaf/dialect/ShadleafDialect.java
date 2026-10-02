@@ -5,6 +5,8 @@ import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
 import io.github.wimdeblauwe.shadleaf.nav.Navigation;
 import io.github.wimdeblauwe.shadleaf.paging.Paging;
 import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
+import io.github.wimdeblauwe.shadleaf.security.CurrentUser;
+import io.github.wimdeblauwe.shadleaf.security.UserSource;
 import io.github.wimdeblauwe.shadleaf.sidebar.SidebarState;
 import java.util.Set;
 import org.thymeleaf.context.IExpressionContext;
@@ -40,6 +42,7 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
   public static final String PAGING_EXPRESSION_OBJECT = "slPaging";
   public static final String SIDEBAR_EXPRESSION_OBJECT = "slSidebar";
   public static final String NAV_EXPRESSION_OBJECT = "slNav";
+  public static final String USER_EXPRESSION_OBJECT = "slUser";
   private static final String NAME = "Shadleaf";
 
   private final ComponentRegistry registry;
@@ -50,14 +53,20 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
     this(registry, iconRegistry, PagingParameters.defaults());
   }
 
+  /** Nobody is signed in, as in an application without Spring Security. */
   public ShadleafDialect(ComponentRegistry registry, IconRegistry iconRegistry, PagingParameters pagingParameters) {
+    this(registry, iconRegistry, pagingParameters, UserSource.anonymous());
+  }
+
+  public ShadleafDialect(ComponentRegistry registry, IconRegistry iconRegistry, PagingParameters pagingParameters,
+      UserSource userSource) {
     super(NAME, PREFIX, StandardDialect.PROCESSOR_PRECEDENCE);
     this.registry = registry;
     this.expressionObjectFactory = new IExpressionObjectFactory() {
       @Override
       public Set<String> getAllExpressionObjectNames() {
         return Set.of(ICONS_EXPRESSION_OBJECT, FIELDS_EXPRESSION_OBJECT, PAGING_EXPRESSION_OBJECT,
-            SIDEBAR_EXPRESSION_OBJECT, NAV_EXPRESSION_OBJECT);
+            SIDEBAR_EXPRESSION_OBJECT, NAV_EXPRESSION_OBJECT, USER_EXPRESSION_OBJECT);
       }
 
       @Override
@@ -68,6 +77,7 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
           case PAGING_EXPRESSION_OBJECT -> new Paging(context, pagingParameters);
           case SIDEBAR_EXPRESSION_OBJECT -> new SidebarState(context);
           case NAV_EXPRESSION_OBJECT -> new Navigation(context);
+          case USER_EXPRESSION_OBJECT -> new CurrentUser(userSource);
           default -> null;
         };
       }

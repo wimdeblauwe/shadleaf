@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<p id="signed-in" th:text="${#slUser.signedIn}"></p>
+<p id="user" th:text="${#slUser.current?.name}"></p>
+<a id="login" th:href="${#slUser.loginUrl}">Sign in</a>
+<p id="logout" th:text="${#slUser.logoutUrl}"></p>
+<sl:button xmlns:sl="https://shadleaf.dev/sl">Save</sl:button>
+</body>
+</html>

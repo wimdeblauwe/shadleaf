@@ -17,7 +17,7 @@
   <properties>
     <!-- JUnit tags: the performance profile swaps them -->
     <shadleaf.test.groups/>
-    <shadleaf.test.excluded-groups>performance</shadleaf.test.excluded-groups>
+    <shadleaf.test.excluded-groups>performance,without-spring-security</shadleaf.test.excluded-groups>
   </properties>
 
   <dependencies>
@@ -34,6 +34,18 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-commons</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <!-- #slUser reads the signed-in user when the application has Spring Security; without it nobody is signed in.
+      OAuth2 client: the claims of an OpenID Connect or OAuth2 login, and the sign-in URL of a single client -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-oauth2-client</artifactId>
       <optional>true</optional>
     </dependency>
 
@@ -57,6 +69,12 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- oidcLogin(), oauth2Login(), user() for ComponentRenderTester.Builder.with() -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -136,6 +154,31 @@
             <shadleaf.version>${project.version}</shadleaf.version>
           </systemPropertyVariables>
         </configuration>
+        <executions>
+          <!-- WithoutSpringSecurityTest alone (the other test classes name Spring Security types, which fails their
+            discovery), on a classpath without Spring Security: the starter must start and render in an application that
+            does not have it. Set here, so -Dtest on the command line does not change it. -->
+          <execution>
+            <id>without-spring-security</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <test>WithoutSpringSecurityTest</test>
+              <groups>without-spring-security</groups>
+              <excludedGroups>performance</excludedGroups>
+              <classpathDependencyExcludes>
+                <classpathDependencyExclude>org.springframework.security:spring-security-core</classpathDependencyExclude>
+                <classpathDependencyExclude>org.springframework.security:spring-security-crypto</classpathDependencyExclude>
+                <classpathDependencyExclude>org.springframework.security:spring-security-web</classpathDependencyExclude>
+                <classpathDependencyExclude>org.springframework.security:spring-security-oauth2-client</classpathDependencyExclude>
+                <classpathDependencyExclude>org.springframework.security:spring-security-oauth2-core</classpathDependencyExclude>
+                <classpathDependencyExclude>org.springframework.security:spring-security-oauth2-jose</classpathDependencyExclude>
+                <classpathDependencyExclude>org.springframework.security:spring-security-test</classpathDependencyExclude>
+              </classpathDependencyExcludes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
@@ -157,7 +200,7 @@
       <id>performance</id>
       <properties>
         <shadleaf.test.groups>performance</shadleaf.test.groups>
-        <shadleaf.test.excluded-groups/>
+        <shadleaf.test.excluded-groups>without-spring-security</shadleaf.test.excluded-groups>
       </properties>
     </profile>
   </profiles>

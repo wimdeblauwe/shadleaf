@@ -8,6 +8,7 @@ import io.github.wimdeblauwe.shadleaf.icon.IconRegistry;
 import io.github.wimdeblauwe.shadleaf.icon.IconSource;
 import io.github.wimdeblauwe.shadleaf.icon.LucideIconSource;
 import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
+import io.github.wimdeblauwe.shadleaf.security.UserSource;
 import jakarta.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.servlet.support.RequestContext;
@@ -46,6 +48,9 @@ import tools.jackson.databind.json.JsonMapper;
  * here just as it does at runtime; the snippet itself is the template. Messages come from the built-in
  * {@code shadleaf/messages.properties} unless {@link Builder#messageSource(MessageSource)} says otherwise.
  * <p>
+ * Who is signed in comes from Spring Security's request post-processors, as with MockMvc:
+ * {@code builder().with(oidcLogin())}, {@code with(user("ada"))}; without one the visitor is anonymous.
+ * <p>
  * Every render runs in a mock servlet web exchange, so {@code @{/orders}} resolves against the context path and
  * request attributes (such as a CSP nonce) are context variables, as in a request. It also carries Spring MVC's
  * {@code RequestContext}, as {@code ThymeleafView} sets it up, so {@code th:field}, {@code th:errors} and
@@ -65,6 +70,7 @@ public final class ComponentRenderTester {
   private final String requestUri;
   private final Map<String, Object> requestAttributes;
   private final Map<String, String> cookies;
+  private final List<RequestPostProcessor> requestPostProcessors;
 
   private ComponentRenderTester(Builder builder) {
     ClassLoaderTemplateResolver componentResolver = new ClassLoaderTemplateResolver();
@@ -85,7 +91,8 @@ public final class ComponentRenderTester {
     engine.addTemplateResolver(snippetResolver);
     engine.addDialect(builder.dialect != null
         ? builder.dialect
-        : defaultDialect(builder.iconSources, builder.pagingParameters));
+        : defaultDialect(builder.iconSources, builder.pagingParameters,
+            builder.userSource != null ? builder.userSource : TesterSecurity.defaultUserSource()));
     MessageSource messageSource = builder.messageSource != null ? builder.messageSource : new ShadleafMessageSource();
     engine.setTemplateEngineMessageSource(messageSource);
 
@@ -103,6 +110,7 @@ public final class ComponentRenderTester {
     requestUri = builder.requestUri;
     requestAttributes = Map.copyOf(builder.requestAttributes);
     cookies = Map.copyOf(builder.cookies);
+    requestPostProcessors = List.copyOf(builder.requestPostProcessors);
   }
 
   /** The library's components, the bundled lucide icons and the built-in messages, at context path {@code ""}. */
@@ -137,6 +145,19 @@ public final class ComponentRenderTester {
           .map(cookie -> new Cookie(cookie.getKey(), cookie.getValue()))
           .toArray(Cookie[]::new));
     }
+    MockHttpServletRequest processed = request;
+    for (RequestPostProcessor postProcessor : requestPostProcessors) {
+      processed = postProcessor.postProcessRequest(processed);
+    }
+    try {
+      TesterSecurity.loadContext(processed);
+      return render(snippet, variables, processed);
+    } finally {
+      TesterSecurity.clearContext();
+    }
+  }
+
+  private Rendered render(String snippet, Map<String, ?> variables, MockHttpServletRequest request) {
     MockHttpServletResponse response = new MockHttpServletResponse();
     WebContext context = new WebContext(webApplication.buildExchange(request, response), locale);
     variables.forEach(context::setVariable);
@@ -154,12 +175,12 @@ public final class ComponentRenderTester {
   }
 
   private static ShadleafDialect defaultDialect(List<IconSource> applicationIconSources,
-      PagingParameters pagingParameters) {
+      PagingParameters pagingParameters, UserSource userSource) {
     ComponentRegistry registry = new ComponentRegistry(List.of(
         new ClasspathComponentDefinitionSource(ComponentRenderTester.class.getClassLoader())));
     List<IconSource> iconSources = new ArrayList<>(applicationIconSources);
     iconSources.add(new LucideIconSource(JsonMapper.builder().build()));
-    return new ShadleafDialect(registry, new IconRegistry(iconSources), pagingParameters);
+    return new ShadleafDialect(registry, new IconRegistry(iconSources), pagingParameters, userSource);
   }
 
   public static final class Builder {
@@ -167,7 +188,9 @@ public final class ComponentRenderTester {
     private final List<IconSource> iconSources = new ArrayList<>();
     private final Map<String, Object> requestAttributes = new LinkedHashMap<>();
     private final Map<String, String> cookies = new LinkedHashMap<>();
+    private final List<RequestPostProcessor> requestPostProcessors = new ArrayList<>();
     private @Nullable IDialect dialect;
+    private @Nullable UserSource userSource;
     private @Nullable MessageSource messageSource;
     private Locale locale = Locale.ENGLISH;
     private String contextPath = "";
@@ -234,6 +257,26 @@ public final class ComponentRenderTester {
     /** A cookie the request sends, such as the sidebar's {@code sl-sidebar-state}. */
     public Builder cookie(String name, String value) {
       cookies.put(name, value);
+      return this;
+    }
+
+    /**
+     * Prepares every render's request, as {@code MockMvc}'s {@code with()}: Spring Security's {@code oidcLogin()},
+     * {@code oauth2Login()} or {@code user("ada")} sign a user in for the render. Without one the visitor is
+     * anonymous.
+     */
+    public Builder with(RequestPostProcessor postProcessor) {
+      requestPostProcessors.add(postProcessor);
+      return this;
+    }
+
+    /**
+     * Where {@code #slUser} gets the user and the sign-in and sign-out URLs from. Defaults to what an application with
+     * Spring Security and the default resolver gets (anonymous without Spring Security), with {@code /login} and
+     * {@code /logout}.
+     */
+    public Builder userSource(UserSource userSource) {
+      this.userSource = userSource;
       return this;
     }
 

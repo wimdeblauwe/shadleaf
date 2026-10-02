@@ -20,7 +20,8 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 public record ShadleafProperties(@DefaultValue("vega") String skin,
                                  @DefaultValue AssetsProperties assets,
                                  @DefaultValue CspProperties csp,
-                                 @DefaultValue DevProperties dev) {
+                                 @DefaultValue DevProperties dev,
+                                 @DefaultValue SecurityProperties security) {
 
   /**
    * @param variant {@code standalone} (the default) includes Tailwind's preflight reset; {@code embedded} leaves it
@@ -54,6 +55,19 @@ public record ShadleafProperties(@DefaultValue("vega") String skin,
    */
   public record DevProperties(@Nullable String viteServerUrl, @Nullable String templatesPath,
                               @Nullable String webTypesFile) {
+
+  }
+
+  /**
+   * Where the user menu sends a visitor to sign in and out. Only used with Spring Security on the classpath; without it
+   * nobody is ever signed in, and the menu shows a Sign in link to {@code login-url}.
+   *
+   * @param loginUrl  where Sign in goes, a path within the application. Defaults to Spring Security's authorization
+   *                  endpoint ({@code /oauth2/authorization/<id>}) when exactly one OAuth2 login client is registered,
+   *                  else {@code /login}
+   * @param logoutUrl where the sign-out form posts to, a path within the application
+   */
+  public record SecurityProperties(@Nullable String loginUrl, @DefaultValue("/logout") String logoutUrl) {
 
   }
 }
