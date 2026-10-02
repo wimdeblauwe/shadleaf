@@ -190,9 +190,23 @@ class HeaderLayoutPageTest {
     mockMvc.perform(post(form.attr("action")).session(session)
             .param("_csrf", form.selectFirst("input[name=_csrf]").val()))
         .andExpect(redirectedUrl("/login?logout"));
+    Document signedOut = Jsoup.parse(mockMvc.perform(get("/login?logout").session(session))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString());
+    assertThat(signedOut.selectFirst(".message[role=status]").text()).isEqualTo("You have been signed out.");
     mockMvc.perform(get("/").session(session))
         .andExpect(status().isFound())
         .andExpect(redirectedUrl("/login"));
+
+    // Signing in again from the "signed out" page goes home, not back to that page.
+    MockHttpSession again = new MockHttpSession();
+    Document loginAgain = Jsoup.parse(mockMvc.perform(get("/login?logout").session(again))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString());
+    mockMvc.perform(post("/login").session(again)
+            .param("username", "ada").param("password", "password")
+            .param("_csrf", loginAgain.selectFirst("form input[name=_csrf]").val()))
+        .andExpect(redirectedUrl("/"));
   }
 
   @Test

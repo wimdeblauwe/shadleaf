@@ -25,6 +25,9 @@ public class SecurityConfiguration {
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated())
         .formLogin(login -> login.loginPage("/login").permitAll())
+        // formLogin's permitAll matches /login exactly, query included: without this, /login?logout needs a sign-in,
+        // gets saved as the request to return to, and the next sign-in lands on the "signed out" page again.
+        .logout(logout -> logout.permitAll())
         .headers(headers -> headers.addHeaderWriter(new CspHeaderWriter(csp.mode(), themeScript)));
     if (csp.mode() == Mode.NONCE) {
       http.addFilterBefore(new CspNonceFilter(), HeaderWriterFilter.class);
