@@ -4021,6 +4021,93 @@
             "required" : false
           }
         } ]
+      }, {
+        "name" : "sl:user-menu",
+        "description" : "The signed-in user (`#slUser.current`) with a menu that signs out, or a Sign in link for an anonymous visitor. In the sidebar's footer a large menu button with the user's picture, name and email (or username, when it is not the name); in the site header a button with the picture alone. Both open a `sl:dropdown-menu`: the user's name and email, the items in its content (Account, Settings), and Sign out, which posts to `#slUser.logoutUrl` (`shadleaf.security.logout-url`) from a form of its own, so `th:action` adds Spring Security's CSRF token. The picture goes through `sl:avatar`: while it loads, without one and when it fails to load, the initials show. Every attribute that is not a prop passes through to the button (or the Sign in link), except an `aria-label`, which only names the header's button: in the sidebar the button's name is the text it shows, and Sign in is named by its text.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "`sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named \"Account: \" and the user's name.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sidebar"
+          }, {
+            "name" : "header"
+          } ],
+          "default" : "sidebar"
+        }, {
+          "name" : "id",
+          "description" : "The menu's id. Its button gets the id with `-trigger` added, the sign-out form with `-sign-out`. Two user menus on a page need different ids.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "user-menu"
+        }, {
+          "name" : "side",
+          "description" : "The side of the button the menu opens on, as on `sl:dropdown-menu-content`. By default `right` in the sidebar (below the button in the phone panel) and `bottom` in the header.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ]
+        }, {
+          "name" : "align",
+          "description" : "How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "end"
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       } ]
     }
   }

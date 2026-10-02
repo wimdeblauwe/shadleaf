@@ -1,0 +1,25 @@
+/*
+  User menu: structure only. The button, the menu and the avatar are sl:dropdown-menu-trigger, sl:dropdown-menu and
+  sl:avatar, styled by the skins.
+
+  The menu's label shows the picture beside the name and the email (or username), each cut off with an ellipsis. The
+  sign-out form is hidden (the attribute) and holds nothing but the CSRF token; Sign out in the menu submits it.
+*/
+@layer components {
+  .user-menu-label {
+    @apply flex items-center text-start;
+  }
+
+  .user-menu-text {
+    @apply grid min-w-0 flex-1;
+  }
+
+  :is(.user-menu-name, .user-menu-detail) {
+    @apply truncate;
+  }
+
+  /* The header's button is the picture: no padding around it. */
+  .btn.user-menu-trigger {
+    @apply overflow-hidden p-0;
+  }
+}

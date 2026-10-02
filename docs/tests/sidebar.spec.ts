@@ -1,7 +1,7 @@
 import {expect, test, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {ORIGIN, openFixture, type FixtureOptions, type Request} from './fixture';
+import {ORIGIN, openFixture, servePhotos, type FixtureOptions, type Request} from './fixture';
 import {openShowcase, skins} from './showcase';
 
 // The sidebar's panel mechanism: sl:sidebar-provider, sl:sidebar, sl:sidebar-trigger, sl:sidebar-inset and slSidebar.
@@ -15,7 +15,7 @@ const DESKTOP = {width: 1024, height: 700};
 const PHONE = {width: 390, height: 700};
 
 type Scenario = { id: string, html: string };
-const PREVIEW = (previews.scenarios as Scenario[]).find(scenario => scenario.id === 'sidebar--default')!.html;
+const PREVIEW = servePhotos((previews.scenarios as Scenario[]).find(scenario => scenario.id === 'sidebar--default')!.html);
 
 type Variant = 'sidebar' | 'floating' | 'inset';
 type Collapsible = 'offcanvas' | 'icon' | 'none';
@@ -946,14 +946,14 @@ test.describe('collapsed to icons', () => {
     await collapseCookie(page);
     await openShell(page, {collapsible: 'icon'});
     const stops: string[] = [];
-    for (let i = 0; i < 11; i++) {
+    for (let i = 0; i < 12; i++) {
       await page.keyboard.press('Tab');
       stops.push(await focused(page));
     }
     expect(stops).toEqual(['Skip to main content', 'sidebar: #team-switcher-trigger Acme Inc. Enterprise', 'sidebar: Home',
       'sidebar: Inbox',
       'sidebar: Calendar', 'sidebar: Documents', 'sidebar: Design Engineering', 'sidebar: Sales & Marketing',
-      'sidebar: Settings', 'sidebar: Help', 'sidebar: Section']);
+      'sidebar: Settings', 'sidebar: Help', 'sidebar: #user-menu-trigger shadcn m@example.com', 'sidebar: Section']);
   });
 
   test.describe('without JavaScript', () => {

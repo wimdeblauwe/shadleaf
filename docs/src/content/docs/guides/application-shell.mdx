@@ -143,6 +143,9 @@ collapses to icons, with a tooltip on every menu button. `hx-boost` on the body 
           </sl:sidebar-menu-button>
         </sl:sidebar-menu-item>
       </sl:sidebar-menu>
+      <sl:user-menu>
+        <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+      </sl:user-menu>
     </sl:sidebar-footer>
   </sl:sidebar>
   <sl:sidebar-inset>
@@ -309,12 +312,9 @@ parts:
     </sl:sidebar>
     <sl:slot name="end">
       <sl:theme-toggle/>
-      <form method="post" th:action="@{/logout}">
-        <sl:button type="submit" variant="ghost" size="sm">
-          <sl:slot name="icon-start"><sl:icon name="log-out"/></sl:slot>
-          Sign out
-        </sl:button>
-      </form>
+      <sl:user-menu as="header">
+        <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+      </sl:user-menu>
     </sl:slot>
   </sl:site-header>
   <sl:sidebar-inset>
@@ -403,6 +403,9 @@ in the header (the header layout).
 
 ## The signed-in user
 
-Both layouts have a place for the user: the sidebar's footer, and the site header's `end` slot, where sample-02 has a
-Sign out button for now. A user menu for both places, with Sign in and Sign out through Spring Security, is planned for
-0.7.0.
+Both layouts have a place for the user: the sidebar's footer, and the site header's `end` slot. The
+[user menu](../../components/user-menu/) goes in either (`as="header"` in the site header): the signed-in user from
+Spring Security with a menu that signs out, or a Sign in link for an anonymous visitor, so one layout serves public
+pages too. Sign out posts a form with the CSRF token; `hx-boost="false"` on it keeps a boosted body from sending it
+with htmx. Where the user comes from, and how to change it, is in the [Spring Security](../spring-security/#the-signed-in-user)
+guide.

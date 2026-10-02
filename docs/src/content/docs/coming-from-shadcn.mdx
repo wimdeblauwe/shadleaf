@@ -288,6 +288,16 @@ layout itself (that header across the whole page, the sidebar below it) is not s
 top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The
 [Application shell](../guides/application-shell/) guide has the two layouts there are.
 
+### User menu: a component, not a block
+
+shadcn's `NavUser` is part of its sidebar blocks, with the user passed in as props and a Log out item that does
+nothing. `<sl:user-menu>` is a component: the user comes from Spring Security (`#slUser`), Sign out posts a form with
+the CSRF token, and an anonymous visitor gets a Sign in link. `as="header"` gives the picture-only button for a site
+header. The avatar stays round in the menu, where `NavUser` makes it a rounded square, and the menu's items are what you
+put inside the component (shadcn's "Upgrade to Pro", "Account", "Billing" and "Notifications" are the block's own). The
+team switcher and the version switcher stay examples on the Sidebar page, as in shadcn's docs: see
+[Menus in the sidebar](../components/sidebar/#menus-in-the-sidebar).
+
 ### Breadcrumb: the ellipsis opens its own menu
 
 The parts are shadcn's (`BreadcrumbList`, `-Item`, `-Link`, `-Page`, `-Separator`, `-Ellipsis`). `<sl:breadcrumb-link>`

@@ -2,6 +2,9 @@ package io.github.wimdeblauwe.shadleaf.sample01;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import jakarta.servlet.http.Cookie;
@@ -112,6 +115,32 @@ class ShellPageTest {
   }
 
   @Test
+  void theFooterEndsInTheDemoUsersMenu() throws Exception {
+    Element footer = page(get("/form")).selectFirst("nav.sidebar > .sidebar-footer");
+
+    Element trigger = footer.selectFirst(".user-menu .user-menu-trigger");
+    assertThat(trigger.attr("popovertarget")).isEqualTo("user-menu");
+    assertThat(trigger.select(".sidebar-menu-button-label > *").eachText())
+        .containsExactly("Ada Lovelace", "ada@example.com");
+    assertThat(trigger.selectFirst(".avatar-image").attr("src")).isEqualTo("/dialog/members/1/photo");
+    assertThat(trigger.selectFirst(".avatar-fallback").text()).isEqualTo("AL");
+    Element menu = footer.selectFirst("#user-menu[role=menu]");
+    assertThat(menu.select("[role=menuitem]").eachText()).containsExactly("Settings", "Sign out");
+    assertThat(menu.selectFirst(".user-menu-sign-out").attr("form")).isEqualTo("user-menu-sign-out");
+    Element form = footer.selectFirst("form#user-menu-sign-out");
+    assertThat(form.attr("action")).isEqualTo("/sign-out");
+    assertThat(form.attr("hx-boost")).isEqualTo("false");
+  }
+
+  @Test
+  void signingOutOnlySaysThisSampleCannot() throws Exception {
+    mockMvc.perform(post("/sign-out"))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl("/"))
+        .andExpect(flash().attributeExists("toasts"));
+  }
+
+  @Test
   void theSidebarHasTheApplicationGroupsAndTheDocumentation() throws Exception {
     Element sidebar = page(get("/")).selectFirst("nav.sidebar");
 
@@ -134,21 +163,23 @@ class ShellPageTest {
     assertThat(people.child(0).tagName()).isEqualTo("summary");
     assertThat(people.select(".sidebar-menu-sub-button").eachAttr("href"))
         .containsExactly("/people", "/people-multiselect", "/people-load-more");
-    // Collapsed to icons, every menu button shows its label as a tooltip, which repeats its name.
+    // Collapsed to icons, every menu button shows its label as a tooltip, which repeats its name (the first line of a
+    // two-line label: the application's name, the user's name).
     assertThat(sidebar.attr("data-collapsible")).isEqualTo("icon");
     for (Element button : sidebar.select(".sidebar-menu-button")) {
       Element tooltip = button.selectFirst("> .sidebar-menu-tooltip");
       assertThat(tooltip).as("tooltip of %s", button.text()).isNotNull();
       assertThat(tooltip.attr("aria-hidden")).isEqualTo("true");
-      assertThat(tooltip.ownText()).isEqualTo(button.selectFirst(".sidebar-menu-button-label").text()
-          .replace("Shadleaf Sample app 1", "Shadleaf"));
+      Element label = button.selectFirst(".sidebar-menu-button-label");
+      assertThat(tooltip.ownText()).isEqualTo(label.childrenSize() > 0 ? label.child(0).text() : label.text());
     }
     // Each group is named by its label.
     for (Element group : sidebar.select(".sidebar-content > .sidebar-group")) {
       assertThat(group.attr("role")).isEqualTo("group");
       assertThat(group.attr("aria-labelledby")).isEqualTo(group.selectFirst(".sidebar-group-label").id());
     }
-    assertThat(sidebar.select(".sidebar-footer .sidebar-menu-button-label").eachText()).containsExactly("Documentation");
+    assertThat(sidebar.select(".sidebar-footer .sidebar-menu-button-label").eachText())
+        .containsExactly("Documentation", "Ada Lovelace ada@example.com");
   }
 
   /** Requests a link in the boosted body sends: HX-Request and HX-Boosted, no HX-Target (the body has no id). */

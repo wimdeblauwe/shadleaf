@@ -22,6 +22,26 @@ type Scripts = { bundled: string, csp: string, external: string };
 const scripts = (previews as unknown as { scripts: Scripts }).scripts;
 const css = previews.skins[0].css;
 
+/** The pictures servePhotos took out of previews, by the path the fixture serves them at. */
+const photos = new Map<string, { contentType: string, body: Buffer }>();
+
+/**
+ * A preview's markup with each data: picture (a photo from the generator's previews/photos/) replaced by a
+ * same-origin URL the fixture serves: the fixture's policy blocks data: images, as an application's strict one would.
+ */
+export function servePhotos(html: string): string {
+  const paths = new Map<string, string>();
+  return html.replace(/src="data:(image\/[a-z+]+);base64,([^"]+)"/g, (_, contentType: string, data: string) => {
+    let path = paths.get(data);
+    if (!path) {
+      path = `/photos/${photos.size + 1}`;
+      paths.set(data, path);
+      photos.set(path, {contentType, body: Buffer.from(data, 'base64')});
+    }
+    return `src="${path}"`;
+  });
+}
+
 export type Request = { url: URL, body: string, headers: Record<string, string> };
 export type Response = {
   body: string | Buffer,
@@ -70,7 +90,7 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
   page.on('pageerror', error => messages.push(error.message));
   await page.addInitScript(() => document.addEventListener('securitypolicyviolation',
       event => console.error(`CSP violation: ${event.violatedDirective}`)));
-  const document = (content: string) => `<!doctype html><html lang="en" ${htmlAttributes}><head><title>Fixture</title>`
+  const document = (content: string) => `<!doctype html><html lang="en" ${htmlAttributes}><head><meta charset="utf-8"><title>Fixture</title>`
       + (theme ? `<script>${themeScript.script}</script>` : '')
       + `<link rel="stylesheet" href="/${css}">`
       + (htmx ? `${HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
@@ -81,6 +101,10 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
     const url = new URL(request.url());
     if (url.pathname === '/webjars/htmx.min.js') {
       return route.fulfill({contentType: 'text/javascript', path: HTMX});
+    }
+    const photo = photos.get(url.pathname);
+    if (photo) {
+      return route.fulfill(photo);
     }
     if (url.pathname.startsWith('/shadleaf/')) {
       if (scriptDelay && url.pathname.endsWith('.js')) {

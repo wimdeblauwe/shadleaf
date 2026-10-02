@@ -165,7 +165,7 @@ class HtmxFormPageTest {
     assertThat(confirmation.text()).contains("wim@example.com");
     assertThat(confirmation.attr("tabindex")).isEqualTo("-1");
     assertThat(page.select("[autofocus]")).containsExactly(confirmation);
-    assertThat(page.select("form")).isEmpty();
+    assertThat(page.select(".page form")).isEmpty();
   }
 
   private static MockHttpServletRequestBuilder htmx(MockHttpServletRequestBuilder request) {

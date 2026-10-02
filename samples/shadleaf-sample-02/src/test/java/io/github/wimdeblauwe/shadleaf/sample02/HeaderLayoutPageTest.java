@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.jsoup.Jsoup;
+import org.springframework.mock.web.MockHttpSession;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 /**
  * The header layout on every signed-in page, under the strict policy: one navigation in the site header with
  * placement="header" (a row of links from 768 px, the panel on a phone), the current page marked, Settings and Help only
- * in the panel, the theme toggle and Sign out at the end, the page in the inset; and nothing that needs an inline
+ * in the panel, the theme toggle and the user menu at the end, the page in the inset; and nothing that needs an inline
  * allowance. The sign-in page has the header without the navigation.
  */
 @SpringBootTest
@@ -63,7 +64,16 @@ class HeaderLayoutPageTest {
     assertThat(nav.hasAttr("popover")).isTrue();
     assertThat(header.selectFirst("> .sidebar-trigger").attr("popovertarget")).isEqualTo("sidebar");
     assertThat(header.select("> .site-header-end .theme-toggle")).hasSize(1);
-    assertThat(header.selectFirst("> .site-header-end form[action=/logout] input[name=_csrf]")).isNotNull();
+    // The user menu: the picture button (initials: user has no picture), Settings and Sign out, and the form Sign out
+    // submits, outside the menu, with the CSRF token.
+    Element userMenu = header.selectFirst("> .site-header-end > button#user-menu-trigger");
+    assertThat(userMenu.attr("aria-label")).isEqualTo("Account: user");
+    assertThat(userMenu.selectFirst(".avatar-fallback").text()).isEqualTo("U");
+    assertThat(header.select("> .site-header-end > #user-menu[role=menu] [role=menuitem]").eachText())
+        .containsExactly("Settings", "Sign out");
+    Element signOut = header.selectFirst("> .site-header-end > form#user-menu-sign-out");
+    assertThat(signOut.attr("action")).isEqualTo("/logout");
+    assertThat(signOut.selectFirst("input[name=_csrf]")).isNotNull();
 
     assertThat(nav.select(".sidebar-menu-button[aria-current=page] .sidebar-menu-button-label"))
         .extracting(Element::text).containsExactly(current);
@@ -91,6 +101,36 @@ class HeaderLayoutPageTest {
     assertThat(page.selectFirst("body > main#main h1").text()).isEqualTo("Sign in");
     assertUniqueIds(page);
     assertNoInlineAllowanceNeeded(page);
+  }
+
+  /**
+   * For real: sign in with the sign-in page's form, then sign out with the user menu's form and the token it holds, as
+   * the browser sends them. The session is signed out afterwards, and a post without the token is refused.
+   */
+  @Test
+  void theUserMenuSignsOutForReal() throws Exception {
+    MockHttpSession session = new MockHttpSession();
+    Document login = Jsoup.parse(mockMvc.perform(get("/login").session(session))
+        .andReturn().getResponse().getContentAsString());
+    mockMvc.perform(post("/login").session(session)
+            .param("username", "user").param("password", "password")
+            .param("_csrf", login.selectFirst("form input[name=_csrf]").val()))
+        .andExpect(redirectedUrl("/"));
+
+    Document home = Jsoup.parse(mockMvc.perform(get("/").session(session))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString());
+    Element form = home.selectFirst("form#user-menu-sign-out");
+    assertThat(home.selectFirst(".user-menu-sign-out").attr("form")).isEqualTo(form.id());
+
+    mockMvc.perform(post(form.attr("action")).session(session))
+        .andExpect(status().isForbidden());
+    mockMvc.perform(post(form.attr("action")).session(session)
+            .param("_csrf", form.selectFirst("input[name=_csrf]").val()))
+        .andExpect(redirectedUrl("/login?logout"));
+    mockMvc.perform(get("/").session(session))
+        .andExpect(status().isFound())
+        .andExpect(redirectedUrl("/login"));
   }
 
   @Test

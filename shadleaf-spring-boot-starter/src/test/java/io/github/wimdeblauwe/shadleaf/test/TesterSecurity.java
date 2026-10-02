@@ -4,16 +4,18 @@ import io.github.wimdeblauwe.shadleaf.security.DefaultCurrentUserResolver;
 import io.github.wimdeblauwe.shadleaf.security.SpringSecurityUserSource;
 import io.github.wimdeblauwe.shadleaf.security.UserSource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.web.support.WebTestUtils;
+import org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor;
 import org.springframework.util.ClassUtils;
 
 /**
  * The tester's only contact with Spring Security, so it also runs in the tests without it on the classpath: the
  * {@link UserSource} an application with the default resolver gets, and the security context a request post-processor
  * such as {@code oidcLogin()} saved for the request, loaded as Spring Security's {@code SecurityContextHolderFilter}
- * loads it.
+ * loads it, and the CSRF token {@code csrf()} sets, added to forms by {@code th:action} as in an application.
  */
 final class TesterSecurity {
 
@@ -28,6 +30,16 @@ final class TesterSecurity {
         ? new SpringSecurityUserSource(new DefaultCurrentUserResolver(), UserSource.DEFAULT_LOGIN_URL,
             UserSource.DEFAULT_LOGOUT_URL)
         : UserSource.anonymous();
+  }
+
+  /**
+   * Registers what Spring Security's web configuration adds to an application's context for templates: the
+   * {@code requestDataValueProcessor} that gives a {@code th:action} form the request's CSRF token.
+   */
+  static void registerBeans(ConfigurableListableBeanFactory beanFactory) {
+    if (PRESENT) {
+      beanFactory.registerSingleton("requestDataValueProcessor", new CsrfRequestDataValueProcessor());
+    }
   }
 
   /** Loads the request's security context into {@link SecurityContextHolder}, as the filter chain would. */

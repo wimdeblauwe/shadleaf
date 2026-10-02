@@ -1,0 +1,102 @@
+<!-- <sl:user-menu>
+  <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+  <sl:dropdown-menu-item as="a" href="/settings"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+</sl:user-menu> -->
+<ul class="sidebar-menu user-menu">
+  <li class="sidebar-menu-item">
+    <button class="sidebar-menu-button dropdown-menu-trigger user-menu-trigger" type="button" data-size="lg" id="user-menu-trigger" popovertarget="user-menu" aria-haspopup="menu">
+      <span class="avatar user-menu-avatar" aria-hidden="true">
+        <img class="avatar-image" alt="" src="https://example.com/ada.jpg">
+        <span class="avatar-fallback">AL</span>
+      </span>
+      <span class="sidebar-menu-button-label">
+        <strong>Ada Lovelace</strong>
+        <small>ada@example.com</small>
+      </span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <span class="tooltip-content sidebar-menu-tooltip" role="tooltip" popover="manual" data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">
+        Ada Lovelace
+        <span class="tooltip-arrow" aria-hidden="true"></span>
+      </span>
+    </button>
+    <div class="dropdown-menu-content user-menu-content" id="user-menu" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="user-menu-trigger" data-side="right" data-align="end">
+      <div class="dropdown-menu-label user-menu-label">
+        <span class="avatar user-menu-avatar" aria-hidden="true">
+          <img class="avatar-image" alt="" src="https://example.com/ada.jpg">
+          <span class="avatar-fallback">AL</span>
+        </span>
+        <span class="user-menu-text">
+          <span class="user-menu-name">Ada Lovelace</span>
+          <span class="user-menu-detail">ada@example.com</span>
+        </span>
+      </div>
+      <div class="dropdown-menu-separator" role="separator"></div>
+      <a class="dropdown-menu-item" role="menuitem" href="/account">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        Account
+      </a>
+      <a class="dropdown-menu-item" role="menuitem" href="/settings">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        Settings
+      </a>
+      <div class="dropdown-menu-separator" role="separator"></div>
+      <button type="submit" class="dropdown-menu-item user-menu-sign-out" role="menuitem" form="user-menu-sign-out">
+        <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        Sign out
+      </button>
+    </div>
+    <form id="user-menu-sign-out" class="user-menu-sign-out-form" method="post" action="/logout" hx-boost="false" hidden></form>
+  </li>
+</ul>
+
+<!-- <sl:user-menu as="header"/> -->
+<button class="btn dropdown-menu-trigger user-menu-trigger" type="button" data-variant="ghost" data-size="icon" id="user-menu-trigger" popovertarget="user-menu" aria-haspopup="menu" aria-label="Account: Ada Lovelace">
+  <span class="avatar user-menu-avatar" aria-hidden="true">
+    <img class="avatar-image" alt="" src="https://example.com/ada.jpg">
+    <span class="avatar-fallback">AL</span>
+  </span>
+</button>
+<div class="dropdown-menu-content user-menu-content" id="user-menu" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="user-menu-trigger" data-align="end">
+  <div class="dropdown-menu-label user-menu-label">
+    <span class="avatar user-menu-avatar" aria-hidden="true">
+      <img class="avatar-image" alt="" src="https://example.com/ada.jpg">
+      <span class="avatar-fallback">AL</span>
+    </span>
+    <span class="user-menu-text">
+      <span class="user-menu-name">Ada Lovelace</span>
+      <span class="user-menu-detail">ada@example.com</span>
+    </span>
+  </div>
+  <div class="dropdown-menu-separator" role="separator"></div>
+  <button type="submit" class="dropdown-menu-item user-menu-sign-out" role="menuitem" form="user-menu-sign-out">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    Sign out
+  </button>
+</div>
+<form id="user-menu-sign-out" class="user-menu-sign-out-form" method="post" action="/logout" hx-boost="false" hidden></form>
+
+<!-- <sl:user-menu as="header" id="account" side="left" align="start" aria-label="Your account"/> -->
+<button class="btn dropdown-menu-trigger user-menu-trigger" type="button" data-variant="ghost" data-size="icon" id="account-trigger" popovertarget="account" aria-haspopup="menu" aria-label="Your account">
+  <span class="avatar user-menu-avatar" aria-hidden="true">
+    <img class="avatar-image" alt="" src="https://example.com/ada.jpg">
+    <span class="avatar-fallback">AL</span>
+  </span>
+</button>
+<div class="dropdown-menu-content user-menu-content" id="account" role="menu" popover tabindex="-1" x-data="slDropdownMenu" aria-labelledby="account-trigger" data-side="left">
+  <div class="dropdown-menu-label user-menu-label">
+    <span class="avatar user-menu-avatar" aria-hidden="true">
+      <img class="avatar-image" alt="" src="https://example.com/ada.jpg">
+      <span class="avatar-fallback">AL</span>
+    </span>
+    <span class="user-menu-text">
+      <span class="user-menu-name">Ada Lovelace</span>
+      <span class="user-menu-detail">ada@example.com</span>
+    </span>
+  </div>
+  <div class="dropdown-menu-separator" role="separator"></div>
+  <button type="submit" class="dropdown-menu-item user-menu-sign-out" role="menuitem" form="account-sign-out">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    Sign out
+  </button>
+</div>
+<form id="account-sign-out" class="user-menu-sign-out-form" method="post" action="/logout" hx-boost="false" hidden></form>

@@ -82,13 +82,10 @@
     </sl:sidebar>
     <sl:slot name="end">
       <sl:theme-toggle/>
-      <!--/* Until the signed-in user's menu (0.7.0): a plain form, so th:action adds the CSRF token. */-->
-      <form method="post" th:action="@{/logout}">
-        <sl:button type="submit" variant="ghost" size="sm">
-          <sl:slot name="icon-start"><sl:icon name="log-out"/></sl:slot>
-          Sign out
-        </sl:button>
-      </form>
+      <!--/* The signed-in user, from Spring Security: Sign out posts to /logout with the CSRF token. */-->
+      <sl:user-menu as="header">
+        <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+      </sl:user-menu>
     </sl:slot>
   </sl:site-header>
   <sl:sidebar-inset>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The signed-in user (<code>#slUser.current</code>) with a menu that signs out, or a Sign in link
+      for an anonymous visitor. In the sidebar's footer a large menu button with the user's picture, name and email (or
+      username, when it is not the name); in the site header a button with the picture alone. Both open a <code>sl:dropdown-menu</code>: the
+      user's name and email, the items in its content (Account, Settings), and Sign out, which posts to
+      <code>#slUser.logoutUrl</code> (<code>shadleaf.security.logout-url</code>) from a form of its own, so
+      <code>th:action</code> adds Spring Security's CSRF token. The picture goes through <code>sl:avatar</code>: while
+      it loads, without one and when it fails to load, the initials show. Every attribute that is not a prop passes
+      through to the button (or the Sign in link), except an <code>aria-label</code>, which only names the header's
+      button: in the sidebar the button's name is the text it shows, and Sign in is named by its text.</sl:description>
+    <sl:prop name="as" default="sidebar" values="sidebar header"><code>sidebar</code>: a
+      <code>sl:sidebar-menu</code> with one large menu button, for the <code>sl:sidebar-footer</code> (shadcn's
+      NavUser). <code>header</code>: a round button with the picture, for the <code>end</code> slot of
+      <code>sl:site-header</code>, named "Account: " and the user's name.</sl:prop>
+    <sl:prop name="id" default="user-menu">The menu's id. Its button gets the id with <code>-trigger</code> added, the
+      sign-out form with <code>-sign-out</code>. Two user menus on a page need different ids.</sl:prop>
+    <sl:prop name="side" values="top right bottom left">The side of the button the menu opens on, as on
+      <code>sl:dropdown-menu-content</code>. By default <code>right</code> in the sidebar (below the button in the
+      phone panel) and <code>bottom</code> in the header.</sl:prop>
+    <sl:prop name="align" default="end" values="start center end">How the menu lines up with the button along that
+      side, as on <code>sl:dropdown-menu-content</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The user is read once per template (#slUser). The second line is the email, else the username unless it is
+  the name (a UserDetails user's name is the username). The button's name
+  in the header is a message, or the caller's aria-label (theme-toggle's pattern); everywhere else the visible text names
+  it, so an aria-label is dropped. Values for nested components go
+  through sl-prefixed locals: their attributes are evaluated in their own templates. The form lies outside the menu
+  (role="menu" holds menu items only); Sign out names it with form. hx-boost="false" on the form and on the Sign in
+  link: signing in may redirect to an identity provider, which an htmx request cannot follow, and signing out should
+  load a whole page with a new CSRF token. */-->
+<th:block th:fragment="user-menu"
+          th:with="slUserMenuUser=${#slUser.current},
+                   slUserMenuId=${props.id},
+                   slUserMenuSide=${props.side ?: (props.as == 'sidebar' ? 'right' : 'bottom')},
+                   slUserMenuAlign=${props.align},
+                   slUserMenuFormId=${props.id + '-sign-out'},
+                   slUserMenuAttrs=${attrs.containsKey('th:aria-label') ? attrs : attrs.without('aria-label')},
+                   slUserMenuUnnamedAttrs=${attrs.without('aria-label')}">
+  <th:block th:if="${slUserMenuUser != null}"
+            th:with="slUserMenuDetail=${slUserMenuUser.email ?: (slUserMenuUser.username != slUserMenuUser.name ? slUserMenuUser.username : null)},
+                     slUserMenuLabel=${attrs['aria-label'] ?: #messages.msg('sl.user-menu.trigger', slUserMenuUser.name)}">
+    <sl:sidebar-menu th:if="${props.as == 'sidebar'}" class="user-menu">
+      <sl:sidebar-menu-item>
+        <sl:dropdown-menu th:id="${slUserMenuId}">
+          <sl:dropdown-menu-trigger as="sidebar-menu-button"
+                                    size="lg"
+                                    class="user-menu-trigger"
+                                    th:tooltip="${slUserMenuUser.name}"
+                                    sl:attrs="${slUserMenuUnnamedAttrs}">
+            <sl:slot name="icon-start"><th:block th:replace="~{sl/components/user-menu :: avatar}"/></sl:slot>
+            <strong th:text="${slUserMenuUser.name}"></strong>
+            <small th:if="${slUserMenuDetail != null}" th:text="${slUserMenuDetail}"></small>
+            <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+          </sl:dropdown-menu-trigger>
+          <th:block th:replace="~{sl/components/user-menu :: content}"/>
+        </sl:dropdown-menu>
+        <th:block th:replace="~{sl/components/user-menu :: sign-out-form}"/>
+      </sl:sidebar-menu-item>
+    </sl:sidebar-menu>
+    <th:block th:unless="${props.as == 'sidebar'}">
+      <sl:dropdown-menu th:id="${slUserMenuId}">
+        <sl:dropdown-menu-trigger variant="ghost"
+                                  size="icon"
+                                  class="user-menu-trigger"
+                                  th:aria-label="${slUserMenuLabel}"
+                                  sl:attrs="${slUserMenuAttrs}"><th:block
+            th:replace="~{sl/components/user-menu :: avatar}"/></sl:dropdown-menu-trigger>
+        <th:block th:replace="~{sl/components/user-menu :: content}"/>
+      </sl:dropdown-menu>
+      <th:block th:replace="~{sl/components/user-menu :: sign-out-form}"/>
+    </th:block>
+  </th:block>
+  <th:block th:if="${slUserMenuUser == null}"
+            th:with="slUserMenuLoginUrl=@{${#slUser.loginUrl}}">
+    <sl:sidebar-menu th:if="${props.as == 'sidebar'}" class="user-menu">
+      <sl:sidebar-menu-item>
+        <sl:sidebar-menu-button class="user-menu-sign-in"
+                                th:href="${slUserMenuLoginUrl}"
+                                hx-boost="false"
+                                th:tooltip="#{sl.user-menu.sign-in}"
+                                sl:attrs="${slUserMenuUnnamedAttrs}">
+          <sl:slot name="icon-start"><sl:icon name="log-in"/></sl:slot>
+          [[#{sl.user-menu.sign-in}]]
+        </sl:sidebar-menu-button>
+      </sl:sidebar-menu-item>
+    </sl:sidebar-menu>
+    <sl:button th:unless="${props.as == 'sidebar'}"
+               as="a"
+               variant="outline"
+               class="user-menu-sign-in"
+               th:href="${slUserMenuLoginUrl}"
+               hx-boost="false"
+               sl:attrs="${slUserMenuUnnamedAttrs}">[[#{sl.user-menu.sign-in}]]</sl:button>
+  </th:block>
+</th:block>
+
+<!--/* The picture, decorative: the name is beside it, or names the button. Without a picture the image has src="" and
+  CSS hides it; without initials the fallback is an icon. */-->
+<th:block th:fragment="avatar"><sl:avatar class="user-menu-avatar"><sl:avatar-image
+    th:src="${slUserMenuUser.picture != null} ? @{${slUserMenuUser.picture}}"/><sl:avatar-fallback><th:block
+    th:if="${slUserMenuUser.initials != null}">[[${slUserMenuUser.initials}]]</th:block><sl:icon
+    th:unless="${slUserMenuUser.initials != null}" name="user"/></sl:avatar-fallback></sl:avatar></th:block>
+
+<!--/* The menu: the user, the caller's items (if any) between separators, Sign out. */-->
+<th:block th:fragment="content"><sl:dropdown-menu-content class="user-menu-content"
+                                                          th:side="${slUserMenuSide}"
+                                                          th:align="${slUserMenuAlign}">
+  <sl:dropdown-menu-label class="user-menu-label">
+    <th:block th:replace="~{sl/components/user-menu :: avatar}"/>
+    <span class="user-menu-text">
+      <span class="user-menu-name" th:text="${slUserMenuUser.name}"></span>
+      <span th:if="${slUserMenuDetail != null}" class="user-menu-detail" th:text="${slUserMenuDetail}"></span>
+    </span>
+  </sl:dropdown-menu-label>
+  <sl:dropdown-menu-separator/>
+  <th:block th:if="${slots.hasDefault()}"><sl:slot/><sl:dropdown-menu-separator/></th:block>
+  <sl:dropdown-menu-item class="user-menu-sign-out" type="submit" th:form="${slUserMenuFormId}"><sl:icon
+      name="log-out"/>[[#{sl.user-menu.sign-out}]]</sl:dropdown-menu-item>
+</sl:dropdown-menu-content></th:block>
+
+<th:block th:fragment="sign-out-form"><form th:id="${slUserMenuFormId}"
+                                            class="user-menu-sign-out-form"
+                                            method="post"
+                                            th:action="@{${#slUser.logoutUrl}}"
+                                            hx-boost="false"
+                                            hidden></form></th:block>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import {expect, test, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {ORIGIN, openFixture, type FixtureOptions} from './fixture';
+import {ORIGIN, openFixture, servePhotos, type FixtureOptions} from './fixture';
 
 // The header layout: sl:site-header with a sl:sidebar placement="header" in it. Fixture pages under a strict
 // Content-Security-Policy with the csp Alpine build. From 768 px the one <nav popover> is a row of links in the header
@@ -15,7 +15,7 @@ const DESKTOP = {width: 1024, height: 700};
 const PHONE = {width: 390, height: 700};
 
 type Scenario = { id: string, html: string };
-const PREVIEW = (previews.scenarios as Scenario[]).find(scenario => scenario.id === 'sidebar--header')!.html;
+const PREVIEW = servePhotos((previews.scenarios as Scenario[]).find(scenario => scenario.id === 'sidebar--header')!.html);
 
 type ShellOptions = { title?: string, current?: string, side?: 'start' | 'end', inset?: boolean, more?: number };
 

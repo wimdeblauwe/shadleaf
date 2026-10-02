@@ -24,10 +24,15 @@ scenarios:
       for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to
       the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the
       sidebar's ground (from 768 px), and collapsible="icon" collapses it to a strip of icons whose tooltips show the
-      labels, as sample-01's layout. Documents opens a sub-menu. The large button in the header is a team switcher: it
+      labels, as sample-01's layout. Documents opens a sub-menu. The footer ends in the signed-in user's menu
+      (sl:user-menu). The large button in the header is a team switcher: it
       opens a dropdown menu beside the sidebar (below it in the panel) with the current team checked, and "More" beside
       Design Engineering opens one too.
     request: /
+    user:
+      name: shadcn
+      email: m@example.com
+      photo: shadcn
     source: |-
       <sl:skip-link/>
       <sl:sidebar-provider>
@@ -173,6 +178,10 @@ scenarios:
                 </sl:sidebar-menu-button>
               </sl:sidebar-menu-item>
             </sl:sidebar-menu>
+            <sl:user-menu>
+              <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+              <sl:dropdown-menu-item as="a" href="/notifications"><sl:icon name="bell"/>Notifications</sl:dropdown-menu-item>
+            </sl:user-menu>
           </sl:sidebar-footer>
         </sl:sidebar>
         <sl:sidebar-inset>
@@ -561,12 +570,16 @@ scenarios:
     title: Header layout
     description: >-
       placement="header" puts the same navigation in a sl:site-header: from 768 px a row of links (the current page
-      marked as in the sidebar), with the application's name before it and search and the theme toggle at the end.
+      marked as in the sidebar), with the application's name before it and search, the theme toggle and the signed-in user's menu at the end.
       Favorites, Settings and Help are panel-only, so the row stays short; the panel's own header with the name is
       panel-only too. "More" beside Documents opens a dropdown menu below it. variant="inset" makes the page a card below the header. Narrower, the menu button opens the
       same nav as the panel: see the next example.
     showcase: false
     request: /
+    user:
+      name: shadcn
+      email: m@example.com
+      photo: shadcn
     source: &header-source |-
       <sl:skip-link/>
       <sl:sidebar-provider>
@@ -669,6 +682,9 @@ scenarios:
           <sl:slot name="end">
             <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
             <sl:theme-toggle/>
+            <sl:user-menu as="header" id="header-user-menu">
+              <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+            </sl:user-menu>
           </sl:slot>
         </sl:site-header>
         <sl:sidebar-inset>
@@ -685,4 +701,8 @@ scenarios:
     showcase: false
     request: /
     width: 390
+    user:
+      name: shadcn
+      email: m@example.com
+      photo: shadcn
     source: *header-source

@@ -694,6 +694,26 @@
     @apply px-2 py-1.5 text-xs font-medium text-muted-foreground data-inset:ps-8;
   }
 
+  /*
+    The user menu's label: the user, in the menu's text colour (shadcn's NavUser), not a muted heading. After
+    .dropdown-menu-label, which it overrides. The header's button is round, as the picture it shows.
+  */
+  .dropdown-menu-label.user-menu-label {
+    @apply gap-2 px-1 py-1.5 text-sm font-normal leading-tight text-popover-foreground;
+  }
+
+  .user-menu-name {
+    @apply font-medium;
+  }
+
+  .user-menu-detail {
+    @apply text-xs;
+  }
+
+  .btn.user-menu-trigger {
+    @apply rounded-full;
+  }
+
   .dropdown-menu-separator {
     @apply -mx-1 my-1 bg-border;
   }

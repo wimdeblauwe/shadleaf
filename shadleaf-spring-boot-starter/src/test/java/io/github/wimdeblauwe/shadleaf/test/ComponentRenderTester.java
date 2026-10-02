@@ -102,6 +102,7 @@ public final class ComponentRenderTester {
     // application's messageSource bean does.
     GenericWebApplicationContext applicationContext = new GenericWebApplicationContext(servletContext);
     applicationContext.getBeanFactory().registerSingleton("messageSource", messageSource);
+    TesterSecurity.registerBeans(applicationContext.getBeanFactory());
     applicationContext.refresh();
     servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
     webApplication = JakartaServletWebApplication.buildApplication(servletContext);

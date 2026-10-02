@@ -57,7 +57,7 @@ yourself, or use a [site header](../site-header/), which does it for you, as the
 The sidebar holds a header, the content and a footer, with shadcn/ui's names:
 
 - `<sl:sidebar-header>` at the top (the application or team) and `<sl:sidebar-footer>` at the bottom (settings, help,
-  later the signed-in user). They stay in view.
+  the signed-in user's [user menu](../user-menu/)). They stay in view.
 - `<sl:sidebar-content>` between them, which scrolls when there is more than fits. It is a plain `div`: the sidebar
   itself is the navigation landmark.
 - `<sl:sidebar-separator>` draws a line between parts; screen readers skip it.
@@ -180,7 +180,8 @@ A dropdown menu opens from a sidebar part when its trigger says so: `<sl:dropdow
 renders a menu button, `as="sidebar-menu-action"` a menu action (shadcn's `<DropdownMenuTrigger asChild>`). The trigger
 takes the part's props (`size`, `variant`, `tooltip`; `show-on-hover`) and its `icon-start` and `icon-end` slots, and
 any other attribute passes through. Put the `<sl:dropdown-menu>` in the `<sl:sidebar-menu-item>`, where the part would
-be. The default example above has two: a team switcher in the header and "More" beside Design Engineering.
+be. The default example above has three: a team switcher in the header, "More" beside Design Engineering, and the
+[user menu](../user-menu/) in the footer, which is one component.
 
 ```html
 <sl:sidebar-header>
@@ -225,10 +226,12 @@ be. The default example above has two: a team switcher in the header and "More" 
 </sl:sidebar-menu-item>
 ```
 
-**The current team or version** is a checked radio item: a menu of links, one per team, the current one checked by the
-server. A screen reader says "Acme Inc., radio menu item, checked", the check mark shows it, and it works without
+**The current team or version** is a checked radio item: a menu of links, one per team (or version), the current one
+checked by the server. A screen reader says "Acme Inc., radio menu item, checked", the check mark shows it, and it works without
 JavaScript, as the [radio items](../dropdown-menu/#checkbox-and-radio-items) of a sort menu do. The menu is labelled by its
 trigger; the group of teams by the label above it.
+
+A version switcher (shadcn's sidebar-01) is the same menu with the versions, opened from the header's large menu button:
 
 <ComponentPreview id="sidebar--version-switcher" />
 

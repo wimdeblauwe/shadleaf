@@ -1,6 +1,6 @@
 ---
 title: Spring Security
-description: The one matcher the library's assets need.
+description: The one matcher the library's assets need, and the signed-in user in templates (#slUser).
 sidebar:
   order: 3
 ---
@@ -25,3 +25,79 @@ The files are static resources inside the jar, so nothing else is exposed by it:
 hashed files is kept outside the served directory.
 
 To run under a strict Content-Security-Policy as well, see [CSP](../csp/).
+
+## The signed-in user
+
+Templates read the signed-in user from `#slUser`, an expression object, so no controller has to add a user to the
+model, and error pages and fragments see it too. The [user menu](../../components/user-menu/) is built on it.
+
+| Expression | Value |
+| --- | --- |
+| `#slUser.signedIn` | Whether someone is signed in. Remember-me counts; an anonymous visitor does not. |
+| `#slUser.current` | The user (a `ShadleafUser`), or `null` for an anonymous visitor. |
+| `#slUser.current.name` | What to call the user. Never empty. |
+| `#slUser.current.username` | The name the user signs in with (GitHub's `login`, OpenID Connect's `preferred_username`, a `UserDetails` username), or `null`. |
+| `#slUser.current.email` | The email address, or `null`. |
+| `#slUser.current.picture` | The URL of a picture, or `null`. |
+| `#slUser.current.initials` | One or two letters for the avatar: the first and last word of the name ("Ludwig van Beethoven": LB), or from the email. |
+| `#slUser.loginUrl` | Where Sign in goes, for `@{...}`. |
+| `#slUser.logoutUrl` | Where the sign-out form posts to, for `@{...}`. |
+
+```html
+<p th:if="${#slUser.signedIn}">Welcome back, [[${#slUser.current.name}]].</p>
+```
+
+Spring Security is an optional dependency of the starter. Without it `#slUser` is still there, and nobody is signed in.
+
+### Where the user comes from
+
+The default `CurrentUserResolver` reads what each kind of sign-in provides:
+
+| Sign-in | Name | Email, picture |
+| --- | --- | --- |
+| OpenID Connect (Keycloak, Google, ...) | `name`, else `given_name` and `family_name`, else `preferred_username`, else the email | `email`, `picture` |
+| OAuth2 (GitHub) | `name`, else `login` | `email` (often missing), `avatar_url` |
+| A JWT (resource server) | as OpenID Connect, from its claims | as OpenID Connect |
+| Form login, HTTP Basic (`UserDetails`) | the username | none |
+| Anything else | `Authentication.getName()` | none |
+
+An application that knows its users better (a display name from its own database, say) declares its own:
+
+```java
+@Bean
+CurrentUserResolver currentUserResolver(MemberRepository members) {
+  return authentication -> members.findByUsername(authentication.getName())
+      .map(member -> ShadleafUser.of(member.getDisplayName(), member.getUsername(), member.getEmail(),
+          member.getPhotoUrl()))
+      .orElse(null);
+}
+```
+
+It is only asked for an authenticated user; returning `null` treats the visitor as anonymous.
+
+### Sign-in and sign-out URLs
+
+```properties
+# Where Sign in goes. Default: the authorization endpoint of the one OAuth2 login client
+# (/oauth2/authorization/<id>) when there is exactly one, else /login.
+shadleaf.security.login-url=/login
+# Where Sign out posts to. Default: /logout, Spring Security's.
+shadleaf.security.logout-url=/logout
+```
+
+Sign out is a POST with the CSRF token, which `th:action` adds to the form; see the
+[user menu](../../components/user-menu/#signing-out).
+
+### Navigation by role
+
+Hide a link a user may not follow with the Thymeleaf extras for Spring Security
+(`thymeleaf-extras-springsecurity6`, which Spring Boot configures when it is on the classpath, also with Spring
+Security 7):
+
+```html
+<sl:sidebar-menu-item sec:authorize="hasRole('ADMIN')">
+  <sl:sidebar-menu-button th:href="@{/admin}">Admin</sl:sidebar-menu-button>
+</sl:sidebar-menu-item>
+```
+
+Hiding the link is no security: protect the URL itself in the security configuration.

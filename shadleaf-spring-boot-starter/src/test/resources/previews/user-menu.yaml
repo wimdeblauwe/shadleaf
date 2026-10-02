@@ -1,0 +1,108 @@
+# Scenarios for the user menu's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# A scenario's user is who #slUser says is signed in; without one the visitor is anonymous. The sidebar's showcase
+# scenario (sidebar.yaml, default) has a user menu in its footer, and the header layout (sidebar.yaml, header) one in
+# its site header; docs/tests/user-menu.spec.ts builds its fixtures from the scenarios here.
+component: user-menu
+scenarios:
+  - id: default
+    title: User menu
+    description: >-
+      In the sidebar's footer, the signed-in user as a large menu button: picture, name and email. It opens a menu
+      beside the sidebar (below the button in the phone panel) with the user, the application's items and Sign out,
+      which posts to #slUser.logoutUrl with the CSRF token. Collapsed to icons, the picture stays, with the name as a
+      tooltip.
+    showcase: false
+    user:
+      name: shadcn
+      email: m@example.com
+      photo: shadcn
+    source: |-
+      <sl:sidebar-provider>
+        <sl:sidebar collapsible="none">
+          <sl:sidebar-content>
+            <p>The application's navigation.</p>
+          </sl:sidebar-content>
+          <sl:sidebar-footer>
+            <sl:user-menu>
+              <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+              <sl:dropdown-menu-item as="a" href="/billing"><sl:icon name="credit-card"/>Billing</sl:dropdown-menu-item>
+              <sl:dropdown-menu-item as="a" href="/notifications"><sl:icon name="bell"/>Notifications</sl:dropdown-menu-item>
+            </sl:user-menu>
+          </sl:sidebar-footer>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <p>The page's content.</p>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+  - id: header
+    title: In the site header
+    description: >-
+      as="header": a round button with the picture, named "Account: " and the user's name, at the end of a
+      sl:site-header. The menu opens below it, lined up with its end.
+    user:
+      name: shadcn
+      email: m@example.com
+      photo: shadcn
+    source: |-
+      <sl:site-header>
+        <sl:button as="a" href="/" variant="ghost">
+          <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+          Acme Inc.
+        </sl:button>
+        <sl:slot name="end">
+          <sl:user-menu as="header" id="user-menu-header">
+            <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+            <sl:dropdown-menu-item as="a" href="/settings"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+          </sl:user-menu>
+        </sl:slot>
+      </sl:site-header>
+  - id: initials
+    title: Without a picture
+    description: >-
+      A user without a picture, or whose picture fails to load, gets the initials (here from a GitHub sign-in: no email,
+      so the username is the second line).
+    user:
+      name: The Octocat
+      username: octocat
+    source: |-
+      <sl:site-header>
+        <sl:slot name="end">
+          <sl:user-menu as="header" id="user-menu-initials"/>
+        </sl:slot>
+      </sl:site-header>
+  - id: anonymous
+    title: Nobody signed in
+    description: >-
+      An anonymous visitor gets a Sign in link to #slUser.loginUrl instead: /login, the one OAuth2 client's
+      authorization endpoint, or shadleaf.security.login-url. In the sidebar a menu button, in the header an outline
+      button.
+    source: |-
+      <sl:site-header>
+        <sl:button as="a" href="/" variant="ghost">
+          <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+          Acme Inc.
+        </sl:button>
+        <sl:slot name="end">
+          <sl:user-menu as="header"/>
+        </sl:slot>
+      </sl:site-header>
+  - id: anonymous-sidebar
+    title: Nobody signed in, in the sidebar
+    description: >-
+      The same in the sidebar's footer: a menu button with the log-in icon, which stays as the icon when the sidebar
+      collapses to icons.
+    showcase: false
+    source: |-
+      <sl:sidebar-provider>
+        <sl:sidebar collapsible="none">
+          <sl:sidebar-content>
+            <p>The application's navigation.</p>
+          </sl:sidebar-content>
+          <sl:sidebar-footer>
+            <sl:user-menu/>
+          </sl:sidebar-footer>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <p>The page's content.</p>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>

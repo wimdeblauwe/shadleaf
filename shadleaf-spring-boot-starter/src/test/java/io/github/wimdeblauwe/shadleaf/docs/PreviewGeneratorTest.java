@@ -10,7 +10,9 @@ import io.github.wimdeblauwe.shadleaf.assets.ViteManifestParser.ViteManifest;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.metadata.ComponentMetadata;
 import io.github.wimdeblauwe.shadleaf.metadata.WebTypes;
+import io.github.wimdeblauwe.shadleaf.security.ShadleafUser;
 import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
+import io.github.wimdeblauwe.shadleaf.test.FixedUserSource;
 import io.github.wimdeblauwe.shadleaf.test.FormModel;
 import io.github.wimdeblauwe.shadleaf.test.LibraryComponents;
 import io.github.wimdeblauwe.shadleaf.test.Rendered;
@@ -60,7 +62,9 @@ import tools.jackson.databind.json.JsonMapper;
  * A scenario's {@code renderSource} can show a photo from {@code previews/photos/} as {@code ${photos.<name>}}, a data:
  * URI, so the previews and the showcase checks never fetch an image. A scenario's {@code pages} are Spring Data
  * pages by variable name ({@code people: {number: 4, size: 10, total: 270}}, {@code number} zero-based, {@code slice:
- * true} for a {@code Slice}), so a pagination renders from a real {@code Page}.
+ * true} for a {@code Slice}), so a pagination renders from a real {@code Page}. A scenario's {@code user} is the
+ * signed-in user {@code #slUser} gives ({@code name}, {@code username}, {@code email}, and {@code photo}, the name of
+ * a photo, or {@code picture}, a URL); without one the visitor is anonymous.
  * {@code docs/scripts/sync.mjs} copies them into the docs project. Adding examples for a component means adding a
  * YAML file; every library component must have one, or be listed under the {@code parts} of its family's file.
  */
@@ -113,10 +117,18 @@ class PreviewGeneratorTest {
 
   private Preview render(Scenario scenario) {
     Rendered rendered;
-    ComponentRenderTester tester = scenario.request() == null
-        ? this.tester
-        : testersByRequest.computeIfAbsent(scenario.request(),
-            request -> ComponentRenderTester.builder().requestUri(request).build());
+    ComponentRenderTester tester;
+    if (scenario.user() != null) {
+      tester = ComponentRenderTester.builder()
+          .requestUri(scenario.request() == null ? "/" : scenario.request())
+          .userSource(FixedUserSource.of(user(scenario.user())))
+          .build();
+    } else if (scenario.request() != null) {
+      tester = testersByRequest.computeIfAbsent(scenario.request(),
+          request -> ComponentRenderTester.builder().requestUri(request).build());
+    } else {
+      tester = this.tester;
+    }
     try {
       Map<String, Object> variables = new LinkedHashMap<>(scenario.pages());
       variables.put("photos", photos);
@@ -226,7 +238,7 @@ class PreviewGeneratorTest {
             source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form")),
             (Boolean) entry.getOrDefault("showcase", true), (String) entry.get("request"),
             pages((Map<String, Map<String, Object>>) entry.getOrDefault("pages", Map.of())),
-            (Integer) entry.get("width")));
+            (Integer) entry.get("width"), (Map<String, String>) entry.get("user")));
       }
     }
     assertThat(components).as("components with previews in %s", PREVIEWS_DIRECTORY)
@@ -250,6 +262,16 @@ class PreviewGeneratorTest {
     Object globalErrors = form.getOrDefault("globalErrors", List.of());
     return FormModel.of((Map<String, Object>) form.getOrDefault("values", Map.of()), errors,
         globalErrors instanceof List<?> list ? (List<String>) list : List.of((String) globalErrors));
+  }
+
+  /** A scenario's {@code user}: its picture is a photo's data: URI ({@code photo}) or a URL ({@code picture}). */
+  private ShadleafUser user(Map<String, String> user) {
+    String photo = user.get("photo");
+    if (photo != null) {
+      assertThat(photos).as("photo of user %s", user.get("name")).containsKey(photo);
+    }
+    return ShadleafUser.of(user.get("name"), user.get("username"), user.get("email"),
+        photo != null ? photos.get(photo) : user.get("picture"));
   }
 
   /** A scenario's {@code pages}: a {@code Page} (or with {@code slice: true} a {@code Slice}) by variable name. */
@@ -284,10 +306,12 @@ class PreviewGeneratorTest {
    * @param request      the path and query of the request it renders in ({@code /people?sort=name,desc}), for links
    *                     built from the request such as a table's sort links; {@code /} when absent
    * @param pages        Spring Data pages by variable name, for a pagination
+   * @param user         the signed-in user, as written in the YAML; anonymous when absent
    */
   private record Scenario(String id, String component, @Nullable String title, @Nullable String description,
                           String source, String renderSource, @Nullable FormModel form, boolean showcase,
-                          @Nullable String request, Map<String, Object> pages, @Nullable Integer width) {
+                          @Nullable String request, Map<String, Object> pages, @Nullable Integer width,
+                          @Nullable Map<String, String> user) {
 
   }
 

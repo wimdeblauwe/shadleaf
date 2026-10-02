@@ -1,0 +1,22 @@
+<!-- <sl:user-menu>
+  <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+  <sl:dropdown-menu-item as="a" href="/settings"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+</sl:user-menu> -->
+<ul class="sidebar-menu user-menu">
+  <li class="sidebar-menu-item">
+    <a class="sidebar-menu-button user-menu-sign-in" href="/login" hx-boost="false">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <span class="sidebar-menu-button-label">Sign in</span>
+      <span class="tooltip-content sidebar-menu-tooltip" role="tooltip" popover="manual" data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">
+        Sign in
+        <span class="tooltip-arrow" aria-hidden="true"></span>
+      </span>
+    </a>
+  </li>
+</ul>
+
+<!-- <sl:user-menu as="header"/> -->
+<a class="btn user-menu-sign-in" data-variant="outline" href="/login" hx-boost="false">Sign in</a>
+
+<!-- <sl:user-menu as="header" id="account" side="left" align="start" aria-label="Your account"/> -->
+<a class="btn user-menu-sign-in" data-variant="outline" href="/login" hx-boost="false">Sign in</a>

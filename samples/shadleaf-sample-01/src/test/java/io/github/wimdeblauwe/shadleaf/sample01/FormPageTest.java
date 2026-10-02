@@ -70,7 +70,7 @@ class FormPageTest {
     assertThat(page.select("input[type=hidden][name=_terms], input[type=hidden][name=_newsletter]")).hasSize(2);
     assertThat(page.select(".field-error, [data-invalid], .form-errors")).isEmpty();
     assertThat(page.select("[autofocus]")).as("the first, empty form keeps the focus where it was").isEmpty();
-    Element form = page.selectFirst("form");
+    Element form = page.selectFirst(".page form");
     assertThat(form.attr("action")).isEqualTo("/form");
     assertThat(form.attr("method")).isEqualTo("post");
     assertThat(form.attributes().asList()).noneMatch(attribute -> attribute.getKey().startsWith("hx-"));
