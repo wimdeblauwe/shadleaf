@@ -1,0 +1,76 @@
+/*
+ * The application's own stylesheet: plain CSS, served as a static file. It uses Shadleaf's tokens, so it follows the
+ * theme. Unlayered, so it wins over the library's layered rules.
+ */
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+.page {
+  max-width: 48rem;
+  padding: 0 1rem 1rem;
+}
+
+.page > h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-block-end: 1rem;
+}
+
+.page p {
+  margin-block-end: 1rem;
+}
+
+.claim-value {
+  overflow-wrap: anywhere;
+}
+
+/* The application's logo in the sidebar's large menu button. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+
+.app-logo > svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+code {
+  font-size: 0.875em;
+}
+
+/* The sign-in page. */
+.plain-page {
+  margin: 0 auto;
+  padding-block-start: 1.5rem;
+}
+
+.app-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.app-name > svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.sign-in-providers {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 20rem;
+}
+
+.alert {
+  margin-block-end: 1rem;
+}

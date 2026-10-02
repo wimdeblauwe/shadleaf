@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Home', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>Signed in as <strong th:text="${#slUser.current.name}">Ada Lovelace</strong>. This is what <code>#slUser</code>
+    made of what the provider sent; the user menu at the bottom of the sidebar shows the same.</p>
+  <sl:table id="user">
+    <thead>
+    <tr>
+      <th>Expression</th>
+      <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row : ${ {'name', 'username', 'email', 'picture', 'initials'} }">
+      <td><code th:text="|#slUser.current.${row}|">#slUser.current.name</code></td>
+      <td th:text="${#slUser.current[row] ?: '(none)'}">Ada Lovelace</td>
+    </tr>
+    </tbody>
+  </sl:table>
+</div>
+</body>
+</html>

@@ -91,7 +91,8 @@ names it (`form="user-menu-sign-out"`).
 
 The form's `th:action` is what adds the token, as on every form of yours; nothing to configure. Spring Security's
 default `/logout` then signs the user out and redirects to `/login?logout`. With OpenID Connect, sign out at the
-provider too with Spring Security's `OidcClientInitiatedLogoutSuccessHandler`.
+provider too with Spring Security's `OidcClientInitiatedLogoutSuccessHandler`: see
+[Signing out at Keycloak](../../guides/oauth2/#signing-out-at-keycloak).
 
 `hx-boost="false"` keeps a [boosted](../../guides/htmx/) page from sending it with htmx: signing out should load a
 whole page, with a new CSRF token. The Sign in link has it too, as signing in usually redirects to an identity

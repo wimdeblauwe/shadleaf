@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--/* The sign-in page: no navigation, as nothing else is open to a visitor who has not signed in. */-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${pageTitle} - Shadleaf Sample App 3|">Shadleaf Sample App 3</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:site-header>
+  <span class="app-name"><sl:icon name="leaf"/>Shadleaf</span>
+  <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+</sl:site-header>
+<main id="main" class="page plain-page" tabindex="-1">
+  <h1 th:text="${pageTitle}"></h1>
+  <div th:replace="${content}"></div>
+</main>
+</body>
+</html>

@@ -1,0 +1,210 @@
+---
+title: Signing in with OAuth2
+description: Keycloak (OpenID Connect, signing out at Keycloak too) and GitHub as the way users sign in, and what the user menu shows for each.
+sidebar:
+  order: 4
+---
+
+With Spring Security's OAuth2 login, users sign in at an identity provider, and Shadleaf's
+[user menu](../../components/user-menu/) shows what the provider sent: name, email or login, and picture. This page
+sets up two providers that differ in every one of those: Keycloak, an OpenID Connect provider you run yourself, and
+GitHub, which speaks plain OAuth2. The [Spring Security](../spring-security/) guide has what holds for any sign-in:
+`#slUser`, the sign-in and sign-out URLs, navigation by role.
+
+Sample-03 (`samples/shadleaf-sample-03`) is this page as an application: Keycloak by default, GitHub next to it with
+the `github` profile.
+
+## The dependency
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-security-oauth2-client</artifactId>
+</dependency>
+```
+
+With one login client, Sign in (`#slUser.loginUrl`) goes straight to the provider:
+`/oauth2/authorization/<registration id>`. With two or more it is `/login`, the page to choose one on (see
+[More than one provider](#more-than-one-provider)). `shadleaf.security.login-url` overrides both.
+
+## Keycloak
+
+Register the application as a client in Keycloak: client authentication on (a confidential client with a secret),
+the standard flow (authorization code), and as valid redirect URI `http://localhost:8080/login/oauth2/code/keycloak`
+(the last part is the registration id below). For signing out, add the application's home page,
+`http://localhost:8080/`, as a valid post logout redirect URI, or `+` for "the same as the redirect URIs".
+
+```properties
+spring.security.oauth2.client.registration.keycloak.client-id=acme
+spring.security.oauth2.client.registration.keycloak.client-secret=${KEYCLOAK_CLIENT_SECRET}
+spring.security.oauth2.client.registration.keycloak.client-name=Keycloak
+spring.security.oauth2.client.registration.keycloak.scope=openid,profile,email
+spring.security.oauth2.client.provider.keycloak.issuer-uri=https://keycloak.example.com/realms/acme
+```
+
+Spring Security reads every endpoint from the issuer's discovery document, so the application needs Keycloak to be
+up when it starts. The issuer must be the same URL for the browser and the application: Spring Security checks the
+ID token's `iss` against it.
+
+`scope` asks for `profile` and `email`, which Keycloak's default client scopes map to the claims the user menu reads:
+
+| Claim | Keycloak's user | In the user menu |
+| --- | --- | --- |
+| `name` (or `given_name` and `family_name`) | first and last name | the name, and the initials when there is no picture |
+| `email` | email | the second line |
+| `preferred_username` | username | `#slUser.current.username` |
+| `picture` | the user attribute `picture`, if you add one | the avatar |
+
+Keycloak has no picture by default: the user menu then shows the initials. To send one, add `picture` to the realm's
+user profile and set it per user; the `profile` scope already maps it to the claim.
+
+### Signing out at Keycloak
+
+Spring Security's `/logout` ends the application's session, not Keycloak's. Keycloak still knows the user, so the
+next Sign in goes straight through without asking for a password: on a shared computer, the user never signed out.
+OpenID Connect's RP-initiated logout ends both: after its own sign-out, Spring Security sends the browser to
+Keycloak's end-session endpoint (from the discovery document), with the ID token as a hint and the URL to come back
+to.
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http, ClientRegistrationRepository clients) throws Exception {
+  OidcClientInitiatedLogoutSuccessHandler signOutAtKeycloak = new OidcClientInitiatedLogoutSuccessHandler(clients);
+  signOutAtKeycloak.setPostLogoutRedirectUri("{baseUrl}/");
+  return http
+      .authorizeHttpRequests(requests -> requests
+          .requestMatchers("/shadleaf/**").permitAll()
+          .anyRequest().authenticated())
+      .oauth2Login(Customizer.withDefaults())
+      .logout(logout -> logout.logoutSuccessHandler(signOutAtKeycloak))
+      .build();
+}
+```
+
+The user menu's Sign out posts to `/logout` as before; nothing changes in the templates. Keycloak sends the browser
+back to the home page, which asks to sign in again, and this time Keycloak shows its sign-in form. `{baseUrl}` is the
+application's own scheme, host and port, so the same code works locally and deployed, as long as Keycloak lists the
+URL as a valid post logout redirect URI. Behind a proxy, set `server.forward-headers-strategy` so the base URL is the
+public one.
+
+A user who signed in with a provider without an end-session endpoint (GitHub) is sent to `/` after signing out of the
+application.
+
+## GitHub
+
+Create an OAuth app under *Settings*, *Developer settings*, *OAuth Apps*, with the authorization callback URL
+`http://localhost:8080/login/oauth2/code/github`. Spring Security knows GitHub's endpoints, so a client id and secret
+are all it needs:
+
+```properties
+spring.security.oauth2.client.registration.github.client-id=${GITHUB_CLIENT_ID}
+spring.security.oauth2.client.registration.github.client-secret=${GITHUB_CLIENT_SECRET}
+```
+
+GitHub is no OpenID Connect provider: there is no ID token, only the user's attributes from its API, and the user menu
+reads those.
+
+| Attribute | In the user menu |
+| --- | --- |
+| `name` | the name; a user who set none gets their `login` instead |
+| `login` | the second line, as GitHub sends no `email` for a user who keeps it private (the default) |
+| `avatar_url` | the avatar |
+
+The `user:email` scope does not change this: it allows asking GitHub's emails endpoint, but the attributes stay the
+same. An application that needs the address asks for it itself and puts it in a
+[`CurrentUserResolver`](../spring-security/#where-the-user-comes-from) of its own.
+
+Signing out only signs out of the application: GitHub has no end-session endpoint, so the next Sign in with GitHub
+goes straight through while the browser is signed in at GitHub.
+
+## More than one provider
+
+With two clients, Sign in goes to `/login`. Spring Security generates a page there that lists them, but only while
+you leave its exception handling alone: [htmx after the session expired](#with-htmx) sets an entry point of its own,
+and then `/login` is yours to write. Sample-03's is a few lines: one Shadleaf button per client.
+
+```java
+@Controller
+class LoginController {
+
+  private final List<ClientRegistration> clients;
+
+  LoginController(InMemoryClientRegistrationRepository clients) {
+    this.clients = StreamSupport.stream(clients.spliterator(), false).toList();
+  }
+
+  @GetMapping("/login")
+  String login(Model model) {
+    model.addAttribute("clients", clients);
+    return "login";
+  }
+}
+```
+
+```html
+<sl:alert variant="destructive" th:if="${param.error != null}">
+  <sl:icon name="circle-alert"/>
+  <sl:alert-title>Signing in did not work</sl:alert-title>
+</sl:alert>
+<sl:button th:each="client : ${clients}" as="a" variant="outline" hx-boost="false"
+           th:href="@{/oauth2/authorization/{id}(id=${client.registrationId})}"
+           th:text="|Sign in with ${client.clientName}|">Sign in with Keycloak</sl:button>
+```
+
+```java
+http
+    .authorizeHttpRequests(requests -> requests
+        .requestMatchers("/shadleaf/**").permitAll()
+        .requestMatchers("/login").permitAll()
+        .anyRequest().authenticated())
+    .oauth2Login(login -> login.loginPage("/login"))
+```
+
+Permit `/login` as a path: `oauth2Login`'s own `permitAll()` matches `/login` and `/login?error` exactly, so a
+`/login?error=` would ask to sign in first. `hx-boost="false"` on the links (and on the user menu's Sign in, which
+has it already): the provider is another origin, which an htmx request cannot follow.
+
+## With htmx
+
+An htmx request made after the session expired needs the treatment the Spring Security guide describes in
+[htmx after the session expired](../spring-security/#htmx-after-the-session-expired), more so with OAuth2: the provider
+is another origin, so the htmx request fails outright instead of swapping a page in. Give
+`HxRedirectToPageAuthenticationEntryPoint` the URL Sign in goes to; `UserSource`, the bean behind `#slUser`, knows it:
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http, UserSource users) throws Exception {
+  return http
+      // ...
+      .exceptionHandling(exceptions -> exceptions
+          .authenticationEntryPoint(new HxRedirectToPageAuthenticationEntryPoint(
+              new LoginUrlAuthenticationEntryPoint(users.loginUrl())))
+          .accessDeniedHandler(new HxRedirectToPageAccessDeniedHandler()))
+      .build();
+}
+```
+
+The browser then loads the page as a normal navigation, goes to the provider, and comes back to the page after signing
+in.
+
+## Testing
+
+spring-security-test signs a user in for a MockMvc request without a provider. `oidcLogin()` stands in for Keycloak,
+`oauth2Login()` for GitHub; give them the claims or attributes your provider sends, as the user menu reads those:
+
+```java
+mockMvc.perform(get("/").with(oauth2Login()
+        .clientRegistration(clients.findByRegistrationId("github"))
+        .attributes(attributes -> {
+          attributes.put("login", "octocat");
+          attributes.put("name", "The Octocat");
+          attributes.put("avatar_url", "https://avatars.githubusercontent.com/u/583231?v=4");
+        })))
+    .andExpect(status().isOk());
+```
+
+Signing out at Keycloak needs the real thing. Sample-03's `KeycloakSignInTest` starts Keycloak with Testcontainers
+(the realm, its client and two users imported from a JSON file), signs in on Keycloak's form with a plain HTTP client,
+and checks that after Sign out Keycloak asks for the password again. Keycloak marks its cookies `Secure` also over
+http; a browser sends them to `http://localhost`, Java's `CookieManager` does not, so the test's cookie handler treats
+localhost as the browser does.

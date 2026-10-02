@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/plain :: layout('Sign in', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <sl:alert variant="destructive" th:if="${param.error != null}">
+    <sl:icon name="circle-alert"/>
+    <sl:alert-title>Signing in did not work</sl:alert-title>
+    <sl:alert-description>The provider did not sign you in. Try again, or choose another one.</sl:alert-description>
+  </sl:alert>
+  <p>Choose how to sign in.</p>
+  <!--/* Not boosted: the provider's sign-in page is on another origin, which an htmx request cannot follow. */-->
+  <div class="sign-in-providers">
+    <sl:button th:each="provider : ${providers}" as="a" variant="outline" th:href="@{${provider.url}}"
+               hx-boost="false" th:text="|Sign in with ${provider.name}|">Sign in with Keycloak</sl:button>
+  </div>
+</div>
+</body>
+</html>

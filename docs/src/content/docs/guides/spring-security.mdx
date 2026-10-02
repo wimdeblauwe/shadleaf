@@ -49,6 +49,9 @@ model, and error pages and fragments see it too. The [user menu](../../component
 
 Spring Security is an optional dependency of the starter. Without it `#slUser` is still there, and nobody is signed in.
 
+Signing in with Keycloak or GitHub, and what each sends to the user menu, is in
+[Signing in with OAuth2](../oauth2/).
+
 ### Where the user comes from
 
 The default `CurrentUserResolver` reads what each kind of sign-in provides:
@@ -158,8 +161,8 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
   required role still gets a plain 403, and so does a request with a wrong token.
 - **Every request that is not an htmx request** goes to the entry point you pass, so it behaves as before. With OAuth2
   login, that is `new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/<registration id>")`, the same URL as
-  [Sign in](#sign-in-and-sign-out-urls). If you have an access denied handler of your own, pass it to
-  `HxRedirectToPageAccessDeniedHandler`, which hands every other denial to it.
+  [Sign in](#sign-in-and-sign-out-urls) (see [Signing in with OAuth2](../oauth2/#with-htmx)). If you have an access
+  denied handler of your own, pass it to `HxRedirectToPageAccessDeniedHandler`, which hands every other denial to it.
 - **`/webjars/**`** is permitted so the sign-in page can load htmx, if your layout loads it there too.
 
 Form input that was not sent is lost: the session that held the CSRF token is gone, so the POST cannot be replayed.

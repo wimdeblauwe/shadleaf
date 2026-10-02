@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--/* The sidebar layout of the Application shell guide, with the signed-in user in the sidebar's footer: the name and
+  email from the provider's claims, the picture when it sends one, else the initials. Sign out posts to /logout, which
+  signs out at Keycloak too (SecurityConfiguration). */-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${pageTitle} - Shadleaf Sample App 3|">Shadleaf Sample App 3</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body hx-boost="true">
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="inset" collapsible="icon">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Shadleaf">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+            <strong>Shadleaf</strong>
+            <small>Sample App 3</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="nav-account">
+        <sl:sidebar-group-label>Account</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}" tooltip="Home">
+                <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                Home
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/claims}" th:active="${#slNav.current('/claims')}" tooltip="Claims">
+                <sl:slot name="icon-start"><sl:icon name="id-card"/></sl:slot>
+                Claims
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+    <sl:sidebar-footer>
+      <sl:user-menu>
+        <sl:dropdown-menu-item as="a" th:href="@{/claims}"><sl:icon name="id-card"/>Claims</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:sidebar-footer>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <sl:breadcrumb-item><sl:breadcrumb-page th:text="${pageTitle}">Page</sl:breadcrumb-page></sl:breadcrumb-item>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+      <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+</body>
+</html>

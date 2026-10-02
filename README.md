@@ -50,7 +50,8 @@ The build downloads Node.js and pnpm through the frontend-maven-plugin.
 `docs/README.md`.
 
 See `samples/shadleaf-sample-01` for a consuming application, `samples/shadleaf-sample-02` for one behind Spring
-Security with a strict Content-Security-Policy (and no Node in its build), and `CLAUDE.md` for the live-reload
+Security with a strict Content-Security-Policy (and no Node in its build), `samples/shadleaf-sample-03` for OAuth2 login
+with Keycloak (Docker Compose starts it; its tests use Testcontainers) and GitHub, and `CLAUDE.md` for the live-reload
 development loop.
 
 Component markup is pinned by approval files in `shadleaf-spring-boot-starter/src/test/resources/approved/`. After a

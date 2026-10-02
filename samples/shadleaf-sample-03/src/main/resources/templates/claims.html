@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Claims', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  <p>Everything the provider sent about you: the ID token's claims and the user info for OpenID Connect (Keycloak),
+    the user's attributes for OAuth2 (GitHub).</p>
+  <sl:table id="claims">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="attribute : ${attributes}">
+      <td><code th:text="${attribute.key}">name</code></td>
+      <td class="claim-value" th:text="${attribute.value}">Ada Lovelace</td>
+    </tr>
+    </tbody>
+  </sl:table>
+</div>
+</body>
+</html>

@@ -38,6 +38,11 @@ jobs:
         run: mvn -B verify
         working-directory: samples/shadleaf-sample-02
 
+      # Its tests start Keycloak with Testcontainers (Docker is on the runner).
+      - name: Build the OAuth2 login sample against the installed library
+        run: mvn -B verify
+        working-directory: samples/shadleaf-sample-03
+
   docs:
     needs: build
     runs-on: ubuntu-latest
