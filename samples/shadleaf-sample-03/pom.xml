@@ -12,7 +12,7 @@
   </parent>
   <groupId>io.github.wimdeblauwe.shadleaf.samples</groupId>
   <artifactId>shadleaf-sample-03</artifactId>
-  <version>0.7.0</version>
+  <version>0.8.0-SNAPSHOT</version>
   <name>Shadleaf Sample App 3</name>
   <description>
     Shadleaf with OAuth2 login: Keycloak (OpenID Connect, signing out at Keycloak too), and GitHub with the github
@@ -22,7 +22,7 @@
 
   <properties>
     <java.version>17</java.version>
-    <shadleaf.version>0.7.0</shadleaf.version>
+    <shadleaf.version>0.8.0-SNAPSHOT</shadleaf.version>
     <htmx-spring-boot.version>5.2.0</htmx-spring-boot.version>
     <htmx.version>2.0.11</htmx.version>
     <!-- The same image as compose.yaml; the tests read it from the system property below. -->
