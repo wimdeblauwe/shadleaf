@@ -42,3 +42,19 @@ scenarios:
           Save changes <sl:kbd-group><sl:kbd>Ctrl</sl:kbd><sl:kbd>S</sl:kbd></sl:kbd-group>
         </sl:tooltip-content>
       </sl:tooltip>
+
+  - id: label
+    title: Repeating the name
+    description: >-
+      mode="label" is for a tooltip that says what the trigger's name already says, such as an icon button's
+      aria-label: it is hidden from assistive technology and describes nothing, so a screen reader does not hear the
+      name twice.
+    source: |-
+      <sl:tooltip mode="label">
+        <sl:button variant="outline" size="icon" aria-label="Edit"><sl:icon name="pencil"/></sl:button>
+        <sl:tooltip-content>Edit</sl:tooltip-content>
+      </sl:tooltip>
+      <sl:tooltip mode="label">
+        <sl:button variant="outline" size="icon" aria-label="Delete"><sl:icon name="trash"/></sl:button>
+        <sl:tooltip-content>Delete</sl:tooltip-content>
+      </sl:tooltip>

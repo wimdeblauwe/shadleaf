@@ -5,9 +5,11 @@
   The sidebar is one <nav popover> for both widths (768 px, Tailwind's md, is the breakpoint, as in shadcn and
   slSidebar):
   - from 768 px it is a column in the page flow beside the inset, sticky at the top and as tall as the screen. The
-    provider's data-state (rendered from the cookie) collapses it: offcanvas moves it out past its edge with a negative
-    margin, so the inset takes the room and the sidebar's content never reflows, and hides it, so its links leave the
-    tab order and the accessibility tree. The user agent's popover styles (fixed, centred, display: none) are undone.
+    provider's data-state (rendered from the cookie) collapses it: offcanvas (no data-collapsible) moves it out past
+    its edge with a negative margin, so the inset takes the room and the sidebar's content never reflows, and hides it,
+    so its links leave the tab order and the accessibility tree; icon narrows it to --sidebar-width-icon, where the
+    menu buttons (sized in the skins) show only their icons, centred, the labels visually hidden but still their names;
+    none never collapses. The user agent's popover styles (fixed, centred, display: none) are undone.
   - below 768 px it is what the popover is: hidden until the trigger opens it in the top layer, then fixed to its edge
     with the ::backdrop over the page. data-state does not apply there.
   variant (desktop only): floating draws it as a panel with a margin all round; inset gives it no edge and makes the
@@ -151,7 +153,7 @@
       @apply me-0;
     }
 
-    .sidebar-provider[data-state='collapsed']:has(> .sidebar[data-variant='inset']) > .sidebar-inset {
+    .sidebar-provider[data-state='collapsed']:has(> .sidebar[data-variant='inset']:not([data-collapsible])) > .sidebar-inset {
       @apply m-2;
     }
 
@@ -159,32 +161,118 @@
       @apply visible;
     }
 
-    .sidebar-provider[data-state='collapsed'] > .sidebar {
+    /* Collapsed offcanvas: out past its edge, hidden. */
+    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible]) {
       @apply invisible;
     }
 
-    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-side]) {
+    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible]):not([data-side]) {
       margin-inline-start: calc(-1 * var(--sidebar-width));
     }
 
-    .sidebar-provider[data-state='collapsed'] > .sidebar[data-side='end'] {
+    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible])[data-side='end'] {
       margin-inline-end: calc(-1 * var(--sidebar-width));
     }
 
     /* The floating panel keeps its outer margin, so its footprint is still -(width - margin) + width = 0. */
-    .sidebar-provider[data-state='collapsed'] > .sidebar[data-variant='floating']:not([data-side]) {
+    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible])[data-variant='floating']:not([data-side]) {
       margin-inline-start: calc(-1 * (var(--sidebar-width) - --spacing(2)));
     }
 
-    .sidebar-provider[data-state='collapsed'] > .sidebar[data-variant='floating'][data-side='end'] {
+    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible])[data-variant='floating'][data-side='end'] {
       margin-inline-end: calc(-1 * (var(--sidebar-width) - --spacing(2)));
     }
+
+    /*
+      Collapsed to icons: a strip as wide as --sidebar-width-icon (a skin token), its content inside. Floating and
+      inset add their margin or padding around it, as their expanded widths do (shadcn's): the floating panel is the
+      strip plus its borders, the inset sidebar the strip plus its padding.
+    */
+    /* Nothing scrolls sideways in the strip (Firefox would make it a tab stop). */
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] {
+      @apply overflow-x-hidden;
+      inline-size: var(--sidebar-width-icon);
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'][data-variant='floating'] {
+      inline-size: calc(var(--sidebar-width-icon) + 2px);
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'][data-variant='inset'] {
+      inline-size: calc(var(--sidebar-width-icon) + --spacing(4));
+    }
+
+    /*
+      What the strip has no room for: badges, actions, a collapsible item's chevron and sub-menus (shadcn hides them).
+      A badge is only hidden from view: it still describes its button, and a description from hidden content would
+      read all its text, the visible count a label replaces included ("12 12 unread"). Group labels move up out of the
+      way in the skins, but stay the groups' names. The content does not scroll sideways.
+    */
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] :is(
+      .sidebar-menu-action, .sidebar-group-action, .sidebar-menu-button-chevron, .sidebar-menu-sub) {
+      @apply hidden;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-badge {
+      @apply sr-only min-w-0;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-content {
+      @apply overflow-hidden;
+    }
+
+    /*
+      A menu button shows its icon only, centred: the label (and anything after it, an icon-end) is visually hidden, so
+      it stays the button's name. Clipping by the button's size alone left part of a label in view beside an icon
+      smaller than the square, as in a large button, which has no padding there.
+    */
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-button {
+      @apply justify-center;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-button > :is(
+      .sidebar-menu-button-label, .sidebar-menu-button-label ~ :not(.sidebar-menu-tooltip)) {
+      @apply sr-only;
+    }
+
+    /* None: nothing to collapse, so no trigger on a desktop. */
+    .sidebar-provider:has(> .sidebar[data-collapsible='none']) .sidebar-trigger {
+      display: none;
+    }
+  }
+
+  /*
+    The menu button's tooltip shows only while the sidebar is collapsed to icons on a desktop (slSidebarMenuTooltip
+    checks the same before showing it): this hides one left showing when that changes.
+  */
+  .sidebar-provider:not([data-state='collapsed']) .sidebar-menu-tooltip,
+  .sidebar:not([data-collapsible='icon']) .sidebar-menu-tooltip {
+    display: none;
+  }
+
+  @media (width < 48rem) {
+    .sidebar .sidebar-menu-tooltip {
+      display: none;
+    }
+  }
+
+  /* On a sidebar at the end it shows on the other side, the start (the menu button renders side="right"). */
+  .sidebar[data-side='end'] .sidebar-menu-tooltip {
+    --popup-side: inline-start;
+    --popup-margin-inline: 0 var(--popup-offset);
+    --popup-from: var(--popup-slide) 0;
+    transform-origin: right;
+  }
+
+  .sidebar[data-side='end'] .sidebar-menu-tooltip:dir(rtl) {
+    --popup-from: calc(-1 * var(--popup-slide)) 0;
+    transform-origin: left;
   }
 
   @media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
     /* visibility changes at the end of a collapse and at the start of an expansion, so the slide is seen both ways. */
     .sidebar {
-      @apply transition-[margin,visibility];
+      @apply transition-[margin,visibility,width];
     }
 
     .sidebar-provider:has(> .sidebar[data-variant='inset']) > .sidebar-inset {
@@ -264,6 +352,49 @@
   }
 
   /*
+    A collapsible item: details, with the menu button as its summary (no marker) and the sub-menu as its content. The
+    chevron at the end turns down when it opens (and points the other way on a right-to-left page while closed).
+  */
+  .sidebar-menu-collapsible > summary {
+    @apply list-none;
+  }
+
+  .sidebar-menu-collapsible > summary::-webkit-details-marker {
+    @apply hidden;
+  }
+
+  .sidebar-menu-button-chevron {
+    @apply ms-auto shrink-0 transition-none rtl:-scale-x-100 motion-safe:transition-[rotate];
+  }
+
+  .sidebar-menu-collapsible[open] > summary > .sidebar-menu-button-chevron {
+    rotate: 90deg;
+    scale: none;
+  }
+
+  /* A sub-menu: indented along a line (the skins draw it), its buttons as the menu's. */
+  .sidebar-menu-sub {
+    @apply m-0 flex min-w-0 list-none flex-col;
+  }
+
+  .sidebar-menu-sub-item {
+    @apply relative;
+  }
+
+  .sidebar-menu-sub-button {
+    @apply flex min-w-0 items-center overflow-hidden no-underline outline-none
+      disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50;
+  }
+
+  .sidebar-menu-sub-button > svg {
+    @apply shrink-0;
+  }
+
+  .sidebar-menu-sub-button-label {
+    @apply min-w-0 flex-1 truncate;
+  }
+
+  /*
     Action and badge lie over the end of the button. On a phone the action's hit area is larger than the icon
     (after: -inset-2), as shadcn's.
   */
@@ -292,11 +423,15 @@
     Forced colours drop backgrounds and box shadows: the current entry gets an outline, focus a thicker one.
   */
   @media (forced-colors: active) {
-    .sidebar-menu-button:is([aria-current='page'], [aria-current='true']) {
+    .sidebar-menu-button:is([aria-current='page'], [aria-current='true']),
+    .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true']),
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
+      .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button {
       @apply outline-1 -outline-offset-1 outline-solid;
     }
 
     .sidebar-menu-button:focus-visible,
+    .sidebar-menu-sub-button:focus-visible,
     .sidebar-group-action:focus-visible,
     .sidebar-menu-action:focus-visible,
     .sidebar-group-label:focus-visible {

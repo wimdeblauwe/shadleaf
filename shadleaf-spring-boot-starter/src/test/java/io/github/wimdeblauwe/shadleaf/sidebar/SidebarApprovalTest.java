@@ -27,6 +27,8 @@ class SidebarApprovalTest {
         "<sl:sidebar side=\"start\">Links</sl:sidebar>",
         "<sl:sidebar side=\"end\">Links</sl:sidebar>",
         "<sl:sidebar collapsible=\"offcanvas\">Links</sl:sidebar>",
+        "<sl:sidebar collapsible=\"icon\">Links</sl:sidebar>",
+        "<sl:sidebar collapsible=\"none\">Links</sl:sidebar>",
         "<sl:sidebar variant=\"sidebar\">Links</sl:sidebar>",
         "<sl:sidebar variant=\"floating\">Links</sl:sidebar>",
         "<sl:sidebar variant=\"inset\" side=\"end\">Links</sl:sidebar>",

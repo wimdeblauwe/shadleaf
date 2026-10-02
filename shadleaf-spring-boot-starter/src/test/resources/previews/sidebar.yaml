@@ -2,11 +2,14 @@
 # A page holds one sidebar and one main, so only the first scenario is on the showcase (which puts it before its region
 # of other components, as a page's shell). docs/tests/sidebar.spec.ts builds its fixture pages from that scenario: it
 # expects Home to be the current page and links to /inbox, /calendar and /settings, a skip link before the provider and
-# a breadcrumb in the inset's header ending in the page "Home", and variant="inset" (it sets the variant itself).
+# a breadcrumb in the inset's header ending in the page "Home", variant="inset" and collapsible="icon" (it sets both
+# itself), a tooltip on every menu button, and a closed collapsible item "Documents" with links to /documents and
+# /documents/shared.
 component: sidebar
 parts: [sidebar-provider, sidebar-trigger, sidebar-inset, sidebar-header, sidebar-content, sidebar-footer,
         sidebar-separator, sidebar-group, sidebar-group-label, sidebar-group-action, sidebar-group-content,
-        sidebar-menu, sidebar-menu-item, sidebar-menu-button, sidebar-menu-action, sidebar-menu-badge]
+        sidebar-menu, sidebar-menu-item, sidebar-menu-button, sidebar-menu-action, sidebar-menu-badge,
+        sidebar-menu-sub, sidebar-menu-sub-item, sidebar-menu-sub-button]
 scenarios:
   - id: default
     title: Sidebar
@@ -15,16 +18,17 @@ scenarios:
       Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered
       for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to
       the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the
-      sidebar's ground (from 768 px), as sample-01's layout.
+      sidebar's ground (from 768 px), and collapsible="icon" collapses it to a strip of icons whose tooltips show the
+      labels, as sample-01's layout. Documents opens a sub-menu.
     request: /
     source: |-
       <sl:skip-link/>
       <sl:sidebar-provider>
-        <sl:sidebar variant="inset">
+        <sl:sidebar variant="inset" collapsible="icon">
           <sl:sidebar-header>
             <sl:sidebar-menu>
               <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/" size="lg">
+                <sl:sidebar-menu-button href="/" size="lg" tooltip="Acme Inc.">
                   <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
                   <strong>Acme Inc.</strong>
                   <small>Enterprise</small>
@@ -38,23 +42,43 @@ scenarios:
               <sl:sidebar-group-content>
                 <sl:sidebar-menu>
                   <sl:sidebar-menu-item>
-                    <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}">
+                    <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}" tooltip="Home">
                       <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
                       Home
                     </sl:sidebar-menu-button>
                   </sl:sidebar-menu-item>
                   <sl:sidebar-menu-item id="inbox">
-                    <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
+                    <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}" tooltip="Inbox">
                       <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
                       Inbox
                     </sl:sidebar-menu-button>
                     <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
                   </sl:sidebar-menu-item>
                   <sl:sidebar-menu-item>
-                    <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}">
+                    <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}" tooltip="Calendar">
                       <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
                       Calendar
                     </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/documents')}">
+                    <sl:sidebar-menu-button tooltip="Documents">
+                      <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                      Documents
+                    </sl:sidebar-menu-button>
+                    <sl:sidebar-menu-sub>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/documents"
+                                                    th:active="${#slNav.current('/documents', true)}">
+                          Recent
+                        </sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/documents/shared"
+                                                    th:active="${#slNav.current('/documents/shared')}">
+                          Shared with me
+                        </sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                    </sl:sidebar-menu-sub>
                   </sl:sidebar-menu-item>
                 </sl:sidebar-menu>
               </sl:sidebar-group-content>
@@ -65,7 +89,7 @@ scenarios:
               <sl:sidebar-group-content>
                 <sl:sidebar-menu>
                   <sl:sidebar-menu-item>
-                    <sl:sidebar-menu-button href="/projects/design">
+                    <sl:sidebar-menu-button href="/projects/design" tooltip="Design Engineering">
                       <sl:slot name="icon-start"><sl:icon name="frame"/></sl:slot>
                       Design Engineering
                     </sl:sidebar-menu-button>
@@ -74,7 +98,7 @@ scenarios:
                     </sl:sidebar-menu-action>
                   </sl:sidebar-menu-item>
                   <sl:sidebar-menu-item>
-                    <sl:sidebar-menu-button href="/projects/sales">
+                    <sl:sidebar-menu-button href="/projects/sales" tooltip="Sales &amp; Marketing">
                       <sl:slot name="icon-start"><sl:icon name="chart-pie"/></sl:slot>
                       Sales &amp; Marketing
                     </sl:sidebar-menu-button>
@@ -89,13 +113,14 @@ scenarios:
           <sl:sidebar-footer>
             <sl:sidebar-menu>
               <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}">
+                <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}"
+                                        tooltip="Settings">
                   <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
                   Settings
                 </sl:sidebar-menu-button>
               </sl:sidebar-menu-item>
               <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/help" size="sm">
+                <sl:sidebar-menu-button href="/help" size="sm" tooltip="Help">
                   <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
                   Help
                 </sl:sidebar-menu-button>
@@ -285,5 +310,148 @@ scenarios:
             <sl:sidebar-trigger for="sidebar-floating"/>
           </header>
           <h1>Floating</h1>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+
+  - id: icon
+    title: Collapsed to icons
+    description: >-
+      collapsible="icon" collapses the sidebar to a strip of its menu buttons' icons (from 768 px). The labels stay the
+      buttons' names; a tooltip shows them on hover and keyboard focus. Badges, actions and sub-menus are hidden; the
+      icon of a group holding the current page (here: Billing, below Settings) is marked, and a click on it expands
+      the sidebar with the group open. Rendered collapsed (state="collapsed"), for a request for /settings/billing.
+    showcase: false
+    request: /settings/billing
+    source: |-
+      <sl:sidebar-provider state="collapsed">
+        <sl:sidebar id="sidebar-icon" collapsible="icon">
+          <sl:sidebar-header>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/" size="lg" tooltip="Acme Inc.">
+                  <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+                  <strong>Acme Inc.</strong>
+                  <small>Enterprise</small>
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-header>
+          <sl:sidebar-content>
+            <sl:sidebar-group id="icon-platform">
+              <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item>
+                    <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}" tooltip="Home">
+                      <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                      Home
+                    </sl:sidebar-menu-button>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item id="icon-inbox">
+                    <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}" tooltip="Inbox">
+                      <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+                      Inbox
+                    </sl:sidebar-menu-button>
+                    <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/settings')}">
+                    <sl:sidebar-menu-button tooltip="Settings">
+                      <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                      Settings
+                    </sl:sidebar-menu-button>
+                    <sl:sidebar-menu-sub>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/settings"
+                                                    th:active="${#slNav.current('/settings', true)}">
+                          General
+                        </sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/settings/billing"
+                                                    th:active="${#slNav.current('/settings/billing')}">
+                          Billing
+                        </sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                    </sl:sidebar-menu-sub>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+          </sl:sidebar-content>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <header>
+            <sl:sidebar-trigger for="sidebar-icon"/>
+          </header>
+          <h1>Billing</h1>
+        </sl:sidebar-inset>
+      </sl:sidebar-provider>
+
+  - id: sub-menu
+    title: Collapsible groups
+    description: >-
+      A collapsible sl:sidebar-menu-item is a group that opens and closes on the browser's details element, no
+      JavaScript needed; its sl:sidebar-menu-button is what the user clicks, its sl:sidebar-menu-sub the links. The
+      server opens the group holding the current page (th:open with #slNav.current), here /settings/billing.
+      Sub-buttons come in two sizes.
+    showcase: false
+    request: /settings/billing
+    source: |-
+      <sl:sidebar-provider>
+        <sl:sidebar id="sidebar-sub">
+          <sl:sidebar-content>
+            <sl:sidebar-group id="sub-platform">
+              <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+              <sl:sidebar-group-content>
+                <sl:sidebar-menu>
+                  <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/projects')}">
+                    <sl:sidebar-menu-button>
+                      <sl:slot name="icon-start"><sl:icon name="folder"/></sl:slot>
+                      Projects
+                    </sl:sidebar-menu-button>
+                    <sl:sidebar-menu-sub>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/projects/design">Design Engineering</sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/projects/sales">Sales &amp; Marketing</sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                    </sl:sidebar-menu-sub>
+                  </sl:sidebar-menu-item>
+                  <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/settings')}">
+                    <sl:sidebar-menu-button>
+                      <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                      Settings
+                    </sl:sidebar-menu-button>
+                    <sl:sidebar-menu-sub>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/settings"
+                                                    th:active="${#slNav.current('/settings', true)}">
+                          General
+                        </sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/settings/billing"
+                                                    th:active="${#slNav.current('/settings/billing')}">
+                          Billing
+                        </sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-item>
+                        <sl:sidebar-menu-sub-button href="/settings/limits" size="sm">
+                          Limits (small)
+                        </sl:sidebar-menu-sub-button>
+                      </sl:sidebar-menu-sub-item>
+                    </sl:sidebar-menu-sub>
+                  </sl:sidebar-menu-item>
+                </sl:sidebar-menu>
+              </sl:sidebar-group-content>
+            </sl:sidebar-group>
+          </sl:sidebar-content>
+        </sl:sidebar>
+        <sl:sidebar-inset>
+          <header>
+            <sl:sidebar-trigger for="sidebar-sub"/>
+          </header>
+          <h1>Billing</h1>
         </sl:sidebar-inset>
       </sl:sidebar-provider>

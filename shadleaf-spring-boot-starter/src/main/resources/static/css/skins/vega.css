@@ -1031,6 +1031,7 @@
   .sidebar-provider {
     --sidebar-width: 16rem;
     --sidebar-width-mobile: 18rem;
+    --sidebar-width-icon: 3rem;
   }
 
   .sidebar {
@@ -1160,6 +1161,70 @@
 
   .sidebar-menu-button:is(:hover, [aria-current='page'], [aria-current='true']) ~ :is(.sidebar-menu-action, .sidebar-menu-badge) {
     @apply text-sidebar-accent-foreground;
+  }
+
+  /*
+    A sub-menu, after shadcn's vega style: indented along a line from the middle of the icons above it. Its buttons
+    look like the menu's, a little lower.
+  */
+  .sidebar-menu-sub {
+    @apply mx-3.5 gap-1 border-s border-sidebar-border px-2.5 py-0.5;
+  }
+
+  .sidebar-menu-sub-button {
+    @apply h-7 gap-2 rounded-md px-2 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      active:bg-sidebar-accent active:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg]:text-sidebar-accent-foreground [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true']) {
+    @apply bg-sidebar-accent text-sidebar-accent-foreground;
+  }
+
+  .sidebar-menu-sub-button:not([data-size]) {
+    @apply text-sm;
+  }
+
+  .sidebar-menu-sub-button[data-size='sm'] {
+    @apply text-xs;
+  }
+
+  /*
+    Collapsed to icons (desktop only), after shadcn's vega style: every menu button is a square as large as the
+    default height around its icon (the structure hides the label); a large one loses its padding, so a logo of
+    that size fills it. Group
+    labels move up out of view (they still name their groups). A collapsible item whose hidden sub-menu holds the
+    current page shows it on its icon. Width, padding and the label's move follow the sidebar only without reduced
+    motion.
+  */
+  @media (width >= 48rem) {
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-button {
+      @apply size-8 p-2;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-button[data-size='lg'] {
+      @apply p-0;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-group-label {
+      @apply -mt-8 opacity-0;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
+      .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button {
+      @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground;
+    }
+  }
+
+  @media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
+    .sidebar[data-collapsible='icon'] .sidebar-menu-button {
+      @apply transition-[width,height,padding] duration-200 ease-linear;
+    }
+
+    .sidebar[data-collapsible='icon'] .sidebar-group-label {
+      @apply transition-[margin,opacity] duration-200 ease-linear;
+    }
   }
 
   /*

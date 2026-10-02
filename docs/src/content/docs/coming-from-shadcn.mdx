@@ -240,14 +240,22 @@ the trigger opens it as the panel (focus in, the rest of the page inert while it
 server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
 the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
 the text direction. `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
-Only `collapsible="offcanvas"` so far. See [Sidebar](../components/sidebar/).
+So does `collapsible`: `offcanvas` and `icon` as shadcn's, while `none` only keeps the sidebar from collapsing on a
+desktop and is still the panel on a phone (shadcn's is a plain column at every width). See
+[Sidebar](../components/sidebar/).
 
 The parts inside it keep shadcn's names. `<sl:sidebar-menu-button>` is a link unless `as="button"` (shadcn's renders a
 button, and `asChild` makes it a link); `isActive` is `active`, and `th:active="${#slNav.current('/people')}"` asks the
 request whether the link is the current page, so no controller has to say so. The icon goes in the `icon-start` slot
 and the text is wrapped for you (shadcn's `<span>` around the label); two lines are two elements, such as `<strong>`
 and `<small>`, as there are no utility classes. `<sl:sidebar-content>` is a `div`, as shadcn's: `<sl:sidebar>` is the
-`nav`.
+`nav`. `tooltip="Home"` on a menu button is shadcn's `tooltip` prop (a string only).
+
+A collapsible group needs no `Collapsible`, `CollapsibleTrigger` and `CollapsibleContent` around the item, its button
+and its sub-menu: `<sl:sidebar-menu-item collapsible>` is a `details` element, its menu button becomes the `summary`
+(with shadcn's chevron) and `<sl:sidebar-menu-sub>` the content. `defaultOpen` is `open`, usually
+`th:open="${#slNav.current('/settings')}"`. `SidebarMenuSubButton`'s `isActive` is `active`, `size` is shadcn's
+(`sm`, `md`), and it is a link unless `as="button"`.
 
 ### Breadcrumb: the ellipsis opens its own menu
 
@@ -322,6 +330,8 @@ takes keyboard focus, when it is a link (`as="a"`).
   across a toolbar does not flash every tooltip on the way. Keyboard focus, and the next tooltip right after one hid,
   still show at once.
 - The pointer can move onto a tooltip without it hiding, and Escape hides it, as WCAG 1.4.13 asks.
+- `mode="label"` is for a tooltip that repeats its trigger's name, such as an icon button's `aria-label`: it is hidden
+  from screen readers instead of describing the trigger with the same words. shadcn has no such option.
 
 ### Toasts
 
@@ -353,6 +363,12 @@ takes keyboard focus, when it is a link (`as="a"`).
 - The group and menu actions need an `aria-label` (shadcn's examples put a visually hidden `<span>` in them). On a phone
   they are 24 px, WCAG 2.2's minimum target size, instead of 20 px with a larger invisible hit area.
 - `show-on-hover` is `showOnHover`.
+- Collapsed to icons, a menu button's tooltip repeats its name, so it is hidden from screen readers and describes
+  nothing (`sl:tooltip`'s `mode="label"`); Radix's tooltip makes it the button's description, which a screen reader
+  says after the same name. The tooltip shows on keyboard focus too, after the delay on hover.
+- Collapsed to icons, a click on a collapsible group's icon expands the sidebar and opens the group; shadcn's opens the
+  group, whose sub-menu the strip hides. A group that holds the current page shows it on its icon, which shadcn's does
+  not. A collapsible item takes no badge or action (the browser hides them with the sub-menu).
 
 ### Form controls
 

@@ -9,10 +9,10 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 <ComponentPreview id="sidebar--default" />
 
 :::note[Being built]
-The sidebar's frame (provider, sidebar, trigger, inset: collapsing, the phone panel, the remembered state, the three
-variants), the parts that go inside it (header, groups, menus, the current page, badges, actions), the page header's
-[breadcrumb](../breadcrumb/), the [skip link](../skip-link/) and a [layout](#layout) to copy are here. Collapsing to
-icons with sub-menus, and a header layout follow in the next releases.
+The sidebar's frame (provider, sidebar, trigger, inset: collapsing off-canvas or to icons, the phone panel, the
+remembered state, the three variants), the parts that go inside it (header, groups, menus, collapsible groups with
+sub-menus, the current page, badges, actions, tooltips), the page header's [breadcrumb](../breadcrumb/), the
+[skip link](../skip-link/) and a [layout](#layout) to copy are here. A header layout follows in the next release.
 :::
 
 ## Built from parts
@@ -174,6 +174,46 @@ it; on a phone it is always there. On a phone both are 24 px, the minimum target
 </sl:sidebar-menu-item>
 ```
 
+## Collapsible groups
+
+A menu item with `collapsible` is a group of links that opens and closes, as shadcn's sidebar-07 has: its menu button
+is what the user clicks, and `<sl:sidebar-menu-sub>` holds the links, indented along a line below it. It is the
+browser's `details` element (the button becomes its `summary`, with a chevron that turns when it opens), so it needs
+no JavaScript, and the keyboard opens and closes it with Enter and Space.
+
+```html
+<sl:sidebar-menu-item collapsible th:open="${#slNav.current('/settings')}">
+  <sl:sidebar-menu-button tooltip="Settings">
+    <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+    Settings
+  </sl:sidebar-menu-button>
+  <sl:sidebar-menu-sub>
+    <sl:sidebar-menu-sub-item>
+      <sl:sidebar-menu-sub-button th:href="@{/settings}" th:active="${#slNav.current('/settings', true)}">
+        General
+      </sl:sidebar-menu-sub-button>
+    </sl:sidebar-menu-sub-item>
+    <sl:sidebar-menu-sub-item>
+      <sl:sidebar-menu-sub-button th:href="@{/settings/billing}" th:active="${#slNav.current('/settings/billing')}">
+        Billing
+      </sl:sidebar-menu-sub-button>
+    </sl:sidebar-menu-sub-item>
+  </sl:sidebar-menu-sub>
+</sl:sidebar-menu-item>
+```
+
+- `open` renders the group open. Open the one that holds the current page, so its link is in view:
+  `#slNav.current('/settings')` is true on every page below `/settings`. When the pages share no path, combine them:
+  `th:open="${#slNav.current('/people') or #slNav.current('/teams')}"`.
+- `<sl:sidebar-menu-sub-button>` is a link (or `as="button"`) like a menu button: `active` marks the current page,
+  `size` is `md` (the default) or `sm`, `disabled` works as on a menu button, and an icon goes in `icon-start`.
+- The menu button of a collapsible item takes no `href`: it opens the group. Link the group's first page as a
+  sub-button.
+- A collapsible item takes no badge or action: the browser hides everything in a closed `details` but its `summary`.
+  Put a count on a sub-button instead.
+
+<ComponentPreview id="sidebar--sub-menu" />
+
 ## One element for a desktop and a phone
 
 The server does not know how wide the screen is, so the sidebar is one element for both:
@@ -222,6 +262,42 @@ The phone panel ignores the state: it always opens with everything in it.
 
 Below 768 px the variant makes no difference: the panel and the page are the same for all three.
 
+## Collapsed to icons
+
+`collapsible="icon"` collapses the sidebar to a strip of its menu buttons' icons instead of moving it out of view, as
+shadcn's sidebar-07 does. It is as wide as `--sidebar-width-icon` (3 rem in both skins); floating and inset add their
+margin around it.
+
+```html
+<sl:sidebar variant="inset" collapsible="icon">
+  ...
+  <sl:sidebar-menu-button th:href="@{/inbox}" th:active="${#slNav.current('/inbox')}" tooltip="Inbox">
+    <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+    Inbox
+  </sl:sidebar-menu-button>
+```
+
+- Every menu button becomes a square with its icon in the middle. The label is visually hidden, not removed: it stays
+  the link's name, so a
+  screen reader still says "Inbox, link". A large button (the application's name in the header) loses its padding,
+  so a logo as large as the square fills it.
+- Badges, actions, sub-menus and a collapsible item's chevron are hidden. A badge still describes its button. Group
+  labels move out of view but still name their groups.
+- `tooltip` on a menu button shows its label beside it, on hover and on keyboard focus, while the sidebar is collapsed
+  to icons; never while it is expanded or on a phone. It repeats the button's name, so it is hidden from screen
+  readers and describes nothing (as a [tooltip](../tooltip/#when-it-repeats-the-name) with `mode="label"`). Give every
+  menu button one: without it, the icon alone has to say where the link goes.
+- A click (or Enter) on a [collapsible group's](#collapsible-groups) icon expands the sidebar and opens the group, as
+  the sub-menu has no room in the strip. A group that holds the current page shows it on its icon.
+- The server renders the strip from the cookie, so the first paint is right with and without JavaScript. On a phone
+  the panel ignores it and shows everything.
+
+<ComponentPreview id="sidebar--icon" />
+
+`collapsible="offcanvas"` (the default) moves the collapsed sidebar out of view. `collapsible="none"` never collapses
+it: the trigger is hidden on a desktop and Ctrl/⌘B does nothing there, whatever the cookie says. On a phone it is the
+panel, as with the other two.
+
 ## Side
 
 `side="end"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
@@ -242,22 +318,26 @@ The trigger is a ghost icon button with a panel icon (turned around on a right-t
 
 ## Motion
 
-On a desktop the sidebar slides out and the page widens with it; on a phone the panel slides in from its edge and the
-backdrop fades. With reduced motion (`prefers-reduced-motion: reduce`) the changes are immediate.
+On a desktop the sidebar slides out and the page widens with it (collapsed to icons, it narrows to the strip and the
+group labels slide up); on a phone the panel slides in from its edge and the backdrop fades. With reduced motion (`prefers-reduced-motion: reduce`) the changes are immediate.
 
 ## Without JavaScript
 
 The parts inside the sidebar need none: the current page, the badges and the actions are all in the markup (an action
-does what its attributes say). The phone panel still opens and closes: that is the browser's popover. It is not modal then (Tab can leave it), and it
+does what its attributes say), and collapsible groups are the browser's `details`. Tooltips need it: without
+JavaScript a strip of icons shows none. The phone panel still opens and closes: that is the browser's popover. It is not modal then (Tab can leave it), and it
 stays open when one of its links goes to a place on the same page. On a desktop nothing can collapse the sidebar, so
-the trigger is hidden there (`@media (scripting: none)`); the sidebar shows in the state the cookie asked for.
+the trigger is hidden there (`@media (scripting: none)`); the sidebar shows in the state the cookie asked for, also
+as a strip of icons, where a click on a group's icon then opens a sub-menu the strip hides.
 
 ## htmx
 
 With `hx-boost` on the body, every page comes from the server with the sidebar in the cookie's state, the current
 page marked and the panel closed. Boosting only the main area works too: following a link in the panel closes it, and a trigger htmx swaps in is
 set up again. Going back through htmx's history shows the page with the panel closed (whether a popover is open is not
-part of the markup htmx saves, and the panel closes before htmx takes its snapshot).
+part of the markup htmx saves, and the panel closes before htmx takes its snapshot), and in the state the user chose
+last: the snapshot holds the state of the moment it was taken, so the restored page reads the cookie, as the server
+would.
 
 A boosted link sends `HX-Request` too. A controller that answers htmx with a fragment (a table's rows, a dialog) must
 tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
@@ -267,9 +347,10 @@ check.
 ## Layout
 
 shadcn/ui's sidebar-07 block with the inset variant, as the layout of the sample application (sample-01's
-`layout/main.html`, which has four groups): the application's name and logo at the top, groups of pages, a footer,
-and the page as a card beside it with a header holding the trigger, a separator, the page's breadcrumb and the theme
-toggle. `hx-boost` on the body loads every page with htmx.
+`layout/main.html`, which has four groups): the application's name and logo at the top, groups of pages (one of them
+collapsible), a footer, and the page as a card beside it with a header holding the trigger, a separator, the page's
+breadcrumb and the theme toggle. The sidebar collapses to icons, with a tooltip on every menu button. `hx-boost` on the
+body loads every page with htmx.
 
 ```html
 <!DOCTYPE html>
@@ -287,11 +368,11 @@ toggle. `hx-boost` on the body loads every page with htmx.
 <body hx-boost="true">
 <sl:skip-link/>
 <sl:sidebar-provider>
-  <sl:sidebar variant="inset">
+  <sl:sidebar variant="inset" collapsible="icon">
     <sl:sidebar-header>
       <sl:sidebar-menu>
         <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+          <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Acme">
             <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
             <strong>Acme</strong>
             <small>Enterprise</small>
@@ -305,7 +386,7 @@ toggle. `hx-boost` on the body loads every page with htmx.
         <sl:sidebar-group-content>
           <sl:sidebar-menu>
             <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}">
+              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}" tooltip="Form">
                 <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
                 Form
               </sl:sidebar-menu-button>
@@ -317,11 +398,23 @@ toggle. `hx-boost` on the body loads every page with htmx.
         <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
         <sl:sidebar-group-content>
           <sl:sidebar-menu>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+            <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/people') or #slNav.current('/teams')}">
+              <sl:sidebar-menu-button tooltip="People">
                 <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
                 People
               </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+                    All people
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/teams}" th:active="${#slNav.current('/teams')}">
+                    Teams
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
             </sl:sidebar-menu-item>
           </sl:sidebar-menu>
         </sl:sidebar-group-content>
@@ -330,7 +423,7 @@ toggle. `hx-boost` on the body loads every page with htmx.
     <sl:sidebar-footer>
       <sl:sidebar-menu>
         <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button href="https://example.com/help" size="sm">
+          <sl:sidebar-menu-button href="https://example.com/help" size="sm" tooltip="Documentation">
             <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
             Documentation
           </sl:sidebar-menu-button>
@@ -417,8 +510,8 @@ table) does send `HX-Target`, and still gets its fragment.
 
 For now:
 
-- `collapsible="icon"` (collapsing to a strip of icons, with tooltips on the menu buttons), collapsible groups and
-  sub-menus (`SidebarMenuSub`), and `collapsible="none"`;
+- a collapsible group whose chevron is a menu action beside a link (shadcn's sidebar-08), and sub-menus that open as
+  dropdown menus while collapsed to icons (sidebar-06);
 - a menu action that opens a dropdown menu;
 - `SidebarInput` (use `<sl:input>`) and `SidebarMenuSkeleton` (use `<sl:skeleton>`);
 - `SidebarRail`, the strip along the sidebar's edge that toggles it;
@@ -494,6 +587,18 @@ For now:
 
 <ComponentAttributes component="sidebar-menu-badge" />
 
+### sl:sidebar-menu-sub
+
+<ComponentAttributes component="sidebar-menu-sub" />
+
+### sl:sidebar-menu-sub-item
+
+<ComponentAttributes component="sidebar-menu-sub-item" />
+
+### sl:sidebar-menu-sub-button
+
+<ComponentAttributes component="sidebar-menu-sub-button" />
+
 ## JavaScript
 
 A small Alpine component, `slSidebar`, does the work: `<sl:sidebar-provider>` renders as
@@ -505,6 +610,9 @@ A small Alpine component, `slSidebar`, does the work: `<sl:sidebar-provider>` re
 - **On a desktop it takes `popovertarget` off the trigger** and sets `aria-expanded` from the state instead: browsers
   report a `popovertarget` button as collapsed while its popover is closed, which the sidebar on a desktop always is.
   Below 768 px it puts it back. It finds the trigger by its `aria-controls`.
+- **Collapsed to icons, it expands the sidebar** when a collapsible group's icon is clicked, and opens the group.
+  Each menu button's tooltip is a second small Alpine component, `slSidebarMenuTooltip`, on the tooltip itself; it
+  shares `slTooltip`'s code.
 - **It fires `sl-sidebar-toggle`** on the provider (it bubbles) after the user collapses or expands the sidebar and when
   the panel opens or closes: `detail` is `{state: 'expanded' | 'collapsed', open, mobile}`.
 - **Keep your own `x-data` off `<sl:sidebar-provider>`**: it would replace `slSidebar`. Put it on an element inside.

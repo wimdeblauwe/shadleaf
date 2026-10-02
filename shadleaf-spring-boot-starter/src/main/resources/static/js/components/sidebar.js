@@ -6,7 +6,9 @@
   Desktop (>= 768 px):
   - the trigger and Ctrl/Cmd+B collapse and expand the sidebar: data-state on the provider, and the sl-sidebar-state
     cookie, which the server reads to render the next page in the same state (a plain cookie, written at once, so a
-    link followed right after sees it);
+    link followed right after sees it). Not a sidebar with collapsible="none";
+  - collapsed to icons (collapsible="icon"), a click on a collapsible item's button (its summary) expands the sidebar
+    and opens the item, instead of opening a sub-menu the icon strip hides;
   - the trigger loses popovertarget (browsers would report it as collapsed from the closed popover, and ignore an
     explicit aria-expanded) and gets aria-expanded from data-state; it gets popovertarget back below 768 px. The
     trigger keeps aria-controls, which is how this finds it at both widths, also after htmx swapped it.
@@ -19,6 +21,10 @@
   - it closes when a link in it is followed (a same-page link, or htmx swapping only the main area), when the viewport
     crosses 768 px, before htmx saves the page in its history cache, and when the page comes back from the back/forward
     cache.
+
+  Both: htmx's history snapshot keeps the state of the moment it was taken, so a page the back button restores from
+  it takes the state from the cookie instead (the provider is marked data-history just before the snapshot), as the
+  server would render it.
 
   Both: sl-sidebar-toggle on the provider (bubbles), {state: 'expanded' | 'collapsed', open, mobile}, after a desktop
   change and when the panel opens or closes.
@@ -33,11 +39,21 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 const TOGGLE_EVENT = 'sl-sidebar-toggle';
 const desktop = window.matchMedia('(width >= 48rem)');
 
+/** The state the cookie holds, or null. */
+function cookieState() {
+  const match = document.cookie.match(new RegExp(`(?:^|;\\s*)${COOKIE}=(expanded|collapsed)(?:;|$)`));
+  return match ? match[1] : null;
+}
+
 export default function sidebar() {
   return {
     init() {
       const provider = this.$el;
       const cleanups = [];
+      if (provider.hasAttribute('data-history')) {
+        provider.removeAttribute('data-history');
+        provider.dataset.state = cookieState() ?? provider.dataset.state;
+      }
       const listen = listener(cleanups);
       let inerted = [];
 
@@ -50,6 +66,7 @@ export default function sidebar() {
           : [];
       const isOpen = sidebar => sidebar.matches(':popover-open');
       const state = () => provider.dataset.state === 'collapsed' ? 'collapsed' : 'expanded';
+      const collapsible = sidebar => sidebar.dataset.collapsible ?? 'offcanvas';
 
       const syncTriggers = () => {
         const sidebar = sidebarOf();
@@ -92,7 +109,9 @@ export default function sidebar() {
           return;
         }
         if (desktop.matches) {
-          setState(state() === 'collapsed' ? 'expanded' : 'collapsed');
+          if (collapsible(sidebar) !== 'none') {
+            setState(state() === 'collapsed' ? 'expanded' : 'collapsed');
+          }
         } else if (isOpen(sidebar)) {
           sidebar.hidePopover();
         } else {
@@ -159,6 +178,13 @@ export default function sidebar() {
           return;
         }
         if (desktop.matches) {
+          const summary = event.target.closest('summary.sidebar-menu-button');
+          if (summary && sidebar.contains(summary) && collapsible(sidebar) === 'icon' && state() === 'collapsed') {
+            event.preventDefault();
+            summary.parentElement.open = true;
+            setState('expanded');
+            return;
+          }
           const trigger = event.target.closest(`[aria-controls="${CSS.escape(sidebar.id)}"]`);
           if (trigger && !trigger.matches(':disabled')) {
             toggle(trigger);
@@ -190,7 +216,10 @@ export default function sidebar() {
           hide(sidebar);
         }
       };
-      listen(document, 'htmx:beforeHistorySave', close);
+      listen(document, 'htmx:beforeHistorySave', () => {
+        close();
+        provider.setAttribute('data-history', '');
+      });
       listen(window, 'pageshow', event => {
         if (event.persisted) {
           close();

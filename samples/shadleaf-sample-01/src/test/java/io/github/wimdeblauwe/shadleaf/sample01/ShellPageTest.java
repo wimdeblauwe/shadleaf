@@ -25,8 +25,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 /**
- * The layout every page shares: shadcn/ui's sidebar-07 with the inset variant. A skip link first, the sidebar (the one
- * navigation landmark besides the breadcrumb) with the current page marked by {@code #slNav.current}, the inset (the
+ * The layout every page shares: shadcn/ui's sidebar-07 with the inset variant, collapsing to icons. A skip link first,
+ * the sidebar (the one navigation landmark besides the breadcrumb) with the current page marked by
+ * {@code #slNav.current} and the people pages in a collapsible group that is open on them, the inset (the
  * one {@code main}) with the trigger, a separator, the page's breadcrumb and the theme toggle, and the body boosted by
  * htmx. The server renders the sidebar's state from its cookie. A link the boost sends gets the whole page, also from
  * the controllers that answer other htmx requests with a fragment.
@@ -41,7 +42,7 @@ class ShellPageTest {
   @Autowired
   private PersonRepository repository;
 
-  /** Every page: its URL, the menu button marked as current, and the breadcrumb's levels. */
+  /** Every page: its URL, the menu button or sub-button marked as current, and the breadcrumb's levels. */
   static Stream<Arguments> pages() {
     return Stream.of(
         Arguments.of("/", "/", List.of("Basics", "Buttons")),
@@ -63,6 +64,9 @@ class ShellPageTest {
 
     assertShell(page);
     assertThat(currentMenuButtons(page)).containsExactly(current);
+    // The people group is open exactly when it holds the current page.
+    assertThat(page.selectFirst("nav.sidebar details.sidebar-menu-collapsible").hasAttr("open"))
+        .isEqualTo(current.startsWith("/people"));
     assertThat(page.select(".breadcrumb-item").eachText()).isEqualTo(levels);
     assertThat(page.select(".breadcrumb-page[aria-current=page]").text()).isEqualTo(levels.get(levels.size() - 1));
     assertThat(page.select("main h1").text()).isEqualTo(levels.get(levels.size() - 1));
@@ -77,6 +81,7 @@ class ShellPageTest {
 
     assertShell(page);
     assertThat(currentMenuButtons(page)).containsExactly("/people");
+    assertThat(page.selectFirst("nav.sidebar details.sidebar-menu-collapsible").hasAttr("open")).isTrue();
     assertThat(page.select(".breadcrumb-item").eachText()).containsExactly("Tables", "People", person.getName());
     assertThat(page.select(".breadcrumb-link").attr("href")).isEqualTo("/people");
     assertThat(page.select(".breadcrumb-page").text()).isEqualTo(person.getName());
@@ -114,21 +119,36 @@ class ShellPageTest {
     assertThat(sidebar.select(".sidebar-header .sidebar-menu-button").attr("data-size")).isEqualTo("lg");
     assertThat(sidebar.select(".sidebar-header .sidebar-menu-button-label > *").eachText())
         .containsExactly("Shadleaf", "Sample app 1");
+    // The labels (a menu button's text also holds its tooltip).
     Map<String, List<String>> groups = sidebar.select(".sidebar-content > .sidebar-group").stream()
         .collect(Collectors.toMap(group -> group.selectFirst(".sidebar-group-label").text(),
-            group -> group.select(".sidebar-menu-button").eachText(), (a, b) -> a,
-            LinkedHashMap::new));
+            group -> group.select(".sidebar-menu-button-label, .sidebar-menu-sub-button-label").eachText(),
+            (a, b) -> a, LinkedHashMap::new));
     assertThat(groups).containsExactly(
         Map.entry("Basics", List.of("Buttons")),
         Map.entry("Forms", List.of("Form", "Form with htmx")),
         Map.entry("Interactive", List.of("Dialog", "Settings")),
-        Map.entry("Tables", List.of("People", "People with multiselect", "People, load more")));
+        Map.entry("Tables", List.of("People", "All people", "With multiselect", "Load more")));
+    // People is a collapsible group: its button is the summary, the three pages its sub-menu.
+    Element people = sidebar.selectFirst("details.sidebar-menu-collapsible");
+    assertThat(people.child(0).tagName()).isEqualTo("summary");
+    assertThat(people.select(".sidebar-menu-sub-button").eachAttr("href"))
+        .containsExactly("/people", "/people-multiselect", "/people-load-more");
+    // Collapsed to icons, every menu button shows its label as a tooltip, which repeats its name.
+    assertThat(sidebar.attr("data-collapsible")).isEqualTo("icon");
+    for (Element button : sidebar.select(".sidebar-menu-button")) {
+      Element tooltip = button.selectFirst("> .sidebar-menu-tooltip");
+      assertThat(tooltip).as("tooltip of %s", button.text()).isNotNull();
+      assertThat(tooltip.attr("aria-hidden")).isEqualTo("true");
+      assertThat(tooltip.ownText()).isEqualTo(button.selectFirst(".sidebar-menu-button-label").text()
+          .replace("Shadleaf Sample app 1", "Shadleaf"));
+    }
     // Each group is named by its label.
     for (Element group : sidebar.select(".sidebar-content > .sidebar-group")) {
       assertThat(group.attr("role")).isEqualTo("group");
       assertThat(group.attr("aria-labelledby")).isEqualTo(group.selectFirst(".sidebar-group-label").id());
     }
-    assertThat(sidebar.select(".sidebar-footer .sidebar-menu-button").eachText()).containsExactly("Documentation");
+    assertThat(sidebar.select(".sidebar-footer .sidebar-menu-button-label").eachText()).containsExactly("Documentation");
   }
 
   /** Requests a link in the boosted body sends: HX-Request and HX-Boosted, no HX-Target (the body has no id). */
@@ -192,9 +212,9 @@ class ShellPageTest {
     assertThat(page.select("body > .toaster")).hasSize(1);
   }
 
-  /** The hrefs of the menu buttons marked as the current page. */
+  /** The hrefs of the menu buttons and sub-buttons marked as the current page. */
   private static List<String> currentMenuButtons(Document page) {
-    return page.select("nav.sidebar .sidebar-menu-button[aria-current]").stream()
+    return page.select("nav.sidebar :is(.sidebar-menu-button, .sidebar-menu-sub-button)[aria-current]").stream()
         .peek(button -> assertThat(button.attr("aria-current")).isEqualTo("page"))
         .map(button -> button.attr("href"))
         .toList();

@@ -24,14 +24,15 @@
   cookie) every time. Controllers that answer htmx with a fragment tell such a request apart (HtmxRequests). */-->
 <body hx-boost="true">
 <sl:skip-link/>
-<!--/* shadcn/ui's sidebar-07, with the inset variant: the page is a card on the sidebar's ground from 768 px; below that
-  the sidebar is a panel the trigger opens. */-->
+<!--/* shadcn/ui's sidebar-07, with the inset variant: the page is a card on the sidebar's ground from 768 px, and the
+  sidebar collapses to a strip of icons whose tooltips show the labels; below 768 px the sidebar is a panel the trigger
+  opens. */-->
 <sl:sidebar-provider>
-  <sl:sidebar variant="inset">
+  <sl:sidebar variant="inset" collapsible="icon">
     <sl:sidebar-header>
       <sl:sidebar-menu>
         <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+          <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Shadleaf">
             <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
             <strong>Shadleaf</strong>
             <small>Sample app 1</small>
@@ -45,7 +46,8 @@
         <sl:sidebar-group-content>
           <sl:sidebar-menu>
             <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
+              <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}"
+                                      tooltip="Buttons">
                 <sl:slot name="icon-start"><sl:icon name="mouse-pointer-click"/></sl:slot>
                 Buttons
               </sl:sidebar-menu-button>
@@ -58,13 +60,15 @@
         <sl:sidebar-group-content>
           <sl:sidebar-menu>
             <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}">
+              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}"
+                                      tooltip="Form">
                 <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
                 Form
               </sl:sidebar-menu-button>
             </sl:sidebar-menu-item>
             <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/htmx-form}" th:active="${#slNav.current('/htmx-form')}">
+              <sl:sidebar-menu-button th:href="@{/htmx-form}" th:active="${#slNav.current('/htmx-form')}"
+                                      tooltip="Form with htmx">
                 <sl:slot name="icon-start"><sl:icon name="zap"/></sl:slot>
                 Form with htmx
               </sl:sidebar-menu-button>
@@ -77,13 +81,15 @@
         <sl:sidebar-group-content>
           <sl:sidebar-menu>
             <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/dialog}" th:active="${#slNav.current('/dialog')}">
+              <sl:sidebar-menu-button th:href="@{/dialog}" th:active="${#slNav.current('/dialog')}"
+                                      tooltip="Dialog">
                 <sl:slot name="icon-start"><sl:icon name="app-window"/></sl:slot>
                 Dialog
               </sl:sidebar-menu-button>
             </sl:sidebar-menu-item>
             <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
+              <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}"
+                                      tooltip="Settings">
                 <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
                 Settings
               </sl:sidebar-menu-button>
@@ -95,26 +101,34 @@
         <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
         <sl:sidebar-group-content>
           <sl:sidebar-menu>
-            <!--/* /people also marks the person pages below it (/people/12). */-->
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+            <!--/* The three people pages under one collapsible item, open on any of them. /people also marks the
+              person pages below it (/people/12). */-->
+            <sl:sidebar-menu-item collapsible
+                                  th:open="${#slNav.current('/people') or #slNav.current('/people-multiselect')
+                                             or #slNav.current('/people-load-more')}">
+              <sl:sidebar-menu-button tooltip="People">
                 <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
                 People
               </sl:sidebar-menu-button>
-            </sl:sidebar-menu-item>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/people-multiselect}"
-                                      th:active="${#slNav.current('/people-multiselect')}">
-                <sl:slot name="icon-start"><sl:icon name="list-checks"/></sl:slot>
-                People with multiselect
-              </sl:sidebar-menu-button>
-            </sl:sidebar-menu-item>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/people-load-more}"
-                                      th:active="${#slNav.current('/people-load-more')}">
-                <sl:slot name="icon-start"><sl:icon name="list-plus"/></sl:slot>
-                People, load more
-              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+                    All people
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/people-multiselect}"
+                                              th:active="${#slNav.current('/people-multiselect')}">
+                    With multiselect
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/people-load-more}"
+                                              th:active="${#slNav.current('/people-load-more')}">
+                    Load more
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
             </sl:sidebar-menu-item>
           </sl:sidebar-menu>
         </sl:sidebar-group-content>
@@ -123,7 +137,7 @@
     <sl:sidebar-footer>
       <sl:sidebar-menu>
         <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button href="https://wimdeblauwe.github.io/shadleaf/" size="sm">
+          <sl:sidebar-menu-button href="https://wimdeblauwe.github.io/shadleaf/" size="sm" tooltip="Documentation">
             <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
             Documentation
           </sl:sidebar-menu-button>

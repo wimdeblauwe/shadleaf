@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A list of links below a <code>sl:sidebar-menu-button</code>, indented along a line: a
+      <code>ul</code> of <code>sl:sidebar-menu-sub-item</code>s. In a <code>collapsible</code>
+      <code>sl:sidebar-menu-item</code> it is what opens and closes. Hidden while the sidebar is collapsed to
+      icons.</sl:description>
+  </sl:props>
+</head>
+<body>
+<ul th:fragment="sidebar-menu-sub" class="sidebar-menu-sub" sl:attrs><sl:slot/></ul>
+</body>
+</html>

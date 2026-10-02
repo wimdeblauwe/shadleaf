@@ -161,6 +161,138 @@
   <span class="sl-sr-only">12 unread messages</span>
 </div>
 
+<!-- <sl:sidebar-menu-button href="/" tooltip="Home">Home</sl:sidebar-menu-button> -->
+<a class="sidebar-menu-button" href="/">
+  <span class="sidebar-menu-button-label">Home</span>
+  <span class="tooltip-content sidebar-menu-tooltip" role="tooltip" popover="manual" data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">
+    Home
+    <span class="tooltip-arrow" aria-hidden="true"></span>
+  </span>
+</a>
+
+<!-- <sl:sidebar-menu-button as="button" tooltip="Compose">Compose</sl:sidebar-menu-button> -->
+<button class="sidebar-menu-button" type="button">
+  <span class="sidebar-menu-button-label">Compose</span>
+  <span class="tooltip-content sidebar-menu-tooltip" role="tooltip" popover="manual" data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">
+    Compose
+    <span class="tooltip-arrow" aria-hidden="true"></span>
+  </span>
+</button>
+
+<!-- <sl:sidebar-menu-item collapsible>Content</sl:sidebar-menu-item> -->
+<li class="sidebar-menu-item">
+  <details class="sidebar-menu-collapsible">Content</details>
+</li>
+
+<!-- <sl:sidebar-menu-item collapsible open id="settings">Content</sl:sidebar-menu-item> -->
+<li class="sidebar-menu-item" id="settings">
+  <details class="sidebar-menu-collapsible" open>Content</details>
+</li>
+
+<!-- <sl:sidebar-menu-item collapsible open>
+  <sl:sidebar-menu-button tooltip="Settings" variant="outline" size="sm">
+    <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+    Settings
+  </sl:sidebar-menu-button>
+  <sl:sidebar-menu-sub>
+    <sl:sidebar-menu-sub-item>
+      <sl:sidebar-menu-sub-button href="/settings" th:active="${#slNav.current('/settings')}">
+        General
+      </sl:sidebar-menu-sub-button>
+    </sl:sidebar-menu-sub-item>
+  </sl:sidebar-menu-sub>
+</sl:sidebar-menu-item> -->
+<li class="sidebar-menu-item">
+  <details class="sidebar-menu-collapsible" open>
+    <summary class="sidebar-menu-button" data-variant="outline" data-size="sm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <span class="sidebar-menu-button-label">Settings</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-menu-button-chevron" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <span class="tooltip-content sidebar-menu-tooltip" role="tooltip" popover="manual" data-side="right" aria-hidden="true" x-data="slSidebarMenuTooltip">
+        Settings
+        <span class="tooltip-arrow" aria-hidden="true"></span>
+      </span>
+    </summary>
+    <ul class="sidebar-menu-sub">
+      <li class="sidebar-menu-sub-item">
+        <a class="sidebar-menu-sub-button" href="/settings">
+          <span class="sidebar-menu-sub-button-label">General</span>
+        </a>
+      </li>
+    </ul>
+  </details>
+</li>
+
+<!-- <sl:sidebar-menu-sub>Items</sl:sidebar-menu-sub> -->
+<ul class="sidebar-menu-sub">Items</ul>
+
+<!-- <sl:sidebar-menu-sub-item>Button</sl:sidebar-menu-sub-item> -->
+<li class="sidebar-menu-sub-item">Button</li>
+
+<!-- <sl:sidebar-menu-sub-button href="/a">Link</sl:sidebar-menu-sub-button> -->
+<a class="sidebar-menu-sub-button" href="/a">
+  <span class="sidebar-menu-sub-button-label">Link</span>
+</a>
+
+<!-- <sl:sidebar-menu-sub-button as="a" href="/a">Link</sl:sidebar-menu-sub-button> -->
+<a class="sidebar-menu-sub-button" href="/a">
+  <span class="sidebar-menu-sub-button-label">Link</span>
+</a>
+
+<!-- <sl:sidebar-menu-sub-button as="button">Action</sl:sidebar-menu-sub-button> -->
+<button class="sidebar-menu-sub-button" type="button">
+  <span class="sidebar-menu-sub-button-label">Action</span>
+</button>
+
+<!-- <sl:sidebar-menu-sub-button as="button" type="submit">Action</sl:sidebar-menu-sub-button> -->
+<button class="sidebar-menu-sub-button" type="submit">
+  <span class="sidebar-menu-sub-button-label">Action</span>
+</button>
+
+<!-- <sl:sidebar-menu-sub-button as="button" type="reset">Action</sl:sidebar-menu-sub-button> -->
+<button class="sidebar-menu-sub-button" type="reset">
+  <span class="sidebar-menu-sub-button-label">Action</span>
+</button>
+
+<!-- <sl:sidebar-menu-sub-button href="/a" active>Link</sl:sidebar-menu-sub-button> -->
+<a class="sidebar-menu-sub-button" aria-current="page" href="/a">
+  <span class="sidebar-menu-sub-button-label">Link</span>
+</a>
+
+<!-- <sl:sidebar-menu-sub-button as="button" active>Action</sl:sidebar-menu-sub-button> -->
+<button class="sidebar-menu-sub-button" type="button" aria-current="true">
+  <span class="sidebar-menu-sub-button-label">Action</span>
+</button>
+
+<!-- <sl:sidebar-menu-sub-button href="/a" size="md">Link</sl:sidebar-menu-sub-button> -->
+<a class="sidebar-menu-sub-button" href="/a">
+  <span class="sidebar-menu-sub-button-label">Link</span>
+</a>
+
+<!-- <sl:sidebar-menu-sub-button href="/a" size="sm">Link</sl:sidebar-menu-sub-button> -->
+<a class="sidebar-menu-sub-button" data-size="sm" href="/a">
+  <span class="sidebar-menu-sub-button-label">Link</span>
+</a>
+
+<!-- <sl:sidebar-menu-sub-button href="/a" disabled>Link</sl:sidebar-menu-sub-button> -->
+<a class="sidebar-menu-sub-button" aria-disabled="true" role="link" tabindex="-1">
+  <span class="sidebar-menu-sub-button-label">Link</span>
+</a>
+
+<!-- <sl:sidebar-menu-sub-button as="button" disabled>Action</sl:sidebar-menu-sub-button> -->
+<button class="sidebar-menu-sub-button" type="button" disabled>
+  <span class="sidebar-menu-sub-button-label">Action</span>
+</button>
+
+<!-- <sl:sidebar-menu-sub-button href="/a">
+  <sl:slot name="icon-start"><sl:icon name="file"/></sl:slot>
+  With an icon
+</sl:sidebar-menu-sub-button> -->
+<a class="sidebar-menu-sub-button" href="/a">
+  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <span class="sidebar-menu-sub-button-label">With an icon</span>
+</a>
+
 <!-- <sl:sidebar>
   <sl:sidebar-header>
     <sl:sidebar-menu>

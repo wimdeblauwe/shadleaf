@@ -6,6 +6,10 @@
       browser's Popover API. The first element inside is the trigger, any focusable element (a
       <code>sl:button</code>, a link); the <code>sl:tooltip-content</code> after it describes it
       (<code>aria-describedby</code>). Escape hides it. Needs Alpine.</sl:description>
+    <sl:prop name="mode" default="description" values="description label">What the text is to a screen reader:
+      <code>description</code> adds it to the trigger as a description; <code>label</code> is for a text that repeats
+      the trigger's name, such as an icon button's <code>aria-label</code>: it is hidden from assistive technology and
+      describes nothing, so the name is not said twice.</sl:prop>
     <sl:prop name="delay" type="number" default="300">How long the pointer rests on the trigger before the tooltip
       shows, in milliseconds. Keyboard focus shows it at once, and so does moving to another trigger right after a
       tooltip hid.</sl:prop>
@@ -13,10 +17,13 @@
 </head>
 <body>
 <!--/* A wrapper without a box of its own (display: contents), so it keeps the trigger's layout, for slTooltip to find
-  the trigger and the content in. A span, so a tooltip can sit in running text. */-->
+  the trigger and the content in. A span, so a tooltip can sit in running text. sl:tooltip-content reads slTooltipMode
+  (always set, so a tooltip nested in another's content does not take its mode) and hides itself in label mode, which
+  is how slTooltip knows the mode. */-->
 <span th:fragment="tooltip"
       class="tooltip"
       x-data="slTooltip"
+      th:with="slTooltipMode=${props.mode}"
       th:attr="data-delay=${props.unlessDefault('delay')}"
       sl:attrs><sl:slot/></span>
 </body>

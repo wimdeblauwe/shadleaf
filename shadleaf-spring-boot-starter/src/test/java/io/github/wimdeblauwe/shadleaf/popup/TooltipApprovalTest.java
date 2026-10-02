@@ -26,6 +26,16 @@ class TooltipApprovalTest {
               <sl:tooltip-content side="bottom" align="start" id="save-tip">Save
                 <sl:kbd-group><sl:kbd>Ctrl</sl:kbd><sl:kbd>S</sl:kbd></sl:kbd-group></sl:tooltip-content>
             </sl:tooltip>""",
+        """
+            <sl:tooltip mode="label">
+              <sl:button variant="ghost" size="icon" aria-label="Delete"><sl:icon name="trash"/></sl:button>
+              <sl:tooltip-content>Delete</sl:tooltip-content>
+            </sl:tooltip>""",
+        """
+            <sl:tooltip mode="description">
+              <sl:button variant="outline">Hover</sl:button>
+              <sl:tooltip-content>Add to library</sl:tooltip-content>
+            </sl:tooltip>""",
         "<sl:tooltip-content side=\"right\">Text</sl:tooltip-content>",
         "<sl:tooltip-content side=\"left\" align=\"end\">Text</sl:tooltip-content>"));
   }

@@ -5,20 +5,34 @@
     <sl:description>One entry of a <code>sl:sidebar-menu</code>: an <code>li</code> holding a
       <code>sl:sidebar-menu-button</code>, and optionally a <code>sl:sidebar-menu-badge</code> or a
       <code>sl:sidebar-menu-action</code> beside it. With a badge, the button is described by it
-      (<code>aria-describedby</code>), so a screen reader says "Inbox, link, 12".</sl:description>
+      (<code>aria-describedby</code>), so a screen reader says "Inbox, link, 12". With <code>collapsible</code> it is a
+      group of links that opens and closes: the menu button is what the user clicks, followed by a
+      <code>sl:sidebar-menu-sub</code>.</sl:description>
     <sl:prop name="id">The item's id. Its badge gets <code>&lt;id&gt;-badge</code>; without an id, each render
       generates one (<code>sl-sidebar-menu-item-</code> and eight random characters).</sl:prop>
+    <sl:prop name="collapsible" type="boolean">Make it a group that opens and closes, on the browser's
+      <code>details</code> element (no JavaScript needed): its <code>sl:sidebar-menu-button</code> becomes the
+      <code>summary</code>, with a chevron, and its <code>sl:sidebar-menu-sub</code> the content. Collapsed to icons,
+      a click on the button expands the sidebar and opens the group. It takes no badge or action: the browser would
+      hide them with the sub-menu.</sl:prop>
+    <sl:prop name="open" type="boolean">Render a collapsible item open, for instance when it holds the current page:
+      <code>th:open="${#slNav.current('/settings')}"</code>.</sl:prop>
   </sl:props>
 </head>
 <body>
 <!--/* The button and the badge read slSidebarMenuBadgeId: the badge's id and the button's aria-describedby. Always set
-  (null without a badge), so an item nested in this one does not point at this item's badge. */-->
+  (null without a badge), so an item nested in this one does not point at this item's badge. The button reads
+  slSidebarMenuCollapsible to render as the details' summary; also always set. */-->
 <li th:fragment="sidebar-menu-item"
     class="sidebar-menu-item"
     th:with="slSidebarMenuBadgeId=${slots.contains('sidebar-menu-badge', 'sidebar-menu-item')
                ? (props.id ?: 'sl-sidebar-menu-item-' + #strings.randomAlphanumeric(8).toLowerCase()) + '-badge'
-               : null}"
+               : null},
+             slSidebarMenuCollapsible=${props.collapsible}"
     th:attr="id=${props.id}"
-    sl:attrs><sl:slot/></li>
+    sl:attrs><details th:if="${props.collapsible}"
+                      class="sidebar-menu-collapsible"
+                      th:attr="open=${props.open ? 'open' : null}"><sl:slot/></details><th:block
+    th:unless="${props.collapsible}"><sl:slot/></th:block></li>
 </body>
 </html>

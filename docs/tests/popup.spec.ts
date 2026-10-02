@@ -135,8 +135,15 @@ for (const {skin, theme} of combinations) {
     for (let i = 0; i < count; i++) {
       const trigger = tooltips.nth(i).locator('> :not(.tooltip-content)').first();
       const content = tooltips.nth(i).locator('> .tooltip-content');
+      // A label tooltip (mode="label") repeats the name: hidden from assistive technology, it describes nothing.
+      if (await content.getAttribute('aria-hidden') === 'true') {
+        await expect(trigger).not.toHaveAttribute('aria-describedby');
+        await content.evaluate((element, n) => element.id ||= `label-tooltip-${n}`, i);
+      }
       const contentId = await content.evaluate(element => element.id);
-      await expect(trigger).toHaveAttribute('aria-describedby', new RegExp(`\\b${contentId}\\b`));
+      if (await content.getAttribute('aria-hidden') !== 'true') {
+        await expect(trigger).toHaveAttribute('aria-describedby', new RegExp(`\\b${contentId}\\b`));
+      }
       await trigger.focus();
       await waitUntilOpen(content);
       const results = await new AxeBuilder({page}).include(`#${contentId}`).withTags(TAGS).analyze();
@@ -150,6 +157,29 @@ for (const {skin, theme} of combinations) {
     expect(failures, failures.join('\n')).toEqual([]);
   });
 }
+
+test('a label tooltip shows the name on hover and focus, but neither names nor describes its trigger again', async ({page}) => {
+  await openShowcase(page, 'vega', 'light');
+  await page.waitForFunction(() => 'Alpine' in window);
+  const trigger = page.locator('.showcase .tooltip:has(> .tooltip-content[aria-hidden="true"]) > button').first();
+  const content = trigger.locator('xpath=following-sibling::*[contains(@class, "tooltip-content")]');
+
+  await expect(trigger).toHaveAccessibleName('Edit');
+  await expect(trigger).toHaveAccessibleDescription('');
+  await trigger.hover();
+  await waitUntilOpen(content);
+  await expect(content).toHaveText('Edit');
+  // Still nothing more to hear while it shows.
+  await expect(trigger).toHaveAccessibleDescription('');
+  await page.mouse.move(0, 0);
+  await expectClosed(content);
+  await trigger.focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  await waitUntilOpen(content);
+  await page.keyboard.press('Escape');
+  await expectClosed(content);
+});
 
 test('menu keyboard: arrows, Home and End, disabled items skipped, typeahead, Tab moves on', async ({page}) => {
   await openShowcase(page, 'vega', 'light');

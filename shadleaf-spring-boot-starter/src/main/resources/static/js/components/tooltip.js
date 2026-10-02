@@ -1,25 +1,13 @@
 /*
-  sl:tooltip: the wrapper around a trigger (its first element) and a sl:tooltip-content, a popover="manual". Nothing in
-  HTML shows a popover on hover in every browser yet, so this does:
-  - the content describes the trigger (aria-describedby, added to any the trigger has; the content gets an id if it
-    has none);
-  - it shows when the pointer rests on the trigger for the delay (data-delay, 300 ms by default), at once on keyboard
-    focus, and at once when another tooltip hid a moment ago, so moving along a toolbar does not wait at every button;
-  - it stays while the pointer moves from the trigger onto it, so it can be read at any zoom (WCAG 1.4.13), and hides
-    when the pointer leaves both, when the trigger loses focus or is pressed, and on Escape, which then does nothing
-    else (an open dialog or menu around it stays open);
-  - one tooltip at a time; touch never shows one.
-  The trigger is passed to showPopover() as its source, which makes it the implicit anchor CSS positions against.
+  sl:tooltip: the wrapper around a trigger (its first element) and a sl:tooltip-content, a popover="manual". The
+  behaviour is in ../tooltip.js. The delay is data-delay (300 ms by default). A content hidden from assistive technology
+  (aria-hidden, which sl:tooltip-content renders for mode="label") repeats the trigger's name, such as an icon button's
+  aria-label: it adds no aria-describedby, which would make a screen reader say the name twice.
 */
-import {listener, placedSide, positionWithoutAnchoring, show} from '../popup.js';
+import {listener} from '../popup.js';
+import {attachTooltip} from '../tooltip.js';
 
 const DEFAULT_DELAY_MS = 300;
-const HIDE_GRACE_MS = 100;
-const SKIP_DELAY_MS = 300;
-
-let current = null;
-let lastHiddenAt = 0;
-let counter = 0;
 
 export default function tooltip() {
   return {
@@ -31,89 +19,10 @@ export default function tooltip() {
         return;
       }
       const cleanups = [];
-      const listen = listener(cleanups);
-      const delay = Number(wrapper.dataset.delay ?? DEFAULT_DELAY_MS);
-      let showTimer = 0;
-      let hideTimer = 0;
-      let suppressed = false;
-
-      if (!content.id) {
-        content.id = `sl-tooltip-${++counter}`;
-      }
-      const describedBy = (trigger.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
-      if (!describedBy.includes(content.id)) {
-        trigger.setAttribute('aria-describedby', [...describedBy, content.id].join(' '));
-      }
-
-      const self = {
-        hide() {
-          clearTimeout(showTimer);
-          clearTimeout(hideTimer);
-          if (content.matches(':popover-open')) {
-            content.hidePopover();
-            lastHiddenAt = Date.now();
-          }
-          if (current === self) {
-            current = null;
-          }
-        },
-      };
-      const open = () => {
-        clearTimeout(showTimer);
-        clearTimeout(hideTimer);
-        if (current && current !== self) {
-          current.hide();
-        }
-        current = self;
-        show(content, trigger);
-        content.dataset.placed = placedSide(content, trigger);
-      };
-      const openAfterDelay = () => {
-        clearTimeout(hideTimer);
-        if (content.matches(':popover-open')) {
-          return;
-        }
-        clearTimeout(showTimer);
-        const warm = Date.now() - lastHiddenAt < SKIP_DELAY_MS || (current && current !== self);
-        showTimer = setTimeout(open, warm ? 0 : delay);
-      };
-      const hideSoon = () => {
-        clearTimeout(showTimer);
-        clearTimeout(hideTimer);
-        hideTimer = setTimeout(() => self.hide(), HIDE_GRACE_MS);
-      };
-
-      positionWithoutAnchoring(content, () => trigger, {side: 'top', align: 'center'}, listen);
-
-      listen(trigger, 'pointerenter', event => {
-        if (event.pointerType !== 'touch' && !suppressed) {
-          openAfterDelay();
-        }
-      });
-      listen(trigger, 'pointerleave', () => {
-        suppressed = false;
-        hideSoon();
-      });
-      listen(trigger, 'pointerdown', () => {
-        suppressed = true;
-        self.hide();
-      });
-      listen(trigger, 'focus', () => {
-        if (trigger.matches(':focus-visible')) {
-          open();
-        }
-      });
-      listen(trigger, 'blur', () => self.hide());
-      listen(content, 'pointerenter', () => clearTimeout(hideTimer));
-      listen(content, 'pointerleave', hideSoon);
-      listen(document, 'keydown', event => {
-        if (event.key === 'Escape' && content.matches(':popover-open')) {
-          event.preventDefault();
-          event.stopPropagation();
-          self.hide();
-        }
-      }, true);
-
+      const self = attachTooltip(trigger, content, {
+        delay: Number(wrapper.dataset.delay ?? DEFAULT_DELAY_MS),
+        describe: content.getAttribute('aria-hidden') !== 'true',
+      }, listener(cleanups));
       cleanups.push(() => self.hide());
       this.cleanups = cleanups;
     },

@@ -46,4 +46,29 @@ class TooltipComponentTest {
         .hasAttribute("data-side", "bottom")
         .hasAttribute("data-align", "start");
   }
+
+  @Test
+  void labelModeHidesTheContentFromAssistiveTechnology() {
+    Rendered rendered = tester.render("""
+        <sl:tooltip mode="label">
+          <sl:button variant="ghost" size="icon" aria-label="Delete"><sl:icon name="trash"/></sl:button>
+          <sl:tooltip-content>Delete</sl:tooltip-content>
+        </sl:tooltip>""");
+
+    assertThat(rendered).hasNoLeakedMarkup();
+    assertThat(rendered).root().hasNoAttribute("data-mode");
+    assertThat(rendered).element(".tooltip-content").hasAttribute("aria-hidden", "true");
+    assertThat(rendered).element("button").hasNoAttribute("aria-describedby");
+  }
+
+  @Test
+  void aTooltipNestedInALabelTooltipDescribes() {
+    Rendered rendered = tester.render("""
+        <sl:tooltip mode="label">
+          <sl:button aria-label="Outer">O</sl:button>
+          <sl:tooltip-content>Outer<sl:tooltip><a href="/x">x</a><sl:tooltip-content>Inner</sl:tooltip-content></sl:tooltip></sl:tooltip-content>
+        </sl:tooltip>""");
+
+    assertThat(rendered).element(".tooltip-content .tooltip-content").hasNoAttribute("aria-hidden");
+  }
 }

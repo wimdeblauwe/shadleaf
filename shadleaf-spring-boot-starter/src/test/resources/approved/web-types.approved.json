@@ -2518,7 +2518,7 @@
           "default" : "sidebar"
         }, {
           "name" : "collapsible",
-          "description" : "How it collapses on a desktop: `offcanvas` moves it out of view entirely. Collapsing to icons comes later.",
+          "description" : "How it collapses on a desktop: `offcanvas` moves it out of view entirely; `icon` narrows it to a strip of its menu buttons' icons (labels, badges, actions and sub-menus hidden; a menu button's `tooltip` shows its label); `none` never collapses it, and the trigger is hidden on a desktop. The phone panel is the same for all three.",
           "value" : {
             "kind" : "plain",
             "type" : "enum",
@@ -2526,6 +2526,10 @@
           },
           "values" : [ {
             "name" : "offcanvas"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "none"
           } ],
           "default" : "offcanvas"
         }, {
@@ -2748,7 +2752,7 @@
         } ]
       }, {
         "name" : "sl:sidebar-menu-button",
-        "description" : "A link (or button) in a `sl:sidebar-menu-item`: an icon in the `icon-start` slot, then the label. Mark the current page with `active`, for instance `th:active=\"${#slNav.current('/people')}\"`. The label is cut off with an ellipsis when it does not fit; for two lines, put each in an element of its own (`&lt;strong&gt;`, `&lt;small&gt;`). Every attribute that is not a prop passes through (`href`, `hx-*`); `class` is appended to `sidebar-menu-button`.",
+        "description" : "A link (or button) in a `sl:sidebar-menu-item`: an icon in the `icon-start` slot, then the label. Mark the current page with `active`, for instance `th:active=\"${#slNav.current('/people')}\"`. The label is cut off with an ellipsis when it does not fit; for two lines, put each in an element of its own (`&lt;strong&gt;`, `&lt;small&gt;`). Every attribute that is not a prop passes through (`href`, `hx-*`); `class` is appended to `sidebar-menu-button`. In a `collapsible` `sl:sidebar-menu-item` it is the item's `summary`, which opens and closes the group, with a chevron at the end; `as`, `type` and `disabled` do not apply there, and it takes no `href`.",
         "attributes" : [ {
           "name" : "as",
           "description" : "Element to render: an anchor (`a`) to a page, or a `button` for an action.",
@@ -2824,6 +2828,13 @@
             "required" : false
           }
         }, {
+          "name" : "tooltip",
+          "description" : "The label to show beside the button while the sidebar is collapsed to icons (`collapsible=\"icon\"`), on hover and on keyboard focus; usually the same words as the label. Not shown while the sidebar is expanded or on a phone. It repeats the button's name, so it is hidden from assistive technology and describes nothing (`sl:tooltip`'s `mode=\"label\"`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
           "name" : "th:as",
           "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
           "value" : {
@@ -2865,15 +2876,36 @@
             "kind" : "expression",
             "required" : false
           }
+        }, {
+          "name" : "th:tooltip",
+          "description" : "`tooltip` from a Thymeleaf expression, e.g. `th:tooltip=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
         } ]
       }, {
         "name" : "sl:sidebar-menu-item",
-        "description" : "One entry of a `sl:sidebar-menu`: an `li` holding a `sl:sidebar-menu-button`, and optionally a `sl:sidebar-menu-badge` or a `sl:sidebar-menu-action` beside it. With a badge, the button is described by it (`aria-describedby`), so a screen reader says \"Inbox, link, 12\".",
+        "description" : "One entry of a `sl:sidebar-menu`: an `li` holding a `sl:sidebar-menu-button`, and optionally a `sl:sidebar-menu-badge` or a `sl:sidebar-menu-action` beside it. With a badge, the button is described by it (`aria-describedby`), so a screen reader says \"Inbox, link, 12\". With `collapsible` it is a group of links that opens and closes: the menu button is what the user clicks, followed by a `sl:sidebar-menu-sub`.",
         "attributes" : [ {
           "name" : "id",
           "description" : "The item's id. Its badge gets `&lt;id&gt;-badge`; without an id, each render generates one (`sl-sidebar-menu-item-` and eight random characters).",
           "value" : {
             "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "collapsible",
+          "description" : "Make it a group that opens and closes, on the browser's `details` element (no JavaScript needed): its `sl:sidebar-menu-button` becomes the `summary`, with a chevron, and its `sl:sidebar-menu-sub` the content. Collapsed to icons, a click on the button expands the sidebar and opens the group. It takes no badge or action: the browser would hide them with the sub-menu.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "open",
+          "description" : "Render a collapsible item open, for instance when it holds the current page: `th:open=\"${#slNav.current('/settings')}\"`.",
+          "value" : {
+            "kind" : "no-value",
             "required" : false
           }
         }, {
@@ -2883,7 +2915,126 @@
             "kind" : "expression",
             "required" : false
           }
+        }, {
+          "name" : "th:collapsible",
+          "description" : "`collapsible` from a Thymeleaf expression, e.g. `th:collapsible=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
         } ]
+      }, {
+        "name" : "sl:sidebar-menu-sub",
+        "description" : "A list of links below a `sl:sidebar-menu-button`, indented along a line: a `ul` of `sl:sidebar-menu-sub-item`s. In a `collapsible` `sl:sidebar-menu-item` it is what opens and closes. Hidden while the sidebar is collapsed to icons.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-menu-sub-button",
+        "description" : "A link (or button) in a `sl:sidebar-menu-sub-item`. Mark the current page with `active`, for instance `th:active=\"${#slNav.current('/settings/billing')}\"`. An optional icon goes in the `icon-start` slot; the label is cut off with an ellipsis when it does not fit. Every attribute that is not a prop passes through (`href`, `hx-*`); `class` is appended to `sidebar-menu-sub-button`.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "Element to render: an anchor (`a`) to a page, or a `button` for an action.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "a"
+          }, {
+            "name" : "button"
+          } ],
+          "default" : "a"
+        }, {
+          "name" : "active",
+          "description" : "The current one: the link gets `aria-current=\"page\"`, a button `aria-current=\"true\"`, and both the active look.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "size",
+          "description" : "Text size: `sm` for a denser list.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "md"
+          } ],
+          "default" : "md"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour of a button; defaults to `button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "disabled",
+          "description" : "Disable it. A disabled link loses its `href` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:active",
+          "description" : "`active` from a Thymeleaf expression, e.g. `th:active=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-menu-sub-item",
+        "description" : "One entry of a `sl:sidebar-menu-sub`: an `li` holding a `sl:sidebar-menu-sub-button`.",
+        "attributes" : [ ]
       }, {
         "name" : "sl:sidebar-provider",
         "description" : "The wrapper of an application shell with a sidebar: it holds `sl:sidebar`, and `sl:sidebar-inset` with the page's content (and the `sl:sidebar-trigger`), and it holds whether the sidebar is expanded or collapsed on a desktop. The server renders that state from the `sl-sidebar-state` cookie, which the browser writes when the user collapses or expands the sidebar (the trigger, or Ctrl/⌘+B), so every page starts in it without a jump. Below 768&nbsp;px the sidebar is a panel the trigger opens instead, and the state does not apply. Needs Alpine for the trigger and the shortcut; without JavaScript the sidebar stays as the server rendered it.",
@@ -3649,6 +3800,20 @@
         "name" : "sl:tooltip",
         "description" : "A short text that shows while the pointer rests on an element or the keyboard focuses it, on the browser's Popover API. The first element inside is the trigger, any focusable element (a `sl:button`, a link); the `sl:tooltip-content` after it describes it (`aria-describedby`). Escape hides it. Needs Alpine.",
         "attributes" : [ {
+          "name" : "mode",
+          "description" : "What the text is to a screen reader: `description` adds it to the trigger as a description; `label` is for a text that repeats the trigger's name, such as an icon button's `aria-label`: it is hidden from assistive technology and describes nothing, so the name is not said twice.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "description"
+          }, {
+            "name" : "label"
+          } ],
+          "default" : "description"
+        }, {
           "name" : "delay",
           "description" : "How long the pointer rests on the trigger before the tooltip shows, in milliseconds. Keyboard focus shows it at once, and so does moving to another trigger right after a tooltip hid.",
           "value" : {
@@ -3657,6 +3822,13 @@
             "required" : false
           },
           "default" : "300"
+        }, {
+          "name" : "th:mode",
+          "description" : "`mode` from a Thymeleaf expression, e.g. `th:mode=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
         }, {
           "name" : "th:delay",
           "description" : "`delay` from a Thymeleaf expression, e.g. `th:delay=\"${...}\"`.",
@@ -3667,7 +3839,7 @@
         } ]
       }, {
         "name" : "sl:tooltip-content",
-        "description" : "The text of a `sl:tooltip` (`role=\"tooltip\"`), after its trigger. Keep it short and plain: it cannot hold links or buttons, and touch screens never show it. It flips to the other side when there is no room.",
+        "description" : "The text of a `sl:tooltip` (`role=\"tooltip\"`), after its trigger. Keep it short and plain: it cannot hold links or buttons, and touch screens never show it. It flips to the other side when there is no room. In a tooltip with `mode=\"label\"` it is hidden from assistive technology (`aria-hidden`).",
         "attributes" : [ {
           "name" : "side",
           "description" : "The side of the trigger it shows on. `right` and `left` are the end and the start of a line.",

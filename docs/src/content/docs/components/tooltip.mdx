@@ -36,6 +36,23 @@ reader reads it after the trigger's name. It does not replace the name: an icon-
 
 <ComponentPreview id="tooltip--keyboard-shortcut" />
 
+### When it repeats the name
+
+A tooltip that only shows an icon button's name (the same words as its `aria-label`) would make a screen reader say
+them twice: "Edit, button, Edit". `mode="label"` says the tooltip repeats the name: it is hidden from assistive
+technology (`aria-hidden` on the content) and describes nothing. It still shows on hover and keyboard focus.
+
+```html
+<sl:tooltip mode="label">
+  <sl:button variant="outline" size="icon" aria-label="Edit"><sl:icon name="pencil"/></sl:button>
+  <sl:tooltip-content>Edit</sl:tooltip-content>
+</sl:tooltip>
+```
+
+<ComponentPreview id="tooltip--label" />
+
+The [sidebar's](../sidebar/#collapsed-to-icons) menu buttons use this for their labels while it is collapsed to icons.
+
 Keep the text short and plain. A tooltip cannot hold links or buttons (it hides when the pointer or focus leaves), and
 nobody on a touch screen sees it, so never put information in it that is not available another way. For richer
 content that the user can interact with, use a [popover](../popover/).

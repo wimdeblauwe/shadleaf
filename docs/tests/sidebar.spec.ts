@@ -18,24 +18,32 @@ type Scenario = { id: string, html: string };
 const PREVIEW = (previews.scenarios as Scenario[]).find(scenario => scenario.id === 'sidebar--default')!.html;
 
 type Variant = 'sidebar' | 'floating' | 'inset';
+type Collapsible = 'offcanvas' | 'icon' | 'none';
 type ShellOptions = {
-  state?: 'expanded' | 'collapsed', side?: 'start' | 'end', variant?: Variant, title?: string, current?: string
+  state?: 'expanded' | 'collapsed', side?: 'start' | 'end', variant?: Variant, collapsible?: Collapsible,
+  title?: string, current?: string
 };
 
 /**
- * The preview's shell as a server renders it for a page: the state, the current page's menu button (as
- * #slNav.current marks it; the large brand button in the header never), the breadcrumb's page, a same-page link, a
- * control in main. The preview is the inset variant; the plain sidebar unless asked.
+ * The preview's shell as a server renders it for a page: the state, the current page's menu button or sub-button (as
+ * #slNav.current marks it; the large brand button in the header never) and the Documents group open when it holds it,
+ * the breadcrumb's page, a same-page link, a control in main. The preview is the inset variant, collapsing to icons;
+ * the plain sidebar, collapsing off-canvas, unless asked.
  */
-function shell({state = 'expanded', side = 'start', variant = 'sidebar', title = 'Home', current = '/'}: ShellOptions = {}) {
+function shell({state = 'expanded', side = 'start', variant = 'sidebar', collapsible = 'offcanvas', title = 'Home',
+                 current = '/'}: ShellOptions = {}) {
   return PREVIEW
       .replace(' data-variant="inset"', '')
-      .replace(/(<a class="sidebar-menu-button"[^>]*?)\s*aria-current="page"/g, '$1')
-      .replace(new RegExp(`(<a class="sidebar-menu-button")((?:(?!data-size)[^>])*? href="${current}")`),
+      .replace(' data-collapsible="icon"', '')
+      .replace(/(<a class="sidebar-menu-(?:sub-)?button"[^>]*?)\s*aria-current="page"/g, '$1')
+      .replace(new RegExp(`(<a class="sidebar-menu-(?:sub-)?button")((?:(?!data-size)[^>])*? href="${current}")`),
           '$1 aria-current="page"$2')
+      .replace('<details class="sidebar-menu-collapsible">',
+          `<details class="sidebar-menu-collapsible"${current.startsWith('/documents') ? ' open' : ''}>`)
       .replace('data-state="expanded"', `data-state="${state}"`)
       .replace('aria-label="Main">', `aria-label="Main"${side === 'end' ? ' data-side="end"' : ''}${
-          variant === 'sidebar' ? '' : ` data-variant="${variant}"`}>`)
+          variant === 'sidebar' ? '' : ` data-variant="${variant}"`}${
+          collapsible === 'offcanvas' ? '' : ` data-collapsible="${collapsible}"`}>`)
       .replace('</nav>', '<a class="btn" data-variant="ghost" href="#section">Section</a></nav>')
       .replace('aria-current="page">Home</span>', `aria-current="page">${title}</span>`)
       .replace('<h1>Home</h1>', `<h1>${title}</h1><button id="in-main" type="button">In main</button>`
@@ -46,21 +54,24 @@ function shell({state = 'expanded', side = 'start', variant = 'sidebar', title =
 const stateFrom = (request: Request) =>
     /(?:^|;\s*)sl-sidebar-state=collapsed/.test(request.headers['cookie'] ?? '') ? 'collapsed' : 'expanded';
 
-type OpenOptions = FixtureOptions & { side?: 'start' | 'end', variant?: Variant, boost?: 'body' | 'main' };
+type OpenOptions = FixtureOptions & {
+  side?: 'start' | 'end', variant?: Variant, collapsible?: Collapsible, boost?: 'body' | 'main'
+};
 
-/** Serves the shell at / and at /inbox, /calendar and /settings, each rendered from the cookie. */
-async function openShell(page: Page, {side, variant, boost, ...options}: OpenOptions = {}) {
+/** Serves the shell at / and at /inbox, /calendar, /settings and the two documents pages, each rendered from the cookie. */
+async function openShell(page: Page, {side, variant, collapsible, boost, ...options}: OpenOptions = {}) {
   const page_ = (title: string, current: string) => (request: Request) =>
-      ({body: shell({state: stateFrom(request), side, variant, title, current})});
+      ({body: shell({state: stateFrom(request), side, variant, collapsible, title, current})});
   const boostAttributes = boost === 'body' ? 'hx-boost="true"'
       : boost === 'main' ? 'hx-boost="true" hx-target="main" hx-select="main" hx-swap="outerHTML"' : '';
-  return openFixture(page, (url, request) => shell({state: stateFrom(request), side, variant}), {
+  return openFixture(page, (url, request) => shell({state: stateFrom(request), side, variant, collapsible}), {
     wrap: false,
     htmx: !!boost,
     bodyAttributes: boostAttributes,
     routes: {
       '/inbox': page_('Inbox', '/inbox'), '/calendar': page_('Calendar', '/calendar'),
       '/settings': page_('Settings', '/settings'),
+      '/documents': page_('Recent', '/documents'), '/documents/shared': page_('Shared with me', '/documents/shared'),
     },
     ...options,
   });
@@ -69,11 +80,14 @@ async function openShell(page: Page, {side, variant, boost, ...options}: OpenOpt
 const sidebar = (page: Page) => page.locator('#sidebar');
 const trigger = (page: Page) => page.locator('.sidebar-trigger');
 const isOpen = (page: Page) => sidebar(page).evaluate(element => element.matches(':popover-open'));
+/** The focused element: in the sidebar or not, its id, and its text (not a menu button's tooltip, which repeats it). */
 const focused = (page: Page) => page.evaluate(() => {
   const element = document.activeElement!;
+  const text = (element.cloneNode(true) as Element);
+  text.querySelectorAll('[aria-hidden="true"]').forEach(hidden => hidden.remove());
   return element === document.body ? 'body'
       : `${element.closest('#sidebar') ? 'sidebar: ' : ''}${element.id ? '#' + element.id + ' ' : ''}${
-          element.textContent?.replace(/\s+/g, ' ').trim() || element.getAttribute('aria-label')}`;
+          text.textContent?.replace(/\s+/g, ' ').trim() || element.getAttribute('aria-label')}`;
 });
 const inertElements = (page: Page) => page.evaluate(() => document.querySelectorAll('[inert]').length);
 const box = (page: Page) => sidebar(page).evaluate(element => {
@@ -203,6 +217,27 @@ test.describe('desktop', () => {
     await expect(sidebar(page)).toBeHidden();
     await expect(trigger(page)).toHaveAttribute('aria-expanded', 'false');
   });
+
+  for (const boost of ['body', 'main'] as const) {
+    test(`hx-boost on ${boost}: back shows the state the user chose last, not the one in htmx's snapshot`, async ({page}) => {
+      await openShell(page, {boost});
+      await trigger(page).click();
+      await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'collapsed');
+      // Collapsed off-canvas the links are hidden: click one from script, which htmx boosts as any click.
+      await page.locator('#sidebar a[href="/inbox"]').evaluate(link => (link as HTMLElement).click());
+      await page.waitForURL('**/inbox');
+      await expect(page.locator('h1')).toHaveText('Inbox');
+      await trigger(page).click();
+      await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'expanded');
+
+      await page.goBack();
+      await expect(page.locator('h1')).toHaveText('Home');
+      await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'expanded');
+      await expect(sidebar(page)).toBeVisible();
+      await expect(trigger(page)).toHaveAttribute('aria-expanded', 'true');
+      await expect(page.locator('.sidebar-provider')).not.toHaveAttribute('data-history');
+    });
+  }
 
   test('a trigger htmx swaps in is set up for the desktop too', async ({page}) => {
     await openShell(page, {boost: 'main'});
@@ -454,7 +489,8 @@ test.describe('content parts', () => {
 
     await expect(sidebar(page).getByRole('group', {name: 'Platform'})).toBeVisible();
     await expect(sidebar(page).getByRole('group', {name: 'Projects'})).toBeVisible();
-    await expect(sidebar(page).getByRole('group', {name: 'Platform'}).getByRole('listitem')).toHaveCount(3);
+    // Home, Inbox, Calendar and the closed Documents group (its sub-items are hidden).
+    await expect(sidebar(page).getByRole('group', {name: 'Platform'}).getByRole('listitem')).toHaveCount(4);
     await expect(link(page, 'Inbox')).toHaveAccessibleDescription('12 unread');
     await expect(link(page, 'Home')).toHaveAttribute('aria-current', 'page');
     await expect(link(page, 'Home')).not.toHaveAttribute('aria-describedby');
@@ -833,4 +869,395 @@ test('forced colours: the sidebar keeps a border, the panel its backdrop, the cu
   expect(await border()).toMatchObject({style: 'solid', width: 1});
   expect(await sidebar(page).evaluate(element => getComputedStyle(element, '::backdrop').backgroundColor))
       .not.toBe('rgba(0, 0, 0, 0)');
+});
+
+// collapsible="icon": the strip of icons, its tooltips, and collapsible groups (sub-menus on details).
+test.describe('collapsed to icons', () => {
+  const ICON = 48;
+  const collapseCookie = (page: Page) => page.context().addCookies([
+    {name: 'sl-sidebar-state', value: 'collapsed', url: `${ORIGIN}/`}]);
+  const link = (page: Page, name: string) => sidebar(page).getByRole('link', {name, exact: true});
+  const tooltip = (page: Page, name: string) => link(page, name).locator('> .sidebar-menu-tooltip');
+  const openTooltips = (page: Page) => page.evaluate(() => document.querySelectorAll('.sidebar-menu-tooltip:popover-open').length);
+  const documents = (page: Page) => sidebar(page).locator('details.sidebar-menu-collapsible');
+  const summary = (page: Page) => documents(page).locator('> summary');
+  const isDetailsOpen = (page: Page) => documents(page).evaluate(element => (element as HTMLDetailsElement).open);
+
+  test.beforeEach(async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+  });
+
+  test('the trigger narrows the sidebar to its icons; the labels stay the names', async ({page, context, browserName}) => {
+    const messages = await openShell(page, {collapsible: 'icon'});
+    await trigger(page).click();
+    await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'collapsed');
+    await expect(trigger(page)).toHaveAttribute('aria-expanded', 'false');
+    expect((await context.cookies()).find(cookie => cookie.name === 'sl-sidebar-state')?.value).toBe('collapsed');
+
+    await expect.poll(() => box(page)).toMatchObject({left: 0, width: ICON});
+    await expect.poll(async () => (await inset(page).boundingBox())!.width).toBe(DESKTOP.width - ICON);
+    await expect(sidebar(page)).toBeVisible();
+    // Every menu button is a 32 px square showing only its icon, in the middle of the strip; the label is hidden from
+    // view but still the link's name. The large header button too, whose icon is smaller than the square.
+    for (const name of ['Acme Inc. Enterprise', 'Home', 'Inbox', 'Calendar', 'Design Engineering', 'Settings', 'Help']) {
+      await expect(link(page, name)).toBeVisible();
+      expect(await rectOf(link(page, name)), name).toMatchObject({width: 32});
+      expect(await link(page, name).locator('.sidebar-menu-button-label').evaluate(label => label.clientWidth), name)
+          .toBeLessThanOrEqual(1);
+      const icon = await rectOf(link(page, name).locator('> svg').first());
+      expect(Math.abs((icon.left + icon.right) / 2 - ICON / 2), name).toBeLessThanOrEqual(1);
+    }
+    // No text of a menu button is painted anywhere in the strip.
+    expect(await sidebar(page).evaluate(nav => Array.from(nav.querySelectorAll('.sidebar-menu-button-label'))
+        .filter(label => label.getBoundingClientRect().width > 1).length)).toBe(0);
+    await expect(link(page, 'Inbox')).toHaveAccessibleDescription('12 unread');
+    await expect(sidebar(page).getByRole('group', {name: 'Platform'})).toHaveCount(1);
+    expect(await sidebar(page).locator('.sidebar-group-label').first()
+        .evaluate(label => getComputedStyle(label).opacity)).toBe('0');
+    // What the strip has no room for is hidden.
+    expect(await rectOf(sidebar(page).locator('.sidebar-menu-badge'))).toMatchObject({width: 1});
+    for (const selector of ['.sidebar-menu-action', '.sidebar-group-action',
+      '.sidebar-menu-button-chevron', '.sidebar-menu-sub']) {
+      await expect(sidebar(page).locator(selector).first(), selector).toBeHidden();
+    }
+    // Header and footer buttons sit in the middle of the strip.
+    for (const selector of ['.sidebar-header .sidebar-menu-button', '.sidebar-footer .sidebar-menu-button']) {
+      const button = await rectOf(sidebar(page).locator(selector).first());
+      expect(Math.abs((button.left + button.right) / 2 - ICON / 2), selector).toBeLessThanOrEqual(1);
+    }
+    if (browserName === 'chromium') {
+      const {roles} = await accessibilityTree(page);
+      expect(roles).toEqual(expect.arrayContaining(['link:Home', 'link:Inbox', 'link:Calendar']));
+    }
+    const results = await new AxeBuilder({page}).withTags(TAGS).analyze();
+    expect(results.violations.map(violation => violation.id)).toEqual([]);
+
+    await trigger(page).click();
+    await expect.poll(() => box(page)).toMatchObject({left: 0, width: 256});
+    expect(await link(page, 'Home').locator('.sidebar-menu-button-label').evaluate(label => label.clientWidth))
+        .toBeGreaterThan(0);
+    expect(messages).toEqual([]);
+  });
+
+  test('the keyboard reaches only what the strip shows, in order', async ({page}) => {
+    await collapseCookie(page);
+    await openShell(page, {collapsible: 'icon'});
+    const stops: string[] = [];
+    for (let i = 0; i < 11; i++) {
+      await page.keyboard.press('Tab');
+      stops.push(await focused(page));
+    }
+    expect(stops).toEqual(['Skip to main content', 'sidebar: Acme Inc. Enterprise', 'sidebar: Home', 'sidebar: Inbox',
+      'sidebar: Calendar', 'sidebar: Documents', 'sidebar: Design Engineering', 'sidebar: Sales & Marketing',
+      'sidebar: Settings', 'sidebar: Help', 'sidebar: Section']);
+  });
+
+  test.describe('without JavaScript', () => {
+    test.use({javaScriptEnabled: false});
+
+    test('the strip is painted from the cookie; the phone panel shows everything', async ({page}) => {
+      await collapseCookie(page);
+      await openShell(page, {collapsible: 'icon', alpine: false});
+      expect(await box(page)).toMatchObject({left: 0, width: ICON});
+      await expect(trigger(page)).toBeHidden();
+      await expect(link(page, 'Home')).toBeVisible();
+      expect(await rectOf(sidebar(page).locator('.sidebar-menu-badge'))).toMatchObject({width: 1});
+
+      await page.setViewportSize(PHONE);
+      await trigger(page).click();
+      expect(await isOpen(page)).toBe(true);
+      expect(await box(page)).toMatchObject({left: 0, width: 288});
+      expect(await link(page, 'Home').locator('.sidebar-menu-button-label').evaluate(label => label.clientWidth))
+          .toBeGreaterThan(100);
+      await expect(sidebar(page).locator('.sidebar-menu-badge')).toBeVisible();
+      await expect(summary(page).locator('.sidebar-menu-button-chevron')).toBeVisible();
+      await expect(sidebar(page).locator('.sidebar-group-label').first()).toHaveCSS('opacity', '1');
+    });
+  });
+
+  test('a tooltip shows the label on hover and keyboard focus, and describes nothing', async ({page, browserName}) => {
+    await collapseCookie(page);
+    const messages = await openShell(page, {collapsible: 'icon'});
+    await page.waitForFunction(() => 'Alpine' in window);
+
+    await link(page, 'Home').hover();
+    await expect.poll(() => tooltip(page, 'Home').evaluate(element => element.matches(':popover-open'))).toBe(true);
+    await expect(tooltip(page, 'Home')).toHaveText('Home');
+    const button = await rectOf(link(page, 'Home'));
+    const tip = await rectOf(tooltip(page, 'Home'));
+    expect(tip.left).toBeGreaterThanOrEqual(button.right);
+    await expect(link(page, 'Home')).toHaveAccessibleDescription('');
+    await expect(link(page, 'Inbox')).toHaveAccessibleDescription('12 unread');
+    if (browserName === 'chromium') {
+      const {roles} = await accessibilityTree(page);
+      expect(roles.filter(role => role.startsWith('tooltip'))).toEqual([]);
+    }
+    const results = await new AxeBuilder({page}).withTags(TAGS).analyze();
+    expect(results.violations.map(violation => violation.id)).toEqual([]);
+    // A click on the tooltip goes nowhere.
+    await tooltip(page, 'Home').click();
+    expect(new URL(page.url()).pathname).toBe('/');
+
+    await page.mouse.move(700, 600);
+    await expect.poll(() => openTooltips(page)).toBe(0);
+
+    // Keyboard focus shows it at once; Escape hides it and leaves the focus.
+    await link(page, 'Home').focus();
+    await page.keyboard.press('Tab');
+    await expect(link(page, 'Inbox')).toBeFocused();
+    await expect.poll(() => tooltip(page, 'Inbox').evaluate(element => element.matches(':popover-open'))).toBe(true);
+    await page.keyboard.press('Escape');
+    await expect.poll(() => openTooltips(page)).toBe(0);
+    await expect(link(page, 'Inbox')).toBeFocused();
+    // The collapsible item's summary has one too.
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Tab');
+    await expect.poll(() => summary(page).locator('.sidebar-menu-tooltip')
+        .evaluate(element => element.matches(':popover-open'))).toBe(true);
+    expect(messages).toEqual([]);
+  });
+
+  test('no tooltip while expanded, collapsed off-canvas, or on a phone', async ({page}) => {
+    await openShell(page, {collapsible: 'icon'});
+    await page.waitForFunction(() => 'Alpine' in window);
+    await link(page, 'Home').hover();
+    await page.waitForTimeout(600);
+    expect(await openTooltips(page)).toBe(0);
+    await link(page, 'Home').focus();
+    await page.keyboard.press('Tab');
+    await page.waitForTimeout(100);
+    expect(await openTooltips(page)).toBe(0);
+
+    // Collapsing hides a tooltip that shows; expanding again hides one too.
+    await trigger(page).click();
+    await link(page, 'Calendar').hover();
+    await expect.poll(() => openTooltips(page)).toBe(1);
+    await page.keyboard.press('ControlOrMeta+b');
+    await expect.poll(() => openTooltips(page)).toBe(0);
+    await expect(tooltip(page, 'Calendar')).toBeHidden();
+
+    await page.setViewportSize(PHONE);
+    await trigger(page).click();
+    await link(page, 'Calendar').hover();
+    await page.waitForTimeout(600);
+    expect(await openTooltips(page)).toBe(0);
+  });
+
+  test('a collapsible item opens and closes its sub-menu natively, the chevron turning', async ({page}) => {
+    for (const alpine of [true, false]) {
+      await openShell(page, {collapsible: 'icon', alpine});
+      const chevron = summary(page).locator('.sidebar-menu-button-chevron');
+      expect(await isDetailsOpen(page)).toBe(false);
+      await expect(link(page, 'Recent')).toBeHidden();
+      await summary(page).click();
+      expect(await isDetailsOpen(page)).toBe(true);
+      await expect(link(page, 'Recent')).toBeVisible();
+      await expect(link(page, 'Shared with me')).toBeVisible();
+      await expect.poll(() => chevron.evaluate(element => getComputedStyle(element).rotate)).toBe('90deg');
+      // Below the button, indented.
+      expect((await rectOf(link(page, 'Recent'))).left).toBeGreaterThan((await rectOf(summary(page))).left);
+
+      await summary(page).focus();
+      await page.keyboard.press('Enter');
+      expect(await isDetailsOpen(page)).toBe(false);
+      await page.keyboard.press('Space');
+      expect(await isDetailsOpen(page)).toBe(true);
+      await page.unrouteAll({behavior: 'ignoreErrors'});
+    }
+  });
+
+  test('the server opens the group holding the current page', async ({page}) => {
+    await openShell(page, {collapsible: 'icon', path: '/documents/shared'});
+    expect(await isDetailsOpen(page)).toBe(true);
+    await expect(link(page, 'Shared with me')).toHaveAttribute('aria-current', 'page');
+    await expect(link(page, 'Recent')).not.toHaveAttribute('aria-current');
+    // The sub-button looks current, as a menu button does.
+    const background = (name: string) => link(page, name).evaluate(element => getComputedStyle(element).backgroundColor);
+    expect(await background('Recent')).toBe('rgba(0, 0, 0, 0)');
+    expect(await background('Shared with me')).not.toBe('rgba(0, 0, 0, 0)');
+  });
+
+  test('collapsed, a group holding the current page marks its icon; the sub-menu stays hidden', async ({page}) => {
+    await collapseCookie(page);
+    await openShell(page, {collapsible: 'icon', path: '/documents/shared'});
+    expect(await isDetailsOpen(page)).toBe(true);
+    await expect(link(page, 'Shared with me')).toBeHidden();
+    expect(await summary(page).evaluate(element => getComputedStyle(element).backgroundColor))
+        .not.toBe('rgba(0, 0, 0, 0)');
+    // Not aria-current: the summary is no link to the page.
+    await expect(summary(page)).not.toHaveAttribute('aria-current');
+  });
+
+  for (const how of ['pointer', 'keyboard'] as const) {
+    test(`collapsed, a group's icon expands the sidebar and opens the group: ${how}`, async ({page, context}) => {
+      await collapseCookie(page);
+      await openShell(page, {collapsible: 'icon'});
+      await page.waitForFunction(() => 'Alpine' in window);
+      if (how === 'pointer') {
+        await summary(page).click();
+      } else {
+        await summary(page).focus();
+        await page.keyboard.press('Enter');
+      }
+      await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'expanded');
+      expect(await isDetailsOpen(page)).toBe(true);
+      await expect(link(page, 'Recent')).toBeVisible();
+      await expect(summary(page)).toBeFocused();
+      await expect(trigger(page)).toHaveAttribute('aria-expanded', 'true');
+      expect((await context.cookies()).find(cookie => cookie.name === 'sl-sidebar-state')?.value).toBe('expanded');
+      await expect.poll(() => openTooltips(page)).toBe(0);
+
+      // An open group stays open: collapse again, then the icon again.
+      await page.keyboard.press('ControlOrMeta+b');
+      await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'collapsed');
+      await expect(link(page, 'Recent')).toBeHidden();
+      await summary(page).click();
+      await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'expanded');
+      expect(await isDetailsOpen(page)).toBe(true);
+    });
+  }
+
+  const placements = [['ltr', 'start', 'left'], ['rtl', 'start', 'right'], ['ltr', 'end', 'right'],
+    ['rtl', 'end', 'left']] as const;
+  for (const [dir, side, edge] of placements) {
+    test(`${dir}, side ${side}: the strip on the ${edge}, its tooltips towards the page`, async ({page}) => {
+      await collapseCookie(page);
+      await openShell(page, {collapsible: 'icon', side, htmlAttributes: `dir="${dir}"`});
+      await page.waitForFunction(() => 'Alpine' in window);
+      const strip = await box(page);
+      expect(strip.width).toBe(ICON);
+      expect(edge === 'left' ? strip.left : DESKTOP.width - strip.right).toBe(0);
+      await link(page, 'Home').hover();
+      await expect.poll(() => openTooltips(page)).toBe(1);
+      const button = await rectOf(link(page, 'Home'));
+      const tip = await rectOf(tooltip(page, 'Home'));
+      if (edge === 'left') {
+        expect(tip.left).toBeGreaterThanOrEqual(button.right);
+      } else {
+        expect(tip.right).toBeLessThanOrEqual(button.left);
+      }
+    });
+
+    for (const variant of ['floating', 'inset'] as const) {
+      test(`${variant}, ${dir}, side ${side}: the strip with its margin`, async ({page}) => {
+        await collapseCookie(page);
+        await openShell(page, {collapsible: 'icon', variant, side, htmlAttributes: `dir="${dir}"`});
+        // floating: the strip plus its two borders, 8 px from the edge; inset: the strip plus its 8 px padding, the
+        // card beside it.
+        const expected = variant === 'floating' ? {width: ICON + 2, gap: 8, page: ICON + 2 + 16}
+            : {width: ICON + 16, gap: 0, page: ICON + 16};
+        const strip = await rectOf(sidebar(page));
+        expect(strip.width).toBe(expected.width);
+        expect(edge === 'left' ? strip.left : DESKTOP.width - strip.right).toBe(expected.gap);
+        const card = await rectOf(inset(page));
+        expect(edge === 'left' ? card.left : DESKTOP.width - card.right).toBe(expected.page);
+        // Every menu button inside, the same square.
+        const home = await rectOf(link(page, 'Home'));
+        expect(home.width).toBe(32);
+        expect(home.left).toBeGreaterThanOrEqual(strip.left);
+        expect(home.right).toBeLessThanOrEqual(strip.right);
+      });
+    }
+  }
+
+  test('the strip narrows and widens only without reduced motion', async ({page}) => {
+    for (const reducedMotion of ['no-preference', 'reduce'] as const) {
+      await page.emulateMedia({reducedMotion});
+      await openShell(page, {collapsible: 'icon'});
+      await trigger(page).click();
+      const moving = await sidebar(page).evaluate(element => element.getAnimations({subtree: true})
+          .map(animation => (animation as CSSTransition).transitionProperty));
+      expect(moving.includes('width'), `${reducedMotion}: ${moving}`).toBe(reducedMotion === 'no-preference');
+      expect(moving.includes('margin-left') || moving.includes('margin-inline-start'), `${reducedMotion}: ${moving}`)
+          .toBe(false);
+      await page.unrouteAll({behavior: 'ignoreErrors'});
+      await page.context().clearCookies();
+    }
+  });
+
+  test('forced colours: the strip keeps its border, a group holding the current page an outline', async ({page, browserName}) => {
+    test.skip(browserName !== 'chromium', 'forced colours emulation is Chromium only');
+    await page.emulateMedia({forcedColors: 'active'});
+    await collapseCookie(page);
+    await openShell(page, {collapsible: 'icon', path: '/documents/shared'});
+    expect(await sidebar(page).evaluate(element => getComputedStyle(element).borderInlineEndStyle)).toBe('solid');
+    expect(await summary(page).evaluate(element => getComputedStyle(element).outlineStyle)).toBe('solid');
+    expect(await link(page, 'Home').evaluate(element => getComputedStyle(element).outlineStyle)).toBe('none');
+  });
+
+  for (const boost of ['body', 'main'] as const) {
+    test(`hx-boost on ${boost}: the next page keeps the strip, history brings it back without a tooltip`, async ({page}) => {
+      await collapseCookie(page);
+      const messages = await openShell(page, {collapsible: 'icon', boost});
+      await page.waitForFunction(() => 'Alpine' in window);
+      await link(page, 'Inbox').hover();
+      await expect.poll(() => openTooltips(page)).toBe(1);
+      await link(page, 'Inbox').click();
+      await page.waitForURL('**/inbox');
+      await expect(page.locator('h1')).toHaveText('Inbox');
+      expect(await box(page)).toMatchObject({width: ICON});
+      // Boosting only main leaves the sidebar, and its current page, as it was (see the docs' htmx section).
+      await expect(link(page, boost === 'body' ? 'Inbox' : 'Home')).toHaveAttribute('aria-current', 'page');
+      await page.mouse.move(700, 600);
+      await expect.poll(() => openTooltips(page)).toBe(0);
+      // The new page's tooltips work.
+      await link(page, 'Calendar').hover();
+      await expect.poll(() => openTooltips(page)).toBe(1);
+
+      await page.goBack();
+      await expect(page.locator('h1')).toHaveText('Home');
+      expect(await box(page)).toMatchObject({width: ICON});
+      await page.mouse.move(700, 600);
+      await expect.poll(() => openTooltips(page)).toBe(0);
+      await link(page, 'Home').hover();
+      await expect.poll(() => openTooltips(page)).toBe(1);
+      expect(messages).toEqual([]);
+    });
+  }
+
+  // The showcase's shell collapses to icons, in every skin: the strip, square buttons, the large one without padding.
+  for (const skin of skins) {
+    test(`showcase, ${skin}: collapsed to icons`, async ({page}) => {
+      await page.setViewportSize({width: 1280, height: 720});
+      await openShowcase(page, skin, 'light');
+      await page.waitForFunction(() => 'Alpine' in window);
+      await page.locator('.sidebar-provider .sidebar-trigger').click();
+      await expect.poll(async () => (await rectOf(page.locator('.sidebar-provider > .sidebar'))).width).toBe(ICON + 16);
+      const square = await rectOf(page.locator('.sidebar-provider .sidebar-content .sidebar-menu-button').first());
+      expect(square.width).toBe(32);
+      expect(square.bottom - square.top).toBe(32);
+      expect(await page.locator('.sidebar-provider .sidebar-header .sidebar-menu-button')
+          .evaluate(element => getComputedStyle(element).paddingInlineStart)).toBe('0px');
+      const results = await new AxeBuilder({page}).include('.sidebar-provider').withTags(TAGS).analyze();
+      expect(results.violations.map(violation => violation.id)).toEqual([]);
+      await page.context().clearCookies();
+    });
+  }
+});
+
+test.describe('collapsible none', () => {
+  test('desktop: the sidebar stays, whatever the cookie, and the trigger is hidden', async ({page, context}) => {
+    await page.setViewportSize(DESKTOP);
+    await context.addCookies([{name: 'sl-sidebar-state', value: 'collapsed', url: `${ORIGIN}/`}]);
+    await openShell(page, {collapsible: 'none'});
+    await page.waitForFunction(() => 'Alpine' in window);
+    expect(await box(page)).toMatchObject({left: 0, width: 256});
+    await expect(sidebar(page)).toBeVisible();
+    await expect(trigger(page)).toBeHidden();
+    await page.keyboard.press('ControlOrMeta+b');
+    await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'collapsed');
+    expect(await box(page)).toMatchObject({left: 0, width: 256});
+    expect((await context.cookies()).find(cookie => cookie.name === 'sl-sidebar-state')?.value).toBe('collapsed');
+  });
+
+  test('phone: the panel as always', async ({page}) => {
+    await page.setViewportSize(PHONE);
+    await openShell(page, {collapsible: 'none'});
+    await expect(trigger(page)).toBeVisible();
+    await trigger(page).click();
+    expect(await isOpen(page)).toBe(true);
+    await expect.poll(() => focused(page)).toBe('sidebar: Home');
+    await page.keyboard.press('ControlOrMeta+b');
+    expect(await isOpen(page)).toBe(false);
+  });
 });

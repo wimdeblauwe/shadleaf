@@ -18,8 +18,11 @@
       <code>sidebar</code> is a column along the edge with a border; <code>floating</code> a panel with a
       margin all round; <code>inset</code> lays the sidebar's ground around the page, which
       (<code>sl:sidebar-inset</code>) becomes a card on it. The phone panel looks the same for all three.</sl:prop>
-    <sl:prop name="collapsible" default="offcanvas" values="offcanvas">How it collapses on a desktop:
-      <code>offcanvas</code> moves it out of view entirely. Collapsing to icons comes later.</sl:prop>
+    <sl:prop name="collapsible" default="offcanvas" values="offcanvas icon none">How it collapses on a desktop:
+      <code>offcanvas</code> moves it out of view entirely; <code>icon</code> narrows it to a strip of its menu
+      buttons' icons (labels, badges, actions and sub-menus hidden; a menu button's <code>tooltip</code> shows its
+      label); <code>none</code> never collapses it, and the trigger is hidden on a desktop. The phone panel is the same
+      for all three.</sl:prop>
   </sl:props>
 </head>
 <body>

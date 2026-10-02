@@ -63,6 +63,42 @@ class SidebarContentApprovalTest {
         "<sl:sidebar-menu-action as=\"a\" href=\"/design\" aria-label=\"Open Design\">→</sl:sidebar-menu-action>",
         "<sl:sidebar-menu-badge>12</sl:sidebar-menu-badge>",
         "<sl:sidebar-menu-badge label=\"12 unread messages\">12</sl:sidebar-menu-badge>",
+        "<sl:sidebar-menu-button href=\"/\" tooltip=\"Home\">Home</sl:sidebar-menu-button>",
+        "<sl:sidebar-menu-button as=\"button\" tooltip=\"Compose\">Compose</sl:sidebar-menu-button>",
+        "<sl:sidebar-menu-item collapsible>Content</sl:sidebar-menu-item>",
+        "<sl:sidebar-menu-item collapsible open id=\"settings\">Content</sl:sidebar-menu-item>",
+        """
+            <sl:sidebar-menu-item collapsible open>
+              <sl:sidebar-menu-button tooltip="Settings" variant="outline" size="sm">
+                <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                Settings
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button href="/settings" th:active="${#slNav.current('/settings')}">
+                    General
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>""",
+        "<sl:sidebar-menu-sub>Items</sl:sidebar-menu-sub>",
+        "<sl:sidebar-menu-sub-item>Button</sl:sidebar-menu-sub-item>",
+        "<sl:sidebar-menu-sub-button href=\"/a\">Link</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button as=\"a\" href=\"/a\">Link</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button as=\"button\">Action</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button as=\"button\" type=\"submit\">Action</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button as=\"button\" type=\"reset\">Action</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button href=\"/a\" active>Link</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button as=\"button\" active>Action</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button href=\"/a\" size=\"md\">Link</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button href=\"/a\" size=\"sm\">Link</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button href=\"/a\" disabled>Link</sl:sidebar-menu-sub-button>",
+        "<sl:sidebar-menu-sub-button as=\"button\" disabled>Action</sl:sidebar-menu-sub-button>",
+        """
+            <sl:sidebar-menu-sub-button href="/a">
+              <sl:slot name="icon-start"><sl:icon name="file"/></sl:slot>
+              With an icon
+            </sl:sidebar-menu-sub-button>""",
         """
             <sl:sidebar>
               <sl:sidebar-header>

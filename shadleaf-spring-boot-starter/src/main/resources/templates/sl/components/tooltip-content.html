@@ -4,7 +4,8 @@
   <sl:props>
     <sl:description>The text of a <code>sl:tooltip</code> (<code>role="tooltip"</code>), after its trigger. Keep it
       short and plain: it cannot hold links or buttons, and touch screens never show it. It flips to the other side
-      when there is no room.</sl:description>
+      when there is no room. In a tooltip with <code>mode="label"</code> it is hidden from assistive technology
+      (<code>aria-hidden</code>).</sl:description>
     <sl:prop name="side" default="top" values="top right bottom left">The side of the trigger it shows on.
       <code>right</code> and <code>left</code> are the end and the start of a line.</sl:prop>
     <sl:prop name="align" default="center" values="start center end">How it lines up with the trigger along that
@@ -19,7 +20,8 @@
       role="tooltip"
       popover="manual"
       th:attr="data-side=${props.unlessDefault('side')},
-               data-align=${props.unlessDefault('align')}"
+               data-align=${props.unlessDefault('align')},
+               aria-hidden=${slTooltipMode == 'label' ? 'true' : null}"
       sl:attrs><sl:slot/><span class="tooltip-arrow" aria-hidden="true"></span></span>
 </body>
 </html>
