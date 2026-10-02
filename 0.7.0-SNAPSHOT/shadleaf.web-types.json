@@ -1339,10 +1339,26 @@
         "attributes" : [ ]
       }, {
         "name" : "sl:dropdown-menu-trigger",
-        "description" : "The button that opens and closes a `sl:dropdown-menu`: a `sl:button` with `popovertarget` set to the menu, which names the menu. Arrow down opens the menu on its first item, arrow up on its last. Any other attribute passes through to the `sl:button`.",
+        "description" : "What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part (shadcn's `&lt;DropdownMenuTrigger asChild&gt;`). It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.",
         "attributes" : [ {
+          "name" : "as",
+          "description" : "The part to render: a `sl:button`, a `sl:sidebar-menu-button` (a team switcher or user menu in a `sl:sidebar-menu-item`), or a `sl:sidebar-menu-action` (a \"More\" beside a menu button, which needs an `aria-label`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "sidebar-menu-button"
+          }, {
+            "name" : "sidebar-menu-action"
+          } ],
+          "default" : "button"
+        }, {
           "name" : "variant",
-          "description" : "Visual style of the button, as on `sl:button`.",
+          "description" : "Visual style, as on `sl:button`, or `default` and `outline` as on `sl:sidebar-menu-button`. Not for a sidebar menu action.",
           "value" : {
             "kind" : "plain",
             "type" : "enum",
@@ -1364,7 +1380,7 @@
           "default" : "default"
         }, {
           "name" : "size",
-          "description" : "Size of the button, as on `sl:button`. The `icon` sizes need an `aria-label`.",
+          "description" : "Size, as on `sl:button` (the `icon` sizes need an `aria-label`), or `sm`, `default` and `lg` as on `sl:sidebar-menu-button`. Not for a sidebar menu action.",
           "value" : {
             "kind" : "plain",
             "type" : "enum",
@@ -1389,6 +1405,27 @@
           } ],
           "default" : "default"
         }, {
+          "name" : "tooltip",
+          "description" : "With `as=\"sidebar-menu-button\"`: the label shown beside it while the sidebar is collapsed to icons, as on `sl:sidebar-menu-button`. Never shown while the menu is open.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "show-on-hover",
+          "description" : "With `as=\"sidebar-menu-action\"`: from 768&nbsp;px, show it only while the pointer is over its item, the focus is in it, or the menu is open.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
           "name" : "th:variant",
           "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
           "value" : {
@@ -1398,6 +1435,20 @@
         }, {
           "name" : "th:size",
           "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tooltip",
+          "description" : "`tooltip` from a Thymeleaf expression, e.g. `th:tooltip=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-on-hover",
+          "description" : "`show-on-hover` from a Thymeleaf expression, e.g. `th:show-on-hover=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -3955,6 +4006,93 @@
             "name" : "end"
           } ],
           "default" : "center"
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:user-menu",
+        "description" : "The signed-in user (`#slUser.current`) with a menu that signs out, or a Sign in link for an anonymous visitor. In the sidebar's footer a large menu button with the user's picture, name and email (or username, when it is not the name); in the site header a button with the picture alone. Both open a `sl:dropdown-menu`: the user's name and email, the items in its content (Account, Settings), and Sign out, which posts to `#slUser.logoutUrl` (`shadleaf.security.logout-url`) from a form of its own, so `th:action` adds Spring Security's CSRF token. The picture goes through `sl:avatar`: while it loads, without one and when it fails to load, the initials show. Every attribute that is not a prop passes through to the button (or the Sign in link), except an `aria-label`, which only names the header's button: in the sidebar the button's name is the text it shows, and Sign in is named by its text.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "`sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named \"Account: \" and the user's name.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sidebar"
+          }, {
+            "name" : "header"
+          } ],
+          "default" : "sidebar"
+        }, {
+          "name" : "id",
+          "description" : "The menu's id. Its button gets the id with `-trigger` added, the sign-out form with `-sign-out`. Two user menus on a page need different ids.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "user-menu"
+        }, {
+          "name" : "side",
+          "description" : "The side of the button the menu opens on, as on `sl:dropdown-menu-content`. By default `right` in the sidebar (below the button in the phone panel) and `bottom` in the header.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ]
+        }, {
+          "name" : "align",
+          "description" : "How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "end"
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
         }, {
           "name" : "th:side",
           "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
