@@ -1,0 +1,408 @@
+---
+title: Application shell
+description: Two layouts to copy for the frame around every page, a sidebar or the navigation in a header, and what every layout needs whichever you pick.
+sidebar:
+  order: 7
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+
+The application shell is what every page shares: the navigation, a header, and the places where dialogs and toasts
+appear. Shadleaf has two layouts for it, both built from the [Sidebar](../../components/sidebar/) family:
+
+- **The sidebar layout** ([shadcn/ui's sidebar-07](https://ui.shadcn.com/blocks/sidebar)): the navigation in a column beside the page. It collapses to a strip
+  of icons on a desktop.
+- **The header layout** (after Flux's [header-inset](https://fluxui.dev/layouts/header)): the navigation as a row of links in a
+  [site header](../../components/site-header/) across the top.
+
+In both, the navigation is one `<sl:sidebar>`. Below 768 px the menu button opens that same element as a panel over
+the page, so the two layouts work the same way on a phone. Copy one of them into your application (the samples keep
+theirs in `templates/layout/main.html`) and change what you need: the templates are yours, and so is the CSS around
+the components.
+
+## Which one
+
+|                         | Sidebar layout                                                                 | Header layout                                                              |
+|-------------------------|--------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| Pages in the navigation | Many, in labelled groups, with sub-menus                                       | A handful of top-level pages                                               |
+| On a desktop            | A column the user collapses to icons (or out of view) and the cookie remembers | A row of links that scrolls sideways when it does not fit; never collapses |
+| Page header             | Inside the page: trigger, breadcrumb, theme toggle                             | The site header itself: name, links, theme toggle                          |
+| Room for the page       | The width minus the sidebar (3 rem collapsed to icons)                         | The full width                                                             |
+| On a phone              | The panel                                                                      | The same panel                                                             |
+| Sample                  | sample-01                                                                      | sample-02 (strict Content-Security-Policy)                                 |
+
+Pick the sidebar layout when the application has more pages than fit in a header row or needs groups and sub-menus.
+Pick the header layout for a smaller application. Moving from one to the other later means changing the layout
+template, not the pages: both take the same `pageTitle` and `content`.
+
+## What every layout needs
+
+Whichever you choose, the layout template has the same pieces. The two layouts below have all of them:
+
+- **In the `head`**, `~{sl/layout :: theme-script}` and then `~{sl/layout :: assets}`, then your own stylesheet. The
+  theme script sets the dark class before the first paint. Under a strict policy it needs its nonce or hash (see
+  [Content-Security-Policy](../csp/)).
+- **`<sl:skip-link/>` first in the body.** It lets a keyboard user jump past the navigation to the page.
+- **One `main`:** `<sl:sidebar-inset>` renders `<main id="main" tabindex="-1">`, the skip link's target. Put nothing
+  of the page outside it.
+- **The page's title** in the `<title>` and as the page's `h1`, from the same `pageTitle` parameter.
+- **The current page** marked in the navigation with `th:active="${#slNav.current('/people')}"`, which reads the
+  request, so no controller has to say which page it is.
+- **`<sl:toaster>` at the end of the body**, with the toasts a controller put in the `toasts` flash attribute before a
+  redirect (see [Toast](../../components/toast/)).
+- **A `<div id="modal-root">`**, if htmx fetches dialogs into the page (see [Dialog](../../components/dialog/)).
+
+The CSS for the page itself (its padding, the `h1`, the logo in the sidebar) is the application's. Shadleaf's CSS styles
+its components, not the page around them.
+
+## The sidebar layout
+
+<ComponentPreview id="sidebar--default" />
+
+shadcn/ui's sidebar-07 block with the inset variant, as the layout of the first sample application (sample-01's
+`layout/main.html`, which has four groups): the application's name and logo at the top, groups of pages (one of them
+collapsible), a footer, and the page as a card beside it with a [site header](../../components/site-header/) holding
+the trigger, a separator, the page's [breadcrumb](../../components/breadcrumb/) and the theme toggle. The sidebar
+collapses to icons, with a tooltip on every menu button. `hx-boost` on the body loads every page with htmx (see
+[With htmx](#with-htmx)).
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${pageTitle} - Acme|">Acme</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body hx-boost="true">
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="inset" collapsible="icon">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Acme">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+            <strong>Acme</strong>
+            <small>Enterprise</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="nav-forms">
+        <sl:sidebar-group-label>Forms</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}" tooltip="Form">
+                <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                Form
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-tables">
+        <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/people') or #slNav.current('/teams')}">
+              <sl:sidebar-menu-button tooltip="People">
+                <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
+                People
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+                    All people
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/teams}" th:active="${#slNav.current('/teams')}">
+                    Teams
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+    <sl:sidebar-footer>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button href="https://example.com/help" size="sm" tooltip="Documentation">
+            <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
+            Documentation
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-footer>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+      <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout(${person.name}, ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-link th:href="@{/people}">People</sl:breadcrumb-link></sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page th:text="${person.name}">Name</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+The header's layout is the site header's own: a row 3.5 rem high, the trigger, a short separator and the breadcrumb
+at the start, the `end` slot at the end. The page's padding and the logo are the application's. Without Tailwind:
+
+```css
+.page { padding: 0 1rem 1rem; }
+.page > h1 { margin-block-end: 1rem; }
+.app-logo {
+  display: grid; place-items: center; flex-shrink: 0; inline-size: 2rem; block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px); background: var(--sidebar-primary); color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+```
+
+The [Sidebar](../../components/sidebar/) page has every part and option: the variants, collapsing off-canvas instead
+of to icons, the sidebar at the end of the line, badges and actions.
+
+## The header layout
+
+<ComponentPreview id="sidebar--header" />
+
+For an application with a handful of pages: the layout of the second sample application (sample-02's
+`layout/main.html`, which runs under a strict Content-Security-Policy), after Flux's header-inset layout. The header
+holds the menu button (on a phone), the application's name, the pages as a row of links, and the theme toggle and Sign
+out at the end; More (Settings, Help) and the panel's own header are panel-only. The page is a card below the header
+(`variant="inset"`).
+
+On a phone the menu button opens the same navigation as a panel, with the icons, the group labels and the panel-only
+parts:
+
+<ComponentPreview id="sidebar--header-phone" />
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:site-header>
+    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+    <sl:button as="a" th:href="@{/}" variant="ghost" class="app-name">
+      <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+      Shadleaf
+    </sl:button>
+    <sl:sidebar placement="header" variant="inset">
+      <sl:sidebar-header panel-only>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/}" size="lg">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+              <strong>Shadleaf</strong>
+              <small>Sample App 2</small>
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-header>
+      <sl:sidebar-content>
+        <sl:sidebar-group>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
+                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                  Home
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/forms}" th:active="${#slNav.current('/forms')}">
+                  <sl:slot name="icon-start"><sl:icon name="text-cursor-input"/></sl:slot>
+                  Forms
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/overlays}" th:active="${#slNav.current('/overlays')}">
+                  <sl:slot name="icon-start"><sl:icon name="layers"/></sl:slot>
+                  Overlays
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/data}" th:active="${#slNav.current('/data')}">
+                  <sl:slot name="icon-start"><sl:icon name="table"/></sl:slot>
+                  Data
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+        <sl:sidebar-group id="nav-more" panel-only>
+          <sl:sidebar-group-label>More</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
+                  <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                  Settings
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/help}" th:active="${#slNav.current('/help')}">
+                  <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+                  Help
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+      </sl:sidebar-content>
+    </sl:sidebar>
+    <sl:slot name="end">
+      <sl:theme-toggle/>
+      <form method="post" th:action="@{/logout}">
+        <sl:button type="submit" variant="ghost" size="sm">
+          <sl:slot name="icon-start"><sl:icon name="log-out"/></sl:slot>
+          Sign out
+        </sl:button>
+      </form>
+    </sl:slot>
+  </sl:site-header>
+  <sl:sidebar-inset>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+The page in the card is the application's again; sample-02 keeps it to a readable width:
+
+```css
+.page { max-width: 48rem; padding: 1.5rem 1rem 2rem; }
+.page > h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem; }
+```
+
+`.app-logo` is the sidebar layout's. In the row, the links show their labels without icons and the current page is
+marked as in the sidebar; group actions, separators and collapsible items are left out of the row, and the trigger is
+hidden on a desktop. See [In the header](../../components/sidebar/#in-the-header) and
+[Panel-only parts](../../components/sidebar/#panel-only-parts).
+
+## A page without the navigation
+
+A sign-in page has nothing to navigate to yet. Sample-02 gives it a layout of its own: the site header with only the
+name and the theme toggle, and the page in a plain `main` with the skip link's target:
+
+```html
+<body>
+<sl:skip-link/>
+<sl:site-header>
+  <sl:button as="a" th:href="@{/}" variant="ghost">
+    <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+    Acme
+  </sl:button>
+  <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+</sl:site-header>
+<main id="main" class="page" tabindex="-1">
+  <h1 th:text="${pageTitle}"></h1>
+  <div th:replace="${content}"></div>
+</main>
+</body>
+```
+
+Without `<sl:sidebar-provider>` the site header lies across the top of the page, on the page's colour with a border
+below.
+
+## With htmx
+
+`hx-boost` on the body (as the sidebar layout has it) loads every page with htmx. The server renders the whole page
+each time, so the current page, the breadcrumb and the sidebar's collapsed state are always right, and a link in the
+phone panel closes it. The [Sidebar](../../components/sidebar/#htmx) page says what happens with history and when only
+the main area is boosted.
+
+A boosted link sends `HX-Request` too. A controller that answers other htmx requests with a fragment (a table's rows,
+a dialog) has to tell such a request apart, or a link in the navigation gets the fragment without the page around it.
+A request from the body's boost has `HX-Boosted` and no `HX-Target`, because the body has no id. With
+[htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot):
+
+```java
+static boolean wantsFragment(HtmxRequest request) {
+  return request.isHtmxRequest()
+      && !request.isHistoryRestoreRequest()
+      && !(request.isBoosted() && request.getTarget() == null);
+}
+```
+
+A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
+table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](../tables-htmx/).
+
+## A sidebar below a full-width header
+
+shadcn/ui's sidebar-16 puts a header across the whole top of the page and the sidebar below it. Shadleaf does not
+support that layout. From 768 px the sidebar is sticky at the top of the screen and as tall as the screen, so below a
+header it would slide under the header and run past the bottom of the screen. `<sl:sidebar-provider>` has to start
+at the top of the page. Put the page's header inside `<sl:sidebar-inset>` (the sidebar layout), or put the navigation
+in the header (the header layout).
+
+## The signed-in user
+
+Both layouts have a place for the user: the sidebar's footer, and the site header's `end` slot, where sample-02 has a
+Sign out button for now. A user menu for both places, with Sign in and Sign out through Spring Security, is planned for
+0.7.0.

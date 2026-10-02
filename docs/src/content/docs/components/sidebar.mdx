@@ -8,13 +8,9 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
 <ComponentPreview id="sidebar--default" />
 
-:::note[Being built]
-The sidebar's frame (provider, sidebar, trigger, inset: collapsing off-canvas or to icons, the phone panel, the
-remembered state, the three variants), the parts that go inside it (header, groups, menus, collapsible groups with
-sub-menus, the current page, badges, actions, tooltips), the page header's [breadcrumb](../breadcrumb/), the
-[skip link](../skip-link/), the [header placement](#in-the-header) with [panel-only parts](#panel-only-parts) and two
-layouts to copy ([sidebar](#layout), [header](#header-layout)) are here. A page "Application shell" with a third layout
-(a header across the top above the sidebar) follows.
+:::tip[Layouts to copy]
+The [Application shell](../../guides/application-shell/) guide has two whole layouts built from these parts, the
+sidebar layout and the header layout, and what every layout needs around them.
 :::
 
 ## Built from parts
@@ -53,8 +49,8 @@ there.
 The [skip link](../skip-link/) comes first in the body: the sidebar puts many links before the content, and it lets a
 keyboard user jump past them to the inset. The header at the top of the inset holds the trigger, a vertical
 [separator](../separator/) and the [breadcrumb](../breadcrumb/), as shadcn's blocks have it. Lay it out as a row
-yourself (flex, the items centred, a small gap): the library's CSS styles its components, not the page around them.
-The [layout](#layout) below has the CSS.
+yourself, or use a [site header](../site-header/), which does it for you, as the
+[sidebar layout](../../guides/application-shell/#the-sidebar-layout) does.
 
 ## What goes inside
 
@@ -234,6 +230,11 @@ CSS shows it in the page instead, where it is a plain navigation landmark.
 
 Ctrl/⌘B does nothing while the focus is in a rich text editor (`contenteditable`), where it means bold.
 
+`<sl:sidebar-provider>` has to start at the top of the page. On a desktop the sidebar is sticky at the top of the
+screen and as tall as the screen, so below a header of the page's own (shadcn's sidebar-16) it would slide under that
+header and run past the bottom of the screen. Put the page's header inside `<sl:sidebar-inset>`, or the navigation in
+the header with [`placement="header"`](#in-the-header).
+
 ## The state is remembered
 
 When the user collapses or expands the sidebar, the browser stores the choice in a cookie, `sl-sidebar-state`
@@ -257,8 +258,8 @@ The phone panel ignores the state: it always opens with everything in it.
 - `floating` is a panel with a margin all round, rounded (in the vega skin) and with a shadow. It takes as much room
   as the plain sidebar, so a page lays out the same with either.
 - `inset` gives the sidebar no edge: its colour lies around the page, and `<sl:sidebar-inset>` becomes a card on it,
-  with a margin, rounded corners (vega) and a shadow. The example at the top of this page, and the [layout](#layout)
-  below, use it.
+  with a margin, rounded corners (vega) and a shadow. The example at the top of this page, and the
+  [sidebar layout](../../guides/application-shell/#the-sidebar-layout), use it.
 
 <ComponentPreview id="sidebar--variant" />
 
@@ -406,285 +407,8 @@ would.
 
 A boosted link sends `HX-Request` too. A controller that answers htmx with a fragment (a table's rows, a dialog) must
 tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
-`HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The [layout](#layout) below shows the
-check.
-
-## Layout
-
-shadcn/ui's sidebar-07 block with the inset variant, as the layout of the sample application (sample-01's
-`layout/main.html`, which has four groups): the application's name and logo at the top, groups of pages (one of them
-collapsible), a footer, and the page as a card beside it with a [site header](../site-header/) holding the trigger, a
-separator, the page's breadcrumb and the theme toggle. The sidebar collapses to icons, with a tooltip on every menu button. `hx-boost` on the
-body loads every page with htmx.
-
-```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
-      th:fragment="layout(pageTitle, breadcrumb, content)">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:text="|${pageTitle} - Acme|">Acme</title>
-  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
-  <th:block th:replace="~{sl/layout :: assets}"></th:block>
-  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
-  <link rel="stylesheet" th:href="@{/css/application.css}">
-</head>
-<body hx-boost="true">
-<sl:skip-link/>
-<sl:sidebar-provider>
-  <sl:sidebar variant="inset" collapsible="icon">
-    <sl:sidebar-header>
-      <sl:sidebar-menu>
-        <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Acme">
-            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
-            <strong>Acme</strong>
-            <small>Enterprise</small>
-          </sl:sidebar-menu-button>
-        </sl:sidebar-menu-item>
-      </sl:sidebar-menu>
-    </sl:sidebar-header>
-    <sl:sidebar-content>
-      <sl:sidebar-group id="nav-forms">
-        <sl:sidebar-group-label>Forms</sl:sidebar-group-label>
-        <sl:sidebar-group-content>
-          <sl:sidebar-menu>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}" tooltip="Form">
-                <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
-                Form
-              </sl:sidebar-menu-button>
-            </sl:sidebar-menu-item>
-          </sl:sidebar-menu>
-        </sl:sidebar-group-content>
-      </sl:sidebar-group>
-      <sl:sidebar-group id="nav-tables">
-        <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
-        <sl:sidebar-group-content>
-          <sl:sidebar-menu>
-            <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/people') or #slNav.current('/teams')}">
-              <sl:sidebar-menu-button tooltip="People">
-                <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
-                People
-              </sl:sidebar-menu-button>
-              <sl:sidebar-menu-sub>
-                <sl:sidebar-menu-sub-item>
-                  <sl:sidebar-menu-sub-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
-                    All people
-                  </sl:sidebar-menu-sub-button>
-                </sl:sidebar-menu-sub-item>
-                <sl:sidebar-menu-sub-item>
-                  <sl:sidebar-menu-sub-button th:href="@{/teams}" th:active="${#slNav.current('/teams')}">
-                    Teams
-                  </sl:sidebar-menu-sub-button>
-                </sl:sidebar-menu-sub-item>
-              </sl:sidebar-menu-sub>
-            </sl:sidebar-menu-item>
-          </sl:sidebar-menu>
-        </sl:sidebar-group-content>
-      </sl:sidebar-group>
-    </sl:sidebar-content>
-    <sl:sidebar-footer>
-      <sl:sidebar-menu>
-        <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button href="https://example.com/help" size="sm" tooltip="Documentation">
-            <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
-            Documentation
-          </sl:sidebar-menu-button>
-        </sl:sidebar-menu-item>
-      </sl:sidebar-menu>
-    </sl:sidebar-footer>
-  </sl:sidebar>
-  <sl:sidebar-inset>
-    <sl:site-header>
-      <sl:sidebar-trigger/>
-      <sl:separator orientation="vertical"/>
-      <sl:breadcrumb>
-        <sl:breadcrumb-list>
-          <th:block th:replace="${breadcrumb}"></th:block>
-        </sl:breadcrumb-list>
-      </sl:breadcrumb>
-      <sl:slot name="end"><sl:theme-toggle/></sl:slot>
-    </sl:site-header>
-    <div class="page">
-      <h1 th:text="${pageTitle}"></h1>
-      <div th:replace="${content}"></div>
-    </div>
-  </sl:sidebar-inset>
-</sl:sidebar-provider>
-<sl:toaster/>
-</body>
-</html>
-```
-
-A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
-nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`:
-
-```html
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
-      th:replace="~{layout/main :: layout(${person.name}, ~{::breadcrumb}, ~{::#page-content})}">
-<body>
-<th:block th:ref="breadcrumb">
-  <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
-  <sl:breadcrumb-separator/>
-  <sl:breadcrumb-item><sl:breadcrumb-link th:href="@{/people}">People</sl:breadcrumb-link></sl:breadcrumb-item>
-  <sl:breadcrumb-separator/>
-  <sl:breadcrumb-item><sl:breadcrumb-page th:text="${person.name}">Name</sl:breadcrumb-page></sl:breadcrumb-item>
-</th:block>
-<div id="page-content">
-  ...
-</div>
-</body>
-</html>
-```
-
-The header and the page's padding are the application's, as in shadcn's block (a 4rem row, the separator 1rem high,
-the page 1rem in from the card's edges). Without Tailwind:
-
-```css
-.inset-header { display: flex; align-items: center; gap: 0.5rem; block-size: 4rem; flex-shrink: 0; padding-inline: 1rem; }
-.inset-header > .sidebar-trigger { margin-inline-start: -0.25rem; }
-.inset-header > .separator { block-size: 1rem; align-self: center; margin-inline-end: 0.5rem; }
-.inset-header-end { margin-inline-start: auto; }
-.page { padding: 0 1rem 1rem; }
-.app-logo {
-  display: grid; place-items: center; flex-shrink: 0; inline-size: 2rem; block-size: 2rem;
-  border-radius: calc(var(--radius) - 2px); background: var(--sidebar-primary); color: var(--sidebar-primary-foreground);
-}
-.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
-```
-
-With the body boosted, a controller that answers other htmx requests with a fragment checks for a whole-page request
-first (see [htmx](#htmx) above). With [htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot):
-
-```java
-static boolean wantsFragment(HtmxRequest request) {
-  return request.isHtmxRequest()
-      && !request.isHistoryRestoreRequest()
-      && !(request.isBoosted() && request.getTarget() == null);
-}
-```
-
-A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
-table) does send `HX-Target`, and still gets its fragment.
-
-## Header layout
-
-For an application with a handful of pages: the header layout of the second sample application (sample-02's
-`layout/main.html`, which runs under a strict Content-Security-Policy), after Flux's header-inset layout. The header
-holds the menu button (on a phone), the application's name, the pages as a row of links, and the theme toggle and Sign
-out at the end; More (Settings, Help) and the panel's own header are panel-only. The page is a card below the header
-(`variant="inset"`).
-
-```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
-      th:fragment="layout(pageTitle, content)">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:text="${pageTitle}">Page</title>
-  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
-  <th:block th:replace="~{sl/layout :: assets}"></th:block>
-</head>
-<body>
-<sl:skip-link/>
-<sl:sidebar-provider>
-  <sl:site-header>
-    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
-    <sl:button as="a" th:href="@{/}" variant="ghost" class="app-name">
-      <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
-      Shadleaf
-    </sl:button>
-    <sl:sidebar placement="header" variant="inset">
-      <sl:sidebar-header panel-only>
-        <sl:sidebar-menu>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button th:href="@{/}" size="lg">
-              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
-              <strong>Shadleaf</strong>
-              <small>Sample App 2</small>
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-        </sl:sidebar-menu>
-      </sl:sidebar-header>
-      <sl:sidebar-content>
-        <sl:sidebar-group>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
-                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
-                  Home
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/forms}" th:active="${#slNav.current('/forms')}">
-                  <sl:slot name="icon-start"><sl:icon name="text-cursor-input"/></sl:slot>
-                  Forms
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/overlays}" th:active="${#slNav.current('/overlays')}">
-                  <sl:slot name="icon-start"><sl:icon name="layers"/></sl:slot>
-                  Overlays
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/data}" th:active="${#slNav.current('/data')}">
-                  <sl:slot name="icon-start"><sl:icon name="table"/></sl:slot>
-                  Data
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
-        </sl:sidebar-group>
-        <sl:sidebar-group id="nav-more" panel-only>
-          <sl:sidebar-group-label>More</sl:sidebar-group-label>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
-                  <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
-                  Settings
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/help}" th:active="${#slNav.current('/help')}">
-                  <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
-                  Help
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
-        </sl:sidebar-group>
-      </sl:sidebar-content>
-    </sl:sidebar>
-    <sl:slot name="end">
-      <sl:theme-toggle/>
-      <form method="post" th:action="@{/logout}">
-        <sl:button type="submit" variant="ghost" size="sm">
-          <sl:slot name="icon-start"><sl:icon name="log-out"/></sl:slot>
-          Sign out
-        </sl:button>
-      </form>
-    </sl:slot>
-  </sl:site-header>
-  <sl:sidebar-inset>
-    <div class="page">
-      <h1 th:text="${pageTitle}"></h1>
-      <div th:replace="${content}"></div>
-    </div>
-  </sl:sidebar-inset>
-</sl:sidebar-provider>
-<sl:toaster>
-  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
-            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
-</sl:toaster>
-</body>
-</html>
-```
+`HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The
+[Application shell](../../guides/application-shell/#with-htmx) guide shows the check.
 
 ## Left out
 
@@ -697,7 +421,9 @@ For now:
 - `SidebarRail`, the strip along the sidebar's edge that toggles it;
 - a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page;
 - in the header placement: sub-menus that drop down from the row (a navigation menu), and a "More" entry gathering
-  the links that do not fit (the row scrolls instead).
+  the links that do not fit (the row scrolls instead);
+- a sidebar below a header across the whole page (shadcn's sidebar-16): see
+  [One element for a desktop and a phone](#one-element-for-a-desktop-and-a-phone).
 
 ## Attributes
 

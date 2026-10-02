@@ -264,7 +264,10 @@ that header (a `header` row, with an `end` slot for what goes to the end), and s
 inside `<sl:sidebar-inset>` too. shadcn/ui's sidebar has no header placement either: `placement="header"` on
 `<sl:sidebar>` makes the same element a row of links in the site header from 768 px (Flux's header layout) and the
 panel on a phone, and `panel-only` on a header, footer, group or menu item leaves it out of everything but the phone
-panel. See [Sidebar](../components/sidebar/#in-the-header) and [Site Header](../components/site-header/).
+panel. See [Sidebar](../components/sidebar/#in-the-header) and [Site Header](../components/site-header/). sidebar-16's
+layout itself (that header across the whole page, the sidebar below it) is not supported: the sidebar is sticky at the
+top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The
+[Application shell](../guides/application-shell/) guide has the two layouts there are.
 
 ### Breadcrumb: the ellipsis opens its own menu
 
