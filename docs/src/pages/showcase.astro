@@ -31,6 +31,11 @@ const components = [...new Set(scenarios.map(s => s.component))];
   <ShowcaseHead title="Shadleaf showcase"/>
   <style>
     body { padding: 2rem; font-family: system-ui, sans-serif; }
+    /* A phone's usual gutter. With 2rem, the invoice table (text only, so no tab stop of its own in WebKit: axe's
+       scrollable-region-focusable) was a few pixels from scrolling at 390 px, and did scroll with a CI runner's fonts. */
+    @media (width < 48rem) {
+      body { padding: 1rem; }
+    }
     h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.5rem; }
     h2 { font-size: 1.25rem; font-weight: 600; margin: 2rem 0 1rem; }
     h3 { font-size: 0.875rem; font-weight: 500; margin: 1.25rem 0 0.5rem; }

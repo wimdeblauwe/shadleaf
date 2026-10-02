@@ -31,6 +31,8 @@ for (const {skin, theme} of combinations) {
       // and run in the page directly; an AxeBuilder per control injects and sets it up again every time (~100 ms each).
       test(`text keeps its contrast on hover: ${skin}, ${theme}, ${width.name}, ${showcase.name}`, async ({page}) => {
         await page.setViewportSize(width.viewport);
+        // A hover and an axe run per control: some 15 s on a laptop, twice that on a CI runner.
+        test.slow();
         await openShowcase(page, skin, theme, showcase.path);
         // evaluate, not addScriptTag: a page's Content-Security-Policy does not apply to it
         await page.evaluate(axe.source);
@@ -50,13 +52,20 @@ for (const {skin, theme} of combinations) {
         const failures: string[] = [];
         for (let i = 0; i < count; i++) {
           const control = controls.nth(i);
-          // Nor those not shown at this width: the links of the closed sidebar panel on a phone.
-          if (!await control.evaluate(element => element.checkVisibility())) {
+          // One round trip per control where possible: with some 150 controls per page, each one counts.
+          const state = await control.evaluate(element => {
+            // Nor those not shown at this width: the links of the closed sidebar panel on a phone.
+            if (!element.checkVisibility()) {
+              return 'hidden';
+            }
+            element.setAttribute('data-hovered', '');
+            // A skip link is only drawn while it has the focus.
+            return element.matches('.skip-link') ? 'skip-link' : 'shown';
+          });
+          if (state === 'hidden') {
             continue;
           }
-          await control.evaluate(element => element.setAttribute('data-hovered', ''));
-          // A skip link is only drawn while it has the focus.
-          if (await control.evaluate(element => element.matches('.skip-link'))) {
+          if (state === 'skip-link') {
             await control.focus();
           }
           await control.hover();
