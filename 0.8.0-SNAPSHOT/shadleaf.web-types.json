@@ -1,0 +1,4114 @@
+{
+  "$schema" : "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name" : "shadleaf",
+  "version" : "0.8.0-SNAPSHOT",
+  "description-markup" : "markdown",
+  "contributions" : {
+    "html" : {
+      "elements" : [ {
+        "name" : "sl:slot",
+        "description" : "Content for a named slot of the enclosing component. Inside a component template: where that content goes, with this element's body as the fallback.",
+        "attributes" : [ {
+          "name" : "name",
+          "description" : "The named slot to fill, e.g. `icon-start`. Omit it for the default slot.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:accordion",
+        "description" : "A stack of sections, each with a heading that shows or hides its content. Built on the browser's `details` element, so it needs no JavaScript: the keyboard, the open state, and find-in-page opening a section that holds a match all come from the browser. Holds `sl:accordion-item`s, each with a `sl:accordion-trigger` and a `sl:accordion-content`.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "`single`: opening a section closes the one that was open (the items share a `details` `name`). `multiple`: sections open and close on their own.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "single"
+          }, {
+            "name" : "multiple"
+          } ],
+          "default" : "single"
+        }, {
+          "name" : "name",
+          "description" : "The group name the items of a `single` accordion share. Must be unique on the page. Without it, each render generates one (`sl-accordion-` and eight random characters).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:name",
+          "description" : "`name` from a Thymeleaf expression, e.g. `th:name=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:accordion-content",
+        "description" : "The content of a `sl:accordion-item`, shown while it is open. Find-in-page searches it while it is closed, and opens the section on a match.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:accordion-item",
+        "description" : "One section of a `sl:accordion`: a `details` element holding a `sl:accordion-trigger` (first) and a `sl:accordion-content`.",
+        "attributes" : [ {
+          "name" : "open",
+          "description" : "Render the section open. In a `single` accordion only the first open section stays open.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "The section cannot be opened or closed: its trigger is out of the tab order and ignores the pointer, and a closed disabled section renders no content, so find-in-page cannot open it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:accordion-trigger",
+        "description" : "The heading of a `sl:accordion-item`, which opens and closes it: the `details` element's `summary`, so it must be the item's first child. Its text is a heading inside the `summary`, and a chevron follows it.",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level of the text (`role=\"heading\"` and `aria-level`), as shadcn/ui's trigger sits in an `h3`. Pick the level that fits the page's outline.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ],
+          "default" : "3"
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert",
+        "description" : "A callout for a message the user should notice: an optional `sl:icon`, then `sl:alert-title` and `sl:alert-description`. It is not announced by itself; add `role=\"alert\"` when it appears after the page loaded, such as in an htmx response.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the alert.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "destructive"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-description",
+        "description" : "The body of an alert, inside `sl:alert`: text, paragraphs or a list.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:alert-dialog",
+        "description" : "A modal dialog that interrupts the user with something important and waits for an answer, such as a confirmation before deleting. Built on the native `dialog` element with `role=\"alertdialog\"`: a click outside does not close it, Escape does. Build it from `sl:alert-dialog-header` (with an optional `sl:alert-dialog-media`, `sl:alert-dialog-title` and `sl:alert-dialog-description`) and `sl:alert-dialog-footer` holding `sl:alert-dialog-cancel`, which takes the focus when the dialog opens, and the action, a `sl:button`. A button opens it with `commandfor` set to its `id` and `command=\"show-modal\"`; an htmx response closes it with the `sl-dialog-close` event.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The dialog's id, which the button that opens it points at with `commandfor`. The title and description ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "size",
+          "description" : "Size of the dialog. `sm` is narrower, with the header centred and the footer's two buttons side by side.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "open",
+          "description" : "Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap). Needs Alpine.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-dialog-cancel",
+        "description" : "The button that closes a `sl:alert-dialog` without doing anything, in its `sl:alert-dialog-footer`. It takes the focus when the dialog opens, so Enter never confirms by accident. Its text defaults to \"Cancel\" (`sl.alert-dialog.cancel`); content of its own replaces it. Any other attribute passes through to the `sl:button`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "outline"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-dialog-description",
+        "description" : "Supporting text below a `sl:alert-dialog-title`, which describes the dialog (`aria-describedby`): what happens, and whether it can be undone. Its id derives from the dialog's (`delete-account-description`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:alert-dialog-footer",
+        "description" : "The bottom of a `sl:alert-dialog`, for `sl:alert-dialog-cancel` and the action: side by side at the end on a wide screen, stacked with the first one at the bottom on a narrow one, and two equal columns in a small dialog.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:alert-dialog-header",
+        "description" : "The top of a `sl:alert-dialog`: an optional `sl:alert-dialog-media`, a `sl:alert-dialog-title` and an optional `sl:alert-dialog-description`. Centred on a narrow screen and in a small dialog.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:alert-dialog-media",
+        "description" : "An icon (or an image) at the start of a `sl:alert-dialog-header`, on a muted square: above the title, or beside title and description in a wide dialog.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Colour of the square and its icon: `destructive` for a dialog that confirms deleting something.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "destructive"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-dialog-title",
+        "description" : "The title of a `sl:alert-dialog`, inside `sl:alert-dialog-header`: a heading that names the dialog (`aria-labelledby`). Its id derives from the dialog's (`delete-account-title`).",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level (`role=\"heading\"` and `aria-level`). A dialog starts an outline of its own, so the default, 2, rarely needs changing.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ],
+          "default" : "2"
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:alert-title",
+        "description" : "The title of an alert, inside `sl:alert`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:avatar",
+        "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead while the image has no `src`, is loading or fails to load. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Size of the avatar.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "label",
+          "description" : "The person's name, for an avatar with no name next to it. It is then announced as an image with that name; without it the avatar is hidden from assistive technology.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:avatar-fallback",
+        "description" : "What `sl:avatar` shows when its image has no `src`, while it loads and when it fails to load: usually the person's initials, or an `sl:icon`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:avatar-image",
+        "description" : "The picture inside `sl:avatar`. Pass `src` or `th:src`; when it is empty or null, while the picture loads, and when it fails to load (marked by Shadleaf's script), the image is hidden and the `sl:avatar-fallback` shows instead. The avatar's `label` names it, so the image itself has an empty `alt`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:badge",
+        "description" : "A small label for a status, a count or a category; with `as=\"a\"`, a link that looks the same. Every attribute that is not a prop passes through; `class` is appended to `badge`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the badge.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `span`, or an anchor (`a`) for a badge that links somewhere. Only a linked badge reacts to hover.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "span"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "span"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:breadcrumb",
+        "description" : "The trail of pages above the one shown now, in a `nav` named \"Breadcrumb\" (the message `sl.breadcrumb.label`; an `aria-label` replaces it). Holds a `sl:breadcrumb-list` with `sl:breadcrumb-item`s, each a `sl:breadcrumb-link` or, last, the `sl:breadcrumb-page`, with a `sl:breadcrumb-separator` between them.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:breadcrumb-ellipsis",
+        "description" : "Stands for the levels a long trail leaves out. Without content it is an ellipsis, read as \"More levels\" (the message `sl.breadcrumb.more`). With content, the `sl:dropdown-menu-item`s of those levels (`as=\"a\"`), it is a ghost icon button named \"Show more levels\" (`sl.breadcrumb.more.trigger`; an `aria-label` replaces it) that opens a `sl:dropdown-menu` of them; any other attribute then goes to the button.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "With content: the menu's id, `breadcrumb-more` when not set (the button's is `&lt;id&gt;-trigger`); give a second breadcrumb on the page another one. Without content: the ellipsis's own id.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:breadcrumb-item",
+        "description" : "One level of a `sl:breadcrumb-list`: a `sl:breadcrumb-link`, the `sl:breadcrumb-page`, a `sl:breadcrumb-ellipsis`, or plain text for a level that has no page of its own.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:breadcrumb-link",
+        "description" : "A link to a level above the page shown now. Give it an `href` or `th:href`. A level without a page of its own is plain text in its `sl:breadcrumb-item` instead.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:breadcrumb-list",
+        "description" : "The ordered list of a `sl:breadcrumb`: its items and the separators between them, on one line that wraps when there is no room.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:breadcrumb-page",
+        "description" : "The page shown now, last in the trail: text in the foreground colour, marked `aria-current=\"page\"`. Not a link.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:breadcrumb-separator",
+        "description" : "The mark between two items of a `sl:breadcrumb-list`: a chevron that points the other way on a right-to-left page. Content of its own (another icon, a slash) replaces it; that content is not turned around. Decorative: screen readers skip it, so the list holds only the levels.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:button",
+        "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`. Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) for navigation.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour. Defaults to `button`, unlike HTML, so a button in a form never submits by accident.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "disabled",
+          "description" : "Disable the button. A disabled anchor loses its `href` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "loading",
+          "description" : "Show a spinner, announce the busy state and disable the button.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:loading",
+          "description" : "`loading` from a Thymeleaf expression, e.g. `th:loading=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card",
+        "description" : "A container for related content and actions. Build it from its parts, in any order and number: `sl:card-header` (holding `sl:card-title`, `sl:card-description` and `sl:card-action`), `sl:card-content` and `sl:card-footer`. An `img` as the first or last child runs to the card's edges.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Spacing inside the card and between its parts.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-action",
+        "description" : "An action in the top end corner of a card, such as a button or a badge, inside `sl:card-header`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-content",
+        "description" : "The body of a card.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-description",
+        "description" : "Supporting text below a `sl:card-title`, inside `sl:card-header`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:card-footer",
+        "description" : "The bottom of a card, for actions or a summary.",
+        "attributes" : [ {
+          "name" : "border",
+          "description" : "A dividing line above the footer, with matching spacing.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-header",
+        "description" : "The top of a card: a `sl:card-title`, an optional `sl:card-description` below it, and an optional `sl:card-action` beside both.",
+        "attributes" : [ {
+          "name" : "border",
+          "description" : "A dividing line below the header, with matching spacing.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:card-title",
+        "description" : "The title of a card, inside `sl:card-header`.",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:checkbox",
+        "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors. A checkbox in the indeterminate state (neither checked nor unchecked: some of a group selected) shows a minus.",
+        "attributes" : [ {
+          "name" : "indeterminate",
+          "description" : "Start in the indeterminate state. HTML has no attribute for it, only the DOM property `indeterminate`: this renders `data-indeterminate`, from which Shadleaf's script sets the property when the page loads (or htmx swaps the checkbox in). A click clears it, as it does on every checkbox. A script can set the property on any checkbox; the minus follows it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:indeterminate",
+          "description" : "`indeterminate` from a Thymeleaf expression, e.g. `th:indeterminate=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:collapsible",
+        "description" : "Content that a button shows and hides. Built on the browser's `details` element, so it needs no JavaScript. Holds a `sl:collapsible-trigger` (first) and a `sl:collapsible-content`.",
+        "attributes" : [ {
+          "name" : "open",
+          "description" : "Render it open.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "It cannot be opened or closed: its trigger is out of the tab order and ignores the pointer, and closed it renders no content, so find-in-page cannot open it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:collapsible-content",
+        "description" : "The content of a `sl:collapsible`, shown while it is open. Find-in-page searches it while it is closed, and opens it on a match.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:collapsible-trigger",
+        "description" : "What the user clicks to open and close a `sl:collapsible`: its `details` element's `summary`, so it must come first. Plain text by default; `variant` or `size` draws it as a `sl:button`. Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Draw the trigger as a button of this variant, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "link"
+          } ]
+        }, {
+          "name" : "size",
+          "description" : "Draw the trigger as a button of this size, as on `sl:button`. The `icon` sizes need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ]
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dialog",
+        "description" : "A modal dialog on the native `dialog` element: the page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it from `sl:dialog-header` (holding `sl:dialog-title` and `sl:dialog-description`), your content and `sl:dialog-footer`. A button opens it with `commandfor` set to the dialog's `id` and `command=\"show-modal\"`, and closes it with `command=\"close\"`; an htmx response closes it with the `sl-dialog-close` event.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The dialog's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "open",
+          "description" : "Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap, or a page shown after a redirect). Needs Alpine.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "close-button",
+          "description" : "A close button (an x) in the corner.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:close-button",
+          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dialog-description",
+        "description" : "Supporting text below a `sl:dialog-title`, which describes the dialog (`aria-describedby`). Its id derives from the dialog's (`edit-profile-description`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:dialog-footer",
+        "description" : "The bottom of a `sl:dialog`, for its actions: side by side at the end on a wide screen, stacked with the first one at the bottom on a narrow one.",
+        "attributes" : [ {
+          "name" : "close-button",
+          "description" : "An outline \"Close\" button after the other actions.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:close-button",
+          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dialog-header",
+        "description" : "The top of a `sl:dialog`: a `sl:dialog-title` and an optional `sl:dialog-description` below it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:dialog-title",
+        "description" : "The title of a `sl:dialog`, inside `sl:dialog-header`: a heading that names the dialog (`aria-labelledby`). Its id derives from the dialog's (`edit-profile-title`).",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level (`role=\"heading\"` and `aria-level`). A dialog starts an outline of its own, so the default, 2, rarely needs changing.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ],
+          "default" : "2"
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dropdown-menu",
+        "description" : "A menu of actions or links that opens from a button, on the browser's Popover API: it sits above the page, and Escape or a click outside closes it. Holds a `sl:dropdown-menu-trigger` and a `sl:dropdown-menu-content` with the items. Renders no element of its own. Needs Alpine for the arrow keys, typeahead and closing after an item is chosen.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The menu's id, which the trigger points at with `popovertarget`. Any other button can open it that way too.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dropdown-menu-checkbox-item",
+        "description" : "An item in a `sl:dropdown-menu-content` that shows an on/off state with a check mark (`role=\"menuitemcheckbox\"`), such as a filter or a view setting. The state comes from the server: choosing the item does what its attributes say (a link to `?archived=true`, an `hx-post`), and the page or fragment that comes back shows the new state. Give it its text as content (`[[${...}]]`), not with `th:text`, which would replace the check mark too. Otherwise as `sl:dropdown-menu-item`.",
+        "attributes" : [ {
+          "name" : "checked",
+          "description" : "Whether the setting is on (`aria-checked`).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour of a button item.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "inset",
+          "description" : "Indent the item to line up with items that start with an icon.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "Disable the item. The arrow keys skip it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:checked",
+          "description" : "`checked` from a Thymeleaf expression, e.g. `th:checked=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:inset",
+          "description" : "`inset` from a Thymeleaf expression, e.g. `th:inset=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dropdown-menu-content",
+        "description" : "The menu itself, inside `sl:dropdown-menu`: a popover next to its trigger, in the top layer, holding the items, labels, groups and separators. It flips to the other side when there is no room.",
+        "attributes" : [ {
+          "name" : "side",
+          "description" : "The side of the trigger it opens on. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` menu opens on the left.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ],
+          "default" : "bottom"
+        }, {
+          "name" : "align",
+          "description" : "How it lines up with the trigger along that side: `start` lines up the start edges.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "start"
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dropdown-menu-group",
+        "description" : "Items that belong together in a `sl:dropdown-menu-content` (`role=\"group\"`), usually between separators or under a label.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:dropdown-menu-item",
+        "description" : "An action in a `sl:dropdown-menu-content`: a button, or with `as=\"a\"` a link. Every attribute that is not a prop (`hx-*`, `href`, `commandfor`, `form`) passes through, and the menu closes once the item is chosen.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) for navigation.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "variant",
+          "description" : "`destructive` for an item that deletes something.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "destructive"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour of a button item. Defaults to `button`; `submit` submits the form it is in (or names with `form`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "inset",
+          "description" : "Indent the item to line up with items that start with an icon.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "Disable the item. The arrow keys skip it; a disabled link loses its `href`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:inset",
+          "description" : "`inset` from a Thymeleaf expression, e.g. `th:inset=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dropdown-menu-label",
+        "description" : "A heading for the items below it in a `sl:dropdown-menu-content`. It cannot be chosen, and the arrow keys pass it by.",
+        "attributes" : [ {
+          "name" : "inset",
+          "description" : "Indent the label to line up with items that start with an icon.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:inset",
+          "description" : "`inset` from a Thymeleaf expression, e.g. `th:inset=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dropdown-menu-radio-group",
+        "description" : "A set of `sl:dropdown-menu-radio-item`s in a menu, one of which is chosen (`role=\"group\"`). Name it with `aria-label` when a label above it does not make the choice clear.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:dropdown-menu-radio-item",
+        "description" : "One of a set of choices in a `sl:dropdown-menu-radio-group`, with a check mark on the chosen one (`role=\"menuitemradio\"`), such as the sort order of a list. The server marks the chosen one `checked`: each item is a link (`?sort=name`) or a request, and the page or fragment that comes back shows the new choice. Give it its text as content (`[[${...}]]`), not with `th:text`, which would replace the check mark too. Otherwise as `sl:dropdown-menu-item`.",
+        "attributes" : [ {
+          "name" : "checked",
+          "description" : "Whether this is the chosen item (`aria-checked`).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour of a button item.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "inset",
+          "description" : "Indent the item to line up with items that start with an icon.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "Disable the item. The arrow keys skip it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:checked",
+          "description" : "`checked` from a Thymeleaf expression, e.g. `th:checked=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:inset",
+          "description" : "`inset` from a Thymeleaf expression, e.g. `th:inset=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:dropdown-menu-separator",
+        "description" : "A line between groups of items in a `sl:dropdown-menu-content` (`role=\"separator\"`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:dropdown-menu-shortcut",
+        "description" : "A keyboard shortcut at the end of a `sl:dropdown-menu-item`, such as `⌘S`. It only shows the shortcut; the application handles the keys. Typeahead ignores it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:dropdown-menu-trigger",
+        "description" : "What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part (shadcn's `&lt;DropdownMenuTrigger asChild&gt;`). It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "The part to render: a `sl:button`, a `sl:sidebar-menu-button` (a team switcher or user menu in a `sl:sidebar-menu-item`), or a `sl:sidebar-menu-action` (a \"More\" beside a menu button, which needs an `aria-label`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "sidebar-menu-button"
+          }, {
+            "name" : "sidebar-menu-action"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "variant",
+          "description" : "Visual style, as on `sl:button`, or `default` and `outline` as on `sl:sidebar-menu-button`. Not for a sidebar menu action.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Size, as on `sl:button` (the `icon` sizes need an `aria-label`), or `sm`, `default` and `lg` as on `sl:sidebar-menu-button`. Not for a sidebar menu action.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "tooltip",
+          "description" : "With `as=\"sidebar-menu-button\"`: the label shown beside it while the sidebar is collapsed to icons, as on `sl:sidebar-menu-button`. Never shown while the menu is open.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "show-on-hover",
+          "description" : "With `as=\"sidebar-menu-action\"`: from 768&nbsp;px, show it only while the pointer is over its item, the focus is in it, or the menu is open.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tooltip",
+          "description" : "`tooltip` from a Thymeleaf expression, e.g. `th:tooltip=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-on-hover",
+          "description" : "`show-on-hover` from a Thymeleaf expression, e.g. `th:show-on-hover=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:field",
+        "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
+        "attributes" : [ {
+          "name" : "orientation",
+          "description" : "Stack the label above the control, or put them side by side (a checkbox or switch, then its label). `responsive` stacks them in a narrow `sl:field-group` and puts them side by side in a wide one.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "vertical"
+          }, {
+            "name" : "horizontal"
+          }, {
+            "name" : "responsive"
+          } ],
+          "default" : "vertical"
+        }, {
+          "name" : "for",
+          "description" : "The id of the control: for a field without `th:field`, or to use another id than the field's name. The control gets it when it has no id of its own, and the description and error ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:for",
+          "description" : "`for` from a Thymeleaf expression, e.g. `th:for=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:field-content",
+        "description" : "Stacks a `sl:field-label` with its `sl:field-description` or `sl:field-error`, beside the control of a horizontal `sl:field`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-description",
+        "description" : "Help text for a `sl:field` or `sl:field-set`. It gets the id the control's (or fieldset's) `aria-describedby` points at.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-error",
+        "description" : "The error messages of a `sl:field` or `sl:field-set`, read from its `th:field`'s binding: one message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. It gets the id the control's (or fieldset's) `aria-describedby` points at while it shows messages.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-group",
+        "description" : "Stacks `sl:field`s and `sl:field-set`s with even spacing. Fields with `orientation=\"responsive\"` inside it go side by side when it is wide enough.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-label",
+        "description" : "The label of a `sl:field`. Its `for` points at the field's control; a `for` of your own wins.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:field-legend",
+        "description" : "The caption of a `sl:field-set`, as its `legend`. Put it first in the fieldset.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "A section heading, or the size of a field label (for a set of options that answers one question).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "legend"
+          }, {
+            "name" : "label"
+          } ],
+          "default" : "legend"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:field-set",
+        "description" : "A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:form-errors",
+        "description" : "The errors of the form object the enclosing `th:object` selects, shown as a destructive alert: by default the errors that belong to the whole form rather than one field (global errors, from `bindingResult.reject(...)` or a class-level constraint); with `show=\"all\"` the field errors too. One message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. Not announced, and not focused unless it has `autofocus`; it has an id (`signup-errors` for `th:object=\"${signup}\"`) and `tabindex=\"-1\"`, so a link or a script can move focus to it too.",
+        "attributes" : [ {
+          "name" : "show",
+          "description" : "Which errors to list: the global errors only, or all of them, the global ones first and then every field's (each field keeps its own error too). Field messages are listed as they are, without the field's label, so write them to make sense on their own.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "global"
+          }, {
+            "name" : "all"
+          } ],
+          "default" : "global"
+        }, {
+          "name" : "title",
+          "description" : "The title above the messages. Defaults to the message `sl.form-errors.title` (\"There is a problem\"); use `th:title` for a message of your own.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "level",
+          "description" : "Heading level of the title. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "autofocus",
+          "description" : "Move focus to the problem when the form comes back with errors: to the summary when it shows, otherwise to the first control with errors below it (in a field or with a `th:field` of its own). Nothing takes focus while the form has no errors. htmx honours it in swapped content too.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show",
+          "description" : "`show` from a Thymeleaf expression, e.g. `th:show=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:title",
+          "description" : "`title` from a Thymeleaf expression, e.g. `th:title=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:autofocus",
+          "description" : "`autofocus` from a Thymeleaf expression, e.g. `th:autofocus=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:icon",
+        "description" : "Inlines the SVG of an icon: the bundled lucide icons, or the application's own through an `IconSource` bean. An unknown name fails with the closest known ones.",
+        "attributes" : [ {
+          "name" : "name",
+          "description" : "Name of the icon, e.g. `trash`. Lucide's names and aliases, plus any icons the application registers.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "size",
+          "description" : "Width and height in pixels. Without it the icon is 24 pixels, or sized by the surrounding component (16 pixels inside a button).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "stroke-width",
+          "description" : "Stroke width, overriding the icon's own (2 for lucide).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "label",
+          "description" : "Accessible name for an icon that carries meaning on its own. Without it the icon is decorative and hidden from assistive technology.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:name",
+          "description" : "`name` from a Thymeleaf expression, e.g. `th:name=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:stroke-width",
+          "description" : "`stroke-width` from a Thymeleaf expression, e.g. `th:stroke-width=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:input",
+        "description" : "A text input. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "Type of the input. Checkboxes and radio buttons have components of their own.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "text"
+          }, {
+            "name" : "email"
+          }, {
+            "name" : "password"
+          }, {
+            "name" : "number"
+          }, {
+            "name" : "search"
+          }, {
+            "name" : "tel"
+          }, {
+            "name" : "url"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "datetime-local"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "week"
+          }, {
+            "name" : "time"
+          }, {
+            "name" : "file"
+          } ],
+          "default" : "text"
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:kbd",
+        "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:kbd-group",
+        "description" : "A key combination: `sl:kbd` elements, with any text between them (such as `+`). HTML nests the keys of a combination in an outer `kbd`, as this does.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:label",
+        "description" : "A label for a form control. Point it at the control with `for` (the control's `id`; `th:field` gives the control an `id` equal to the field name), or put the control inside it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:native-select",
+        "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Height of the select. It replaces HTML's `size` attribute, which turns a select into a list box.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination",
+        "description" : "Links to the other pages of a list, in a `nav`. Given the Spring Data `Page` it shows (`th:page=\"${people}\"`) and no content of its own, it renders them all: Previous, the first and the last page, the current page with `siblings` on each side, an ellipsis for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and has a stable id, so htmx can give the focus back after a swap. A `Slice`, which does not know how many pages there are, gets Previous and Next only. Without Spring Data, pass `current` and `total` instead. With content of its own it is the frame for a hand-written pagination of `sl:pagination-content`, `-item`, `-link`, `-previous`, `-next` and `-ellipsis`, as in shadcn/ui.",
+        "attributes" : [ {
+          "name" : "current",
+          "description" : "Without a `page`: the page shown now, counting from 1.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "total",
+          "description" : "Without a `page`: the number of pages.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "siblings",
+          "description" : "How many pages to show on each side of the current one.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "1"
+        }, {
+          "name" : "qualifier",
+          "description" : "The `@Qualifier` of the controller's `Pageable`, for a second list on the page: its links use `members_page` instead of `page`, and their ids start with `members-`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:page",
+          "description" : "The Spring Data `Page` or `Slice` shown now.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:current",
+          "description" : "`current` from a Thymeleaf expression, e.g. `th:current=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:total",
+          "description" : "`total` from a Thymeleaf expression, e.g. `th:total=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:siblings",
+          "description" : "`siblings` from a Thymeleaf expression, e.g. `th:siblings=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:qualifier",
+          "description" : "`qualifier` from a Thymeleaf expression, e.g. `th:qualifier=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-content",
+        "description" : "The list (`ul`) of a hand-written `sl:pagination`, holding `sl:pagination-item`s.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:pagination-ellipsis",
+        "description" : "Stands for the pages a `sl:pagination` leaves out: an ellipsis, read as \"More pages\" (the message `sl.pagination.more`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:pagination-item",
+        "description" : "One entry (`li`) of a `sl:pagination-content`: holds a link, Previous, Next or an ellipsis.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:pagination-link",
+        "description" : "A link to one page, drawn as a ghost button, or an outline one for the page shown now (`active`). Give it an `href` or `th:href`, and the page number as content.",
+        "attributes" : [ {
+          "name" : "active",
+          "description" : "Whether it is the page shown now: `aria-current=\"page\"` and the outline look.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "size",
+          "description" : "Size of the link, as on `sl:button`: square by default, for a number.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "icon"
+        }, {
+          "name" : "disabled",
+          "description" : "There is nowhere to go: the link loses its `href`, gets `aria-disabled` and leaves the tab order, as a disabled `sl:button as=\"a\"`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:active",
+          "description" : "`active` from a Thymeleaf expression, e.g. `th:active=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-next",
+        "description" : "The link to the next page: a `sl:pagination-link` with a chevron and the text \"Next\" (the message `sl.pagination.next`), which content of its own replaces. Its name is \"Go to next page\" (`sl.pagination.next.label`); an `aria-label` replaces it. On a narrow screen only the chevron shows.",
+        "attributes" : [ {
+          "name" : "disabled",
+          "description" : "There is no next page: the link loses its `href`, gets `aria-disabled` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-previous",
+        "description" : "The link to the previous page: a `sl:pagination-link` with a chevron and the text \"Previous\" (the message `sl.pagination.previous`), which content of its own replaces. Its name is \"Go to previous page\" (`sl.pagination.previous.label`); an `aria-label` replaces it. On a narrow screen only the chevron shows.",
+        "attributes" : [ {
+          "name" : "disabled",
+          "description" : "There is no previous page: the link loses its `href`, gets `aria-disabled` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-size",
+        "description" : "\"Rows per page\" and a menu of page sizes, as in shadcn/ui's data table. The sizes are `sl:dropdown-menu-radio-item` links: each asks for the same request with that size, every other parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the menu is a popover). Takes the Spring Data `Page` shown now, whose size is the checked one; a size the page has but `sizes` does not list is added. The label is the message `sl.pagination-size.label`. Attributes go to the wrapper.",
+        "attributes" : [ {
+          "name" : "sizes",
+          "description" : "The sizes to choose from, separated by commas.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "10,20,50"
+        }, {
+          "name" : "qualifier",
+          "description" : "The `@Qualifier` of the controller's `Pageable`, for a second list on the page: its links use `members_size` instead of `size`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "id",
+          "description" : "The menu's id; its button gets `-trigger` added, its label `-label`. `page-size` when not set, prefixed with the qualifier (`members-page-size`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:page",
+          "description" : "The Spring Data `Page` or `Slice` shown now.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:sizes",
+          "description" : "`sizes` from a Thymeleaf expression, e.g. `th:sizes=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:qualifier",
+          "description" : "`qualifier` from a Thymeleaf expression, e.g. `th:qualifier=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:pagination-summary",
+        "description" : "Where the page is in the results, as text: \"11–20 of 270\", or with `format=\"page\"` \"Page 2 of 27\". Takes the Spring Data `Page` shown now (`th:page`); for a `Slice`, which does not know the total, \"11–20\" or \"Page 2\". The words are messages (`sl.pagination.summary*`), so an application rewords or translates them; numbers are formatted for the locale.",
+        "attributes" : [ {
+          "name" : "format",
+          "description" : "`range`: the rows shown and the total. `page`: the page number and the number of pages.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "range"
+          }, {
+            "name" : "page"
+          } ],
+          "default" : "range"
+        }, {
+          "name" : "th:page",
+          "description" : "The Spring Data `Page` or `Slice` shown now.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:format",
+          "description" : "`format` from a Thymeleaf expression, e.g. `th:format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:popover",
+        "description" : "Rich content in a panel that opens from a button, on the browser's Popover API: it sits above the page next to its trigger, and Escape, a click outside or moving the focus out of it closes it. Holds a `sl:popover-trigger` and a `sl:popover-content`. Renders no element of its own.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The popover's id, which the trigger points at with `popovertarget`. The title and description ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:popover-content",
+        "description" : "The panel of a `sl:popover`, next to its trigger in the top layer. It is a non-modal dialog: name it with a `sl:popover-title` (in a `sl:popover-header`) or an `aria-label`. When it opens, focus moves to its first control. It flips to the other side when there is no room.",
+        "attributes" : [ {
+          "name" : "side",
+          "description" : "The side of the trigger it opens on. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` popover opens on the left.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ],
+          "default" : "bottom"
+        }, {
+          "name" : "align",
+          "description" : "How it lines up with the trigger along that side.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "center"
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:popover-description",
+        "description" : "Supporting text below a `sl:popover-title`, which describes the popover (`aria-describedby`). Its id derives from the popover's (`dimensions-description`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:popover-header",
+        "description" : "The top of a `sl:popover-content`, holding `sl:popover-title` and `sl:popover-description`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:popover-title",
+        "description" : "The title of a `sl:popover`, inside `sl:popover-header`, which names the popover (`aria-labelledby`). Its id derives from the popover's (`dimensions-title`).",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`); without it, plain text, as in shadcn/ui.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:popover-trigger",
+        "description" : "The button that opens and closes a `sl:popover`: a `sl:button` with `popovertarget` set to the popover. Any other attribute passes through to the `sl:button`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button, as on `sl:button`. The `icon` sizes need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:query-params",
+        "description" : "Hidden inputs that copy the current request's query parameters into a `GET` form, so sending a search keeps the table's order, page size and other filters. Name the form's own fields in `except`, or they are sent twice. The page number is always left out, so a new search starts on the first page. Values are decoded once and escaped like any other attribute; a repeated parameter (several `sort` values) stays repeated. Renders no element of its own. Other attributes go to every input: `form=\"search\"` ties them to a form elsewhere on the page.",
+        "attributes" : [ {
+          "name" : "except",
+          "description" : "The parameters not to copy, separated by commas: the fields the form has itself (`q`, `q,status`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "qualifier",
+          "description" : "The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its page parameter (`members_page`) is the one left out.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:except",
+          "description" : "`except` from a Thymeleaf expression, e.g. `th:except=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:qualifier",
+          "description" : "`qualifier` from a Thymeleaf expression, e.g. `th:qualifier=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:radio-group",
+        "description" : "A group of `sl:radio-group-item`s, announced as a radio group. Name it with `aria-labelledby` (pointing at the question) or `aria-label`. The items share their `name`, or their `th:field`, which is what makes them one choice.",
+        "attributes" : [ {
+          "name" : "orientation",
+          "description" : "Stack the items, or put them on a row that wraps.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "vertical"
+          }, {
+            "name" : "horizontal"
+          } ],
+          "default" : "vertical"
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:radio-group-item",
+        "description" : "One radio button in `sl:radio-group`: the browser's own, styled. Give it a `value` and the group's `name`, or `th:field` with a `value` or `th:value`; Spring then numbers the ids (`plan1`, `plan2`), so put the item inside its label. In a `sl:field-set` with `th:field`, the items take its field. Every attribute that is not a prop passes through; `class` is appended to `radio-group-item`. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:select",
+        "description" : "A select drawn like shadcn/ui's: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Height of the select.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "placeholder",
+          "description" : "Text shown while no option is chosen: a first option with an empty value, hidden from the list. A required select with it selected is invalid.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:placeholder",
+          "description" : "`placeholder` from a Thymeleaf expression, e.g. `th:placeholder=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:select-group",
+        "description" : "A group of `sl:select-item`s under a heading: an `optgroup`.",
+        "attributes" : [ {
+          "name" : "label",
+          "description" : "The group's heading, shadcn/ui's `SelectLabel`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:select-item",
+        "description" : "An option in a `sl:select`: an `option` with a check mark that shows while it is chosen. `value` (or `th:value`) and `disabled` pass through; `th:field` on the select marks the bound one. Its content may start with an icon; always give it text, which is all an older browser keeps of it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:select-separator",
+        "description" : "A line between items or groups of a `sl:select`: an `hr`, which every current browser draws in a select's list.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:separator",
+        "description" : "A thin line between content. A vertical one stretches to the height of the row it is in, so it needs a flex container.",
+        "attributes" : [ {
+          "name" : "orientation",
+          "description" : "Direction of the line.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "decorative",
+          "description" : "Hide the line from assistive technology, as most separators only draw a line. With `decorative=\"false\"` it is announced as a separator, for one that divides content into groups.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:decorative",
+          "description" : "`decorative` from a Thymeleaf expression, e.g. `th:decorative=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sheet",
+        "description" : "A dialog that slides in from an edge of the screen, for content that complements the page: filters, settings, details. Built on the native `dialog` element, like `sl:dialog`: the page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it from `sl:sheet-header` (holding `sl:sheet-title` and `sl:sheet-description`), your content and `sl:sheet-footer`. A button opens it with `commandfor` set to the sheet's `id` and `command=\"show-modal\"`.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The sheet's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "side",
+          "description" : "The edge it slides in from. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` sheet opens on the left.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ],
+          "default" : "right"
+        }, {
+          "name" : "open",
+          "description" : "Open the sheet as soon as it is on the page, for a sheet the server renders in answer to a request (an htmx swap). Needs Alpine.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "close-button",
+          "description" : "A close button (an x) in the corner.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:close-button",
+          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sheet-description",
+        "description" : "Supporting text below a `sl:sheet-title`, which describes the sheet (`aria-describedby`). Its id derives from the sheet's (`filters-description`).",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sheet-footer",
+        "description" : "The bottom of a `sl:sheet`, for its actions, stacked. It stays at the bottom of a sheet on the side of the screen however little content there is above it.",
+        "attributes" : [ {
+          "name" : "close-button",
+          "description" : "An outline \"Close\" button after the other actions.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:close-button",
+          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sheet-header",
+        "description" : "The top of a `sl:sheet`: a `sl:sheet-title` and an optional `sl:sheet-description` below it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sheet-title",
+        "description" : "The title of a `sl:sheet`, inside `sl:sheet-header`: a heading that names the sheet (`aria-labelledby`). Its id derives from the sheet's (`filters-title`).",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level (`role=\"heading\"` and `aria-level`). A sheet starts an outline of its own, so the default, 2, rarely needs changing.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ],
+          "default" : "2"
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar",
+        "description" : "The application's navigation, inside `sl:sidebar-provider`. One element serves both widths: from 768&nbsp;px up it is a column beside the page, which the trigger collapses and expands; below that it is a panel over the page, which the trigger opens. It is a `nav` named \"Main\" (`sl.sidebar.label`; an `aria-label` replaces it) and a popover: the browser opens the panel in the top layer and closes it on Escape or a click outside. On a phone, Alpine moves the focus into the open panel and makes the rest of the page inert, and closes it when a link in it is followed. It holds `sl:sidebar-header`, `sl:sidebar-content` (groups of menus) and `sl:sidebar-footer`. With `placement=\"header\"` it goes inside `sl:site-header` instead, where from 768&nbsp;px it is a row of links; on a phone it is the same panel.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The id the trigger points at (`sl:sidebar-trigger`'s `for`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "sidebar"
+        }, {
+          "name" : "side",
+          "description" : "The edge it sits on: the start of a line (the left, or the right on a right-to-left page) or the end.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "start"
+        }, {
+          "name" : "placement",
+          "description" : "Where it sits on a desktop: `sidebar` is a column beside the page; `header` a row of links inside `sl:site-header` (the header layout), which never collapses: `collapsible`, the collapsed state and the trigger do not apply there (the trigger is hidden), and `side` only picks the phone panel's edge. Collapsible items and the parts marked `panel-only` are left out of the row; the phone panel is the same for both.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sidebar"
+          }, {
+            "name" : "header"
+          } ],
+          "default" : "sidebar"
+        }, {
+          "name" : "variant",
+          "description" : "How it looks on a desktop: `sidebar` is a column along the edge with a border; `floating` a panel with a margin all round; `inset` lays the sidebar's ground around the page, which (`sl:sidebar-inset`) becomes a card on it. The phone panel looks the same for all three. In the header placement only `inset` counts: the page becomes a card below the header.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sidebar"
+          }, {
+            "name" : "floating"
+          }, {
+            "name" : "inset"
+          } ],
+          "default" : "sidebar"
+        }, {
+          "name" : "collapsible",
+          "description" : "How it collapses on a desktop: `offcanvas` moves it out of view entirely; `icon` narrows it to a strip of its menu buttons' icons (labels, badges, actions and sub-menus hidden; a menu button's `tooltip` shows its label); `none` never collapses it, and the trigger is hidden on a desktop. The phone panel is the same for all three.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "offcanvas"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "none"
+          } ],
+          "default" : "offcanvas"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:placement",
+          "description" : "`placement` from a Thymeleaf expression, e.g. `th:placement=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:collapsible",
+          "description" : "`collapsible` from a Thymeleaf expression, e.g. `th:collapsible=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-content",
+        "description" : "The part of the `sl:sidebar` that scrolls, between `sl:sidebar-header` and `sl:sidebar-footer`; it holds the `sl:sidebar-group`s. A plain `div`: the sidebar itself is the navigation landmark.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-footer",
+        "description" : "The bottom of the `sl:sidebar`: settings, help or the signed-in user, below the `sl:sidebar-content`. It does not scroll with the content.",
+        "attributes" : [ {
+          "name" : "panel-only",
+          "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:panel-only",
+          "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-group",
+        "description" : "A section of the `sl:sidebar`'s links: an optional `sl:sidebar-group-label` and `sl:sidebar-group-action`, then `sl:sidebar-group-content` with a `sl:sidebar-menu`. With a label it is a group named by that label (`role=\"group\"`, `aria-labelledby`), so a screen reader says \"Platform, group\" when the focus moves into it; without one it is a plain `div`.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The group's id. Its label gets `&lt;id&gt;-label`; without an id, each render generates one (`sl-sidebar-group-` and eight random characters).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "panel-only",
+          "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:panel-only",
+          "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-group-action",
+        "description" : "An icon button at the end of a `sl:sidebar-group`'s label, such as \"Add project\". It holds only an icon, so it needs an `aria-label`. Every other attribute passes through (`hx-*`, `commandfor`, `href`). Requires `aria-label` or `aria-labelledby`.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) to a page.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour of the button; defaults to `button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-group-content",
+        "description" : "The content of a `sl:sidebar-group`, below its label: usually one `sl:sidebar-menu`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-group-label",
+        "description" : "The name of a `sl:sidebar-group`, in small muted text above its menu. The group is labelled by it, so it gets an id from the group (`&lt;group id&gt;-label`); give the group an `id` rather than the label.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-header",
+        "description" : "The top of the `sl:sidebar`: the application or team, above the `sl:sidebar-content`. It does not scroll with the content.",
+        "attributes" : [ {
+          "name" : "panel-only",
+          "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:panel-only",
+          "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-inset",
+        "description" : "The page's main content beside the `sl:sidebar`: the `main` element, which takes the rest of the width. Put the page header with the `sl:sidebar-trigger` at its top. It is the target of a `sl:skip-link`: `tabindex=\"-1\"` lets the link move the focus to it.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The element's id, which a `sl:skip-link` points at (`main` is its default too).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "main"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-menu",
+        "description" : "A list of links (or buttons) in the `sl:sidebar`: a `ul` of `sl:sidebar-menu-item`s, so a screen reader says how many there are.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-menu-action",
+        "description" : "An icon button at the end of a `sl:sidebar-menu-item`, beside its `sl:sidebar-menu-button`: a second action for that entry, such as \"More\" or \"Remove from favourites\". It holds only an icon, so it needs an `aria-label` that names the entry too (\"More for Design Engineering\"). Every other attribute passes through. Requires `aria-label` or `aria-labelledby`.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) to a page.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour of the button; defaults to `button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "show-on-hover",
+          "description" : "From 768&nbsp;px, show it only while the pointer is over the item, the focus is in it, or its menu is open (`aria-expanded=\"true\"`). Always shown on a phone.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-on-hover",
+          "description" : "`show-on-hover` from a Thymeleaf expression, e.g. `th:show-on-hover=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-menu-badge",
+        "description" : "A count at the end of a `sl:sidebar-menu-button`, inside the same `sl:sidebar-menu-item`. The button is described by it, so a screen reader says the count after the link's name (\"Inbox, link, 12\"); the badge gets its id from the item (`&lt;item id&gt;-badge`). Clicks go through it to the button.",
+        "attributes" : [ {
+          "name" : "label",
+          "description" : "What a screen reader says instead of the visible text, such as \"12 unread messages\". The visible count is then hidden from it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-menu-button",
+        "description" : "A link (or button) in a `sl:sidebar-menu-item`: an icon in the `icon-start` slot, then the label. Mark the current page with `active`, for instance `th:active=\"${#slNav.current('/people')}\"`. The label is cut off with an ellipsis when it does not fit; for two lines, put each in an element of its own (`&lt;strong&gt;`, `&lt;small&gt;`). Every attribute that is not a prop passes through (`href`, `hx-*`); `class` is appended to `sidebar-menu-button`. In a `collapsible` `sl:sidebar-menu-item` it is the item's `summary`, which opens and closes the group, with a chevron at the end; `as`, `type` and `disabled` do not apply there, and it takes no `href`.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "Element to render: an anchor (`a`) to a page, or a `button` for an action.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "a"
+          }, {
+            "name" : "button"
+          } ],
+          "default" : "a"
+        }, {
+          "name" : "active",
+          "description" : "The current one: the link gets `aria-current=\"page\"`, a button `aria-current=\"true\"`, and both the active look.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "variant",
+          "description" : "Visual style: `outline` adds a background and a border.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Height: `sm` for a dense list, `lg` for an entry with two lines, such as the application's name in the `sl:sidebar-header`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour of a button; defaults to `button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "disabled",
+          "description" : "Disable it. A disabled link loses its `href` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "tooltip",
+          "description" : "The label to show beside the button while the sidebar is collapsed to icons (`collapsible=\"icon\"`), on hover and on keyboard focus; usually the same words as the label. Not shown while the sidebar is expanded or on a phone. It repeats the button's name, so it is hidden from assistive technology and describes nothing (`sl:tooltip`'s `mode=\"label\"`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:active",
+          "description" : "`active` from a Thymeleaf expression, e.g. `th:active=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tooltip",
+          "description" : "`tooltip` from a Thymeleaf expression, e.g. `th:tooltip=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-menu-item",
+        "description" : "One entry of a `sl:sidebar-menu`: an `li` holding a `sl:sidebar-menu-button`, and optionally a `sl:sidebar-menu-badge` or a `sl:sidebar-menu-action` beside it. With a badge, the button is described by it (`aria-describedby`), so a screen reader says \"Inbox, link, 12\". With `collapsible` it is a group of links that opens and closes: the menu button is what the user clicks, followed by a `sl:sidebar-menu-sub`.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The item's id. Its badge gets `&lt;id&gt;-badge`; without an id, each render generates one (`sl-sidebar-menu-item-` and eight random characters).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "collapsible",
+          "description" : "Make it a group that opens and closes, on the browser's `details` element (no JavaScript needed): its `sl:sidebar-menu-button` becomes the `summary`, with a chevron, and its `sl:sidebar-menu-sub` the content. Collapsed to icons, a click on the button expands the sidebar and opens the group. It takes no badge or action: the browser would hide them with the sub-menu.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "open",
+          "description" : "Render a collapsible item open, for instance when it holds the current page: `th:open=\"${#slNav.current('/settings')}\"`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "panel-only",
+          "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:collapsible",
+          "description" : "`collapsible` from a Thymeleaf expression, e.g. `th:collapsible=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:panel-only",
+          "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-menu-sub",
+        "description" : "A list of links below a `sl:sidebar-menu-button`, indented along a line: a `ul` of `sl:sidebar-menu-sub-item`s. In a `collapsible` `sl:sidebar-menu-item` it is what opens and closes. Hidden while the sidebar is collapsed to icons.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-menu-sub-button",
+        "description" : "A link (or button) in a `sl:sidebar-menu-sub-item`. Mark the current page with `active`, for instance `th:active=\"${#slNav.current('/settings/billing')}\"`. An optional icon goes in the `icon-start` slot; the label is cut off with an ellipsis when it does not fit. Every attribute that is not a prop passes through (`href`, `hx-*`); `class` is appended to `sidebar-menu-sub-button`.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "Element to render: an anchor (`a`) to a page, or a `button` for an action.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "a"
+          }, {
+            "name" : "button"
+          } ],
+          "default" : "a"
+        }, {
+          "name" : "active",
+          "description" : "The current one: the link gets `aria-current=\"page\"`, a button `aria-current=\"true\"`, and both the active look.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "size",
+          "description" : "Text size: `sm` for a denser list.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "md"
+          } ],
+          "default" : "md"
+        }, {
+          "name" : "type",
+          "description" : "Submit behaviour of a button; defaults to `button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "submit"
+          }, {
+            "name" : "reset"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "disabled",
+          "description" : "Disable it. A disabled link loses its `href` and leaves the tab order.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:active",
+          "description" : "`active` from a Thymeleaf expression, e.g. `th:active=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-menu-sub-item",
+        "description" : "One entry of a `sl:sidebar-menu-sub`: an `li` holding a `sl:sidebar-menu-sub-button`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-provider",
+        "description" : "The wrapper of an application shell with a sidebar: it holds `sl:sidebar`, and `sl:sidebar-inset` with the page's content (and the `sl:sidebar-trigger`), and it holds whether the sidebar is expanded or collapsed on a desktop. The server renders that state from the `sl-sidebar-state` cookie, which the browser writes when the user collapses or expands the sidebar (the trigger, or Ctrl/⌘+B), so every page starts in it without a jump. Below 768&nbsp;px the sidebar is a panel the trigger opens instead, and the state does not apply. Needs Alpine for the trigger and the shortcut; without JavaScript the sidebar stays as the server rendered it.",
+        "attributes" : [ {
+          "name" : "state",
+          "description" : "The state to render, whatever the cookie says: for an application that keeps the choice itself, such as in the user's settings. Without it, the cookie decides.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "expanded"
+          }, {
+            "name" : "collapsed"
+          } ]
+        }, {
+          "name" : "default-state",
+          "description" : "The state before the user chose one (no cookie yet).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "expanded"
+          }, {
+            "name" : "collapsed"
+          } ],
+          "default" : "expanded"
+        }, {
+          "name" : "th:state",
+          "description" : "`state` from a Thymeleaf expression, e.g. `th:state=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:default-state",
+          "description" : "`default-state` from a Thymeleaf expression, e.g. `th:default-state=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sidebar-separator",
+        "description" : "A line between parts of the `sl:sidebar`, in the sidebar's border colour. Decorative: screen readers skip it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:sidebar-trigger",
+        "description" : "The icon button that collapses and expands the `sl:sidebar` on a desktop and opens its panel on a phone. Named \"Toggle sidebar\" (`sl.sidebar.trigger`; an `aria-label` replaces it); content of its own replaces the icon. Without JavaScript it is hidden on a desktop, where it could not do anything, and still opens the panel on a phone. Any other attribute passes through to the `sl:button`.",
+        "attributes" : [ {
+          "name" : "for",
+          "description" : "The `id` of the sidebar it toggles.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "sidebar"
+        }, {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "ghost"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button: one of `sl:button`'s icon sizes.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "icon-sm"
+        }, {
+          "name" : "th:for",
+          "description" : "`for` from a Thymeleaf expression, e.g. `th:for=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:site-header",
+        "description" : "A header bar: a `header` laying out its content in a row. Across the top of the page (inside `sl:sidebar-provider`, before `sl:sidebar-inset`) it is the header layout's: a `sl:sidebar-trigger` that opens the menu on a phone, the application's name, the `sl:sidebar` with `placement=\"header\"` as a row of links, and the `end` slot. At the top of `sl:sidebar-inset` it is the page's header in the sidebar layout: the trigger, a vertical `sl:separator` and a `sl:breadcrumb`. The `end` slot (search, the theme toggle, the signed-in user) goes to the end of the row.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:skeleton",
+        "description" : "A placeholder that pulses while content loads. It is hidden from assistive technology; mark the region that is loading with `aria-busy=\"true\"` instead. Give it the size of what it stands in for with a class of your own.",
+        "attributes" : [ {
+          "name" : "shape",
+          "description" : "A line of text (full width, one line high) or a circle (an avatar).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "line"
+          }, {
+            "name" : "circle"
+          } ],
+          "default" : "line"
+        }, {
+          "name" : "th:shape",
+          "description" : "`shape` from a Thymeleaf expression, e.g. `th:shape=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:skip-link",
+        "description" : "A link past the navigation to the page's content, for keyboard users: put it first in the body. Hidden until it has the focus (the first Tab on the page), then drawn at the top of the page. Its text is \"Skip to main content\" (the message `sl.skip-link`), which content of its own replaces. The target should be able to take the focus: `sl:sidebar-inset` is `id=\"main\"` with `tabindex=\"-1\"`, so the default target works with it.",
+        "attributes" : [ {
+          "name" : "for",
+          "description" : "The `id` of the element it skips to, usually the `main`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "main"
+        }, {
+          "name" : "th:for",
+          "description" : "`for` from a Thymeleaf expression, e.g. `th:for=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:switch",
+        "description" : "A switch: a checkbox with `role=\"switch\"`, announced as on or off. It submits like a checkbox, so `th:field` on a boolean works as it does there (numbered id, hidden marker input; in a `sl:field`, the field's name as id). Every attribute that is not a prop passes through; `class` is appended to `switch`. With `th:field`, the switch is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Size of the switch.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:table",
+        "description" : "A table in shadcn/ui's look. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.",
+        "attributes" : [ {
+          "name" : "qualifier",
+          "description" : "The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its sort links use `members_sort` instead of `sort`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:page",
+          "description" : "The Spring Data `Page` or `Slice` the table shows. Its `Sort` tells every `sl:table-head` inside how the rows are sorted now. Without it, the headers read the order from the request's sort parameter.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:qualifier",
+          "description" : "`qualifier` from a Thymeleaf expression, e.g. `th:qualifier=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:table-empty",
+        "description" : "The row a `sl:table` shows when there are no rows to show: one cell across every column saying \"No results.\" (the message `sl.table.empty`). Content of its own replaces the text. Render it with `th:if`, e.g. `th:if=\"${people.empty}\"`.",
+        "attributes" : [ {
+          "name" : "colspan",
+          "description" : "The number of columns the cell spans: all of the table's.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "th:colspan",
+          "description" : "`colspan` from a Thymeleaf expression, e.g. `th:colspan=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:table-head",
+        "description" : "A header cell (`th`) of a `sl:table`. With `sort` its label is a link that sorts the table by that property on the server: ascending, or descending when it is sorted ascending already. The link keeps the request's other parameters (filters, page size) and goes back to the first page. The sorted column gets `aria-sort` and an arrow. A plain `th` works too, for a header that does neither.",
+        "attributes" : [ {
+          "name" : "sort",
+          "description" : "The property to sort by, as the controller's `Sort` names it (`name`, `address.city`). Only the first key of the current order is shown.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "align",
+          "description" : "Where the label sits in the cell. Put the same `data-align` on the column's `td`s: `end` for amounts.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "start"
+        }, {
+          "name" : "th:sort",
+          "description" : "`sort` from a Thymeleaf expression, e.g. `th:sort=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:table-select-all",
+        "description" : "A checkbox for a header cell of a `sl:table` that selects every row on the page. The rows are the application's own checkboxes (a `sl:checkbox` with `name=\"ids\"` and `th:value=\"${person.id}\"`) in the cells of the table's body; they submit without JavaScript. This one is checked when every row is, indeterminate when some are, and checks or unchecks them all when clicked; it is named \"Select all rows on this page\" (the message `sl.table.select-all`) unless it gets an `aria-label`. It needs JavaScript, so it stays hidden until Alpine starts. It fires `sl-table-selection-change` on the table (`{selected, total}`), which `sl:table-selection-count` shows. It submits nothing itself (no `name`); other attributes go to its `input`, `class` to its wrapper.",
+        "attributes" : [ {
+          "name" : "name",
+          "description" : "The `name` of the row checkboxes, when the body has checkboxes of another kind too. Without it, every checkbox in a body cell is a row.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:name",
+          "description" : "`name` from a Thymeleaf expression, e.g. `th:name=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:table-selection-count",
+        "description" : "How many rows of a `sl:table` are selected: \"2 of 20 selected\" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as shadcn/ui's data table does. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.",
+        "attributes" : [ {
+          "name" : "table",
+          "description" : "The `id` of the table whose rows it counts (`sl:table` puts its `id` on the `table`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:table",
+          "description" : "`table` from a Thymeleaf expression, e.g. `th:table=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tabs",
+        "description" : "Panels of content shown one at a time, chosen from a row of tabs. Holds a `sl:tabs-list` of `sl:tabs-trigger`s and a `sl:tabs-content` per tab. The server renders the active tab's panel and hides the others, so the page is right before any script runs; Alpine adds switching in the browser and the keyboard (the ARIA tabs pattern). Give the triggers an `href` and the tabs work without JavaScript too.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The id of the tabs. The ids of the triggers and panels derive from it (`settings-account-trigger`, `settings-account-content`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "active",
+          "description" : "The `tab` of the trigger and panel that are active when the page renders, e.g. from a request parameter: `th:active=\"${tab}\"`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "orientation",
+          "description" : "`vertical` puts the tabs in a column next to the panels, and the up and down arrow keys move between them.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "activation-mode",
+          "description" : "`automatic`: a tab shows its panel as soon as the arrow keys reach it. `manual`: the arrow keys only move the focus, and Enter or Space shows the panel; for panels that are slow to show, such as ones loaded with htmx.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "automatic"
+          }, {
+            "name" : "manual"
+          } ],
+          "default" : "automatic"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:active",
+          "description" : "`active` from a Thymeleaf expression, e.g. `th:active=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:activation-mode",
+          "description" : "`activation-mode` from a Thymeleaf expression, e.g. `th:activation-mode=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tabs-content",
+        "description" : "The panel of one tab of a `sl:tabs`, labelled by its trigger. Only the active tab's panel shows; the others are `hidden`. It takes the focus with Tab after the tabs (as in Radix), so a panel without controls can be read and scrolled.",
+        "attributes" : [ {
+          "name" : "tab",
+          "description" : "Which tab's panel this is: the `tab` of its `sl:tabs-trigger`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tab",
+          "description" : "`tab` from a Thymeleaf expression, e.g. `th:tab=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tabs-list",
+        "description" : "The row (or column) of `sl:tabs-trigger`s of a `sl:tabs`: a `tablist`. An `aria-label` names it when the page has more than one.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "`default`: the tabs sit on a muted track and the active one is raised. `line`: no track, a line under the active tab.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "line"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tabs-trigger",
+        "description" : "A tab in a `sl:tabs-list`, which shows the `sl:tabs-content` with the same `tab`. A button, or with an `href` a link to the page with this tab active: without JavaScript the link loads it, with Alpine the tab switches in place and the address follows.",
+        "attributes" : [ {
+          "name" : "tab",
+          "description" : "Which tab this is: the `tab` of its `sl:tabs-content`, and the value `sl:tabs`' `active` names. Part of the ids, so letters, digits and dashes.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "The tab cannot be chosen; the arrow keys skip it. A disabled link loses its `href`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tab",
+          "description" : "`tab` from a Thymeleaf expression, e.g. `th:tab=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:textarea",
+        "description" : "A multi-line text input that grows with its content where the browser supports it. The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:theme-toggle",
+        "description" : "Switches the page between the light and the dark theme, and remembers the choice in the browser under the key the theme script (`sl/layout :: theme-script`) reads before the first paint, so the next page starts in it. By default an icon button opening a menu with Light, Dark and System; with `as=\"button\"` one button that switches between light and dark. Its icon shows the theme the page is in. Needs Alpine; without JavaScript it is not shown. Every attribute that is not a prop passes through to the button.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "`menu`: a menu with Light, Dark and System (`menuitemradio`s). `button`: one toggle button for dark mode (`aria-pressed`), which cannot go back to following the system.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "menu"
+          }, {
+            "name" : "button"
+          } ],
+          "default" : "menu"
+        }, {
+          "name" : "id",
+          "description" : "The menu's id (its button gets the id with `-trigger` added). Two menus on a page need different ids. With `as=\"button\"` it is the button's id, rendered only when set.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "theme-toggle"
+        }, {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "outline"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button: one of `sl:button`'s icon sizes.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "icon"
+        }, {
+          "name" : "side",
+          "description" : "The side of the button the menu opens on, as on `sl:dropdown-menu-content`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ],
+          "default" : "bottom"
+        }, {
+          "name" : "align",
+          "description" : "How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`: `end` lines up the end edges.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "end"
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:toast",
+        "description" : "One toast in a `sl:toaster`: a title, an optional description and a close button. The server renders it for a message that has to show when the page loads, such as a flash attribute after a redirect, or in an out-of-band swap. Content of its own replaces the description. A toast goes away by itself, so it must never hold the only way to do something.",
+        "attributes" : [ {
+          "name" : "title",
+          "description" : "What happened, in a few words: \"Member deleted\".",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "description",
+          "description" : "More about it, under the title.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "variant",
+          "description" : "The kind of message, shown by its icon: none, a check, an i, a warning triangle or an x. A screen reader announces an `error` at once, interrupting what it reads; the others when it is done.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "success"
+          }, {
+            "name" : "info"
+          }, {
+            "name" : "warning"
+          }, {
+            "name" : "error"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "duration",
+          "description" : "How long this toast shows, in milliseconds, instead of the toaster's `duration`. `0` keeps it until it is closed.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "th:title",
+          "description" : "`title` from a Thymeleaf expression, e.g. `th:title=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:description",
+          "description" : "`description` from a Thymeleaf expression, e.g. `th:description=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:duration",
+          "description" : "`duration` from a Thymeleaf expression, e.g. `th:duration=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:toaster",
+        "description" : "Where toasts show: short messages in a corner of the page that close themselves, such as \"Member deleted\". Put one at the end of the layout's `body`. Toasts get there three ways: as `sl:toast`s inside it, which the server renders (e.g. from a flash attribute after a redirect); from an `sl-toast` event, which an htmx response sends with the `HX-Trigger` header; or swapped in out of band. A screen reader announces each toast, and toasts show above an open modal dialog and can be used there. Needs Alpine.",
+        "attributes" : [ {
+          "name" : "id",
+          "description" : "The toaster's id, which an out-of-band swap targets (`hx-swap-oob=\"beforeend:#toaster\"`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "toaster"
+        }, {
+          "name" : "position",
+          "description" : "The corner or edge the toasts show in. `right` and `left` are the end and the start of a line.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top-left"
+          }, {
+            "name" : "top-center"
+          }, {
+            "name" : "top-right"
+          }, {
+            "name" : "bottom-left"
+          }, {
+            "name" : "bottom-center"
+          }, {
+            "name" : "bottom-right"
+          } ],
+          "default" : "bottom-right"
+        }, {
+          "name" : "duration",
+          "description" : "How long a toast shows, in milliseconds, unless it sets its own. The time stops while the pointer is on the toasts, while one of them has the focus and while the page is hidden. `0` keeps toasts until they are closed.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "5000"
+        }, {
+          "name" : "visible-toasts",
+          "description" : "How many toasts show at once, the newest ones. Older ones wait, with their time stopped, and show again when a newer one closes.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "3"
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:position",
+          "description" : "`position` from a Thymeleaf expression, e.g. `th:position=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:duration",
+          "description" : "`duration` from a Thymeleaf expression, e.g. `th:duration=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:visible-toasts",
+          "description" : "`visible-toasts` from a Thymeleaf expression, e.g. `th:visible-toasts=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tooltip",
+        "description" : "A short text that shows while the pointer rests on an element or the keyboard focuses it, on the browser's Popover API. The first element inside is the trigger, any focusable element (a `sl:button`, a link); the `sl:tooltip-content` after it describes it (`aria-describedby`). Escape hides it. Needs Alpine.",
+        "attributes" : [ {
+          "name" : "mode",
+          "description" : "What the text is to a screen reader: `description` adds it to the trigger as a description; `label` is for a text that repeats the trigger's name, such as an icon button's `aria-label`: it is hidden from assistive technology and describes nothing, so the name is not said twice.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "description"
+          }, {
+            "name" : "label"
+          } ],
+          "default" : "description"
+        }, {
+          "name" : "delay",
+          "description" : "How long the pointer rests on the trigger before the tooltip shows, in milliseconds. Keyboard focus shows it at once, and so does moving to another trigger right after a tooltip hid.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "300"
+        }, {
+          "name" : "th:mode",
+          "description" : "`mode` from a Thymeleaf expression, e.g. `th:mode=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:delay",
+          "description" : "`delay` from a Thymeleaf expression, e.g. `th:delay=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:tooltip-content",
+        "description" : "The text of a `sl:tooltip` (`role=\"tooltip\"`), after its trigger. Keep it short and plain: it cannot hold links or buttons, and touch screens never show it. It flips to the other side when there is no room. In a tooltip with `mode=\"label\"` it is hidden from assistive technology (`aria-hidden`).",
+        "attributes" : [ {
+          "name" : "side",
+          "description" : "The side of the trigger it shows on. `right` and `left` are the end and the start of a line.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ],
+          "default" : "top"
+        }, {
+          "name" : "align",
+          "description" : "How it lines up with the trigger along that side.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "center"
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:user-menu",
+        "description" : "The signed-in user (`#slUser.current`) with a menu that signs out, or a Sign in link for an anonymous visitor. In the sidebar's footer a large menu button with the user's picture, name and email (or username, when it is not the name); in the site header a button with the picture alone. Both open a `sl:dropdown-menu`: the user's name and email, the items in its content (Account, Settings), and Sign out, which posts to `#slUser.logoutUrl` (`shadleaf.security.logout-url`) from a form of its own, so `th:action` adds Spring Security's CSRF token. The picture goes through `sl:avatar`: while it loads, without one and when it fails to load, the initials show. Every attribute that is not a prop passes through to the button (or the Sign in link), except an `aria-label`, which only names the header's button: in the sidebar the button's name is the text it shows, and Sign in is named by its text.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "`sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named \"Account: \" and the user's name.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sidebar"
+          }, {
+            "name" : "header"
+          } ],
+          "default" : "sidebar"
+        }, {
+          "name" : "id",
+          "description" : "The menu's id. Its button gets the id with `-trigger` added, the sign-out form with `-sign-out`. Two user menus on a page need different ids.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "user-menu"
+        }, {
+          "name" : "side",
+          "description" : "The side of the button the menu opens on, as on `sl:dropdown-menu-content`. By default `right` in the sidebar (below the button in the phone panel) and `bottom` in the header.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "top"
+          }, {
+            "name" : "right"
+          }, {
+            "name" : "bottom"
+          }, {
+            "name" : "left"
+          } ]
+        }, {
+          "name" : "align",
+          "description" : "How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "start"
+          }, {
+            "name" : "center"
+          }, {
+            "name" : "end"
+          } ],
+          "default" : "end"
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:id",
+          "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:side",
+          "description" : "`side` from a Thymeleaf expression, e.g. `th:side=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      } ]
+    }
+  }
+}
