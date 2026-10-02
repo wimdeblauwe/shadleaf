@@ -394,6 +394,11 @@ static boolean wantsFragment(HtmxRequest request) {
 A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
 table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](../tables-htmx/).
 
+A boosted link or form made after the session expired would get the sign-in page swapped into the body (or, for a
+form, nothing at all, as its CSRF token went with the session). The Spring Security guide shows how to send the browser
+to the page instead, which then asks the user to sign in and comes back to it:
+[htmx after the session expired](../spring-security/#htmx-after-the-session-expired).
+
 ## A sidebar below a full-width header
 
 shadcn/ui's sidebar-16 puts a header across the whole top of the page and the sidebar below it. Shadleaf does not

@@ -1,6 +1,6 @@
 ---
 title: Spring Security
-description: The one matcher the library's assets need, and the signed-in user in templates (#slUser).
+description: The one matcher the library's assets need, the signed-in user in templates (#slUser), and htmx requests after the session expired.
 sidebar:
   order: 3
 ---
@@ -119,3 +119,58 @@ Security 7):
 Hiding the link is no security: protect the URL itself in the security configuration. The
 [Application shell](../application-shell/#navigation-by-role) guide shows both in a layout, and the same check on
 content inside a page.
+
+## htmx after the session expired
+
+When the session has expired, Spring Security answers an htmx request the way it answers a browser, and htmx cannot
+follow that:
+
+- **A GET** (a lazily loaded tab, a table's rows, a dialog fetched into `#modal-root`) is redirected to the sign-in
+  page. The browser's XHR follows the redirect, and htmx swaps the sign-in page into the request's target.
+- **A POST** fails its CSRF check, because the token lived in the session: a 403, which htmx does not swap. Nothing
+  happens on the page.
+- **After signing in** the user is sent to the request Spring Security saved before it asked them to sign in. For an
+  htmx request that is its URL, which may be a fragment endpoint that renders a few table rows as a page.
+
+[htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot) (5.2.0 and later) has an entry point and an
+access denied handler that answer such a request with `HX-Redirect` to the page it was made from:
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  return http
+      .authorizeHttpRequests(requests -> requests
+          .requestMatchers("/shadleaf/**", "/webjars/**").permitAll()
+          .anyRequest().authenticated())
+      .formLogin(login -> login.loginPage("/login").permitAll())
+      .exceptionHandling(exceptions -> exceptions
+          .authenticationEntryPoint(new HxRedirectToPageAuthenticationEntryPoint(
+              new LoginUrlAuthenticationEntryPoint("/login")))
+          .accessDeniedHandler(new HxRedirectToPageAccessDeniedHandler()))
+      .build();
+}
+```
+
+- **The page** is the one the user is on (htmx's `HX-Current-URL`), or for a boosted link the page it links to. The
+  browser loads it as a normal navigation, the sign-in page asks the user to sign in, and the page is what they come
+  back to, not the fragment.
+- **A POST** gets the same answer, but only when its CSRF token went with the session. A signed-in user without the
+  required role still gets a plain 403, and so does a request with a wrong token.
+- **Every request that is not an htmx request** goes to the entry point you pass, so it behaves as before. With OAuth2
+  login, that is `new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/<registration id>")`, the same URL as
+  [Sign in](#sign-in-and-sign-out-urls). If you have an access denied handler of your own, pass it to
+  `HxRedirectToPageAccessDeniedHandler`, which hands every other denial to it.
+- **`/webjars/**`** is permitted so the sign-in page can load htmx, if your layout loads it there too.
+
+Form input that was not sent is lost: the session that held the CSRF token is gone, so the POST cannot be replayed.
+An htmx request that needs a session made from a page anyone may see sends the visitor back to that page, still
+signed out; such a page should send them to Sign in itself.
+
+Spring Security's own suggestion, `defaultAuthenticationEntryPointFor(entryPoint, htmxRequestMatcher)`, also works for
+htmx requests, but makes the htmx entry point the default for every request that does not ask for HTML (a `fetch`
+without an `Accept` header, a MockMvc test without `accept(...)`): those then get a 401 instead of the redirect to
+the sign-in page. The htmx-spring-boot README has the details, and how this combines with a sign-in form that is itself
+sent with htmx.
+
+Sample-02 (`samples/shadleaf-sample-02`) has it: `hx-boost` on the body, a tab on its Data page that loads with htmx,
+and a form. Its `SessionExpiryTest` makes these requests without a session.

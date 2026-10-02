@@ -56,6 +56,12 @@ public class PagesController {
     return "data";
   }
 
+  /** The About tab's panel, which the Data page loads with htmx the first time the tab is shown. */
+  @GetMapping("/data/about")
+  public String dataAbout() {
+    return "data :: about";
+  }
+
   @GetMapping("/settings")
   public String settings() {
     return "settings";

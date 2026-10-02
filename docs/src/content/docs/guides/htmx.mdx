@@ -53,6 +53,9 @@ headers, and htmx itself from its webjar, pinned in the pom:
   indicator, which `style-src 'self'` blocks, and evaluates `hx-on` handlers and `js:` values with `eval`. Turn both
   off unless you use them.
 
+Behind Spring Security, an htmx request made after the session expired gets the sign-in page swapped into its
+target, or, for a POST, nothing at all. See [htmx after the session expired](../spring-security/#htmx-after-the-session-expired).
+
 ## One form, two ways to post
 
 The form keeps its `th:action` and `method="post"`, and gets `hx-post` next to them. htmx posts it when JavaScript

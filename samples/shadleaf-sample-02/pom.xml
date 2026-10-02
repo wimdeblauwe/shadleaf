@@ -22,6 +22,11 @@
   <properties>
     <java.version>17</java.version>
     <shadleaf.version>0.7.0-SNAPSHOT</shadleaf.version>
+    <!-- HxRedirectToPage* (an htmx request after the session expired) are new in 5.2.0 -->
+    <htmx-spring-boot.version>5.2.0</htmx-spring-boot.version>
+    <!-- htmx itself, pinned: the webjar is served from the application's own origin (/webjars/**), which the strict
+      policy's script-src 'self' allows -->
+    <htmx.version>2.0.11</htmx.version>
   </properties>
   <dependencies>
     <dependency>
@@ -45,6 +50,21 @@
       <groupId>io.github.wimdeblauwe</groupId>
       <artifactId>shadleaf-spring-boot-starter</artifactId>
       <version>${shadleaf.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.wimdeblauwe</groupId>
+      <artifactId>htmx-spring-boot</artifactId>
+      <version>${htmx-spring-boot.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>htmx.org</artifactId>
+      <version>${htmx.version}</version>
+    </dependency>
+    <dependency>
+      <!-- Lets templates leave the version out of /webjars/ URLs; the pom above is the only place it is written. -->
+      <groupId>org.webjars</groupId>
+      <artifactId>webjars-locator-lite</artifactId>
     </dependency>
 
     <dependency>

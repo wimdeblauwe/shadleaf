@@ -9,7 +9,10 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:fragment="layout(pageTitle, content)">
 <head th:replace="~{layout/head :: head(${pageTitle})}"></head>
-<body>
+<!--/* hx-boost on the body: links and forms load the next page with htmx and swap the whole body. After the session
+  expired, such a request (and the Data page's lazy tab) is sent to the page as a normal navigation, so the sign-in
+  page is never swapped into it: see SecurityConfiguration. */-->
+<body hx-boost="true">
 <sl:skip-link/>
 <sl:sidebar-provider>
   <sl:site-header>

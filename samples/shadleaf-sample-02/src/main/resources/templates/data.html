@@ -38,10 +38,15 @@
         </tbody>
       </sl:table>
     </sl:tabs-content>
-    <sl:tabs-content tab="about">
-      <p>Tabs whose triggers are links: without JavaScript each loads the page with its tab active.</p>
+    <!--/* Loaded with htmx the first time it is shown, unless the server rendered it as the active tab. */-->
+    <sl:tabs-content tab="about" th:hx-get="${tab != 'about'} ? @{/data/about}" hx-trigger="sl-tabs-show once">
+      <th:block th:if="${tab == 'about'}" th:insert="~{data :: about}"></th:block>
     </sl:tabs-content>
   </sl:tabs>
 </div>
+<th:block th:fragment="about">
+  <p>Tabs whose triggers are links: without JavaScript each loads the page with its tab active. This panel is loaded
+    with htmx the first time it is shown, from <code>/data/about</code>.</p>
+</th:block>
 </body>
 </html>

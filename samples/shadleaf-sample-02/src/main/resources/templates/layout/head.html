@@ -7,6 +7,10 @@
   <!--/* Inline, so the policy must allow it: by this request's nonce, or by the published hash. */-->
   <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
   <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <!--/* htmx from its webjar, so script-src 'self' allows it. The config keeps it within the policy: no inline <style>
+    for the request indicator, and no eval (hx-on, js: values). */-->
+  <meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
   <!--/* The application's own stylesheet: a plain static resource, no Node in this build. */-->
   <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>

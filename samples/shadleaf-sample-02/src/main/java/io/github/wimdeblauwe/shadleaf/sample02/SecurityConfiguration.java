@@ -1,5 +1,7 @@
 package io.github.wimdeblauwe.shadleaf.sample02;
 
+import io.github.wimdeblauwe.htmx.spring.boot.security.HxRedirectToPageAccessDeniedHandler;
+import io.github.wimdeblauwe.htmx.spring.boot.security.HxRedirectToPageAuthenticationEntryPoint;
 import io.github.wimdeblauwe.shadleaf.sample02.CspProperties.Mode;
 import io.github.wimdeblauwe.shadleaf.security.CurrentUserResolver;
 import io.github.wimdeblauwe.shadleaf.security.DefaultCurrentUserResolver;
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.header.HeaderWriterFilter;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfiguration {
@@ -20,7 +23,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(requests -> requests
             // Everything Shadleaf serves lives under /shadleaf/**: one matcher for the library's assets.
             .requestMatchers("/shadleaf/**").permitAll()
-            .requestMatchers("/css/**").permitAll()
+            .requestMatchers("/css/**", "/webjars/**").permitAll()
             // This rule is the security: the layout only hides the Admin link from users who would get a 403 here.
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated())
@@ -28,6 +31,15 @@ public class SecurityConfiguration {
         // formLogin's permitAll matches /login exactly, query included: without this, /login?logout needs a sign-in,
         // gets saved as the request to return to, and the next sign-in lands on the "signed out" page again.
         .logout(logout -> logout.permitAll())
+        // An htmx request after the session expired (a boosted link or form, the Data page's lazy tab) would get the
+        // sign-in page swapped into its target, or, for a POST whose CSRF token went with the session, a 403 that
+        // htmx does not show. These send the browser to the page instead (HX-Redirect): a normal navigation, which
+        // the login form above answers and saves as the page to return to. Every other request goes to the login
+        // form's entry point, as without them.
+        .exceptionHandling(exceptions -> exceptions
+            .authenticationEntryPoint(new HxRedirectToPageAuthenticationEntryPoint(
+                new LoginUrlAuthenticationEntryPoint("/login")))
+            .accessDeniedHandler(new HxRedirectToPageAccessDeniedHandler()))
         .headers(headers -> headers.addHeaderWriter(new CspHeaderWriter(csp.mode(), themeScript)));
     if (csp.mode() == Mode.NONCE) {
       http.addFilterBefore(new CspNonceFilter(), HeaderWriterFilter.class);
