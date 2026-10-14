@@ -1,0 +1,88 @@
+---
+title: Using Shadleaf with coding agents
+description: Point Claude Code, Codex, Cursor, Copilot and other coding agents at these docs, and give them the rules they get wrong.
+---
+
+Coding agents are great company when you build with Shadleaf, with a little help to get started. Shadleaf is new, so
+models haven't learned it yet, and because it looks so much like shadcn/ui, an agent tends to reach for what it knows
+from React: a `<Button asChild>`, a few Tailwind classes, or a `<sl:dialog-trigger>` that doesn't exist.
+
+The good news is that two small steps take care of most of this: a few rules in the file your agent reads at the start
+of every session, and docs it can read as Markdown. Both take only a couple of minutes to set up.
+
+## Add the rules to your project
+
+Paste this into the instructions file your agent reads: `AGENTS.md` (Codex, Cursor, Copilot, Gemini CLI and most
+others), `CLAUDE.md` (Claude Code) or `.github/copilot-instructions.md`. Replace `<version>` with the Shadleaf version in
+your `pom.xml`, so the agent reads the docs of the version you use.
+
+```markdown
+## Shadleaf (Thymeleaf UI components)
+
+- The UI uses Shadleaf: shadcn/ui as Thymeleaf tags with the `sl:` prefix
+  (`xmlns:sl="https://shadleaf.dev/sl"`), rendered on the server. Not React: no JSX, no Radix, no `asChild`.
+- Docs as Markdown: https://wimdeblauwe.github.io/shadleaf/<version>/llms.txt. Read the component's page
+  (`.../components/<name>.md`) before using a component; it ends with the attribute table.
+- An attribute that is not a prop passes through to the HTML silently, so a misspelt prop does nothing.
+  Use only the props in the attribute table; `th:<prop>="${...}"` sets one from an expression.
+- Change a component's look with its props (`variant`, `size`, `border`, ...), not with utility classes:
+  the library's stylesheet defines none. `class` is appended to the component's own class.
+- A link that looks like a button is `<sl:button as="a" th:href="@{/x}">`. `<sl:button>` renders
+  `type="button"`: write `type="submit"` on the one that submits a form.
+- Forms: `th:object` on the `<form>`, `th:field` on `<sl:field>` (its label, control and errors share it),
+  `<sl:form-errors/>` before the fields.
+- Dialogs and sheets need an `id` and open from any button with `commandfor="<id>" command="show-modal"`
+  (`command="close"` closes). There are no trigger or close parts. Menus and popovers open with
+  `<sl:dropdown-menu-trigger>` / `<sl:popover-trigger>` or `popovertarget`.
+- Icons: `<sl:icon name="...">` with Lucide names. An icon-only button (`size="icon"`, `icon-sm`, ...)
+  needs an `aria-label`; rendering fails without one.
+- Rendering fails with a message on a wrong prop value, a missing required prop or a missing accessible
+  name: render every page you change (run the tests or load the page) and fix what it reports.
+- With `hx-boost` on `<body>`, every boosted page load sends `HX-Request`: return a fragment only when the
+  request targets one (see the "Application shell" guide, "With htmx").
+```
+
+Then tell the agent how your application loads Shadleaf's CSS and Alpine.js, as that changes what it may write. Add
+the line for each setting that matches your `application.properties`, below the others:
+
+```markdown
+<!-- shadleaf.assets.variant: keep one -->
+- CSS: `standalone` (the default). The application does not compile Tailwind, so utility classes do nothing;
+  style the application's own markup in its own stylesheet.
+- CSS: `embedded`. The application compiles Tailwind; utility classes work for layout, also in `class` on a
+  component, but never to restyle one.
+
+<!-- shadleaf.assets.alpine: keep one -->
+- Alpine: `bundled` (the default). Shadleaf loads and starts Alpine.js; never add another Alpine script.
+  Register the application's own `Alpine.data` on `alpine:init`, in a script before the `sl/layout :: assets`
+  fragment.
+- Alpine: `csp`. As `bundled`, with Alpine's CSP build: no arrow functions, template literals, spread,
+  nested assignments or globals (`Math`, `document`) in `x-*` attributes; put that logic in `Alpine.data`.
+- Alpine: `external`. The application loads Alpine.js itself; its script goes after the
+  `sl/layout :: assets` fragment, and it registers the Alpine plugins it needs.
+```
+
+See [Getting started](../getting-started/#already-compiling-tailwind) and the [Alpine.js guide](../guides/alpine/) for
+what each setting does.
+
+Keep it short: it is loaded in every session. Your coding agent will read more documentation as it needs.
+
+## Docs as Markdown
+
+Every page of these docs has a Markdown copy at the same address with `.md` instead of the trailing slash:
+`components/button/` is `components/button.md`. The examples in it are the Thymeleaf source, and the attribute table is
+a Markdown table, so an agent gets what you see here without parsing HTML.
+
+The site's root also has the files of the [llms.txt](https://llmstxt.org) convention:
+
+| File                  | Holds                                                                                       |
+|-----------------------|---------------------------------------------------------------------------------------------|
+| `llms.txt`            | Every page with a one-line description, linking the Markdown copies. Start an agent here.   |
+| `llms-full.txt`       | All pages in one file. Large; most agents do better with the index and the pages they need. |
+| `llms-components.txt` | All component pages in one file: every example and attribute table.                         |
+| `llms-guides.txt`     | The "Start here" pages and the guides in one file.                                          |
+
+Every version of the docs has its own set, under `/shadleaf/<version>/`; `/shadleaf/current/` is the latest release.
+In a session without the rules above, a prompt such as "read https://wimdeblauwe.github.io/shadleaf/current/llms.txt,
+then add a delete confirmation to the members table" is enough to get started.
+

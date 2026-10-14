@@ -1,0 +1,18 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Shadleaf",
+  "description": "shadcn/ui for Thymeleaf, packaged as a Spring Boot starter: server-rendered sl:* components (buttons, forms, dialogs, menus, tables, application shell) with htmx and Alpine.js support.",
+  "folders": ["docs/src/content/docs"],
+  "excludeFolders": ["docs/tests", "docs/src/pages", "samples", "shadleaf-spring-boot-starter"],
+  "excludeFiles": ["CLAUDE.md"],
+  "rules": [
+    "Shadleaf components are Thymeleaf tags with the sl: prefix (xmlns:sl=\"https://shadleaf.dev/sl\"), rendered on the server; do not write React, JSX, Radix or asChild.",
+    "The complete examples and attribute tables are in the docs as Markdown: https://wimdeblauwe.github.io/shadleaf/current/llms.txt (each page also at <page>.md).",
+    "An attribute that is not a declared prop passes through to the HTML silently; use only the props in a component's attribute table, and th:<prop> for expressions.",
+    "Do not put Tailwind utility classes on components to change them; the library's stylesheet has none. Use props such as variant, size and border.",
+    "A link styled as a button is <sl:button as=\"a\" th:href=\"@{/x}\">; sl:button renders type=\"button\", so the submit button needs type=\"submit\".",
+    "In a form with th:object, put th:field on sl:field: its label, control and errors share it. Place sl:form-errors before the fields.",
+    "Dialogs and sheets need an id and open from any button with commandfor=\"<id>\" command=\"show-modal\"; there are no trigger or close parts.",
+    "Icons are <sl:icon name=\"...\"> with Lucide names; an icon-only button (size icon, icon-sm, ...) needs an aria-label or rendering fails."
+  ]
+}
