@@ -22,9 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 /**
- * The dialog page: a dialog on the page, opened by an icon button with a tooltip, and an edit dialog htmx fetches from
- * a row's menu of actions, whose form swaps itself while it has errors and closes the dialog with
- * {@code HX-Trigger: sl-dialog-close} after a valid save. An alert dialog confirms a delete, a sheet in the page holds
+ * The dialog page: a dialog on the page, opened by an icon button with a tooltip, and, from a row's menu of actions, a
+ * details sheet and an edit dialog whose bodies htmx loads. The edit form swaps itself while it has errors and closes
+ * the dialog with {@code HX-Trigger: sl-dialog-close} after a valid save. An alert dialog confirms a delete, a sheet in the page holds
  * an invite form, a menu of radio items sorts the table, and a popover renames the team. A confirmed delete shows a
  * toast and moves the focus to the next row; a valid invite shows one out of band.
  */
@@ -121,10 +121,12 @@ class DialogPageTest {
     assertThat(menu.attr("aria-labelledby")).isEqualTo("member-2-actions-trigger");
     assertThat(menu.attr("data-align")).isEqualTo("end");
     assertThat(menu.select("[role=menuitem]")).extracting(Element::text)
-        .containsExactly("Edit", "Send email", "Delete");
-    Element edit = menu.selectFirst("button[role=menuitem]");
-    assertThat(edit.attr("hx-get")).isEqualTo("/dialog/members/2/edit");
-    assertThat(edit.attr("hx-target")).isEqualTo("#modal-root");
+        .containsExactly("Details", "Edit", "Send email", "Delete");
+    List<Element> buttons = menu.select("button[role=menuitem]");
+    assertThat(buttons.get(0).attr("hx-get")).isEqualTo("/dialog/members/2");
+    assertThat(buttons.get(0).attr("hx-target")).isEqualTo("#member-details-body");
+    assertThat(buttons.get(1).attr("hx-get")).isEqualTo("/dialog/members/2/edit");
+    assertThat(buttons.get(1).attr("hx-target")).isEqualTo("#edit-member-body");
     assertThat(menu.selectFirst("a[role=menuitem]").attr("href")).isEqualTo("mailto:grace@example.com");
     assertThat(menu.select(".dropdown-menu-separator[role=separator]")).hasSize(1);
   }
@@ -200,19 +202,56 @@ class DialogPageTest {
   }
 
   @Test
-  void editFetchesADialogThatOpensItself() throws Exception {
+  void theDetailsSheetAndTheEditDialogAreInThePageWithEmptyBodies() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(get("/dialog")).andReturn().getResponse().getContentAsString());
+
+    Element details = page.getElementById("member-details-body");
+    assertThat(details.closest("dialog").id()).isEqualTo("member-details");
+    assertThat(details.closest("dialog").hasAttr("data-show-modal")).isFalse();
+    assertThat(details.attr("data-clear-on-close")).isEqualTo("true");
+    assertThat(details.parent().selectFirst("[role=alert]").text()).isEqualTo("The member could not be loaded.");
+
+    Element edit = page.getElementById("edit-member-body");
+    assertThat(edit.closest("dialog").id()).isEqualTo("edit-member");
+    assertThat(edit.childNodeSize()).isZero();
+    assertThat(edit.closest("dialog").selectFirst("button[type=submit]").attr("form"))
+        .isEqualTo("edit-member-form");
+  }
+
+  @Test
+  void detailsAnswersWithWhatGoesInTheSheetsBody() throws Exception {
+    // A member of this test's own: other tests change and delete the first three.
+    String invited = mockMvc.perform(htmx(post("/dialog/members")
+            .param("name", "Edsger Dijkstra").param("email", "edsger@example.com")))
+        .andReturn().getResponse().getContentAsString();
+    String id = Jsoup.parseBodyFragment("<table>" + invited + "</table>").selectFirst("tbody tr").id()
+        .substring("member-".length());
+
+    Document fragment = fragment(mockMvc.perform(htmx(get("/dialog/members/" + id)))
+        .andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString());
+
+    Element details = fragment.body().child(0);
+    assertThat(details.className()).isEqualTo("member-details");
+    assertThat(details.select("dd")).extracting(Element::text).containsExactly("Edsger Dijkstra", "edsger@example.com");
+  }
+
+  @Test
+  void detailsFailForGrace() throws Exception {
+    mockMvc.perform(htmx(get("/dialog/members/2"))).andExpect(status().isServiceUnavailable());
+  }
+
+  @Test
+  void editAnswersWithTheFormAlone() throws Exception {
     Document fragment = fragment(mockMvc.perform(htmx(get("/dialog/members/2/edit")))
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString());
 
-    Element dialog = fragment.body().child(0);
-    assertThat(dialog.id()).isEqualTo("edit-member");
-    assertThat(dialog.attr("data-show-modal")).isEqualTo("true");
-    assertThat(dialog.getElementById("name").val()).isEqualTo("Grace Hopper");
-    Element form = dialog.getElementById("edit-member-form");
+    assertThat(fragment.body().children()).extracting(Element::id).containsExactly("edit-member-form");
+    assertThat(fragment.getElementById("edit-member-name").val()).isEqualTo("Grace Hopper");
+    Element form = fragment.getElementById("edit-member-form");
     assertThat(form.attr("hx-post")).isEqualTo("/dialog/members/2");
     assertThat(form.attr("hx-target")).isEqualTo("this");
-    assertThat(dialog.selectFirst("button[type=submit]").attr("form")).isEqualTo("edit-member-form");
   }
 
   @Test
@@ -224,8 +263,8 @@ class DialogPageTest {
 
     Document fragment = fragment(html);
     assertThat(fragment.body().children()).extracting(Element::id).containsExactly("edit-member-form");
-    assertThat(fragment.select("[autofocus]")).extracting(Element::id).containsExactly("email");
-    assertThat(fragment.getElementById("email").attr("aria-invalid")).isEqualTo("true");
+    assertThat(fragment.select("[autofocus]")).extracting(Element::id).containsExactly("edit-member-email");
+    assertThat(fragment.getElementById("edit-member-email").attr("aria-invalid")).isEqualTo("true");
   }
 
   @Test

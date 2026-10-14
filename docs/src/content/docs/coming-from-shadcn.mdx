@@ -91,6 +91,13 @@ wrap it in a `div` with `px-4`. `side="right"` and `"left"` are the end and the 
 right-to-left page. `<sl:sheet-footer close-button>` adds an outline Close button, as the dialog footer does. With
 reduced motion the sheet only fades. See [Sheet](../components/sheet/).
 
+### Dialog and sheet bodies: an addition for htmx
+
+shadcn has no body part. `<sl:dialog-body>` and `<sl:sheet-body>` are Shadleaf's own: the content between the header
+and the footer, which scrolls by itself, and the target for htmx. A request into it opens the dialog or sheet at once,
+shows a spinner until the answer is in, and reports a failure as a toast or in the dialog. Without a body, the content
+goes straight into the dialog, as in shadcn. See [Dialog](../components/dialog/#loaded-into-the-dialog-a-body).
+
 ### Dropdown menu, popover and tooltip are popovers
 
 The three are the browser's [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), placed next to

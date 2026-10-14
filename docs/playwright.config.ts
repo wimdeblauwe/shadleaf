@@ -23,7 +23,7 @@ export default defineConfig({
     // breadcrumb's menu depend on how each browser moves the focus. htmx's HX-Redirect after an expired session is a
     // navigation each browser makes itself.
     {name: 'firefox', use: {...devices['Desktop Firefox']},
-      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|table-scroll|sidebar|sidebar-header|breadcrumb|user-menu|session-expiry)\.spec\.ts/},
+      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|dialog-body|table-scroll|sidebar|sidebar-header|breadcrumb|user-menu|session-expiry)\.spec\.ts/},
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

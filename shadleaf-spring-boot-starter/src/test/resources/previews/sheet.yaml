@@ -1,6 +1,6 @@
 # Scenarios for the sheet's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
 component: sheet
-parts: [sheet-header, sheet-title, sheet-description, sheet-footer]
+parts: [sheet-header, sheet-title, sheet-description, sheet-body, sheet-footer]
 scenarios:
   - id: default
     title: Sheet
@@ -78,5 +78,51 @@ scenarios:
           <sl:sheet-title>Notifications</sl:sheet-title>
           <sl:sheet-description>You have no unread messages.</sl:sheet-description>
         </sl:sheet-header>
+        <sl:sheet-footer close-button/>
+      </sl:sheet>
+
+  - id: body
+    title: Body
+    description: sl:sheet-body scrolls by itself, so the header and the footer stay in view.
+    source: |-
+      <sl:button variant="outline" commandfor="sheet-member" command="show-modal">Open</sl:button>
+      <sl:sheet id="sheet-member">
+        <sl:sheet-header>
+          <sl:sheet-title>Ada Lovelace</sl:sheet-title>
+          <sl:sheet-description>Member since 1843.</sl:sheet-description>
+        </sl:sheet-header>
+        <sl:sheet-body>
+          <sl:field-group>
+            <sl:field for="sheet-member-name">
+              <sl:field-label>Name</sl:field-label>
+              <sl:input name="name" value="Ada Lovelace"/>
+            </sl:field>
+            <sl:field for="sheet-member-email">
+              <sl:field-label>Email</sl:field-label>
+              <sl:input name="email" type="email" value="ada@example.com"/>
+            </sl:field>
+            <sl:field for="sheet-member-notes">
+              <sl:field-label>Notes</sl:field-label>
+              <sl:textarea name="notes" rows="12">Wrote the first program for the Analytical Engine.</sl:textarea>
+            </sl:field>
+          </sl:field-group>
+        </sl:sheet-body>
+        <sl:sheet-footer close-button>
+          <sl:button type="submit">Save changes</sl:button>
+        </sl:sheet-footer>
+      </sl:sheet>
+
+  - id: loading
+    title: Loading
+    description: >-
+      While an htmx request into the body runs, a spinner covers it. Here the body keeps data-loading, which the
+      script sets and removes.
+    source: |-
+      <sl:button variant="outline" commandfor="sheet-loading" command="show-modal">Open</sl:button>
+      <sl:sheet id="sheet-loading">
+        <sl:sheet-header>
+          <sl:sheet-title>Member details</sl:sheet-title>
+        </sl:sheet-header>
+        <sl:sheet-body data-loading="true"/>
         <sl:sheet-footer close-button/>
       </sl:sheet>

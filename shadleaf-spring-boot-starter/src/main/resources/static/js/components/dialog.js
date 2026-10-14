@@ -6,13 +6,21 @@
   - data-show-modal (the open prop): open as a modal as soon as it is on the page, e.g. after an htmx swap;
   - the sl-dialog-close event, e.g. from an htmx HX-Trigger response header on a request from inside the dialog, closes
     it;
-  - it closes before htmx saves the page in its history cache, which would otherwise restore it open but not modal.
+  - it closes before htmx saves the page in its history cache, which would otherwise restore it open but not modal;
+  - a body (sl:dialog-body, sl:sheet-body) is an htmx target that opens the dialog and shows the request's progress
+    and errors (see dialog-body.js).
 */
+import {watchBody} from '../dialog-body.js';
+
 const supportsCommands = 'commandForElement' in HTMLButtonElement.prototype;
 const supportsClosedBy = 'closedBy' in HTMLDialogElement.prototype;
 
 export default function dialog() {
   return {
+    // Declared, so init() sets it here: Alpine puts a property no scope has on the outermost x-data, where every
+    // component nested in that one (all of them, inside sl:sidebar-provider) would share it.
+    cleanups: [],
+
     init() {
       const dialog = this.$el;
       const cleanups = [];
@@ -34,6 +42,7 @@ export default function dialog() {
       if (!supportsClosedBy && dialog.getAttribute('closedby') === 'any') {
         closeOnClickOutside(dialog, listen);
       }
+      watchBody(dialog, listen);
       this.cleanups = cleanups;
 
       if (dialog.hasAttribute('data-show-modal') && !dialog.open) {

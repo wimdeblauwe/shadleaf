@@ -566,6 +566,19 @@
     @apply gap-2;
   }
 
+  /* A dialog's or sheet's body: the error above the content, and the loading layer over it. */
+  :is(.dialog-body, .sheet-body) {
+    @apply gap-4;
+  }
+
+  :is(.dialog-body-loading, .sheet-body-loading) {
+    @apply bg-popover/70 text-muted-foreground;
+  }
+
+  :is(.dialog-body-spinner, .sheet-body-spinner) {
+    @apply size-6;
+  }
+
   /* Alert dialog */
   .alert-dialog {
     @apply max-w-xs gap-6 rounded-xl bg-popover p-6 text-sm text-popover-foreground ring-1 ring-foreground/10
@@ -622,8 +635,13 @@
   }
 
   /* Content between the header and the footer lines up with them (shadcn's examples give it px-4). */
-  .sheet > :not(.sheet-header, .sheet-footer, .sheet-close) {
+  .sheet > :not(.sheet-header, .sheet-footer, .sheet-close, .sheet-body),
+  .sheet-body-content {
     @apply px-4;
+  }
+
+  .sheet-body-error {
+    @apply mx-4;
   }
 
   .sheet-close {

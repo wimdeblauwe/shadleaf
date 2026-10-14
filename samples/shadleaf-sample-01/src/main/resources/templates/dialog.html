@@ -3,13 +3,13 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sl="https://shadleaf.dev/sl"
       xmlns:hx="http://www.w3.org/1999/xhtml"
-      th:replace="~{layout/main :: layout('Dialog', ~{::breadcrumb}, ~{::#page-content})}">
+      th:replace="~{layout/main :: layout('Dialog &amp; Sheet', ~{::breadcrumb}, ~{::#page-content})}">
 <body>
 <!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
 <th:block th:ref="breadcrumb">
   <sl:breadcrumb-item>Interactive</sl:breadcrumb-item>
   <sl:breadcrumb-separator/>
-  <sl:breadcrumb-item><sl:breadcrumb-page>Dialog</sl:breadcrumb-page></sl:breadcrumb-item>
+  <sl:breadcrumb-item><sl:breadcrumb-page>Dialog &amp; Sheet</sl:breadcrumb-page></sl:breadcrumb-item>
 </th:block>
 <div id="page-content">
   <h2>On the page</h2>
@@ -38,6 +38,42 @@
   </sl:dialog>
 
   <h2>From the server, with htmx</h2>
+  <p>The team below is managed with htmx. Each member has a menu of row actions; the buttons above the table act on the
+    whole team. Everything posts with htmx and swaps only what changed.</p>
+
+  <h3>Dialogs</h3>
+  <ul class="explainer">
+    <li><strong>Edit</strong> (row menu) loads the member's form into the body of a dialog that is in the page
+      (<code>&lt;sl:dialog-body&gt;</code>): the dialog opens at once, with a spinner until the form is in and the focus
+      on its first field. With errors the form comes back with them and the dialog stays open; after a valid save
+      <code>HX-Trigger: sl-dialog-close</code> closes it, the row is updated and the focus is back on the row's menu
+      button.</li>
+    <li><strong>Delete</strong> (row menu) fetches an alert dialog into <code>#modal-root</code>, where
+      <code>&lt;sl:alert-dialog open&gt;</code> shows it, with the focus on Cancel, which sends nothing. Its Delete
+      button sends <code>hx-delete</code>: the response closes the alert dialog, shows a toast
+      (<code>HX-Trigger: sl-toast</code>), removes the row and moves the focus to the next row's menu button.</li>
+  </ul>
+
+  <h3>Sheets</h3>
+  <ul class="explainer">
+    <li><strong>Details</strong> (row menu) loads the member into the body of a sheet that is in the page
+      (<code>&lt;sl:sheet-body&gt;</code>): the sheet opens at once and shows a spinner until the answer is in. The
+      server takes a second to answer, and fails for Grace Hopper: then the sheet closes and a toast says the member
+      could not be loaded.</li>
+    <li><strong>Invite member</strong> opens a sheet whose form is in the page. It posts with htmx and swaps itself:
+      with errors the sheet stays open; after a valid invite an empty form comes back, the sheet closes, the new member
+      is added to the table and a toast, swapped in out of band, says the invitation was sent.</li>
+  </ul>
+
+  <h3>Menus and popovers</h3>
+  <ul class="explainer">
+    <li><strong>Sort by</strong> is a menu of radio items: links that load the page sorted, which marks the chosen
+      one.</li>
+    <li><strong>Rename</strong> opens a popover with a form that posts with htmx: with errors the form comes back with
+      them and the popover stays open; after a valid rename <code>HX-Trigger: sl-popover-close</code> closes it and the
+      name is updated.</li>
+  </ul>
+
   <div class="team-name">
     <h3 th:replace="~{dialog :: team-name}">Team Shadleaf</h3>
     <!--/* A popover with a form that swaps itself; a valid rename closes it with HX-Trigger: sl-popover-close. */-->
@@ -52,21 +88,6 @@
       </sl:popover-content>
     </sl:popover>
   </div>
-  <p>Rename opens a popover with a form that posts with htmx: with errors the form comes back with them and the popover
-    stays open; after a valid rename the response header <code>HX-Trigger: sl-popover-close</code> closes it and the
-    name is updated.</p>
-  <p>Each member has a menu of row actions. Edit fetches a dialog into <code>#modal-root</code>, and
-    <code>&lt;sl:dialog open&gt;</code> shows it. Save posts the form with htmx: with errors the form comes back with
-    them and the dialog stays open; after a valid save the response header <code>HX-Trigger: sl-dialog-close</code>
-    closes it and the row is updated, with the focus back on the row's menu button.</p>
-  <p>Delete fetches an alert dialog the same way. Its Delete button sends <code>hx-delete</code>; the response closes
-    the alert dialog with the same event, shows a toast saying what happened (<code>HX-Trigger: sl-toast</code>),
-    removes the row and moves the focus to the next row's menu button. Cancel, which has the focus when it opens, sends
-    nothing.</p>
-  <p>Sort by is a menu of radio items: links that load the page sorted, which marks the chosen one. Invite member opens
-    a sheet that is in the page. Its form posts with htmx and swaps itself: with errors the sheet stays open; after a
-    valid invite an empty form comes back, the sheet closes, the new member is added to the table and a toast, swapped
-    in out of band, says the invitation was sent.</p>
   <div class="row">
     <sl:dropdown-menu id="sort-members">
       <sl:dropdown-menu-trigger variant="outline">
@@ -107,6 +128,29 @@
       <sl:button type="submit" form="invite-member-form">Send invitation</sl:button>
     </sl:sheet-footer>
   </sl:sheet>
+
+  <!--/* The row menus' Details and Edit load into these bodies: #member-details-body and #edit-member-body. */-->
+  <sl:sheet id="member-details">
+    <sl:sheet-header>
+      <sl:sheet-title>Member details</sl:sheet-title>
+    </sl:sheet-header>
+    <sl:sheet-body>
+      <sl:slot name="error">The member could not be loaded.</sl:slot>
+    </sl:sheet-body>
+    <sl:sheet-footer close-button/>
+  </sl:sheet>
+
+  <sl:dialog id="edit-member">
+    <sl:dialog-header>
+      <sl:dialog-title>Edit member</sl:dialog-title>
+      <sl:dialog-description>Changes are saved when you click Save.</sl:dialog-description>
+    </sl:dialog-header>
+    <sl:dialog-body/>
+    <sl:dialog-footer>
+      <sl:button variant="outline" commandfor="edit-member" command="close">Cancel</sl:button>
+      <sl:button type="submit" form="edit-member-form">Save</sl:button>
+    </sl:dialog-footer>
+  </sl:dialog>
 </div>
 
 <!--/* One row; hx-swap-oob when it is the out-of-band update after a save (member-row-oob), and autofocus on its menu
@@ -135,7 +179,10 @@
           <sl:icon name="ellipsis"/>
         </sl:dropdown-menu-trigger>
         <sl:dropdown-menu-content align="end">
-          <sl:dropdown-menu-item hx:get="@{/dialog/members/{id}/edit(id=${member.id})}" hx-target="#modal-root">
+          <sl:dropdown-menu-item hx:get="@{/dialog/members/{id}(id=${member.id})}" hx-target="#member-details-body">
+            <sl:icon name="user"/>Details
+          </sl:dropdown-menu-item>
+          <sl:dropdown-menu-item hx:get="@{/dialog/members/{id}/edit(id=${member.id})}" hx-target="#edit-member-body">
             <sl:icon name="pencil"/>Edit
           </sl:dropdown-menu-item>
           <sl:dropdown-menu-item as="a" th:href="|mailto:${member.email}|">
@@ -204,30 +251,33 @@
   <h3 th:replace="~{dialog :: team-name-oob}"></h3>
 </th:block>
 
-<!--/* The dialog htmx fetches. Only the form swaps itself, so the dialog stays open while it has errors. */-->
-<sl:dialog th:fragment="edit-dialog" id="edit-member" open>
-  <sl:dialog-header>
-    <sl:dialog-title>Edit member</sl:dialog-title>
-    <sl:dialog-description>Changes are saved when you click Save.</sl:dialog-description>
-  </sl:dialog-header>
-  <form th:replace="~{dialog :: edit-form}"></form>
-  <sl:dialog-footer>
-    <sl:button variant="outline" commandfor="edit-member" command="close">Cancel</sl:button>
-    <sl:button type="submit" form="edit-member-form">Save</sl:button>
-  </sl:dialog-footer>
-</sl:dialog>
+<!--/* What Details loads into the member-details sheet. */-->
+<div th:fragment="member-details" class="member-details">
+  <sl:avatar size="lg">
+    <sl:avatar-image th:src="${member.photoUrl}"/>
+    <sl:avatar-fallback>[[${member.initials()}]]</sl:avatar-fallback>
+  </sl:avatar>
+  <dl>
+    <dt>Name</dt>
+    <dd th:text="${member.name}">Ada Lovelace</dd>
+    <dt>Email</dt>
+    <dd><a th:href="|mailto:${member.email}|" th:text="${member.email}">ada@example.com</a></dd>
+  </dl>
+</div>
 
+<!--/* What Edit loads into the edit-member dialog's body. It swaps only itself, so the dialog stays open while it has
+  errors. Its fields have ids of their own: the invite form on the same page has a name and an email too. */-->
 <form th:fragment="edit-form" id="edit-member-form" class="dialog-form" th:object="${memberForm}"
       th:action="@{/dialog/members/{id}(id=${member.id})}" method="post" novalidate
       hx:post="@{/dialog/members/{id}(id=${member.id})}" hx-target="this" hx-swap="outerHTML">
   <sl:form-errors autofocus/>
   <sl:field-group>
-    <sl:field th:field="*{name}">
+    <sl:field th:field="*{name}" for="edit-member-name">
       <sl:field-label>Name</sl:field-label>
       <sl:input/>
       <sl:field-error/>
     </sl:field>
-    <sl:field th:field="*{email}">
+    <sl:field th:field="*{email}" for="edit-member-email">
       <sl:field-label>Email</sl:field-label>
       <sl:input type="email"/>
       <sl:field-error/>

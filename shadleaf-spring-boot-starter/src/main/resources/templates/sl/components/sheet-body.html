@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The content of a <code>sl:sheet</code> between its header and footer, which scrolls by itself so the
+      header and footer stay in view. Its content has the id <code>&lt;id&gt;-body</code> (<code>edit-body</code>), the
+      target for htmx: a request from outside that targets it opens the sheet at once and shows a spinner until the
+      answer is swapped in; closing aborts a request still running. Left empty, it is emptied again when the sheet
+      closes, so it never shows the previous content. When a request fails, the error shows in the sheet, or, for the
+      request that opened it, as a toast (see <code>load-error</code>). Needs Alpine.</sl:description>
+    <sl:prop name="load-error" default="toast" values="toast inline">What happens when the request that opened the
+      sheet fails: <code>toast</code> closes it and shows the error as a toast (shown in the sheet when the page has
+      no <code>sl:toaster</code>); <code>inline</code> keeps it open with the error in it. A failed request from
+      inside (a form) always shows the error in the sheet, so nothing typed is lost.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The error is an alert (its own markup, as sl:form-errors'), hidden until a request fails; the error slot
+  replaces its message. The content is what htmx targets; data-clear-on-close when the template gave it nothing.
+  The loading layer covers the content while a request runs (the spinner shows after a moment, so a quick answer
+  does not flicker). */-->
+<div th:fragment="sheet-body"
+     class="sheet-body"
+     th:attr="data-on-load-error=${props.unlessDefault('load-error')}"
+     sl:attrs><div class="alert sheet-body-error" data-variant="destructive" role="alert" hidden><sl:icon
+    name="circle-alert"/><div class="alert-title"><sl:slot name="error">[[#{sl.dialog.error}]]</sl:slot></div></div><div
+    class="sheet-body-content"
+    th:attr="id=${slDialogId != null ? slDialogId + '-body' : null},
+             data-clear-on-close=${slots.hasDefault() ? null : 'true'}"><sl:slot/></div><div
+    class="sheet-body-loading" aria-hidden="true"><sl:icon name="loader-circle" class="sheet-body-spinner"/></div></div>
+</body>
+</html>

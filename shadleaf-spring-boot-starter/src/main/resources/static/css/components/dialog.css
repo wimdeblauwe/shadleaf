@@ -35,4 +35,47 @@
   .dialog-footer {
     @apply flex flex-col-reverse sm:flex-row sm:justify-end;
   }
+
+  .dialog:has(> .dialog-body) {
+    @apply open:flex flex-col;
+  }
+
+  /*
+    The body: what lies between the header and the footer scrolls by itself. The dialog is a flex column then, and
+    only the body shrinks to keep the dialog on the screen. Its content reaches a little past the body on every side
+    (padding, undone by a negative margin), so the focus ring of a control at its edge is not cut off by the
+    scrolling.
+    While a request into it runs (data-loading) the loading layer covers the content and takes the clicks at once; the
+    spinner fades in only after a moment, so a quick answer does not flicker. It fades from nothing also when the dialog
+    opens with the request (@starting-style: it was not displayed before). The error alert is hidden until a
+    request fails: [hidden] needs a rule of its own, as the alert is a grid.
+  */
+  .dialog-body {
+    @apply relative flex min-h-0 flex-1 flex-col;
+  }
+
+  .dialog-body-content {
+    @apply min-h-0 flex-1 overflow-y-auto -m-1 p-1;
+  }
+
+  .dialog-body-error[hidden] {
+    @apply hidden;
+  }
+
+  .dialog-body-loading {
+    @apply pointer-events-none absolute inset-0 grid place-items-center opacity-0 transition-opacity duration-150;
+  }
+
+  /* Room for the spinner while a request fills an empty body. */
+  .dialog-body[data-loading] {
+    @apply min-h-24;
+  }
+
+  .dialog-body[data-loading] > .dialog-body-loading {
+    @apply pointer-events-auto opacity-100 delay-200 starting:opacity-0;
+  }
+
+  .dialog-body[data-loading] .dialog-body-spinner {
+    @apply animate-spin motion-reduce:[animation-duration:2.5s];
+  }
 }

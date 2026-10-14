@@ -24,6 +24,8 @@ class DialogApprovalTest {
         "<sl:dialog-title level=\"3\">Edit profile</sl:dialog-title>",
         "<sl:dialog-description>Make changes to your profile.</sl:dialog-description>",
         "<sl:dialog-footer>Footer</sl:dialog-footer>",
+        "<sl:dialog id=\"d4\"><sl:dialog-body/></sl:dialog>",
+        "<sl:dialog id=\"d5\"><sl:dialog-body load-error=\"inline\"><p>Content</p></sl:dialog-body></sl:dialog>",
         """
             <sl:dialog id="edit-profile" class="wide">
               <sl:dialog-header>

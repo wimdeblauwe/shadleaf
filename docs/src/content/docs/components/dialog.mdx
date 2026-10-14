@@ -133,6 +133,84 @@ dialog as a modal. A dialog removed from the page while it is open, by any swap,
 inertness with it. Before htmx saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
 the back button never brings one back.
 
+## Loaded into the dialog: a body
+
+The dialog above appears only once the server has answered, and a slow answer leaves the user waiting with nothing to
+show for the click. `<sl:dialog-body>` turns this around: the dialog is in the page, closed, and its body is what htmx
+loads. A request that targets the body opens the dialog at once, and a spinner covers the body until the answer is
+swapped in.
+
+```html
+<!-- The button, in each row -->
+<sl:button hx:get="@{/members/{id}/edit(id=${member.id})}" hx-target="#edit-member-body">Edit</sl:button>
+
+<!-- The dialog, once on the page -->
+<sl:dialog id="edit-member">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit member</sl:dialog-title>
+  </sl:dialog-header>
+  <sl:dialog-body/>
+  <sl:dialog-footer>
+    <sl:button variant="outline" commandfor="edit-member" command="close">Cancel</sl:button>
+    <sl:button type="submit" form="edit-member-form">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+The body's content has the id `<dialog id>-body`; the controller returns only what goes in it, here the form of the
+previous section (`members :: edit-form`). Once it is in, the focus moves to its first field (or to one with
+`autofocus`), as it would have had the form been there when the dialog opened. Saving works as before: with errors the
+form swaps itself, and `HX-Trigger: sl-dialog-close` closes the dialog.
+
+<ComponentPreview id="dialog--loading" />
+
+What the body does with a request that targets it (or an element inside it):
+
+- **A request from outside opens the dialog**, as a modal, at once; focus returns to the button when it closes. A
+  request from inside a closed dialog, such as content loaded with `hx-trigger="load"`, opens nothing.
+- **The spinner shows after a moment** (200 ms), so a quick answer does not flicker. The body takes no clicks while
+  the request runs, and a second request into it is not sent: clicking Save twice saves once. The content has
+  `aria-busy="true"` meanwhile.
+- **Closing the dialog aborts a request still running**, so a slow answer never fills a dialog the user has left.
+- **An empty body is emptied again** once the dialog has closed, so the next member's dialog never shows the previous
+  member while it loads. Content you put in the body in the page stays.
+- **The header and the footer stay in view.** The body scrolls by itself when its content is taller than the screen.
+
+### When a request fails
+
+When the request that opened the dialog fails (an error status, no connection, a timeout), the dialog closes and the
+error is shown as a [toast](../toast/). Without an `<sl:toaster>` on the page, or with `load-error="inline"`, the dialog
+stays open and the error is shown in it, above the content. A failed request from inside the dialog, such as a save,
+always shows the error in the dialog, so nothing the user typed is lost; the next request hides it.
+
+The message is "Something went wrong. Please try again." (`sl.dialog.error` in your `messages.properties`). The
+`error` slot replaces it for one dialog:
+
+```html
+<sl:dialog-body>
+  <sl:slot name="error">The member could not be loaded.</sl:slot>
+</sl:dialog-body>
+```
+
+Validation errors are no failure: return the form with its errors and a success status, as above.
+
+## Width
+
+The skin decides the dialog's width (at most `28rem` in vega). Give the dialog a class and set its width in your own
+stylesheet, loaded after the library's: the library's rules sit in a cascade layer, so yours win.
+
+```html
+<sl:dialog id="edit-member" class="dialog-wide">...</sl:dialog>
+```
+
+```css
+.dialog-wide {
+  max-width: min(42rem, calc(100% - 2rem));
+}
+```
+
+If you compile Tailwind yourself (the `embedded` bundle), a utility class does the same: `class="sm:max-w-2xl"`.
+
 ## Attributes
 
 ### sl:dialog
@@ -151,6 +229,10 @@ the back button never brings one back.
 
 <ComponentAttributes component="dialog-description" />
 
+### sl:dialog-body
+
+<ComponentAttributes component="dialog-body" />
+
 ### sl:dialog-footer
 
 <ComponentAttributes component="dialog-footer" />
@@ -161,8 +243,8 @@ A small Alpine component, `slDialog`, adds what the browser's `<dialog>` cannot 
 `<dialog class="dialog" x-data="slDialog">`.
 
 - **Most of it works without Alpine.** Opening and closing with `commandfor`, Escape, a click outside and focus
-  returning to the button are the browser's. Alpine is needed for `open`, for the `sl-dialog-close` event, and for
-  invoker commands and a click outside in browsers that lack them. Alpine is included by default; see
+  returning to the button are the browser's. Alpine is needed for `open`, for the `sl-dialog-close` event, for a
+  body that htmx loads, and for invoker commands and a click outside in browsers that lack them. Alpine is included by default; see
   [Alpine](../../guides/alpine/).
 - **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
   enough.

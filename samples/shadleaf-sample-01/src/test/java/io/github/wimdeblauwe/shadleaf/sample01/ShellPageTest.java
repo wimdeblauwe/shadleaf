@@ -51,7 +51,7 @@ class ShellPageTest {
         Arguments.of("/", "/", List.of("Basics", "Buttons")),
         Arguments.of("/form", "/form", List.of("Forms", "Form")),
         Arguments.of("/htmx-form", "/htmx-form", List.of("Forms", "Form with htmx")),
-        Arguments.of("/dialog", "/dialog", List.of("Interactive", "Dialog")),
+        Arguments.of("/dialog", "/dialog", List.of("Interactive", "Dialog & Sheet")),
         Arguments.of("/settings", "/settings", List.of("Interactive", "Settings")),
         Arguments.of("/settings?tab=notifications", "/settings", List.of("Interactive", "Settings")),
         Arguments.of("/people", "/people", List.of("Tables", "People")),
@@ -156,7 +156,7 @@ class ShellPageTest {
     assertThat(groups).containsExactly(
         Map.entry("Basics", List.of("Buttons")),
         Map.entry("Forms", List.of("Form", "Form with htmx")),
-        Map.entry("Interactive", List.of("Dialog", "Settings")),
+        Map.entry("Interactive", List.of("Dialog & Sheet", "Settings")),
         Map.entry("Tables", List.of("People", "All people", "With multiselect", "Load more")));
     // People is a collapsible group: its button is the summary, the three pages its sub-menu.
     Element people = sidebar.selectFirst("details.sidebar-menu-collapsible");

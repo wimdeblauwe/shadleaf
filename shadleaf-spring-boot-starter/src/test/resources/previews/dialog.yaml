@@ -1,6 +1,6 @@
 # Scenarios for the dialog's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
 component: dialog
-parts: [dialog-header, dialog-title, dialog-description, dialog-footer]
+parts: [dialog-header, dialog-title, dialog-description, dialog-body, dialog-footer]
 scenarios:
   - id: default
     title: Dialog
@@ -43,5 +43,21 @@ scenarios:
           <sl:dialog-description>Anyone who has this link will be able to view this.</sl:dialog-description>
         </sl:dialog-header>
         <sl:input aria-label="Link" value="https://ui.shadcn.com/docs/installation" readonly/>
+        <sl:dialog-footer close-button/>
+      </sl:dialog>
+
+  - id: loading
+    title: Loading
+    description: >-
+      While an htmx request into sl:dialog-body runs, a spinner covers it. Here the body keeps data-loading, which the
+      script sets and removes.
+    source: |-
+      <sl:button variant="outline" commandfor="dialog-loading" command="show-modal">Edit member</sl:button>
+      <sl:dialog id="dialog-loading">
+        <sl:dialog-header>
+          <sl:dialog-title>Edit member</sl:dialog-title>
+          <sl:dialog-description>Changes are saved when you click Save.</sl:dialog-description>
+        </sl:dialog-header>
+        <sl:dialog-body data-loading="true"/>
         <sl:dialog-footer close-button/>
       </sl:dialog>

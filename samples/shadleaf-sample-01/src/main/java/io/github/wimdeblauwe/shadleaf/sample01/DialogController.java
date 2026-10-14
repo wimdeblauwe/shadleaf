@@ -6,6 +6,7 @@ import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxReswap;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import io.github.wimdeblauwe.shadleaf.toast.Toast;
 import jakarta.validation.Valid;
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -31,13 +32,16 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * The dialog page. A dialog on the page itself, opened by a button, and an edit dialog per team member that htmx
- * fetches into {@code #modal-root}, where {@code <sl:dialog open>} shows it as a modal. The form in it swaps only
- * itself: with errors the dialog stays open, with the focus on the first field with an error. A valid save closes the
- * dialog through {@code HX-Trigger: sl-dialog-close}, swaps nothing where the form is, and updates the member's row out
- * of band.
+ * The dialog page. A dialog on the page itself, opened by a button. Details loads a team member into the body of a
+ * sheet in the page ({@code #member-details-body}), which opens the sheet at once and shows a spinner until the answer
+ * is in; the answer takes a second, and fails for Grace Hopper, so the sheet closes and a toast shows its error
+ * message. Edit loads the member's form into the body of a dialog in the page the same way. The form swaps only itself:
+ * with errors the dialog stays open, with the focus on the first field with an error. A valid save closes the dialog
+ * through {@code HX-Trigger: sl-dialog-close}, swaps nothing where the form is, and updates the member's row out of
+ * band.
  * <p>
- * Delete fetches an alert dialog the same way; its Delete button sends {@code hx-delete}, and the answer closes it with
+ * Delete fetches an alert dialog into {@code #modal-root}, where {@code <sl:alert-dialog open>} shows it as a modal;
+ * its Delete button sends {@code hx-delete}, and the answer closes it with
  * the same event, shows a toast ({@code HX-Trigger: sl-toast}), removes the row and moves the focus to the next row.
  * Invite member opens a sheet in the page, whose form swaps itself too; a valid invite answers with an empty form,
  * closes the sheet, appends the new row and shows a toast, both out of band.
@@ -55,6 +59,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class DialogController {
 
   private static final Map<String, String> SORT_OPTIONS = sortOptions();
+  private static final Duration DETAILS_DELAY = Duration.ofSeconds(1);
   private static final Map<String, Comparator<Member>> SORT_ORDERS = Map.of(
       "added", Comparator.comparingLong(Member::id),
       "name", Comparator.comparing(Member::name, String.CASE_INSENSITIVE_ORDER),
@@ -95,12 +100,25 @@ public class DialogController {
   }
 
   @HxRequest
+  @GetMapping("/dialog/members/{id}")
+  public String details(@PathVariable long id, Model model) throws InterruptedException {
+    Member member = member(id);
+    // A slow server, so the sheet's spinner shows; and one that fails for Grace, so its error toast does.
+    Thread.sleep(DETAILS_DELAY.toMillis());
+    if (id == 2) {
+      throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+    }
+    model.addAttribute("member", member);
+    return "dialog :: member-details";
+  }
+
+  @HxRequest
   @GetMapping("/dialog/members/{id}/edit")
   public String edit(@PathVariable long id, Model model) {
     Member member = member(id);
     model.addAttribute("member", member);
     model.addAttribute("memberForm", MemberForm.of(member));
-    return "dialog :: edit-dialog";
+    return "dialog :: edit-form";
   }
 
   @HxRequest

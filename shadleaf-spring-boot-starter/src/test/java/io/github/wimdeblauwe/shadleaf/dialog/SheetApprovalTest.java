@@ -28,6 +28,8 @@ class SheetApprovalTest {
         "<sl:sheet-title level=\"3\">Edit profile</sl:sheet-title>",
         "<sl:sheet-description>Make changes to your profile.</sl:sheet-description>",
         "<sl:sheet-footer>Footer</sl:sheet-footer>",
+        "<sl:sheet id=\"s8\"><sl:sheet-body/></sl:sheet>",
+        "<sl:sheet id=\"s9\"><sl:sheet-body load-error=\"inline\"><p>Content</p></sl:sheet-body></sl:sheet>",
         """
             <sl:sheet id="edit-profile">
               <sl:sheet-header>

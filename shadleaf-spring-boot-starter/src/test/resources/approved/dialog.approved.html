@@ -32,6 +32,42 @@
 <!-- <sl:dialog-footer>Footer</sl:dialog-footer> -->
 <div class="dialog-footer">Footer</div>
 
+<!-- <sl:dialog id="d4"><sl:dialog-body/></sl:dialog> -->
+<dialog class="dialog" id="d4" closedby="any" x-data="slDialog">
+  <div class="dialog-body">
+    <div class="alert dialog-body-error" data-variant="destructive" role="alert" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="alert-title">Something went wrong. Please try again.</div>
+    </div>
+    <div class="dialog-body-content" id="d4-body" data-clear-on-close="true"></div>
+    <div class="dialog-body-loading" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon dialog-body-spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </div>
+  </div>
+  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d4" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:dialog id="d5"><sl:dialog-body load-error="inline"><p>Content</p></sl:dialog-body></sl:dialog> -->
+<dialog class="dialog" id="d5" closedby="any" x-data="slDialog">
+  <div class="dialog-body" data-on-load-error="inline">
+    <div class="alert dialog-body-error" data-variant="destructive" role="alert" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="alert-title">Something went wrong. Please try again.</div>
+    </div>
+    <div class="dialog-body-content" id="d5-body">
+      <p>Content</p>
+    </div>
+    <div class="dialog-body-loading" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon dialog-body-spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </div>
+  </div>
+  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d5" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
 <!-- <sl:dialog id="edit-profile" class="wide">
   <sl:dialog-header>
     <sl:dialog-title>Edit profile</sl:dialog-title>

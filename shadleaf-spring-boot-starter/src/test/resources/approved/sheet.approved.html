@@ -64,6 +64,42 @@
 <!-- <sl:sheet-footer>Footer</sl:sheet-footer> -->
 <div class="sheet-footer">Footer</div>
 
+<!-- <sl:sheet id="s8"><sl:sheet-body/></sl:sheet> -->
+<dialog class="sheet" id="s8" closedby="any" x-data="slDialog">
+  <div class="sheet-body">
+    <div class="alert sheet-body-error" data-variant="destructive" role="alert" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="alert-title">Something went wrong. Please try again.</div>
+    </div>
+    <div class="sheet-body-content" id="s8-body" data-clear-on-close="true"></div>
+    <div class="sheet-body-loading" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sheet-body-spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </div>
+  </div>
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="s8" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
+<!-- <sl:sheet id="s9"><sl:sheet-body load-error="inline"><p>Content</p></sl:sheet-body></sl:sheet> -->
+<dialog class="sheet" id="s9" closedby="any" x-data="slDialog">
+  <div class="sheet-body" data-on-load-error="inline">
+    <div class="alert sheet-body-error" data-variant="destructive" role="alert" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <div class="alert-title">Something went wrong. Please try again.</div>
+    </div>
+    <div class="sheet-body-content" id="s9-body">
+      <p>Content</p>
+    </div>
+    <div class="sheet-body-loading" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sheet-body-spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </div>
+  </div>
+  <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="s9" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </button>
+</dialog>
+
 <!-- <sl:sheet id="edit-profile">
   <sl:sheet-header>
     <sl:sheet-title>Edit profile</sl:sheet-title>
