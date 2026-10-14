@@ -1,6 +1,14 @@
 // @ts-check
 import {defineConfig} from 'astro/config';
 import starlight from '@astrojs/starlight';
+import {readdirSync} from 'node:fs';
+import {checkComponentGroups, componentGroups} from './src/component-groups.mjs';
+
+// Every component page must be in exactly one group of the sidebar: an explicit list would otherwise forget a new one.
+checkComponentGroups(readdirSync(new URL('./src/content/docs/components/', import.meta.url))
+    .filter(file => /\.mdx?$/.test(file))
+    .map(file => file.replace(/\.mdx?$/, ''))
+    .filter(page => page !== 'index'));
 
 // The docs are published into per-version directories of the gh-pages branch (/current/, /0.1.0/), served as a
 // GitHub project page under /shadleaf/. So `base` is the repository name plus that directory, set by the publish
@@ -31,7 +39,19 @@ export default defineConfig({
             'coding-agents',
           ],
         },
-        {label: 'Components', items: [{autogenerate: {directory: 'components'}}]},
+        {
+          label: 'Components',
+          items: [
+            {label: 'Overview', slug: 'components'},
+            ...componentGroups.map(group => ({
+              label: group.label,
+              items: [
+                ...(group.overview ? [{label: 'Overview', slug: `components/${group.overview}`}] : []),
+                ...group.pages.map(page => `components/${page}`),
+              ],
+            })),
+          ],
+        },
         {label: 'Layouts', items: [{autogenerate: {directory: 'layouts'}}]},
         {label: 'Guides', items: [{autogenerate: {directory: 'guides'}}]},
       ],

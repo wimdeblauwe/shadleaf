@@ -1,0 +1,22 @@
+---
+// The components overview: a heading per group of the sidebar, a link to the group's own overview page if it has
+// one, a card per page (title and description). The Markdown
+// copy of the page writes the same as lists (src/lib/markdown.ts).
+import {CardGrid, LinkCard} from '@astrojs/starlight/components';
+import {componentOverview} from '../lib/component-overview';
+import {withBase} from '../lib/generated';
+---
+
+{componentOverview().map(group => (
+  <>
+    <h2 id={group.label.toLowerCase().replace(/\s+/g, '-')}>{group.label}</h2>
+    {group.overview && (
+      <p>Start with the <a href={withBase(`components/${group.overview.page}/`)}>overview</a>: {group.overview.description}</p>
+    )}
+    <CardGrid>
+      {group.pages.map(page => (
+        <LinkCard title={page.title} description={page.description} href={withBase(`components/${page.page}/`)}/>
+      ))}
+    </CardGrid>
+  </>
+))}

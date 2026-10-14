@@ -1,12 +1,17 @@
 // The llms.txt index (https://llmstxt.org): every page with its description, linking the Markdown copies, plus the
 // files holding the whole docs (llms-full.txt) or one part of them.
 import type {APIRoute} from 'astro';
-import {markdownUrl, sections, siteRoot, version} from '../lib/markdown';
+import {markdownUrl, sections, siteRoot, version, type DocsEntry} from '../lib/markdown';
 
 export const GET: APIRoute = async () => {
-  const lists = (await sections()).map(section => `## ${section.title}\n\n` + section.entries
+  const list = (entries: DocsEntry[]) => entries
       .map(entry => `- [${entry.data.title}](${markdownUrl(entry)})${entry.data.description ? ': ' + entry.data.description : ''}`)
-      .join('\n'));
+      .join('\n');
+  // Components: the overview, then a list per group.
+  const lists = (await sections()).map(section => `## ${section.title}\n\n` + (section.groups
+      ? [list(section.entries.filter(entry => entry.id === 'components')),
+        ...section.groups.map(group => `### ${group.title}\n\n${list(group.entries)}`)].filter(Boolean).join('\n\n')
+      : list(section.entries)));
   const file = (name: string) => new URL(name, siteRoot()).href;
   const text = `# Shadleaf
 

@@ -4,27 +4,40 @@
 // table a Markdown table from the same registry export, so an agent gets exactly what a reader sees.
 import {getCollection, type CollectionEntry} from 'astro:content';
 import {components, previews, themeScript} from './generated';
+import {componentOverview, layoutOverview} from './component-overview';
 
 export type DocsEntry = CollectionEntry<'docs'>;
 
-export type Section = { title: string; entries: DocsEntry[] };
+/** A part of the sidebar; Components has its groups too (src/component-groups.mjs), after the overview. */
+export type Section = { title: string; entries: DocsEntry[]; groups?: { title: string; entries: DocsEntry[] }[] };
 
 /** The pages of "Start here", in the sidebar's order (astro.config.mjs). */
 const START_HERE = ['index', 'getting-started', 'coming-from-shadcn', 'ide-completion', 'coding-agents'];
 
-/** The docs in the sidebar's order: Start here, Components (by file name), Layouts and Guides (by sidebar.order). */
+/**
+ * The docs in the sidebar's order: Start here, Components (the overview, then by group), Layouts and Guides (by
+ * sidebar.order).
+ */
 export async function sections(): Promise<Section[]> {
   const entries = await getCollection('docs');
   const startHere = START_HERE
       .map(id => entries.find(entry => entry.id === id))
       .filter((entry): entry is DocsEntry => entry !== undefined);
-  const inDirectory = (directory: string) => entries.filter(entry => entry.id.startsWith(directory + '/'));
-  const componentPages = inDirectory('components').sort((a, b) => a.id.localeCompare(b.id));
+  // A directory's pages, its overview (index.mdx, id = the directory) included.
+  const inDirectory = (directory: string) => entries.filter(entry =>
+      entry.id === directory || entry.id.startsWith(directory + '/'));
+  const overview = entries.filter(entry => entry.id === 'components');
+  const groups = componentOverview().map(group => ({
+    title: group.label,
+    entries: [...(group.overview ? [group.overview] : []), ...group.pages]
+        .map(page => entries.find(entry => entry.id === `components/${page.page}`))
+        .filter((entry): entry is DocsEntry => entry !== undefined),
+  }));
   const byOrder = (directory: string) => inDirectory(directory).sort((a, b) =>
       (a.data.sidebar?.order ?? Infinity) - (b.data.sidebar?.order ?? Infinity) || a.data.title.localeCompare(b.data.title));
   return [
     {title: 'Start here', entries: startHere},
-    {title: 'Components', entries: componentPages},
+    {title: 'Components', entries: [...overview, ...groups.flatMap(group => group.entries)], groups},
     {title: 'Layouts', entries: byOrder('layouts')},
     {title: 'Guides', entries: byOrder('guides')},
   ];
@@ -133,6 +146,13 @@ export function bodyMarkdown(entry: DocsEntry): string {
 }
 
 function convertLine(line: string, entry: DocsEntry): string {
+  if (/^\s*<ComponentOverview\s*\/>\s*$/.test(line)) {
+    return overviewMarkdown();
+  }
+  if (/^\s*<LayoutOverview\s*\/>\s*$/.test(line)) {
+    return layoutOverview().map(layout => `- [${layout.title}](${new URL(`layouts/${layout.page}.md`, siteRoot()).href})`
+        + (layout.description ? `: ${layout.description}` : '')).join('\n');
+  }
   const preview = line.match(/^\s*<ComponentPreview\s+id="([^"]+)"\s*\/>\s*$/);
   if (preview) {
     return previewMarkdown(preview[1]);
@@ -172,6 +192,17 @@ export function previewMarkdown(id: string): string {
   const title = scenario.title ? `**Example: ${scenario.title}.**` : '**Example.**';
   const description = `${title}${scenario.description ? ' ' + scenario.description : ''}`;
   return scenario.layout ? description : `${description}\n\n` + fenced('html', scenario.source);
+}
+
+/** The components overview, as ComponentOverview.astro shows it: a heading and a list of pages per group. */
+function overviewMarkdown(): string {
+  const url = (page: string) => new URL(`components/${page}.md`, siteRoot()).href;
+  return componentOverview().map(group => `## ${group.label}\n\n`
+      + (group.overview ? `Start with the [overview](${url(group.overview.page)}): ${group.overview.description}\n\n` : '')
+      + group.pages
+      .map(page => `- [${page.title}](${url(page.page)})`
+          + (page.description ? `: ${page.description}` : ''))
+      .join('\n')).join('\n\n');
 }
 
 /** One of a layout's files, as LayoutCode.astro shows it. */

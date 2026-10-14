@@ -1,0 +1,44 @@
+---
+title: Layouts
+description: Whole layout files to copy into an application, each with a page that uses it and the CSS around it, after shadcn/ui's sidebar blocks.
+sidebar:
+  label: Overview
+  order: 0
+---
+
+import LayoutOverview from '../../../components/LayoutOverview.astro';
+
+A layout is the frame every page of an application shares: the navigation, the page's header, the skip link, and the
+places where dialogs and toasts appear. In Thymeleaf it is one template, `templates/layout/main.html`, whose fragment
+every page fills in with its title and content. The layouts here are built from Shadleaf's
+[application shell](../components/application-shell/) components, most of them after one of
+[shadcn/ui's sidebar blocks](https://ui.shadcn.com/blocks/sidebar), and each one has what
+[every layout needs](../components/application-shell/#what-every-layout-needs).
+
+## What a layout page holds
+
+- **A preview**, at a desktop's width and, with the Phone switch, at a phone's. The navigation is one element for
+  both: beside the page (or in the header) from 768 px, a panel the menu button opens below that. The preview works:
+  open the menus, collapse the sidebar, open the panel.
+- **The layout**: the whole layout file, head included, ready to copy.
+- **A page**: a page that uses it. It passes its title, its content and, where the layout has a breadcrumb, the
+  breadcrumb's levels, as fragments of itself (`th:ref`), so nothing is rendered where it stands.
+- **The CSS**: what the layout needs of the application's own CSS. Shadleaf's CSS styles the components, not the page
+  around them, and has no utility classes, so the page's padding, a logo's square or a border below the header are
+  yours. It is plain CSS, without Tailwind, on Shadleaf's colour tokens, so it follows the skin and the dark theme.
+
+## Using one
+
+Copy the layout file to `src/main/resources/templates/layout/main.html` and its CSS into your stylesheet, then
+replace the example navigation with your own pages. Mark the current page with `#slNav.current`, which reads the
+request, so no controller has to tell the layout which page it is. The template is yours from then on: Shadleaf
+does not update it, and nothing in it is configuration. Which kind of layout suits an application, a sidebar or a
+header, is on the [Application shell](../components/application-shell/#which-one) page, with the htmx check a
+controller needs when the layout boosts its links.
+
+The first sample application uses a shorter [Collapses to icons](./collapses-to-icons/), the second
+[Navigation in the header](./header/).
+
+## The layouts
+
+<LayoutOverview />

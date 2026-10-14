@@ -1,0 +1,13 @@
+---
+// The layouts of the Layouts section as cards (title and description), in the sidebar's order. The Markdown copy of
+// the page writes the same as a list (src/lib/markdown.ts).
+import {CardGrid, LinkCard} from '@astrojs/starlight/components';
+import {layoutOverview} from '../lib/component-overview';
+import {withBase} from '../lib/generated';
+---
+
+<CardGrid>
+  {layoutOverview().map(layout => (
+    <LinkCard title={layout.title} description={layout.description} href={withBase(`layouts/${layout.page}/`)}/>
+  ))}
+</CardGrid>
