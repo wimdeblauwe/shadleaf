@@ -51,6 +51,8 @@ export async function expectVisibleFocus(page: Page, scope: string) {
     const style = getComputedStyle(element);
     return {
       index: element.dataset.focusIndex,
+      label: element.outerHTML.slice(0, 120),
+      scrolls: element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth,
       focusVisible: element.matches(':focus-visible'),
       outlineVisible: style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0,
       indicator: {outline: `${style.outlineStyle} ${style.outlineWidth} ${style.outlineColor}`,
@@ -63,6 +65,15 @@ export async function expectVisibleFocus(page: Page, scope: string) {
     let focused = await readFocused();
     // A date or time input has a tab stop per segment (day, month, year): tab on until focus leaves it.
     for (let extra = 0; extra < 5 && i > 0 && focused.index === String(i - 1); extra++) {
+      await page.keyboard.press('Tab');
+      focused = await readFocused();
+    }
+    // A container that scrolls can be a tab stop the browser adds (Firefox always, so the keyboard can scroll it): it
+    // needs a visible focus too. Then tab on.
+    for (let extra = 0; extra < 3 && focused.index === undefined && focused.scrolls; extra++) {
+      if (!focused.focusVisible || !(focused.outlineVisible || focused.indicator.boxShadow !== 'none')) {
+        invisible.push(`${focused.label} (scroll container)\n    focused   ${JSON.stringify(focused.indicator)}`);
+      }
       await page.keyboard.press('Tab');
       focused = await readFocused();
     }

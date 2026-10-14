@@ -4,11 +4,31 @@
   <sl:props>
     <sl:description>A list of links below a <code>sl:sidebar-menu-button</code>, indented along a line: a
       <code>ul</code> of <code>sl:sidebar-menu-sub-item</code>s. In a <code>collapsible</code>
-      <code>sl:sidebar-menu-item</code> it is what opens and closes. Hidden while the sidebar is collapsed to
-      icons.</sl:description>
+      <code>sl:sidebar-menu-item</code> it is what opens and closes. With <code>collapsible</code> of its own it opens
+      and closes by a chevron beside the menu button, which stays a link to a page of its own. Hidden while the
+      sidebar is collapsed to icons.</sl:description>
+    <sl:prop name="collapsible" type="boolean">Open and close it with a chevron at the end of the menu button (a
+      <code>summary</code>, drawn as a <code>sl:sidebar-menu-action</code>), so the menu button stays a link. The
+      chevron holds only an icon, so it needs an <code>aria-label</code> that names the sub-menu ("Playground's
+      pages"); every other attribute goes to the <code>ul</code>.</sl:prop>
+    <sl:prop name="open" type="boolean">Render a collapsible sub-menu open, for instance when it holds the current
+      page: <code>th:open="${#slNav.current('/playground')}"</code>.</sl:prop>
+    <sl:accessible-name required-when="collapsible=true"/>
   </sl:props>
 </head>
 <body>
-<ul th:fragment="sidebar-menu-sub" class="sidebar-menu-sub" sl:attrs><sl:slot/></ul>
+<!--/* Collapsible: details beside the menu button (not around it: a link cannot be in a summary). Its summary is the
+  chevron, placed as a menu action, and takes the name; the list takes the rest. */-->
+<th:block th:fragment="sidebar-menu-sub">
+  <details th:if="${props.collapsible}"
+           class="sidebar-menu-sub-collapsible"
+           th:attr="open=${props.open ? 'open' : null}"><summary
+      class="sidebar-menu-action sidebar-menu-sub-toggle"
+      sl:attrs="${attrs.only('aria-label', 'aria-labelledby')}"><sl:icon name="chevron-right"
+      class="sidebar-menu-sub-toggle-icon"/></summary><ul
+      class="sidebar-menu-sub"
+      sl:attrs="${attrs.without('aria-label', 'aria-labelledby')}"><sl:slot/></ul></details>
+  <ul th:unless="${props.collapsible}" class="sidebar-menu-sub" sl:attrs><sl:slot/></ul>
+</th:block>
 </body>
 </html>

@@ -259,4 +259,13 @@ class SidebarContentComponentTest {
           .hasNoAttribute("data-panel-only");
     }
   }
+
+  @Test
+  void anIconHiddenGroupIsMarked() {
+    assertThat(tester.render("<sl:sidebar-group icon-hidden>x</sl:sidebar-group>")).root()
+        .hasClassName("sidebar-group")
+        .hasAttribute("data-icon-hidden", "true");
+    assertThat(tester.render("<sl:sidebar-group>x</sl:sidebar-group>")).root()
+        .hasNoAttribute("data-icon-hidden");
+  }
 }

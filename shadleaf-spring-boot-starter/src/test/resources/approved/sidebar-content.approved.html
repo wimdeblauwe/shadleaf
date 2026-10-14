@@ -22,6 +22,9 @@
 <!-- <sl:sidebar-group panel-only>Content</sl:sidebar-group> -->
 <div class="sidebar-group" data-panel-only="true">Content</div>
 
+<!-- <sl:sidebar-group icon-hidden>Content</sl:sidebar-group> -->
+<div class="sidebar-group" data-icon-hidden="true">Content</div>
+
 <!-- <sl:sidebar-group id="platform"><sl:sidebar-group-label>Platform</sl:sidebar-group-label></sl:sidebar-group> -->
 <div class="sidebar-group" id="platform" role="group" aria-labelledby="platform-label">
   <div class="sidebar-group-label" id="platform-label">Platform</div>
@@ -237,6 +240,46 @@
 
 <!-- <sl:sidebar-menu-sub>Items</sl:sidebar-menu-sub> -->
 <ul class="sidebar-menu-sub">Items</ul>
+
+<!-- <sl:sidebar-menu-sub collapsible aria-label="Playground's pages">Items</sl:sidebar-menu-sub> -->
+<details class="sidebar-menu-sub-collapsible">
+  <summary class="sidebar-menu-action sidebar-menu-sub-toggle" aria-label="Playground's pages">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-menu-sub-toggle-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </summary>
+  <ul class="sidebar-menu-sub">Items</ul>
+</details>
+
+<!-- <sl:sidebar-menu-sub collapsible open aria-label="Playground's pages">Items</sl:sidebar-menu-sub> -->
+<details class="sidebar-menu-sub-collapsible" open>
+  <summary class="sidebar-menu-action sidebar-menu-sub-toggle" aria-label="Playground's pages">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-menu-sub-toggle-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </summary>
+  <ul class="sidebar-menu-sub">Items</ul>
+</details>
+
+<!-- <sl:sidebar-group id="build" collapsible open>
+  <sl:sidebar-group-label>Build</sl:sidebar-group-label>
+  <sl:sidebar-group-content>Menu</sl:sidebar-group-content>
+</sl:sidebar-group> -->
+<div class="sidebar-group" id="build" role="group" aria-labelledby="build-label">
+  <details class="sidebar-group-collapsible" open>
+    <summary class="sidebar-group-label" id="build-label">
+      Build
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-group-label-chevron" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </summary>
+    <div class="sidebar-group-content">Menu</div>
+  </details>
+</div>
+
+<!-- <sl:sidebar-group id="build" collapsible><sl:sidebar-group-label>Build</sl:sidebar-group-label></sl:sidebar-group> -->
+<div class="sidebar-group" id="build" role="group" aria-labelledby="build-label">
+  <details class="sidebar-group-collapsible">
+    <summary class="sidebar-group-label" id="build-label">
+      Build
+      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon sidebar-group-label-chevron" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </summary>
+  </details>
+</div>
 
 <!-- <sl:sidebar-menu-sub-item>Button</sl:sidebar-menu-sub-item> -->
 <li class="sidebar-menu-sub-item">Button</li>

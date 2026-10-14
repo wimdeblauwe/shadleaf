@@ -25,6 +25,7 @@ class SidebarContentApprovalTest {
         "<sl:sidebar-separator/>",
         "<sl:sidebar-group>Content</sl:sidebar-group>",
         "<sl:sidebar-group panel-only>Content</sl:sidebar-group>",
+        "<sl:sidebar-group icon-hidden>Content</sl:sidebar-group>",
         "<sl:sidebar-group id=\"platform\"><sl:sidebar-group-label>Platform</sl:sidebar-group-label></sl:sidebar-group>",
         "<sl:sidebar-group-label>Platform</sl:sidebar-group-label>",
         "<sl:sidebar-group-action aria-label=\"Add project\"><sl:icon name=\"plus\"/></sl:sidebar-group-action>",
@@ -86,6 +87,14 @@ class SidebarContentApprovalTest {
               </sl:sidebar-menu-sub>
             </sl:sidebar-menu-item>""",
         "<sl:sidebar-menu-sub>Items</sl:sidebar-menu-sub>",
+        "<sl:sidebar-menu-sub collapsible aria-label=\"Playground's pages\">Items</sl:sidebar-menu-sub>",
+        "<sl:sidebar-menu-sub collapsible open aria-label=\"Playground's pages\">Items</sl:sidebar-menu-sub>",
+        """
+            <sl:sidebar-group id="build" collapsible open>
+              <sl:sidebar-group-label>Build</sl:sidebar-group-label>
+              <sl:sidebar-group-content>Menu</sl:sidebar-group-content>
+            </sl:sidebar-group>""",
+        "<sl:sidebar-group id=\"build\" collapsible><sl:sidebar-group-label>Build</sl:sidebar-group-label></sl:sidebar-group>",
         "<sl:sidebar-menu-sub-item>Button</sl:sidebar-menu-sub-item>",
         "<sl:sidebar-menu-sub-button href=\"/a\">Link</sl:sidebar-menu-sub-button>",
         "<sl:sidebar-menu-sub-button as=\"a\" href=\"/a\">Link</sl:sidebar-menu-sub-button>",

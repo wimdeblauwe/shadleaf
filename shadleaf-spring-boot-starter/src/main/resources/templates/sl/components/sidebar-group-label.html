@@ -4,14 +4,22 @@
   <sl:props>
     <sl:description>The name of a <code>sl:sidebar-group</code>, in small muted text above its menu. The group is
       labelled by it, so it gets an id from the group (<code>&lt;group id&gt;-label</code>); give the group an
-      <code>id</code> rather than the label.</sl:description>
+      <code>id</code> rather than the label. In a <code>collapsible</code> group it is the <code>summary</code> that
+      opens and closes it, with a chevron at the end, and must be the group's first part.</sl:description>
   </sl:props>
 </head>
 <body>
-<!--/* A div, not a heading: the group's role="group" carries the name (see sl:sidebar-group). */-->
-<div th:fragment="sidebar-group-label"
-     class="sidebar-group-label"
-     th:attr="id=${slSidebarGroupLabelId}"
-     sl:attrs><sl:slot/></div>
+<!--/* A div, not a heading: the group's role="group" carries the name (see sl:sidebar-group). In a collapsible group
+  (slSidebarGroupCollapsible) the summary of its details. */-->
+<th:block th:fragment="sidebar-group-label">
+  <summary th:if="${slSidebarGroupCollapsible == true}"
+           class="sidebar-group-label"
+           th:attr="id=${slSidebarGroupLabelId}"
+           sl:attrs><sl:slot/><sl:icon name="chevron-right" class="sidebar-group-label-chevron"/></summary>
+  <div th:unless="${slSidebarGroupCollapsible == true}"
+       class="sidebar-group-label"
+       th:attr="id=${slSidebarGroupLabelId}"
+       sl:attrs><sl:slot/></div>
+</th:block>
 </body>
 </html>

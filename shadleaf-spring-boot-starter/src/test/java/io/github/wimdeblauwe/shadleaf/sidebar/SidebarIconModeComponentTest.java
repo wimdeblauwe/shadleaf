@@ -1,6 +1,7 @@
 package io.github.wimdeblauwe.shadleaf.sidebar;
 
 import static io.github.wimdeblauwe.shadleaf.test.ShadleafAssertions.assertThat;
+import static io.github.wimdeblauwe.shadleaf.test.ShadleafAssertions.assertThatRenderFailure;
 
 import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
 import io.github.wimdeblauwe.shadleaf.test.Rendered;
@@ -152,5 +153,94 @@ class SidebarIconModeComponentTest {
     Rendered rendered = tester.render("<sl:sidebar-menu-sub-button as=\"button\" active>Drafts</sl:sidebar-menu-sub-button>");
 
     assertThat(rendered).root().hasTag("button").hasAttribute("type", "button").hasAttribute("aria-current", "true");
+  }
+
+  @Test
+  void aCollapsibleGroupIsDetailsWithTheLabelAsItsSummary() {
+    Rendered rendered = tester.render("""
+        <sl:sidebar-group id="build" collapsible th:open="${#slNav.current('/build')}" class="extra">
+          <sl:sidebar-group-label>Build</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/build/routing">Routing</sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>""");
+
+    assertThat(rendered).hasNoLeakedMarkup();
+    assertThat(rendered).root()
+        .hasTag("div")
+        .hasAttribute("class", "sidebar-group extra")
+        .hasAttribute("role", "group")
+        .hasAttribute("aria-labelledby", "build-label");
+    assertThat(rendered).element("div.sidebar-group > details.sidebar-group-collapsible").hasNoAttribute("open");
+    assertThat(rendered).element("details > summary.sidebar-group-label:first-child")
+        .hasAttribute("id", "build-label")
+        .hasText("Build");
+    assertThat(rendered).element("summary > svg.sidebar-group-label-chevron");
+    assertThat(rendered).element("details > .sidebar-group-content a.sidebar-menu-button");
+  }
+
+  @Test
+  void aCollapsibleGroupRendersOpen() {
+    Rendered rendered = ComponentRenderTester.builder().requestUri("/build/routing").build().render("""
+        <sl:sidebar-group collapsible th:open="${#slNav.current('/build')}">
+          <sl:sidebar-group-label>Build</sl:sidebar-group-label>
+        </sl:sidebar-group>""");
+
+    assertThat(rendered).element("details.sidebar-group-collapsible").hasAttribute("open", "open");
+  }
+
+  @Test
+  void aLabelInAPlainGroupIsNoSummary() {
+    Rendered rendered = tester.render("""
+        <sl:sidebar-group id="platform"><sl:sidebar-group-label>Platform</sl:sidebar-group-label></sl:sidebar-group>""");
+
+    assertThat(rendered).elements("details, summary").isEmpty();
+    assertThat(rendered).element("div.sidebar-group > div.sidebar-group-label").hasAttribute("id", "platform-label");
+    assertThat(rendered).elements("svg").isEmpty();
+  }
+
+  @Test
+  void aCollapsibleSubMenuOpensBesideALink() {
+    Rendered rendered = ComponentRenderTester.builder().requestUri("/playground/history").build().render("""
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button href="/playground">Playground</sl:sidebar-menu-button>
+          <sl:sidebar-menu-sub collapsible th:open="${#slNav.current('/playground')}"
+                               aria-label="Playground's pages" class="extra">
+            <sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-button href="/playground/history"
+                                          th:active="${#slNav.current('/playground/history')}">
+                History
+              </sl:sidebar-menu-sub-button>
+            </sl:sidebar-menu-sub-item>
+          </sl:sidebar-menu-sub>
+        </sl:sidebar-menu-item>""");
+
+    assertThat(rendered).hasNoLeakedMarkup();
+    assertThat(rendered).element("li > a.sidebar-menu-button + details.sidebar-menu-sub-collapsible")
+        .hasAttribute("open", "open");
+    assertThat(rendered).element("details > summary.sidebar-menu-action.sidebar-menu-sub-toggle:first-child")
+        .hasAttribute("aria-label", "Playground's pages");
+    assertThat(rendered).element("summary > svg.sidebar-menu-sub-toggle-icon");
+    assertThat(rendered).element("details > ul.sidebar-menu-sub")
+        .hasAttribute("class", "sidebar-menu-sub extra")
+        .hasNoAttribute("aria-label");
+    assertThat(rendered).element("a.sidebar-menu-sub-button").hasAttribute("aria-current", "page");
+  }
+
+  @Test
+  void aCollapsibleSubMenuNeedsAName() {
+    assertThatRenderFailure(() -> tester.render("<sl:sidebar-menu-sub collapsible>x</sl:sidebar-menu-sub>"))
+        .hasMessageContaining("<sl:sidebar-menu-sub collapsible=\"true\">")
+        .hasMessageContaining("accessible name");
+    assertThat(tester.render("<sl:sidebar-menu-sub>x</sl:sidebar-menu-sub>")).root()
+        .hasTag("ul")
+        .hasAttribute("class", "sidebar-menu-sub");
+    assertThat(tester.render("""
+        <sl:sidebar-menu-sub collapsible th:aria-label="${'Pages'}">x</sl:sidebar-menu-sub>"""))
+        .element("summary").hasAttribute("aria-label", "Pages");
   }
 }

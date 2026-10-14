@@ -11,21 +11,35 @@
       generates one (<code>sl-sidebar-group-</code> and eight random characters).</sl:prop>
     <sl:prop name="panel-only" type="boolean">Show it only in the phone panel: from 768&nbsp;px it is left out
       (<code>display: none</code>), so a header row or a sidebar stays short.</sl:prop>
+    <sl:prop name="collapsible" type="boolean">Make it a section that opens and closes, on the browser's
+      <code>details</code> element: its <code>sl:sidebar-group-label</code> (which must come first) becomes the
+      <code>summary</code>, with a chevron at the end. Collapsed to icons, and in the header row, its links show
+      whether it is open or not.</sl:prop>
+    <sl:prop name="open" type="boolean">Render a collapsible group open, for instance when it holds the current
+      page: <code>th:open="${#slNav.current('/build')}"</code>.</sl:prop>
+    <sl:prop name="icon-hidden" type="boolean">Leave the group out while the sidebar is collapsed to icons
+      (<code>collapsible="icon"</code>), as for a group whose links have no icons of their own. Expanded, and in the
+      phone panel, it shows as usual.</sl:prop>
   </sl:props>
 </head>
 <body>
 <!--/* The label part reads slSidebarGroupLabelId for its id. slots.contains looks for a label in this group's content,
   not in a nested group. The local is always set (null without a label), so a group nested in a labelled one does not
-  take its label's id. */-->
+  take its label's id. The label reads slSidebarGroupCollapsible (always set) to render as the details' summary. */-->
 <div th:fragment="sidebar-group"
      class="sidebar-group"
      th:with="slSidebarGroupLabelId=${slots.contains('sidebar-group-label', 'sidebar-group')
                 ? (props.id ?: 'sl-sidebar-group-' + #strings.randomAlphanumeric(8).toLowerCase()) + '-label'
-                : null}"
+                : null},
+              slSidebarGroupCollapsible=${props.collapsible}"
      th:attr="id=${props.id},
               role=${slSidebarGroupLabelId != null ? 'group' : null},
               aria-labelledby=${slSidebarGroupLabelId},
-              data-panel-only=${props['panel-only'] ? 'true' : null}"
-     sl:attrs><sl:slot/></div>
+              data-panel-only=${props['panel-only'] ? 'true' : null},
+              data-icon-hidden=${props['icon-hidden'] ? 'true' : null}"
+     sl:attrs><details th:if="${props.collapsible}"
+                       class="sidebar-group-collapsible"
+                       th:attr="open=${props.open ? 'open' : null}"><sl:slot/></details><th:block
+    th:unless="${props.collapsible}"><sl:slot/></th:block></div>
 </body>
 </html>

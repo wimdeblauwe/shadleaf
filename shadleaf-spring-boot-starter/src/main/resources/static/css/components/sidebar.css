@@ -220,6 +220,23 @@
       @apply hidden;
     }
 
+    /*
+      A collapsible group shows its links in the strip whether it is open or not: its label is out of view anyway.
+      The label (the summary) is hidden, so it takes no focus, and still names the group.
+    */
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-group-collapsible > summary {
+      @apply invisible;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-group-collapsible::details-content {
+      content-visibility: visible;
+    }
+
+    /* A group the application leaves out of the strip (icon-hidden). */
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-group[data-icon-hidden] {
+      @apply hidden;
+    }
+
     .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-badge {
       @apply sr-only min-w-0;
     }
@@ -331,8 +348,18 @@
     .sidebar[data-placement='header'] :is(.sidebar-group-action, .sidebar-separator, .sidebar-menu-tooltip,
       .sidebar-menu-button:not([aria-haspopup]) > svg,
       .sidebar-menu-button[aria-haspopup] > svg:not(.sidebar-menu-button-label ~ svg)),
-    .sidebar[data-placement='header'] .sidebar-menu-item:has(> .sidebar-menu-collapsible) {
+    .sidebar[data-placement='header'] .sidebar-menu-item:has(> .sidebar-menu-collapsible),
+    .sidebar[data-placement='header'] :is(.sidebar-menu-sub-collapsible, .sidebar-group-collapsible > summary) {
       display: none;
+    }
+
+    /* A collapsible group's links show in the row whether it is open or not; its label is hidden, and names it. */
+    .sidebar[data-placement='header'] .sidebar-group-collapsible::details-content {
+      content-visibility: visible;
+    }
+
+    .sidebar[data-placement='header'] .sidebar-group-collapsible {
+      @apply flex flex-row items-center;
     }
 
     .sidebar[data-placement='header'] .sidebar-menu-item {
@@ -458,27 +485,36 @@
   }
 
   /* Room for the action or badge that lies over the button's end. */
-  .sidebar-menu-item:has(> .sidebar-menu-action, > .sidebar-menu-badge) > .sidebar-menu-button {
+  .sidebar-menu-item:has(> .sidebar-menu-action, > .sidebar-menu-badge, > .sidebar-menu-sub-collapsible) > .sidebar-menu-button {
     @apply pe-8;
   }
 
   /*
-    A collapsible item: details, with the menu button as its summary (no marker) and the sub-menu as its content. The
-    chevron at the end turns down when it opens (and points the other way on a right-to-left page while closed).
+    A collapsible item: details, with the menu button as its summary (no marker) and the sub-menu as its content. A
+    collapsible group: details, with the group label as its summary. A collapsible sub-menu: details beside the menu
+    button, its summary a menu action holding only the chevron. The chevron turns down when it opens (and points the
+    other way on a right-to-left page while closed).
   */
-  .sidebar-menu-collapsible > summary {
+  :is(.sidebar-menu-collapsible, .sidebar-group-collapsible, .sidebar-menu-sub-collapsible) > summary {
     @apply list-none;
   }
 
-  .sidebar-menu-collapsible > summary::-webkit-details-marker {
+  :is(.sidebar-menu-collapsible, .sidebar-group-collapsible, .sidebar-menu-sub-collapsible) > summary::-webkit-details-marker {
     @apply hidden;
   }
 
-  .sidebar-menu-button-chevron {
+  .sidebar-menu-button-chevron,
+  .sidebar-group-label-chevron {
     @apply ms-auto shrink-0 transition-none rtl:-scale-x-100 motion-safe:transition-[rotate];
   }
 
-  .sidebar-menu-collapsible[open] > summary > .sidebar-menu-button-chevron {
+  .sidebar-menu-sub-toggle-icon {
+    @apply shrink-0 transition-none rtl:-scale-x-100 motion-safe:transition-[rotate];
+  }
+
+  .sidebar-menu-collapsible[open] > summary > .sidebar-menu-button-chevron,
+  .sidebar-group-collapsible[open] > summary > .sidebar-group-label-chevron,
+  .sidebar-menu-sub-collapsible[open] > summary > .sidebar-menu-sub-toggle-icon {
     rotate: 90deg;
     scale: none;
   }
@@ -537,7 +573,9 @@
     .sidebar-menu-button:is([aria-current='page'], [aria-current='true']),
     .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true']),
     .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
-      .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button {
+      .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button,
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
+      .sidebar-menu-item:has(> .sidebar-menu-sub-collapsible .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button {
       @apply outline-1 -outline-offset-1 outline-solid;
     }
 

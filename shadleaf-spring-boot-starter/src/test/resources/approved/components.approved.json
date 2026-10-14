@@ -1318,6 +1318,24 @@
       "defaultValue" : "false",
       "values" : [ ],
       "description" : "Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short."
+    }, {
+      "name" : "collapsible",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Make it a section that opens and closes, on the browser's `details` element: its `sl:sidebar-group-label` (which must come first) becomes the `summary`, with a chevron at the end. Collapsed to icons, and in the header row, its links show whether it is open or not."
+    }, {
+      "name" : "open",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Render a collapsible group open, for instance when it holds the current page: `th:open=\"${#slNav.current('/build')}\"`."
+    }, {
+      "name" : "icon-hidden",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Leave the group out while the sidebar is collapsed to icons (`collapsible=\"icon\"`), as for a group whose links have no icons of their own. Expanded, and in the phone panel, it shows as usual."
     } ]
   }, {
     "name" : "sidebar-group-action",
@@ -1349,7 +1367,7 @@
   }, {
     "name" : "sidebar-group-label",
     "tag" : "sl:sidebar-group-label",
-    "description" : "The name of a `sl:sidebar-group`, in small muted text above its menu. The group is labelled by it, so it gets an id from the group (`&lt;group id&gt;-label`); give the group an `id` rather than the label.",
+    "description" : "The name of a `sl:sidebar-group`, in small muted text above its menu. The group is labelled by it, so it gets an id from the group (`&lt;group id&gt;-label`); give the group an `id` rather than the label. In a `collapsible` group it is the `summary` that opens and closes it, with a chevron at the end, and must be the group's first part.",
     "declared" : true,
     "props" : [ ]
   }, {
@@ -1499,9 +1517,25 @@
   }, {
     "name" : "sidebar-menu-sub",
     "tag" : "sl:sidebar-menu-sub",
-    "description" : "A list of links below a `sl:sidebar-menu-button`, indented along a line: a `ul` of `sl:sidebar-menu-sub-item`s. In a `collapsible` `sl:sidebar-menu-item` it is what opens and closes. Hidden while the sidebar is collapsed to icons.",
+    "description" : "A list of links below a `sl:sidebar-menu-button`, indented along a line: a `ul` of `sl:sidebar-menu-sub-item`s. In a `collapsible` `sl:sidebar-menu-item` it is what opens and closes. With `collapsible` of its own it opens and closes by a chevron beside the menu button, which stays a link to a page of its own. Hidden while the sidebar is collapsed to icons.",
     "declared" : true,
-    "props" : [ ]
+    "props" : [ {
+      "name" : "collapsible",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Open and close it with a chevron at the end of the menu button (a `summary`, drawn as a `sl:sidebar-menu-action`), so the menu button stays a link. The chevron holds only an icon, so it needs an `aria-label` that names the sub-menu (\"Playground's pages\"); every other attribute goes to the `ul`."
+    }, {
+      "name" : "open",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Render a collapsible sub-menu open, for instance when it holds the current page: `th:open=\"${#slNav.current('/playground')}\"`."
+    } ],
+    "accessibleName" : {
+      "prop" : "collapsible",
+      "values" : [ "true" ]
+    }
   }, {
     "name" : "sidebar-menu-sub-button",
     "tag" : "sl:sidebar-menu-sub-button",

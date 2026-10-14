@@ -1139,8 +1139,12 @@
     @apply gap-2 p-2;
   }
 
+  /*
+    Firefox makes the content a tab stop of its own when it scrolls (so do other browsers when nothing in it can take
+    the focus): an outline inside its edge shows it has the focus.
+  */
   .sidebar-content {
-    @apply gap-2;
+    @apply gap-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sidebar-ring;
   }
 
   .sidebar-separator {
@@ -1154,6 +1158,11 @@
   .sidebar-group-label {
     @apply h-8 rounded-md px-2 text-xs font-medium text-sidebar-foreground/70 ring-sidebar-ring focus-visible:ring-2
       [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  /* The label of a collapsible group opens and closes it. */
+  summary.sidebar-group-label {
+    @apply hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
   }
 
   .sidebar-group-content {
@@ -1293,7 +1302,9 @@
     }
 
     .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
-      .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button {
+      .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button,
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
+      .sidebar-menu-item:has(> .sidebar-menu-sub-collapsible .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button {
       @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground;
     }
   }

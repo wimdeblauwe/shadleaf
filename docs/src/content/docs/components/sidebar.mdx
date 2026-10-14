@@ -11,7 +11,7 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 :::tip[Layouts to copy]
 The Layouts section has whole layouts built from these parts, such as [Collapses to
 icons](../../layouts/collapses-to-icons/) and [Navigation in the header](../../layouts/header/). The
-[Application shell](../../guides/application-shell/) guide says what every layout needs around them.
+[Application shell](../../components/application-shell/) page says what every layout needs around them.
 :::
 
 ## Built from parts
@@ -287,6 +287,52 @@ no JavaScript, and the keyboard opens and closes it with Enter and Space.
 
 <ComponentPreview id="sidebar--sub-menu" />
 
+### A section that is a page too
+
+When the section has a page of its own, keep its menu button a link and give the sub-menu `collapsible`: a chevron
+at the end of the button opens and closes it, as in shadcn's sidebar-08. The chevron is the `summary` of a `details`
+element beside the link (a link cannot sit inside a `summary`), drawn as a [menu action](#actions). It holds only an
+icon, so it needs an `aria-label` that names what it opens; the other attributes go to the list. `open` works as on a
+collapsible item.
+
+```html
+<sl:sidebar-menu-item>
+  <sl:sidebar-menu-button th:href="@{/playground}" th:active="${#slNav.current('/playground', true)}">
+    <sl:slot name="icon-start"><sl:icon name="square-terminal"/></sl:slot>
+    Playground
+  </sl:sidebar-menu-button>
+  <sl:sidebar-menu-sub collapsible th:open="${#slNav.current('/playground')}" aria-label="Playground's pages">
+    <sl:sidebar-menu-sub-item>
+      <sl:sidebar-menu-sub-button th:href="@{/playground/history}"
+                                  th:active="${#slNav.current('/playground/history')}">History</sl:sidebar-menu-sub-button>
+    </sl:sidebar-menu-sub-item>
+  </sl:sidebar-menu-sub>
+</sl:sidebar-menu-item>
+```
+
+The keyboard reaches the link, then the chevron. Collapsed to icons, the chevron and the sub-menu are hidden, and the
+section's icon shows when the current page is one of its pages. The
+[Inset with secondary navigation](../../layouts/inset-secondary-navigation/) layout has four such sections.
+
+### Collapsible sections
+
+A group with `collapsible` opens and closes as a whole, as in shadcn's sidebar-02: its
+`<sl:sidebar-group-label>` becomes the `summary` of a `details` element, with a chevron at the end, so it must be the
+group's first part. The label still names the group. `open` renders it open.
+
+```html
+<sl:sidebar-group id="build" collapsible th:open="${#slNav.current('/build')}">
+  <sl:sidebar-group-label>Build Your Application</sl:sidebar-group-label>
+  <sl:sidebar-group-content>
+    <sl:sidebar-menu>...</sl:sidebar-menu>
+  </sl:sidebar-group-content>
+</sl:sidebar-group>
+```
+
+Collapsed to icons, and in the [header row](#in-the-header), the label is out of view, so every collapsible group
+shows its links whether it is open or not. The [Collapsible sections](../../layouts/collapsible-sections/) layout
+has one per section.
+
 ## One element for a desktop and a phone
 
 The server does not know how wide the screen is, so the sidebar is one element for both:
@@ -369,6 +415,9 @@ margin around it.
   while the menu is open.
 - A click (or Enter) on a [collapsible group's](#collapsible-groups) icon expands the sidebar and opens the group, as
   the sub-menu has no room in the strip. A group that holds the current page shows it on its icon.
+- `icon-hidden` on a [group](#what-goes-inside) leaves it out of the strip, as shadcn's sidebar-07 does with its
+  projects: links without icons of their own would be a row of identical squares. Expanded, and in the phone panel,
+  the group shows as usual.
 - The server renders the strip from the cookie, so the first paint is right with and without JavaScript. On a phone
   the panel ignores it and shows everything.
 
@@ -487,14 +536,15 @@ would.
 A boosted link sends `HX-Request` too. A controller that answers htmx with a fragment (a table's rows, a dialog) must
 tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
 `HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The
-[Application shell](../../guides/application-shell/#with-htmx) guide shows the check.
+[Application shell](../../components/application-shell/#with-htmx) page shows the check.
 
 ## Left out
 
 For now:
 
-- a collapsible group whose chevron is a menu action beside a link (shadcn's sidebar-08), and sub-menus that open as
-  dropdown menus while collapsed to icons (sidebar-06);
+- sub-menus that open as dropdown menus while collapsed to icons (shadcn's sidebar-06), and collapsible items nested
+  in sub-menus to any depth, such as a file tree (sidebar-11);
+- plus and minus instead of the turning chevron (sidebar-05);
 - `SidebarInput` (use `<sl:input>`) and `SidebarMenuSkeleton` (use `<sl:skeleton>`);
 - `SidebarRail`, the strip along the sidebar's edge that toggles it;
 - a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page;
