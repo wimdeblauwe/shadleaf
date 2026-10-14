@@ -65,6 +65,13 @@ class ComponentElementProcessorTest {
   }
 
   @Test
+  void aLiteralPropIsTheTextTheBrowserReads() {
+    String html = renderer.render("<sl:test-chip label=\"Fish &amp; chips &quot;to go&quot;\">x</sl:test-chip>").html();
+
+    assertThat(html).contains("<b>Fish &amp; chips &quot;to go&quot;</b>").doesNotContain("&amp;amp;");
+  }
+
+  @Test
   void thPropWinsOverLiteral() {
     Element chip = render("<sl:test-chip variant=\"danger\" th:variant=\"${'success'}\">x</sl:test-chip>");
 

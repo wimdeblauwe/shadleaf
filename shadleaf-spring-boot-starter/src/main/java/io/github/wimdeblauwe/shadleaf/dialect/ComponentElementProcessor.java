@@ -29,6 +29,7 @@ import org.thymeleaf.standard.StandardDialect;
 import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.templatemode.TemplateMode;
+import org.unbescape.html.HtmlEscape;
 
 /**
  * Renders {@code <sl:NAME ...>} as the fragment {@code ~{sl/components/NAME :: NAME}}.
@@ -166,8 +167,10 @@ public class ComponentElementProcessor implements IElementModelProcessor {
       throw new ShadleafComponentException("<sl:%s> takes %s as an object: write th:%s=\"${...}\", not %s=\"...\"."
           .formatted(definition.name(), prop.name(), prop.name(), prop.name()));
     } else if (hasLiteral) {
-      // A bare attribute (<sl:button disabled>) has no value.
-      raw = literal == null ? "" : literal;
+      // A bare attribute (<sl:button disabled>) has no value. The value is the attribute's text as written, character
+      // references included; the prop gets what the browser would read (tooltip="Dialog &amp; Sheet" is
+      // "Dialog & Sheet"), or a template that outputs it with th:text would escape the & a second time.
+      raw = literal == null ? "" : HtmlEscape.unescapeHtml(literal);
     } else {
       raw = null;
     }
