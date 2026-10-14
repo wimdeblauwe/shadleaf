@@ -1,0 +1,396 @@
+# Tables with htmx
+
+> Search as you type, sort and page a server-side table with htmx, act on a row from its menu, load more rows, keep the focus and the back button, and keep it working without JavaScript.
+
+Source: https://wimdeblauwe.github.io/shadleaf/current/guides/tables-htmx/
+
+A Shadleaf [table](https://wimdeblauwe.github.io/shadleaf/current/components/table.md) sorts and pages on the server through plain links: its column headers,
+its [pagination](https://wimdeblauwe.github.io/shadleaf/current/components/pagination.md) and the rows-per-page menu all link to the same page with other
+parameters, built from the request that rendered it. A search above it is a plain `GET` form, which
+[`sl:query-params`](https://wimdeblauwe.github.io/shadleaf/current/components/query-params.md) keeps in step with the table's order and size. None of it needs
+JavaScript, and none of the library's templates has an `hx-*` attribute. htmx makes it faster: it searches while the
+user types and replaces only the table, and the links and the address bar stay what they would be without it.
+
+This guide follows sample-01's `/people` page (`samples/shadleaf-sample-01`): 270 people in an H2 database, sorted,
+paged and searched by Spring Data JPA, with a menu of actions per row; and its `/people-load-more` page, which reads
+them a `Slice` at a time. Loading htmx is in [Forms with htmx](https://wimdeblauwe.github.io/shadleaf/current/guides/htmx.md#loading-htmx).
+
+## The page
+
+Two parts: the search form, which htmx never replaces, and the results (the table and its footer), which it does.
+
+```html
+<form id="people-search" role="search" method="get" th:action="@{/people}"
+      hx:get="@{/people}" hx-trigger="input changed delay:300ms, search, submit" hx-sync="this:replace"
+      hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none"
+      hx-push-url="true" hx-history="false">
+  <sl:input type="search" id="people-q" name="q" th:value="${search}" aria-label="Search people"
+            placeholder="Filter by name or email…" autocomplete="off"/>
+  <p id="people-status" class="visually-hidden" role="status" th:text="${found}"></p>
+</form>
+
+<div id="people-results" th:fragment="results"
+     hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+  <sl:query-params except="q" form="people-search"/>
+  <p th:if="${fragment}" id="people-status" hx-swap-oob="innerHTML" th:text="${found}"></p>
+  <sl:table th:page="${people}">
+    <thead>
+      <tr>
+        <sl:table-head sort="name">Name</sl:table-head>
+        <sl:table-head sort="email">Email</sl:table-head>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="person : ${people}">...</tr>
+      <sl:table-empty colspan="2" th:if="${people.empty}">No one matches “[[${search}]]”.</sl:table-empty>
+    </tbody>
+  </sl:table>
+  <div class="table-footer">
+    <sl:pagination-summary th:page="${people}"/>
+    <div class="table-footer-controls">
+      <sl:pagination-size th:page="${people}"/>
+      <sl:pagination th:page="${people}"/>
+    </div>
+  </div>
+</div>
+```
+
+(`hx:get` is htmx-spring-boot's dialect, which runs the URL through `@{...}`; a plain `hx-get="/people"` does the
+same without a context path.)
+
+## The controller
+
+The controller answers an htmx request with the results alone, as the [htmx form](https://wimdeblauwe.github.io/shadleaf/current/guides/htmx.md) does, and every other
+request with the page:
+
+```java
+@GetMapping("/people")
+public String people(@RequestParam(required = false) String q,
+    @PageableDefault(size = 20, sort = "name") Pageable pageable, HtmxRequest htmxRequest, Model model) {
+  String search = q == null ? "" : q.strip();
+  Page<Person> people = search.isEmpty()
+      ? repository.findAll(pageable)
+      : repository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable);
+  model.addAttribute("people", people);
+  model.addAttribute("search", search);
+  model.addAttribute("found", search.isEmpty() ? ""
+      : people.getTotalElements() == 1 ? "1 person found" : people.getTotalElements() + " people found");
+  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
+      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
+  model.addAttribute("fragment", fragment);
+  return fragment ? "people :: results" : "people";
+}
+```
+
+A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. So does a link
+that `hx-boost` on the body sends, such as the [sidebar's](https://wimdeblauwe.github.io/shadleaf/current/components/sidebar.md#htmx): it has `HX-Boosted` and no
+`HX-Target` (the body has no id), where the table's own boosted links target the results. htmx-spring-boot
+adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
+page. Limit the sortable properties and add a unique last sort key as the [table](https://wimdeblauwe.github.io/shadleaf/current/components/table.md#limit-what-can-be-sorted)
+explains; the sample does both.
+
+## Ask for the page's own URL
+
+The links in the results are built from the request that rendered them: a sort link is that request's path and query
+with another `sort`. So htmx must ask for the page's own URL (`/people?q=ada&sort=email,asc`), not for an endpoint of
+its own such as `/people/table`. Then the address htmx pushes, the links in the fragment and the page a reload shows
+all agree, and a link copied from the address bar opens the same table. An endpoint of its own would put
+`/people/table?...` into every sort and page link, and the next click would push that address.
+
+## Search as you type
+
+The form's `hx-get` asks for `/people` with the form's fields: the search field and the hidden inputs of
+`sl:query-params`, so the order and the size stay, and the page number is left out, so the results start on the first
+page.
+
+- `input changed delay:300ms` sends the search 300 ms after the last keystroke; each keystroke starts the wait again,
+  and `changed` skips an input that leaves the value as it was.
+- `search` sends it at once when the field is cleared with its clear button (or Enter, in Chromium and Safari).
+- `submit` sends it at once on Enter. Without it, Enter would submit the form the normal way and load the whole page;
+  Firefox has no `search` event, so `submit` is what catches Enter there.
+- `hx-sync="this:replace"` aborts a request still out when the next one starts, so a slow answer to "ad" never
+  replaces the answer to "ada".
+- `hx-push-url="true"` puts the search into the address: `/people?q=ada&sort=email,asc&size=50`.
+
+The field is outside `#people-results`, so a swap never touches it: it keeps the focus, the caret and whatever the
+user typed while a request was out. The hidden inputs are inside: `form="people-search"` ties them to the form from
+there, so each swap brings the ones that belong to the table it shows. Hidden inputs inside the form would keep the
+order of the first load after a sort link changed it.
+
+### What a screen reader hears
+
+A sighted user sees the rows change; a screen reader user hears nothing unless the page says so. The form holds an
+empty `role="status"` region, and the fragment updates its text out of band (`hx-swap-oob="innerHTML"` keeps the
+region itself, which a screen reader is listening to): "15 people found". It is only rendered in the fragment, so the
+whole page has the id once. Keep the region out of the swapped part: a live region that is replaced is not announced.
+
+## Sort, page and size links
+
+`hx-boost="true"` on `#people-results` turns every link inside it into an htmx request for that link's URL: the sort
+links in the headers, the page links and the rows-per-page menu's items. They inherit `hx-target`, `hx-select` and
+`hx-swap` from the same element, so each replaces the results and pushes its address, as following the link would.
+
+- **Focus.** htmx gives the focus back to the element with the id of the one that had it, if the swap replaced that
+  element. Every link Shadleaf builds has a stable id (`sort-name`, `page-next`, `page-3`, and the size menu's button
+  `page-size-trigger`, which the menu focuses before it follows the chosen size), so after a click on Next the focus is
+  on the new Next, and the keyboard user can press Enter again. Ids get the [qualifier](https://wimdeblauwe.github.io/shadleaf/current/components/table.md#two-tables-on-one-page)
+  as a prefix, so two tables on a page keep theirs apart.
+- **Scrolling.** A boosted link scrolls to the top of the target by default (`scrollIntoViewOnBoost`). `show:none` in
+  `hx-swap` keeps the page where it is, which suits a pagination at the bottom of a long table; the focused link stays
+  in view.
+- **The search.** The links are built from the request, so they keep `q`: sorting the search results sorts the search
+  results.
+
+## Actions per row
+
+Each row of `/people` has a [menu](https://wimdeblauwe.github.io/shadleaf/current/components/table.md#actions-per-row): View, Change role (one radio item per
+role, the current one checked) and Delete.
+
+```html
+<td data-align="end">
+  <form method="post" th:action="${selfUrl}">
+    <input type="hidden" name="person" th:value="${person.id}">
+    <sl:dropdown-menu th:id="|people-${person.id}-actions|">
+      <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" th:aria-label="|Actions for ${person.name}|"
+                                th:autofocus="${person.id == focusPerson}">
+        <sl:icon name="ellipsis"/>
+      </sl:dropdown-menu-trigger>
+      <sl:dropdown-menu-content align="end">
+        <sl:dropdown-menu-item as="a" th:href="@{/people/{id}(id=${person.id})}" hx-boost="false">
+          <sl:icon name="eye"/>View
+        </sl:dropdown-menu-item>
+        <sl:dropdown-menu-separator/>
+        <sl:dropdown-menu-label>Change role</sl:dropdown-menu-label>
+        <sl:dropdown-menu-radio-group aria-label="Change role">
+          <sl:dropdown-menu-radio-item th:each="role : ${roles}" type="submit" name="role" th:value="${role}"
+                                       th:checked="${person.role == role}" hx:post="${selfUrl}">
+            [[${role.label}]]
+          </sl:dropdown-menu-radio-item>
+        </sl:dropdown-menu-radio-group>
+        <sl:dropdown-menu-separator/>
+        <sl:dropdown-menu-item as="a" variant="destructive" th:href="@{|/people/${person.id}/delete${query}|}"
+                               hx:get="@{|/people/${person.id}/delete${query}|}" hx-target="#modal-root"
+                               hx-select="unset" hx-swap="innerHTML">
+          <sl:icon name="trash-2"/>Delete
+        </sl:dropdown-menu-item>
+      </sl:dropdown-menu-content>
+    </sl:dropdown-menu>
+  </form>
+</td>
+```
+
+- **Post to the page's own URL.** `selfUrl` is the request's path and query string (`/people?q=a&sort=orders,desc&page=1`),
+  as for the [bulk action](#selection-and-a-bulk-action) below, and the controller maps the change to it by its
+  parameter: `@PostMapping(path = "/people", params = "role")`. Without htmx it redirects back there with a toast;
+  with htmx it changes the role and renders the `results` fragment of that page, with the toast in `HX-Trigger`. The
+  links in the fragment are built from the page's address, as after a search.
+- **The form goes around the menu.** A `role="menu"` may only hold menu items. The hidden input names the person and
+  each radio item is a submit button sending its role, so without JavaScript the menu (a popover, which needs none)
+  still changes the role.
+- **`hx-post` on the item, not the form.** The menu puts the focus back on its trigger before the item's action runs,
+  which makes htmx forget which submit button was pressed in a form it boosts. An item with `hx-post` of its own sends
+  its `role` and the form's `person` (a non-`GET` request includes the item's form).
+- **View leaves the table.** It is a link inside the boosted results, which would swap the person's page into
+  `#people-results`; `hx-boost="false"` makes it a normal link.
+- **Delete asks first.** Without JavaScript the link opens a page asking the same question, with a form that posts
+  `delete=<id>` to the people page's address (the delete link carries its query string) and a Cancel link back. With
+  htmx the same URL answers `HX-Request` with an alert dialog for `#modal-root`; `hx-select="unset"` drops the
+  `#people-results` the item would inherit. The dialog's Delete button has `hx:post` to the people page's address
+  and `hx-target`/`hx-select` `#people-results`; the answer closes the dialog with `sl-dialog-close`, then shows the
+  toast, as in the [confirm with htmx](https://wimdeblauwe.github.io/shadleaf/current/components/alert-dialog.md) example.
+
+### Where the focus goes
+
+The menu puts the focus on its trigger before the item's action, so htmx gives it back to the trigger with the same
+id after the swap: the keyboard user is where they were. Two cases need the server's help:
+
+- **The row is gone.** After a delete the alert dialog closes and returns the focus to the row's menu button, which
+  the swap then removes. The controller notes where the row was and gives `autofocus` to the menu button of the row now
+  in its place (or of the last row, when it was the last); htmx focuses it after the swap.
+- **The row moved.** Changing a role while the table is sorted by role can move the row to another page. The same rule
+  applies: the menu button of the row now in its place.
+
+```java
+/** The person's menu button while they are on the page, else the one of the person now in their place. */
+private static Long focusAfter(List<Person> before, long id, Page<Person> after) {
+  if (after.stream().anyMatch(person -> person.getId() == id)) return id;
+  if (after.isEmpty()) return null;
+  int index = before.stream().map(Person::getId).toList().indexOf(id);
+  return after.getContent().get(Math.min(Math.max(index, 0), after.getNumberOfElements() - 1)).getId();
+}
+```
+
+`PeoplePageTest` checks both, and that `HX-Trigger` lists `sl-dialog-close` before `sl-toast`.
+
+### The cost of a menu per row
+
+A menu per row is the menu's markup in every row: the trigger, the items and their icons. Measured on 1 October 2026
+(`TablePerformanceTest` in the starter, `mvn test -Pperformance`, Java 25 on an arm64 Mac), against the
+200 buttons with an icon that serve as the baseline:
+
+| A table of 50 rows | Render | HTML | Gzipped |
+| --- | --- | --- | --- |
+| text cells only | 0.17 ms | 6.7 KB | 0.9 KB |
+| with a badge per row | 0.41 ms | 10.0 KB | 1.0 KB |
+| with a badge and the menu's trigger only | 2.2 ms | 53.4 KB | 2.4 KB |
+| with a badge and the menu above | 8.9 ms | 222 KB | 5.3 KB |
+| (baseline: 200 buttons with an icon) | 3.7 ms | 116 KB | 1.4 KB |
+
+So a menu costs about 0.17 ms and 4 KB of HTML per row on the server, and next to nothing on the wire, as its markup
+repeats. That is less than the query behind the page, so sample-01 renders a menu per row, which also works without
+JavaScript. A page of hundreds of rows with long menus could render only the trigger and fetch the items when the menu
+opens (`hx-get` on the content with `hx-trigger="toggle once"`), at the price of a menu that is empty without
+JavaScript and for a moment after it opens; Shadleaf does not test that pattern, and a smaller page size is usually
+the better answer.
+
+## Selection and a bulk action
+
+Sample-01's `/people-multiselect` page is the same page with a form around the table, with a checkbox per row, [select-all](https://wimdeblauwe.github.io/shadleaf/current/components/table.md#selecting-rows)
+in the header, the selection count in the footer, and a Delete selected button that opens an alert dialog:
+
+```html
+<form id="people-bulk" method="post" th:action="${selfUrl}">
+  <sl:button id="people-delete-trigger" type="button" variant="outline" size="sm"
+             commandfor="people-delete" command="show-modal">Delete selected</sl:button>
+  <sl:table id="people-table" th:page="${people}">...</sl:table>
+  <sl:alert-dialog id="people-delete" size="sm">
+    ...
+    <sl:alert-dialog-footer>
+      <sl:alert-dialog-cancel/>
+      <sl:button variant="destructive" type="submit" hx:post="${selfUrl}">Delete</sl:button>
+    </sl:alert-dialog-footer>
+  </sl:alert-dialog>
+</form>
+```
+
+- **Post to the page's own URL.** `selfUrl` is the request's path and query string (`/people-multiselect?q=a&sort=orders,desc&page=1`),
+  so the action knows the search, order and page to come back to, and the links in the fragment it answers with are
+  built from that same address. Without htmx the controller redirects there with a toast; with htmx it renders the
+  `results` fragment of that page, as a search would.
+- **`hx-post` on the confirm button, not the form.** htmx dispatches the events of `HX-Trigger` on the element that
+  made the request. The answer sends `sl-dialog-close` and `sl-toast`; the dialog only closes on an event from inside
+  it, so the button inside the dialog makes the request (a non-`GET` request from inside a form sends the form's
+  values). Without JavaScript the same button submits the form.
+- **Focus.** `HX-Trigger`'s events run before the swap: the dialog closes and gives the focus back to Delete selected,
+  and htmx then finds the new Delete selected by its id. The toast says how many people were deleted.
+- **The selection resets.** The swap brings new checkboxes, unchecked; select-all and the count follow them. So does
+  every sort, page and search: the selection is per page.
+
+## Load more
+
+A `Slice` knows whether there is a next page, not how many there are, which saves the count query on a large table.
+Instead of a pagination, the list can grow: sample-01's `/people-load-more` page ends with a row holding a Load more
+link, which appends the next slice's rows.
+
+```html
+<sl:table th:page="${people}">
+  <thead>...</thead>
+  <tbody>
+    <th:block th:fragment="rows">
+      <tr th:each="person, row : ${people}" th:id="|people-row-${offset + row.count}|"
+          th:tabindex="${offset + row.index > 0 and (offset + row.index) % people.size == 0 ? -1 : null}"
+          th:autofocus="${fragment and row.first}">
+        <td th:text="${person.name}">Ada Allen</td>
+        ...
+      </tr>
+      <tr th:if="${people.hasNext()}" class="load-more-row">
+        <td colspan="4" th:with="next=${#slPaging.pages(people, null, null, 0, null).next.href}">
+          <sl:button as="a" variant="outline" th:href="|${next}#people-row-${(people.number + 1) * people.size + 1}|"
+                     th:hx-get="${next}" hx-target="closest tr" hx-swap="outerHTML" hx-replace-url="true">
+            Load more
+          </sl:button>
+        </td>
+      </tr>
+    </th:block>
+  </tbody>
+</sl:table>
+```
+
+- **The next slice replaces the Load more row.** `hx-target="closest tr"` and `hx-swap="outerHTML"`: the answer is the
+  `rows` fragment, the next slice's rows followed by a new Load more row (none after the last slice), so there is only
+  ever one. `#slPaging.pages(...).next.href` is the next page's link, keeping the order and any filter.
+- **The address follows, without a history entry.** `hx-replace-url` puts `?page=1` in the address bar in place of the
+  current entry. A reload, or coming back to the page, asks for `?page=1`; the controller then renders every slice up
+  to that one, so the page shows the rows it showed before.
+- **The focus moves to the first new row.** The link that had the focus is gone, so the first row of each slice has
+  `tabindex="-1"` and, in the htmx answer, `autofocus`: htmx focuses it after the swap and a screen reader reads it.
+  Tab goes on through the new rows to the next Load more. Give such a row a visible focus style; rows have none:
+  `.people-rows > tr:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; }`.
+- **Without JavaScript** the link opens `?page=1#people-row-21`: the page with every slice up to the next one, and the
+  browser scrolls to the first new row and focuses it (it takes the focus, `tabindex="-1"`).
+- **Selection.** In a table with [row selection](https://wimdeblauwe.github.io/shadleaf/current/components/table.md#selecting-rows), select-all and the count
+  follow the appended rows: three of three selected becomes three of six, and select-all is indeterminate.
+
+The controller answers `HX-Request` with the fragment of one slice, and every other request with all of them:
+
+```java
+@GetMapping("/people-load-more")
+public String loadMore(@PageableDefault(size = 20, sort = "name") Pageable pageable, HtmxRequest htmxRequest,
+    Model model) {
+  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
+      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
+  Slice<Person> people;
+  if (fragment) {
+    people = repository.findAllBy(pageable);
+  } else {
+    Slice<Person> all = repository.findAllBy(
+        PageRequest.of(0, (int) pageable.getOffset() + pageable.getPageSize(), pageable.getSort()));
+    // Still the requested page number and size, so the next link is right.
+    people = new SliceImpl<>(all.getContent(), pageable, all.hasNext());
+  }
+  model.addAttribute("people", people);
+  model.addAttribute("offset", fragment ? (int) pageable.getOffset() : 0);
+  model.addAttribute("fragment", fragment);
+  return fragment ? "people-load-more :: rows" : "people-load-more";
+}
+```
+
+`Slice<Person> findAllBy(Pageable pageable)` in the repository reads one row more than the slice to know whether there
+is a next one, and never counts. Add a unique last sort key, as for [a stable order](https://wimdeblauwe.github.io/shadleaf/current/components/table.md#a-stable-order-across-pages),
+or a row can be loaded twice or never.
+
+### Endless scrolling
+
+`hx-trigger="revealed"` on an element in the last row loads the next slice when it scrolls into view, with no click:
+
+```html
+<tr th:if="${people.hasNext()}" class="load-more-row">
+  <td colspan="4"><span class="sl-sr-only" th:hx-get="${next}" hx-trigger="revealed" hx-target="closest tr"
+                        hx-swap="outerHTML" hx-replace-url="true">Loading more</span></td>
+</tr>
+```
+
+Leave out the `autofocus` then: the user did not ask for the rows, and the focus must stay where it is. Think twice
+before choosing it: whatever comes after the list (a footer, its links) moves away each time it comes into view, a
+keyboard user tabbing through the rows keeps loading more, and nothing tells a screen reader user that rows arrived.
+The Load more link has none of these problems.
+
+## Back and forward
+
+htmx keeps a snapshot of the page for each address it pushed, and puts it back on the back button. The snapshot is the
+markup, and a field's typed value is not in the markup: going back from "grace" to "ada" would show the results for
+"ada" under a field reading whatever the first load put there. So the form has `hx-history="false"`: htmx keeps no
+snapshot of this page and, on back and forward, asks the server for the page at that address instead
+(`HX-History-Restore-Request`), which renders the field and the table for it. That is one request per step back.
+
+An application that would rather keep the snapshots can update the field's `value` attribute as the user types, in a
+script of its own; Shadleaf ships none for it.
+
+## Without JavaScript
+
+The form is a `GET` form with one field, so Enter sends it without a button, and the browser asks for
+`/people?q=ada&sort=email,asc&size=50` (the hidden inputs are part of the form through `form="people-search"`). The
+links are links. Every step is a page load, and every address is one the controller answers with the whole page.
+
+## Tests
+
+Sample-01's `PeoplePageTest` checks the server side over HTTP: the search on name and email, the links and hidden
+inputs keeping `q`, sort and size and dropping the page, the empty result, the fragment for `HX-Request` and the whole
+page for a history restore, and the row menus (their markup, a role change and a delete with and without htmx, the
+confirm page and dialog, where the focus goes); `PeopleMultiselectPageTest` the bulk delete with and without htmx;
+`PeopleLoadMorePageTest` the slices, the links and every person loaded once. The docs' `table-htmx.spec.ts` runs the
+same markup in Chromium and Firefox under a strict Content-Security-Policy: the debounce, one request for a burst of
+typing, what is typed while a request is out, Enter, the pushed address, the focus after a sort or page link, back
+and forward, the form without htmx, a row menu posting with htmx and keeping the focus, Load more (rows appended, one
+Load more row, the focus on the first new row, the address replaced, select-all and the count, the link without
+htmx) and endless scrolling; `table-selection.spec.ts` the selection through htmx swaps and history.
