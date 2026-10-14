@@ -80,6 +80,10 @@ function watch() {
 
 export default function themeToggle() {
   return {
+    // Declared, so init() sets it here: Alpine puts a property no scope has on the outermost x-data, where every
+    // component nested in that one (all of them, inside sl:sidebar-provider) would share it.
+    cleanups: [],
+
     init() {
       watch();
       const root = this.$el;

@@ -8,6 +8,10 @@ import {CHANGE_EVENT, countText, rowCheckboxes, selection} from '../table-rows.j
 
 export default function tableSelectionCount() {
   return {
+    // Declared, so init() sets it here: Alpine puts a property no scope has on the outermost x-data, where every
+    // component nested in that one (all of them, inside sl:sidebar-provider) would share it.
+    cleanups: [],
+
     init() {
       const root = this.$el;
       const table = () => document.getElementById(root.dataset.table);
