@@ -1,0 +1,45 @@
+---
+title: Collapsible sections
+description: A sidebar of sections whose labels open and close them, with a version switcher and a search field, as documentation has.
+sidebar:
+  order: 2
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import LayoutCode from '../../../components/LayoutCode.astro';
+
+The [grouped layout](../grouped-by-section/) with sections that open and close: each section is a
+[collapsible group](../../components/sidebar/#collapsible-sections) whose label is what the user clicks, with a
+chevron that turns when it opens. Every section starts open here; a long sidebar can open only the current page's
+section with `th:open="${#slNav.current('/build')}"`. At the top, a version switcher and a search field. On a desktop
+the trigger moves the sidebar out of view; on a phone it opens the same sidebar as a panel. Switch the preview to
+Phone to see it.
+
+<ComponentPreview id="layout--collapsible-sections" />
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-02) this layout is based on.
+
+## The layout
+
+The whole layout file. It has what [every layout needs](../../components/application-shell/#what-every-layout-needs): the
+theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
+title, and the toaster. A section is the browser's `details` element, so it opens and closes without JavaScript, and
+a closed one is still found by the browser's find in page.
+
+<LayoutCode id="layout--collapsible-sections" part="template" />
+
+## A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+<LayoutCode id="layout--collapsible-sections" part="page" />
+
+## The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the magnifier in the search field, sections
+without a gap between them and with labels in the links' size and colour (the `docs-sections` class on the
+content), a border below the header, and the page's padding.
+
+<LayoutCode id="layout--collapsible-sections" part="css" />

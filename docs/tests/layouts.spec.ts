@@ -29,7 +29,11 @@ const expected: Record<string, Expected> = {
   'layout--sub-menus': {...DOCS, side: 'start'},
   'layout--floating-sub-menus': {...DOCS, side: 'start', floating: true},
   'layout--sidebar-end': {...DOCS, side: 'end'},
-  'layout--collapses-to-icons': {side: 'start', floating: false, collapse: 'icon', current: 'All people', breadcrumb: true},
+  'layout--grouped-by-section': {...DOCS, side: 'start'},
+  'layout--collapsible-sections': {...DOCS, side: 'start'},
+  'layout--collapsible-sub-menus': {...DOCS, side: 'start'},
+  'layout--inset-secondary-navigation': {side: 'start', floating: false, collapse: 'offcanvas', current: 'History', breadcrumb: true},
+  'layout--collapses-to-icons': {side: 'start', floating: false, collapse: 'icon', current: 'History', breadcrumb: true},
   'layout--header': {side: 'start', floating: false, collapse: 'header', current: 'Forms', breadcrumb: false},
 };
 
@@ -98,6 +102,9 @@ for (const layout of layouts) {
         expect(right).toBe(DESKTOP.width - margin);
       }
 
+      if (collapse === 'icon') {
+        await expect(sidebar(page).locator('#nav-projects')).toBeVisible();
+      }
       await trigger(page).click();
       await expect(page.locator('.sidebar-provider')).toHaveAttribute('data-state', 'collapsed');
       await expect(trigger(page)).toHaveAttribute('aria-expanded', 'false');
@@ -106,6 +113,8 @@ for (const layout of layouts) {
         await expect.poll(async () => (await box(page)).right - (await box(page)).left).toBeLessThan(80);
         expect(await sidebar(page).locator('.sidebar-menu-button-label').first()
             .evaluate(label => label.getBoundingClientRect().width)).toBeLessThanOrEqual(1);
+        // The projects' group (icon-hidden) is left out of the strip.
+        await expect(sidebar(page).locator('#nav-projects')).toBeHidden();
       } else {
         await expect(sidebar(page)).toBeHidden();
       }
@@ -167,4 +176,87 @@ test('on the end: the keyboard reaches the page before the sidebar', async ({pag
     }));
   }
   expect(order).toEqual(['Skip to main content', 'Build Your Application', 'Toggle sidebar', 'sidebar: Getting Started']);
+});
+
+test.describe('collapsible sections and sub-menus', () => {
+  const layout = (id: string) => layouts.find(l => l.id === id)!;
+  const sections = () => layout('layout--collapsible-sections');
+
+  test('a section\'s label opens and closes it, and names it', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    await openLayout(page, sections());
+    const group = page.getByRole('group', {name: 'Getting Started'});
+    const label = group.locator('summary.sidebar-group-label');
+    const link = group.getByRole('link', {name: 'Installation'});
+
+    await expect(link).toBeVisible();
+    await label.click();
+    await expect(link).toBeHidden();
+    await expect(group.locator('details')).not.toHaveAttribute('open');
+    await expect(label.locator('.sidebar-group-label-chevron'))
+        .toHaveCSS('rotate', 'none');
+    await label.press('Enter');
+    await expect(link).toBeVisible();
+    await expect(label.locator('.sidebar-group-label-chevron')).toHaveCSS('rotate', '90deg');
+  });
+
+  test('collapsed to icons, a closed section shows its links and its label takes no focus', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    const html = sections().html
+        .replace('<nav class="sidebar"', '<nav class="sidebar" data-collapsible="icon"')
+        .replace(/(<div class="sidebar-provider"[^>]*data-state=")expanded"/, '$1collapsed"');
+    expect(html).toContain('data-collapsible="icon"');
+    expect(html).toContain('data-state="collapsed"');
+    await openFixture(page, servePhotos(html), {wrap: false, stylesheet: sections().css});
+    const group = page.locator('#nav-getting');
+    await group.locator('details').evaluate(details => (details as HTMLDetailsElement).open = false);
+
+    await expect(group.locator('a[href="/getting-started/installation"]')).toBeVisible();
+    await expect(group.locator('summary')).toHaveCSS('visibility', 'hidden');
+    await expect(page.getByRole('group', {name: 'Getting Started'})).toHaveCount(1);
+  });
+
+  test('in the header row, a closed section shows its links and no label', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    await openLayout(page, sections());
+    await page.evaluate(() => {
+      const provider = document.querySelector('.sidebar-provider')!;
+      const header = document.createElement('header');
+      header.className = 'site-header';
+      provider.prepend(header);
+      const sidebar = document.querySelector<HTMLElement>('#sidebar')!;
+      sidebar.dataset.placement = 'header';
+      header.append(sidebar);
+      document.querySelector<HTMLDetailsElement>('#nav-getting details')!.open = false;
+    });
+    const group = page.locator('#nav-getting');
+
+    await expect(group.locator('a[href="/getting-started/installation"]')).toBeVisible();
+    await expect(group.locator('summary')).toBeHidden();
+  });
+
+  test('a section that is a page too: the link, then its chevron, which opens and closes its pages', async ({page}) => {
+    await page.setViewportSize(DESKTOP);
+    await openLayout(page, layout('layout--inset-secondary-navigation'));
+    const link = page.locator('#sidebar a.sidebar-menu-button[href="/playground"]');
+    // A summary has no role Playwright's role queries know.
+    const chevron = page.locator('#sidebar summary.sidebar-menu-sub-toggle[aria-label="Playground\'s pages"]');
+    const history = page.locator('#sidebar a[href="/playground/history"]');
+
+    await expect(history).toBeVisible();
+    await link.focus();
+    await page.keyboard.press('Tab');
+    await expect(chevron).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(history).toBeHidden();
+    await expect(link).toBeVisible();
+    await chevron.click();
+    await expect(history).toBeVisible();
+
+    // The chevron lies over the end of the link, which leaves it room.
+    const [linkBox, chevronBox] = [await link.boundingBox(), await chevron.boundingBox()];
+    expect(chevronBox!.x).toBeGreaterThan(linkBox!.x + linkBox!.width / 2);
+    expect(chevronBox!.y).toBeGreaterThanOrEqual(linkBox!.y);
+    expect(chevronBox!.y + chevronBox!.height).toBeLessThanOrEqual(linkBox!.y + linkBox!.height);
+  });
 });

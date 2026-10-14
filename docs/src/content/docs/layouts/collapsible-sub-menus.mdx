@@ -1,0 +1,44 @@
+---
+title: Collapsible sub-menus
+description: A sidebar of sections that open and close, each with its pages in a sub-menu, only the current page's section open.
+sidebar:
+  order: 5
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import LayoutCode from '../../../components/LayoutCode.astro';
+
+The [sub-menus layout](../sub-menus/) for more pages than fit in view: every section is a
+[collapsible item](../../components/sidebar/#collapsible-groups) that opens and closes its sub-menu, and the server
+opens only the section that holds the current page (`th:open="${#slNav.current('/build')}"`). The sections are no
+pages of their own: the whole row opens and closes. At the top, the application's name and version and a search
+field. On a desktop the trigger moves the sidebar out of view; on a phone it opens the same sidebar as a panel.
+Switch the preview to Phone to see it.
+
+<ComponentPreview id="layout--collapsible-sub-menus" />
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-05) this layout is based on. Its
+plus and minus are Shadleaf's turning chevron here.
+
+## The layout
+
+The whole layout file. It has what [every layout needs](../../components/application-shell/#what-every-layout-needs): the
+theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
+title, and the toaster.
+
+<LayoutCode id="layout--collapsible-sub-menus" part="template" />
+
+## A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+<LayoutCode id="layout--collapsible-sub-menus" part="page" />
+
+## The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the magnifier in the search field, a border
+below the header, and the page's padding.
+
+<LayoutCode id="layout--collapsible-sub-menus" part="css" />

@@ -1,24 +1,24 @@
-# A layout for the docs' Layouts section, rendered by PreviewGeneratorTest (see its javadoc for the keys): sample-01's
-# layout (templates/layout/main.html), shortened. docs/tests/layouts.spec.ts opens it at a desktop and a phone width;
-# it expects the sub-button "All people" to be the current page.
+# A layout for the docs' Layouts section, rendered by PreviewGeneratorTest (see its javadoc for the keys): shadcn's
+# sidebar-07. docs/tests/layouts.spec.ts opens it at a desktop and a phone width; it expects the sub-button "History"
+# to be the current page, a team switcher (menu team-switcher) and the Projects group left out of the strip of icons.
 title: Collapses to icons
 description: >-
-  The navigation in groups, one with a collapsible item, the page as a card beside it, the signed-in user's menu at
-  the bottom. On a desktop the trigger collapses the sidebar to a strip of icons with tooltips; on a phone it opens it
-  as a panel.
-request: /people
+  A team switcher at the top, the platform's sections as collapsible items, projects with a menu each, the signed-in
+  user's menu at the bottom, and the page as a card beside it. On a desktop the trigger collapses the sidebar to a
+  strip of icons with tooltips; on a phone it opens it as a panel.
+request: /playground/history
 user:
   name: shadcn
   email: m@example.com
   photo: shadcn
 htmx: true
 page:
-  title: People
+  title: History
   breadcrumb: |-
-    <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
+    <sl:breadcrumb-item>Playground</sl:breadcrumb-item>
     <sl:breadcrumb-separator/>
     <sl:breadcrumb-item>
-      <sl:breadcrumb-page>People</sl:breadcrumb-page>
+      <sl:breadcrumb-page>History</sl:breadcrumb-page>
     </sl:breadcrumb-item>
   content: |-
     <div class="placeholder-grid">
@@ -28,7 +28,7 @@ page:
     </div>
     <div class="placeholder placeholder-tall"></div>
 css: |-
-  /* The square behind the logo in the sidebar's header. */
+  /* The square behind the team's logo in the sidebar's header. */
   .app-logo {
     display: grid;
     place-items: center;
@@ -50,65 +50,235 @@ source: |-
       <sl:sidebar-header>
         <sl:sidebar-menu>
           <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Acme">
-              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
-              <strong>Acme</strong>
-              <small>Enterprise</small>
-            </sl:sidebar-menu-button>
+            <sl:dropdown-menu id="team-switcher">
+              <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg" tooltip="Acme Inc">
+                <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+                <strong>Acme Inc</strong>
+                <small>Enterprise</small>
+                <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+              </sl:dropdown-menu-trigger>
+              <sl:dropdown-menu-content side="right">
+                <sl:dropdown-menu-label id="team-switcher-label">Teams</sl:dropdown-menu-label>
+                <sl:dropdown-menu-radio-group aria-labelledby="team-switcher-label">
+                  <sl:dropdown-menu-radio-item as="a" th:href="@{/teams/acme-inc}" checked>Acme Inc</sl:dropdown-menu-radio-item>
+                  <sl:dropdown-menu-radio-item as="a" th:href="@{/teams/acme-corp}">Acme Corp.</sl:dropdown-menu-radio-item>
+                  <sl:dropdown-menu-radio-item as="a" th:href="@{/teams/evil-corp}">Evil Corp.</sl:dropdown-menu-radio-item>
+                </sl:dropdown-menu-radio-group>
+                <sl:dropdown-menu-separator/>
+                <sl:dropdown-menu-item as="a" th:href="@{/teams/new}">
+                  <sl:icon name="plus"/>
+                  Add team
+                </sl:dropdown-menu-item>
+              </sl:dropdown-menu-content>
+            </sl:dropdown-menu>
           </sl:sidebar-menu-item>
         </sl:sidebar-menu>
       </sl:sidebar-header>
       <sl:sidebar-content>
-        <sl:sidebar-group id="nav-forms">
-          <sl:sidebar-group-label>Forms</sl:sidebar-group-label>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}" tooltip="Form">
-                  <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
-                  Form
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
+        <sl:sidebar-group id="nav-platform">
+          <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+          <sl:sidebar-menu>
+                <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/playground')}">
+                  <sl:sidebar-menu-button tooltip="Playground">
+                    <sl:slot name="icon-start"><sl:icon name="square-terminal"/></sl:slot>
+                    Playground
+                  </sl:sidebar-menu-button>
+                  <sl:sidebar-menu-sub>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/playground/history}" th:active="${#slNav.current('/playground/history')}">
+                        History
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/playground/starred}" th:active="${#slNav.current('/playground/starred')}">
+                        Starred
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/playground/settings}" th:active="${#slNav.current('/playground/settings')}">
+                        Settings
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                  </sl:sidebar-menu-sub>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/models')}">
+                  <sl:sidebar-menu-button tooltip="Models">
+                    <sl:slot name="icon-start"><sl:icon name="bot"/></sl:slot>
+                    Models
+                  </sl:sidebar-menu-button>
+                  <sl:sidebar-menu-sub>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/models/genesis}" th:active="${#slNav.current('/models/genesis')}">
+                        Genesis
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/models/explorer}" th:active="${#slNav.current('/models/explorer')}">
+                        Explorer
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/models/quantum}" th:active="${#slNav.current('/models/quantum')}">
+                        Quantum
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                  </sl:sidebar-menu-sub>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/docs')}">
+                  <sl:sidebar-menu-button tooltip="Documentation">
+                    <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
+                    Documentation
+                  </sl:sidebar-menu-button>
+                  <sl:sidebar-menu-sub>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/docs/introduction}" th:active="${#slNav.current('/docs/introduction')}">
+                        Introduction
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/docs/get-started}" th:active="${#slNav.current('/docs/get-started')}">
+                        Get Started
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/docs/tutorials}" th:active="${#slNav.current('/docs/tutorials')}">
+                        Tutorials
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/docs/changelog}" th:active="${#slNav.current('/docs/changelog')}">
+                        Changelog
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                  </sl:sidebar-menu-sub>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/settings')}">
+                  <sl:sidebar-menu-button tooltip="Settings">
+                    <sl:slot name="icon-start"><sl:icon name="settings-2"/></sl:slot>
+                    Settings
+                  </sl:sidebar-menu-button>
+                  <sl:sidebar-menu-sub>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/settings/general}" th:active="${#slNav.current('/settings/general')}">
+                        General
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/settings/team}" th:active="${#slNav.current('/settings/team')}">
+                        Team
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/settings/billing}" th:active="${#slNav.current('/settings/billing')}">
+                        Billing
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-item>
+                      <sl:sidebar-menu-sub-button th:href="@{/settings/limits}" th:active="${#slNav.current('/settings/limits')}">
+                        Limits
+                      </sl:sidebar-menu-sub-button>
+                    </sl:sidebar-menu-sub-item>
+                  </sl:sidebar-menu-sub>
+                </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
         </sl:sidebar-group>
-        <sl:sidebar-group id="nav-tables">
-          <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/people') or #slNav.current('/teams')}">
-                <sl:sidebar-menu-button tooltip="People">
-                  <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
-                  People
-                </sl:sidebar-menu-button>
-                <sl:sidebar-menu-sub>
-                  <sl:sidebar-menu-sub-item>
-                    <sl:sidebar-menu-sub-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
-                      All people
-                    </sl:sidebar-menu-sub-button>
-                  </sl:sidebar-menu-sub-item>
-                  <sl:sidebar-menu-sub-item>
-                    <sl:sidebar-menu-sub-button th:href="@{/teams}" th:active="${#slNav.current('/teams')}">
-                      Teams
-                    </sl:sidebar-menu-sub-button>
-                  </sl:sidebar-menu-sub-item>
-                </sl:sidebar-menu-sub>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
+        <sl:sidebar-group id="nav-projects" icon-hidden>
+          <sl:sidebar-group-label>Projects</sl:sidebar-group-label>
+          <sl:sidebar-menu>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/projects/design}" th:active="${#slNav.current('/projects/design')}">
+                    <sl:slot name="icon-start"><sl:icon name="frame"/></sl:slot>
+                    Design Engineering
+                  </sl:sidebar-menu-button>
+                  <sl:dropdown-menu id="project-design-more">
+                    <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Design Engineering">
+                      <sl:icon name="ellipsis"/>
+                    </sl:dropdown-menu-trigger>
+                    <sl:dropdown-menu-content side="right">
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/design}">
+                        <sl:icon name="folder"/>
+                        View project
+                      </sl:dropdown-menu-item>
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/design/share}">
+                        <sl:icon name="forward"/>
+                        Share project
+                      </sl:dropdown-menu-item>
+                      <sl:dropdown-menu-separator/>
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/design/delete}" variant="destructive">
+                        <sl:icon name="trash-2"/>
+                        Delete project
+                      </sl:dropdown-menu-item>
+                    </sl:dropdown-menu-content>
+                  </sl:dropdown-menu>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/projects/sales}" th:active="${#slNav.current('/projects/sales')}">
+                    <sl:slot name="icon-start"><sl:icon name="chart-pie"/></sl:slot>
+                    Sales &amp; Marketing
+                  </sl:sidebar-menu-button>
+                  <sl:dropdown-menu id="project-sales-more">
+                    <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Sales &amp; Marketing">
+                      <sl:icon name="ellipsis"/>
+                    </sl:dropdown-menu-trigger>
+                    <sl:dropdown-menu-content side="right">
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/sales}">
+                        <sl:icon name="folder"/>
+                        View project
+                      </sl:dropdown-menu-item>
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/sales/share}">
+                        <sl:icon name="forward"/>
+                        Share project
+                      </sl:dropdown-menu-item>
+                      <sl:dropdown-menu-separator/>
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/sales/delete}" variant="destructive">
+                        <sl:icon name="trash-2"/>
+                        Delete project
+                      </sl:dropdown-menu-item>
+                    </sl:dropdown-menu-content>
+                  </sl:dropdown-menu>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/projects/travel}" th:active="${#slNav.current('/projects/travel')}">
+                    <sl:slot name="icon-start"><sl:icon name="map"/></sl:slot>
+                    Travel
+                  </sl:sidebar-menu-button>
+                  <sl:dropdown-menu id="project-travel-more">
+                    <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Travel">
+                      <sl:icon name="ellipsis"/>
+                    </sl:dropdown-menu-trigger>
+                    <sl:dropdown-menu-content side="right">
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/travel}">
+                        <sl:icon name="folder"/>
+                        View project
+                      </sl:dropdown-menu-item>
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/travel/share}">
+                        <sl:icon name="forward"/>
+                        Share project
+                      </sl:dropdown-menu-item>
+                      <sl:dropdown-menu-separator/>
+                      <sl:dropdown-menu-item as="a" th:href="@{/projects/travel/delete}" variant="destructive">
+                        <sl:icon name="trash-2"/>
+                        Delete project
+                      </sl:dropdown-menu-item>
+                    </sl:dropdown-menu-content>
+                  </sl:dropdown-menu>
+                </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/projects}" th:active="${#slNav.current('/projects', true)}">
+                <sl:slot name="icon-start"><sl:icon name="ellipsis"/></sl:slot>
+                More
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
         </sl:sidebar-group>
       </sl:sidebar-content>
       <sl:sidebar-footer>
-        <sl:sidebar-menu>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button href="https://example.com/help" size="sm" tooltip="Documentation">
-              <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
-              Documentation
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-        </sl:sidebar-menu>
         <sl:user-menu>
-          <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+          <sl:dropdown-menu-item as="a" th:href="@{/upgrade}"><sl:icon name="sparkles"/>Upgrade to Pro</sl:dropdown-menu-item>
+          <sl:dropdown-menu-separator/>
+          <sl:dropdown-menu-item as="a" th:href="@{/account}"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+          <sl:dropdown-menu-item as="a" th:href="@{/billing}"><sl:icon name="credit-card"/>Billing</sl:dropdown-menu-item>
+          <sl:dropdown-menu-item as="a" th:href="@{/notifications}"><sl:icon name="bell"/>Notifications</sl:dropdown-menu-item>
         </sl:user-menu>
       </sl:sidebar-footer>
     </sl:sidebar>

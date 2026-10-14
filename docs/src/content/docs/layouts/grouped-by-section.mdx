@@ -1,0 +1,47 @@
+---
+title: Grouped by section
+description: A sidebar of sections, each a group of pages under its label, with a version switcher and a search field, as documentation has.
+sidebar:
+  order: 1
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import LayoutCode from '../../../components/LayoutCode.astro';
+
+A sidebar for an application whose pages fall into a handful of sections, such as documentation: each section is a
+[group](../../components/sidebar/) whose label names it, with its pages below, so the whole structure is in view. At
+the top, a version switcher (a [dropdown menu](../../components/dropdown-menu/#opened-from-the-sidebar) opened from a
+large menu button) and a search field. The page's header has the trigger and the
+[breadcrumb](../../components/breadcrumb/). On a desktop the trigger moves the sidebar out of view; on a phone it opens
+the same sidebar as a panel. Switch the preview to Phone to see it.
+
+<ComponentPreview id="layout--grouped-by-section" />
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-01) this layout is based on.
+
+## The layout
+
+The whole layout file. It has what [every layout needs](../../components/application-shell/#what-every-layout-needs): the
+theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
+title, and the toaster. `#slNav.current` marks the current page from the request.
+
+<LayoutCode id="layout--grouped-by-section" part="template" />
+
+The versions are links, and the server checks the one being read (`checked`), so the switcher works without
+JavaScript. Here the check is fixed in the markup; an application that serves several versions sets it with
+`th:checked`. The search field is a plain `GET` form; Shadleaf has no search of its own.
+
+## A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+<LayoutCode id="layout--grouped-by-section" part="page" />
+
+## The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the magnifier in the search field (the
+`docs-search` class on the form) and its height, a border below the header, and the page's padding.
+
+<LayoutCode id="layout--grouped-by-section" part="css" />

@@ -1,6 +1,6 @@
 ---
 title: Collapses to icons
-description: The navigation in groups beside the page, collapsing to a strip of icons on a desktop, with the page as a card and the signed-in user's menu at the bottom.
+description: A team switcher, collapsible sections and projects beside the page, collapsing to a strip of icons on a desktop, with the page as a card and the signed-in user's menu at the bottom.
 sidebar:
   order: 7
 ---
@@ -8,14 +8,17 @@ sidebar:
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import LayoutCode from '../../../components/LayoutCode.astro';
 
-A sidebar for an application with more pages than fit in a header row: the application's name and logo at the top,
-groups of pages (one with a [collapsible item](../../components/sidebar/#collapsible-groups) holding a sub-menu), a
-footer with a link and the [user menu](../../components/user-menu/), and the page as a card beside it
-(`variant="inset"`). The page's header is a [site header](../../components/site-header/) with the trigger, a
-separator, the page's [breadcrumb](../../components/breadcrumb/) and the theme toggle.
+A sidebar for an application with more pages than fit in a header row. At the top, a team switcher: a
+[dropdown menu](../../components/dropdown-menu/#opened-from-the-sidebar) opened from a large menu button. Then the
+platform's sections as [collapsible items](../../components/sidebar/#collapsible-groups), each with its pages in a
+sub-menu, the projects with a "More" menu each, and at the bottom the [user menu](../../components/user-menu/). The
+page is a card beside the sidebar (`variant="inset"`). The page's header is a
+[site header](../../components/site-header/) with the trigger, a separator, the page's
+[breadcrumb](../../components/breadcrumb/) and the theme toggle.
 
 On a desktop the trigger (or Ctrl/⌘+B) collapses the sidebar to a strip of icons (`collapsible="icon"`), with a
-tooltip on every menu button, and a cookie remembers the choice. On a phone it opens the same sidebar as a panel.
+tooltip on every menu button, and a cookie remembers the choice. The projects have no icons worth a strip of their
+own, so their group is left out of it (`icon-hidden`). On a phone the trigger opens the same sidebar as a panel.
 Switch the preview to Phone to see it.
 
 <ComponentPreview id="layout--collapses-to-icons" />
@@ -24,12 +27,16 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 ## The layout
 
-The whole layout file. It has what [every layout needs](../../guides/application-shell/#what-every-layout-needs), and
-it is the layout of the first sample application (sample-01's `layout/main.html`, which has four groups).
-`hx-boost` on the body loads every page with htmx; see [With htmx](../../guides/application-shell/#with-htmx) for
+The whole layout file. It has what [every layout needs](../../components/application-shell/#what-every-layout-needs).
+The first sample application (sample-01) has a shorter version of it, with its own pages and no team switcher.
+`hx-boost` on the body loads every page with htmx; see [With htmx](../../components/application-shell/#with-htmx) for
 the one check a controller then needs. Leave out the script and the attribute for a layout without htmx.
 
 <LayoutCode id="layout--collapses-to-icons" part="template" />
+
+The teams are links, and the server checks the current one (`checked`), so the switcher works without JavaScript; an
+application sets it with `th:checked` and lists its teams with `th:each`. The projects' menus are links too: a delete
+link leads to a page (or, with htmx, an [alert dialog](../../components/alert-dialog/)) that asks first.
 
 Without `variant="inset"` the sidebar is a column along the edge of the screen; with `collapsible="offcanvas"` it
 moves out of view instead of collapsing to icons. The [Sidebar](../../components/sidebar/) page has every part and
