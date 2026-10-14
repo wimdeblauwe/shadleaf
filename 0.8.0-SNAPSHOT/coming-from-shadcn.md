@@ -1,0 +1,465 @@
+# Coming from shadcn/ui
+
+> What carries over from shadcn/ui unchanged, and where Shadleaf differs, and why.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/coming-from-shadcn/
+
+Most of what you know from shadcn/ui carries over. The component and part names map one to one
+(`CardHeader` is `<sl:card-header>`), and so do the variant and size names (`variant="outline" size="sm"`). The colour
+tokens are shadcn's, verbatim: a theme from tweakcn or the shadcn theme generator drops in unchanged. Porting an example
+is mostly a matter of renaming tags.
+
+The skins are shadcn's styles too. `shadleaf.skin=vega` (the default) is shadcn's classic look, and `lyra` its boxy
+and sharp one. shadcn's other styles (Nova, Maia, Mira, Luma) are not available yet.
+
+This page lists where Shadleaf differs. Some differences come from running on the server with Thymeleaf instead of in
+React; the others are deliberate, mostly for accessibility.
+
+## Because it is Thymeleaf, not React
+
+### `as` instead of `asChild`
+
+There is no `asChild`. A component that can render as a link takes `as="a"`:
+
+```html
+<!-- shadcn: <Button asChild><a href="/orders">Orders</a></Button> -->
+<sl:button as="a" th:href="@{/orders}">Orders</sl:button>
+```
+
+### No utility classes in the library's CSS
+
+shadcn styles its components with Tailwind classes compiled into your application. Shadleaf ships its own stylesheet,
+which defines no utility classes, so it works in an application that does not compile Tailwind at all. Where a shadcn
+example relies on a utility class to change a component, Shadleaf has a prop instead:
+
+| shadcn/ui | Shadleaf |
+| --- | --- |
+| `<CardHeader className="border-b">` | `<sl:card-header border>` |
+| `<Skeleton className="h-4 w-full" />` | `<sl:skeleton/>` (a line is the default), `shape="circle"` for an avatar |
+
+Your own classes still work: `class` is appended to the component's own, so `class="w-64"` sizes a skeleton when your
+application compiles Tailwind. See [the adjustability ladder](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/adjustability.md).
+
+### The avatar decides on the server
+
+shadcn's avatar renders the image only once it has loaded in the browser, and the fallback until then. Shadleaf
+always renders both, and the stylesheet picks one: the fallback when the image has no `src` or an empty one, which is
+what `th:src` gives for a user without a photo, needs no script at all. For a photo that is loading or fails to load,
+Shadleaf's script marks the image `data-status="loaded"` or `"error"` (where Radix has `onLoadingStatusChange`), and the
+fallback shows until it is loaded, as in shadcn. There is no `delayMs`. Without JavaScript the image simply lies over
+the fallback.
+
+### Dialogs open with invoker commands
+
+A dialog is the browser's `<dialog>` element, so `DialogContent`, `DialogOverlay` and `DialogPortal` are all
+`<sl:dialog>`. There is no `DialogTrigger` or `DialogClose`, and no `open`/`onOpenChange` state: every dialog has an
+`id`, and any button opens or closes it with `commandfor` and `command`:
+
+```html
+<!-- shadcn: <DialogTrigger asChild><Button variant="outline">Edit</Button></DialogTrigger> -->
+<sl:button variant="outline" commandfor="edit-profile" command="show-modal">Edit</sl:button>
+<!-- shadcn: <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose> -->
+<sl:button variant="outline" commandfor="edit-profile" command="close">Cancel</sl:button>
+```
+
+`open` on `<sl:dialog>` opens it when it is rendered (for a dialog htmx fetches), and the server closes it with the
+`sl-dialog-close` event. The title is a `div` with `role="heading"` and `aria-level="2"` (Radix renders an `h2`), so
+an application's own `h2` styles do not reach it. Content taller than the screen scrolls inside the dialog. See
+[Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md).
+
+### Alert dialog: a cancel part, no action part
+
+`<sl:alert-dialog>` is the same `<dialog>` element with `role="alertdialog"`, opened the same way, and a click
+outside does not close it. `AlertDialogCancel` is `<sl:alert-dialog-cancel>`: it closes the dialog, takes the focus
+when it opens (as Radix's Cancel does) and says "Cancel" unless you give it text. `AlertDialogAction` has no part: in a
+server-rendered page the action submits a form or sends an htmx request, so it is a plain `<sl:button>`:
+
+```html
+<!-- shadcn: <AlertDialogCancel>Cancel</AlertDialogCancel> -->
+<sl:alert-dialog-cancel/>
+<!-- shadcn: <AlertDialogAction variant="destructive">Delete</AlertDialogAction> -->
+<sl:button variant="destructive" type="submit">Delete</sl:button>
+```
+
+shadcn's destructive example colours the media with `className="bg-destructive/10 text-destructive"`; Shadleaf has
+`<sl:alert-dialog-media variant="destructive">`. See [Alert Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/alert-dialog.md).
+
+### Sheet: content padding, and sides that follow the text direction
+
+`<sl:sheet>` is a dialog on an edge of the screen, with `SheetTrigger` and `SheetClose` replaced by `commandfor`, as
+for the dialog. Content between the header and the footer gets the sheet's inline padding, where shadcn's examples
+wrap it in a `div` with `px-4`. `side="right"` and `"left"` are the end and the start of a line, so they swap on a
+right-to-left page. `<sl:sheet-footer close-button>` adds an outline Close button, as the dialog footer does. With
+reduced motion the sheet only fades. See [Sheet](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sheet.md).
+
+### Dialog and sheet bodies: an addition for htmx
+
+shadcn has no body part. `<sl:dialog-body>` and `<sl:sheet-body>` are Shadleaf's own: the content between the header
+and the footer, which scrolls by itself, and the target for htmx. A request into it opens the dialog or sheet at once,
+shows a spinner until the answer is in, and reports a failure as a toast or in the dialog. Without a body, the content
+goes straight into the dialog, as in shadcn. See [Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md#loaded-into-the-dialog-a-body).
+
+### Dropdown menu, popover and tooltip are popovers
+
+The three are the browser's [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), placed next to
+their trigger with CSS anchor positioning, so there are no portals and no `open`/`onOpenChange` state.
+`<sl:dropdown-menu>` and `<sl:popover>` render no element of their own and need an `id`; the trigger part is a
+`<sl:button>` with `popovertarget`, and any other button opens them with `popovertarget` too:
+
+```html
+<!-- shadcn: <DropdownMenuTrigger asChild><Button variant="outline">Open</Button></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger variant="outline">Open</sl:dropdown-menu-trigger>
+```
+
+`asChild` around a sidebar part is `as` on the trigger, which renders that part with the menu's attributes:
+
+```html
+<!-- shadcn: <DropdownMenuTrigger asChild><SidebarMenuButton size="lg">…</SidebarMenuButton></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg">…</sl:dropdown-menu-trigger>
+<!-- shadcn: <DropdownMenuTrigger asChild><SidebarMenuAction showOnHover>…</SidebarMenuAction></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Design">…</sl:dropdown-menu-trigger>
+```
+
+- A menu item is a button or, with `as="a"`, a link; there is no `onSelect`. It does what its attributes say (`href`,
+  `hx-*`, `type="submit"`, `commandfor`) and the menu closes.
+- Checkbox and radio items show the state the server renders (`checked`); there is no `onCheckedChange` or `value`.
+  Choosing one sends a request, and the page that comes back shows the new state.
+- No sub-menus, no `DropdownMenuPortal`, no `modal`. See [Dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md#left-out).
+- No `PopoverAnchor`. A form in a popover can close it with an `HX-Trigger: sl-popover-close` response header. See
+  [Popover](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/popover.md).
+- There is no `TooltipTrigger` and no `TooltipProvider`: the first element inside `<sl:tooltip>` is the trigger, and
+  `delay` sits on each tooltip. See [Tooltip](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/tooltip.md).
+- `side="right"` and `"left"` are the end and the start of a line, as for the sheet.
+
+### Select is a real select
+
+`<sl:select>` renders a `<select>`, so `th:field` binds it and the form submits it without a hidden input. The
+customizable select (`appearance: base-select`) draws its list where the browser has it (Chrome and Edge 135, Safari
+27); elsewhere a small Alpine component shows a list box in its place, and without Alpine it is the browser's own
+select.
+
+```html
+<!-- shadcn: <Select><SelectTrigger><SelectValue placeholder="Select a fruit"/></SelectTrigger>
+             <SelectContent><SelectGroup><SelectLabel>Fruits</SelectLabel>
+             <SelectItem value="apple">Apple</SelectItem>... -->
+<sl:select th:field="*{fruit}" placeholder="Select a fruit">
+  <sl:select-group label="Fruits">
+    <sl:select-item value="apple">Apple</sl:select-item>
+  </sl:select-group>
+</sl:select>
+```
+
+- `SelectTrigger`, `SelectValue` and `SelectContent` are all `<sl:select>`: `size` and `placeholder` are its props.
+- A group's heading is `<sl:select-group label>`; there is no `SelectLabel` part.
+- No scroll buttons, no `position="item-aligned"`, `side` or `align`: the list opens below the select, or above it
+  when there is no room.
+- No `value`/`onValueChange`: `th:field` renders the value, and the select fires `change`.
+- The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
+  item at once, as on any select, where Radix opens the list. See [Select](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/select.md#left-out).
+
+### Accordion and collapsible are details elements
+
+Each accordion item and each collapsible is a `<details>` element with the trigger as its `<summary>`, so they need
+no JavaScript. That changes a few things:
+
+```html
+<!-- shadcn: <Accordion type="single" collapsible defaultValue="item-1">
+             <AccordionItem value="item-1">... -->
+<sl:accordion>
+  <sl:accordion-item open>...</sl:accordion-item>
+</sl:accordion>
+```
+
+- `defaultValue` is `open` on the item; items have no `value`, and there is no `onValueChange`.
+- `type="single"` (the default here) is always `collapsible`: the browser lets the open `details` close. The items
+  share a `name`, which must be unique on the page; one is generated when you give none.
+- The trigger's text is a heading (`role="heading"`, `level`, 3 by default) inside the `summary`, where Radix puts the
+  trigger's button in an `h3`.
+- No arrow keys between accordion triggers (optional in the ARIA pattern): Tab moves between them.
+- The trigger must be the first child of its item or collapsible; a collapsible's trigger cannot sit after its
+  content. `<CollapsibleTrigger asChild><Button …>` is `<sl:collapsible-trigger variant="…" size="…">`.
+- A closed disabled item renders no content, as Radix renders no closed content at all.
+
+See [Accordion](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/accordion.md) and [Collapsible](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/collapsible.md).
+
+### Tabs: `tab` and `active` instead of `value` and `defaultValue`
+
+`value` is taken in Thymeleaf (`th:value`), so a trigger and its panel share a `tab`, and `active` on `<sl:tabs>`
+names the active one, which the server renders. The tabs need an `id`, and a trigger with an `href` is a link that
+works without JavaScript:
+
+```html
+<!-- shadcn: <Tabs defaultValue="account"><TabsList><TabsTrigger value="account">... -->
+<sl:tabs id="settings" active="account">
+  <sl:tabs-list><sl:tabs-trigger tab="account">Account</sl:tabs-trigger>...</sl:tabs-list>
+  <sl:tabs-content tab="account">...</sl:tabs-content>
+</sl:tabs>
+```
+
+`activationMode` is `activation-mode`; there is no `onValueChange` (an `sl-tabs-show` event fires on the panel that is
+shown). See [Tabs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/tabs.md).
+
+### Toast: the server sends the toasts
+
+shadcn's toast is Sonner: a `<Toaster />` in the layout and `toast("...")` calls in the browser. Shadleaf has
+`<sl:toaster>` in the layout, and the toasts come from the server: an htmx response sends the `sl-toast` event with
+`HX-Trigger` (`htmxResponse.addTrigger("sl-toast", Toast.success("Saved"))`), a page renders `<sl:toast>`s from a flash
+attribute after a redirect, or a response swaps them in out of band. A script can dispatch `sl-toast` itself, with the
+same detail as Sonner's options: `{title, description, variant, duration}`. `toast.success()` and friends are the
+`variant` (`success`, `info`, `warning`, `error`); `visibleToasts` is `visible-toasts`. See
+[Toast](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/toast.md).
+
+### Theme toggle: a component, no `ThemeProvider`
+
+shadcn's dark mode is next-themes: a `ThemeProvider` around the app and a `ModeToggle` you copy from the docs. Shadleaf
+has the theme script in the layout's `<head>` (the provider's part: the `dark` class before the first paint) and
+`<sl:theme-toggle/>`, the same menu with Light, Dark and System, its items checked by the current choice
+(`menuitemradio`s; shadcn's are plain items). `as="button"` is the one-button switch of shadcn's own site. The choice
+is stored under `localStorage['shadleaf-theme']` (next-themes uses `theme`), and System removes it. There is no
+`useTheme()`: the `sl-theme-change` event tells a script about a change. See [Theme toggle](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/theme-toggle.md).
+
+### Table: plain rows and cells, sorted on the server
+
+`<sl:table>` styles the plain table elements inside it, so there is no `TableHeader`, `TableBody`, `TableFooter`,
+`TableRow`, `TableHead`, `TableCell` or `TableCaption`: write `thead`, `tbody`, `tfoot`, `tr`, `th`, `td` and
+`caption`, with `th:each` on the row. A page of 50 rows would otherwise be hundreds of components. Where shadcn's
+data table sorts in the browser with TanStack Table, `<sl:table-head sort="name">` is a link that asks the server for
+the page in another order (`?sort=name,desc`), read from a Spring Data `Page`. A cell's alignment is `data-align="end"`
+rather than a `text-right` class. Filtering is a `GET` form the server answers, with `sl:query-params` keeping the
+order and page size, and htmx to search as the user types ([Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/tables-htmx.md)). There is no
+column visibility or browser-side paging. Row selection is the application's own checkboxes, which submit with a form:
+`<sl:table-select-all>` takes the place of the header's `Checkbox` with `table.getIsAllPageRowsSelected()`, and
+`<sl:table-selection-count>` of `"{n} of {total} row(s) selected."` (it reads "2 of 20 selected"). The selected row's
+background comes from CSS (a checked checkbox in the row's first cell), not from `data-state="selected"`. The
+selection covers the page only; a sort or another page starts afresh. See [Table](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#selecting-rows).
+The row actions are the same dropdown menu in the last cell, but its items post a form around the menu rather than
+call a function (the data table's "Copy payment ID" writes to the clipboard), and the column's header cell has a
+screen-reader name ("Actions") where shadcn's is empty. See [Actions per row](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#actions-per-row).
+
+### Pagination: built from a Spring Data page
+
+The parts are shadcn's (`PaginationContent`, `-Item`, `-Link`, `-Previous`, `-Next`, `-Ellipsis`), and
+`<sl:pagination th:page="${people}"/>` with no content renders them all from a Spring Data `Page`: links that keep the
+request's other parameters, first and last page, ellipses, Previous and Next disabled at the ends (no `href`,
+`aria-disabled`). `isActive` is `active`. The ellipsis is not `aria-hidden`: it reads "More pages", where shadcn's
+hidden screen-reader text is never read. The labels are messages (`sl.pagination.*`) rather than props such as
+Previous's `text`. The data table's footer pieces are components: `sl:pagination-summary` ("11–20 of 270") and
+`sl:pagination-size` (a menu of links rather than a select). See [Pagination](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/pagination.md).
+
+### Sidebar: one element instead of a Sheet on a phone
+
+shadcn's `Sidebar` renders a `Sheet` on a phone and a separate sidebar on a desktop, chosen in the browser by
+`useIsMobile()`. The server does not know the screen's width, and rendering the navigation twice would double its
+markup and its ids, so `<sl:sidebar>` is one `<nav popover>`: CSS shows it beside the page from 768 px, and below that
+the trigger opens it as the panel (focus in, the rest of the page inert while it is open). The state lives on
+`<sl:sidebar-provider>`'s `data-state` (shadcn also puts it on the sidebar), the cookie is `sl-sidebar-state` with
+`expanded` or `collapsed` (shadcn's `sidebar_state` holds `true` or `false`) for a year instead of a week, and the
+server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
+the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
+the text direction. `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
+So does `collapsible`: `offcanvas` and `icon` as shadcn's, while `none` only keeps the sidebar from collapsing on a
+desktop and is still the panel on a phone (shadcn's is a plain column at every width). See
+[Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md).
+
+The parts inside it keep shadcn's names. `<sl:sidebar-menu-button>` is a link unless `as="button"` (shadcn's renders a
+button, and `asChild` makes it a link); `isActive` is `active`, and `th:active="${#slNav.current('/people')}"` asks the
+request whether the link is the current page, so no controller has to say so. The icon goes in the `icon-start` slot
+and the text is wrapped for you (shadcn's `<span>` around the label); two lines are two elements, such as `<strong>`
+and `<small>`, as there are no utility classes. `<sl:sidebar-content>` is a `div`, as shadcn's: `<sl:sidebar>` is the
+`nav`. `tooltip="Home"` on a menu button is shadcn's `tooltip` prop (a string only).
+
+A collapsible group needs no `Collapsible`, `CollapsibleTrigger` and `CollapsibleContent` around the item, its button
+and its sub-menu: `<sl:sidebar-menu-item collapsible>` is a `details` element, its menu button becomes the `summary`
+(with shadcn's chevron) and `<sl:sidebar-menu-sub>` the content. `defaultOpen` is `open`, usually
+`th:open="${#slNav.current('/settings')}"`. `SidebarMenuSubButton`'s `isActive` is `active`, `size` is shadcn's
+(`sm`, `md`), and it is a link unless `as="button"`.
+
+A dropdown menu opened from a menu button or a menu action (shadcn's team switcher, version switcher, `NavUser` and
+the projects' "More") is `<sl:dropdown-menu-trigger as="sidebar-menu-button">` or `as="sidebar-menu-action"` (see
+above). shadcn picks the side in React, `side={isMobile ? "bottom" : "right"}`; here `side="right"` is enough: in the
+phone panel (and in the header layout's row) CSS opens a right or left menu below its trigger, lined up with its end.
+shadcn's `data-[state=open]:bg-sidebar-accent` on the team switcher is built in: an open trigger has the active look,
+and its menu is at least as wide as the trigger (`w-(--radix-dropdown-menu-trigger-width) min-w-56`). The current team
+is a checked radio item (shadcn's team switcher marks none, its version switcher draws a check icon). A menu action is
+24 px, shadcn's 20 px being too small a target once it shows (WCAG 2.2). See
+[Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar).
+
+### Site header and the header placement
+
+shadcn/ui has no site header component: sidebar-16 and the dashboard write theirs in each block. `<sl:site-header>` is
+that header (a `header` row, with an `end` slot for what goes to the end), and serves as the sidebar-07 page header
+inside `<sl:sidebar-inset>` too. shadcn/ui's sidebar has no header placement either: `placement="header"` on
+`<sl:sidebar>` makes the same element a row of links in the site header from 768 px (Flux's header layout) and the
+panel on a phone, and `panel-only` on a header, footer, group or menu item leaves it out of everything but the phone
+panel. See [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#in-the-header) and [Site Header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md). sidebar-16's
+layout itself (that header across the whole page, the sidebar below it) is not supported: the sidebar is sticky at the
+top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The
+[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md) guide has the two layouts there are.
+
+### User menu: a component, not a block
+
+shadcn's `NavUser` is part of its sidebar blocks, with the user passed in as props and a Log out item that does
+nothing. `<sl:user-menu>` is a component: the user comes from Spring Security (`#slUser`), Sign out posts a form with
+the CSRF token, and an anonymous visitor gets a Sign in link. `as="header"` gives the picture-only button for a site
+header. The avatar stays round in the menu, where `NavUser` makes it a rounded square, and the menu's items are what you
+put inside the component (shadcn's "Upgrade to Pro", "Account", "Billing" and "Notifications" are the block's own). The
+team switcher and the version switcher stay examples on the Sidebar page, as in shadcn's docs: see
+[Menus in the sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar).
+
+### Breadcrumb: the ellipsis opens its own menu
+
+The parts are shadcn's (`BreadcrumbList`, `-Item`, `-Link`, `-Page`, `-Separator`, `-Ellipsis`). `<sl:breadcrumb-link>`
+is always a link (shadcn's `asChild` makes it a router `Link`); a level without a page is plain text in its item.
+shadcn's example wraps the ellipsis in a `DropdownMenuTrigger` by hand; here `<sl:breadcrumb-ellipsis>` with
+`sl:dropdown-menu-item`s as its content renders that menu and its button itself. The ellipsis's hidden text is
+"More levels", not "More", and the separator turns around on a right-to-left page. See
+[Breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md).
+
+### Skip link and main
+
+shadcn/ui has no skip link; `<sl:skip-link>` goes first in the body and skips to `<sl:sidebar-inset>`, which therefore
+renders `id="main"` and `tabindex="-1"` (shadcn's `SidebarInset` is a bare `main`). See
+[Skip Link](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/skip-link.md).
+
+### Markup
+
+The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
+`data-variant` or `data-size` attribute only when the value is not the default. It matters only if you port CSS written
+against shadcn's markup.
+
+## Deliberate differences
+
+### A button does not submit by default
+
+`<sl:button>` renders `type="button"`; shadcn's `Button` leaves the type out, so it submits the form it is in. Write
+`type="submit"` on the button that should submit. See [Button](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/button.md).
+
+### An alert is not announced by default
+
+shadcn's `Alert` always has `role="alert"`, so a screen reader interrupts the user to read it. Most alerts are part of
+the page when it loads, where that interruption helps nobody. Add `role="alert"` yourself when an alert appears later,
+for example in an htmx response. See [Alert](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/alert.md).
+
+### Contrast
+
+A few of shadcn's colour pairs are under the 4.5:1 contrast WCAG asks for small text:
+
+- destructive text on its light red tint (the destructive button and badge, the destructive alert);
+- muted text on a muted background (the kbd, the avatar's initials).
+
+Shadleaf mixes 20% of `--foreground` into the text colour in those places. It still follows your own `--destructive`
+and `--muted-foreground`, so your theme keeps working.
+
+Where shadcn changes text to `--muted-foreground` on hover, Shadleaf keeps `--foreground`, for the same reason.
+
+### Only interactive elements react to hover
+
+shadcn's ghost badge changes colour on hover even when it is a plain label. A Shadleaf badge only reacts to hover, and
+takes keyboard focus, when it is a link (`as="a"`).
+
+### Accessibility additions
+
+- `<sl:card-title level="3">` is announced as a heading, so screen reader users can jump between cards. Without a
+  `level` it is plain text, as in shadcn.
+- The avatar is hidden from assistive technology unless it has a `label`, as it usually sits next to the person's
+  name. With one, it is announced as a single image with that name.
+- The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
+- A tab panel shows the focus ring when Tab reaches it; shadcn's takes the focus without showing it. In Windows'
+  high-contrast mode the active tab is underlined, as its background and shadow are gone there.
+- Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
+  `aria-label`.
+
+### Menus and tooltips
+
+- Keyboard focus on a menu item draws the focus ring as well as the accent background, which alone is barely lighter
+  than the menu. The pointer highlights with the background only, as in shadcn.
+- Tab closes a menu and moves on to the next control, as the ARIA menu pattern describes; Radix keeps the focus in
+  the menu.
+- A tooltip waits 300 ms before it shows on hover (`delay`), where shadcn shows it at once, so moving the pointer
+  across a toolbar does not flash every tooltip on the way. Keyboard focus, and the next tooltip right after one hid,
+  still show at once.
+- The pointer can move onto a tooltip without it hiding, and Escape hides it, as WCAG 1.4.13 asks.
+- `mode="label"` is for a tooltip that repeats its trigger's name, such as an icon button's `aria-label`: it is hidden
+  from screen readers instead of describing the trigger with the same words. shadcn has no such option.
+
+### Toasts
+
+- A toast shows for 5 seconds, not Sonner's 4, and its time stops while it has the focus as well as on hover. Every
+  toast has a close button (Sonner's `closeButton` is off by default), and there is no swipe to dismiss.
+- There is no action or cancel button: a toast goes away by itself, so it must not hold the only way to do something.
+- An error toast is announced at once (assertive); the others politely, as all of Sonner's are.
+- An error's icon takes the destructive colour; with Sonner every icon has the text colour unless `richColors` is on.
+- The toasts move into an open modal dialog, so one shown while a dialog is open can be used and is announced; a
+  Sonner toast outside the dialog is inert there.
+
+### Breadcrumb
+
+- The page shown now is plain text with `aria-current="page"`. shadcn's also has `role="link"` and
+  `aria-disabled="true"`, which a screen reader announces as a link that goes nowhere.
+- An ellipsis without a menu is read as "More levels"; shadcn's is hidden from screen readers (`aria-hidden`) even
+  though it holds a visually hidden "More".
+- The ellipsis's menu button is named "Show more levels" rather than shadcn's example's "Toggle menu".
+
+### Sidebar menus
+
+- A group with a label is a group named by it (`role="group"`, `aria-labelledby`), so a screen reader says "Platform,
+  group" when the focus moves into it; shadcn's label is plain text.
+- The current page's menu button has `aria-current="page"` (`aria-current="true"` for a button), which a screen reader
+  says; shadcn sets only `data-active`. The skins style `aria-current`, and in Windows' high-contrast mode the current
+  entry keeps an outline, as its background is gone there.
+- A menu badge describes its button (`aria-describedby`), so a screen reader says "Inbox, link, 12 unread" when Tab
+  reaches the link; shadcn's badge is only read when reading through the list. `label` gives the words to say.
+- The group and menu actions need an `aria-label` (shadcn's examples put a visually hidden `<span>` in them). A menu
+  action is 24 px at every width, and a group action on a phone, WCAG 2.2's minimum target size, instead of 20 px with
+  a larger invisible hit area.
+- Collapsed to icons, a menu button's tooltip and its dropdown menu are never shown together.
+- `show-on-hover` is `showOnHover`.
+- Collapsed to icons, a menu button's tooltip repeats its name, so it is hidden from screen readers and describes
+  nothing (`sl:tooltip`'s `mode="label"`); Radix's tooltip makes it the button's description, which a screen reader
+  says after the same name. The tooltip shows on keyboard focus too, after the delay on hover.
+- Collapsed to icons, a click on a collapsible group's icon expands the sidebar and opens the group; shadcn's opens the
+  group, whose sub-menu the strip hides. A group that holds the current page shows it on its icon, which shadcn's does
+  not. A collapsible item takes no badge or action (the browser hides them with the sub-menu).
+
+### Form controls
+
+- `<sl:input>` only takes the text-like types (`text`, `email`, `password`, `date`, `file`, ...). Checkboxes, radio
+  buttons and switches are separate components, as in shadcn, but shadcn's `Input` would accept `type="checkbox"`.
+- `<sl:native-select>` takes `<option>` and `<optgroup>` as they are; there is no `NativeSelectOption`.
+- The select's list is at least as wide as the select and opens below it, where shadcn's default
+  (`position="item-aligned"`) lays it over the select. Keyboard focus on an item draws the focus ring as well as the
+  accent background, as in the dropdown menu.
+- Checkbox, radio group and switch are the browser's own inputs, styled, where shadcn builds them from buttons. They
+  submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
+  on any radio button or checkbox. The indeterminate state is the input's own (`indeterminate` prop, or the DOM
+  property) and shows a minus; shadcn's checkbox shows its check mark for `checked="indeterminate"`.
+- A disabled checkbox fades as a whole, check mark included. In the lyra skin a disabled native select gets the same
+  grey background as a disabled input (shadcn's lyra only gives it to input and textarea).
+
+### Field
+
+- `th:field` goes on `<sl:field>` (or `<sl:field-set>`), which wires up the label's `for`, the control's `id`,
+  `aria-describedby` and `aria-invalid`, and the field's `data-invalid`. In shadcn you set `htmlFor`, `id`,
+  `aria-invalid` and `data-invalid` yourself.
+- `<sl:field-error/>` reads the binding's messages; there is no `errors` prop. Content of your own replaces them, as
+  `children` do in shadcn.
+- The error has no `role="alert"`: after a full page load every error would be announced at once. The control is
+  described by its error instead.
+- The field has no `role="group"`, which gave every field an unnamed group. A set of options is a `<sl:field-set>`.
+- In an invalid field, only the label (or legend) and the error turn destructive; shadcn colours all the field's
+  text.
+- No `FieldTitle`, `FieldSeparator` or choice cards (a field inside a label) yet.
+- No `data-disabled` on the field: its label fades by itself when the control is disabled, also by a
+  `<sl:field-set disabled>`. The description does not fade.
+
+### Additions
+
+- An input, textarea or native select with `th:field` marks itself `aria-invalid` when its field has errors, so the
+  invalid style needs no markup of yours.
+- `<sl:form-errors/>` shows the binding's global errors (`reject(...)`, a class-level constraint), or with
+  `show="all"` every error, as a destructive alert above the fields. shadcn has no such component; you would write an `Alert` with the messages yourself.
+- A read-only input or textarea gets a muted background and no shadow; shadcn draws it as an editable one.
+- In Windows' high-contrast mode a disabled control turns the system's grey text colour (`GrayText`) instead of
+  fading.
+- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
+  `Spinner` for this.

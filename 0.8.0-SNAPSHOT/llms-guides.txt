@@ -1,0 +1,2846 @@
+# Shadleaf guides
+
+> Getting started with Shadleaf, its conventions, and the guides.
+
+Shadleaf 0.8.0-SNAPSHOT.
+
+## Shadleaf
+
+> shadcn/ui for Thymeleaf, as a Spring Boot starter.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/
+
+Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) design system to Thymeleaf. Add one dependency, include one
+fragment, and write `<sl:button>`:
+
+**Example: Variants.**
+
+```html
+<sl:button>Default</sl:button>
+<sl:button variant="outline">Outline</sl:button>
+<sl:button variant="ghost">Ghost</sl:button>
+<sl:button variant="destructive">Destructive</sl:button>
+<sl:button variant="secondary">Secondary</sl:button>
+<sl:button variant="link">Link</sl:button>
+```
+
+- **No Node, no Tailwind in your application.** The jar ships compiled CSS, served under `/shadleaf/**`.
+- **shadcn's token names, verbatim.** `--primary`, `--radius`, `--ring`: any shadcn theme drops in unchanged.
+- **Declared props.** A typo such as `variant="destructve"` fails with the legal values, and an icon-only button
+  without an `aria-label` fails too, instead of shipping.
+- **Adjustable in five steps**, from a prop to owning the template yourself: see
+  [the adjustability ladder](guides/adjustability/).
+- **Works under a strict Content-Security-Policy**, with no `'unsafe-inline'`: see [CSP](guides/csp/).
+
+Every preview on this site is rendered by the library itself, from the build that produced these pages, so it shows
+exactly the markup your application gets.
+
+> **Caution: Pre-release**
+>
+> Before 1.0, the rendered markup, class names and `data-*` attributes can change between versions.
+
+---
+
+## Getting started
+
+> Add Shadleaf to a Spring Boot application.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/getting-started/
+
+Shadleaf needs Java 17, Spring Boot 4 and Thymeleaf. Your application needs no Node.js and no Tailwind.
+
+### Add the dependency
+
+```xml
+<dependency>
+  <groupId>io.github.wimdeblauwe</groupId>
+  <artifactId>shadleaf-spring-boot-starter</artifactId>
+  <version>0.8.0-SNAPSHOT</version>
+</dependency>
+```
+
+### Include the stylesheet and the theme script
+
+In the `<head>` of your layout:
+
+```html
+<head>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <!-- your own stylesheet after it, so your overrides win -->
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+```
+
+`assets` links the stylesheet of the configured skin and loads the script with Alpine.js, which the interactive
+components use; see [Alpine.js](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/alpine.md) if your application loads Alpine itself. `theme-script` is a tiny inline script that sets `class="dark"`
+on `<html>` before the first paint: `localStorage['shadleaf-theme']` set to `light` or `dark` wins, anything else follows
+the operating system. [`<sl:theme-toggle>`](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/theme-toggle.md) lets the user choose. Behind a
+Content-Security-Policy, see [CSP](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp.md).
+
+### Use the components
+
+Declare the namespace, then use the tags:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+...
+<sl:button variant="outline">Cancel</sl:button>
+<sl:button type="submit">Save</sl:button>
+```
+
+> **Note: type="button" is the default**
+>
+> `<sl:button>` renders `type="button"`, unlike HTML's `<button>`, so a button inside a form never submits it by
+> accident. Write `type="submit"` on the button that should.
+
+### Configuration
+
+| Property | Default | |
+| --- | --- | --- |
+| `shadleaf.skin` | `vega` | The visual identity, named after the shadcn/ui style it follows: `vega` or `lyra`. |
+| `shadleaf.assets.variant` | `standalone` | `embedded` leaves out Tailwind's reset, for applications that compile Tailwind themselves. |
+| `shadleaf.assets.alpine` | `bundled` | Where Alpine.js comes from: `bundled`, `csp` or `external`; see [Alpine.js](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/alpine.md). |
+| `shadleaf.csp.nonce-attribute` | `cspNonce` | The request attribute holding a CSP nonce for the theme script. |
+| `shadleaf.dev.web-types-file` | | Writes IDE metadata for your components; see [IDE completion](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/ide-completion.md). |
+
+### Already compiling Tailwind?
+
+Load the `embedded` bundle (`shadleaf.assets.variant=embedded`). It carries no preflight and no theme variables, so
+your own Tailwind build keeps its reset, its headings and its `@theme`. Utility classes such as `w-full mt-4` on a
+component come from your build: the library's bundles define none.
+
+### A layout for every page
+
+The [Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md) guide has two layouts to copy, with the navigation in a sidebar
+or in a header, a panel on a phone, the skip link, the breadcrumb, the theme toggle and the toasts already in place.
+
+---
+
+## Coming from shadcn/ui
+
+> What carries over from shadcn/ui unchanged, and where Shadleaf differs, and why.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/coming-from-shadcn/
+
+Most of what you know from shadcn/ui carries over. The component and part names map one to one
+(`CardHeader` is `<sl:card-header>`), and so do the variant and size names (`variant="outline" size="sm"`). The colour
+tokens are shadcn's, verbatim: a theme from tweakcn or the shadcn theme generator drops in unchanged. Porting an example
+is mostly a matter of renaming tags.
+
+The skins are shadcn's styles too. `shadleaf.skin=vega` (the default) is shadcn's classic look, and `lyra` its boxy
+and sharp one. shadcn's other styles (Nova, Maia, Mira, Luma) are not available yet.
+
+This page lists where Shadleaf differs. Some differences come from running on the server with Thymeleaf instead of in
+React; the others are deliberate, mostly for accessibility.
+
+### Because it is Thymeleaf, not React
+
+#### `as` instead of `asChild`
+
+There is no `asChild`. A component that can render as a link takes `as="a"`:
+
+```html
+<!-- shadcn: <Button asChild><a href="/orders">Orders</a></Button> -->
+<sl:button as="a" th:href="@{/orders}">Orders</sl:button>
+```
+
+#### No utility classes in the library's CSS
+
+shadcn styles its components with Tailwind classes compiled into your application. Shadleaf ships its own stylesheet,
+which defines no utility classes, so it works in an application that does not compile Tailwind at all. Where a shadcn
+example relies on a utility class to change a component, Shadleaf has a prop instead:
+
+| shadcn/ui | Shadleaf |
+| --- | --- |
+| `<CardHeader className="border-b">` | `<sl:card-header border>` |
+| `<Skeleton className="h-4 w-full" />` | `<sl:skeleton/>` (a line is the default), `shape="circle"` for an avatar |
+
+Your own classes still work: `class` is appended to the component's own, so `class="w-64"` sizes a skeleton when your
+application compiles Tailwind. See [the adjustability ladder](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/adjustability.md).
+
+#### The avatar decides on the server
+
+shadcn's avatar renders the image only once it has loaded in the browser, and the fallback until then. Shadleaf
+always renders both, and the stylesheet picks one: the fallback when the image has no `src` or an empty one, which is
+what `th:src` gives for a user without a photo, needs no script at all. For a photo that is loading or fails to load,
+Shadleaf's script marks the image `data-status="loaded"` or `"error"` (where Radix has `onLoadingStatusChange`), and the
+fallback shows until it is loaded, as in shadcn. There is no `delayMs`. Without JavaScript the image simply lies over
+the fallback.
+
+#### Dialogs open with invoker commands
+
+A dialog is the browser's `<dialog>` element, so `DialogContent`, `DialogOverlay` and `DialogPortal` are all
+`<sl:dialog>`. There is no `DialogTrigger` or `DialogClose`, and no `open`/`onOpenChange` state: every dialog has an
+`id`, and any button opens or closes it with `commandfor` and `command`:
+
+```html
+<!-- shadcn: <DialogTrigger asChild><Button variant="outline">Edit</Button></DialogTrigger> -->
+<sl:button variant="outline" commandfor="edit-profile" command="show-modal">Edit</sl:button>
+<!-- shadcn: <DialogClose asChild><Button variant="outline">Cancel</Button></DialogClose> -->
+<sl:button variant="outline" commandfor="edit-profile" command="close">Cancel</sl:button>
+```
+
+`open` on `<sl:dialog>` opens it when it is rendered (for a dialog htmx fetches), and the server closes it with the
+`sl-dialog-close` event. The title is a `div` with `role="heading"` and `aria-level="2"` (Radix renders an `h2`), so
+an application's own `h2` styles do not reach it. Content taller than the screen scrolls inside the dialog. See
+[Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md).
+
+#### Alert dialog: a cancel part, no action part
+
+`<sl:alert-dialog>` is the same `<dialog>` element with `role="alertdialog"`, opened the same way, and a click
+outside does not close it. `AlertDialogCancel` is `<sl:alert-dialog-cancel>`: it closes the dialog, takes the focus
+when it opens (as Radix's Cancel does) and says "Cancel" unless you give it text. `AlertDialogAction` has no part: in a
+server-rendered page the action submits a form or sends an htmx request, so it is a plain `<sl:button>`:
+
+```html
+<!-- shadcn: <AlertDialogCancel>Cancel</AlertDialogCancel> -->
+<sl:alert-dialog-cancel/>
+<!-- shadcn: <AlertDialogAction variant="destructive">Delete</AlertDialogAction> -->
+<sl:button variant="destructive" type="submit">Delete</sl:button>
+```
+
+shadcn's destructive example colours the media with `className="bg-destructive/10 text-destructive"`; Shadleaf has
+`<sl:alert-dialog-media variant="destructive">`. See [Alert Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/alert-dialog.md).
+
+#### Sheet: content padding, and sides that follow the text direction
+
+`<sl:sheet>` is a dialog on an edge of the screen, with `SheetTrigger` and `SheetClose` replaced by `commandfor`, as
+for the dialog. Content between the header and the footer gets the sheet's inline padding, where shadcn's examples
+wrap it in a `div` with `px-4`. `side="right"` and `"left"` are the end and the start of a line, so they swap on a
+right-to-left page. `<sl:sheet-footer close-button>` adds an outline Close button, as the dialog footer does. With
+reduced motion the sheet only fades. See [Sheet](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sheet.md).
+
+#### Dialog and sheet bodies: an addition for htmx
+
+shadcn has no body part. `<sl:dialog-body>` and `<sl:sheet-body>` are Shadleaf's own: the content between the header
+and the footer, which scrolls by itself, and the target for htmx. A request into it opens the dialog or sheet at once,
+shows a spinner until the answer is in, and reports a failure as a toast or in the dialog. Without a body, the content
+goes straight into the dialog, as in shadcn. See [Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md#loaded-into-the-dialog-a-body).
+
+#### Dropdown menu, popover and tooltip are popovers
+
+The three are the browser's [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), placed next to
+their trigger with CSS anchor positioning, so there are no portals and no `open`/`onOpenChange` state.
+`<sl:dropdown-menu>` and `<sl:popover>` render no element of their own and need an `id`; the trigger part is a
+`<sl:button>` with `popovertarget`, and any other button opens them with `popovertarget` too:
+
+```html
+<!-- shadcn: <DropdownMenuTrigger asChild><Button variant="outline">Open</Button></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger variant="outline">Open</sl:dropdown-menu-trigger>
+```
+
+`asChild` around a sidebar part is `as` on the trigger, which renders that part with the menu's attributes:
+
+```html
+<!-- shadcn: <DropdownMenuTrigger asChild><SidebarMenuButton size="lg">…</SidebarMenuButton></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg">…</sl:dropdown-menu-trigger>
+<!-- shadcn: <DropdownMenuTrigger asChild><SidebarMenuAction showOnHover>…</SidebarMenuAction></DropdownMenuTrigger> -->
+<sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Design">…</sl:dropdown-menu-trigger>
+```
+
+- A menu item is a button or, with `as="a"`, a link; there is no `onSelect`. It does what its attributes say (`href`,
+  `hx-*`, `type="submit"`, `commandfor`) and the menu closes.
+- Checkbox and radio items show the state the server renders (`checked`); there is no `onCheckedChange` or `value`.
+  Choosing one sends a request, and the page that comes back shows the new state.
+- No sub-menus, no `DropdownMenuPortal`, no `modal`. See [Dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md#left-out).
+- No `PopoverAnchor`. A form in a popover can close it with an `HX-Trigger: sl-popover-close` response header. See
+  [Popover](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/popover.md).
+- There is no `TooltipTrigger` and no `TooltipProvider`: the first element inside `<sl:tooltip>` is the trigger, and
+  `delay` sits on each tooltip. See [Tooltip](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/tooltip.md).
+- `side="right"` and `"left"` are the end and the start of a line, as for the sheet.
+
+#### Select is a real select
+
+`<sl:select>` renders a `<select>`, so `th:field` binds it and the form submits it without a hidden input. The
+customizable select (`appearance: base-select`) draws its list where the browser has it (Chrome and Edge 135, Safari
+27); elsewhere a small Alpine component shows a list box in its place, and without Alpine it is the browser's own
+select.
+
+```html
+<!-- shadcn: <Select><SelectTrigger><SelectValue placeholder="Select a fruit"/></SelectTrigger>
+             <SelectContent><SelectGroup><SelectLabel>Fruits</SelectLabel>
+             <SelectItem value="apple">Apple</SelectItem>... -->
+<sl:select th:field="*{fruit}" placeholder="Select a fruit">
+  <sl:select-group label="Fruits">
+    <sl:select-item value="apple">Apple</sl:select-item>
+  </sl:select-group>
+</sl:select>
+```
+
+- `SelectTrigger`, `SelectValue` and `SelectContent` are all `<sl:select>`: `size` and `placeholder` are its props.
+- A group's heading is `<sl:select-group label>`; there is no `SelectLabel` part.
+- No scroll buttons, no `position="item-aligned"`, `side` or `align`: the list opens below the select, or above it
+  when there is no room.
+- No `value`/`onValueChange`: `th:field` renders the value, and the select fires `change`.
+- The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
+  item at once, as on any select, where Radix opens the list. See [Select](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/select.md#left-out).
+
+#### Accordion and collapsible are details elements
+
+Each accordion item and each collapsible is a `<details>` element with the trigger as its `<summary>`, so they need
+no JavaScript. That changes a few things:
+
+```html
+<!-- shadcn: <Accordion type="single" collapsible defaultValue="item-1">
+             <AccordionItem value="item-1">... -->
+<sl:accordion>
+  <sl:accordion-item open>...</sl:accordion-item>
+</sl:accordion>
+```
+
+- `defaultValue` is `open` on the item; items have no `value`, and there is no `onValueChange`.
+- `type="single"` (the default here) is always `collapsible`: the browser lets the open `details` close. The items
+  share a `name`, which must be unique on the page; one is generated when you give none.
+- The trigger's text is a heading (`role="heading"`, `level`, 3 by default) inside the `summary`, where Radix puts the
+  trigger's button in an `h3`.
+- No arrow keys between accordion triggers (optional in the ARIA pattern): Tab moves between them.
+- The trigger must be the first child of its item or collapsible; a collapsible's trigger cannot sit after its
+  content. `<CollapsibleTrigger asChild><Button …>` is `<sl:collapsible-trigger variant="…" size="…">`.
+- A closed disabled item renders no content, as Radix renders no closed content at all.
+
+See [Accordion](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/accordion.md) and [Collapsible](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/collapsible.md).
+
+#### Tabs: `tab` and `active` instead of `value` and `defaultValue`
+
+`value` is taken in Thymeleaf (`th:value`), so a trigger and its panel share a `tab`, and `active` on `<sl:tabs>`
+names the active one, which the server renders. The tabs need an `id`, and a trigger with an `href` is a link that
+works without JavaScript:
+
+```html
+<!-- shadcn: <Tabs defaultValue="account"><TabsList><TabsTrigger value="account">... -->
+<sl:tabs id="settings" active="account">
+  <sl:tabs-list><sl:tabs-trigger tab="account">Account</sl:tabs-trigger>...</sl:tabs-list>
+  <sl:tabs-content tab="account">...</sl:tabs-content>
+</sl:tabs>
+```
+
+`activationMode` is `activation-mode`; there is no `onValueChange` (an `sl-tabs-show` event fires on the panel that is
+shown). See [Tabs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/tabs.md).
+
+#### Toast: the server sends the toasts
+
+shadcn's toast is Sonner: a `<Toaster />` in the layout and `toast("...")` calls in the browser. Shadleaf has
+`<sl:toaster>` in the layout, and the toasts come from the server: an htmx response sends the `sl-toast` event with
+`HX-Trigger` (`htmxResponse.addTrigger("sl-toast", Toast.success("Saved"))`), a page renders `<sl:toast>`s from a flash
+attribute after a redirect, or a response swaps them in out of band. A script can dispatch `sl-toast` itself, with the
+same detail as Sonner's options: `{title, description, variant, duration}`. `toast.success()` and friends are the
+`variant` (`success`, `info`, `warning`, `error`); `visibleToasts` is `visible-toasts`. See
+[Toast](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/toast.md).
+
+#### Theme toggle: a component, no `ThemeProvider`
+
+shadcn's dark mode is next-themes: a `ThemeProvider` around the app and a `ModeToggle` you copy from the docs. Shadleaf
+has the theme script in the layout's `<head>` (the provider's part: the `dark` class before the first paint) and
+`<sl:theme-toggle/>`, the same menu with Light, Dark and System, its items checked by the current choice
+(`menuitemradio`s; shadcn's are plain items). `as="button"` is the one-button switch of shadcn's own site. The choice
+is stored under `localStorage['shadleaf-theme']` (next-themes uses `theme`), and System removes it. There is no
+`useTheme()`: the `sl-theme-change` event tells a script about a change. See [Theme toggle](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/theme-toggle.md).
+
+#### Table: plain rows and cells, sorted on the server
+
+`<sl:table>` styles the plain table elements inside it, so there is no `TableHeader`, `TableBody`, `TableFooter`,
+`TableRow`, `TableHead`, `TableCell` or `TableCaption`: write `thead`, `tbody`, `tfoot`, `tr`, `th`, `td` and
+`caption`, with `th:each` on the row. A page of 50 rows would otherwise be hundreds of components. Where shadcn's
+data table sorts in the browser with TanStack Table, `<sl:table-head sort="name">` is a link that asks the server for
+the page in another order (`?sort=name,desc`), read from a Spring Data `Page`. A cell's alignment is `data-align="end"`
+rather than a `text-right` class. Filtering is a `GET` form the server answers, with `sl:query-params` keeping the
+order and page size, and htmx to search as the user types ([Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/tables-htmx.md)). There is no
+column visibility or browser-side paging. Row selection is the application's own checkboxes, which submit with a form:
+`<sl:table-select-all>` takes the place of the header's `Checkbox` with `table.getIsAllPageRowsSelected()`, and
+`<sl:table-selection-count>` of `"{n} of {total} row(s) selected."` (it reads "2 of 20 selected"). The selected row's
+background comes from CSS (a checked checkbox in the row's first cell), not from `data-state="selected"`. The
+selection covers the page only; a sort or another page starts afresh. See [Table](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#selecting-rows).
+The row actions are the same dropdown menu in the last cell, but its items post a form around the menu rather than
+call a function (the data table's "Copy payment ID" writes to the clipboard), and the column's header cell has a
+screen-reader name ("Actions") where shadcn's is empty. See [Actions per row](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#actions-per-row).
+
+#### Pagination: built from a Spring Data page
+
+The parts are shadcn's (`PaginationContent`, `-Item`, `-Link`, `-Previous`, `-Next`, `-Ellipsis`), and
+`<sl:pagination th:page="${people}"/>` with no content renders them all from a Spring Data `Page`: links that keep the
+request's other parameters, first and last page, ellipses, Previous and Next disabled at the ends (no `href`,
+`aria-disabled`). `isActive` is `active`. The ellipsis is not `aria-hidden`: it reads "More pages", where shadcn's
+hidden screen-reader text is never read. The labels are messages (`sl.pagination.*`) rather than props such as
+Previous's `text`. The data table's footer pieces are components: `sl:pagination-summary` ("11–20 of 270") and
+`sl:pagination-size` (a menu of links rather than a select). See [Pagination](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/pagination.md).
+
+#### Sidebar: one element instead of a Sheet on a phone
+
+shadcn's `Sidebar` renders a `Sheet` on a phone and a separate sidebar on a desktop, chosen in the browser by
+`useIsMobile()`. The server does not know the screen's width, and rendering the navigation twice would double its
+markup and its ids, so `<sl:sidebar>` is one `<nav popover>`: CSS shows it beside the page from 768 px, and below that
+the trigger opens it as the panel (focus in, the rest of the page inert while it is open). The state lives on
+`<sl:sidebar-provider>`'s `data-state` (shadcn also puts it on the sidebar), the cookie is `sl-sidebar-state` with
+`expanded` or `collapsed` (shadcn's `sidebar_state` holds `true` or `false`) for a year instead of a week, and the
+server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
+the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
+the text direction. `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
+So does `collapsible`: `offcanvas` and `icon` as shadcn's, while `none` only keeps the sidebar from collapsing on a
+desktop and is still the panel on a phone (shadcn's is a plain column at every width). See
+[Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md).
+
+The parts inside it keep shadcn's names. `<sl:sidebar-menu-button>` is a link unless `as="button"` (shadcn's renders a
+button, and `asChild` makes it a link); `isActive` is `active`, and `th:active="${#slNav.current('/people')}"` asks the
+request whether the link is the current page, so no controller has to say so. The icon goes in the `icon-start` slot
+and the text is wrapped for you (shadcn's `<span>` around the label); two lines are two elements, such as `<strong>`
+and `<small>`, as there are no utility classes. `<sl:sidebar-content>` is a `div`, as shadcn's: `<sl:sidebar>` is the
+`nav`. `tooltip="Home"` on a menu button is shadcn's `tooltip` prop (a string only).
+
+A collapsible group needs no `Collapsible`, `CollapsibleTrigger` and `CollapsibleContent` around the item, its button
+and its sub-menu: `<sl:sidebar-menu-item collapsible>` is a `details` element, its menu button becomes the `summary`
+(with shadcn's chevron) and `<sl:sidebar-menu-sub>` the content. `defaultOpen` is `open`, usually
+`th:open="${#slNav.current('/settings')}"`. `SidebarMenuSubButton`'s `isActive` is `active`, `size` is shadcn's
+(`sm`, `md`), and it is a link unless `as="button"`.
+
+A dropdown menu opened from a menu button or a menu action (shadcn's team switcher, version switcher, `NavUser` and
+the projects' "More") is `<sl:dropdown-menu-trigger as="sidebar-menu-button">` or `as="sidebar-menu-action"` (see
+above). shadcn picks the side in React, `side={isMobile ? "bottom" : "right"}`; here `side="right"` is enough: in the
+phone panel (and in the header layout's row) CSS opens a right or left menu below its trigger, lined up with its end.
+shadcn's `data-[state=open]:bg-sidebar-accent` on the team switcher is built in: an open trigger has the active look,
+and its menu is at least as wide as the trigger (`w-(--radix-dropdown-menu-trigger-width) min-w-56`). The current team
+is a checked radio item (shadcn's team switcher marks none, its version switcher draws a check icon). A menu action is
+24 px, shadcn's 20 px being too small a target once it shows (WCAG 2.2). See
+[Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar).
+
+#### Site header and the header placement
+
+shadcn/ui has no site header component: sidebar-16 and the dashboard write theirs in each block. `<sl:site-header>` is
+that header (a `header` row, with an `end` slot for what goes to the end), and serves as the sidebar-07 page header
+inside `<sl:sidebar-inset>` too. shadcn/ui's sidebar has no header placement either: `placement="header"` on
+`<sl:sidebar>` makes the same element a row of links in the site header from 768 px (Flux's header layout) and the
+panel on a phone, and `panel-only` on a header, footer, group or menu item leaves it out of everything but the phone
+panel. See [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#in-the-header) and [Site Header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md). sidebar-16's
+layout itself (that header across the whole page, the sidebar below it) is not supported: the sidebar is sticky at the
+top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The
+[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md) guide has the two layouts there are.
+
+#### User menu: a component, not a block
+
+shadcn's `NavUser` is part of its sidebar blocks, with the user passed in as props and a Log out item that does
+nothing. `<sl:user-menu>` is a component: the user comes from Spring Security (`#slUser`), Sign out posts a form with
+the CSRF token, and an anonymous visitor gets a Sign in link. `as="header"` gives the picture-only button for a site
+header. The avatar stays round in the menu, where `NavUser` makes it a rounded square, and the menu's items are what you
+put inside the component (shadcn's "Upgrade to Pro", "Account", "Billing" and "Notifications" are the block's own). The
+team switcher and the version switcher stay examples on the Sidebar page, as in shadcn's docs: see
+[Menus in the sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar).
+
+#### Breadcrumb: the ellipsis opens its own menu
+
+The parts are shadcn's (`BreadcrumbList`, `-Item`, `-Link`, `-Page`, `-Separator`, `-Ellipsis`). `<sl:breadcrumb-link>`
+is always a link (shadcn's `asChild` makes it a router `Link`); a level without a page is plain text in its item.
+shadcn's example wraps the ellipsis in a `DropdownMenuTrigger` by hand; here `<sl:breadcrumb-ellipsis>` with
+`sl:dropdown-menu-item`s as its content renders that menu and its button itself. The ellipsis's hidden text is
+"More levels", not "More", and the separator turns around on a right-to-left page. See
+[Breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md).
+
+#### Skip link and main
+
+shadcn/ui has no skip link; `<sl:skip-link>` goes first in the body and skips to `<sl:sidebar-inset>`, which therefore
+renders `id="main"` and `tabindex="-1"` (shadcn's `SidebarInset` is a bare `main`). See
+[Skip Link](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/skip-link.md).
+
+#### Markup
+
+The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
+`data-variant` or `data-size` attribute only when the value is not the default. It matters only if you port CSS written
+against shadcn's markup.
+
+### Deliberate differences
+
+#### A button does not submit by default
+
+`<sl:button>` renders `type="button"`; shadcn's `Button` leaves the type out, so it submits the form it is in. Write
+`type="submit"` on the button that should submit. See [Button](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/button.md).
+
+#### An alert is not announced by default
+
+shadcn's `Alert` always has `role="alert"`, so a screen reader interrupts the user to read it. Most alerts are part of
+the page when it loads, where that interruption helps nobody. Add `role="alert"` yourself when an alert appears later,
+for example in an htmx response. See [Alert](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/alert.md).
+
+#### Contrast
+
+A few of shadcn's colour pairs are under the 4.5:1 contrast WCAG asks for small text:
+
+- destructive text on its light red tint (the destructive button and badge, the destructive alert);
+- muted text on a muted background (the kbd, the avatar's initials).
+
+Shadleaf mixes 20% of `--foreground` into the text colour in those places. It still follows your own `--destructive`
+and `--muted-foreground`, so your theme keeps working.
+
+Where shadcn changes text to `--muted-foreground` on hover, Shadleaf keeps `--foreground`, for the same reason.
+
+#### Only interactive elements react to hover
+
+shadcn's ghost badge changes colour on hover even when it is a plain label. A Shadleaf badge only reacts to hover, and
+takes keyboard focus, when it is a link (`as="a"`).
+
+#### Accessibility additions
+
+- `<sl:card-title level="3">` is announced as a heading, so screen reader users can jump between cards. Without a
+  `level` it is plain text, as in shadcn.
+- The avatar is hidden from assistive technology unless it has a `label`, as it usually sits next to the person's
+  name. With one, it is announced as a single image with that name.
+- The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
+- A tab panel shows the focus ring when Tab reaches it; shadcn's takes the focus without showing it. In Windows'
+  high-contrast mode the active tab is underlined, as its background and shadow are gone there.
+- Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
+  `aria-label`.
+
+#### Menus and tooltips
+
+- Keyboard focus on a menu item draws the focus ring as well as the accent background, which alone is barely lighter
+  than the menu. The pointer highlights with the background only, as in shadcn.
+- Tab closes a menu and moves on to the next control, as the ARIA menu pattern describes; Radix keeps the focus in
+  the menu.
+- A tooltip waits 300 ms before it shows on hover (`delay`), where shadcn shows it at once, so moving the pointer
+  across a toolbar does not flash every tooltip on the way. Keyboard focus, and the next tooltip right after one hid,
+  still show at once.
+- The pointer can move onto a tooltip without it hiding, and Escape hides it, as WCAG 1.4.13 asks.
+- `mode="label"` is for a tooltip that repeats its trigger's name, such as an icon button's `aria-label`: it is hidden
+  from screen readers instead of describing the trigger with the same words. shadcn has no such option.
+
+#### Toasts
+
+- A toast shows for 5 seconds, not Sonner's 4, and its time stops while it has the focus as well as on hover. Every
+  toast has a close button (Sonner's `closeButton` is off by default), and there is no swipe to dismiss.
+- There is no action or cancel button: a toast goes away by itself, so it must not hold the only way to do something.
+- An error toast is announced at once (assertive); the others politely, as all of Sonner's are.
+- An error's icon takes the destructive colour; with Sonner every icon has the text colour unless `richColors` is on.
+- The toasts move into an open modal dialog, so one shown while a dialog is open can be used and is announced; a
+  Sonner toast outside the dialog is inert there.
+
+#### Breadcrumb
+
+- The page shown now is plain text with `aria-current="page"`. shadcn's also has `role="link"` and
+  `aria-disabled="true"`, which a screen reader announces as a link that goes nowhere.
+- An ellipsis without a menu is read as "More levels"; shadcn's is hidden from screen readers (`aria-hidden`) even
+  though it holds a visually hidden "More".
+- The ellipsis's menu button is named "Show more levels" rather than shadcn's example's "Toggle menu".
+
+#### Sidebar menus
+
+- A group with a label is a group named by it (`role="group"`, `aria-labelledby`), so a screen reader says "Platform,
+  group" when the focus moves into it; shadcn's label is plain text.
+- The current page's menu button has `aria-current="page"` (`aria-current="true"` for a button), which a screen reader
+  says; shadcn sets only `data-active`. The skins style `aria-current`, and in Windows' high-contrast mode the current
+  entry keeps an outline, as its background is gone there.
+- A menu badge describes its button (`aria-describedby`), so a screen reader says "Inbox, link, 12 unread" when Tab
+  reaches the link; shadcn's badge is only read when reading through the list. `label` gives the words to say.
+- The group and menu actions need an `aria-label` (shadcn's examples put a visually hidden `<span>` in them). A menu
+  action is 24 px at every width, and a group action on a phone, WCAG 2.2's minimum target size, instead of 20 px with
+  a larger invisible hit area.
+- Collapsed to icons, a menu button's tooltip and its dropdown menu are never shown together.
+- `show-on-hover` is `showOnHover`.
+- Collapsed to icons, a menu button's tooltip repeats its name, so it is hidden from screen readers and describes
+  nothing (`sl:tooltip`'s `mode="label"`); Radix's tooltip makes it the button's description, which a screen reader
+  says after the same name. The tooltip shows on keyboard focus too, after the delay on hover.
+- Collapsed to icons, a click on a collapsible group's icon expands the sidebar and opens the group; shadcn's opens the
+  group, whose sub-menu the strip hides. A group that holds the current page shows it on its icon, which shadcn's does
+  not. A collapsible item takes no badge or action (the browser hides them with the sub-menu).
+
+#### Form controls
+
+- `<sl:input>` only takes the text-like types (`text`, `email`, `password`, `date`, `file`, ...). Checkboxes, radio
+  buttons and switches are separate components, as in shadcn, but shadcn's `Input` would accept `type="checkbox"`.
+- `<sl:native-select>` takes `<option>` and `<optgroup>` as they are; there is no `NativeSelectOption`.
+- The select's list is at least as wide as the select and opens below it, where shadcn's default
+  (`position="item-aligned"`) lays it over the select. Keyboard focus on an item draws the focus ring as well as the
+  accent background, as in the dropdown menu.
+- Checkbox, radio group and switch are the browser's own inputs, styled, where shadcn builds them from buttons. They
+  submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
+  on any radio button or checkbox. The indeterminate state is the input's own (`indeterminate` prop, or the DOM
+  property) and shows a minus; shadcn's checkbox shows its check mark for `checked="indeterminate"`.
+- A disabled checkbox fades as a whole, check mark included. In the lyra skin a disabled native select gets the same
+  grey background as a disabled input (shadcn's lyra only gives it to input and textarea).
+
+#### Field
+
+- `th:field` goes on `<sl:field>` (or `<sl:field-set>`), which wires up the label's `for`, the control's `id`,
+  `aria-describedby` and `aria-invalid`, and the field's `data-invalid`. In shadcn you set `htmlFor`, `id`,
+  `aria-invalid` and `data-invalid` yourself.
+- `<sl:field-error/>` reads the binding's messages; there is no `errors` prop. Content of your own replaces them, as
+  `children` do in shadcn.
+- The error has no `role="alert"`: after a full page load every error would be announced at once. The control is
+  described by its error instead.
+- The field has no `role="group"`, which gave every field an unnamed group. A set of options is a `<sl:field-set>`.
+- In an invalid field, only the label (or legend) and the error turn destructive; shadcn colours all the field's
+  text.
+- No `FieldTitle`, `FieldSeparator` or choice cards (a field inside a label) yet.
+- No `data-disabled` on the field: its label fades by itself when the control is disabled, also by a
+  `<sl:field-set disabled>`. The description does not fade.
+
+#### Additions
+
+- An input, textarea or native select with `th:field` marks itself `aria-invalid` when its field has errors, so the
+  invalid style needs no markup of yours.
+- `<sl:form-errors/>` shows the binding's global errors (`reject(...)`, a class-level constraint), or with
+  `show="all"` every error, as a destructive alert above the fields. shadcn has no such component; you would write an `Alert` with the messages yourself.
+- A read-only input or textarea gets a muted background and no shadow; shadcn draws it as an editable one.
+- In Windows' high-contrast mode a disabled control turns the system's grey text colour (`GrayText`) instead of
+  fading.
+- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
+  `Spinner` for this.
+
+---
+
+## IDE completion
+
+> Completion for sl:* tags, their attributes and values in IntelliJ IDEA and WebStorm.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/ide-completion/
+
+IntelliJ IDEA and WebStorm complete `<sl:button>`, its attributes and their allowed values from a
+[web-types](https://github.com/JetBrains/web-types) file. The IDE finds that file through the `web-types` property of a
+`package.json`, and nowhere else: not inside a jar, not from a URL. The file does not need Node.js to be installed.
+
+### Let your application write it
+
+Set this property for development, for example in `application-local.properties`:
+
+```properties
+shadleaf.dev.web-types-file=shadleaf.web-types.json
+```
+
+When the application starts, it writes the file from its own component registry, relative to the working directory
+(the project root, when you run it from the IDE or with `mvn spring-boot:run`). That makes it exact for your
+application: a template you copied into your project and changed, and components of your own under
+`templates/sl/components/`, are in it too. It is only rewritten when something changed.
+
+Then reference it from a `package.json` in the project root. A Maven-only project needs nothing more than this:
+
+```json
+{
+  "name": "my-application",
+  "private": true,
+  "web-types": "./shadleaf.web-types.json"
+}
+```
+
+Add `shadleaf.web-types.json` to `.gitignore`, and commit the `package.json`. If the project already has a
+`package.json`, add the `web-types` property to it; it also takes an array of paths.
+
+### Or download it
+
+The file for this version of the docs, describing the library's own components:
+[shadleaf.web-types.json](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/shadleaf.web-types.json). Save it next to the
+`package.json` above.
+
+### What it contains
+
+For every component, the props its template declares: an enum's `values`, the `default`, a `boolean` prop as an
+attribute without a value, and the prop's description. Each prop is offered a second time as `th:<prop>`, for a value
+from an expression. The attribute tables in these docs are generated from the same data.
+
+---
+
+## Using Shadleaf with coding agents
+
+> Point Claude Code, Codex, Cursor, Copilot and other coding agents at these docs, and give them the rules they get wrong.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/coding-agents/
+
+Coding agents are great company when you build with Shadleaf, with a little help to get started. Shadleaf is new, so
+models haven't learned it yet, and because it looks so much like shadcn/ui, an agent tends to reach for what it knows
+from React: a `<Button asChild>`, a few Tailwind classes, or a `<sl:dialog-trigger>` that doesn't exist.
+
+The good news is that two small steps take care of most of this: a few rules in the file your agent reads at the start
+of every session, and docs it can read as Markdown. Both take only a couple of minutes to set up.
+
+### Add the rules to your project
+
+Paste this into the instructions file your agent reads: `AGENTS.md` (Codex, Cursor, Copilot, Gemini CLI and most
+others), `CLAUDE.md` (Claude Code) or `.github/copilot-instructions.md`. Replace `<version>` with the Shadleaf version in
+your `pom.xml`, so the agent reads the docs of the version you use.
+
+```markdown
+## Shadleaf (Thymeleaf UI components)
+
+- The UI uses Shadleaf: shadcn/ui as Thymeleaf tags with the `sl:` prefix
+  (`xmlns:sl="https://shadleaf.dev/sl"`), rendered on the server. Not React: no JSX, no Radix, no `asChild`.
+- Docs as Markdown: https://wimdeblauwe.github.io/shadleaf/<version>/llms.txt. Read the component's page
+  (`.../components/<name>.md`) before using a component; it ends with the attribute table.
+- An attribute that is not a prop passes through to the HTML silently, so a misspelt prop does nothing.
+  Use only the props in the attribute table; `th:<prop>="${...}"` sets one from an expression.
+- Change a component's look with its props (`variant`, `size`, `border`, ...), not with utility classes:
+  the library's stylesheet defines none. `class` is appended to the component's own class.
+- A link that looks like a button is `<sl:button as="a" th:href="@{/x}">`. `<sl:button>` renders
+  `type="button"`: write `type="submit"` on the one that submits a form.
+- Forms: `th:object` on the `<form>`, `th:field` on `<sl:field>` (its label, control and errors share it),
+  `<sl:form-errors/>` before the fields.
+- Dialogs and sheets need an `id` and open from any button with `commandfor="<id>" command="show-modal"`
+  (`command="close"` closes). There are no trigger or close parts. Menus and popovers open with
+  `<sl:dropdown-menu-trigger>` / `<sl:popover-trigger>` or `popovertarget`.
+- Icons: `<sl:icon name="...">` with Lucide names. An icon-only button (`size="icon"`, `icon-sm`, ...)
+  needs an `aria-label`; rendering fails without one.
+- Rendering fails with a message on a wrong prop value, a missing required prop or a missing accessible
+  name: render every page you change (run the tests or load the page) and fix what it reports.
+- With `hx-boost` on `<body>`, every boosted page load sends `HX-Request`: return a fragment only when the
+  request targets one (see the "Application shell" guide, "With htmx").
+```
+
+Then tell the agent how your application loads Shadleaf's CSS and Alpine.js, as that changes what it may write. Add
+the line for each setting that matches your `application.properties`, below the others:
+
+```markdown
+<!-- shadleaf.assets.variant: keep one -->
+- CSS: `standalone` (the default). The application does not compile Tailwind, so utility classes do nothing;
+  style the application's own markup in its own stylesheet.
+- CSS: `embedded`. The application compiles Tailwind; utility classes work for layout, also in `class` on a
+  component, but never to restyle one.
+
+<!-- shadleaf.assets.alpine: keep one -->
+- Alpine: `bundled` (the default). Shadleaf loads and starts Alpine.js; never add another Alpine script.
+  Register the application's own `Alpine.data` on `alpine:init`, in a script before the `sl/layout :: assets`
+  fragment.
+- Alpine: `csp`. As `bundled`, with Alpine's CSP build: no arrow functions, template literals, spread,
+  nested assignments or globals (`Math`, `document`) in `x-*` attributes; put that logic in `Alpine.data`.
+- Alpine: `external`. The application loads Alpine.js itself; its script goes after the
+  `sl/layout :: assets` fragment, and it registers the Alpine plugins it needs.
+```
+
+See [Getting started](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/getting-started.md#already-compiling-tailwind) and the [Alpine.js guide](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/alpine.md) for
+what each setting does.
+
+Keep it short: it is loaded in every session. Your coding agent will read more documentation as it needs.
+
+### Docs as Markdown
+
+Every page of these docs has a Markdown copy at the same address with `.md` instead of the trailing slash:
+`components/button/` is `components/button.md`. The examples in it are the Thymeleaf source, and the attribute table is
+a Markdown table, so an agent gets what you see here without parsing HTML.
+
+The site's root also has the files of the [llms.txt](https://llmstxt.org) convention:
+
+| File                  | Holds                                                                                       |
+|-----------------------|---------------------------------------------------------------------------------------------|
+| `llms.txt`            | Every page with a one-line description, linking the Markdown copies. Start an agent here.   |
+| `llms-full.txt`       | All pages in one file. Large; most agents do better with the index and the pages they need. |
+| `llms-components.txt` | All component pages in one file: every example and attribute table.                         |
+| `llms-guides.txt`     | The "Start here" pages and the guides in one file.                                          |
+
+Every version of the docs has its own set, under `/shadleaf/<version>/`; `/shadleaf/current/` is the latest release.
+In a session without the rules above, a prompt such as "read https://wimdeblauwe.github.io/shadleaf/current/llms.txt,
+then add a delete confirmation to the members table" is enough to get started.
+
+---
+
+## The adjustability ladder
+
+> Five ways to make the components your own, from a prop to owning the template.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/adjustability/
+
+Each step is more powerful, and more work to maintain, than the one before it. Take the first one that solves your
+problem.
+
+### 1. Props
+
+```html
+<sl:button variant="outline" size="sm">Cancel</sl:button>
+```
+
+The declared props of each component are listed on its page. This covers most needs, with no CSS at all.
+
+### 2. Pass-through attributes and classes
+
+Every attribute that is not a prop lands on the rendered element: `hx-post`, `x-on:click`, `aria-*`, `data-*`.
+`class` is appended to the component's own class.
+
+```html
+<sl:button class="toolbar-action" hx-post="/orders/42/archive">Archive</sl:button>
+```
+
+The classes are your application's own. If you compile Tailwind, `class="w-full mt-4"` works; if you don't, use a class
+from your own stylesheet. The library's bundles define no utility classes.
+
+### 3. Token overrides
+
+The components are drawn with shadcn/ui's CSS variables. Redefine them in your stylesheet, loaded after the library's,
+to rebrand every component at once:
+
+```css
+:root {
+  --primary: oklch(0.55 0.15 150);
+  --primary-foreground: oklch(0.98 0 0);
+  --radius: 0.25rem;
+}
+.dark {
+  --primary: oklch(0.7 0.14 150);
+}
+```
+
+The library's tokens sit in a cascade layer, so your values win whether or not you put them in a layer yourself. Any
+shadcn theme generator's output can be pasted in unchanged.
+
+### 4. Skin
+
+```properties
+shadleaf.skin=lyra
+```
+
+A skin changes geometry, type size and shadow: the same markup and the same tokens, a different look. Each skin follows
+one of shadcn/ui's styles: `vega` (the default) is shadcn's classic look, `lyra` its boxy and sharp one. Token overrides keep
+working under every skin. Use the skin switch on any preview in these docs to compare.
+
+### 5. Own the template
+
+Copy a component's template from the jar, for example `templates/sl/components/button.html`, into your application's
+`src/main/resources/templates/sl/components/`. Your copy wins, props included, with no configuration.
+
+Your copy no longer receives the library's fixes, so compare it with the new version when you upgrade. A test that
+renders a page using the component keeps it honest.
+
+You can add components of your own the same way: a template at `templates/sl/components/badge.html` is `<sl:badge>`.
+
+---
+
+## Content-Security-Policy
+
+> Run Shadleaf under a strict CSP, with a nonce or a hash, and no 'unsafe-inline'.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp/
+
+Shadleaf renders no inline styles and no inline event handlers. The only inline code is the theme script
+(`~{sl/layout :: theme-script}`), which has to run before the first paint to avoid a flash of the wrong theme. A strict
+policy can allow it in two ways, without `'unsafe-inline'`.
+
+### With a nonce
+
+Put a fresh nonce in a request attribute on every request, and the fragment renders it as `nonce="…"` on the script.
+The attribute is `cspNonce`, or whatever `shadleaf.csp.nonce-attribute` says. Use the same nonce in the header.
+
+Spring Security 7 has no nonce support for servlet applications, so add a filter before its `HeaderWriterFilter`:
+
+```java
+public class CspNonceFilter extends OncePerRequestFilter {
+
+  private final SecureRandom random = new SecureRandom();
+
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+      throws ServletException, IOException {
+    byte[] nonce = new byte[16];
+    random.nextBytes(nonce);
+    request.setAttribute("cspNonce", Base64.getEncoder().encodeToString(nonce));
+    chain.doFilter(request, response);
+  }
+}
+```
+
+and write the header with a `HeaderWriter` that reads it:
+
+```java
+public class CspHeaderWriter implements HeaderWriter {
+
+  @Override
+  public void writeHeaders(HttpServletRequest request, HttpServletResponse response) {
+    response.setHeader("Content-Security-Policy",
+        "default-src 'self'; script-src 'self' 'nonce-" + request.getAttribute("cspNonce") + "'; "
+            + "style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; "
+            + "frame-ancestors 'none'");
+  }
+}
+```
+
+```java
+http
+    .headers(headers -> headers.addHeaderWriter(new CspHeaderWriter()))
+    .addFilterBefore(new CspNonceFilter(), HeaderWriterFilter.class);
+```
+
+### With a hash
+
+For a policy that is the same on every response, allow the script by its hash. The `ShadleafThemeScript` bean computes
+it from the script it renders, so a header built from it stays correct across upgrades:
+
+```java
+String scriptSrc = "script-src 'self' " + themeScript.getCspHash();
+```
+
+For this version of Shadleaf that is:
+
+```text
+script-src 'self' 'sha256-ewffi8zKmIW+zI2vwENPE6/RaQgcGL/MObd1E+H3wJo='
+```
+
+A hash pasted into a static configuration goes stale when an upgrade changes the script, so prefer the bean.
+
+### Alpine.js
+
+Alpine's standard build needs `'unsafe-eval'`. Under a policy without it, set `shadleaf.assets.alpine=csp` to load
+Alpine's CSP build instead; see [Alpine.js](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/alpine.md#csp) for what that means for your own Alpine markup. Shadleaf's
+script is served from your application, so `script-src 'self'` allows it.
+
+### A working example
+
+`samples/shadleaf-sample-02` in the repository runs behind Spring Security with exactly this policy, switchable between
+the two modes with `sample.csp.mode=nonce|hash`, and loads Alpine's CSP build. Its tests check that the header holds no `'unsafe-inline'`, that the
+nonce in the header matches the script's and changes on every request, and that the page holds no `<style>`, `style=`
+or `on*=` attributes.
+
+---
+
+## Spring Security
+
+> The one matcher the library's assets need, the signed-in user in templates (#slUser), and htmx requests after the session expired.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security/
+
+Everything Shadleaf serves lives under `/shadleaf/**`: the stylesheet of each skin and the Alpine.js scripts, each
+with a content hash in its name.
+Permit that path for anonymous visitors, or every page they can see, such as your login page, renders unstyled:
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  return http
+      .authorizeHttpRequests(requests -> requests
+          .requestMatchers("/shadleaf/**").permitAll()
+          .anyRequest().authenticated())
+      .formLogin(login -> login.loginPage("/login").permitAll())
+      .build();
+}
+```
+
+The files are static resources inside the jar, so nothing else is exposed by it: the Vite manifest that maps names to
+hashed files is kept outside the served directory.
+
+To run under a strict Content-Security-Policy as well, see [CSP](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp.md).
+
+### The signed-in user
+
+Templates read the signed-in user from `#slUser`, an expression object, so no controller has to add a user to the
+model, and error pages and fragments see it too. The [user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md) is built on it.
+
+| Expression | Value |
+| --- | --- |
+| `#slUser.signedIn` | Whether someone is signed in. Remember-me counts; an anonymous visitor does not. |
+| `#slUser.current` | The user (a `ShadleafUser`), or `null` for an anonymous visitor. |
+| `#slUser.current.name` | What to call the user. Never empty. |
+| `#slUser.current.username` | The name the user signs in with (GitHub's `login`, OpenID Connect's `preferred_username`, a `UserDetails` username), or `null`. |
+| `#slUser.current.email` | The email address, or `null`. |
+| `#slUser.current.picture` | The URL of a picture, or `null`. |
+| `#slUser.current.initials` | One or two letters for the avatar: the first and last word of the name ("Ludwig van Beethoven": LB), or from the email. |
+| `#slUser.loginUrl` | Where Sign in goes, for `@{...}`. |
+| `#slUser.logoutUrl` | Where the sign-out form posts to, for `@{...}`. |
+
+```html
+<p th:if="${#slUser.signedIn}">Welcome back, [[${#slUser.current.name}]].</p>
+```
+
+Spring Security is an optional dependency of the starter. Without it `#slUser` is still there, and nobody is signed in.
+
+Signing in with Keycloak or GitHub, and what each sends to the user menu, is in
+[Signing in with OAuth2](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/oauth2.md).
+
+#### Where the user comes from
+
+The default `CurrentUserResolver` reads what each kind of sign-in provides:
+
+| Sign-in | Name | Email, picture |
+| --- | --- | --- |
+| OpenID Connect (Keycloak, Google, ...) | `name`, else `given_name` and `family_name`, else `preferred_username`, else the email | `email`, `picture` |
+| OAuth2 (GitHub) | `name`, else `login` | `email` (often missing), `avatar_url` |
+| A JWT (resource server) | as OpenID Connect, from its claims | as OpenID Connect |
+| Form login, HTTP Basic (`UserDetails`) | the username | none |
+| Anything else | `Authentication.getName()` | none |
+
+An application that knows its users better (a display name from its own database, say) declares its own:
+
+```java
+@Bean
+CurrentUserResolver currentUserResolver(MemberRepository members) {
+  return authentication -> members.findByUsername(authentication.getName())
+      .map(member -> ShadleafUser.of(member.getDisplayName(), member.getUsername(), member.getEmail(),
+          member.getPhotoUrl()))
+      .orElse(null);
+}
+```
+
+It is only asked for an authenticated user; returning `null` treats the visitor as anonymous.
+
+When your own `UserDetailsService` already loads the name (a subclass of Spring Security's `User` with a display
+name, say), read it from the principal and leave other sign-ins to the default. Sample-02 does this for its two users:
+
+```java
+@Bean
+CurrentUserResolver currentUserResolver() {
+  CurrentUserResolver fallback = new DefaultCurrentUserResolver();
+  return authentication -> authentication.getPrincipal() instanceof AppUser user
+      ? ShadleafUser.of(user.getDisplayName(), user.getUsername(), user.getEmail(), null)
+      : fallback.resolve(authentication);
+}
+```
+
+Load a new user object on every `loadUserByUsername` call: Spring Security erases the password of the user it signs
+in, so handing out the same object twice breaks the second sign-in.
+
+#### Sign-in and sign-out URLs
+
+```properties
+# Where Sign in goes. Default: the authorization endpoint of the one OAuth2 login client
+# (/oauth2/authorization/<id>) when there is exactly one, else /login.
+shadleaf.security.login-url=/login
+# Where Sign out posts to. Default: /logout, Spring Security's.
+shadleaf.security.logout-url=/logout
+```
+
+Sign out is a POST with the CSRF token, which `th:action` adds to the form; see the
+[user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md#signing-out).
+
+#### Navigation by role
+
+Hide a link a user may not follow with the Thymeleaf extras for Spring Security
+(`thymeleaf-extras-springsecurity6`, which Spring Boot configures when it is on the classpath, also with Spring
+Security 7):
+
+```html
+<sl:sidebar-menu-item sec:authorize="hasRole('ADMIN')">
+  <sl:sidebar-menu-button th:href="@{/admin}">Admin</sl:sidebar-menu-button>
+</sl:sidebar-menu-item>
+```
+
+Hiding the link is no security: protect the URL itself in the security configuration. The
+[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md#navigation-by-role) guide shows both in a layout, and the same check on
+content inside a page.
+
+### htmx after the session expired
+
+When the session has expired, Spring Security answers an htmx request the way it answers a browser, and htmx cannot
+follow that:
+
+- **A GET** (a lazily loaded tab, a table's rows, a dialog fetched into `#modal-root`) is redirected to the sign-in
+  page. The browser's XHR follows the redirect, and htmx swaps the sign-in page into the request's target.
+- **A POST** fails its CSRF check, because the token lived in the session: a 403, which htmx does not swap. Nothing
+  happens on the page.
+- **After signing in** the user is sent to the request Spring Security saved before it asked them to sign in. For an
+  htmx request that is its URL, which may be a fragment endpoint that renders a few table rows as a page.
+
+[htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot) (5.2.0 and later) has an entry point and an
+access denied handler that answer such a request with `HX-Redirect` to the page it was made from:
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  return http
+      .authorizeHttpRequests(requests -> requests
+          .requestMatchers("/shadleaf/**", "/webjars/**").permitAll()
+          .anyRequest().authenticated())
+      .formLogin(login -> login.loginPage("/login").permitAll())
+      .exceptionHandling(exceptions -> exceptions
+          .authenticationEntryPoint(new HxRedirectToPageAuthenticationEntryPoint(
+              new LoginUrlAuthenticationEntryPoint("/login")))
+          .accessDeniedHandler(new HxRedirectToPageAccessDeniedHandler()))
+      .build();
+}
+```
+
+- **The page** is the one the user is on (htmx's `HX-Current-URL`), or for a boosted link the page it links to. The
+  browser loads it as a normal navigation, the sign-in page asks the user to sign in, and the page is what they come
+  back to, not the fragment.
+- **A POST** gets the same answer, but only when its CSRF token went with the session. A signed-in user without the
+  required role still gets a plain 403, and so does a request with a wrong token.
+- **Every request that is not an htmx request** goes to the entry point you pass, so it behaves as before. With OAuth2
+  login, that is `new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/<registration id>")`, the same URL as
+  [Sign in](#sign-in-and-sign-out-urls) (see [Signing in with OAuth2](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/oauth2.md#with-htmx)). If you have an access
+  denied handler of your own, pass it to `HxRedirectToPageAccessDeniedHandler`, which hands every other denial to it.
+- **`/webjars/**`** is permitted so the sign-in page can load htmx, if your layout loads it there too.
+
+Form input that was not sent is lost: the session that held the CSRF token is gone, so the POST cannot be replayed.
+An htmx request that needs a session made from a page anyone may see sends the visitor back to that page, still
+signed out; such a page should send them to Sign in itself.
+
+Spring Security's own suggestion, `defaultAuthenticationEntryPointFor(entryPoint, htmxRequestMatcher)`, also works for
+htmx requests, but makes the htmx entry point the default for every request that does not ask for HTML (a `fetch`
+without an `Accept` header, a MockMvc test without `accept(...)`): those then get a 401 instead of the redirect to
+the sign-in page. The htmx-spring-boot README has the details, and how this combines with a sign-in form that is itself
+sent with htmx.
+
+Sample-02 (`samples/shadleaf-sample-02`) has it: `hx-boost` on the body, a tab on its Data page that loads with htmx,
+and a form. Its `SessionExpiryTest` makes these requests without a session.
+
+---
+
+## Signing in with OAuth2
+
+> Keycloak (OpenID Connect, signing out at Keycloak too) and GitHub as the way users sign in, and what the user menu shows for each.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/oauth2/
+
+With Spring Security's OAuth2 login, users sign in at an identity provider, and Shadleaf's
+[user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md) shows what the provider sent: name, email or login, and picture. This page
+sets up two providers that differ in every one of those: Keycloak, an OpenID Connect provider you run yourself, and
+GitHub, which speaks plain OAuth2. The [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md) guide has what holds for any sign-in:
+`#slUser`, the sign-in and sign-out URLs, navigation by role.
+
+Sample-03 (`samples/shadleaf-sample-03`) is this page as an application: Keycloak by default, GitHub next to it with
+the `github` profile.
+
+### The dependency
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-security-oauth2-client</artifactId>
+</dependency>
+```
+
+With one login client, Sign in (`#slUser.loginUrl`) goes straight to the provider:
+`/oauth2/authorization/<registration id>`. With two or more it is `/login`, the page to choose one on (see
+[More than one provider](#more-than-one-provider)). `shadleaf.security.login-url` overrides both.
+
+### Keycloak
+
+Register the application as a client in Keycloak: client authentication on (a confidential client with a secret),
+the standard flow (authorization code), and as valid redirect URI `http://localhost:8080/login/oauth2/code/keycloak`
+(the last part is the registration id below). For signing out, add the application's home page,
+`http://localhost:8080/`, as a valid post logout redirect URI, or `+` for "the same as the redirect URIs".
+
+```properties
+spring.security.oauth2.client.registration.keycloak.client-id=acme
+spring.security.oauth2.client.registration.keycloak.client-secret=${KEYCLOAK_CLIENT_SECRET}
+spring.security.oauth2.client.registration.keycloak.client-name=Keycloak
+spring.security.oauth2.client.registration.keycloak.scope=openid,profile,email
+spring.security.oauth2.client.provider.keycloak.issuer-uri=https://keycloak.example.com/realms/acme
+```
+
+Spring Security reads every endpoint from the issuer's discovery document, so the application needs Keycloak to be
+up when it starts. The issuer must be the same URL for the browser and the application: Spring Security checks the
+ID token's `iss` against it.
+
+`scope` asks for `profile` and `email`, which Keycloak's default client scopes map to the claims the user menu reads:
+
+| Claim | Keycloak's user | In the user menu |
+| --- | --- | --- |
+| `name` (or `given_name` and `family_name`) | first and last name | the name, and the initials when there is no picture |
+| `email` | email | the second line |
+| `preferred_username` | username | `#slUser.current.username` |
+| `picture` | the user attribute `picture`, if you add one | the avatar |
+
+Keycloak has no picture by default: the user menu then shows the initials. To send one, add `picture` to the realm's
+user profile and set it per user; the `profile` scope already maps it to the claim.
+
+#### Signing out at Keycloak
+
+Spring Security's `/logout` ends the application's session, not Keycloak's. Keycloak still knows the user, so the
+next Sign in goes straight through without asking for a password: on a shared computer, the user never signed out.
+OpenID Connect's RP-initiated logout ends both: after its own sign-out, Spring Security sends the browser to
+Keycloak's end-session endpoint (from the discovery document), with the ID token as a hint and the URL to come back
+to.
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http, ClientRegistrationRepository clients) throws Exception {
+  OidcClientInitiatedLogoutSuccessHandler signOutAtKeycloak = new OidcClientInitiatedLogoutSuccessHandler(clients);
+  signOutAtKeycloak.setPostLogoutRedirectUri("{baseUrl}/");
+  return http
+      .authorizeHttpRequests(requests -> requests
+          .requestMatchers("/shadleaf/**").permitAll()
+          .anyRequest().authenticated())
+      .oauth2Login(Customizer.withDefaults())
+      .logout(logout -> logout.logoutSuccessHandler(signOutAtKeycloak))
+      .build();
+}
+```
+
+The user menu's Sign out posts to `/logout` as before; nothing changes in the templates. Keycloak sends the browser
+back to the home page, which asks to sign in again, and this time Keycloak shows its sign-in form. `{baseUrl}` is the
+application's own scheme, host and port, so the same code works locally and deployed, as long as Keycloak lists the
+URL as a valid post logout redirect URI. Behind a proxy, set `server.forward-headers-strategy` so the base URL is the
+public one.
+
+A user who signed in with a provider without an end-session endpoint (GitHub) is sent to `/` after signing out of the
+application.
+
+### GitHub
+
+Create an OAuth app under *Settings*, *Developer settings*, *OAuth Apps*, with the authorization callback URL
+`http://localhost:8080/login/oauth2/code/github`. Spring Security knows GitHub's endpoints, so a client id and secret
+are all it needs:
+
+```properties
+spring.security.oauth2.client.registration.github.client-id=${GITHUB_CLIENT_ID}
+spring.security.oauth2.client.registration.github.client-secret=${GITHUB_CLIENT_SECRET}
+```
+
+GitHub is no OpenID Connect provider: there is no ID token, only the user's attributes from its API, and the user menu
+reads those.
+
+| Attribute | In the user menu |
+| --- | --- |
+| `name` | the name; a user who set none gets their `login` instead |
+| `login` | the second line, as GitHub sends no `email` for a user who keeps it private (the default) |
+| `avatar_url` | the avatar |
+
+The `user:email` scope does not change this: it allows asking GitHub's emails endpoint, but the attributes stay the
+same. An application that needs the address asks for it itself and puts it in a
+[`CurrentUserResolver`](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#where-the-user-comes-from) of its own.
+
+Signing out only signs out of the application: GitHub has no end-session endpoint, so the next Sign in with GitHub
+goes straight through while the browser is signed in at GitHub.
+
+### More than one provider
+
+With two clients, Sign in goes to `/login`. Spring Security generates a page there that lists them, but only while
+you leave its exception handling alone: [htmx after the session expired](#with-htmx) sets an entry point of its own,
+and then `/login` is yours to write. Sample-03's is a few lines: one Shadleaf button per client.
+
+```java
+@Controller
+class LoginController {
+
+  private final List<ClientRegistration> clients;
+
+  LoginController(InMemoryClientRegistrationRepository clients) {
+    this.clients = StreamSupport.stream(clients.spliterator(), false).toList();
+  }
+
+  @GetMapping("/login")
+  String login(Model model) {
+    model.addAttribute("clients", clients);
+    return "login";
+  }
+}
+```
+
+```html
+<sl:alert variant="destructive" th:if="${param.error != null}">
+  <sl:icon name="circle-alert"/>
+  <sl:alert-title>Signing in did not work</sl:alert-title>
+</sl:alert>
+<sl:button th:each="client : ${clients}" as="a" variant="outline" hx-boost="false"
+           th:href="@{/oauth2/authorization/{id}(id=${client.registrationId})}"
+           th:text="|Sign in with ${client.clientName}|">Sign in with Keycloak</sl:button>
+```
+
+```java
+http
+    .authorizeHttpRequests(requests -> requests
+        .requestMatchers("/shadleaf/**").permitAll()
+        .requestMatchers("/login").permitAll()
+        .anyRequest().authenticated())
+    .oauth2Login(login -> login.loginPage("/login"))
+```
+
+Permit `/login` as a path: `oauth2Login`'s own `permitAll()` matches `/login` and `/login?error` exactly, so a
+`/login?error=` would ask to sign in first. `hx-boost="false"` on the links (and on the user menu's Sign in, which
+has it already): the provider is another origin, which an htmx request cannot follow.
+
+### With htmx
+
+An htmx request made after the session expired needs the treatment the Spring Security guide describes in
+[htmx after the session expired](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired), more so with OAuth2: the provider
+is another origin, so the htmx request fails outright instead of swapping a page in. Give
+`HxRedirectToPageAuthenticationEntryPoint` the URL Sign in goes to; `UserSource`, the bean behind `#slUser`, knows it:
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http, UserSource users) throws Exception {
+  return http
+      // ...
+      .exceptionHandling(exceptions -> exceptions
+          .authenticationEntryPoint(new HxRedirectToPageAuthenticationEntryPoint(
+              new LoginUrlAuthenticationEntryPoint(users.loginUrl())))
+          .accessDeniedHandler(new HxRedirectToPageAccessDeniedHandler()))
+      .build();
+}
+```
+
+The browser then loads the page as a normal navigation, goes to the provider, and comes back to the page after signing
+in.
+
+### Testing
+
+spring-security-test signs a user in for a MockMvc request without a provider. `oidcLogin()` stands in for Keycloak,
+`oauth2Login()` for GitHub; give them the claims or attributes your provider sends, as the user menu reads those:
+
+```java
+mockMvc.perform(get("/").with(oauth2Login()
+        .clientRegistration(clients.findByRegistrationId("github"))
+        .attributes(attributes -> {
+          attributes.put("login", "octocat");
+          attributes.put("name", "The Octocat");
+          attributes.put("avatar_url", "https://avatars.githubusercontent.com/u/583231?v=4");
+        })))
+    .andExpect(status().isOk());
+```
+
+Signing out at Keycloak needs the real thing. Sample-03's `KeycloakSignInTest` starts Keycloak with Testcontainers
+(the realm, its client and two users imported from a JSON file), signs in on Keycloak's form with a plain HTTP client,
+and checks that after Sign out Keycloak asks for the password again. Keycloak marks its cookies `Secure` also over
+http; a browser sends them to `http://localhost`, Java's `CookieManager` does not, so the test's cookie handler treats
+localhost as the browser does.
+
+---
+
+## Alpine.js
+
+> Let Shadleaf bring Alpine, use its CSP build, or register with the Alpine your application already loads.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/alpine/
+
+Shadleaf's interactive components (dialog, dropdown menu, tabs and the like, from 0.4 on) use [Alpine.js](https://alpinejs.dev)
+for what the native elements cannot do on their own. A page can only have **one** Alpine: two copies would both
+initialise the same elements. So you choose where it comes from, with one property:
+
+```properties
+shadleaf.assets.alpine=bundled   # the default
+```
+
+| Value | The `assets` fragment loads | Choose it when |
+| --- | --- | --- |
+| `bundled` | Alpine's standard build, Shadleaf's components, and starts Alpine | your application does not load Alpine itself |
+| `csp` | Alpine's CSP build, Shadleaf's components, and starts Alpine | your Content-Security-Policy has no `'unsafe-eval'` |
+| `external` | only Shadleaf's components, registered with your Alpine | your application already loads Alpine |
+
+In every case the script is served from your own application under `/shadleaf/**`, so a policy with
+`script-src 'self'` allows it. It is a module script, so it never blocks rendering.
+
+### bundled
+
+Nothing to do: include the `assets` fragment as shown in [Getting started](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/getting-started.md). You can use Alpine
+in your own markup too (`x-data`, `x-show`, `@click`, ...) without loading it yourself.
+
+To register your own components or plugins, listen for `alpine:init` in a script that runs **before** the `assets`
+fragment. Shadleaf starts Alpine as soon as its script runs, and `alpine:init` fires only once, at that moment:
+
+```html
+<head>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <script type="module" th:src="@{/js/alpine-components.js}"></script>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+</head>
+```
+
+```js
+// /js/alpine-components.js
+document.addEventListener('alpine:init', () => {
+  window.Alpine.data('orderLine', () => ({
+    quantity: 1,
+    increment() {
+      this.quantity++;
+    }
+  }));
+});
+```
+
+Do not load another Alpine next to it. Shadleaf's script refuses to start a second one when it finds
+`window.Alpine` already on the page, and says so in the browser console. It cannot notice an Alpine that loads
+**after** it, so if you see elements initialised twice, look for a second Alpine script tag.
+
+### csp
+
+Alpine's standard build turns every attribute expression into code with `new Function(...)`, which a policy without
+`'unsafe-eval'` blocks. The CSP build parses the expressions itself instead. Shadleaf's own templates only use
+expressions it accepts, so the components work the same with either build.
+
+The rules apply to your own Alpine markup as well. The CSP build supports property access, method calls, assignments,
+ternaries and string concatenation. It does not support arrow functions, template literals, the spread operator,
+assignments to nested properties, or globals such as `Math`, `document` and `console`. Move that logic into an
+`Alpine.data` component, registered as shown above, and call its methods from the markup:
+
+```html
+<!-- not with the CSP build -->
+<button @click="items = items.filter(i => i.done)">Clear done</button>
+
+<!-- works with both builds -->
+<div x-data="todoList">
+  <button @click="clearDone">Clear done</button>
+</div>
+```
+
+The [Content-Security-Policy guide](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp.md) covers the rest of a strict policy. `samples/shadleaf-sample-02` in the
+repository uses `csp` behind exactly that policy.
+
+### external
+
+Your application loads Alpine, and Shadleaf's script only registers its components with it. Shadleaf's script has
+to run before your Alpine starts, so put the `assets` fragment **before** the script that loads Alpine. Deferred and
+module scripts run in the order they appear:
+
+```html
+<head>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <script defer th:src="@{/js/alpine.min.js}"></script>
+</head>
+```
+
+The same goes for an Alpine you bundle yourself: the module that calls `Alpine.start()` goes after the fragment.
+
+```js
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+Alpine.start();
+```
+
+If Shadleaf's script runs after Alpine has already initialised elements, the Shadleaf components on the page stay
+inert, and the browser console says: *Shadleaf: shadleaf.js ran after Alpine started*. Move the fragment up.
+
+Some components need an Alpine plugin, such as `@alpinejs/focus`. With `bundled` and `csp` Shadleaf includes them;
+with `external` your application registers them. Each component's page lists the plugins it needs. No component
+needs one yet: the dialog family, the dropdown menu, the popover and the tooltip use none. The dropdown menu, popover
+and tooltip are placed with CSS anchor positioning, not with `@alpinejs/anchor`: every current browser supports it, and
+for older ones their components set the position themselves.
+
+The avatar's broken-image fallback is in the same script but is no Alpine component: it works with every value of
+`shadleaf.assets.alpine`, and with `external` also before, or without, your Alpine.
+
+### Pages without interactive components
+
+The script is on every page that includes the `assets` fragment, whether that page uses an interactive component or
+not. That keeps the setup to one fragment. `bundled` and `csp` add about 20 KB, compressed, and are cached across pages.
+
+---
+
+## Forms with htmx
+
+> Post a Shadleaf form with htmx, get it back with its errors without a page load, and keep it working as a plain POST.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/htmx/
+
+Shadleaf's form components render plain HTML with every `id`, `aria-invalid` and `aria-describedby` in place, so a
+form that htmx swaps in is as accessible as one that loaded with the page. Shadleaf has no dependency on htmx and
+ships none of it; your application loads htmx, and the components pass `hx-*` attributes through like any other.
+
+This guide follows the "Form with htmx" page of sample-01 (`samples/shadleaf-sample-01`, `/htmx-form`): it posts with
+htmx, comes back with its errors or a confirmation, moves focus to the right place, and still works as a normal POST
+without JavaScript. The sample's `/form` page has the same fields without htmx, for comparison.
+
+### Loading htmx
+
+The sample uses [htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot) for the request and response
+headers, and htmx itself from its webjar, pinned in the pom:
+
+```xml
+<dependency>
+  <groupId>io.github.wimdeblauwe</groupId>
+  <artifactId>htmx-spring-boot-thymeleaf</artifactId>
+  <version>5.1.1</version>
+</dependency>
+<dependency>
+  <groupId>org.webjars.npm</groupId>
+  <artifactId>htmx.org</artifactId>
+  <version>2.0.11</version>
+</dependency>
+<dependency>
+  <groupId>org.webjars</groupId>
+  <artifactId>webjars-locator-lite</artifactId>
+</dependency>
+```
+
+```html
+<head>
+  ...
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+</head>
+```
+
+- **A webjar, served by your application.** It needs no Node build, and it comes from your own origin, so a policy
+  with `script-src 'self'` allows it (add the [nonce](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp.md) if your policy uses one). With `webjars-locator-lite`
+  the template leaves the version out, and Spring Boot writes it into the URL (`/webjars/htmx.org/2.0.11/...`), which
+  also busts caches on an upgrade. An application that bundles its JavaScript with Vite can `import 'htmx.org'`
+  instead.
+- **The config keeps htmx within a strict [CSP](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp.md).** By default htmx adds an inline `<style>` for its request
+  indicator, which `style-src 'self'` blocks, and evaluates `hx-on` handlers and `js:` values with `eval`. Turn both
+  off unless you use them.
+
+Behind Spring Security, an htmx request made after the session expired gets the sign-in page swapped into its
+target, or, for a POST, nothing at all. See [htmx after the session expired](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired).
+
+### One form, two ways to post
+
+The form keeps its `th:action` and `method="post"`, and gets `hx-post` next to them. htmx posts it when JavaScript
+runs; without it, the browser does. The part htmx swaps is a fragment that holds the form, or the confirmation:
+
+```html
+<div id="contact" th:fragment="contact">
+  <th:block th:if="${sentTo}">
+    <sl:alert tabindex="-1" autofocus>
+      <sl:icon name="circle-check"/>
+      <sl:alert-title>Message sent</sl:alert-title>
+      <sl:alert-description th:text="|We will reply to ${sentTo}.|">We will reply to you.</sl:alert-description>
+    </sl:alert>
+    <sl:button as="a" variant="outline" th:href="@{/form}">Send another message</sl:button>
+  </th:block>
+
+  <form th:unless="${sentTo}" th:object="${contactForm}" th:action="@{/form}" method="post" novalidate
+        hx:post="@{/form}" hx-target="#contact" hx-swap="outerHTML">
+    <sl:form-errors autofocus/>
+    <sl:field-group>
+      <sl:field th:field="*{name}">
+        <sl:field-label>Name</sl:field-label>
+        <sl:input autocomplete="name"/>
+        <sl:field-error/>
+      </sl:field>
+      ...
+    </sl:field-group>
+    <sl:button type="submit">Send</sl:button>
+  </form>
+</div>
+```
+
+`hx:post` (with a colon) is htmx-spring-boot's Thymeleaf dialect: it resolves `@{/form}` like `th:action` does, and
+adds the CSRF header when Spring Security is on. `hx-target` is a plain attribute: `#` starts a message expression in
+Thymeleaf. The target is the fragment's own wrapper, so the fragment replaces itself, and a second submit works like
+the first.
+
+The controller answers an htmx request (it sends `HX-Request`) with the fragment alone, and everything else as
+before, with post/redirect/get on success:
+
+```java
+@PostMapping("/form")
+public String submit(@Valid @ModelAttribute("contactForm") ContactForm contactForm, BindingResult bindingResult,
+    HtmxRequest htmxRequest, Model model, RedirectAttributes redirectAttributes) {
+  if (htmxRequest.isHtmxRequest()) {
+    if (!bindingResult.hasErrors()) {
+      model.addAttribute("sentTo", contactForm.getEmail());
+    }
+    return "form :: contact";
+  }
+  if (bindingResult.hasErrors()) {
+    return "form";
+  }
+  redirectAttributes.addFlashAttribute("sentTo", contactForm.getEmail());
+  return "redirect:/form";
+}
+```
+
+- **Errors come back with status 200**, as for the full page. htmx 2 does not swap 4xx responses unless you
+  configure it to, so a `422` would need a `responseHandling` entry.
+- **A valid htmx submit gets the confirmation, not a redirect.** An htmx POST is not a navigation: a reload cannot
+  send it again, which is what post/redirect/get protects against. An `HX-Redirect` (`redirect:htmx:/form` with
+  htmx-spring-boot, flash attributes included) works too, but loads the whole page again, and focus with it.
+- **Two handler methods** with `@HxRequest` on one of them work as well, if you prefer that to the `if`.
+
+### Where focus goes
+
+When htmx replaces the form, the submit button that had the focus is gone, and focus falls back to the page.
+`<sl:form-errors autofocus/>` gives the server's answer to where it should go, the same for both ways to post:
+
+- a global error, or any error with `show="all"`: the summary, which the screen reader reads out;
+- field errors only: the first control with an error, which is read with its label, its invalid state and, through
+  `aria-describedby`, its error;
+- the confirmation has its own `tabindex="-1"` and `autofocus`.
+
+htmx focuses the first `[autofocus]` in content it swaps in. It first tries to put focus back on the element that had
+it, by id, so a user who pressed <kbd>Enter</kbd> in the name field would stay there; `autofocus` runs later and
+wins. See [Form errors](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/form-errors.md#announcement-and-focus) for the details.
+
+### Announcement
+
+The errors are announced because focus moves to them, so there is no `role="alert"` on the summary or the field
+errors, in the htmx response or anywhere else. A live region would read the same message a second time, and
+`role="alert"` on every field error would read all of them at once. The confirmation has no `role="status"` for the
+same reason: a live region inserted together with its text is not announced reliably anyway.
+
+Add `role="alert"` when content changes without moving focus, for example a single field that htmx validates as the
+user leaves it: see [Field](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/field.md#errors).
+
+### Back button and history
+
+`hx-post` pushes no history entry. The URL stays `/form`, and htmx's history cache, which snapshots the page into
+`localStorage` when htmx pushes a URL, is not involved: back from another page shows `/form` as the browser kept it
+or as the server renders it again. If you boost navigation (`hx-boost`) or push URLs, htmx does snapshot pages, and a
+failed form keeps the user's input in its `value` attributes. For a form with personal data, set
+`"historyCacheSize": 0` in the htmx config, or `hx-history="false"` on the page.
+
+### Dialogs
+
+A dialog can come from the server too: a button fetches `<sl:dialog open>` into an empty element, the form in it
+swaps only itself while it has errors, and an `HX-Trigger: sl-dialog-close` response header closes it after a valid
+save. Open dialogs close before htmx snapshots a page for its history, so back never restores one. See
+[Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.
+
+The same works for an [alert dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/alert-dialog.md#confirming-with-htmx) that confirms a delete: its
+destructive button sends `hx-delete`, and the response closes it with the same event, shows a toast saying what
+happened, removes the row and moves the focus to the next row. A [sheet](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sheet.md) is a dialog too, with the same `open`
+and `sl-dialog-close`.
+
+### Menus and popovers
+
+A [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md) item takes `hx-*` like a button: it sends its request and the menu
+closes, with the focus back on the trigger. A menu of row actions whose response replaces the row keeps the focus in
+place when the trigger has an id, which it gets from the menu's (`th:id="|order-${order.id}-actions|"` gives
+`order-42-actions-trigger`). A form in a [popover](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/popover.md#a-form-in-a-popover-with-htmx) closes
+it with `HX-Trigger: sl-popover-close`. A swap that replaces an open menu or popover leaves nothing open behind it,
+and back never restores one open: whether a popover is open is not part of the markup htmx saves.
+
+### Toasts
+
+An `HX-Trigger: sl-toast` response header shows a [toast](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/toast.md), whatever the response swaps:
+`htmxResponse.addTrigger("sl-toast", Toast.success("Member deleted"))`. A response can also swap `<sl:toast>`s into
+the toaster out of band. Use `HX-Trigger` rather than `HX-Trigger-After-Swap`/`-After-Settle`, whose events are lost
+when the swap removed the element that sent the request, and a flash attribute rather than a toast when the response
+redirects. Toasts are removed before htmx saves a page in its history cache, so back never shows one again. A toast
+never takes the focus: it goes away.
+
+---
+
+## Tables with htmx
+
+> Search as you type, sort and page a server-side table with htmx, act on a row from its menu, load more rows, keep the focus and the back button, and keep it working without JavaScript.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/tables-htmx/
+
+A Shadleaf [table](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md) sorts and pages on the server through plain links: its column headers,
+its [pagination](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/pagination.md) and the rows-per-page menu all link to the same page with other
+parameters, built from the request that rendered it. A search above it is a plain `GET` form, which
+[`sl:query-params`](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/query-params.md) keeps in step with the table's order and size. None of it needs
+JavaScript, and none of the library's templates has an `hx-*` attribute. htmx makes it faster: it searches while the
+user types and replaces only the table, and the links and the address bar stay what they would be without it.
+
+This guide follows sample-01's `/people` page (`samples/shadleaf-sample-01`): 270 people in an H2 database, sorted,
+paged and searched by Spring Data JPA, with a menu of actions per row; and its `/people-load-more` page, which reads
+them a `Slice` at a time. Loading htmx is in [Forms with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/htmx.md#loading-htmx).
+
+### The page
+
+Two parts: the search form, which htmx never replaces, and the results (the table and its footer), which it does.
+
+```html
+<form id="people-search" role="search" method="get" th:action="@{/people}"
+      hx:get="@{/people}" hx-trigger="input changed delay:300ms, search, submit" hx-sync="this:replace"
+      hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none"
+      hx-push-url="true" hx-history="false">
+  <sl:input type="search" id="people-q" name="q" th:value="${search}" aria-label="Search people"
+            placeholder="Filter by name or email…" autocomplete="off"/>
+  <p id="people-status" class="visually-hidden" role="status" th:text="${found}"></p>
+</form>
+
+<div id="people-results" th:fragment="results"
+     hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+  <sl:query-params except="q" form="people-search"/>
+  <p th:if="${fragment}" id="people-status" hx-swap-oob="innerHTML" th:text="${found}"></p>
+  <sl:table th:page="${people}">
+    <thead>
+      <tr>
+        <sl:table-head sort="name">Name</sl:table-head>
+        <sl:table-head sort="email">Email</sl:table-head>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="person : ${people}">...</tr>
+      <sl:table-empty colspan="2" th:if="${people.empty}">No one matches “[[${search}]]”.</sl:table-empty>
+    </tbody>
+  </sl:table>
+  <div class="table-footer">
+    <sl:pagination-summary th:page="${people}"/>
+    <div class="table-footer-controls">
+      <sl:pagination-size th:page="${people}"/>
+      <sl:pagination th:page="${people}"/>
+    </div>
+  </div>
+</div>
+```
+
+(`hx:get` is htmx-spring-boot's dialect, which runs the URL through `@{...}`; a plain `hx-get="/people"` does the
+same without a context path.)
+
+### The controller
+
+The controller answers an htmx request with the results alone, as the [htmx form](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/htmx.md) does, and every other
+request with the page:
+
+```java
+@GetMapping("/people")
+public String people(@RequestParam(required = false) String q,
+    @PageableDefault(size = 20, sort = "name") Pageable pageable, HtmxRequest htmxRequest, Model model) {
+  String search = q == null ? "" : q.strip();
+  Page<Person> people = search.isEmpty()
+      ? repository.findAll(pageable)
+      : repository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(search, search, pageable);
+  model.addAttribute("people", people);
+  model.addAttribute("search", search);
+  model.addAttribute("found", search.isEmpty() ? ""
+      : people.getTotalElements() == 1 ? "1 person found" : people.getTotalElements() + " people found");
+  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
+      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
+  model.addAttribute("fragment", fragment);
+  return fragment ? "people :: results" : "people";
+}
+```
+
+A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. So does a link
+that `hx-boost` on the body sends, such as the [sidebar's](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#htmx): it has `HX-Boosted` and no
+`HX-Target` (the body has no id), where the table's own boosted links target the results. htmx-spring-boot
+adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
+page. Limit the sortable properties and add a unique last sort key as the [table](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#limit-what-can-be-sorted)
+explains; the sample does both.
+
+### Ask for the page's own URL
+
+The links in the results are built from the request that rendered them: a sort link is that request's path and query
+with another `sort`. So htmx must ask for the page's own URL (`/people?q=ada&sort=email,asc`), not for an endpoint of
+its own such as `/people/table`. Then the address htmx pushes, the links in the fragment and the page a reload shows
+all agree, and a link copied from the address bar opens the same table. An endpoint of its own would put
+`/people/table?...` into every sort and page link, and the next click would push that address.
+
+### Search as you type
+
+The form's `hx-get` asks for `/people` with the form's fields: the search field and the hidden inputs of
+`sl:query-params`, so the order and the size stay, and the page number is left out, so the results start on the first
+page.
+
+- `input changed delay:300ms` sends the search 300 ms after the last keystroke; each keystroke starts the wait again,
+  and `changed` skips an input that leaves the value as it was.
+- `search` sends it at once when the field is cleared with its clear button (or Enter, in Chromium and Safari).
+- `submit` sends it at once on Enter. Without it, Enter would submit the form the normal way and load the whole page;
+  Firefox has no `search` event, so `submit` is what catches Enter there.
+- `hx-sync="this:replace"` aborts a request still out when the next one starts, so a slow answer to "ad" never
+  replaces the answer to "ada".
+- `hx-push-url="true"` puts the search into the address: `/people?q=ada&sort=email,asc&size=50`.
+
+The field is outside `#people-results`, so a swap never touches it: it keeps the focus, the caret and whatever the
+user typed while a request was out. The hidden inputs are inside: `form="people-search"` ties them to the form from
+there, so each swap brings the ones that belong to the table it shows. Hidden inputs inside the form would keep the
+order of the first load after a sort link changed it.
+
+#### What a screen reader hears
+
+A sighted user sees the rows change; a screen reader user hears nothing unless the page says so. The form holds an
+empty `role="status"` region, and the fragment updates its text out of band (`hx-swap-oob="innerHTML"` keeps the
+region itself, which a screen reader is listening to): "15 people found". It is only rendered in the fragment, so the
+whole page has the id once. Keep the region out of the swapped part: a live region that is replaced is not announced.
+
+### Sort, page and size links
+
+`hx-boost="true"` on `#people-results` turns every link inside it into an htmx request for that link's URL: the sort
+links in the headers, the page links and the rows-per-page menu's items. They inherit `hx-target`, `hx-select` and
+`hx-swap` from the same element, so each replaces the results and pushes its address, as following the link would.
+
+- **Focus.** htmx gives the focus back to the element with the id of the one that had it, if the swap replaced that
+  element. Every link Shadleaf builds has a stable id (`sort-name`, `page-next`, `page-3`, and the size menu's button
+  `page-size-trigger`, which the menu focuses before it follows the chosen size), so after a click on Next the focus is
+  on the new Next, and the keyboard user can press Enter again. Ids get the [qualifier](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#two-tables-on-one-page)
+  as a prefix, so two tables on a page keep theirs apart.
+- **Scrolling.** A boosted link scrolls to the top of the target by default (`scrollIntoViewOnBoost`). `show:none` in
+  `hx-swap` keeps the page where it is, which suits a pagination at the bottom of a long table; the focused link stays
+  in view.
+- **The search.** The links are built from the request, so they keep `q`: sorting the search results sorts the search
+  results.
+
+### Actions per row
+
+Each row of `/people` has a [menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#actions-per-row): View, Change role (one radio item per
+role, the current one checked) and Delete.
+
+```html
+<td data-align="end">
+  <form method="post" th:action="${selfUrl}">
+    <input type="hidden" name="person" th:value="${person.id}">
+    <sl:dropdown-menu th:id="|people-${person.id}-actions|">
+      <sl:dropdown-menu-trigger variant="ghost" size="icon-sm" th:aria-label="|Actions for ${person.name}|"
+                                th:autofocus="${person.id == focusPerson}">
+        <sl:icon name="ellipsis"/>
+      </sl:dropdown-menu-trigger>
+      <sl:dropdown-menu-content align="end">
+        <sl:dropdown-menu-item as="a" th:href="@{/people/{id}(id=${person.id})}" hx-boost="false">
+          <sl:icon name="eye"/>View
+        </sl:dropdown-menu-item>
+        <sl:dropdown-menu-separator/>
+        <sl:dropdown-menu-label>Change role</sl:dropdown-menu-label>
+        <sl:dropdown-menu-radio-group aria-label="Change role">
+          <sl:dropdown-menu-radio-item th:each="role : ${roles}" type="submit" name="role" th:value="${role}"
+                                       th:checked="${person.role == role}" hx:post="${selfUrl}">
+            [[${role.label}]]
+          </sl:dropdown-menu-radio-item>
+        </sl:dropdown-menu-radio-group>
+        <sl:dropdown-menu-separator/>
+        <sl:dropdown-menu-item as="a" variant="destructive" th:href="@{|/people/${person.id}/delete${query}|}"
+                               hx:get="@{|/people/${person.id}/delete${query}|}" hx-target="#modal-root"
+                               hx-select="unset" hx-swap="innerHTML">
+          <sl:icon name="trash-2"/>Delete
+        </sl:dropdown-menu-item>
+      </sl:dropdown-menu-content>
+    </sl:dropdown-menu>
+  </form>
+</td>
+```
+
+- **Post to the page's own URL.** `selfUrl` is the request's path and query string (`/people?q=a&sort=orders,desc&page=1`),
+  as for the [bulk action](#selection-and-a-bulk-action) below, and the controller maps the change to it by its
+  parameter: `@PostMapping(path = "/people", params = "role")`. Without htmx it redirects back there with a toast;
+  with htmx it changes the role and renders the `results` fragment of that page, with the toast in `HX-Trigger`. The
+  links in the fragment are built from the page's address, as after a search.
+- **The form goes around the menu.** A `role="menu"` may only hold menu items. The hidden input names the person and
+  each radio item is a submit button sending its role, so without JavaScript the menu (a popover, which needs none)
+  still changes the role.
+- **`hx-post` on the item, not the form.** The menu puts the focus back on its trigger before the item's action runs,
+  which makes htmx forget which submit button was pressed in a form it boosts. An item with `hx-post` of its own sends
+  its `role` and the form's `person` (a non-`GET` request includes the item's form).
+- **View leaves the table.** It is a link inside the boosted results, which would swap the person's page into
+  `#people-results`; `hx-boost="false"` makes it a normal link.
+- **Delete asks first.** Without JavaScript the link opens a page asking the same question, with a form that posts
+  `delete=<id>` to the people page's address (the delete link carries its query string) and a Cancel link back. With
+  htmx the same URL answers `HX-Request` with an alert dialog for `#modal-root`; `hx-select="unset"` drops the
+  `#people-results` the item would inherit. The dialog's Delete button has `hx:post` to the people page's address
+  and `hx-target`/`hx-select` `#people-results`; the answer closes the dialog with `sl-dialog-close`, then shows the
+  toast, as in the [confirm with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/alert-dialog.md) example.
+
+#### Where the focus goes
+
+The menu puts the focus on its trigger before the item's action, so htmx gives it back to the trigger with the same
+id after the swap: the keyboard user is where they were. Two cases need the server's help:
+
+- **The row is gone.** After a delete the alert dialog closes and returns the focus to the row's menu button, which
+  the swap then removes. The controller notes where the row was and gives `autofocus` to the menu button of the row now
+  in its place (or of the last row, when it was the last); htmx focuses it after the swap.
+- **The row moved.** Changing a role while the table is sorted by role can move the row to another page. The same rule
+  applies: the menu button of the row now in its place.
+
+```java
+/** The person's menu button while they are on the page, else the one of the person now in their place. */
+private static Long focusAfter(List<Person> before, long id, Page<Person> after) {
+  if (after.stream().anyMatch(person -> person.getId() == id)) return id;
+  if (after.isEmpty()) return null;
+  int index = before.stream().map(Person::getId).toList().indexOf(id);
+  return after.getContent().get(Math.min(Math.max(index, 0), after.getNumberOfElements() - 1)).getId();
+}
+```
+
+`PeoplePageTest` checks both, and that `HX-Trigger` lists `sl-dialog-close` before `sl-toast`.
+
+#### The cost of a menu per row
+
+A menu per row is the menu's markup in every row: the trigger, the items and their icons. Measured on 1 October 2026
+(`TablePerformanceTest` in the starter, `mvn test -Pperformance`, Java 25 on an arm64 Mac), against the
+200 buttons with an icon that serve as the baseline:
+
+| A table of 50 rows | Render | HTML | Gzipped |
+| --- | --- | --- | --- |
+| text cells only | 0.17 ms | 6.7 KB | 0.9 KB |
+| with a badge per row | 0.41 ms | 10.0 KB | 1.0 KB |
+| with a badge and the menu's trigger only | 2.2 ms | 53.4 KB | 2.4 KB |
+| with a badge and the menu above | 8.9 ms | 222 KB | 5.3 KB |
+| (baseline: 200 buttons with an icon) | 3.7 ms | 116 KB | 1.4 KB |
+
+So a menu costs about 0.17 ms and 4 KB of HTML per row on the server, and next to nothing on the wire, as its markup
+repeats. That is less than the query behind the page, so sample-01 renders a menu per row, which also works without
+JavaScript. A page of hundreds of rows with long menus could render only the trigger and fetch the items when the menu
+opens (`hx-get` on the content with `hx-trigger="toggle once"`), at the price of a menu that is empty without
+JavaScript and for a moment after it opens; Shadleaf does not test that pattern, and a smaller page size is usually
+the better answer.
+
+### Selection and a bulk action
+
+Sample-01's `/people-multiselect` page is the same page with a form around the table, with a checkbox per row, [select-all](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#selecting-rows)
+in the header, the selection count in the footer, and a Delete selected button that opens an alert dialog:
+
+```html
+<form id="people-bulk" method="post" th:action="${selfUrl}">
+  <sl:button id="people-delete-trigger" type="button" variant="outline" size="sm"
+             commandfor="people-delete" command="show-modal">Delete selected</sl:button>
+  <sl:table id="people-table" th:page="${people}">...</sl:table>
+  <sl:alert-dialog id="people-delete" size="sm">
+    ...
+    <sl:alert-dialog-footer>
+      <sl:alert-dialog-cancel/>
+      <sl:button variant="destructive" type="submit" hx:post="${selfUrl}">Delete</sl:button>
+    </sl:alert-dialog-footer>
+  </sl:alert-dialog>
+</form>
+```
+
+- **Post to the page's own URL.** `selfUrl` is the request's path and query string (`/people-multiselect?q=a&sort=orders,desc&page=1`),
+  so the action knows the search, order and page to come back to, and the links in the fragment it answers with are
+  built from that same address. Without htmx the controller redirects there with a toast; with htmx it renders the
+  `results` fragment of that page, as a search would.
+- **`hx-post` on the confirm button, not the form.** htmx dispatches the events of `HX-Trigger` on the element that
+  made the request. The answer sends `sl-dialog-close` and `sl-toast`; the dialog only closes on an event from inside
+  it, so the button inside the dialog makes the request (a non-`GET` request from inside a form sends the form's
+  values). Without JavaScript the same button submits the form.
+- **Focus.** `HX-Trigger`'s events run before the swap: the dialog closes and gives the focus back to Delete selected,
+  and htmx then finds the new Delete selected by its id. The toast says how many people were deleted.
+- **The selection resets.** The swap brings new checkboxes, unchecked; select-all and the count follow them. So does
+  every sort, page and search: the selection is per page.
+
+### Load more
+
+A `Slice` knows whether there is a next page, not how many there are, which saves the count query on a large table.
+Instead of a pagination, the list can grow: sample-01's `/people-load-more` page ends with a row holding a Load more
+link, which appends the next slice's rows.
+
+```html
+<sl:table th:page="${people}">
+  <thead>...</thead>
+  <tbody>
+    <th:block th:fragment="rows">
+      <tr th:each="person, row : ${people}" th:id="|people-row-${offset + row.count}|"
+          th:tabindex="${offset + row.index > 0 and (offset + row.index) % people.size == 0 ? -1 : null}"
+          th:autofocus="${fragment and row.first}">
+        <td th:text="${person.name}">Ada Allen</td>
+        ...
+      </tr>
+      <tr th:if="${people.hasNext()}" class="load-more-row">
+        <td colspan="4" th:with="next=${#slPaging.pages(people, null, null, 0, null).next.href}">
+          <sl:button as="a" variant="outline" th:href="|${next}#people-row-${(people.number + 1) * people.size + 1}|"
+                     th:hx-get="${next}" hx-target="closest tr" hx-swap="outerHTML" hx-replace-url="true">
+            Load more
+          </sl:button>
+        </td>
+      </tr>
+    </th:block>
+  </tbody>
+</sl:table>
+```
+
+- **The next slice replaces the Load more row.** `hx-target="closest tr"` and `hx-swap="outerHTML"`: the answer is the
+  `rows` fragment, the next slice's rows followed by a new Load more row (none after the last slice), so there is only
+  ever one. `#slPaging.pages(...).next.href` is the next page's link, keeping the order and any filter.
+- **The address follows, without a history entry.** `hx-replace-url` puts `?page=1` in the address bar in place of the
+  current entry. A reload, or coming back to the page, asks for `?page=1`; the controller then renders every slice up
+  to that one, so the page shows the rows it showed before.
+- **The focus moves to the first new row.** The link that had the focus is gone, so the first row of each slice has
+  `tabindex="-1"` and, in the htmx answer, `autofocus`: htmx focuses it after the swap and a screen reader reads it.
+  Tab goes on through the new rows to the next Load more. Give such a row a visible focus style; rows have none:
+  `.people-rows > tr:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; }`.
+- **Without JavaScript** the link opens `?page=1#people-row-21`: the page with every slice up to the next one, and the
+  browser scrolls to the first new row and focuses it (it takes the focus, `tabindex="-1"`).
+- **Selection.** In a table with [row selection](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#selecting-rows), select-all and the count
+  follow the appended rows: three of three selected becomes three of six, and select-all is indeterminate.
+
+The controller answers `HX-Request` with the fragment of one slice, and every other request with all of them:
+
+```java
+@GetMapping("/people-load-more")
+public String loadMore(@PageableDefault(size = 20, sort = "name") Pageable pageable, HtmxRequest htmxRequest,
+    Model model) {
+  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
+      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
+  Slice<Person> people;
+  if (fragment) {
+    people = repository.findAllBy(pageable);
+  } else {
+    Slice<Person> all = repository.findAllBy(
+        PageRequest.of(0, (int) pageable.getOffset() + pageable.getPageSize(), pageable.getSort()));
+    // Still the requested page number and size, so the next link is right.
+    people = new SliceImpl<>(all.getContent(), pageable, all.hasNext());
+  }
+  model.addAttribute("people", people);
+  model.addAttribute("offset", fragment ? (int) pageable.getOffset() : 0);
+  model.addAttribute("fragment", fragment);
+  return fragment ? "people-load-more :: rows" : "people-load-more";
+}
+```
+
+`Slice<Person> findAllBy(Pageable pageable)` in the repository reads one row more than the slice to know whether there
+is a next one, and never counts. Add a unique last sort key, as for [a stable order](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#a-stable-order-across-pages),
+or a row can be loaded twice or never.
+
+#### Endless scrolling
+
+`hx-trigger="revealed"` on an element in the last row loads the next slice when it scrolls into view, with no click:
+
+```html
+<tr th:if="${people.hasNext()}" class="load-more-row">
+  <td colspan="4"><span class="sl-sr-only" th:hx-get="${next}" hx-trigger="revealed" hx-target="closest tr"
+                        hx-swap="outerHTML" hx-replace-url="true">Loading more</span></td>
+</tr>
+```
+
+Leave out the `autofocus` then: the user did not ask for the rows, and the focus must stay where it is. Think twice
+before choosing it: whatever comes after the list (a footer, its links) moves away each time it comes into view, a
+keyboard user tabbing through the rows keeps loading more, and nothing tells a screen reader user that rows arrived.
+The Load more link has none of these problems.
+
+### Back and forward
+
+htmx keeps a snapshot of the page for each address it pushed, and puts it back on the back button. The snapshot is the
+markup, and a field's typed value is not in the markup: going back from "grace" to "ada" would show the results for
+"ada" under a field reading whatever the first load put there. So the form has `hx-history="false"`: htmx keeps no
+snapshot of this page and, on back and forward, asks the server for the page at that address instead
+(`HX-History-Restore-Request`), which renders the field and the table for it. That is one request per step back.
+
+An application that would rather keep the snapshots can update the field's `value` attribute as the user types, in a
+script of its own; Shadleaf ships none for it.
+
+### Without JavaScript
+
+The form is a `GET` form with one field, so Enter sends it without a button, and the browser asks for
+`/people?q=ada&sort=email,asc&size=50` (the hidden inputs are part of the form through `form="people-search"`). The
+links are links. Every step is a page load, and every address is one the controller answers with the whole page.
+
+### Tests
+
+Sample-01's `PeoplePageTest` checks the server side over HTTP: the search on name and email, the links and hidden
+inputs keeping `q`, sort and size and dropping the page, the empty result, the fragment for `HX-Request` and the whole
+page for a history restore, and the row menus (their markup, a role change and a delete with and without htmx, the
+confirm page and dialog, where the focus goes); `PeopleMultiselectPageTest` the bulk delete with and without htmx;
+`PeopleLoadMorePageTest` the slices, the links and every person loaded once. The docs' `table-htmx.spec.ts` runs the
+same markup in Chromium and Firefox under a strict Content-Security-Policy: the debounce, one request for a burst of
+typing, what is typed while a request is out, Enter, the pushed address, the focus after a sort or page link, back
+and forward, the form without htmx, a row menu posting with htmx and keeping the focus, Load more (rows appended, one
+Load more row, the focus on the first new row, the address replaced, select-all and the count, the link without
+htmx) and endless scrolling; `table-selection.spec.ts` the selection through htmx swaps and history.
+
+---
+
+## Application shell
+
+> Two layouts to copy for the frame around every page, a sidebar or the navigation in a header, and what every layout needs whichever you pick.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell/
+
+The application shell is what every page shares: the navigation, a header, and the places where dialogs and toasts
+appear. Shadleaf has two layouts for it, both built from the [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md) family:
+
+- **The sidebar layout** ([shadcn/ui's sidebar-07](https://ui.shadcn.com/blocks/sidebar)): the navigation in a column beside the page. It collapses to a strip
+  of icons on a desktop.
+- **The header layout** (after Flux's [header-inset](https://fluxui.dev/layouts/header)): the navigation as a row of links in a
+  [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md) across the top.
+
+In both, the navigation is one `<sl:sidebar>`. Below 768 px the menu button opens that same element as a panel over
+the page, so the two layouts work the same way on a phone. Copy one of them into your application (the samples keep
+theirs in `templates/layout/main.html`) and change what you need: the templates are yours, and so is the CSS around
+the components.
+
+### Which one
+
+|                         | Sidebar layout                                                                 | Header layout                                                              |
+|-------------------------|--------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| Pages in the navigation | Many, in labelled groups, with sub-menus                                       | A handful of top-level pages                                               |
+| On a desktop            | A column the user collapses to icons (or out of view) and the cookie remembers | A row of links that scrolls sideways when it does not fit; never collapses |
+| Page header             | Inside the page: trigger, breadcrumb, theme toggle                             | The site header itself: name, links, theme toggle                          |
+| Room for the page       | The width minus the sidebar (3 rem collapsed to icons)                         | The full width                                                             |
+| On a phone              | The panel                                                                      | The same panel                                                             |
+| Sample                  | sample-01                                                                      | sample-02 (strict Content-Security-Policy)                                 |
+
+Pick the sidebar layout when the application has more pages than fit in a header row or needs groups and sub-menus.
+Pick the header layout for a smaller application. Moving from one to the other later means changing the layout
+template, not the pages: both take the same `pageTitle` and `content`.
+
+### What every layout needs
+
+Whichever you choose, the layout template has the same pieces. The two layouts below have all of them:
+
+- **In the `head`**, `~{sl/layout :: theme-script}` and then `~{sl/layout :: assets}`, then your own stylesheet. The
+  theme script sets the dark class before the first paint. Under a strict policy it needs its nonce or hash (see
+  [Content-Security-Policy](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp.md)).
+- **`<sl:skip-link/>` first in the body.** It lets a keyboard user jump past the navigation to the page.
+- **One `main`:** `<sl:sidebar-inset>` renders `<main id="main" tabindex="-1">`, the skip link's target. Put nothing
+  of the page outside it.
+- **The page's title** in the `<title>` and as the page's `h1`, from the same `pageTitle` parameter.
+- **The current page** marked in the navigation with `th:active="${#slNav.current('/people')}"`, which reads the
+  request, so no controller has to say which page it is.
+- **`<sl:toaster>` at the end of the body**, with the toasts a controller put in the `toasts` flash attribute before a
+  redirect (see [Toast](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/toast.md)).
+- **A `<div id="modal-root">`**, if htmx fetches dialogs into the page (see [Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md)).
+
+The CSS for the page itself (its padding, the `h1`, the logo in the sidebar) is the application's. Shadleaf's CSS styles
+its components, not the page around them.
+
+### The sidebar layout
+
+**Example: Sidebar.** Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the sidebar's ground (from 768 px), and collapsible="icon" collapses it to a strip of icons whose tooltips show the labels, as sample-01's layout. Documents opens a sub-menu. The footer ends in the signed-in user's menu (sl:user-menu). The large button in the header is a team switcher: it opens a dropdown menu beside the sidebar (below it in the panel) with the current team checked, and "More" beside Design Engineering opens one too.
+
+```html
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="inset" collapsible="icon">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:dropdown-menu id="team-switcher">
+            <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg" tooltip="Acme Inc.">
+              <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+              <strong>Acme Inc.</strong>
+              <small>Enterprise</small>
+              <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+            </sl:dropdown-menu-trigger>
+            <sl:dropdown-menu-content side="right">
+              <sl:dropdown-menu-label id="team-switcher-label">Teams</sl:dropdown-menu-label>
+              <sl:dropdown-menu-radio-group aria-labelledby="team-switcher-label">
+                <sl:dropdown-menu-radio-item as="a" href="/teams/acme-inc" checked>
+                  Acme Inc.
+                </sl:dropdown-menu-radio-item>
+                <sl:dropdown-menu-radio-item as="a" href="/teams/acme-corp">
+                  Acme Corp.
+                </sl:dropdown-menu-radio-item>
+                <sl:dropdown-menu-radio-item as="a" href="/teams/evil-corp">
+                  Evil Corp.
+                </sl:dropdown-menu-radio-item>
+              </sl:dropdown-menu-radio-group>
+              <sl:dropdown-menu-separator/>
+              <sl:dropdown-menu-item as="a" href="/teams/new">
+                <sl:icon name="plus"/>
+                Add team
+              </sl:dropdown-menu-item>
+            </sl:dropdown-menu-content>
+          </sl:dropdown-menu>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="platform">
+        <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}" tooltip="Home">
+                <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                Home
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item id="inbox">
+              <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}" tooltip="Inbox">
+                <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+                Inbox
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}" tooltip="Calendar">
+                <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
+                Calendar
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/documents')}">
+              <sl:sidebar-menu-button tooltip="Documents">
+                <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                Documents
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button href="/documents"
+                                              th:active="${#slNav.current('/documents', true)}">
+                    Recent
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button href="/documents/shared"
+                                              th:active="${#slNav.current('/documents/shared')}">
+                    Shared with me
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="projects">
+        <sl:sidebar-group-label>Projects</sl:sidebar-group-label>
+        <sl:sidebar-group-action aria-label="Add project"><sl:icon name="plus"/></sl:sidebar-group-action>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button href="/projects/design" tooltip="Design Engineering">
+                <sl:slot name="icon-start"><sl:icon name="frame"/></sl:slot>
+                Design Engineering
+              </sl:sidebar-menu-button>
+              <sl:dropdown-menu id="project-design-more">
+                <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover
+                                          aria-label="More for Design Engineering">
+                  <sl:icon name="ellipsis"/>
+                </sl:dropdown-menu-trigger>
+                <sl:dropdown-menu-content side="right">
+                  <sl:dropdown-menu-item as="a" href="/projects/design">
+                    <sl:icon name="folder"/>
+                    View project
+                  </sl:dropdown-menu-item>
+                  <sl:dropdown-menu-item as="a" href="/projects/design/share">
+                    <sl:icon name="forward"/>
+                    Share project
+                  </sl:dropdown-menu-item>
+                  <sl:dropdown-menu-separator/>
+                  <sl:dropdown-menu-item as="a" href="/projects/design/delete" variant="destructive">
+                    <sl:icon name="trash-2"/>
+                    Delete project
+                  </sl:dropdown-menu-item>
+                </sl:dropdown-menu-content>
+              </sl:dropdown-menu>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button href="/projects/sales" tooltip="Sales &amp; Marketing">
+                <sl:slot name="icon-start"><sl:icon name="chart-pie"/></sl:slot>
+                Sales &amp; Marketing
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-action aria-label="More for Sales &amp; Marketing" show-on-hover>
+                <sl:icon name="ellipsis"/>
+              </sl:sidebar-menu-action>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+    <sl:sidebar-footer>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}"
+                                  tooltip="Settings">
+            <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+            Settings
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button href="/help" size="sm" tooltip="Help">
+            <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+            Help
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+      <sl:user-menu>
+        <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+        <sl:dropdown-menu-item as="a" href="/notifications"><sl:icon name="bell"/>Notifications</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:sidebar-footer>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <sl:breadcrumb-item>Platform</sl:breadcrumb-item>
+          <sl:breadcrumb-separator/>
+          <sl:breadcrumb-item><sl:breadcrumb-page>Home</sl:breadcrumb-page></sl:breadcrumb-item>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+    </sl:site-header>
+    <h1>Home</h1>
+    <p>The page's content.</p>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+```
+
+shadcn/ui's sidebar-07 block with the inset variant, as the layout of the first sample application (sample-01's
+`layout/main.html`, which has four groups): the application's name and logo at the top, groups of pages (one of them
+collapsible), a footer, and the page as a card beside it with a [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md) holding
+the trigger, a separator, the page's [breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md) and the theme toggle. The sidebar
+collapses to icons, with a tooltip on every menu button. `hx-boost` on the body loads every page with htmx (see
+[With htmx](#with-htmx)).
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="|${pageTitle} - Acme|">Acme</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body hx-boost="true">
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="inset" collapsible="icon">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Acme">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+            <strong>Acme</strong>
+            <small>Enterprise</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="nav-forms">
+        <sl:sidebar-group-label>Forms</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}" tooltip="Form">
+                <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                Form
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-tables">
+        <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/people') or #slNav.current('/teams')}">
+              <sl:sidebar-menu-button tooltip="People">
+                <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
+                People
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+                    All people
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/teams}" th:active="${#slNav.current('/teams')}">
+                    Teams
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+    <sl:sidebar-footer>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button href="https://example.com/help" size="sm" tooltip="Documentation">
+            <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
+            Documentation
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+      <sl:user-menu>
+        <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:sidebar-footer>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+      <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout(${person.name}, ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-link th:href="@{/people}">People</sl:breadcrumb-link></sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page th:text="${person.name}">Name</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+The header's layout is the site header's own: a row 3.5 rem high, the trigger, a short separator and the breadcrumb
+at the start, the `end` slot at the end. The page's padding and the logo are the application's. Without Tailwind:
+
+```css
+.page { padding: 0 1rem 1rem; }
+.page > h1 { margin-block-end: 1rem; }
+.app-logo {
+  display: grid; place-items: center; flex-shrink: 0; inline-size: 2rem; block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px); background: var(--sidebar-primary); color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+```
+
+The [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md) page has every part and option: the variants, collapsing off-canvas instead
+of to icons, the sidebar at the end of the line, badges and actions.
+
+### The header layout
+
+**Example: Header layout.** placement="header" puts the same navigation in a sl:site-header: from 768 px a row of links (the current page marked as in the sidebar), with the application's name before it and search, the theme toggle and the signed-in user's menu at the end. Favorites, Settings and Help are panel-only, so the row stays short; the panel's own header with the name is panel-only too. "More" beside Documents opens a dropdown menu below it. variant="inset" makes the page a card below the header. Narrower, the menu button opens the same nav as the panel: see the next example.
+
+```html
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:site-header>
+    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+    <sl:button as="a" href="/" variant="ghost">
+      <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+      Acme Inc.
+    </sl:button>
+    <sl:sidebar placement="header" variant="inset">
+      <sl:sidebar-header panel-only>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="/" size="lg">
+              <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+              <strong>Acme Inc.</strong>
+              <small>Enterprise</small>
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-header>
+      <sl:sidebar-content>
+        <sl:sidebar-group>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}">
+                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                  Home
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item id="header-inbox">
+                <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
+                  <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+                  Inbox
+                </sl:sidebar-menu-button>
+                <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}">
+                  <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
+                  Calendar
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/documents" th:active="${#slNav.current('/documents')}">
+                  <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                  Documents
+                </sl:sidebar-menu-button>
+                <sl:dropdown-menu id="header-documents-more">
+                  <sl:dropdown-menu-trigger as="sidebar-menu-action" aria-label="More for Documents">
+                    <sl:icon name="ellipsis"/>
+                  </sl:dropdown-menu-trigger>
+                  <sl:dropdown-menu-content side="right">
+                    <sl:dropdown-menu-item as="a" href="/documents/new">New document</sl:dropdown-menu-item>
+                    <sl:dropdown-menu-item as="a" href="/documents/shared">Shared with me</sl:dropdown-menu-item>
+                  </sl:dropdown-menu-content>
+                </sl:dropdown-menu>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+        <sl:sidebar-group id="favorites" panel-only>
+          <sl:sidebar-group-label>Favorites</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/projects/marketing">
+                  <sl:slot name="icon-start"><sl:icon name="globe"/></sl:slot>
+                  Marketing site
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/projects/android">
+                  <sl:slot name="icon-start"><sl:icon name="smartphone"/></sl:slot>
+                  Android app
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+      </sl:sidebar-content>
+      <sl:sidebar-footer panel-only>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}">
+              <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+              Settings
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="/help" size="sm">
+              <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+              Help
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-footer>
+    </sl:sidebar>
+    <sl:slot name="end">
+      <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
+      <sl:theme-toggle/>
+      <sl:user-menu as="header" id="header-user-menu">
+        <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:slot>
+  </sl:site-header>
+  <sl:sidebar-inset>
+    <h1>Home</h1>
+    <p>The page's content.</p>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+```
+
+For an application with a handful of pages: the layout of the second sample application (sample-02's
+`layout/main.html`, which runs under a strict Content-Security-Policy), after Flux's header-inset layout. The header
+holds the menu button (on a phone), the application's name, the pages as a row of links, and the theme toggle and the
+user menu at the end; More (Settings, Help) and the panel's own header are panel-only. The page is a card below the
+header (`variant="inset"`). Sample-02 also has an Admin link for admins only, left out here: see
+[Navigation by role](#navigation-by-role).
+
+On a phone the menu button opens the same navigation as a panel, with the icons, the group labels and the panel-only
+parts:
+
+**Example: Header layout on a phone.** The same markup in a frame 390 px wide: the row is gone and the menu button opens the nav as a panel, with the panel-only parts (the name, Favorites, Settings and Help) in it. The panel takes the focus and makes the page behind it inert; Escape, a click outside or a followed link closes it.
+
+```html
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:site-header>
+    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+    <sl:button as="a" href="/" variant="ghost">
+      <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+      Acme Inc.
+    </sl:button>
+    <sl:sidebar placement="header" variant="inset">
+      <sl:sidebar-header panel-only>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="/" size="lg">
+              <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
+              <strong>Acme Inc.</strong>
+              <small>Enterprise</small>
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-header>
+      <sl:sidebar-content>
+        <sl:sidebar-group>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}">
+                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                  Home
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item id="header-inbox">
+                <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
+                  <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
+                  Inbox
+                </sl:sidebar-menu-button>
+                <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}">
+                  <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
+                  Calendar
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/documents" th:active="${#slNav.current('/documents')}">
+                  <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                  Documents
+                </sl:sidebar-menu-button>
+                <sl:dropdown-menu id="header-documents-more">
+                  <sl:dropdown-menu-trigger as="sidebar-menu-action" aria-label="More for Documents">
+                    <sl:icon name="ellipsis"/>
+                  </sl:dropdown-menu-trigger>
+                  <sl:dropdown-menu-content side="right">
+                    <sl:dropdown-menu-item as="a" href="/documents/new">New document</sl:dropdown-menu-item>
+                    <sl:dropdown-menu-item as="a" href="/documents/shared">Shared with me</sl:dropdown-menu-item>
+                  </sl:dropdown-menu-content>
+                </sl:dropdown-menu>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+        <sl:sidebar-group id="favorites" panel-only>
+          <sl:sidebar-group-label>Favorites</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/projects/marketing">
+                  <sl:slot name="icon-start"><sl:icon name="globe"/></sl:slot>
+                  Marketing site
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button href="/projects/android">
+                  <sl:slot name="icon-start"><sl:icon name="smartphone"/></sl:slot>
+                  Android app
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+      </sl:sidebar-content>
+      <sl:sidebar-footer panel-only>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}">
+              <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+              Settings
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="/help" size="sm">
+              <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+              Help
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-footer>
+    </sl:sidebar>
+    <sl:slot name="end">
+      <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
+      <sl:theme-toggle/>
+      <sl:user-menu as="header" id="header-user-menu">
+        <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:slot>
+  </sl:site-header>
+  <sl:sidebar-inset>
+    <h1>Home</h1>
+    <p>The page's content.</p>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+```
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:site-header>
+    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+    <sl:button as="a" th:href="@{/}" variant="ghost" class="app-name">
+      <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+      Shadleaf
+    </sl:button>
+    <sl:sidebar placement="header" variant="inset">
+      <sl:sidebar-header panel-only>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/}" size="lg">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+              <strong>Shadleaf</strong>
+              <small>Sample App 2</small>
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-header>
+      <sl:sidebar-content>
+        <sl:sidebar-group>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
+                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                  Home
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/forms}" th:active="${#slNav.current('/forms')}">
+                  <sl:slot name="icon-start"><sl:icon name="text-cursor-input"/></sl:slot>
+                  Forms
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/overlays}" th:active="${#slNav.current('/overlays')}">
+                  <sl:slot name="icon-start"><sl:icon name="layers"/></sl:slot>
+                  Overlays
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/data}" th:active="${#slNav.current('/data')}">
+                  <sl:slot name="icon-start"><sl:icon name="table"/></sl:slot>
+                  Data
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+        <sl:sidebar-group id="nav-more" panel-only>
+          <sl:sidebar-group-label>More</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
+                  <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                  Settings
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/help}" th:active="${#slNav.current('/help')}">
+                  <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+                  Help
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+      </sl:sidebar-content>
+    </sl:sidebar>
+    <sl:slot name="end">
+      <sl:theme-toggle/>
+      <sl:user-menu as="header">
+        <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:slot>
+  </sl:site-header>
+  <sl:sidebar-inset>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+The page in the card is the application's again; sample-02 keeps it to a readable width:
+
+```css
+.page { max-width: 48rem; padding: 1.5rem 1rem 2rem; }
+.page > h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem; }
+```
+
+`.app-logo` is the sidebar layout's. In the row, the links show their labels without icons and the current page is
+marked as in the sidebar; group actions, separators and collapsible items are left out of the row, and the trigger is
+hidden on a desktop. See [In the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#in-the-header) and
+[Panel-only parts](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#panel-only-parts).
+
+### A page without the navigation
+
+A sign-in page has nothing to navigate to yet. Sample-02 gives it a layout of its own: the site header with only the
+name and the theme toggle, and the page in a plain `main` with the skip link's target:
+
+```html
+<body>
+<sl:skip-link/>
+<sl:site-header>
+  <sl:button as="a" th:href="@{/}" variant="ghost">
+    <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+    Acme
+  </sl:button>
+  <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+</sl:site-header>
+<main id="main" class="page" tabindex="-1">
+  <h1 th:text="${pageTitle}"></h1>
+  <div th:replace="${content}"></div>
+</main>
+</body>
+```
+
+Without `<sl:sidebar-provider>` the site header lies across the top of the page, on the page's colour with a border
+below.
+
+### With htmx
+
+`hx-boost` on the body (as the sidebar layout has it) loads every page with htmx. The server renders the whole page
+each time, so the current page, the breadcrumb and the sidebar's collapsed state are always right, and a link in the
+phone panel closes it. The [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#htmx) page says what happens with history and when only
+the main area is boosted.
+
+A boosted link sends `HX-Request` too. A controller that answers other htmx requests with a fragment (a table's rows,
+a dialog) has to tell such a request apart, or a link in the navigation gets the fragment without the page around it.
+A request from the body's boost has `HX-Boosted` and no `HX-Target`, because the body has no id. With
+[htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot):
+
+```java
+static boolean wantsFragment(HtmxRequest request) {
+  return request.isHtmxRequest()
+      && !request.isHistoryRestoreRequest()
+      && !(request.isBoosted() && request.getTarget() == null);
+}
+```
+
+A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
+table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/tables-htmx.md).
+
+A boosted link or form made after the session expired would get the sign-in page swapped into the body (or, for a
+form, nothing at all, as its CSRF token went with the session). The Spring Security guide shows how to send the browser
+to the page instead, which then asks the user to sign in and comes back to it:
+[htmx after the session expired](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired).
+
+### A sidebar below a full-width header
+
+shadcn/ui's sidebar-16 puts a header across the whole top of the page and the sidebar below it. Shadleaf does not
+support that layout. From 768 px the sidebar is sticky at the top of the screen and as tall as the screen, so below a
+header it would slide under the header and run past the bottom of the screen. `<sl:sidebar-provider>` has to start
+at the top of the page. Put the page's header inside `<sl:sidebar-inset>` (the sidebar layout), or put the navigation
+in the header (the header layout).
+
+### The signed-in user
+
+Both layouts have a place for the user: the sidebar's footer, and the site header's `end` slot. The
+[user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md) goes in either (`as="header"` in the site header): the signed-in user from
+Spring Security with a menu that signs out, or a Sign in link for an anonymous visitor, so one layout serves public
+pages too. Sign out posts a form with the CSRF token; `hx-boost="false"` on it keeps a boosted body from sending it
+with htmx. Where the user comes from, and how to change it, is in the [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#the-signed-in-user)
+guide.
+
+### Navigation by role
+
+Some pages are only for some users. Hide their links with the Thymeleaf extras for Spring Security, which Spring Boot
+configures when the dependency is there (also with Spring Security 7, under its `springsecurity6` name):
+
+```xml
+<dependency>
+  <groupId>org.thymeleaf.extras</groupId>
+  <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+</dependency>
+```
+
+Declare the `sec` namespace on the layout's `<html>` (`xmlns:sec="http://www.thymeleaf.org/extras/spring-security"`)
+and put `sec:authorize` on the menu item, so no empty list item is left behind:
+
+```html
+<sl:sidebar-menu-item sec:authorize="hasRole('ADMIN')">
+  <sl:sidebar-menu-button th:href="@{/admin}" th:active="${#slNav.current('/admin')}">
+    <sl:slot name="icon-start"><sl:icon name="shield"/></sl:slot>
+    Admin
+  </sl:sidebar-menu-button>
+</sl:sidebar-menu-item>
+```
+
+There is one navigation, so the phone panel follows the same rule as the sidebar or the header row. A group whose
+items are all for one role takes the attribute on the `<sl:sidebar-group>` instead, label included.
+
+**Hiding a link is no security.** Anyone can type the address. What keeps other users out is the rule on the URL:
+
+```java
+.authorizeHttpRequests(requests -> requests
+    .requestMatchers("/shadleaf/**").permitAll()
+    .requestMatchers("/admin/**").hasRole("ADMIN")
+    .anyRequest().authenticated())
+```
+
+A user without the role who opens `/admin` gets a 403. The same attribute works on content inside a page: a button
+only admins may use, a column only they may see. Sample-02 has both: an Admin page in its header row, and a Manage
+access button on its Data page, shown to Ada (an admin) and not to Grace. With `sec:authorize-url="/admin"` instead,
+the template asks whether the URL rule lets the user in, so link and rule cannot disagree.
+
+Test both sides with spring-security-test: the link is in the page for one user and not for another, and the URL
+answers 403 without the role.
+
+```java
+mockMvc.perform(get("/admin").with(user("grace").roles("USER")))
+    .andExpect(status().isForbidden());
+```
+
+The [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#navigation-by-role) guide has the same in short, next to where the
+signed-in user comes from.
