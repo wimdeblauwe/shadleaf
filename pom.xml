@@ -56,7 +56,7 @@
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-    <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
+    <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
     <jreleaser-maven-plugin.version>1.26.0</jreleaser-maven-plugin.version>
 
     <!-- The release workflow tags the release commit itself, before the build; JReleaser only creates the tag of the
