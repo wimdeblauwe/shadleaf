@@ -2723,6 +2723,27 @@
             "required" : false
           }
         }, {
+          "name" : "collapsible",
+          "description" : "Make it a section that opens and closes, on the browser's `details` element: its `sl:sidebar-group-label` (which must come first) becomes the `summary`, with a chevron at the end. Collapsed to icons, and in the header row, its links show whether it is open or not.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "open",
+          "description" : "Render a collapsible group open, for instance when it holds the current page: `th:open=\"${#slNav.current('/build')}\"`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "icon-hidden",
+          "description" : "Leave the group out while the sidebar is collapsed to icons (`collapsible=\"icon\"`), as for a group whose links have no icons of their own. Expanded, and in the phone panel, it shows as usual.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
           "name" : "th:id",
           "description" : "`id` from a Thymeleaf expression, e.g. `th:id=\"${...}\"`.",
           "value" : {
@@ -2732,6 +2753,27 @@
         }, {
           "name" : "th:panel-only",
           "description" : "`panel-only` from a Thymeleaf expression, e.g. `th:panel-only=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:collapsible",
+          "description" : "`collapsible` from a Thymeleaf expression, e.g. `th:collapsible=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:icon-hidden",
+          "description" : "`icon-hidden` from a Thymeleaf expression, e.g. `th:icon-hidden=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -2791,7 +2833,7 @@
         "attributes" : [ ]
       }, {
         "name" : "sl:sidebar-group-label",
-        "description" : "The name of a `sl:sidebar-group`, in small muted text above its menu. The group is labelled by it, so it gets an id from the group (`&lt;group id&gt;-label`); give the group an `id` rather than the label.",
+        "description" : "The name of a `sl:sidebar-group`, in small muted text above its menu. The group is labelled by it, so it gets an id from the group (`&lt;group id&gt;-label`); give the group an `id` rather than the label. In a `collapsible` group it is the `summary` that opens and closes it, with a chevron at the end, and must be the group's first part.",
         "attributes" : [ ]
       }, {
         "name" : "sl:sidebar-header",
@@ -3110,8 +3152,36 @@
         } ]
       }, {
         "name" : "sl:sidebar-menu-sub",
-        "description" : "A list of links below a `sl:sidebar-menu-button`, indented along a line: a `ul` of `sl:sidebar-menu-sub-item`s. In a `collapsible` `sl:sidebar-menu-item` it is what opens and closes. Hidden while the sidebar is collapsed to icons.",
-        "attributes" : [ ]
+        "description" : "A list of links below a `sl:sidebar-menu-button`, indented along a line: a `ul` of `sl:sidebar-menu-sub-item`s. In a `collapsible` `sl:sidebar-menu-item` it is what opens and closes. With `collapsible` of its own it opens and closes by a chevron beside the menu button, which stays a link to a page of its own. Hidden while the sidebar is collapsed to icons. Requires `aria-label` or `aria-labelledby` when `collapsible` is `true`.",
+        "attributes" : [ {
+          "name" : "collapsible",
+          "description" : "Open and close it with a chevron at the end of the menu button (a `summary`, drawn as a `sl:sidebar-menu-action`), so the menu button stays a link. The chevron holds only an icon, so it needs an `aria-label` that names the sub-menu (\"Playground's pages\"); every other attribute goes to the `ul`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "open",
+          "description" : "Render a collapsible sub-menu open, for instance when it holds the current page: `th:open=\"${#slNav.current('/playground')}\"`.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:collapsible",
+          "description" : "`collapsible` from a Thymeleaf expression, e.g. `th:collapsible=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:open",
+          "description" : "`open` from a Thymeleaf expression, e.g. `th:open=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:sidebar-menu-sub-button",
         "description" : "A link (or button) in a `sl:sidebar-menu-sub-item`. Mark the current page with `active`, for instance `th:active=\"${#slNav.current('/settings/billing')}\"`. An optional icon goes in the `icon-start` slot; the label is cut off with an ellipsis when it does not fit. Every attribute that is not a prop passes through (`href`, `hx-*`); `class` is appended to `sidebar-menu-sub-button`.",

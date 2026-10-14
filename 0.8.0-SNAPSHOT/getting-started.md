@@ -69,5 +69,7 @@ component come from your build: the library's bundles define none.
 
 ## A layout for every page
 
-The [Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md) guide has two layouts to copy, with the navigation in a sidebar
-or in a header, a panel on a phone, the skip link, the breadcrumb, the theme toggle and the toasts already in place.
+The Layouts section has whole layouts to copy, with the navigation in a sidebar
+([Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md)) or in a header ([Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md)),
+a panel on a phone, the skip link, the breadcrumb, the theme toggle and the toasts already in place. The
+[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md) page helps you pick one and says what every layout needs.

@@ -1,6 +1,6 @@
 # Shadleaf guides
 
-> Getting started with Shadleaf, its conventions, and the guides.
+> Getting started with Shadleaf, its conventions, the layouts and the guides.
 
 Shadleaf 0.8.0-SNAPSHOT.
 
@@ -112,8 +112,10 @@ component come from your build: the library's bundles define none.
 
 ### A layout for every page
 
-The [Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md) guide has two layouts to copy, with the navigation in a sidebar
-or in a header, a panel on a phone, the skip link, the breadcrumb, the theme toggle and the toasts already in place.
+The Layouts section has whole layouts to copy, with the navigation in a sidebar
+([Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md)) or in a header ([Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md)),
+a panel on a phone, the skip link, the breadcrumb, the theme toggle and the toasts already in place. The
+[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md) page helps you pick one and says what every layout needs.
 
 ---
 
@@ -375,7 +377,8 @@ the trigger opens it as the panel (focus in, the rest of the page inert while it
 `expanded` or `collapsed` (shadcn's `sidebar_state` holds `true` or `false`) for a year instead of a week, and the
 server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
 the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
-the text direction. `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
+the text direction, and the trigger's icon turns round by itself for a sidebar on the end (shadcn's sidebar-14 adds
+`rotate-180`). `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
 So does `collapsible`: `offcanvas` and `icon` as shadcn's, while `none` only keeps the sidebar from collapsing on a
 desktop and is still the panel on a phone (shadcn's is a plain column at every width). See
 [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md).
@@ -391,7 +394,12 @@ A collapsible group needs no `Collapsible`, `CollapsibleTrigger` and `Collapsibl
 and its sub-menu: `<sl:sidebar-menu-item collapsible>` is a `details` element, its menu button becomes the `summary`
 (with shadcn's chevron) and `<sl:sidebar-menu-sub>` the content. `defaultOpen` is `open`, usually
 `th:open="${#slNav.current('/settings')}"`. `SidebarMenuSubButton`'s `isActive` is `active`, `size` is shadcn's
-(`sm`, `md`), and it is a link unless `as="button"`.
+(`sm`, `md`), and it is a link unless `as="button"`. sidebar-07 leaves its projects out of the strip of icons with
+`group-data-[collapsible=icon]:hidden` on the group; here that is `<sl:sidebar-group icon-hidden>`. sidebar-02 wraps
+a group in a `Collapsible` with the label as its trigger; here that is `<sl:sidebar-group collapsible>`. sidebar-08
+puts the trigger in a `SidebarMenuAction` beside a link; here that is `<sl:sidebar-menu-sub collapsible
+aria-label="...">`, whose chevron needs a name of its own (shadcn's says "Toggle"). sidebar-05's plus and minus are the
+turning chevron.
 
 A dropdown menu opened from a menu button or a menu action (shadcn's team switcher, version switcher, `NavUser` and
 the projects' "More") is `<sl:dropdown-menu-trigger as="sidebar-menu-button">` or `as="sidebar-menu-action"` (see
@@ -399,7 +407,9 @@ above). shadcn picks the side in React, `side={isMobile ? "bottom" : "right"}`; 
 phone panel (and in the header layout's row) CSS opens a right or left menu below its trigger, lined up with its end.
 shadcn's `data-[state=open]:bg-sidebar-accent` on the team switcher is built in: an open trigger has the active look,
 and its menu is at least as wide as the trigger (`w-(--radix-dropdown-menu-trigger-width) min-w-56`). The current team
-is a checked radio item (shadcn's team switcher marks none, its version switcher draws a check icon). A menu action is
+is a checked radio item (shadcn's team switcher marks none, its version switcher draws a check icon). The team
+switcher's shortcuts (⌘1, ⌘2) are left out of the [layout](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md): shadcn shows them, but
+nothing handles the keys. A menu action is
 24 px, shadcn's 20 px being too small a target once it shows (WCAG 2.2). See
 [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar).
 
@@ -412,8 +422,8 @@ inside `<sl:sidebar-inset>` too. shadcn/ui's sidebar has no header placement eit
 panel on a phone, and `panel-only` on a header, footer, group or menu item leaves it out of everything but the phone
 panel. See [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#in-the-header) and [Site Header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md). sidebar-16's
 layout itself (that header across the whole page, the sidebar below it) is not supported: the sidebar is sticky at the
-top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The
-[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md) guide has the two layouts there are.
+top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The Layouts section has the
+layouts there are, from [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md) on.
 
 #### User menu: a component, not a block
 
@@ -718,11 +728,2485 @@ The site's root also has the files of the [llms.txt](https://llmstxt.org) conven
 | `llms.txt`            | Every page with a one-line description, linking the Markdown copies. Start an agent here.   |
 | `llms-full.txt`       | All pages in one file. Large; most agents do better with the index and the pages they need. |
 | `llms-components.txt` | All component pages in one file: every example and attribute table.                         |
-| `llms-guides.txt`     | The "Start here" pages and the guides in one file.                                          |
+| `llms-guides.txt`     | The "Start here" pages, the layouts and the guides in one file.                             |
 
 Every version of the docs has its own set, under `/shadleaf/<version>/`; `/shadleaf/current/` is the latest release.
 In a session without the rules above, a prompt such as "read https://wimdeblauwe.github.io/shadleaf/current/llms.txt,
 then add a delete confirmation to the members table" is enough to get started.
+
+---
+
+## Layouts
+
+> Whole layout files to copy into an application, each with a page that uses it and the CSS around it, after shadcn/ui's sidebar blocks.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/
+
+A layout is the frame every page of an application shares: the navigation, the page's header, the skip link, and the
+places where dialogs and toasts appear. In Thymeleaf it is one template, `templates/layout/main.html`, whose fragment
+every page fills in with its title and content. The layouts here are built from Shadleaf's
+[application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md) components, most of them after one of
+[shadcn/ui's sidebar blocks](https://ui.shadcn.com/blocks/sidebar), and each one has what
+[every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs).
+
+### What a layout page holds
+
+- **A preview**, at a desktop's width and, with the Phone switch, at a phone's. The navigation is one element for
+  both: beside the page (or in the header) from 768 px, a panel the menu button opens below that. The preview works:
+  open the menus, collapse the sidebar, open the panel.
+- **The layout**: the whole layout file, head included, ready to copy.
+- **A page**: a page that uses it. It passes its title, its content and, where the layout has a breadcrumb, the
+  breadcrumb's levels, as fragments of itself (`th:ref`), so nothing is rendered where it stands.
+- **The CSS**: what the layout needs of the application's own CSS. Shadleaf's CSS styles the components, not the page
+  around them, and has no utility classes, so the page's padding, a logo's square or a border below the header are
+  yours. It is plain CSS, without Tailwind, on Shadleaf's colour tokens, so it follows the skin and the dark theme.
+
+### Using one
+
+Copy the layout file to `src/main/resources/templates/layout/main.html` and its CSS into your stylesheet, then
+replace the example navigation with your own pages. Mark the current page with `#slNav.current`, which reads the
+request, so no controller has to tell the layout which page it is. The template is yours from then on: Shadleaf
+does not update it, and nothing in it is configuration. Which kind of layout suits an application, a sidebar or a
+header, is on the [Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#which-one) page, with the htmx check a
+controller needs when the layout boosts its links.
+
+The first sample application uses a shorter [Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md), the second
+[Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md).
+
+### The layouts
+
+- [Grouped by section](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/grouped-by-section.md): A sidebar of sections, each a group of pages under its label, with a version switcher and a search field, as documentation has.
+- [Collapsible sections](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapsible-sections.md): A sidebar of sections whose labels open and close them, with a version switcher and a search field, as documentation has.
+- [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md): A sidebar of sections with their pages in sub-menus that are always open, as documentation has.
+- [Floating, with sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/floating-sub-menus.md): The sections and sub-menus of the Sub-menus layout in a floating sidebar, wider and with more room between the sections.
+- [Collapsible sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapsible-sub-menus.md): A sidebar of sections that open and close, each with its pages in a sub-menu, only the current page's section open.
+- [Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md): A team switcher, collapsible sections and projects beside the page, collapsing to a strip of icons on a desktop, with the page as a card and the signed-in user's menu at the bottom.
+- [Inset with secondary navigation](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/inset-secondary-navigation.md): Sections that are pages of their own with a chevron for their sub-menus, projects, a secondary navigation and the user menu, beside the page as a card.
+- [On the end](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sidebar-end.md): A table of contents in a sidebar on the end of the line, the right in a left-to-right page, with the trigger at the end of the page's header.
+- [Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md): For an application with a handful of pages, the pages as a row of links in the site header and the page as a card below it; on a phone the same navigation is a panel.
+
+---
+
+## Grouped by section
+
+> A sidebar of sections, each a group of pages under its label, with a version switcher and a search field, as documentation has.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/grouped-by-section/
+
+A sidebar for an application whose pages fall into a handful of sections, such as documentation: each section is a
+[group](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md) whose label names it, with its pages below, so the whole structure is in view. At
+the top, a version switcher (a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md#opened-from-the-sidebar) opened from a
+large menu button) and a search field. The page's header has the trigger and the
+[breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md). On a desktop the trigger moves the sidebar out of view; on a phone it opens
+the same sidebar as a panel. Switch the preview to Phone to see it.
+
+**Example: Grouped by section.** A sidebar of sections, each a group of pages under its label, with a version switcher and a search field at the top, as in documentation. The trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-01) this layout is based on.
+
+### The layout
+
+The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
+theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
+title, and the toaster. `#slNav.current` marks the current page from the request.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar>
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:dropdown-menu id="version-switcher">
+            <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+              <strong>Documentation</strong>
+              <small>v1.0.1</small>
+              <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+            </sl:dropdown-menu-trigger>
+            <sl:dropdown-menu-content>
+              <sl:dropdown-menu-radio-group aria-label="Versions">
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/}" checked>v1.0.1</sl:dropdown-menu-radio-item>
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/1.1.0-alpha/}">v1.1.0-alpha</sl:dropdown-menu-radio-item>
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/2.0.0-beta1/}">v2.0.0-beta1</sl:dropdown-menu-radio-item>
+              </sl:dropdown-menu-radio-group>
+            </sl:dropdown-menu-content>
+          </sl:dropdown-menu>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+      <form class="docs-search" role="search" th:action="@{/search}">
+        <sl:input type="search" name="q" placeholder="Search the docs..." aria-label="Search the docs"/>
+        <sl:icon name="search"/>
+      </form>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="nav-getting">
+        <sl:sidebar-group-label>Getting Started</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/getting-started/installation}" th:active="${#slNav.current('/getting-started/installation')}">Installation</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/getting-started/project-structure}" th:active="${#slNav.current('/getting-started/project-structure')}">Project Structure</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-build">
+        <sl:sidebar-group-label>Build Your Application</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/routing}" th:active="${#slNav.current('/build/routing')}">Routing</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/data-fetching}" th:active="${#slNav.current('/build/data-fetching')}">Data Fetching</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/rendering}" th:active="${#slNav.current('/build/rendering')}">Rendering</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/caching}" th:active="${#slNav.current('/build/caching')}">Caching</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/styling}" th:active="${#slNav.current('/build/styling')}">Styling</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/optimizing}" th:active="${#slNav.current('/build/optimizing')}">Optimizing</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/configuring}" th:active="${#slNav.current('/build/configuring')}">Configuring</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/testing}" th:active="${#slNav.current('/build/testing')}">Testing</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/authentication}" th:active="${#slNav.current('/build/authentication')}">Authentication</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/deploying}" th:active="${#slNav.current('/build/deploying')}">Deploying</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/upgrading}" th:active="${#slNav.current('/build/upgrading')}">Upgrading</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/examples}" th:active="${#slNav.current('/build/examples')}">Examples</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-api">
+        <sl:sidebar-group-label>API Reference</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/components}" th:active="${#slNav.current('/api/components')}">Components</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/file-conventions}" th:active="${#slNav.current('/api/file-conventions')}">File Conventions</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/functions}" th:active="${#slNav.current('/api/functions')}">Functions</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/configuration-options}" th:active="${#slNav.current('/api/configuration-options')}">Configuration Options</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/cli}" th:active="${#slNav.current('/api/cli')}">CLI</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/edge-runtime}" th:active="${#slNav.current('/api/edge-runtime')}">Edge Runtime</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-architecture">
+        <sl:sidebar-group-label>Architecture</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/accessibility}" th:active="${#slNav.current('/architecture/accessibility')}">Accessibility</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/fast-refresh}" th:active="${#slNav.current('/architecture/fast-refresh')}">Fast Refresh</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/compiler}" th:active="${#slNav.current('/architecture/compiler')}">Compiler</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/supported-browsers}" th:active="${#slNav.current('/architecture/supported-browsers')}">Supported Browsers</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/bundler}" th:active="${#slNav.current('/architecture/bundler')}">Bundler</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+The versions are links, and the server checks the one being read (`checked`), so the switcher works without
+JavaScript. Here the check is fixed in the markup; an application that serves several versions sets it with
+`th:checked`. The search field is a plain `GET` form; Shadleaf has no search of its own.
+
+### A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Data Fetching', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-link th:href="@{/build}">Build Your Application</sl:breadcrumb-link>
+  </sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>Data Fetching</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the magnifier in the search field (the
+`docs-search` class on the form) and its height, a border below the header, and the page's padding.
+
+```css
+/* The square behind the logo in the version switcher. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* The search field: a magnifier inside it, at the start. */
+.docs-search { position: relative; }
+.docs-search > .input {
+  block-size: 2rem;
+  padding-inline-start: 2rem;
+  background: var(--background);
+}
+.docs-search > svg {
+  position: absolute;
+  inset-inline-start: 0.5rem;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  inline-size: 1rem;
+  block-size: 1rem;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* A border below the page's header, and the page's padding. */
+.sidebar-inset > .site-header { border-block-end: 1px solid var(--border); }
+.page { padding: 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```
+
+---
+
+## Collapsible sections
+
+> A sidebar of sections whose labels open and close them, with a version switcher and a search field, as documentation has.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapsible-sections/
+
+The [grouped layout](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/grouped-by-section.md) with sections that open and close: each section is a
+[collapsible group](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#collapsible-sections) whose label is what the user clicks, with a
+chevron that turns when it opens. Every section starts open here; a long sidebar can open only the current page's
+section with `th:open="${#slNav.current('/build')}"`. At the top, a version switcher and a search field. On a desktop
+the trigger moves the sidebar out of view; on a phone it opens the same sidebar as a panel. Switch the preview to
+Phone to see it.
+
+**Example: Collapsible sections.** A sidebar of sections, each a group of pages under a label that opens and closes it, with a version switcher and a search field at the top. The trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-02) this layout is based on.
+
+### The layout
+
+The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
+theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
+title, and the toaster. A section is the browser's `details` element, so it opens and closes without JavaScript, and
+a closed one is still found by the browser's find in page.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar>
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:dropdown-menu id="version-switcher">
+            <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+              <strong>Documentation</strong>
+              <small>v1.0.1</small>
+              <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+            </sl:dropdown-menu-trigger>
+            <sl:dropdown-menu-content>
+              <sl:dropdown-menu-radio-group aria-label="Versions">
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/}" checked>v1.0.1</sl:dropdown-menu-radio-item>
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/1.1.0-alpha/}">v1.1.0-alpha</sl:dropdown-menu-radio-item>
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/2.0.0-beta1/}">v2.0.0-beta1</sl:dropdown-menu-radio-item>
+              </sl:dropdown-menu-radio-group>
+            </sl:dropdown-menu-content>
+          </sl:dropdown-menu>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+      <form class="docs-search" role="search" th:action="@{/search}">
+        <sl:input type="search" name="q" placeholder="Search the docs..." aria-label="Search the docs"/>
+        <sl:icon name="search"/>
+      </form>
+    </sl:sidebar-header>
+    <sl:sidebar-content class="docs-sections">
+      <sl:sidebar-group id="nav-getting" collapsible open>
+        <sl:sidebar-group-label>Getting Started</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/getting-started/installation}" th:active="${#slNav.current('/getting-started/installation')}">Installation</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/getting-started/project-structure}" th:active="${#slNav.current('/getting-started/project-structure')}">Project Structure</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-build" collapsible open>
+        <sl:sidebar-group-label>Build Your Application</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/routing}" th:active="${#slNav.current('/build/routing')}">Routing</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/data-fetching}" th:active="${#slNav.current('/build/data-fetching')}">Data Fetching</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/rendering}" th:active="${#slNav.current('/build/rendering')}">Rendering</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/caching}" th:active="${#slNav.current('/build/caching')}">Caching</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/styling}" th:active="${#slNav.current('/build/styling')}">Styling</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/optimizing}" th:active="${#slNav.current('/build/optimizing')}">Optimizing</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/configuring}" th:active="${#slNav.current('/build/configuring')}">Configuring</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/testing}" th:active="${#slNav.current('/build/testing')}">Testing</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/authentication}" th:active="${#slNav.current('/build/authentication')}">Authentication</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/deploying}" th:active="${#slNav.current('/build/deploying')}">Deploying</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/upgrading}" th:active="${#slNav.current('/build/upgrading')}">Upgrading</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build/examples}" th:active="${#slNav.current('/build/examples')}">Examples</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-api" collapsible open>
+        <sl:sidebar-group-label>API Reference</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/components}" th:active="${#slNav.current('/api/components')}">Components</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/file-conventions}" th:active="${#slNav.current('/api/file-conventions')}">File Conventions</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/functions}" th:active="${#slNav.current('/api/functions')}">Functions</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/configuration-options}" th:active="${#slNav.current('/api/configuration-options')}">Configuration Options</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/cli}" th:active="${#slNav.current('/api/cli')}">CLI</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api/edge-runtime}" th:active="${#slNav.current('/api/edge-runtime')}">Edge Runtime</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-architecture" collapsible open>
+        <sl:sidebar-group-label>Architecture</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/accessibility}" th:active="${#slNav.current('/architecture/accessibility')}">Accessibility</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/fast-refresh}" th:active="${#slNav.current('/architecture/fast-refresh')}">Fast Refresh</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/compiler}" th:active="${#slNav.current('/architecture/compiler')}">Compiler</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/supported-browsers}" th:active="${#slNav.current('/architecture/supported-browsers')}">Supported Browsers</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture/bundler}" th:active="${#slNav.current('/architecture/bundler')}">Bundler</sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+### A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Data Fetching', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-link th:href="@{/build}">Build Your Application</sl:breadcrumb-link>
+  </sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>Data Fetching</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the magnifier in the search field, sections
+without a gap between them and with labels in the links' size and colour (the `docs-sections` class on the
+content), a border below the header, and the page's padding.
+
+```css
+/* The square behind the logo in the sidebar's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* The search field: a magnifier inside it, at the start. */
+.docs-search { position: relative; }
+.docs-search > .input {
+  block-size: 2rem;
+  padding-inline-start: 2rem;
+  background: var(--background);
+}
+.docs-search > svg {
+  position: absolute;
+  inset-inline-start: 0.5rem;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  inline-size: 1rem;
+  block-size: 1rem;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* The sections close up, and their labels read as the links below them (shadcn's sidebar-02). */
+.docs-sections { gap: 0; }
+.docs-sections summary.sidebar-group-label:not(:hover) {
+  font-size: 0.875rem;
+  color: var(--sidebar-foreground);
+}
+
+/* A border below the page's header, and the page's padding. */
+.sidebar-inset > .site-header { border-block-end: 1px solid var(--border); }
+.page { padding: 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```
+
+---
+
+## Sub-menus
+
+> A sidebar of sections with their pages in sub-menus that are always open, as documentation has.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus/
+
+A sidebar for an application whose pages fall into a handful of sections, such as documentation: each section is a
+link of its own with its pages in a [sub-menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#collapsible-groups) below it, always open, so
+the whole structure is in view. The application's name and version are at the top. The page's header has the
+trigger and the [breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md). On a desktop the trigger moves the sidebar out of view; on
+a phone it opens the same sidebar as a panel. Switch the preview to Phone to see it.
+
+**Example: Sub-menus.** A sidebar of sections, each with its pages in a sub-menu that is always open, as in documentation. The current page is a sub-button; the trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-03) this layout is based on.
+
+The [floating variant](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/floating-sub-menus.md) has the same menus in a panel with a margin round it.
+
+### The layout
+
+The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
+theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
+title, and the toaster. `#slNav.current` marks the current page from the request: the sections compare the exact path
+(`true`), so a section is not marked as well when one of its pages is shown.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar>
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+            <strong>Documentation</strong>
+            <small>v1.0.0</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group>
+        <sl:sidebar-menu class="docs-nav">
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/getting-started}"
+                                    th:active="${#slNav.current('/getting-started', true)}">
+              Getting Started
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/getting-started/installation}"
+                                            th:active="${#slNav.current('/getting-started/installation')}">
+                  Installation
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/getting-started/project-structure}"
+                                            th:active="${#slNav.current('/getting-started/project-structure')}">
+                  Project Structure
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/build}"
+                                    th:active="${#slNav.current('/build', true)}">
+              Build Your Application
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/routing}"
+                                            th:active="${#slNav.current('/build/routing')}">
+                  Routing
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/data-fetching}"
+                                            th:active="${#slNav.current('/build/data-fetching')}">
+                  Data Fetching
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/rendering}"
+                                            th:active="${#slNav.current('/build/rendering')}">
+                  Rendering
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/caching}"
+                                            th:active="${#slNav.current('/build/caching')}">
+                  Caching
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/styling}"
+                                            th:active="${#slNav.current('/build/styling')}">
+                  Styling
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/api}"
+                                    th:active="${#slNav.current('/api', true)}">
+              API Reference
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/components}"
+                                            th:active="${#slNav.current('/api/components')}">
+                  Components
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/file-conventions}"
+                                            th:active="${#slNav.current('/api/file-conventions')}">
+                  File Conventions
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/functions}"
+                                            th:active="${#slNav.current('/api/functions')}">
+                  Functions
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/architecture}"
+                                    th:active="${#slNav.current('/architecture', true)}">
+              Architecture
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/accessibility}"
+                                            th:active="${#slNav.current('/architecture/accessibility')}">
+                  Accessibility
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/fast-refresh}"
+                                            th:active="${#slNav.current('/architecture/fast-refresh')}">
+                  Fast Refresh
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/community}"
+                                    th:active="${#slNav.current('/community', true)}">
+              Community
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/community/contribution-guide}"
+                                            th:active="${#slNav.current('/community/contribution-guide')}">
+                  Contribution Guide
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+### A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Data Fetching', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-link th:href="@{/build}">Build Your Application</sl:breadcrumb-link>
+  </sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>Data Fetching</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the weight of the sections' links (the `docs-nav` class on the menu), a border below the header, and the page's padding.
+
+```css
+/* The square behind the logo in the sidebar's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* The sections' links in a medium weight, their pages' in the normal one. */
+.docs-nav > .sidebar-menu-item > .sidebar-menu-button { font-weight: 500; }
+
+/* A border below the page's header, and the page's padding. */
+.sidebar-inset > .site-header { border-block-end: 1px solid var(--border); }
+.page { padding: 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```
+
+---
+
+## Floating, with sub-menus
+
+> The sections and sub-menus of the Sub-menus layout in a floating sidebar, wider and with more room between the sections.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/floating-sub-menus/
+
+The [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md) layout with `variant="floating"`: on a desktop the sidebar is a panel with a margin all
+round, rounded corners (in the vega skin) and a shadow, instead of a column along the edge of the screen. The
+application's CSS makes it wider (19 rem), puts more room between the sections and takes the line away from the
+sub-menus. The page's header has no border. On a phone the panel is the same as for every
+[variant](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#variants).
+
+**Example: Floating, with sub-menus.** The same sections and sub-menus in a floating sidebar: a panel with a margin all round, rounded and with a shadow, wider than the default, with more room between the sections and no line along the sub-menus.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-04) this layout is based on.
+
+### The layout
+
+The whole layout file, with what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). The
+sub-menus have a class of their own, `docs-nav-sub`, for the CSS below.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="floating">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+            <strong>Documentation</strong>
+            <small>v1.0.0</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group>
+        <sl:sidebar-menu class="docs-nav">
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/getting-started}"
+                                    th:active="${#slNav.current('/getting-started', true)}">
+              Getting Started
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/getting-started/installation}"
+                                            th:active="${#slNav.current('/getting-started/installation')}">
+                  Installation
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/getting-started/project-structure}"
+                                            th:active="${#slNav.current('/getting-started/project-structure')}">
+                  Project Structure
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/build}"
+                                    th:active="${#slNav.current('/build', true)}">
+              Build Your Application
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/routing}"
+                                            th:active="${#slNav.current('/build/routing')}">
+                  Routing
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/data-fetching}"
+                                            th:active="${#slNav.current('/build/data-fetching')}">
+                  Data Fetching
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/rendering}"
+                                            th:active="${#slNav.current('/build/rendering')}">
+                  Rendering
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/caching}"
+                                            th:active="${#slNav.current('/build/caching')}">
+                  Caching
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/styling}"
+                                            th:active="${#slNav.current('/build/styling')}">
+                  Styling
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/api}"
+                                    th:active="${#slNav.current('/api', true)}">
+              API Reference
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/components}"
+                                            th:active="${#slNav.current('/api/components')}">
+                  Components
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/file-conventions}"
+                                            th:active="${#slNav.current('/api/file-conventions')}">
+                  File Conventions
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/functions}"
+                                            th:active="${#slNav.current('/api/functions')}">
+                  Functions
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/architecture}"
+                                    th:active="${#slNav.current('/architecture', true)}">
+              Architecture
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/accessibility}"
+                                            th:active="${#slNav.current('/architecture/accessibility')}">
+                  Accessibility
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/fast-refresh}"
+                                            th:active="${#slNav.current('/architecture/fast-refresh')}">
+                  Fast Refresh
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/community}"
+                                    th:active="${#slNav.current('/community', true)}">
+              Community
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/community/contribution-guide}"
+                                            th:active="${#slNav.current('/community/contribution-guide')}">
+                  Contribution Guide
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+### A page
+
+A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md#a-page)
+layout:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Data Fetching', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-link th:href="@{/build}">Build Your Application</sl:breadcrumb-link>
+  </sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>Data Fetching</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+The width is a token: `--sidebar-width` on `.sidebar-provider` replaces the skin's 16 rem, and the floating panel's
+footprint follows it. Rules outside a cascade layer, as here, win over Shadleaf's, which are in one.
+
+```css
+/* The square behind the logo in the sidebar's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* A wider sidebar, more room between the sections, the sub-menus without their line. */
+.sidebar-provider { --sidebar-width: 19rem; }
+.docs-nav { gap: 0.5rem; }
+.docs-nav > .sidebar-menu-item > .sidebar-menu-button { font-weight: 500; }
+.docs-nav-sub { margin-inline: 0; border-inline-start: 0; padding-inline: 0.375rem; }
+
+/* The page's padding: the header above it has its own. */
+.page { padding: 0 1rem 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```
+
+---
+
+## Collapsible sub-menus
+
+> A sidebar of sections that open and close, each with its pages in a sub-menu, only the current page's section open.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapsible-sub-menus/
+
+The [sub-menus layout](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md) for more pages than fit in view: every section is a
+[collapsible item](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#collapsible-groups) that opens and closes its sub-menu, and the server
+opens only the section that holds the current page (`th:open="${#slNav.current('/build')}"`). The sections are no
+pages of their own: the whole row opens and closes. At the top, the application's name and version and a search
+field. On a desktop the trigger moves the sidebar out of view; on a phone it opens the same sidebar as a panel.
+Switch the preview to Phone to see it.
+
+**Example: Collapsible sub-menus.** A sidebar of sections that open and close, each with its pages in a sub-menu; only the current page's section is open. The trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-05) this layout is based on. Its
+plus and minus are Shadleaf's turning chevron here.
+
+### The layout
+
+The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
+theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
+title, and the toaster.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar>
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+            <strong>Documentation</strong>
+            <small>v1.0.0</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+      <form class="docs-search" role="search" th:action="@{/search}">
+        <sl:input type="search" name="q" placeholder="Search the docs..." aria-label="Search the docs"/>
+        <sl:icon name="search"/>
+      </form>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/getting-started')}">
+            <sl:sidebar-menu-button>Getting Started</sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/getting-started/installation}" th:active="${#slNav.current('/getting-started/installation')}">Installation</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/getting-started/project-structure}" th:active="${#slNav.current('/getting-started/project-structure')}">Project Structure</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/build')}">
+            <sl:sidebar-menu-button>Build Your Application</sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/routing}" th:active="${#slNav.current('/build/routing')}">Routing</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/data-fetching}" th:active="${#slNav.current('/build/data-fetching')}">Data Fetching</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/rendering}" th:active="${#slNav.current('/build/rendering')}">Rendering</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/caching}" th:active="${#slNav.current('/build/caching')}">Caching</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/styling}" th:active="${#slNav.current('/build/styling')}">Styling</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/optimizing}" th:active="${#slNav.current('/build/optimizing')}">Optimizing</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/configuring}" th:active="${#slNav.current('/build/configuring')}">Configuring</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/testing}" th:active="${#slNav.current('/build/testing')}">Testing</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/authentication}" th:active="${#slNav.current('/build/authentication')}">Authentication</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/deploying}" th:active="${#slNav.current('/build/deploying')}">Deploying</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/upgrading}" th:active="${#slNav.current('/build/upgrading')}">Upgrading</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/examples}" th:active="${#slNav.current('/build/examples')}">Examples</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/api')}">
+            <sl:sidebar-menu-button>API Reference</sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/components}" th:active="${#slNav.current('/api/components')}">Components</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/file-conventions}" th:active="${#slNav.current('/api/file-conventions')}">File Conventions</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/functions}" th:active="${#slNav.current('/api/functions')}">Functions</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/configuration-options}" th:active="${#slNav.current('/api/configuration-options')}">Configuration Options</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/cli}" th:active="${#slNav.current('/api/cli')}">CLI</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/edge-runtime}" th:active="${#slNav.current('/api/edge-runtime')}">Edge Runtime</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/architecture')}">
+            <sl:sidebar-menu-button>Architecture</sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/accessibility}" th:active="${#slNav.current('/architecture/accessibility')}">Accessibility</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/fast-refresh}" th:active="${#slNav.current('/architecture/fast-refresh')}">Fast Refresh</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/compiler}" th:active="${#slNav.current('/architecture/compiler')}">Compiler</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/supported-browsers}" th:active="${#slNav.current('/architecture/supported-browsers')}">Supported Browsers</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/bundler}" th:active="${#slNav.current('/architecture/bundler')}">Bundler</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/community')}">
+            <sl:sidebar-menu-button>Community</sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/community/contribution-guide}" th:active="${#slNav.current('/community/contribution-guide')}">Contribution Guide</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+### A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Data Fetching', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-link th:href="@{/build}">Build Your Application</sl:breadcrumb-link>
+  </sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>Data Fetching</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the magnifier in the search field, a border
+below the header, and the page's padding.
+
+```css
+/* The square behind the logo in the sidebar's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* The search field: a magnifier inside it, at the start. */
+.docs-search { position: relative; }
+.docs-search > .input {
+  block-size: 2rem;
+  padding-inline-start: 2rem;
+  background: var(--background);
+}
+.docs-search > svg {
+  position: absolute;
+  inset-inline-start: 0.5rem;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  inline-size: 1rem;
+  block-size: 1rem;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* A border below the page's header, and the page's padding. */
+.sidebar-inset > .site-header { border-block-end: 1px solid var(--border); }
+.page { padding: 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```
+
+---
+
+## Collapses to icons
+
+> A team switcher, collapsible sections and projects beside the page, collapsing to a strip of icons on a desktop, with the page as a card and the signed-in user's menu at the bottom.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons/
+
+A sidebar for an application with more pages than fit in a header row. At the top, a team switcher: a
+[dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md#opened-from-the-sidebar) opened from a large menu button. Then the
+platform's sections as [collapsible items](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#collapsible-groups), each with its pages in a
+sub-menu, the projects with a "More" menu each, and at the bottom the [user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md). The
+page is a card beside the sidebar (`variant="inset"`). The page's header is a
+[site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md) with the trigger, a separator, the page's
+[breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md) and the theme toggle.
+
+On a desktop the trigger (or Ctrl/⌘+B) collapses the sidebar to a strip of icons (`collapsible="icon"`), with a
+tooltip on every menu button, and a cookie remembers the choice. The projects have no icons worth a strip of their
+own, so their group is left out of it (`icon-hidden`). On a phone the trigger opens the same sidebar as a panel.
+Switch the preview to Phone to see it.
+
+**Example: Collapses to icons.** A team switcher at the top, the platform's sections as collapsible items, projects with a menu each, the signed-in user's menu at the bottom, and the page as a card beside it. On a desktop the trigger collapses the sidebar to a strip of icons with tooltips; on a phone it opens it as a panel.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-07) this layout is based on.
+
+### The layout
+
+The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs).
+The first sample application (sample-01) has a shorter version of it, with its own pages and no team switcher.
+`hx-boost` on the body loads every page with htmx; see [With htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#with-htmx) for
+the one check a controller then needs. Leave out the script and the attribute for a layout without htmx.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body hx-boost="true">
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="inset" collapsible="icon">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:dropdown-menu id="team-switcher">
+            <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg" tooltip="Acme Inc">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+              <strong>Acme Inc</strong>
+              <small>Enterprise</small>
+              <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
+            </sl:dropdown-menu-trigger>
+            <sl:dropdown-menu-content side="right">
+              <sl:dropdown-menu-label id="team-switcher-label">Teams</sl:dropdown-menu-label>
+              <sl:dropdown-menu-radio-group aria-labelledby="team-switcher-label">
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/teams/acme-inc}" checked>Acme Inc</sl:dropdown-menu-radio-item>
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/teams/acme-corp}">Acme Corp.</sl:dropdown-menu-radio-item>
+                <sl:dropdown-menu-radio-item as="a" th:href="@{/teams/evil-corp}">Evil Corp.</sl:dropdown-menu-radio-item>
+              </sl:dropdown-menu-radio-group>
+              <sl:dropdown-menu-separator/>
+              <sl:dropdown-menu-item as="a" th:href="@{/teams/new}">
+                <sl:icon name="plus"/>
+                Add team
+              </sl:dropdown-menu-item>
+            </sl:dropdown-menu-content>
+          </sl:dropdown-menu>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="nav-platform">
+        <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+        <sl:sidebar-menu>
+              <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/playground')}">
+                <sl:sidebar-menu-button tooltip="Playground">
+                  <sl:slot name="icon-start"><sl:icon name="square-terminal"/></sl:slot>
+                  Playground
+                </sl:sidebar-menu-button>
+                <sl:sidebar-menu-sub>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/playground/history}" th:active="${#slNav.current('/playground/history')}">
+                      History
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/playground/starred}" th:active="${#slNav.current('/playground/starred')}">
+                      Starred
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/playground/settings}" th:active="${#slNav.current('/playground/settings')}">
+                      Settings
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                </sl:sidebar-menu-sub>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/models')}">
+                <sl:sidebar-menu-button tooltip="Models">
+                  <sl:slot name="icon-start"><sl:icon name="bot"/></sl:slot>
+                  Models
+                </sl:sidebar-menu-button>
+                <sl:sidebar-menu-sub>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/models/genesis}" th:active="${#slNav.current('/models/genesis')}">
+                      Genesis
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/models/explorer}" th:active="${#slNav.current('/models/explorer')}">
+                      Explorer
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/models/quantum}" th:active="${#slNav.current('/models/quantum')}">
+                      Quantum
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                </sl:sidebar-menu-sub>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/docs')}">
+                <sl:sidebar-menu-button tooltip="Documentation">
+                  <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
+                  Documentation
+                </sl:sidebar-menu-button>
+                <sl:sidebar-menu-sub>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/docs/introduction}" th:active="${#slNav.current('/docs/introduction')}">
+                      Introduction
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/docs/get-started}" th:active="${#slNav.current('/docs/get-started')}">
+                      Get Started
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/docs/tutorials}" th:active="${#slNav.current('/docs/tutorials')}">
+                      Tutorials
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/docs/changelog}" th:active="${#slNav.current('/docs/changelog')}">
+                      Changelog
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                </sl:sidebar-menu-sub>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/settings')}">
+                <sl:sidebar-menu-button tooltip="Settings">
+                  <sl:slot name="icon-start"><sl:icon name="settings-2"/></sl:slot>
+                  Settings
+                </sl:sidebar-menu-button>
+                <sl:sidebar-menu-sub>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/settings/general}" th:active="${#slNav.current('/settings/general')}">
+                      General
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/settings/team}" th:active="${#slNav.current('/settings/team')}">
+                      Team
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/settings/billing}" th:active="${#slNav.current('/settings/billing')}">
+                      Billing
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/settings/limits}" th:active="${#slNav.current('/settings/limits')}">
+                      Limits
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                </sl:sidebar-menu-sub>
+              </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-projects" icon-hidden>
+        <sl:sidebar-group-label>Projects</sl:sidebar-group-label>
+        <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/projects/design}" th:active="${#slNav.current('/projects/design')}">
+                  <sl:slot name="icon-start"><sl:icon name="frame"/></sl:slot>
+                  Design Engineering
+                </sl:sidebar-menu-button>
+                <sl:dropdown-menu id="project-design-more">
+                  <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Design Engineering">
+                    <sl:icon name="ellipsis"/>
+                  </sl:dropdown-menu-trigger>
+                  <sl:dropdown-menu-content side="right">
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/design}">
+                      <sl:icon name="folder"/>
+                      View project
+                    </sl:dropdown-menu-item>
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/design/share}">
+                      <sl:icon name="forward"/>
+                      Share project
+                    </sl:dropdown-menu-item>
+                    <sl:dropdown-menu-separator/>
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/design/delete}" variant="destructive">
+                      <sl:icon name="trash-2"/>
+                      Delete project
+                    </sl:dropdown-menu-item>
+                  </sl:dropdown-menu-content>
+                </sl:dropdown-menu>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/projects/sales}" th:active="${#slNav.current('/projects/sales')}">
+                  <sl:slot name="icon-start"><sl:icon name="chart-pie"/></sl:slot>
+                  Sales &amp; Marketing
+                </sl:sidebar-menu-button>
+                <sl:dropdown-menu id="project-sales-more">
+                  <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Sales &amp; Marketing">
+                    <sl:icon name="ellipsis"/>
+                  </sl:dropdown-menu-trigger>
+                  <sl:dropdown-menu-content side="right">
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/sales}">
+                      <sl:icon name="folder"/>
+                      View project
+                    </sl:dropdown-menu-item>
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/sales/share}">
+                      <sl:icon name="forward"/>
+                      Share project
+                    </sl:dropdown-menu-item>
+                    <sl:dropdown-menu-separator/>
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/sales/delete}" variant="destructive">
+                      <sl:icon name="trash-2"/>
+                      Delete project
+                    </sl:dropdown-menu-item>
+                  </sl:dropdown-menu-content>
+                </sl:dropdown-menu>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/projects/travel}" th:active="${#slNav.current('/projects/travel')}">
+                  <sl:slot name="icon-start"><sl:icon name="map"/></sl:slot>
+                  Travel
+                </sl:sidebar-menu-button>
+                <sl:dropdown-menu id="project-travel-more">
+                  <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Travel">
+                    <sl:icon name="ellipsis"/>
+                  </sl:dropdown-menu-trigger>
+                  <sl:dropdown-menu-content side="right">
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/travel}">
+                      <sl:icon name="folder"/>
+                      View project
+                    </sl:dropdown-menu-item>
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/travel/share}">
+                      <sl:icon name="forward"/>
+                      Share project
+                    </sl:dropdown-menu-item>
+                    <sl:dropdown-menu-separator/>
+                    <sl:dropdown-menu-item as="a" th:href="@{/projects/travel/delete}" variant="destructive">
+                      <sl:icon name="trash-2"/>
+                      Delete project
+                    </sl:dropdown-menu-item>
+                  </sl:dropdown-menu-content>
+                </sl:dropdown-menu>
+              </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/projects}" th:active="${#slNav.current('/projects', true)}">
+              <sl:slot name="icon-start"><sl:icon name="ellipsis"/></sl:slot>
+              More
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+    <sl:sidebar-footer>
+      <sl:user-menu>
+        <sl:dropdown-menu-item as="a" th:href="@{/upgrade}"><sl:icon name="sparkles"/>Upgrade to Pro</sl:dropdown-menu-item>
+        <sl:dropdown-menu-separator/>
+        <sl:dropdown-menu-item as="a" th:href="@{/account}"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+        <sl:dropdown-menu-item as="a" th:href="@{/billing}"><sl:icon name="credit-card"/>Billing</sl:dropdown-menu-item>
+        <sl:dropdown-menu-item as="a" th:href="@{/notifications}"><sl:icon name="bell"/>Notifications</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:sidebar-footer>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+      <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+The teams are links, and the server checks the current one (`checked`), so the switcher works without JavaScript; an
+application sets it with `th:checked` and lists its teams with `th:each`. The projects' menus are links too: a delete
+link leads to a page (or, with htmx, an [alert dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/alert-dialog.md)) that asks first.
+
+Without `variant="inset"` the sidebar is a column along the edge of the screen; with `collapsible="offcanvas"` it
+moves out of view instead of collapsing to icons. The [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md) page has every part and
+option.
+
+### A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('History', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Playground</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>History</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo and the page's padding.
+
+```css
+/* The square behind the team's logo in the sidebar's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* The page's padding: the header above it has its own. */
+.page { padding: 0 1rem 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```
+
+---
+
+## Inset with secondary navigation
+
+> Sections that are pages of their own with a chevron for their sub-menus, projects, a secondary navigation and the user menu, beside the page as a card.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/inset-secondary-navigation/
+
+A sidebar whose sections are pages of their own: the section's name is a link, and a chevron beside it opens and
+closes its pages in a [collapsible sub-menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#a-section-that-is-a-page-too). The server
+opens the current page's section. Below them the projects, each with a "More" menu, and at the bottom of the content
+a secondary navigation (Support, Feedback) in small buttons. The footer holds the
+[user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md). The page is a card beside the sidebar (`variant="inset"`), and its header
+has the trigger, the [breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md) and the theme toggle. On a desktop the trigger moves
+the sidebar out of view; on a phone it opens the same sidebar as a panel. Switch the preview to Phone to see it.
+
+**Example: Inset with secondary navigation.** Sections that are pages of their own, with a chevron beside each that opens its sub-menu, projects with a menu each, a secondary navigation at the bottom and the signed-in user's menu, and the page as a card beside it.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-08) this layout is based on.
+
+### The layout
+
+The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
+theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
+title, and the toaster. The chevrons are `summary` elements and need a name each (`aria-label`), as an icon button
+does: "Playground's pages".
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="inset">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="command"/></span></sl:slot>
+            <strong>Acme Inc</strong>
+            <small>Enterprise</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="nav-platform">
+        <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/playground}" th:active="${#slNav.current('/playground', true)}">
+              <sl:slot name="icon-start"><sl:icon name="square-terminal"/></sl:slot>
+              Playground
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub collapsible th:open="${#slNav.current('/playground')}" aria-label="Playground's pages">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/playground/history}" th:active="${#slNav.current('/playground/history')}">History</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/playground/starred}" th:active="${#slNav.current('/playground/starred')}">Starred</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/playground/settings}" th:active="${#slNav.current('/playground/settings')}">Settings</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/models}" th:active="${#slNav.current('/models', true)}">
+              <sl:slot name="icon-start"><sl:icon name="bot"/></sl:slot>
+              Models
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub collapsible th:open="${#slNav.current('/models')}" aria-label="Models's pages">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/models/genesis}" th:active="${#slNav.current('/models/genesis')}">Genesis</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/models/explorer}" th:active="${#slNav.current('/models/explorer')}">Explorer</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/models/quantum}" th:active="${#slNav.current('/models/quantum')}">Quantum</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/docs}" th:active="${#slNav.current('/docs', true)}">
+              <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
+              Documentation
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub collapsible th:open="${#slNav.current('/docs')}" aria-label="Documentation's pages">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/docs/introduction}" th:active="${#slNav.current('/docs/introduction')}">Introduction</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/docs/get-started}" th:active="${#slNav.current('/docs/get-started')}">Get Started</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/docs/tutorials}" th:active="${#slNav.current('/docs/tutorials')}">Tutorials</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/docs/changelog}" th:active="${#slNav.current('/docs/changelog')}">Changelog</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings', true)}">
+              <sl:slot name="icon-start"><sl:icon name="settings-2"/></sl:slot>
+              Settings
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub collapsible th:open="${#slNav.current('/settings')}" aria-label="Settings's pages">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/settings/general}" th:active="${#slNav.current('/settings/general')}">General</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/settings/team}" th:active="${#slNav.current('/settings/team')}">Team</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/settings/billing}" th:active="${#slNav.current('/settings/billing')}">Billing</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/settings/limits}" th:active="${#slNav.current('/settings/limits')}">Limits</sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-projects">
+        <sl:sidebar-group-label>Projects</sl:sidebar-group-label>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/projects/design}" th:active="${#slNav.current('/projects/design')}">
+              <sl:slot name="icon-start"><sl:icon name="frame"/></sl:slot>
+              Design Engineering
+            </sl:sidebar-menu-button>
+            <sl:dropdown-menu id="project-design-more">
+              <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Design Engineering">
+                <sl:icon name="ellipsis"/>
+              </sl:dropdown-menu-trigger>
+              <sl:dropdown-menu-content side="right">
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/design}">
+                  <sl:icon name="folder"/>
+                  View project
+                </sl:dropdown-menu-item>
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/design/share}">
+                  <sl:icon name="share"/>
+                  Share project
+                </sl:dropdown-menu-item>
+                <sl:dropdown-menu-separator/>
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/design/delete}" variant="destructive">
+                  <sl:icon name="trash-2"/>
+                  Delete project
+                </sl:dropdown-menu-item>
+              </sl:dropdown-menu-content>
+            </sl:dropdown-menu>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/projects/sales}" th:active="${#slNav.current('/projects/sales')}">
+              <sl:slot name="icon-start"><sl:icon name="chart-pie"/></sl:slot>
+              Sales &amp; Marketing
+            </sl:sidebar-menu-button>
+            <sl:dropdown-menu id="project-sales-more">
+              <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Sales &amp; Marketing">
+                <sl:icon name="ellipsis"/>
+              </sl:dropdown-menu-trigger>
+              <sl:dropdown-menu-content side="right">
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/sales}">
+                  <sl:icon name="folder"/>
+                  View project
+                </sl:dropdown-menu-item>
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/sales/share}">
+                  <sl:icon name="share"/>
+                  Share project
+                </sl:dropdown-menu-item>
+                <sl:dropdown-menu-separator/>
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/sales/delete}" variant="destructive">
+                  <sl:icon name="trash-2"/>
+                  Delete project
+                </sl:dropdown-menu-item>
+              </sl:dropdown-menu-content>
+            </sl:dropdown-menu>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/projects/travel}" th:active="${#slNav.current('/projects/travel')}">
+              <sl:slot name="icon-start"><sl:icon name="map"/></sl:slot>
+              Travel
+            </sl:sidebar-menu-button>
+            <sl:dropdown-menu id="project-travel-more">
+              <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover aria-label="More for Travel">
+                <sl:icon name="ellipsis"/>
+              </sl:dropdown-menu-trigger>
+              <sl:dropdown-menu-content side="right">
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/travel}">
+                  <sl:icon name="folder"/>
+                  View project
+                </sl:dropdown-menu-item>
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/travel/share}">
+                  <sl:icon name="share"/>
+                  Share project
+                </sl:dropdown-menu-item>
+                <sl:dropdown-menu-separator/>
+                <sl:dropdown-menu-item as="a" th:href="@{/projects/travel/delete}" variant="destructive">
+                  <sl:icon name="trash-2"/>
+                  Delete project
+                </sl:dropdown-menu-item>
+              </sl:dropdown-menu-content>
+            </sl:dropdown-menu>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/projects}" th:active="${#slNav.current('/projects', true)}">
+              <sl:slot name="icon-start"><sl:icon name="ellipsis"/></sl:slot>
+              More
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group>
+      <sl:sidebar-group class="nav-secondary">
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/support}" th:active="${#slNav.current('/support')}" size="sm">
+                <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+                Support
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/feedback}" th:active="${#slNav.current('/feedback')}" size="sm">
+                <sl:slot name="icon-start"><sl:icon name="send"/></sl:slot>
+                Feedback
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+    <sl:sidebar-footer>
+      <sl:user-menu>
+        <sl:dropdown-menu-item as="a" th:href="@{/upgrade}"><sl:icon name="sparkles"/>Upgrade to Pro</sl:dropdown-menu-item>
+        <sl:dropdown-menu-separator/>
+        <sl:dropdown-menu-item as="a" th:href="@{/account}"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
+        <sl:dropdown-menu-item as="a" th:href="@{/billing}"><sl:icon name="credit-card"/>Billing</sl:dropdown-menu-item>
+        <sl:dropdown-menu-item as="a" th:href="@{/notifications}"><sl:icon name="bell"/>Notifications</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:sidebar-footer>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+    <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+### A page
+
+A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
+nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`.
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('History', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-link th:href="@{/playground}">Playground</sl:breadcrumb-link>
+  </sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>History</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the secondary navigation pushed to the bottom
+of the content (the `nav-secondary` class on its group), and the page's padding.
+
+```css
+/* The square behind the logo in the sidebar's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* The secondary navigation at the bottom of the sidebar's content. */
+.nav-secondary { margin-block-start: auto; }
+
+/* The page's padding: the header above it has its own. */
+.page { padding: 0 1rem 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```
+
+---
+
+## On the end
+
+> A table of contents in a sidebar on the end of the line, the right in a left-to-right page, with the trigger at the end of the page's header.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sidebar-end/
+
+A sidebar on the end of the line (`side="end"`): the right, or the left on a right-to-left page (`dir="rtl"`). Here
+it holds a table of contents under a group label, with the sections and their pages in sub-menus. The trigger is at
+the end of the page's header, in the [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md)'s `end` slot, on the same side as
+the sidebar; its icon shows a panel on that side. On a phone the panel slides in from the end.
+
+**Example: On the end.** A table of contents on the end of the line: the right, or the left on a right-to-left page. The sidebar comes after the page in the markup, so the keyboard reaches the page first, and the trigger sits at the end of the page's header.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-14) this layout is based on.
+
+### The layout
+
+The whole layout file, with what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). The
+sidebar comes after `<sl:sidebar-inset>` in the markup, as in the block, so the keyboard and a screen reader reach the
+page first and the table of contents after it. `side="end"` puts it on the end either way: written before the inset,
+it is still drawn there, and reached first.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+      <sl:slot name="end"><sl:sidebar-trigger/></sl:slot>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+  <sl:sidebar side="end">
+    <sl:sidebar-content>
+      <sl:sidebar-group id="toc">
+        <sl:sidebar-group-label>Table of Contents</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu class="docs-nav">
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/getting-started}"
+                                      th:active="${#slNav.current('/getting-started', true)}">
+                Getting Started
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/getting-started/installation}"
+                                              th:active="${#slNav.current('/getting-started/installation')}">
+                    Installation
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/getting-started/project-structure}"
+                                              th:active="${#slNav.current('/getting-started/project-structure')}">
+                    Project Structure
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build}"
+                                      th:active="${#slNav.current('/build', true)}">
+                Build Your Application
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/routing}"
+                                              th:active="${#slNav.current('/build/routing')}">
+                    Routing
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/data-fetching}"
+                                              th:active="${#slNav.current('/build/data-fetching')}">
+                    Data Fetching
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/rendering}"
+                                              th:active="${#slNav.current('/build/rendering')}">
+                    Rendering
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/caching}"
+                                              th:active="${#slNav.current('/build/caching')}">
+                    Caching
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/styling}"
+                                              th:active="${#slNav.current('/build/styling')}">
+                    Styling
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api}"
+                                      th:active="${#slNav.current('/api', true)}">
+                API Reference
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/api/components}"
+                                              th:active="${#slNav.current('/api/components')}">
+                    Components
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/api/file-conventions}"
+                                              th:active="${#slNav.current('/api/file-conventions')}">
+                    File Conventions
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/api/functions}"
+                                              th:active="${#slNav.current('/api/functions')}">
+                    Functions
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture}"
+                                      th:active="${#slNav.current('/architecture', true)}">
+                Architecture
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/architecture/accessibility}"
+                                              th:active="${#slNav.current('/architecture/accessibility')}">
+                    Accessibility
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/architecture/fast-refresh}"
+                                              th:active="${#slNav.current('/architecture/fast-refresh')}">
+                    Fast Refresh
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/community}"
+                                      th:active="${#slNav.current('/community', true)}">
+                Community
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/community/contribution-guide}"
+                                              th:active="${#slNav.current('/community/contribution-guide')}">
+                    Contribution Guide
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+  </sl:sidebar>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+### A page
+
+A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md#a-page)
+layout:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Data Fetching', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-link th:href="@{/build}">Build Your Application</sl:breadcrumb-link>
+  </sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>Data Fetching</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+The weight of the sections' links, a border below the header and the page's padding:
+
+```css
+/* The sections' links in a medium weight, their pages' in the normal one. */
+.docs-nav > .sidebar-menu-item > .sidebar-menu-button { font-weight: 500; }
+
+/* A border below the page's header, and the page's padding. */
+.sidebar-inset > .site-header { border-block-end: 1px solid var(--border); }
+.page { padding: 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```
+
+---
+
+## Navigation in the header
+
+> For an application with a handful of pages, the pages as a row of links in the site header and the page as a card below it; on a phone the same navigation is a panel.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header/
+
+For an application with a handful of pages. The [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md) holds the menu button
+(on a phone), the application's name, the pages as a row of links, and the theme toggle and the
+[user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md) at the end. The page is a card below the header (`variant="inset"`).
+
+The row is a `<sl:sidebar placement="header">`. On a phone the menu button opens that same navigation as a panel,
+with the icons and the parts marked `panel-only`: here the panel's own header and a More group (Settings, Help).
+Switch the preview to Phone to see it.
+
+**Example: Navigation in the header.** For an application with a handful of pages: the pages as a row of links in the site header, the page as a card below it, the theme toggle and the signed-in user's menu at the end. On a phone the menu button opens the same navigation as a panel, with its icons and the panel-only parts.
+
+For reference: Flux's [header layout](https://fluxui.dev/layouts/header) this layout is based on.
+
+### The layout
+
+The whole layout file, with what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). It is
+the layout of the second sample application (sample-02's `layout/main.html`, which runs under a strict
+Content-Security-Policy). Sample-02 also has an Admin link for admins only, left out here: see
+[Navigation by role](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#navigation-by-role).
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:site-header>
+    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+    <sl:button as="a" th:href="@{/}" variant="ghost">
+      <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+      Acme
+    </sl:button>
+    <sl:sidebar placement="header" variant="inset">
+      <sl:sidebar-header panel-only>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/}" size="lg">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+              <strong>Acme</strong>
+              <small>Enterprise</small>
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-header>
+      <sl:sidebar-content>
+        <sl:sidebar-group>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
+                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                  Home
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/forms}" th:active="${#slNav.current('/forms')}">
+                  <sl:slot name="icon-start"><sl:icon name="text-cursor-input"/></sl:slot>
+                  Forms
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/overlays}" th:active="${#slNav.current('/overlays')}">
+                  <sl:slot name="icon-start"><sl:icon name="layers"/></sl:slot>
+                  Overlays
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/data}" th:active="${#slNav.current('/data')}">
+                  <sl:slot name="icon-start"><sl:icon name="table"/></sl:slot>
+                  Data
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+        <sl:sidebar-group id="nav-more" panel-only>
+          <sl:sidebar-group-label>More</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
+                  <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                  Settings
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/help}" th:active="${#slNav.current('/help')}">
+                  <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+                  Help
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+      </sl:sidebar-content>
+    </sl:sidebar>
+    <sl:slot name="end">
+      <sl:theme-toggle/>
+      <sl:user-menu as="header">
+        <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+      </sl:user-menu>
+    </sl:slot>
+  </sl:site-header>
+  <sl:sidebar-inset>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+In the row, the links show their labels without icons and the current page is marked as in a sidebar; group actions,
+separators and collapsible items are left out of the row, and the menu button is hidden on a desktop. When the links do
+not fit, the row scrolls sideways. See [In the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#in-the-header) and
+[Panel-only parts](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#panel-only-parts).
+
+### A page
+
+A page passes its title and its content:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Forms', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+The square behind the logo in the panel's header, and the page in the card, kept to a readable width:
+
+```css
+/* The square behind the logo in the panel's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* The page in the card, kept to a readable width. */
+.page { max-width: 48rem; padding: 1.5rem 1rem 2rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.75rem; font-weight: 600; }
+```
 
 ---
 
@@ -1003,7 +3487,7 @@ Security 7):
 ```
 
 Hiding the link is no security: protect the URL itself in the security configuration. The
-[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md#navigation-by-role) guide shows both in a layout, and the same check on
+[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#navigation-by-role) page shows both in a layout, and the same check on
 content inside a page.
 
 ### htmx after the session expired
@@ -1978,869 +4462,3 @@ typing, what is typed while a request is out, Enter, the pushed address, the foc
 and forward, the form without htmx, a row menu posting with htmx and keeping the focus, Load more (rows appended, one
 Load more row, the focus on the first new row, the address replaced, select-all and the count, the link without
 htmx) and endless scrolling; `table-selection.spec.ts` the selection through htmx swaps and history.
-
----
-
-## Application shell
-
-> Two layouts to copy for the frame around every page, a sidebar or the navigation in a header, and what every layout needs whichever you pick.
-
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell/
-
-The application shell is what every page shares: the navigation, a header, and the places where dialogs and toasts
-appear. Shadleaf has two layouts for it, both built from the [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md) family:
-
-- **The sidebar layout** ([shadcn/ui's sidebar-07](https://ui.shadcn.com/blocks/sidebar)): the navigation in a column beside the page. It collapses to a strip
-  of icons on a desktop.
-- **The header layout** (after Flux's [header-inset](https://fluxui.dev/layouts/header)): the navigation as a row of links in a
-  [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md) across the top.
-
-In both, the navigation is one `<sl:sidebar>`. Below 768 px the menu button opens that same element as a panel over
-the page, so the two layouts work the same way on a phone. Copy one of them into your application (the samples keep
-theirs in `templates/layout/main.html`) and change what you need: the templates are yours, and so is the CSS around
-the components.
-
-### Which one
-
-|                         | Sidebar layout                                                                 | Header layout                                                              |
-|-------------------------|--------------------------------------------------------------------------------|----------------------------------------------------------------------------|
-| Pages in the navigation | Many, in labelled groups, with sub-menus                                       | A handful of top-level pages                                               |
-| On a desktop            | A column the user collapses to icons (or out of view) and the cookie remembers | A row of links that scrolls sideways when it does not fit; never collapses |
-| Page header             | Inside the page: trigger, breadcrumb, theme toggle                             | The site header itself: name, links, theme toggle                          |
-| Room for the page       | The width minus the sidebar (3 rem collapsed to icons)                         | The full width                                                             |
-| On a phone              | The panel                                                                      | The same panel                                                             |
-| Sample                  | sample-01                                                                      | sample-02 (strict Content-Security-Policy)                                 |
-
-Pick the sidebar layout when the application has more pages than fit in a header row or needs groups and sub-menus.
-Pick the header layout for a smaller application. Moving from one to the other later means changing the layout
-template, not the pages: both take the same `pageTitle` and `content`.
-
-### What every layout needs
-
-Whichever you choose, the layout template has the same pieces. The two layouts below have all of them:
-
-- **In the `head`**, `~{sl/layout :: theme-script}` and then `~{sl/layout :: assets}`, then your own stylesheet. The
-  theme script sets the dark class before the first paint. Under a strict policy it needs its nonce or hash (see
-  [Content-Security-Policy](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp.md)).
-- **`<sl:skip-link/>` first in the body.** It lets a keyboard user jump past the navigation to the page.
-- **One `main`:** `<sl:sidebar-inset>` renders `<main id="main" tabindex="-1">`, the skip link's target. Put nothing
-  of the page outside it.
-- **The page's title** in the `<title>` and as the page's `h1`, from the same `pageTitle` parameter.
-- **The current page** marked in the navigation with `th:active="${#slNav.current('/people')}"`, which reads the
-  request, so no controller has to say which page it is.
-- **`<sl:toaster>` at the end of the body**, with the toasts a controller put in the `toasts` flash attribute before a
-  redirect (see [Toast](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/toast.md)).
-- **A `<div id="modal-root">`**, if htmx fetches dialogs into the page (see [Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md)).
-
-The CSS for the page itself (its padding, the `h1`, the logo in the sidebar) is the application's. Shadleaf's CSS styles
-its components, not the page around them.
-
-### The sidebar layout
-
-**Example: Sidebar.** Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the sidebar's ground (from 768 px), and collapsible="icon" collapses it to a strip of icons whose tooltips show the labels, as sample-01's layout. Documents opens a sub-menu. The footer ends in the signed-in user's menu (sl:user-menu). The large button in the header is a team switcher: it opens a dropdown menu beside the sidebar (below it in the panel) with the current team checked, and "More" beside Design Engineering opens one too.
-
-```html
-<sl:skip-link/>
-<sl:sidebar-provider>
-  <sl:sidebar variant="inset" collapsible="icon">
-    <sl:sidebar-header>
-      <sl:sidebar-menu>
-        <sl:sidebar-menu-item>
-          <sl:dropdown-menu id="team-switcher">
-            <sl:dropdown-menu-trigger as="sidebar-menu-button" size="lg" tooltip="Acme Inc.">
-              <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
-              <strong>Acme Inc.</strong>
-              <small>Enterprise</small>
-              <sl:slot name="icon-end"><sl:icon name="chevrons-up-down"/></sl:slot>
-            </sl:dropdown-menu-trigger>
-            <sl:dropdown-menu-content side="right">
-              <sl:dropdown-menu-label id="team-switcher-label">Teams</sl:dropdown-menu-label>
-              <sl:dropdown-menu-radio-group aria-labelledby="team-switcher-label">
-                <sl:dropdown-menu-radio-item as="a" href="/teams/acme-inc" checked>
-                  Acme Inc.
-                </sl:dropdown-menu-radio-item>
-                <sl:dropdown-menu-radio-item as="a" href="/teams/acme-corp">
-                  Acme Corp.
-                </sl:dropdown-menu-radio-item>
-                <sl:dropdown-menu-radio-item as="a" href="/teams/evil-corp">
-                  Evil Corp.
-                </sl:dropdown-menu-radio-item>
-              </sl:dropdown-menu-radio-group>
-              <sl:dropdown-menu-separator/>
-              <sl:dropdown-menu-item as="a" href="/teams/new">
-                <sl:icon name="plus"/>
-                Add team
-              </sl:dropdown-menu-item>
-            </sl:dropdown-menu-content>
-          </sl:dropdown-menu>
-        </sl:sidebar-menu-item>
-      </sl:sidebar-menu>
-    </sl:sidebar-header>
-    <sl:sidebar-content>
-      <sl:sidebar-group id="platform">
-        <sl:sidebar-group-label>Platform</sl:sidebar-group-label>
-        <sl:sidebar-group-content>
-          <sl:sidebar-menu>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}" tooltip="Home">
-                <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
-                Home
-              </sl:sidebar-menu-button>
-            </sl:sidebar-menu-item>
-            <sl:sidebar-menu-item id="inbox">
-              <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}" tooltip="Inbox">
-                <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
-                Inbox
-              </sl:sidebar-menu-button>
-              <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
-            </sl:sidebar-menu-item>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}" tooltip="Calendar">
-                <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
-                Calendar
-              </sl:sidebar-menu-button>
-            </sl:sidebar-menu-item>
-            <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/documents')}">
-              <sl:sidebar-menu-button tooltip="Documents">
-                <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
-                Documents
-              </sl:sidebar-menu-button>
-              <sl:sidebar-menu-sub>
-                <sl:sidebar-menu-sub-item>
-                  <sl:sidebar-menu-sub-button href="/documents"
-                                              th:active="${#slNav.current('/documents', true)}">
-                    Recent
-                  </sl:sidebar-menu-sub-button>
-                </sl:sidebar-menu-sub-item>
-                <sl:sidebar-menu-sub-item>
-                  <sl:sidebar-menu-sub-button href="/documents/shared"
-                                              th:active="${#slNav.current('/documents/shared')}">
-                    Shared with me
-                  </sl:sidebar-menu-sub-button>
-                </sl:sidebar-menu-sub-item>
-              </sl:sidebar-menu-sub>
-            </sl:sidebar-menu-item>
-          </sl:sidebar-menu>
-        </sl:sidebar-group-content>
-      </sl:sidebar-group>
-      <sl:sidebar-group id="projects">
-        <sl:sidebar-group-label>Projects</sl:sidebar-group-label>
-        <sl:sidebar-group-action aria-label="Add project"><sl:icon name="plus"/></sl:sidebar-group-action>
-        <sl:sidebar-group-content>
-          <sl:sidebar-menu>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button href="/projects/design" tooltip="Design Engineering">
-                <sl:slot name="icon-start"><sl:icon name="frame"/></sl:slot>
-                Design Engineering
-              </sl:sidebar-menu-button>
-              <sl:dropdown-menu id="project-design-more">
-                <sl:dropdown-menu-trigger as="sidebar-menu-action" show-on-hover
-                                          aria-label="More for Design Engineering">
-                  <sl:icon name="ellipsis"/>
-                </sl:dropdown-menu-trigger>
-                <sl:dropdown-menu-content side="right">
-                  <sl:dropdown-menu-item as="a" href="/projects/design">
-                    <sl:icon name="folder"/>
-                    View project
-                  </sl:dropdown-menu-item>
-                  <sl:dropdown-menu-item as="a" href="/projects/design/share">
-                    <sl:icon name="forward"/>
-                    Share project
-                  </sl:dropdown-menu-item>
-                  <sl:dropdown-menu-separator/>
-                  <sl:dropdown-menu-item as="a" href="/projects/design/delete" variant="destructive">
-                    <sl:icon name="trash-2"/>
-                    Delete project
-                  </sl:dropdown-menu-item>
-                </sl:dropdown-menu-content>
-              </sl:dropdown-menu>
-            </sl:sidebar-menu-item>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button href="/projects/sales" tooltip="Sales &amp; Marketing">
-                <sl:slot name="icon-start"><sl:icon name="chart-pie"/></sl:slot>
-                Sales &amp; Marketing
-              </sl:sidebar-menu-button>
-              <sl:sidebar-menu-action aria-label="More for Sales &amp; Marketing" show-on-hover>
-                <sl:icon name="ellipsis"/>
-              </sl:sidebar-menu-action>
-            </sl:sidebar-menu-item>
-          </sl:sidebar-menu>
-        </sl:sidebar-group-content>
-      </sl:sidebar-group>
-    </sl:sidebar-content>
-    <sl:sidebar-footer>
-      <sl:sidebar-menu>
-        <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}"
-                                  tooltip="Settings">
-            <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
-            Settings
-          </sl:sidebar-menu-button>
-        </sl:sidebar-menu-item>
-        <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button href="/help" size="sm" tooltip="Help">
-            <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
-            Help
-          </sl:sidebar-menu-button>
-        </sl:sidebar-menu-item>
-      </sl:sidebar-menu>
-      <sl:user-menu>
-        <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
-        <sl:dropdown-menu-item as="a" href="/notifications"><sl:icon name="bell"/>Notifications</sl:dropdown-menu-item>
-      </sl:user-menu>
-    </sl:sidebar-footer>
-  </sl:sidebar>
-  <sl:sidebar-inset>
-    <sl:site-header>
-      <sl:sidebar-trigger/>
-      <sl:separator orientation="vertical"/>
-      <sl:breadcrumb>
-        <sl:breadcrumb-list>
-          <sl:breadcrumb-item>Platform</sl:breadcrumb-item>
-          <sl:breadcrumb-separator/>
-          <sl:breadcrumb-item><sl:breadcrumb-page>Home</sl:breadcrumb-page></sl:breadcrumb-item>
-        </sl:breadcrumb-list>
-      </sl:breadcrumb>
-    </sl:site-header>
-    <h1>Home</h1>
-    <p>The page's content.</p>
-  </sl:sidebar-inset>
-</sl:sidebar-provider>
-```
-
-shadcn/ui's sidebar-07 block with the inset variant, as the layout of the first sample application (sample-01's
-`layout/main.html`, which has four groups): the application's name and logo at the top, groups of pages (one of them
-collapsible), a footer, and the page as a card beside it with a [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md) holding
-the trigger, a separator, the page's [breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md) and the theme toggle. The sidebar
-collapses to icons, with a tooltip on every menu button. `hx-boost` on the body loads every page with htmx (see
-[With htmx](#with-htmx)).
-
-```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
-      th:fragment="layout(pageTitle, breadcrumb, content)">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:text="|${pageTitle} - Acme|">Acme</title>
-  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
-  <th:block th:replace="~{sl/layout :: assets}"></th:block>
-  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
-  <link rel="stylesheet" th:href="@{/css/application.css}">
-</head>
-<body hx-boost="true">
-<sl:skip-link/>
-<sl:sidebar-provider>
-  <sl:sidebar variant="inset" collapsible="icon">
-    <sl:sidebar-header>
-      <sl:sidebar-menu>
-        <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Acme">
-            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
-            <strong>Acme</strong>
-            <small>Enterprise</small>
-          </sl:sidebar-menu-button>
-        </sl:sidebar-menu-item>
-      </sl:sidebar-menu>
-    </sl:sidebar-header>
-    <sl:sidebar-content>
-      <sl:sidebar-group id="nav-forms">
-        <sl:sidebar-group-label>Forms</sl:sidebar-group-label>
-        <sl:sidebar-group-content>
-          <sl:sidebar-menu>
-            <sl:sidebar-menu-item>
-              <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}" tooltip="Form">
-                <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
-                Form
-              </sl:sidebar-menu-button>
-            </sl:sidebar-menu-item>
-          </sl:sidebar-menu>
-        </sl:sidebar-group-content>
-      </sl:sidebar-group>
-      <sl:sidebar-group id="nav-tables">
-        <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
-        <sl:sidebar-group-content>
-          <sl:sidebar-menu>
-            <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/people') or #slNav.current('/teams')}">
-              <sl:sidebar-menu-button tooltip="People">
-                <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
-                People
-              </sl:sidebar-menu-button>
-              <sl:sidebar-menu-sub>
-                <sl:sidebar-menu-sub-item>
-                  <sl:sidebar-menu-sub-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
-                    All people
-                  </sl:sidebar-menu-sub-button>
-                </sl:sidebar-menu-sub-item>
-                <sl:sidebar-menu-sub-item>
-                  <sl:sidebar-menu-sub-button th:href="@{/teams}" th:active="${#slNav.current('/teams')}">
-                    Teams
-                  </sl:sidebar-menu-sub-button>
-                </sl:sidebar-menu-sub-item>
-              </sl:sidebar-menu-sub>
-            </sl:sidebar-menu-item>
-          </sl:sidebar-menu>
-        </sl:sidebar-group-content>
-      </sl:sidebar-group>
-    </sl:sidebar-content>
-    <sl:sidebar-footer>
-      <sl:sidebar-menu>
-        <sl:sidebar-menu-item>
-          <sl:sidebar-menu-button href="https://example.com/help" size="sm" tooltip="Documentation">
-            <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
-            Documentation
-          </sl:sidebar-menu-button>
-        </sl:sidebar-menu-item>
-      </sl:sidebar-menu>
-      <sl:user-menu>
-        <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
-      </sl:user-menu>
-    </sl:sidebar-footer>
-  </sl:sidebar>
-  <sl:sidebar-inset>
-    <sl:site-header>
-      <sl:sidebar-trigger/>
-      <sl:separator orientation="vertical"/>
-      <sl:breadcrumb>
-        <sl:breadcrumb-list>
-          <th:block th:replace="${breadcrumb}"></th:block>
-        </sl:breadcrumb-list>
-      </sl:breadcrumb>
-      <sl:slot name="end"><sl:theme-toggle/></sl:slot>
-    </sl:site-header>
-    <div class="page">
-      <h1 th:text="${pageTitle}"></h1>
-      <div th:replace="${content}"></div>
-    </div>
-  </sl:sidebar-inset>
-</sl:sidebar-provider>
-<div id="modal-root"></div>
-<sl:toaster>
-  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
-            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
-</sl:toaster>
-</body>
-</html>
-```
-
-A page passes its title, its breadcrumb's levels and its content. The levels are a `th:block` with `th:ref`, so
-nothing of it is rendered where it stands; the layout puts them in its `<sl:breadcrumb-list>`:
-
-```html
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
-      th:replace="~{layout/main :: layout(${person.name}, ~{::breadcrumb}, ~{::#page-content})}">
-<body>
-<th:block th:ref="breadcrumb">
-  <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
-  <sl:breadcrumb-separator/>
-  <sl:breadcrumb-item><sl:breadcrumb-link th:href="@{/people}">People</sl:breadcrumb-link></sl:breadcrumb-item>
-  <sl:breadcrumb-separator/>
-  <sl:breadcrumb-item><sl:breadcrumb-page th:text="${person.name}">Name</sl:breadcrumb-page></sl:breadcrumb-item>
-</th:block>
-<div id="page-content">
-  ...
-</div>
-</body>
-</html>
-```
-
-The header's layout is the site header's own: a row 3.5 rem high, the trigger, a short separator and the breadcrumb
-at the start, the `end` slot at the end. The page's padding and the logo are the application's. Without Tailwind:
-
-```css
-.page { padding: 0 1rem 1rem; }
-.page > h1 { margin-block-end: 1rem; }
-.app-logo {
-  display: grid; place-items: center; flex-shrink: 0; inline-size: 2rem; block-size: 2rem;
-  border-radius: calc(var(--radius) - 2px); background: var(--sidebar-primary); color: var(--sidebar-primary-foreground);
-}
-.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
-```
-
-The [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md) page has every part and option: the variants, collapsing off-canvas instead
-of to icons, the sidebar at the end of the line, badges and actions.
-
-### The header layout
-
-**Example: Header layout.** placement="header" puts the same navigation in a sl:site-header: from 768 px a row of links (the current page marked as in the sidebar), with the application's name before it and search, the theme toggle and the signed-in user's menu at the end. Favorites, Settings and Help are panel-only, so the row stays short; the panel's own header with the name is panel-only too. "More" beside Documents opens a dropdown menu below it. variant="inset" makes the page a card below the header. Narrower, the menu button opens the same nav as the panel: see the next example.
-
-```html
-<sl:skip-link/>
-<sl:sidebar-provider>
-  <sl:site-header>
-    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
-    <sl:button as="a" href="/" variant="ghost">
-      <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
-      Acme Inc.
-    </sl:button>
-    <sl:sidebar placement="header" variant="inset">
-      <sl:sidebar-header panel-only>
-        <sl:sidebar-menu>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button href="/" size="lg">
-              <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
-              <strong>Acme Inc.</strong>
-              <small>Enterprise</small>
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-        </sl:sidebar-menu>
-      </sl:sidebar-header>
-      <sl:sidebar-content>
-        <sl:sidebar-group>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}">
-                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
-                  Home
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item id="header-inbox">
-                <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
-                  <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
-                  Inbox
-                </sl:sidebar-menu-button>
-                <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}">
-                  <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
-                  Calendar
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/documents" th:active="${#slNav.current('/documents')}">
-                  <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
-                  Documents
-                </sl:sidebar-menu-button>
-                <sl:dropdown-menu id="header-documents-more">
-                  <sl:dropdown-menu-trigger as="sidebar-menu-action" aria-label="More for Documents">
-                    <sl:icon name="ellipsis"/>
-                  </sl:dropdown-menu-trigger>
-                  <sl:dropdown-menu-content side="right">
-                    <sl:dropdown-menu-item as="a" href="/documents/new">New document</sl:dropdown-menu-item>
-                    <sl:dropdown-menu-item as="a" href="/documents/shared">Shared with me</sl:dropdown-menu-item>
-                  </sl:dropdown-menu-content>
-                </sl:dropdown-menu>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
-        </sl:sidebar-group>
-        <sl:sidebar-group id="favorites" panel-only>
-          <sl:sidebar-group-label>Favorites</sl:sidebar-group-label>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/projects/marketing">
-                  <sl:slot name="icon-start"><sl:icon name="globe"/></sl:slot>
-                  Marketing site
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/projects/android">
-                  <sl:slot name="icon-start"><sl:icon name="smartphone"/></sl:slot>
-                  Android app
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
-        </sl:sidebar-group>
-      </sl:sidebar-content>
-      <sl:sidebar-footer panel-only>
-        <sl:sidebar-menu>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}">
-              <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
-              Settings
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button href="/help" size="sm">
-              <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
-              Help
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-        </sl:sidebar-menu>
-      </sl:sidebar-footer>
-    </sl:sidebar>
-    <sl:slot name="end">
-      <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
-      <sl:theme-toggle/>
-      <sl:user-menu as="header" id="header-user-menu">
-        <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
-      </sl:user-menu>
-    </sl:slot>
-  </sl:site-header>
-  <sl:sidebar-inset>
-    <h1>Home</h1>
-    <p>The page's content.</p>
-  </sl:sidebar-inset>
-</sl:sidebar-provider>
-```
-
-For an application with a handful of pages: the layout of the second sample application (sample-02's
-`layout/main.html`, which runs under a strict Content-Security-Policy), after Flux's header-inset layout. The header
-holds the menu button (on a phone), the application's name, the pages as a row of links, and the theme toggle and the
-user menu at the end; More (Settings, Help) and the panel's own header are panel-only. The page is a card below the
-header (`variant="inset"`). Sample-02 also has an Admin link for admins only, left out here: see
-[Navigation by role](#navigation-by-role).
-
-On a phone the menu button opens the same navigation as a panel, with the icons, the group labels and the panel-only
-parts:
-
-**Example: Header layout on a phone.** The same markup in a frame 390 px wide: the row is gone and the menu button opens the nav as a panel, with the panel-only parts (the name, Favorites, Settings and Help) in it. The panel takes the focus and makes the page behind it inert; Escape, a click outside or a followed link closes it.
-
-```html
-<sl:skip-link/>
-<sl:sidebar-provider>
-  <sl:site-header>
-    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
-    <sl:button as="a" href="/" variant="ghost">
-      <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
-      Acme Inc.
-    </sl:button>
-    <sl:sidebar placement="header" variant="inset">
-      <sl:sidebar-header panel-only>
-        <sl:sidebar-menu>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button href="/" size="lg">
-              <sl:slot name="icon-start"><sl:icon name="gallery-vertical-end"/></sl:slot>
-              <strong>Acme Inc.</strong>
-              <small>Enterprise</small>
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-        </sl:sidebar-menu>
-      </sl:sidebar-header>
-      <sl:sidebar-content>
-        <sl:sidebar-group>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/" th:active="${#slNav.current('/')}">
-                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
-                  Home
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item id="header-inbox">
-                <sl:sidebar-menu-button href="/inbox" th:active="${#slNav.current('/inbox')}">
-                  <sl:slot name="icon-start"><sl:icon name="inbox"/></sl:slot>
-                  Inbox
-                </sl:sidebar-menu-button>
-                <sl:sidebar-menu-badge label="12 unread">12</sl:sidebar-menu-badge>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/calendar" th:active="${#slNav.current('/calendar')}">
-                  <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
-                  Calendar
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/documents" th:active="${#slNav.current('/documents')}">
-                  <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
-                  Documents
-                </sl:sidebar-menu-button>
-                <sl:dropdown-menu id="header-documents-more">
-                  <sl:dropdown-menu-trigger as="sidebar-menu-action" aria-label="More for Documents">
-                    <sl:icon name="ellipsis"/>
-                  </sl:dropdown-menu-trigger>
-                  <sl:dropdown-menu-content side="right">
-                    <sl:dropdown-menu-item as="a" href="/documents/new">New document</sl:dropdown-menu-item>
-                    <sl:dropdown-menu-item as="a" href="/documents/shared">Shared with me</sl:dropdown-menu-item>
-                  </sl:dropdown-menu-content>
-                </sl:dropdown-menu>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
-        </sl:sidebar-group>
-        <sl:sidebar-group id="favorites" panel-only>
-          <sl:sidebar-group-label>Favorites</sl:sidebar-group-label>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/projects/marketing">
-                  <sl:slot name="icon-start"><sl:icon name="globe"/></sl:slot>
-                  Marketing site
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button href="/projects/android">
-                  <sl:slot name="icon-start"><sl:icon name="smartphone"/></sl:slot>
-                  Android app
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
-        </sl:sidebar-group>
-      </sl:sidebar-content>
-      <sl:sidebar-footer panel-only>
-        <sl:sidebar-menu>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button href="/settings" size="sm" th:active="${#slNav.current('/settings')}">
-              <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
-              Settings
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button href="/help" size="sm">
-              <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
-              Help
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-        </sl:sidebar-menu>
-      </sl:sidebar-footer>
-    </sl:sidebar>
-    <sl:slot name="end">
-      <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
-      <sl:theme-toggle/>
-      <sl:user-menu as="header" id="header-user-menu">
-        <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
-      </sl:user-menu>
-    </sl:slot>
-  </sl:site-header>
-  <sl:sidebar-inset>
-    <h1>Home</h1>
-    <p>The page's content.</p>
-  </sl:sidebar-inset>
-</sl:sidebar-provider>
-```
-
-```html
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
-      th:fragment="layout(pageTitle, content)">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:text="${pageTitle}">Page</title>
-  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
-  <th:block th:replace="~{sl/layout :: assets}"></th:block>
-</head>
-<body>
-<sl:skip-link/>
-<sl:sidebar-provider>
-  <sl:site-header>
-    <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
-    <sl:button as="a" th:href="@{/}" variant="ghost" class="app-name">
-      <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
-      Shadleaf
-    </sl:button>
-    <sl:sidebar placement="header" variant="inset">
-      <sl:sidebar-header panel-only>
-        <sl:sidebar-menu>
-          <sl:sidebar-menu-item>
-            <sl:sidebar-menu-button th:href="@{/}" size="lg">
-              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
-              <strong>Shadleaf</strong>
-              <small>Sample App 2</small>
-            </sl:sidebar-menu-button>
-          </sl:sidebar-menu-item>
-        </sl:sidebar-menu>
-      </sl:sidebar-header>
-      <sl:sidebar-content>
-        <sl:sidebar-group>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
-                  <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
-                  Home
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/forms}" th:active="${#slNav.current('/forms')}">
-                  <sl:slot name="icon-start"><sl:icon name="text-cursor-input"/></sl:slot>
-                  Forms
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/overlays}" th:active="${#slNav.current('/overlays')}">
-                  <sl:slot name="icon-start"><sl:icon name="layers"/></sl:slot>
-                  Overlays
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/data}" th:active="${#slNav.current('/data')}">
-                  <sl:slot name="icon-start"><sl:icon name="table"/></sl:slot>
-                  Data
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
-        </sl:sidebar-group>
-        <sl:sidebar-group id="nav-more" panel-only>
-          <sl:sidebar-group-label>More</sl:sidebar-group-label>
-          <sl:sidebar-group-content>
-            <sl:sidebar-menu>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
-                  <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
-                  Settings
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-              <sl:sidebar-menu-item>
-                <sl:sidebar-menu-button th:href="@{/help}" th:active="${#slNav.current('/help')}">
-                  <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
-                  Help
-                </sl:sidebar-menu-button>
-              </sl:sidebar-menu-item>
-            </sl:sidebar-menu>
-          </sl:sidebar-group-content>
-        </sl:sidebar-group>
-      </sl:sidebar-content>
-    </sl:sidebar>
-    <sl:slot name="end">
-      <sl:theme-toggle/>
-      <sl:user-menu as="header">
-        <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
-      </sl:user-menu>
-    </sl:slot>
-  </sl:site-header>
-  <sl:sidebar-inset>
-    <div class="page">
-      <h1 th:text="${pageTitle}"></h1>
-      <div th:replace="${content}"></div>
-    </div>
-  </sl:sidebar-inset>
-</sl:sidebar-provider>
-<div id="modal-root"></div>
-<sl:toaster>
-  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
-            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
-</sl:toaster>
-</body>
-</html>
-```
-
-The page in the card is the application's again; sample-02 keeps it to a readable width:
-
-```css
-.page { max-width: 48rem; padding: 1.5rem 1rem 2rem; }
-.page > h1 { font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem; }
-```
-
-`.app-logo` is the sidebar layout's. In the row, the links show their labels without icons and the current page is
-marked as in the sidebar; group actions, separators and collapsible items are left out of the row, and the trigger is
-hidden on a desktop. See [In the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#in-the-header) and
-[Panel-only parts](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#panel-only-parts).
-
-### A page without the navigation
-
-A sign-in page has nothing to navigate to yet. Sample-02 gives it a layout of its own: the site header with only the
-name and the theme toggle, and the page in a plain `main` with the skip link's target:
-
-```html
-<body>
-<sl:skip-link/>
-<sl:site-header>
-  <sl:button as="a" th:href="@{/}" variant="ghost">
-    <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
-    Acme
-  </sl:button>
-  <sl:slot name="end"><sl:theme-toggle/></sl:slot>
-</sl:site-header>
-<main id="main" class="page" tabindex="-1">
-  <h1 th:text="${pageTitle}"></h1>
-  <div th:replace="${content}"></div>
-</main>
-</body>
-```
-
-Without `<sl:sidebar-provider>` the site header lies across the top of the page, on the page's colour with a border
-below.
-
-### With htmx
-
-`hx-boost` on the body (as the sidebar layout has it) loads every page with htmx. The server renders the whole page
-each time, so the current page, the breadcrumb and the sidebar's collapsed state are always right, and a link in the
-phone panel closes it. The [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#htmx) page says what happens with history and when only
-the main area is boosted.
-
-A boosted link sends `HX-Request` too. A controller that answers other htmx requests with a fragment (a table's rows,
-a dialog) has to tell such a request apart, or a link in the navigation gets the fragment without the page around it.
-A request from the body's boost has `HX-Boosted` and no `HX-Target`, because the body has no id. With
-[htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot):
-
-```java
-static boolean wantsFragment(HtmxRequest request) {
-  return request.isHtmxRequest()
-      && !request.isHistoryRestoreRequest()
-      && !(request.isBoosted() && request.getTarget() == null);
-}
-```
-
-A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
-table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/tables-htmx.md).
-
-A boosted link or form made after the session expired would get the sign-in page swapped into the body (or, for a
-form, nothing at all, as its CSRF token went with the session). The Spring Security guide shows how to send the browser
-to the page instead, which then asks the user to sign in and comes back to it:
-[htmx after the session expired](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired).
-
-### A sidebar below a full-width header
-
-shadcn/ui's sidebar-16 puts a header across the whole top of the page and the sidebar below it. Shadleaf does not
-support that layout. From 768 px the sidebar is sticky at the top of the screen and as tall as the screen, so below a
-header it would slide under the header and run past the bottom of the screen. `<sl:sidebar-provider>` has to start
-at the top of the page. Put the page's header inside `<sl:sidebar-inset>` (the sidebar layout), or put the navigation
-in the header (the header layout).
-
-### The signed-in user
-
-Both layouts have a place for the user: the sidebar's footer, and the site header's `end` slot. The
-[user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md) goes in either (`as="header"` in the site header): the signed-in user from
-Spring Security with a menu that signs out, or a Sign in link for an anonymous visitor, so one layout serves public
-pages too. Sign out posts a form with the CSRF token; `hx-boost="false"` on it keeps a boosted body from sending it
-with htmx. Where the user comes from, and how to change it, is in the [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#the-signed-in-user)
-guide.
-
-### Navigation by role
-
-Some pages are only for some users. Hide their links with the Thymeleaf extras for Spring Security, which Spring Boot
-configures when the dependency is there (also with Spring Security 7, under its `springsecurity6` name):
-
-```xml
-<dependency>
-  <groupId>org.thymeleaf.extras</groupId>
-  <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-</dependency>
-```
-
-Declare the `sec` namespace on the layout's `<html>` (`xmlns:sec="http://www.thymeleaf.org/extras/spring-security"`)
-and put `sec:authorize` on the menu item, so no empty list item is left behind:
-
-```html
-<sl:sidebar-menu-item sec:authorize="hasRole('ADMIN')">
-  <sl:sidebar-menu-button th:href="@{/admin}" th:active="${#slNav.current('/admin')}">
-    <sl:slot name="icon-start"><sl:icon name="shield"/></sl:slot>
-    Admin
-  </sl:sidebar-menu-button>
-</sl:sidebar-menu-item>
-```
-
-There is one navigation, so the phone panel follows the same rule as the sidebar or the header row. A group whose
-items are all for one role takes the attribute on the `<sl:sidebar-group>` instead, label included.
-
-**Hiding a link is no security.** Anyone can type the address. What keeps other users out is the rule on the URL:
-
-```java
-.authorizeHttpRequests(requests -> requests
-    .requestMatchers("/shadleaf/**").permitAll()
-    .requestMatchers("/admin/**").hasRole("ADMIN")
-    .anyRequest().authenticated())
-```
-
-A user without the role who opens `/admin` gets a 403. The same attribute works on content inside a page: a button
-only admins may use, a column only they may see. Sample-02 has both: an Admin page in its header row, and a Manage
-access button on its Data page, shown to Ada (an admin) and not to Grace. With `sec:authorize-url="/admin"` instead,
-the template asks whether the URL rule lets the user in, so link and rule cannot disagree.
-
-Test both sides with spring-security-test: the link is in the page for one user and not for another, and the URL
-answers 403 without the role.
-
-```java
-mockMvc.perform(get("/admin").with(user("grace").roles("USER")))
-    .andExpect(status().isForbidden());
-```
-
-The [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#navigation-by-role) guide has the same in short, next to where the
-signed-in user comes from.

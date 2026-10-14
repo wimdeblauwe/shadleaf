@@ -177,8 +177,9 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar
 
 > **Tip: Layouts to copy**
 >
-> The [Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md) guide has two whole layouts built from these parts, the
-> sidebar layout and the header layout, and what every layout needs around them.
+> The Layouts section has whole layouts built from these parts, such as [Collapses to
+> icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md) and [Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md). The
+> [Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md) page says what every layout needs around them.
 
 ## Built from parts
 
@@ -217,7 +218,7 @@ The [skip link](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components
 keyboard user jump past them to the inset. The header at the top of the inset holds the trigger, a vertical
 [separator](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/separator.md) and the [breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md), as shadcn's blocks have it. Lay it out as a row
 yourself, or use a [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md), which does it for you, as the
-[sidebar layout](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md#the-sidebar-layout) does.
+[Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md) layout does.
 
 ## What goes inside
 
@@ -627,6 +628,52 @@ no JavaScript, and the keyboard opens and closes it with Enter and Space.
 </sl:sidebar-provider>
 ```
 
+### A section that is a page too
+
+When the section has a page of its own, keep its menu button a link and give the sub-menu `collapsible`: a chevron
+at the end of the button opens and closes it, as in shadcn's sidebar-08. The chevron is the `summary` of a `details`
+element beside the link (a link cannot sit inside a `summary`), drawn as a [menu action](#actions). It holds only an
+icon, so it needs an `aria-label` that names what it opens; the other attributes go to the list. `open` works as on a
+collapsible item.
+
+```html
+<sl:sidebar-menu-item>
+  <sl:sidebar-menu-button th:href="@{/playground}" th:active="${#slNav.current('/playground', true)}">
+    <sl:slot name="icon-start"><sl:icon name="square-terminal"/></sl:slot>
+    Playground
+  </sl:sidebar-menu-button>
+  <sl:sidebar-menu-sub collapsible th:open="${#slNav.current('/playground')}" aria-label="Playground's pages">
+    <sl:sidebar-menu-sub-item>
+      <sl:sidebar-menu-sub-button th:href="@{/playground/history}"
+                                  th:active="${#slNav.current('/playground/history')}">History</sl:sidebar-menu-sub-button>
+    </sl:sidebar-menu-sub-item>
+  </sl:sidebar-menu-sub>
+</sl:sidebar-menu-item>
+```
+
+The keyboard reaches the link, then the chevron. Collapsed to icons, the chevron and the sub-menu are hidden, and the
+section's icon shows when the current page is one of its pages. The
+[Inset with secondary navigation](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/inset-secondary-navigation.md) layout has four such sections.
+
+### Collapsible sections
+
+A group with `collapsible` opens and closes as a whole, as in shadcn's sidebar-02: its
+`<sl:sidebar-group-label>` becomes the `summary` of a `details` element, with a chevron at the end, so it must be the
+group's first part. The label still names the group. `open` renders it open.
+
+```html
+<sl:sidebar-group id="build" collapsible th:open="${#slNav.current('/build')}">
+  <sl:sidebar-group-label>Build Your Application</sl:sidebar-group-label>
+  <sl:sidebar-group-content>
+    <sl:sidebar-menu>...</sl:sidebar-menu>
+  </sl:sidebar-group-content>
+</sl:sidebar-group>
+```
+
+Collapsed to icons, and in the [header row](#in-the-header), the label is out of view, so every collapsible group
+shows its links whether it is open or not. The [Collapsible sections](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapsible-sections.md) layout
+has one per section.
+
 ## One element for a desktop and a phone
 
 The server does not know how wide the screen is, so the sidebar is one element for both:
@@ -701,7 +748,7 @@ The phone panel ignores the state: it always opens with everything in it.
   as the plain sidebar, so a page lays out the same with either.
 - `inset` gives the sidebar no edge: its colour lies around the page, and `<sl:sidebar-inset>` becomes a card on it,
   with a margin, rounded corners (vega) and a shadow. The example at the top of this page, and the
-  [sidebar layout](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md#the-sidebar-layout), use it.
+  [Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md) layout, use it.
 
 **Example: Variants.** variant="sidebar" (the default) is a column along the edge with a border, variant="floating" a panel with a margin all round; the inset variant is the first example. On a phone the panel is the same for all three.
 
@@ -766,6 +813,9 @@ margin around it.
   while the menu is open.
 - A click (or Enter) on a [collapsible group's](#collapsible-groups) icon expands the sidebar and opens the group, as
   the sub-menu has no room in the strip. A group that holds the current page shows it on its icon.
+- `icon-hidden` on a [group](#what-goes-inside) leaves it out of the strip, as shadcn's sidebar-07 does with its
+  projects: links without icons of their own would be a row of identical squares. Expanded, and in the phone panel,
+  the group shows as usual.
 - The server renders the strip from the cookie, so the first paint is right with and without JavaScript. On a phone
   the panel ignores it and shows everything.
 
@@ -844,7 +894,9 @@ panel, as with the other two.
 ## Side
 
 `side="end"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
-The default, `start`, is the left, or the right on a right-to-left page. The panel slides in from the same edge.
+The default, `start`, is the left, or the right on a right-to-left page. The panel slides in from the same edge, and
+the trigger's icon shows the panel on that side. The [On the end](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sidebar-end.md) layout puts a table of
+contents there.
 
 **Example: On the end.** side="end" puts the sidebar on the end of the line (the right, or the left on a right-to-left page).
 
@@ -1206,14 +1258,15 @@ would.
 A boosted link sends `HX-Request` too. A controller that answers htmx with a fragment (a table's rows, a dialog) must
 tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
 `HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The
-[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md#with-htmx) guide shows the check.
+[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#with-htmx) page shows the check.
 
 ## Left out
 
 For now:
 
-- a collapsible group whose chevron is a menu action beside a link (shadcn's sidebar-08), and sub-menus that open as
-  dropdown menus while collapsed to icons (sidebar-06);
+- sub-menus that open as dropdown menus while collapsed to icons (shadcn's sidebar-06), and collapsible items nested
+  in sub-menus to any depth, such as a file tree (sidebar-11);
+- plus and minus instead of the turning chevron (sidebar-05);
 - `SidebarInput` (use `<sl:input>`) and `SidebarMenuSkeleton` (use `<sl:skeleton>`);
 - `SidebarRail`, the strip along the sidebar's edge that toggles it;
 - a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page;
@@ -1311,12 +1364,15 @@ Attributes of `<sl:sidebar-group>`: A section of the `sl:sidebar`'s links: an op
 | --- | --- | --- | --- |
 | `id` | *string* | — | The group's id. Its label gets `&lt;id&gt;-label`; without an id, each render generates one (`sl-sidebar-group-` and eight random characters). |
 | `panel-only` | *boolean* | — | Show it only in the phone panel: from 768&nbsp;px it is left out (`display: none`), so a header row or a sidebar stays short. |
+| `collapsible` | *boolean* | — | Make it a section that opens and closes, on the browser's `details` element: its `sl:sidebar-group-label` (which must come first) becomes the `summary`, with a chevron at the end. Collapsed to icons, and in the header row, its links show whether it is open or not. |
+| `open` | *boolean* | — | Render a collapsible group open, for instance when it holds the current page: `th:open="${#slNav.current('/build')}"`. |
+| `icon-hidden` | *boolean* | — | Leave the group out while the sidebar is collapsed to icons (`collapsible="icon"`), as for a group whose links have no icons of their own. Expanded, and in the phone panel, it shows as usual. |
 
 Every prop can also be set from an expression: `th:id="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ### sl:sidebar-group-label
 
-Attributes of `<sl:sidebar-group-label>`: The name of a `sl:sidebar-group`, in small muted text above its menu. The group is labelled by it, so it gets an id from the group (`&lt;group id&gt;-label`); give the group an `id` rather than the label.
+Attributes of `<sl:sidebar-group-label>`: The name of a `sl:sidebar-group`, in small muted text above its menu. The group is labelled by it, so it gets an id from the group (`&lt;group id&gt;-label`); give the group an `id` rather than the label. In a `collapsible` group it is the `summary` that opens and closes it, with a chevron at the end, and must be the group's first part.
 
 `sl:sidebar-group-label` declares no props; every attribute passes through.
 
@@ -1396,9 +1452,14 @@ Every prop can also be set from an expression: `th:label="${...}"`. Any other at
 
 ### sl:sidebar-menu-sub
 
-Attributes of `<sl:sidebar-menu-sub>`: A list of links below a `sl:sidebar-menu-button`, indented along a line: a `ul` of `sl:sidebar-menu-sub-item`s. In a `collapsible` `sl:sidebar-menu-item` it is what opens and closes. Hidden while the sidebar is collapsed to icons.
+Attributes of `<sl:sidebar-menu-sub>`: A list of links below a `sl:sidebar-menu-button`, indented along a line: a `ul` of `sl:sidebar-menu-sub-item`s. In a `collapsible` `sl:sidebar-menu-item` it is what opens and closes. With `collapsible` of its own it opens and closes by a chevron beside the menu button, which stays a link to a page of its own. Hidden while the sidebar is collapsed to icons.
 
-`sl:sidebar-menu-sub` declares no props; every attribute passes through.
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `collapsible` | *boolean* | — | Open and close it with a chevron at the end of the menu button (a `summary`, drawn as a `sl:sidebar-menu-action`), so the menu button stays a link. The chevron holds only an icon, so it needs an `aria-label` that names the sub-menu ("Playground's pages"); every other attribute goes to the `ul`. |
+| `open` | *boolean* | — | Render a collapsible sub-menu open, for instance when it holds the current page: `th:open="${#slNav.current('/playground')}"`. |
+
+Every prop can also be set from an expression: `th:collapsible="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended. An `aria-label` or `aria-labelledby` is required when `collapsible` is `true`; rendering fails without one.
 
 ### sl:sidebar-menu-sub-item
 

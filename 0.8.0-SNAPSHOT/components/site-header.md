@@ -160,14 +160,14 @@ it.
 </sl:sidebar-provider>
 ```
 
-The [Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md#the-header-layout) guide has the whole layout to copy.
+The [Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md) layout has the whole layout to copy.
 
 ## As the page's header
 
 At the top of `<sl:sidebar-inset>`, in the sidebar layout, it is the page's header (shadcn's sidebar-07): the trigger,
 a vertical [separator](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/separator.md), the [breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md), and the theme toggle at the end. Inside the
 `main` it is no landmark, and it has no border or colour of its own. The separator is a short line in the middle of the
-row there. The [sidebar layout](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md#the-sidebar-layout) uses it this way.
+row there. The [Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md) layout uses it this way.
 
 ```html
 <sl:sidebar-inset>

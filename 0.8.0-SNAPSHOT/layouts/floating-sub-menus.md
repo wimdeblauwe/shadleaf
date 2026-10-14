@@ -1,0 +1,252 @@
+# Floating, with sub-menus
+
+> The sections and sub-menus of the Sub-menus layout in a floating sidebar, wider and with more room between the sections.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/floating-sub-menus/
+
+The [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md) layout with `variant="floating"`: on a desktop the sidebar is a panel with a margin all
+round, rounded corners (in the vega skin) and a shadow, instead of a column along the edge of the screen. The
+application's CSS makes it wider (19 rem), puts more room between the sections and takes the line away from the
+sub-menus. The page's header has no border. On a phone the panel is the same as for every
+[variant](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#variants).
+
+**Example: Floating, with sub-menus.** The same sections and sub-menus in a floating sidebar: a panel with a margin all round, rounded and with a shadow, wider than the default, with more room between the sections and no line along the sub-menus.
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-04) this layout is based on.
+
+## The layout
+
+The whole layout file, with what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). The
+sub-menus have a class of their own, `docs-nav-sub`, for the CSS below.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, breadcrumb, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar variant="floating">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+            <strong>Documentation</strong>
+            <small>v1.0.0</small>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group>
+        <sl:sidebar-menu class="docs-nav">
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/getting-started}"
+                                    th:active="${#slNav.current('/getting-started', true)}">
+              Getting Started
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/getting-started/installation}"
+                                            th:active="${#slNav.current('/getting-started/installation')}">
+                  Installation
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/getting-started/project-structure}"
+                                            th:active="${#slNav.current('/getting-started/project-structure')}">
+                  Project Structure
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/build}"
+                                    th:active="${#slNav.current('/build', true)}">
+              Build Your Application
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/routing}"
+                                            th:active="${#slNav.current('/build/routing')}">
+                  Routing
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/data-fetching}"
+                                            th:active="${#slNav.current('/build/data-fetching')}">
+                  Data Fetching
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/rendering}"
+                                            th:active="${#slNav.current('/build/rendering')}">
+                  Rendering
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/caching}"
+                                            th:active="${#slNav.current('/build/caching')}">
+                  Caching
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/build/styling}"
+                                            th:active="${#slNav.current('/build/styling')}">
+                  Styling
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/api}"
+                                    th:active="${#slNav.current('/api', true)}">
+              API Reference
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/components}"
+                                            th:active="${#slNav.current('/api/components')}">
+                  Components
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/file-conventions}"
+                                            th:active="${#slNav.current('/api/file-conventions')}">
+                  File Conventions
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/api/functions}"
+                                            th:active="${#slNav.current('/api/functions')}">
+                  Functions
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/architecture}"
+                                    th:active="${#slNav.current('/architecture', true)}">
+              Architecture
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/accessibility}"
+                                            th:active="${#slNav.current('/architecture/accessibility')}">
+                  Accessibility
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/architecture/fast-refresh}"
+                                            th:active="${#slNav.current('/architecture/fast-refresh')}">
+                  Fast Refresh
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/community}"
+                                    th:active="${#slNav.current('/community', true)}">
+              Community
+            </sl:sidebar-menu-button>
+            <sl:sidebar-menu-sub class="docs-nav-sub">
+              <sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-button th:href="@{/community/contribution-guide}"
+                                            th:active="${#slNav.current('/community/contribution-guide')}">
+                  Contribution Guide
+                </sl:sidebar-menu-sub-button>
+              </sl:sidebar-menu-sub-item>
+            </sl:sidebar-menu-sub>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger/>
+      <sl:separator orientation="vertical"/>
+      <sl:breadcrumb>
+        <sl:breadcrumb-list>
+          <th:block th:replace="${breadcrumb}"></th:block>
+        </sl:breadcrumb-list>
+      </sl:breadcrumb>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+## A page
+
+A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md#a-page)
+layout:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Data Fetching', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-link th:href="@{/build}">Build Your Application</sl:breadcrumb-link>
+  </sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item>
+    <sl:breadcrumb-page>Data Fetching</sl:breadcrumb-page>
+  </sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+## The CSS
+
+The width is a token: `--sidebar-width` on `.sidebar-provider` replaces the skin's 16 rem, and the floating panel's
+footprint follows it. Rules outside a cascade layer, as here, win over Shadleaf's, which are in one.
+
+```css
+/* The square behind the logo in the sidebar's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* A wider sidebar, more room between the sections, the sub-menus without their line. */
+.sidebar-provider { --sidebar-width: 19rem; }
+.docs-nav { gap: 0.5rem; }
+.docs-nav > .sidebar-menu-item > .sidebar-menu-button { font-weight: 500; }
+.docs-nav-sub { margin-inline: 0; border-inline-start: 0; padding-inline: 0.375rem; }
+
+/* The page's padding: the header above it has its own. */
+.page { padding: 0 1rem 1rem; }
+.page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+```

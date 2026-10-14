@@ -81,7 +81,7 @@ The site's root also has the files of the [llms.txt](https://llmstxt.org) conven
 | `llms.txt`            | Every page with a one-line description, linking the Markdown copies. Start an agent here.   |
 | `llms-full.txt`       | All pages in one file. Large; most agents do better with the index and the pages they need. |
 | `llms-components.txt` | All component pages in one file: every example and attribute table.                         |
-| `llms-guides.txt`     | The "Start here" pages and the guides in one file.                                          |
+| `llms-guides.txt`     | The "Start here" pages, the layouts and the guides in one file.                             |
 
 Every version of the docs has its own set, under `/shadleaf/<version>/`; `/shadleaf/current/` is the latest release.
 In a session without the rules above, a prompt such as "read https://wimdeblauwe.github.io/shadleaf/current/llms.txt,

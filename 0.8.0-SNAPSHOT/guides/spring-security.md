@@ -119,7 +119,7 @@ Security 7):
 ```
 
 Hiding the link is no security: protect the URL itself in the security configuration. The
-[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md#navigation-by-role) guide shows both in a layout, and the same check on
+[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#navigation-by-role) page shows both in a layout, and the same check on
 content inside a page.
 
 ## htmx after the session expired

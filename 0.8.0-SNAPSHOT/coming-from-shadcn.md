@@ -256,7 +256,8 @@ the trigger opens it as the panel (focus in, the rest of the page inert while it
 `expanded` or `collapsed` (shadcn's `sidebar_state` holds `true` or `false`) for a year instead of a week, and the
 server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
 the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
-the text direction. `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
+the text direction, and the trigger's icon turns round by itself for a sidebar on the end (shadcn's sidebar-14 adds
+`rotate-180`). `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
 So does `collapsible`: `offcanvas` and `icon` as shadcn's, while `none` only keeps the sidebar from collapsing on a
 desktop and is still the panel on a phone (shadcn's is a plain column at every width). See
 [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md).
@@ -272,7 +273,12 @@ A collapsible group needs no `Collapsible`, `CollapsibleTrigger` and `Collapsibl
 and its sub-menu: `<sl:sidebar-menu-item collapsible>` is a `details` element, its menu button becomes the `summary`
 (with shadcn's chevron) and `<sl:sidebar-menu-sub>` the content. `defaultOpen` is `open`, usually
 `th:open="${#slNav.current('/settings')}"`. `SidebarMenuSubButton`'s `isActive` is `active`, `size` is shadcn's
-(`sm`, `md`), and it is a link unless `as="button"`.
+(`sm`, `md`), and it is a link unless `as="button"`. sidebar-07 leaves its projects out of the strip of icons with
+`group-data-[collapsible=icon]:hidden` on the group; here that is `<sl:sidebar-group icon-hidden>`. sidebar-02 wraps
+a group in a `Collapsible` with the label as its trigger; here that is `<sl:sidebar-group collapsible>`. sidebar-08
+puts the trigger in a `SidebarMenuAction` beside a link; here that is `<sl:sidebar-menu-sub collapsible
+aria-label="...">`, whose chevron needs a name of its own (shadcn's says "Toggle"). sidebar-05's plus and minus are the
+turning chevron.
 
 A dropdown menu opened from a menu button or a menu action (shadcn's team switcher, version switcher, `NavUser` and
 the projects' "More") is `<sl:dropdown-menu-trigger as="sidebar-menu-button">` or `as="sidebar-menu-action"` (see
@@ -280,7 +286,9 @@ above). shadcn picks the side in React, `side={isMobile ? "bottom" : "right"}`; 
 phone panel (and in the header layout's row) CSS opens a right or left menu below its trigger, lined up with its end.
 shadcn's `data-[state=open]:bg-sidebar-accent` on the team switcher is built in: an open trigger has the active look,
 and its menu is at least as wide as the trigger (`w-(--radix-dropdown-menu-trigger-width) min-w-56`). The current team
-is a checked radio item (shadcn's team switcher marks none, its version switcher draws a check icon). A menu action is
+is a checked radio item (shadcn's team switcher marks none, its version switcher draws a check icon). The team
+switcher's shortcuts (⌘1, ⌘2) are left out of the [layout](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md): shadcn shows them, but
+nothing handles the keys. A menu action is
 24 px, shadcn's 20 px being too small a target once it shows (WCAG 2.2). See
 [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar).
 
@@ -293,8 +301,8 @@ inside `<sl:sidebar-inset>` too. shadcn/ui's sidebar has no header placement eit
 panel on a phone, and `panel-only` on a header, footer, group or menu item leaves it out of everything but the phone
 panel. See [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#in-the-header) and [Site Header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md). sidebar-16's
 layout itself (that header across the whole page, the sidebar below it) is not supported: the sidebar is sticky at the
-top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The
-[Application shell](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/application-shell.md) guide has the two layouts there are.
+top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The Layouts section has the
+layouts there are, from [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md) on.
 
 ### User menu: a component, not a block
 
