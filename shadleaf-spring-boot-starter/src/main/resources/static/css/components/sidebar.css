@@ -42,9 +42,16 @@
     @apply outline-none;
   }
 
-  /* The icon shows a panel on the left: on a right-to-left page the sidebar is on the right. */
+  /*
+    The icon shows a panel on the left: on a right-to-left page the sidebar is on the right, and so is a sidebar on
+    the end of a left-to-right one.
+  */
   .sidebar-trigger-icon {
     @apply rtl:-scale-x-100;
+  }
+
+  .sidebar-provider:has(> .sidebar[data-side='end']) .sidebar-trigger-icon {
+    @apply -scale-x-100 rtl:scale-x-100;
   }
 
   /* Phone: the panel. */
