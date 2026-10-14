@@ -4,7 +4,7 @@ import previews from '../src/generated/previews.json' with {type: 'json'};
 import themeScript from '../src/generated/theme-script.json' with {type: 'json'};
 
 // Fixture pages for disclosure.spec.ts, tabs.spec.ts, theme-toggle.spec.ts, avatar.spec.ts, table-htmx.spec.ts and
-// sidebar.spec.ts,
+// sidebar.spec.ts and layouts.spec.ts,
 // served from a made-up origin under a strict Content-Security-Policy, with the csp Alpine build (or shadleaf.js
 // without any Alpine, or no script of Shadleaf's at all) and optionally htmx. The page at / and every route get the
 // request (URL and headers, cookies included), so a fixture can render what a server would for ?tab=... or a cookie. The
@@ -70,6 +70,10 @@ export type FixtureOptions = {
   theme?: boolean,
   /** Put the content in a <main> (true, the default), or straight into the body: an application shell has its own. */
   wrap?: boolean,
+  /** The skin's standalone bundle to link (default: the first, vega). */
+  skin?: string,
+  /** The application's own CSS, served as /application.css and linked after Shadleaf's (inline styles are blocked). */
+  stylesheet?: string,
   /** Attributes for <html> and <body>, e.g. 'dir="rtl"' or 'hx-boost="true"'. */
   htmlAttributes?: string,
   bodyAttributes?: string,
@@ -78,7 +82,7 @@ export type FixtureOptions = {
 /** Serves `main` at /, and `routes` for other paths; returns what the console said (errors, warnings, CSP). */
 export async function openFixture(page: Page, main: string | ((url: URL, request: Request) => string),
     {alpine = true, htmx = false, routes = {}, path = '/', theme = false, scriptDelay = 0, wrap = true,
-      htmlAttributes = '', bodyAttributes = ''}: FixtureOptions = {})
+      skin, stylesheet, htmlAttributes = '', bodyAttributes = ''}: FixtureOptions = {})
     : Promise<string[]> {
   const messages: string[] = [];
   page.on('console', message => {
@@ -92,7 +96,8 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
       event => console.error(`CSP violation: ${event.violatedDirective}`)));
   const document = (content: string) => `<!doctype html><html lang="en" ${htmlAttributes}><head><meta charset="utf-8"><title>Fixture</title>`
       + (theme ? `<script>${themeScript.script}</script>` : '')
-      + `<link rel="stylesheet" href="/${css}">`
+      + `<link rel="stylesheet" href="/${skin ? previews.skins.find(s => s.name === skin)!.css : css}">`
+      + (stylesheet !== undefined ? '<link rel="stylesheet" href="/application.css">' : '')
       + (htmx ? `${HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
       + (alpine ? `<script type="module" src="/${alpine === 'external' ? scripts.external : scripts.csp}"></script>` : '')
       + `</head><body ${bodyAttributes}>${wrap ? `<main>${content}</main>` : content}</body></html>`;
@@ -101,6 +106,9 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
     const url = new URL(request.url());
     if (url.pathname === '/webjars/htmx.min.js') {
       return route.fulfill({contentType: 'text/javascript', path: HTMX});
+    }
+    if (url.pathname === '/application.css' && stylesheet !== undefined) {
+      return route.fulfill({contentType: 'text/css', body: stylesheet});
     }
     const photo = photos.get(url.pathname);
     if (photo) {

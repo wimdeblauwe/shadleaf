@@ -1,0 +1,47 @@
+---
+title: Navigation in the header
+description: For an application with a handful of pages, the pages as a row of links in the site header and the page as a card below it; on a phone the same navigation is a panel.
+sidebar:
+  order: 20
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import LayoutCode from '../../../components/LayoutCode.astro';
+
+For an application with a handful of pages. The [site header](../../components/site-header/) holds the menu button
+(on a phone), the application's name, the pages as a row of links, and the theme toggle and the
+[user menu](../../components/user-menu/) at the end. The page is a card below the header (`variant="inset"`).
+
+The row is a `<sl:sidebar placement="header">`. On a phone the menu button opens that same navigation as a panel,
+with the icons and the parts marked `panel-only`: here the panel's own header and a More group (Settings, Help).
+Switch the preview to Phone to see it.
+
+<ComponentPreview id="layout--header" />
+
+For reference: Flux's [header layout](https://fluxui.dev/layouts/header) this layout is based on.
+
+## The layout
+
+The whole layout file, with what [every layout needs](../../guides/application-shell/#what-every-layout-needs). It is
+the layout of the second sample application (sample-02's `layout/main.html`, which runs under a strict
+Content-Security-Policy). Sample-02 also has an Admin link for admins only, left out here: see
+[Navigation by role](../../guides/application-shell/#navigation-by-role).
+
+<LayoutCode id="layout--header" part="template" />
+
+In the row, the links show their labels without icons and the current page is marked as in a sidebar; group actions,
+separators and collapsible items are left out of the row, and the menu button is hidden on a desktop. When the links do
+not fit, the row scrolls sideways. See [In the header](../../components/sidebar/#in-the-header) and
+[Panel-only parts](../../components/sidebar/#panel-only-parts).
+
+## A page
+
+A page passes its title and its content:
+
+<LayoutCode id="layout--header" part="page" />
+
+## The CSS
+
+The square behind the logo in the panel's header, and the page in the card, kept to a readable width:
+
+<LayoutCode id="layout--header" part="css" />

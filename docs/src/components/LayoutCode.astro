@@ -1,0 +1,21 @@
+---
+// One of a layout's files, from previews.json (PreviewGeneratorTest builds them from the layout's YAML): the whole
+// layout file, a page that uses it, or the application's CSS it needs. src/lib/markdown.ts writes the same out for the
+// Markdown copy of the page.
+import {Code} from '@astrojs/starlight/components';
+import Missing from './Missing.astro';
+import {previews} from '../lib/generated';
+
+interface Props {
+  /** Scenario id, e.g. "layout--sub-menus". */
+  id: string;
+  part: 'template' | 'page' | 'css';
+}
+
+const {id, part} = Astro.props;
+const scenario = previews.scenarios.find(s => s.id === id && s.layout);
+const code = scenario?.[part];
+const titles = {template: 'templates/layout/main.html', page: 'templates/data-fetching.html', css: 'static/css/application.css'};
+---
+
+{code ? <Code code={code} lang={part === 'css' ? 'css' : 'html'} title={titles[part]}/> : <Missing what={`${part} of ${id}`}/>}

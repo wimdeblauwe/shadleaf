@@ -1,0 +1,131 @@
+# A layout for the docs' Layouts section, rendered by PreviewGeneratorTest (see its javadoc for the keys): sample-01's
+# layout (templates/layout/main.html), shortened. docs/tests/layouts.spec.ts opens it at a desktop and a phone width;
+# it expects the sub-button "All people" to be the current page.
+title: Collapses to icons
+description: >-
+  The navigation in groups, one with a collapsible item, the page as a card beside it, the signed-in user's menu at
+  the bottom. On a desktop the trigger collapses the sidebar to a strip of icons with tooltips; on a phone it opens it
+  as a panel.
+request: /people
+user:
+  name: shadcn
+  email: m@example.com
+  photo: shadcn
+htmx: true
+page:
+  title: People
+  breadcrumb: |-
+    <sl:breadcrumb-item>Tables</sl:breadcrumb-item>
+    <sl:breadcrumb-separator/>
+    <sl:breadcrumb-item>
+      <sl:breadcrumb-page>People</sl:breadcrumb-page>
+    </sl:breadcrumb-item>
+  content: |-
+    <div class="placeholder-grid">
+      <div class="placeholder"></div>
+      <div class="placeholder"></div>
+      <div class="placeholder"></div>
+    </div>
+    <div class="placeholder placeholder-tall"></div>
+css: |-
+  /* The square behind the logo in the sidebar's header. */
+  .app-logo {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-radius: calc(var(--radius) - 2px);
+    background: var(--sidebar-primary);
+    color: var(--sidebar-primary-foreground);
+  }
+  .app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+  /* The page's padding: the header above it has its own. */
+  .page { padding: 0 1rem 1rem; }
+  .page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+source: |-
+  <sl:sidebar-provider>
+    <sl:sidebar variant="inset" collapsible="icon">
+      <sl:sidebar-header>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/}" size="lg" tooltip="Acme">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+              <strong>Acme</strong>
+              <small>Enterprise</small>
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-header>
+      <sl:sidebar-content>
+        <sl:sidebar-group id="nav-forms">
+          <sl:sidebar-group-label>Forms</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item>
+                <sl:sidebar-menu-button th:href="@{/form}" th:active="${#slNav.current('/form')}" tooltip="Form">
+                  <sl:slot name="icon-start"><sl:icon name="file-text"/></sl:slot>
+                  Form
+                </sl:sidebar-menu-button>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+        <sl:sidebar-group id="nav-tables">
+          <sl:sidebar-group-label>Tables</sl:sidebar-group-label>
+          <sl:sidebar-group-content>
+            <sl:sidebar-menu>
+              <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/people') or #slNav.current('/teams')}">
+                <sl:sidebar-menu-button tooltip="People">
+                  <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
+                  People
+                </sl:sidebar-menu-button>
+                <sl:sidebar-menu-sub>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/people}" th:active="${#slNav.current('/people')}">
+                      All people
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-item>
+                    <sl:sidebar-menu-sub-button th:href="@{/teams}" th:active="${#slNav.current('/teams')}">
+                      Teams
+                    </sl:sidebar-menu-sub-button>
+                  </sl:sidebar-menu-sub-item>
+                </sl:sidebar-menu-sub>
+              </sl:sidebar-menu-item>
+            </sl:sidebar-menu>
+          </sl:sidebar-group-content>
+        </sl:sidebar-group>
+      </sl:sidebar-content>
+      <sl:sidebar-footer>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button href="https://example.com/help" size="sm" tooltip="Documentation">
+              <sl:slot name="icon-start"><sl:icon name="book-open"/></sl:slot>
+              Documentation
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+        <sl:user-menu>
+          <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+        </sl:user-menu>
+      </sl:sidebar-footer>
+    </sl:sidebar>
+    <sl:sidebar-inset>
+      <sl:site-header>
+        <sl:sidebar-trigger/>
+        <sl:separator orientation="vertical"/>
+        <sl:breadcrumb>
+          <sl:breadcrumb-list>
+            <th:block th:replace="${breadcrumb}"></th:block>
+          </sl:breadcrumb-list>
+        </sl:breadcrumb>
+        <sl:slot name="end"><sl:theme-toggle/></sl:slot>
+      </sl:site-header>
+      <div class="page">
+        <h1 th:text="${pageTitle}"></h1>
+        <div th:replace="${content}"></div>
+      </div>
+    </sl:sidebar-inset>
+  </sl:sidebar-provider>

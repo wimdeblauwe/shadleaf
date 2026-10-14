@@ -1,0 +1,40 @@
+---
+title: On the end
+description: A table of contents in a sidebar on the end of the line, the right in a left-to-right page, with the trigger at the end of the page's header.
+sidebar:
+  order: 14
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import LayoutCode from '../../../components/LayoutCode.astro';
+
+A sidebar on the end of the line (`side="end"`): the right, or the left on a right-to-left page (`dir="rtl"`). Here
+it holds a table of contents under a group label, with the sections and their pages in sub-menus. The trigger is at
+the end of the page's header, in the [site header](../../components/site-header/)'s `end` slot, on the same side as
+the sidebar; its icon shows a panel on that side. On a phone the panel slides in from the end.
+
+<ComponentPreview id="layout--sidebar-end" />
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-14) this layout is based on.
+
+## The layout
+
+The whole layout file, with what [every layout needs](../../guides/application-shell/#what-every-layout-needs). The
+sidebar comes after `<sl:sidebar-inset>` in the markup, as in the block, so the keyboard and a screen reader reach the
+page first and the table of contents after it. `side="end"` puts it on the end either way: written before the inset,
+it is still drawn there, and reached first.
+
+<LayoutCode id="layout--sidebar-end" part="template" />
+
+## A page
+
+A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](../sub-menus/#a-page)
+layout:
+
+<LayoutCode id="layout--sidebar-end" part="page" />
+
+## The CSS
+
+The weight of the sections' links, a border below the header and the page's padding:
+
+<LayoutCode id="layout--sidebar-end" part="css" />

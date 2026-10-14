@@ -32,6 +32,7 @@ export default defineConfig({
           ],
         },
         {label: 'Components', items: [{autogenerate: {directory: 'components'}}]},
+        {label: 'Layouts', items: [{autogenerate: {directory: 'layouts'}}]},
         {label: 'Guides', items: [{autogenerate: {directory: 'guides'}}]},
       ],
     }),

@@ -6,6 +6,10 @@
 // srcdoc, so it is same-origin: the page swaps the skin stylesheet and the .dark class inside it directly. The skin
 // switch applies to every preview and is remembered; light and dark follow the site's theme.
 //
+// A layout (scenario.layout) is a whole page: no stage around it, the layout's own application CSS, and a frame of a
+// fixed size, as wide as a desktop (scaled down to the column) or a phone (the Desktop/Phone switch). Its source is on
+// the page as a whole file (LayoutCode.astro), so the preview shows only the rendered HTML.
+//
 // Starlight's Code (Expressive Code), not astro:components': Starlight turns off Astro's own Shiki highlighting.
 import {Code} from '@astrojs/starlight/components';
 import Missing from './Missing.astro';
@@ -39,7 +43,34 @@ const resize = `<script>
   new ResizeObserver(post).observe(document.body);
 </script>`;
 
-const srcdoc = scenario && skins.length > 0
+// What stands in for a page's content in a layout's preview: shadcn/ui's grey boxes, from the layout YAML's page.
+const placeholders = `
+    .placeholder-grid { display: grid; gap: 1rem; margin-block-end: 1rem; }
+    @media (width >= 48rem) { .placeholder-grid { grid-template-columns: repeat(3, 1fr); } }
+    .placeholder { aspect-ratio: 16 / 9; border-radius: 0.75rem; background: color-mix(in oklch, var(--muted) 50%, transparent); }
+    .placeholder-tall { aspect-ratio: auto; min-block-size: 40rem; }`;
+
+const layoutSrcdoc = scenario?.layout && skins.length > 0
+    ? `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" id="shadleaf-skin" href="${skins[0].href}">
+  <style>${placeholders}</style>
+  <style>
+${scenario.css ?? ''}
+  </style>
+</head>
+<body>
+${scenario.html}
+${script}
+${navigationGuard}
+</body>
+</html>`
+    : '';
+
+const srcdoc = scenario?.layout ? layoutSrcdoc : scenario && skins.length > 0
     ? `<!doctype html>
 <html lang="en">
 <head>
@@ -93,6 +124,12 @@ ${resize}
           {scenario.title && <strong>{scenario.title}</strong>}
           {scenario.description && <span>{scenario.description}</span>}
         </figcaption>
+        {scenario.layout && (
+          <div class="sl-docs-preview__widths" role="group" aria-label="Width">
+            <button type="button" data-width="desktop" aria-pressed="true">Desktop</button>
+            <button type="button" data-width="phone" aria-pressed="false">Phone</button>
+          </div>
+        )}
         {skins.length > 1 && (
           <div class="sl-docs-preview__skins" role="group" aria-label="Skin">
             {skins.map((skin, i) => (
@@ -103,15 +140,24 @@ ${resize}
           </div>
         )}
       </div>
-      <div class="sl-docs-preview__stage">
-        <iframe class="sl-docs-preview__frame" loading="lazy" title={`Preview: ${scenario.title ?? id}`} srcdoc={srcdoc}
-                style={scenario.width ? `max-width: ${scenario.width}px` : undefined}
-                data-width={scenario.width ?? undefined}></iframe>
-      </div>
-      <details class="sl-docs-preview__code">
-        <summary>Thymeleaf source</summary>
-        <Code code={scenario.source} lang="html"/>
-      </details>
+      {scenario.layout ? (
+        <div class="sl-docs-preview__stage sl-docs-preview__viewport" data-mode="desktop">
+          <iframe class="sl-docs-preview__frame sl-docs-preview__page" loading="lazy"
+                  title={`Preview: ${scenario.title ?? id}`} srcdoc={srcdoc}></iframe>
+        </div>
+      ) : (
+        <div class="sl-docs-preview__stage">
+          <iframe class="sl-docs-preview__frame" loading="lazy" title={`Preview: ${scenario.title ?? id}`} srcdoc={srcdoc}
+                  style={scenario.width ? `max-width: ${scenario.width}px` : undefined}
+                  data-width={scenario.width ?? undefined}></iframe>
+        </div>
+      )}
+      {!scenario.layout && (
+        <details class="sl-docs-preview__code">
+          <summary>Thymeleaf source</summary>
+          <Code code={scenario.source} lang="html"/>
+        </details>
+      )}
       <details class="sl-docs-preview__code">
         <summary>Rendered HTML</summary>
         <Code code={scenario.normalizedHtml} lang="html"/>
@@ -149,7 +195,7 @@ ${resize}
     }
   }
 
-  .sl-docs-preview__skins {
+  .sl-docs-preview__skins, .sl-docs-preview__widths {
     display: flex;
     gap: 0.25rem;
     margin: 0;
@@ -186,6 +232,31 @@ ${resize}
 
   /* A frame as narrow as a phone, outlined so its edges show where the page's column goes on. */
   .sl-docs-preview__frame[data-width] {
+    border-inline: 1px dashed var(--sl-color-gray-5);
+  }
+
+  /*
+    A layout's page: 1280 x 800 CSS pixels (a desktop, past the sidebar's 768 px breakpoint) scaled down to the column
+    by the script below, which also sets the viewport's height; or a phone's 390 x 760, as it is.
+  */
+  .sl-docs-preview__viewport {
+    overflow: hidden;
+  }
+
+  .sl-docs-preview__page {
+    transform-origin: 0 0;
+  }
+
+  .sl-docs-preview__viewport[data-mode='desktop'] .sl-docs-preview__page {
+    width: 1280px;
+    max-width: none;
+    height: 800px;
+  }
+
+  .sl-docs-preview__viewport[data-mode='phone'] .sl-docs-preview__page {
+    width: 390px;
+    max-width: 100%;
+    height: 760px;
     border-inline: 1px dashed var(--sl-color-gray-5);
   }
 
@@ -250,6 +321,37 @@ ${resize}
           // the choice then lasts for this page only
         }
         figures().forEach(apply);
+      });
+    });
+  });
+
+  // A layout's frame: a desktop scaled to the column, or a phone as it is.
+  const DESKTOP = {width: 1280, height: 800};
+
+  function fit(viewport: HTMLElement) {
+    const frame = viewport.querySelector<HTMLIFrameElement>('iframe');
+    if (!frame) {
+      return;
+    }
+    if (viewport.dataset.mode === 'phone') {
+      frame.style.transform = '';
+      viewport.style.height = '';
+      return;
+    }
+    const scale = Math.min(1, viewport.clientWidth / DESKTOP.width);
+    frame.style.transform = `scale(${scale})`;
+    viewport.style.height = `${Math.ceil(DESKTOP.height * scale)}px`;
+  }
+
+  document.querySelectorAll<HTMLElement>('.sl-docs-preview__viewport').forEach(viewport => {
+    new ResizeObserver(() => fit(viewport)).observe(viewport);
+    const figure = viewport.closest('.sl-docs-preview')!;
+    figure.querySelectorAll<HTMLButtonElement>('button[data-width]').forEach(button => {
+      button.addEventListener('click', () => {
+        viewport.dataset.mode = button.dataset.width;
+        figure.querySelectorAll<HTMLButtonElement>('button[data-width]').forEach(other =>
+            other.setAttribute('aria-pressed', String(other === button)));
+        fit(viewport);
       });
     });
   });

@@ -22,7 +22,7 @@ ${lists.join('\n\n')}
 
 - [All docs in one file](${file('llms-full.txt')}): every page above, in this order.
 - [All component pages](${file('llms-components.txt')}): the Components section in one file.
-- [All guides](${file('llms-guides.txt')}): the Start here and Guides sections in one file.
+- [All guides](${file('llms-guides.txt')}): the Start here, Layouts and Guides sections in one file.
 `;
   return new Response(text, {headers: {'Content-Type': 'text/plain; charset=utf-8'}});
 };

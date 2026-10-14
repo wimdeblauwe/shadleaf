@@ -67,6 +67,17 @@ import tools.jackson.databind.json.JsonMapper;
  * a photo, or {@code picture}, a URL); without one the visitor is anonymous.
  * {@code docs/scripts/sync.mjs} copies them into the docs project. Adding examples for a component means adding a
  * YAML file; every library component must have one, or be listed under the {@code parts} of its family's file.
+ * <p>
+ * The layouts of the docs' Layouts section are one YAML file each in {@code previews/layouts/}, a scenario with the id
+ * {@code layout--<file name>} and these keys: {@code title}, {@code description}, {@code request} (the page it is
+ * rendered for, so {@code #slNav.current} marks one), {@code user} (the signed-in user, as for a component),
+ * {@code htmx} ({@code true}: the layout loads htmx and boosts the body), {@code css} (the application's CSS the layout
+ * needs), {@code page} ({@code title}, {@code content} and optionally {@code breadcrumb}: what a page passes the
+ * layout) and {@code source}: what the layout's body holds between the skip link and the toaster, with {@value
+ * #CONTENT_PLACEHOLDER} (and {@value #BREADCRUMB_PLACEHOLDER} for a layout with a breadcrumb) where the page's parts go
+ * and {@code ${pageTitle}} for its title. The generator writes the whole layout file and a page that uses it around
+ * that source ({@link #layoutTemplate}, {@link #pageTemplate}), and renders the preview with the page's parts in
+ * place.
  */
 class PreviewGeneratorTest {
 
@@ -75,6 +86,9 @@ class PreviewGeneratorTest {
   private static final Path OUTPUT_DIRECTORY = Path.of(OUTPUT);
   private static final Path PREVIEWS_DIRECTORY = Path.of("src", "test", "resources", "previews");
   private static final Path PHOTOS_DIRECTORY = PREVIEWS_DIRECTORY.resolve("photos");
+  private static final Path LAYOUTS_DIRECTORY = PREVIEWS_DIRECTORY.resolve("layouts");
+  static final String BREADCRUMB_PLACEHOLDER = "<th:block th:replace=\"${breadcrumb}\"></th:block>";
+  static final String CONTENT_PLACEHOLDER = "<div th:replace=\"${content}\"></div>";
   private static final Map<String, String> PHOTO_TYPES = Map.of("jpg", "image/jpeg", "png", "image/png",
       "svg", "image/svg+xml");
   private static final Path BUILT_ASSETS = Path.of("target", "classes", "META-INF", "resources", "shadleaf");
@@ -91,6 +105,7 @@ class PreviewGeneratorTest {
   void generatesDocsArtifacts() throws IOException {
     ComponentRegistry registry = LibraryComponents.registry();
     List<Scenario> scenarios = loadScenarios(registry);
+    scenarios.addAll(loadLayouts());
 
     FileSystemUtils.deleteRecursively(OUTPUT_DIRECTORY);
     Files.createDirectories(OUTPUT_DIRECTORY);
@@ -132,6 +147,9 @@ class PreviewGeneratorTest {
     try {
       Map<String, Object> variables = new LinkedHashMap<>(scenario.pages());
       variables.put("photos", photos);
+      if (scenario.layout() != null) {
+        variables.put("pageTitle", scenario.layout().pageTitle());
+      }
       if (scenario.form() == null) {
         rendered = tester.render(scenario.renderSource(), variables);
       } else {
@@ -142,8 +160,11 @@ class PreviewGeneratorTest {
       throw new AssertionError("Preview " + scenario.id() + " does not render: " + e.getMessage(), e);
     }
     assertThat(rendered.html()).as("preview %s", scenario.id()).isNotBlank();
+    Layout layout = scenario.layout();
     return new Preview(scenario.id(), scenario.component(), scenario.title(), scenario.description(),
-        scenario.source(), rendered.html().strip(), rendered.normalizedHtml(), scenario.showcase(), scenario.width());
+        scenario.source(), rendered.html().strip(), rendered.normalizedHtml(), scenario.showcase(), scenario.width(),
+        layout != null, layout == null ? null : layout.css(), layout == null ? null : layout.template(),
+        layout == null ? null : layout.page());
   }
 
   /** Every photo in {@code previews/photos/}, by file name without extension, as a data: URI. */
@@ -238,12 +259,111 @@ class PreviewGeneratorTest {
             source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form")),
             (Boolean) entry.getOrDefault("showcase", true), (String) entry.get("request"),
             pages((Map<String, Map<String, Object>>) entry.getOrDefault("pages", Map.of())),
-            (Integer) entry.get("width"), (Map<String, String>) entry.get("user")));
+            (Integer) entry.get("width"), (Map<String, String>) entry.get("user"), null));
       }
     }
     assertThat(components).as("components with previews in %s", PREVIEWS_DIRECTORY)
         .containsExactlyElementsOf(registry.names());
     return scenarios;
+  }
+
+  /** The layouts in {@code previews/layouts/}: one scenario per file, off the showcase (a page holds one shell). */
+  @SuppressWarnings("unchecked")
+  private static List<Scenario> loadLayouts() throws IOException {
+    List<Path> files;
+    try (Stream<Path> entries = Files.list(LAYOUTS_DIRECTORY)) {
+      files = entries.filter(path -> path.getFileName().toString().endsWith(".yaml")).sorted().toList();
+    }
+    List<Scenario> scenarios = new ArrayList<>();
+    for (Path file : files) {
+      Map<String, Object> document;
+      try (InputStream in = Files.newInputStream(file)) {
+        document = new Yaml().load(in);
+      }
+      String name = file.getFileName().toString().replaceFirst("\\.yaml$", "");
+      String id = "layout--" + name;
+      String source = ((String) document.get("source")).strip();
+      Map<String, String> page = (Map<String, String>) document.get("page");
+      @Nullable String breadcrumb = page.get("breadcrumb") == null ? null : page.get("breadcrumb").strip();
+      String content = page.get("content").strip();
+      assertThat(source).as("source of %s", id).contains(CONTENT_PLACEHOLDER);
+      assertThat(source.contains(BREADCRUMB_PLACEHOLDER)).as("breadcrumb of %s", id).isEqualTo(breadcrumb != null);
+      String renderSource = "<sl:skip-link/>\n" + source
+          .replace(BREADCRUMB_PLACEHOLDER, breadcrumb == null ? "" : breadcrumb)
+          .replace(CONTENT_PLACEHOLDER, content);
+      String css = ((String) document.get("css")).strip();
+      boolean htmx = Boolean.TRUE.equals(document.get("htmx"));
+      scenarios.add(new Scenario(id, "layout", (String) document.get("title"), (String) document.get("description"),
+          source, renderSource, null, false, (String) document.get("request"), Map.of(), null,
+          (Map<String, String>) document.get("user"),
+          new Layout(page.get("title"), css, layoutTemplate(source, breadcrumb != null, htmx),
+              pageTemplate(page.get("title"), breadcrumb))));
+    }
+    assertThat(scenarios).as("layouts in %s", LAYOUTS_DIRECTORY).isNotEmpty();
+    return scenarios;
+  }
+
+  /**
+   * The whole layout file around a layout's body: the head every layout needs (theme script, Shadleaf's assets, the
+   * application's CSS, and htmx if the layout uses it), the skip link first in the body, then the body, the root htmx
+   * puts dialogs in and the toaster. As the Application shell guide's checklist says.
+   */
+  private static String layoutTemplate(String source, boolean breadcrumb, boolean htmx) {
+    return """
+        <!DOCTYPE html>
+        <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+              th:fragment="layout({parameters})">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title th:text="${pageTitle}">Page</title>
+          <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+          <th:block th:replace="~{sl/layout :: assets}"></th:block>
+        {htmxScript}  <link rel="stylesheet" th:href="@{/css/application.css}">
+        </head>
+        <body{bodyAttributes}>
+        <sl:skip-link/>
+        {source}
+        <div id="modal-root"></div>
+        <sl:toaster>
+          <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+                    th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+        </sl:toaster>
+        </body>
+        </html>
+        """.replace("{parameters}", breadcrumb ? "pageTitle, breadcrumb, content" : "pageTitle, content")
+        .replace("{htmxScript}", htmx ? "  <script th:src=\"@{/webjars/htmx.org/dist/htmx.min.js}\" defer></script>\n" : "")
+        .replace("{bodyAttributes}", htmx ? " hx-boost=\"true\"" : "")
+        .replace("{source}", source);
+  }
+
+  /** A page that uses the layout (as {@code layout/main.html}): its title, its breadcrumb's levels and its content. */
+  private static String pageTemplate(String title, @Nullable String breadcrumb) {
+    if (breadcrumb == null) {
+      return """
+          <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+                th:replace="~{layout/main :: layout('{title}', ~{::#page-content})}">
+          <body>
+          <div id="page-content">
+            ...
+          </div>
+          </body>
+          </html>
+          """.replace("{title}", title);
+    }
+    return """
+        <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+              th:replace="~{layout/main :: layout('{title}', ~{::breadcrumb}, ~{::#page-content})}">
+        <body>
+        <th:block th:ref="breadcrumb">
+        {breadcrumb}
+        </th:block>
+        <div id="page-content">
+          ...
+        </div>
+        </body>
+        </html>
+        """.replace("{title}", title).replace("{breadcrumb}", breadcrumb.indent(2).stripTrailing());
   }
 
   /**
@@ -307,11 +427,23 @@ class PreviewGeneratorTest {
    *                     built from the request such as a table's sort links; {@code /} when absent
    * @param pages        Spring Data pages by variable name, for a pagination
    * @param user         the signed-in user, as written in the YAML; anonymous when absent
+   * @param layout       what a layout of the Layouts section has besides its source; {@code null} for a component's
+   *                     scenario
    */
   private record Scenario(String id, String component, @Nullable String title, @Nullable String description,
                           String source, String renderSource, @Nullable FormModel form, boolean showcase,
                           @Nullable String request, Map<String, Object> pages, @Nullable Integer width,
-                          @Nullable Map<String, String> user) {
+                          @Nullable Map<String, String> user, @Nullable Layout layout) {
+
+  }
+
+  /**
+   * @param pageTitle the title of the page the preview shows
+   * @param css       the application's CSS the layout needs
+   * @param template  the whole layout file
+   * @param page      a page that uses it
+   */
+  private record Layout(String pageTitle, String css, String template, String page) {
 
   }
 
@@ -334,10 +466,16 @@ class PreviewGeneratorTest {
    * @param html           the rendered markup, as it goes into the preview frame
    * @param normalizedHtml one element per line, for the "rendered HTML" disclosure
    * @param showcase       whether the showcase page shows it
+   * @param layout         whether it is a layout of the Layouts section: a whole page, previewed at a desktop and a
+   *                       phone width
+   * @param css            a layout's application CSS
+   * @param template       a layout's whole file
+   * @param page           a page that uses the layout
    */
   private record Preview(String id, String component, @Nullable String title, @Nullable String description,
                          String source, String html, String normalizedHtml, boolean showcase,
-                         @Nullable Integer width) {
+                         @Nullable Integer width, boolean layout, @Nullable String css, @Nullable String template,
+                         @Nullable String page) {
 
   }
 

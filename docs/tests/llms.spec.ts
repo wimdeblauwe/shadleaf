@@ -49,7 +49,7 @@ test('every page has a Markdown copy without MDX left in it, linked from its hea
     const response = await request.get(markdownPath);
     expect(response.headers()['content-type'], markdownPath).toContain('text/markdown');
     const text = prose(await response.text());
-    expect(text, markdownPath).not.toMatch(/<(ComponentPreview|ComponentAttributes|CspHash|DependencySnippet|Steps)\b/);
+    expect(text, markdownPath).not.toMatch(/<(ComponentPreview|LayoutCode|ComponentAttributes|CspHash|DependencySnippet|Steps)\b/);
     expect(text, markdownPath).not.toMatch(/^import\s|^:::|withBase|is missing from this build/m);
     // Links to other pages point at their Markdown copies, and those exist.
     for (const [, link] of text.matchAll(/\]\((https?:\/\/[^)\s#]+\.md)(?:#[^)]*)?\)/g)) {

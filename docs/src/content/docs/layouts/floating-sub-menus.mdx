@@ -1,0 +1,40 @@
+---
+title: Floating, with sub-menus
+description: The sections and sub-menus of the Sub-menus layout in a floating sidebar, wider and with more room between the sections.
+sidebar:
+  order: 4
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import LayoutCode from '../../../components/LayoutCode.astro';
+
+The [Sub-menus](../sub-menus/) layout with `variant="floating"`: on a desktop the sidebar is a panel with a margin all
+round, rounded corners (in the vega skin) and a shadow, instead of a column along the edge of the screen. The
+application's CSS makes it wider (19 rem), puts more room between the sections and takes the line away from the
+sub-menus. The page's header has no border. On a phone the panel is the same as for every
+[variant](../../components/sidebar/#variants).
+
+<ComponentPreview id="layout--floating-sub-menus" />
+
+For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-04) this layout is based on.
+
+## The layout
+
+The whole layout file, with what [every layout needs](../../guides/application-shell/#what-every-layout-needs). The
+sub-menus have a class of their own, `docs-nav-sub`, for the CSS below.
+
+<LayoutCode id="layout--floating-sub-menus" part="template" />
+
+## A page
+
+A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](../sub-menus/#a-page)
+layout:
+
+<LayoutCode id="layout--floating-sub-menus" part="page" />
+
+## The CSS
+
+The width is a token: `--sidebar-width` on `.sidebar-provider` replaces the skin's 16 rem, and the floating panel's
+footprint follows it. Rules outside a cascade layer, as here, win over Shadleaf's, which are in one.
+
+<LayoutCode id="layout--floating-sub-menus" part="css" />

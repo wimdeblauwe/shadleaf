@@ -12,7 +12,7 @@ export type Section = { title: string; entries: DocsEntry[] };
 /** The pages of "Start here", in the sidebar's order (astro.config.mjs). */
 const START_HERE = ['index', 'getting-started', 'coming-from-shadcn', 'ide-completion', 'coding-agents'];
 
-/** The docs in the sidebar's order: Start here, Components (by file name), Guides (by sidebar.order). */
+/** The docs in the sidebar's order: Start here, Components (by file name), Layouts and Guides (by sidebar.order). */
 export async function sections(): Promise<Section[]> {
   const entries = await getCollection('docs');
   const startHere = START_HERE
@@ -20,12 +20,13 @@ export async function sections(): Promise<Section[]> {
       .filter((entry): entry is DocsEntry => entry !== undefined);
   const inDirectory = (directory: string) => entries.filter(entry => entry.id.startsWith(directory + '/'));
   const componentPages = inDirectory('components').sort((a, b) => a.id.localeCompare(b.id));
-  const guides = inDirectory('guides').sort((a, b) =>
+  const byOrder = (directory: string) => inDirectory(directory).sort((a, b) =>
       (a.data.sidebar?.order ?? Infinity) - (b.data.sidebar?.order ?? Infinity) || a.data.title.localeCompare(b.data.title));
   return [
     {title: 'Start here', entries: startHere},
     {title: 'Components', entries: componentPages},
-    {title: 'Guides', entries: guides},
+    {title: 'Layouts', entries: byOrder('layouts')},
+    {title: 'Guides', entries: byOrder('guides')},
   ];
 }
 
@@ -85,8 +86,8 @@ function demoteHeadings(markdown: string): string {
 }
 
 /**
- * The MDX body with everything that is not Markdown replaced: imports dropped, ComponentPreview, ComponentAttributes,
- * CspHash and DependencySnippet written out, Starlight's asides as block quotes, and links to other pages pointed at
+ * The MDX body with everything that is not Markdown replaced: imports dropped, ComponentPreview, LayoutCode,
+ * ComponentAttributes, CspHash and DependencySnippet written out, Starlight's asides as block quotes, and links to other pages pointed at
  * their Markdown copies. Code blocks are left alone (they hold JSX and imports as examples).
  */
 export function bodyMarkdown(entry: DocsEntry): string {
@@ -136,6 +137,10 @@ function convertLine(line: string, entry: DocsEntry): string {
   if (preview) {
     return previewMarkdown(preview[1]);
   }
+  const layoutCode = line.match(/^\s*<LayoutCode\s+id="([^"]+)"\s+part="(template|page|css)"\s*\/>\s*$/);
+  if (layoutCode) {
+    return layoutCodeMarkdown(layoutCode[1], layoutCode[2] as 'template' | 'page' | 'css');
+  }
   const attributes = line.match(/^\s*<ComponentAttributes\s+component="([^"]+)"\s*\/>\s*$/);
   if (attributes) {
     return attributesMarkdown(attributes[1]);
@@ -155,14 +160,24 @@ function convertLine(line: string, entry: DocsEntry): string {
           (_, path: string, text: string) => `[${text}](${new URL(path, siteRoot()).href})`);
 }
 
-/** A preview: its title and description, then the Thymeleaf source an application writes. */
+/**
+ * A preview: its title and description, then the Thymeleaf source an application writes. A layout's source is on its
+ * page as whole files (LayoutCode), so its preview is the description alone.
+ */
 export function previewMarkdown(id: string): string {
   const scenario = previews.scenarios.find(s => s.id === id);
   if (!scenario) {
     return `(Example ${id} is missing from this build.)`;
   }
   const title = scenario.title ? `**Example: ${scenario.title}.**` : '**Example.**';
-  return `${title}${scenario.description ? ' ' + scenario.description : ''}\n\n` + fenced('html', scenario.source);
+  const description = `${title}${scenario.description ? ' ' + scenario.description : ''}`;
+  return scenario.layout ? description : `${description}\n\n` + fenced('html', scenario.source);
+}
+
+/** One of a layout's files, as LayoutCode.astro shows it. */
+export function layoutCodeMarkdown(id: string, part: 'template' | 'page' | 'css'): string {
+  const code = previews.scenarios.find(s => s.id === id && s.layout)?.[part];
+  return code ? fenced(part === 'css' ? 'css' : 'html', code.trimEnd()) : `(The ${part} of ${id} is missing from this build.)`;
 }
 
 /** The attribute table of a component, as ComponentAttributes.astro shows it. */

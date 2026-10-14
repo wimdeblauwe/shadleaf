@@ -9,8 +9,9 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 <ComponentPreview id="sidebar--default" />
 
 :::tip[Layouts to copy]
-The [Application shell](../../guides/application-shell/) guide has two whole layouts built from these parts, the
-sidebar layout and the header layout, and what every layout needs around them.
+The Layouts section has whole layouts built from these parts, such as [Collapses to
+icons](../../layouts/collapses-to-icons/) and [Navigation in the header](../../layouts/header/). The
+[Application shell](../../guides/application-shell/) guide says what every layout needs around them.
 :::
 
 ## Built from parts
@@ -50,7 +51,7 @@ The [skip link](../skip-link/) comes first in the body: the sidebar puts many li
 keyboard user jump past them to the inset. The header at the top of the inset holds the trigger, a vertical
 [separator](../separator/) and the [breadcrumb](../breadcrumb/), as shadcn's blocks have it. Lay it out as a row
 yourself, or use a [site header](../site-header/), which does it for you, as the
-[sidebar layout](../../guides/application-shell/#the-sidebar-layout) does.
+[Collapses to icons](../../layouts/collapses-to-icons/) layout does.
 
 ## What goes inside
 
@@ -333,7 +334,7 @@ The phone panel ignores the state: it always opens with everything in it.
   as the plain sidebar, so a page lays out the same with either.
 - `inset` gives the sidebar no edge: its colour lies around the page, and `<sl:sidebar-inset>` becomes a card on it,
   with a margin, rounded corners (vega) and a shadow. The example at the top of this page, and the
-  [sidebar layout](../../guides/application-shell/#the-sidebar-layout), use it.
+  [Collapses to icons](../../layouts/collapses-to-icons/) layout, use it.
 
 <ComponentPreview id="sidebar--variant" />
 
@@ -380,7 +381,9 @@ panel, as with the other two.
 ## Side
 
 `side="end"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
-The default, `start`, is the left, or the right on a right-to-left page. The panel slides in from the same edge.
+The default, `start`, is the left, or the right on a right-to-left page. The panel slides in from the same edge, and
+the trigger's icon shows the panel on that side. The [On the end](../../layouts/sidebar-end/) layout puts a table of
+contents there.
 
 <ComponentPreview id="sidebar--side" />
 

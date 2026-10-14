@@ -1,0 +1,201 @@
+# A layout for the docs' Layouts section, rendered by PreviewGeneratorTest (see its javadoc for the keys). docs/tests/
+# layouts.spec.ts opens it at a desktop and a phone width; it expects the sub-button "Data Fetching" to be the current
+# page.
+title: Sub-menus
+description: >-
+  A sidebar of sections, each with its pages in a sub-menu that is always open, as in documentation. The current page
+  is a sub-button; the trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
+request: /build/data-fetching
+page:
+  title: Data Fetching
+  breadcrumb: |-
+    <sl:breadcrumb-item>
+      <sl:breadcrumb-link th:href="@{/build}">Build Your Application</sl:breadcrumb-link>
+    </sl:breadcrumb-item>
+    <sl:breadcrumb-separator/>
+    <sl:breadcrumb-item>
+      <sl:breadcrumb-page>Data Fetching</sl:breadcrumb-page>
+    </sl:breadcrumb-item>
+  content: |-
+    <div class="placeholder-grid">
+      <div class="placeholder"></div>
+      <div class="placeholder"></div>
+      <div class="placeholder"></div>
+    </div>
+    <div class="placeholder placeholder-tall"></div>
+css: |-
+  /* The square behind the logo in the sidebar's header. */
+  .app-logo {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-radius: calc(var(--radius) - 2px);
+    background: var(--sidebar-primary);
+    color: var(--sidebar-primary-foreground);
+  }
+  .app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+  /* The sections' links in a medium weight, their pages' in the normal one. */
+  .docs-nav > .sidebar-menu-item > .sidebar-menu-button { font-weight: 500; }
+
+  /* A border below the page's header, and the page's padding. */
+  .sidebar-inset > .site-header { border-block-end: 1px solid var(--border); }
+  .page { padding: 1rem; }
+  .page > h1 { margin-block-end: 1rem; font-size: 1.5rem; font-weight: 600; }
+source: |-
+  <sl:sidebar-provider>
+    <sl:sidebar>
+      <sl:sidebar-header>
+        <sl:sidebar-menu>
+          <sl:sidebar-menu-item>
+            <sl:sidebar-menu-button th:href="@{/}" size="lg">
+              <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="gallery-vertical-end"/></span></sl:slot>
+              <strong>Documentation</strong>
+              <small>v1.0.0</small>
+            </sl:sidebar-menu-button>
+          </sl:sidebar-menu-item>
+        </sl:sidebar-menu>
+      </sl:sidebar-header>
+      <sl:sidebar-content>
+        <sl:sidebar-group>
+          <sl:sidebar-menu class="docs-nav">
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/getting-started}"
+                                      th:active="${#slNav.current('/getting-started', true)}">
+                Getting Started
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/getting-started/installation}"
+                                              th:active="${#slNav.current('/getting-started/installation')}">
+                    Installation
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/getting-started/project-structure}"
+                                              th:active="${#slNav.current('/getting-started/project-structure')}">
+                    Project Structure
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/build}"
+                                      th:active="${#slNav.current('/build', true)}">
+                Build Your Application
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/routing}"
+                                              th:active="${#slNav.current('/build/routing')}">
+                    Routing
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/data-fetching}"
+                                              th:active="${#slNav.current('/build/data-fetching')}">
+                    Data Fetching
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/rendering}"
+                                              th:active="${#slNav.current('/build/rendering')}">
+                    Rendering
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/caching}"
+                                              th:active="${#slNav.current('/build/caching')}">
+                    Caching
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/build/styling}"
+                                              th:active="${#slNav.current('/build/styling')}">
+                    Styling
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/api}"
+                                      th:active="${#slNav.current('/api', true)}">
+                API Reference
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/api/components}"
+                                              th:active="${#slNav.current('/api/components')}">
+                    Components
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/api/file-conventions}"
+                                              th:active="${#slNav.current('/api/file-conventions')}">
+                    File Conventions
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/api/functions}"
+                                              th:active="${#slNav.current('/api/functions')}">
+                    Functions
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/architecture}"
+                                      th:active="${#slNav.current('/architecture', true)}">
+                Architecture
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/architecture/accessibility}"
+                                              th:active="${#slNav.current('/architecture/accessibility')}">
+                    Accessibility
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/architecture/fast-refresh}"
+                                              th:active="${#slNav.current('/architecture/fast-refresh')}">
+                    Fast Refresh
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/community}"
+                                      th:active="${#slNav.current('/community', true)}">
+                Community
+              </sl:sidebar-menu-button>
+              <sl:sidebar-menu-sub>
+                <sl:sidebar-menu-sub-item>
+                  <sl:sidebar-menu-sub-button th:href="@{/community/contribution-guide}"
+                                              th:active="${#slNav.current('/community/contribution-guide')}">
+                    Contribution Guide
+                  </sl:sidebar-menu-sub-button>
+                </sl:sidebar-menu-sub-item>
+              </sl:sidebar-menu-sub>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group>
+      </sl:sidebar-content>
+    </sl:sidebar>
+    <sl:sidebar-inset>
+      <sl:site-header>
+        <sl:sidebar-trigger/>
+        <sl:separator orientation="vertical"/>
+        <sl:breadcrumb>
+          <sl:breadcrumb-list>
+            <th:block th:replace="${breadcrumb}"></th:block>
+          </sl:breadcrumb-list>
+        </sl:breadcrumb>
+      </sl:site-header>
+      <div class="page">
+        <h1 th:text="${pageTitle}"></h1>
+        <div th:replace="${content}"></div>
+      </div>
+    </sl:sidebar-inset>
+  </sl:sidebar-provider>

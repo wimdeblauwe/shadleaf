@@ -1,0 +1,125 @@
+# A layout for the docs' Layouts section, rendered by PreviewGeneratorTest (see its javadoc for the keys): sample-02's
+# layout (templates/layout/main.html). docs/tests/layouts.spec.ts opens it at a desktop and a phone width; it expects
+# the link "Forms" to be the current page.
+title: Navigation in the header
+description: >-
+  For an application with a handful of pages: the pages as a row of links in the site header, the page as a card
+  below it, the theme toggle and the signed-in user's menu at the end. On a phone the menu button opens the same
+  navigation as a panel, with its icons and the panel-only parts.
+request: /forms
+user:
+  name: shadcn
+  email: m@example.com
+  photo: shadcn
+page:
+  title: Forms
+  content: |-
+    <div class="placeholder-grid">
+      <div class="placeholder"></div>
+      <div class="placeholder"></div>
+      <div class="placeholder"></div>
+    </div>
+    <div class="placeholder placeholder-tall"></div>
+css: |-
+  /* The square behind the logo in the panel's header. */
+  .app-logo {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border-radius: calc(var(--radius) - 2px);
+    background: var(--sidebar-primary);
+    color: var(--sidebar-primary-foreground);
+  }
+  .app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+  /* The page in the card, kept to a readable width. */
+  .page { max-width: 48rem; padding: 1.5rem 1rem 2rem; }
+  .page > h1 { margin-block-end: 1rem; font-size: 1.75rem; font-weight: 600; }
+source: |-
+  <sl:sidebar-provider>
+    <sl:site-header>
+      <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+      <sl:button as="a" th:href="@{/}" variant="ghost">
+        <sl:slot name="icon-start"><sl:icon name="leaf"/></sl:slot>
+        Acme
+      </sl:button>
+      <sl:sidebar placement="header" variant="inset">
+        <sl:sidebar-header panel-only>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/}" size="lg">
+                <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+                <strong>Acme</strong>
+                <small>Enterprise</small>
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-header>
+        <sl:sidebar-content>
+          <sl:sidebar-group>
+            <sl:sidebar-group-content>
+              <sl:sidebar-menu>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
+                    <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                    Home
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/forms}" th:active="${#slNav.current('/forms')}">
+                    <sl:slot name="icon-start"><sl:icon name="text-cursor-input"/></sl:slot>
+                    Forms
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/overlays}" th:active="${#slNav.current('/overlays')}">
+                    <sl:slot name="icon-start"><sl:icon name="layers"/></sl:slot>
+                    Overlays
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/data}" th:active="${#slNav.current('/data')}">
+                    <sl:slot name="icon-start"><sl:icon name="table"/></sl:slot>
+                    Data
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+              </sl:sidebar-menu>
+            </sl:sidebar-group-content>
+          </sl:sidebar-group>
+          <sl:sidebar-group id="nav-more" panel-only>
+            <sl:sidebar-group-label>More</sl:sidebar-group-label>
+            <sl:sidebar-group-content>
+              <sl:sidebar-menu>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
+                    <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+                    Settings
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+                <sl:sidebar-menu-item>
+                  <sl:sidebar-menu-button th:href="@{/help}" th:active="${#slNav.current('/help')}">
+                    <sl:slot name="icon-start"><sl:icon name="life-buoy"/></sl:slot>
+                    Help
+                  </sl:sidebar-menu-button>
+                </sl:sidebar-menu-item>
+              </sl:sidebar-menu>
+            </sl:sidebar-group-content>
+          </sl:sidebar-group>
+        </sl:sidebar-content>
+      </sl:sidebar>
+      <sl:slot name="end">
+        <sl:theme-toggle/>
+        <sl:user-menu as="header">
+          <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
+        </sl:user-menu>
+      </sl:slot>
+    </sl:site-header>
+    <sl:sidebar-inset>
+      <div class="page">
+        <h1 th:text="${pageTitle}"></h1>
+        <div th:replace="${content}"></div>
+      </div>
+    </sl:sidebar-inset>
+  </sl:sidebar-provider>

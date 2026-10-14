@@ -255,7 +255,8 @@ the trigger opens it as the panel (focus in, the rest of the page inert while it
 `expanded` or `collapsed` (shadcn's `sidebar_state` holds `true` or `false`) for a year instead of a week, and the
 server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
 the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
-the text direction. `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
+the text direction, and the trigger's icon turns round by itself for a sidebar on the end (shadcn's sidebar-14 adds
+`rotate-180`). `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
 So does `collapsible`: `offcanvas` and `icon` as shadcn's, while `none` only keeps the sidebar from collapsing on a
 desktop and is still the panel on a phone (shadcn's is a plain column at every width). See
 [Sidebar](../components/sidebar/).
@@ -292,8 +293,8 @@ inside `<sl:sidebar-inset>` too. shadcn/ui's sidebar has no header placement eit
 panel on a phone, and `panel-only` on a header, footer, group or menu item leaves it out of everything but the phone
 panel. See [Sidebar](../components/sidebar/#in-the-header) and [Site Header](../components/site-header/). sidebar-16's
 layout itself (that header across the whole page, the sidebar below it) is not supported: the sidebar is sticky at the
-top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The
-[Application shell](../guides/application-shell/) guide has the two layouts there are.
+top of the screen, so `<sl:sidebar-provider>` has to start at the top of the page. The Layouts section has the
+layouts there are, from [Sub-menus](../layouts/sub-menus/) on.
 
 ### User menu: a component, not a block
 

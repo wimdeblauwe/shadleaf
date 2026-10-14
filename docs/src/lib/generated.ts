@@ -18,6 +18,12 @@ export type Scenario = {
   showcase?: boolean;
   /** The frame's width in px, for a scenario shown as on a phone; otherwise the page's column. */
   width?: number | null;
+  /** A layout of the Layouts section: a whole page, previewed at a desktop and a phone width. */
+  layout?: boolean;
+  /** A layout's application CSS, its whole file and a page that uses it. */
+  css?: string | null;
+  template?: string | null;
+  page?: string | null;
 };
 
 export type Prop = {
