@@ -898,6 +898,31 @@
           }
         } ]
       }, {
+        "name" : "sl:dialog-body",
+        "description" : "The content of a `sl:dialog` between its header and footer, which scrolls by itself so the header and footer stay in view. Its content has the id `&lt;id&gt;-body` (`edit-body`), the target for htmx: a request from outside that targets it opens the dialog at once and shows a spinner until the answer is swapped in; closing aborts a request still running. Left empty, it is emptied again when the dialog closes, so it never shows the previous content. When a request fails, the error shows in the dialog, or, for the request that opened it, as a toast (see `load-error`). Needs Alpine.",
+        "attributes" : [ {
+          "name" : "load-error",
+          "description" : "What happens when the request that opened the dialog fails: `toast` closes it and shows the error as a toast (shown in the dialog when the page has no `sl:toaster`); `inline` keeps it open with the error in it. A failed request from inside (a form) always shows the error in the dialog, so nothing typed is lost.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "toast"
+          }, {
+            "name" : "inline"
+          } ],
+          "default" : "toast"
+        }, {
+          "name" : "th:load-error",
+          "description" : "`load-error` from a Thymeleaf expression, e.g. `th:load-error=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:dialog-description",
         "description" : "Supporting text below a `sl:dialog-title`, which describes the dialog (`aria-describedby`). Its id derives from the dialog's (`edit-profile-description`).",
         "attributes" : [ ]
@@ -2462,6 +2487,31 @@
         }, {
           "name" : "th:close-button",
           "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:sheet-body",
+        "description" : "The content of a `sl:sheet` between its header and footer, which scrolls by itself so the header and footer stay in view. Its content has the id `&lt;id&gt;-body` (`edit-body`), the target for htmx: a request from outside that targets it opens the sheet at once and shows a spinner until the answer is swapped in; closing aborts a request still running. Left empty, it is emptied again when the sheet closes, so it never shows the previous content. When a request fails, the error shows in the sheet, or, for the request that opened it, as a toast (see `load-error`). Needs Alpine.",
+        "attributes" : [ {
+          "name" : "load-error",
+          "description" : "What happens when the request that opened the sheet fails: `toast` closes it and shows the error as a toast (shown in the sheet when the page has no `sl:toaster`); `inline` keeps it open with the error in it. A failed request from inside (a form) always shows the error in the sheet, so nothing typed is lost.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "toast"
+          }, {
+            "name" : "inline"
+          } ],
+          "default" : "toast"
+        }, {
+          "name" : "th:load-error",
+          "description" : "`load-error` from a Thymeleaf expression, e.g. `th:load-error=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
