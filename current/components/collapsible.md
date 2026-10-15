@@ -105,7 +105,7 @@ Attributes of `<sl:collapsible-trigger>`: What the user clicks to open and close
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `default`, `outline`, `secondary`, `ghost`, `destructive`, `link` | — | Draw the trigger as a button of this variant, as on `sl:button`. |
+| `variant` | `default`, `outline`, `ghost`, `destructive`, `secondary`, `link` | — | Draw the trigger as a button of this variant, as on `sl:button`. |
 | `size` | `xs`, `sm`, `default`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg` | — | Draw the trigger as a button of this size, as on `sl:button`. The `icon` sizes need an `aria-label`. |
 
 Every prop can also be set from an expression: `th:variant="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended. An `aria-label` or `aria-labelledby` is required when `size` is `icon` or `icon-xs` or `icon-sm` or `icon-lg`; rendering fails without one.

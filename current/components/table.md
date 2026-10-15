@@ -401,7 +401,7 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
     </tr>
   </tbody>
 </sl:table>
-<sl:table-selection-count table="people-selection"/>
+<sl:table-selection-count for="people-selection"/>
 ```
 
 ```html
@@ -426,7 +426,7 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
   <sl:button type="submit" variant="destructive">Delete selected</sl:button>
 </form>
 <div class="table-footer">
-  <sl:table-selection-count table="people-table"/>
+  <sl:table-selection-count for="people-table"/>
   <sl:pagination th:page="${people}"/>
 </div>
 ```
@@ -571,6 +571,6 @@ Attributes of `<sl:table-selection-count>`: How many rows of a `sl:table` are se
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `table` | *string* | **required** | The `id` of the table whose rows it counts (`sl:table` puts its `id` on the `table`). |
+| `for` | *string* | **required** | The `id` of the table whose rows it counts (`sl:table` puts its `id` on the `table`). |
 
-Every prop can also be set from an expression: `th:table="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:for="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.

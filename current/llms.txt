@@ -3,7 +3,7 @@
 > shadcn/ui for Thymeleaf, as a Spring Boot starter. Components are Thymeleaf tags with the `sl:` prefix
 > (`<sl:button variant="outline">`), rendered on the server. Not React: no JSX, no Radix, no `asChild`.
 
-These docs describe Shadleaf 0.8.0. The docs of other versions live next to this one, at /shadleaf/<version>/.
+These docs describe Shadleaf 0.9.0. The docs of other versions live next to this one, at /shadleaf/<version>/.
 
 Read "Using Shadleaf with coding agents" first: it lists the rules an agent most often gets wrong. Every component
 page ends with its attribute table (props, allowed values, defaults); the examples are the Thymeleaf source to write.

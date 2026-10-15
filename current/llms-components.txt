@@ -2,7 +2,7 @@
 
 > Every Shadleaf component: examples as Thymeleaf source, and attribute tables.
 
-Shadleaf 0.8.0.
+Shadleaf 0.9.0.
 
 ## Components
 
@@ -222,7 +222,7 @@ so the button works with htmx and Alpine. `class` is appended to the component's
 
 ### Attributes
 
-Attributes of `<sl:button>`: A button, or with `as="a"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`.
+Attributes of `<sl:button>`: A button, or with `as="a"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `button`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -804,7 +804,7 @@ With one global error, that renders:
 
 ```html
 <div class="form-errors alert" data-variant="destructive" tabindex="-1" id="signup-errors">
-  <svg class="sl-icon" aria-hidden="true" ...>...</svg>
+  <svg class="icon" aria-hidden="true" ...>...</svg>
   <div class="alert-title">There is a problem</div>
   <div class="alert-description">The passwords do not match.</div>
 </div>
@@ -1988,20 +1988,20 @@ dialog and `command` says what to do. No JavaScript of yours is involved.
 </sl:dialog>
 ```
 
-The close button in the corner does the same; `close-button="false"` leaves it out. `<sl:dialog-footer close-button>`
+The close button in the corner does the same; `show-close-button="false"` leaves it out. `<sl:dialog-footer show-close-button>`
 adds an outline "Close" button after the footer's own actions.
 
 **Example: Close button in the footer.** No close button in the corner; the footer has one instead.
 
 ```html
 <sl:button variant="outline" commandfor="share-link" command="show-modal">Share</sl:button>
-<sl:dialog id="share-link" close-button="false">
+<sl:dialog id="share-link" show-close-button="false">
   <sl:dialog-header>
     <sl:dialog-title>Share link</sl:dialog-title>
     <sl:dialog-description>Anyone who has this link will be able to view this.</sl:dialog-description>
   </sl:dialog-header>
   <sl:input aria-label="Link" value="https://ui.shadcn.com/docs/installation" readonly/>
-  <sl:dialog-footer close-button/>
+  <sl:dialog-footer show-close-button/>
 </sl:dialog>
 ```
 
@@ -2132,7 +2132,7 @@ form swaps itself, and `HX-Trigger: sl-dialog-close` closes the dialog.
     <sl:dialog-description>Changes are saved when you click Save.</sl:dialog-description>
   </sl:dialog-header>
   <sl:dialog-body data-loading="true"/>
-  <sl:dialog-footer close-button/>
+  <sl:dialog-footer show-close-button/>
 </sl:dialog>
 ```
 
@@ -2193,7 +2193,7 @@ Attributes of `<sl:dialog>`: A modal dialog on the native `dialog` element: the 
 | --- | --- | --- | --- |
 | `id` | *string* | **required** | The dialog's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it. |
 | `open` | *boolean* | — | Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap, or a page shown after a redirect). Needs Alpine. |
-| `close-button` | *boolean* | `true` | A close button (an x) in the corner. |
+| `show-close-button` | *boolean* | `true` | A close button (an x) in the corner. |
 
 Every prop can also be set from an expression: `th:id="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -2235,9 +2235,9 @@ Attributes of `<sl:dialog-footer>`: The bottom of a `sl:dialog`, for its actions
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `close-button` | *boolean* | — | An outline "Close" button after the other actions. |
+| `show-close-button` | *boolean* | — | An outline "Close" button after the other actions. |
 
-Every prop can also be set from an expression: `th:close-button="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:show-close-button="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ### JavaScript
 
@@ -2571,7 +2571,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/current/components/sheet/
         <sl:input name="username" value="@peduarte"/>
       </sl:field>
     </sl:field-group>
-    <sl:sheet-footer close-button>
+    <sl:sheet-footer show-close-button>
       <sl:button type="submit">Save changes</sl:button>
     </sl:sheet-footer>
   </sl:sheet>
@@ -2596,7 +2596,7 @@ settings, the details of a row. It is `<sl:sheet>` plus the parts you need, as i
     <sl:field-group>
       ...
     </sl:field-group>
-    <sl:sheet-footer close-button>
+    <sl:sheet-footer show-close-button>
       <sl:button type="submit">Save changes</sl:button>
     </sl:sheet-footer>
   </sl:sheet>
@@ -2638,7 +2638,7 @@ view.
       </sl:field>
     </sl:field-group>
   </sl:sheet-body>
-  <sl:sheet-footer close-button>
+  <sl:sheet-footer show-close-button>
     <sl:button type="submit">Save changes</sl:button>
   </sl:sheet-footer>
 </sl:sheet>
@@ -2662,28 +2662,28 @@ quarters of its width, up to a maximum.
     <sl:sheet-title>From the top</sl:sheet-title>
     <sl:sheet-description>A sheet on the top edge, as wide as the screen.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 <sl:sheet id="sheet-right" side="right">
   <sl:sheet-header>
     <sl:sheet-title>From the right</sl:sheet-title>
     <sl:sheet-description>The default: the end of the line, which is the left on a right-to-left page.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 <sl:sheet id="sheet-bottom" side="bottom">
   <sl:sheet-header>
     <sl:sheet-title>From the bottom</sl:sheet-title>
     <sl:sheet-description>A sheet on the bottom edge, as wide as the screen.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 <sl:sheet id="sheet-left" side="left">
   <sl:sheet-header>
     <sl:sheet-title>From the left</sl:sheet-title>
     <sl:sheet-description>The start of the line, which is the right on a right-to-left page.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 ```
 
@@ -2695,19 +2695,19 @@ it only fades.
 
 ### Close buttons
 
-The close button in the corner is on by default; `close-button="false"` leaves it out. `<sl:sheet-footer
-close-button>` adds an outline "Close" button after the footer's own actions.
+The close button in the corner is on by default; `show-close-button="false"` leaves it out. `<sl:sheet-footer
+show-close-button>` adds an outline "Close" button after the footer's own actions.
 
-**Example: No close button in the corner.** close-button="false" leaves the x out; the footer's close button remains.
+**Example: No close button in the corner.** show-close-button="false" leaves the x out; the footer's close button remains.
 
 ```html
 <sl:button variant="outline" commandfor="sheet-notifications" command="show-modal">Notifications</sl:button>
-<sl:sheet id="sheet-notifications" close-button="false">
+<sl:sheet id="sheet-notifications" show-close-button="false">
   <sl:sheet-header>
     <sl:sheet-title>Notifications</sl:sheet-title>
     <sl:sheet-description>You have no unread messages.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 ```
 
@@ -2736,7 +2736,7 @@ sheet closes, so it never shows the previous row while the next one loads.
        <sl:sheet-title>Member details</sl:sheet-title>
      </sl:sheet-header>
      <sl:sheet-body/>
-     <sl:sheet-footer close-button/>
+     <sl:sheet-footer show-close-button/>
    </sl:sheet>
    ```
 
@@ -2784,7 +2784,7 @@ spinner:
     <sl:sheet-title>Member details</sl:sheet-title>
   </sl:sheet-header>
   <sl:sheet-body data-loading="true"/>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 ```
 
@@ -2819,7 +2819,7 @@ in the page and the form is what htmx loads, so the submit button points at the 
     <sl:sheet-title>Edit member</sl:sheet-title>
   </sl:sheet-header>
   <sl:sheet-body/>
-  <sl:sheet-footer close-button>
+  <sl:sheet-footer show-close-button>
     <sl:button type="submit" form="member-edit-form">Save</sl:button>
   </sl:sheet-footer>
 </sl:sheet>
@@ -2896,7 +2896,7 @@ Attributes of `<sl:sheet>`: A dialog that slides in from an edge of the screen, 
 | `id` | *string* | **required** | The sheet's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it. |
 | `side` | `top`, `right`, `bottom`, `left` | `right` | The edge it slides in from. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` sheet opens on the left. |
 | `open` | *boolean* | — | Open the sheet as soon as it is on the page, for a sheet the server renders in answer to a request (an htmx swap). Needs Alpine. |
-| `close-button` | *boolean* | `true` | A close button (an x) in the corner. |
+| `show-close-button` | *boolean* | `true` | A close button (an x) in the corner. |
 
 Every prop can also be set from an expression: `th:id="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -2938,9 +2938,9 @@ Attributes of `<sl:sheet-footer>`: The bottom of a `sl:sheet`, for its actions, 
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `close-button` | *boolean* | — | An outline "Close" button after the other actions. |
+| `show-close-button` | *boolean* | — | An outline "Close" button after the other actions. |
 
-Every prop can also be set from an expression: `th:close-button="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:show-close-button="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ### JavaScript
 
@@ -3822,7 +3822,11 @@ Every prop can also be set from an expression: `th:variant="${...}"`. Any other 
 
 Attributes of `<sl:alert-title>`: The title of an alert, inside `sl:alert`.
 
-`sl:alert-title` declares no props; every attribute passes through.
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui. |
+
+Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 #### sl:alert-description
 
@@ -4607,7 +4611,7 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
     </tr>
   </tbody>
 </sl:table>
-<sl:table-selection-count table="people-selection"/>
+<sl:table-selection-count for="people-selection"/>
 ```
 
 ```html
@@ -4632,7 +4636,7 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
   <sl:button type="submit" variant="destructive">Delete selected</sl:button>
 </form>
 <div class="table-footer">
-  <sl:table-selection-count table="people-table"/>
+  <sl:table-selection-count for="people-table"/>
   <sl:pagination th:page="${people}"/>
 </div>
 ```
@@ -4777,9 +4781,9 @@ Attributes of `<sl:table-selection-count>`: How many rows of a `sl:table` are se
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `table` | *string* | **required** | The `id` of the table whose rows it counts (`sl:table` puts its `id` on the `table`). |
+| `for` | *string* | **required** | The `id` of the table whose rows it counts (`sl:table` puts its `id` on the `table`). |
 
-Every prop can also be set from an expression: `th:table="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:for="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ---
 
@@ -5309,7 +5313,7 @@ in the header ([Navigation in the header](https://wimdeblauwe.github.io/shadleaf
 ### The signed-in user
 
 Both layouts have a place for the user: the sidebar's footer, and the site header's `end` slot. The
-[user menu](https://wimdeblauwe.github.io/shadleaf/current/components/user-menu.md) goes in either (`as="header"` in the site header): the signed-in user from
+[user menu](https://wimdeblauwe.github.io/shadleaf/current/components/user-menu.md) goes in either (`placement="header"` in the site header): the signed-in user from
 Spring Security with a menu that signs out, or a Sign in link for an anonymous visitor, so one layout serves public
 pages too. Sign out posts a form with the CSRF token; `hx-boost="false"` on it keeps a boosted body from sending it
 with htmx. Where the user comes from, and how to change it, is in the [Spring Security](https://wimdeblauwe.github.io/shadleaf/current/guides/spring-security.md#the-signed-in-user)
@@ -6264,16 +6268,17 @@ panel, as with the other two.
 
 ### Side
 
-`side="end"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
-The default, `start`, is the left, or the right on a right-to-left page. The panel slides in from the same edge, and
+`side="right"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
+The default, `left`, is the start of the line: the left, or the right on a right-to-left page. The sheet's sides work
+the same way. The panel slides in from the same edge, and
 the trigger's icon shows the panel on that side. The [On the end](https://wimdeblauwe.github.io/shadleaf/current/layouts/sidebar-end.md) layout puts a table of
 contents there.
 
-**Example: On the end.** side="end" puts the sidebar on the end of the line (the right, or the left on a right-to-left page).
+**Example: On the end.** side="right" puts the sidebar on the end of the line (the right, or the left on a right-to-left page).
 
 ```html
 <sl:sidebar-provider>
-  <sl:sidebar id="sidebar-end" side="end">
+  <sl:sidebar id="sidebar-end" side="right">
     <sl:sidebar-content>
       <sl:sidebar-group>
         <sl:sidebar-group-content>
@@ -6432,7 +6437,7 @@ first and `<sl:sidebar-inset>` below it:
     <sl:slot name="end">
       <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
       <sl:theme-toggle/>
-      <sl:user-menu as="header" id="header-user-menu">
+      <sl:user-menu placement="header" id="header-user-menu">
         <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
       </sl:user-menu>
     </sl:slot>
@@ -6565,7 +6570,7 @@ groups, and the panel-only parts.
     <sl:slot name="end">
       <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
       <sl:theme-toggle/>
-      <sl:user-menu as="header" id="header-user-menu">
+      <sl:user-menu placement="header" id="header-user-menu">
         <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
       </sl:user-menu>
     </sl:slot>
@@ -6666,7 +6671,7 @@ Attributes of `<sl:sidebar>`: The application's navigation, inside `sl:sidebar-p
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
 | `id` | *string* | `sidebar` | The id the trigger points at (`sl:sidebar-trigger`'s `for`). |
-| `side` | `start`, `end` | `start` | The edge it sits on: the start of a line (the left, or the right on a right-to-left page) or the end. |
+| `side` | `left`, `right` | `left` | The edge it sits on, as on `sl:sheet`: `left` is the start of a line and `right` the end, so they swap on a right-to-left page. |
 | `placement` | `sidebar`, `header` | `sidebar` | Where it sits on a desktop: `sidebar` is a column beside the page; `header` a row of links inside `sl:site-header` (the header layout), which never collapses: `collapsible`, the collapsed state and the trigger do not apply there (the trigger is hidden), and `side` only picks the phone panel's edge. Collapsible items and the parts marked `panel-only` are left out of the row; the phone panel is the same for both. |
 | `variant` | `sidebar`, `floating`, `inset` | `sidebar` | How it looks on a desktop: `sidebar` is a column along the edge with a border; `floating` a panel with a margin all round; `inset` lays the sidebar's ground around the page, which (`sl:sidebar-inset`) becomes a card on it. The phone panel looks the same for all three. In the header placement only `inset` counts: the page becomes a card below the header. |
 | `collapsible` | `offcanvas`, `icon`, `none` | `offcanvas` | How it collapses on a desktop: `offcanvas` moves it out of view entirely; `icon` narrows it to a strip of its menu buttons' icons (labels, badges, actions and sub-menus hidden; a menu button's `tooltip` shows its label); `none` never collapses it, and the trigger is hidden on a desktop. The phone panel is the same for all three. |
@@ -7022,7 +7027,7 @@ it.
     <sl:slot name="end">
       <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
       <sl:theme-toggle/>
-      <sl:user-menu as="header" id="header-user-menu">
+      <sl:user-menu placement="header" id="header-user-menu">
         <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
       </sl:user-menu>
     </sl:slot>
@@ -7121,10 +7126,10 @@ login's user is named by the username), or nothing.
 
 ### In the site header
 
-`as="header"` makes it a round button with the picture alone, for the `end` slot of a
+`placement="header"` makes it a round button with the picture alone, for the `end` slot of a
 [site header](https://wimdeblauwe.github.io/shadleaf/current/components/site-header.md), as in the header layout:
 
-**Example: In the site header.** as="header": a round button with the picture, named "Account: " and the user's name, at the end of a sl:site-header. The menu opens below it, lined up with its end.
+**Example: In the site header.** placement="header": a round button with the picture, named "Account: " and the user's name, at the end of a sl:site-header. The menu opens below it, lined up with its end.
 
 ```html
 <sl:site-header>
@@ -7133,7 +7138,7 @@ login's user is named by the username), or nothing.
     Acme Inc.
   </sl:button>
   <sl:slot name="end">
-    <sl:user-menu as="header" id="user-menu-header">
+    <sl:user-menu placement="header" id="user-menu-header">
       <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
       <sl:dropdown-menu-item as="a" href="/settings"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
     </sl:user-menu>
@@ -7146,7 +7151,7 @@ login's user is named by the username), or nothing.
   ...
   <sl:slot name="end">
     <sl:theme-toggle/>
-    <sl:user-menu as="header">
+    <sl:user-menu placement="header">
       <sl:dropdown-menu-item as="a" th:href="@{/account}"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
     </sl:user-menu>
   </sl:slot>
@@ -7168,7 +7173,7 @@ image.
 ```html
 <sl:site-header>
   <sl:slot name="end">
-    <sl:user-menu as="header" id="user-menu-initials"/>
+    <sl:user-menu placement="header" id="user-menu-initials"/>
   </sl:slot>
 </sl:site-header>
 ```
@@ -7188,7 +7193,7 @@ client (`/oauth2/authorization/github`), or what `shadleaf.security.login-url` s
     Acme Inc.
   </sl:button>
   <sl:slot name="end">
-    <sl:user-menu as="header"/>
+    <sl:user-menu placement="header"/>
   </sl:slot>
 </sl:site-header>
 ```
@@ -7241,7 +7246,7 @@ sl.user-menu.sign-in=Sign in
 sl.user-menu.sign-out=Sign out
 ```
 
-`{0}` is the user's name. An `aria-label` on `<sl:user-menu as="header">` replaces the header button's name for one
+`{0}` is the user's name. An `aria-label` on `<sl:user-menu placement="header">` replaces the header button's name for one
 menu. In the sidebar the button is named by the name and email it shows, and the Sign in link by its text, so an
 `aria-label` is left out there.
 
@@ -7280,12 +7285,12 @@ Attributes of `<sl:user-menu>`: The signed-in user (`#slUser.current`) with a me
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `as` | `sidebar`, `header` | `sidebar` | `sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named "Account: " and the user's name. |
+| `placement` | `sidebar`, `header` | `sidebar` | `sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named "Account: " and the user's name. |
 | `id` | *string* | `user-menu` | The menu's id. Its button gets the id with `-trigger` added, the sign-out form with `-sign-out`. Two user menus on a page need different ids. |
 | `side` | `top`, `right`, `bottom`, `left` | — | The side of the button the menu opens on, as on `sl:dropdown-menu-content`. By default `right` in the sidebar (below the button in the phone panel) and `bottom` in the header. |
 | `align` | `start`, `center`, `end` | `end` | How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`. |
 
-Every prop can also be set from an expression: `th:as="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:placement="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ---
 
@@ -8259,7 +8264,7 @@ Attributes of `<sl:collapsible-trigger>`: What the user clicks to open and close
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `default`, `outline`, `secondary`, `ghost`, `destructive`, `link` | — | Draw the trigger as a button of this variant, as on `sl:button`. |
+| `variant` | `default`, `outline`, `ghost`, `destructive`, `secondary`, `link` | — | Draw the trigger as a button of this variant, as on `sl:button`. |
 | `size` | `xs`, `sm`, `default`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg` | — | Draw the trigger as a button of this size, as on `sl:button`. The `icon` sizes need an `aria-label`. |
 
 Every prop can also be set from an expression: `th:variant="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended. An `aria-label` or `aria-labelledby` is required when `size` is `icon` or `icon-xs` or `icon-sm` or `icon-lg`; rendering fails without one.

@@ -12,7 +12,7 @@ Shadleaf needs Java 17, Spring Boot 4 and Thymeleaf. Your application needs no N
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>shadleaf-spring-boot-starter</artifactId>
-  <version>0.8.0</version>
+  <version>0.9.0</version>
 </dependency>
 ```
 

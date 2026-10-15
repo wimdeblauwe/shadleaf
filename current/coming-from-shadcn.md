@@ -89,7 +89,7 @@ shadcn's destructive example colours the media with `className="bg-destructive/1
 `<sl:sheet>` is a dialog on an edge of the screen, with `SheetTrigger` and `SheetClose` replaced by `commandfor`, as
 for the dialog. Content between the header and the footer gets the sheet's inline padding, where shadcn's examples
 wrap it in a `div` with `px-4`. `side="right"` and `"left"` are the end and the start of a line, so they swap on a
-right-to-left page. `<sl:sheet-footer close-button>` adds an outline Close button, as the dialog footer does. With
+right-to-left page. `<sl:sheet-footer show-close-button>` adds an outline Close button, as the dialog footer does. With
 reduced motion the sheet only fades. See [Sheet](https://wimdeblauwe.github.io/shadleaf/current/components/sheet.md).
 
 ### Dialog and sheet bodies: an addition for htmx
@@ -255,8 +255,8 @@ the trigger opens it as the panel (focus in, the rest of the page inert while it
 `<sl:sidebar-provider>`'s `data-state` (shadcn also puts it on the sidebar), the cookie is `sl-sidebar-state` with
 `expanded` or `collapsed` (shadcn's `sidebar_state` holds `true` or `false`) for a year instead of a week, and the
 server reads it: `defaultOpen` is `default-state`, `open` is `state`, and there is no `onOpenChange` or `useSidebar()`;
-the `sl-sidebar-toggle` event tells a script. `side` is `start` or `end` rather than `left` or `right`, so it follows
-the text direction, and the trigger's icon turns round by itself for a sidebar on the end (shadcn's sidebar-14 adds
+the `sl-sidebar-toggle` event tells a script. `side="right"` and `"left"` are the end and the start of a line, as
+for the sheet, and the trigger's icon turns round by itself for a sidebar on the end (shadcn's sidebar-14 adds
 `rotate-180`). `variant` is shadcn's (`sidebar`, `floating`, `inset`) and, as there, changes the desktop only.
 So does `collapsible`: `offcanvas` and `icon` as shadcn's, while `none` only keeps the sidebar from collapsing on a
 desktop and is still the panel on a phone (shadcn's is a plain column at every width). See
@@ -308,7 +308,7 @@ layouts there are, from [Sub-menus](https://wimdeblauwe.github.io/shadleaf/curre
 
 shadcn's `NavUser` is part of its sidebar blocks, with the user passed in as props and a Log out item that does
 nothing. `<sl:user-menu>` is a component: the user comes from Spring Security (`#slUser`), Sign out posts a form with
-the CSRF token, and an anonymous visitor gets a Sign in link. `as="header"` gives the picture-only button for a site
+the CSRF token, and an anonymous visitor gets a Sign in link. `placement="header"` gives the picture-only button for a site
 header. The avatar stays round in the menu, where `NavUser` makes it a rounded square, and the menu's items are what you
 put inside the component (shadcn's "Upgrade to Pro", "Account", "Billing" and "Notifications" are the block's own). The
 team switcher and the version switcher stay examples on the Sidebar page, as in shadcn's docs: see

@@ -110,7 +110,7 @@ Content-Security-Policy). Sample-02 also has an Admin link for admins only, left
     </sl:sidebar>
     <sl:slot name="end">
       <sl:theme-toggle/>
-      <sl:user-menu as="header">
+      <sl:user-menu placement="header">
         <sl:dropdown-menu-item as="a" th:href="@{/settings}"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
       </sl:user-menu>
     </sl:slot>

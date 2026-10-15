@@ -40,7 +40,7 @@ With one global error, that renders:
 
 ```html
 <div class="form-errors alert" data-variant="destructive" tabindex="-1" id="signup-errors">
-  <svg class="sl-icon" aria-hidden="true" ...>...</svg>
+  <svg class="icon" aria-hidden="true" ...>...</svg>
   <div class="alert-title">There is a problem</div>
   <div class="alert-description">The passwords do not match.</div>
 </div>

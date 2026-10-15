@@ -893,16 +893,17 @@ panel, as with the other two.
 
 ## Side
 
-`side="end"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
-The default, `start`, is the left, or the right on a right-to-left page. The panel slides in from the same edge, and
+`side="right"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
+The default, `left`, is the start of the line: the left, or the right on a right-to-left page. The sheet's sides work
+the same way. The panel slides in from the same edge, and
 the trigger's icon shows the panel on that side. The [On the end](https://wimdeblauwe.github.io/shadleaf/current/layouts/sidebar-end.md) layout puts a table of
 contents there.
 
-**Example: On the end.** side="end" puts the sidebar on the end of the line (the right, or the left on a right-to-left page).
+**Example: On the end.** side="right" puts the sidebar on the end of the line (the right, or the left on a right-to-left page).
 
 ```html
 <sl:sidebar-provider>
-  <sl:sidebar id="sidebar-end" side="end">
+  <sl:sidebar id="sidebar-end" side="right">
     <sl:sidebar-content>
       <sl:sidebar-group>
         <sl:sidebar-group-content>
@@ -1061,7 +1062,7 @@ first and `<sl:sidebar-inset>` below it:
     <sl:slot name="end">
       <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
       <sl:theme-toggle/>
-      <sl:user-menu as="header" id="header-user-menu">
+      <sl:user-menu placement="header" id="header-user-menu">
         <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
       </sl:user-menu>
     </sl:slot>
@@ -1194,7 +1195,7 @@ groups, and the panel-only parts.
     <sl:slot name="end">
       <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
       <sl:theme-toggle/>
-      <sl:user-menu as="header" id="header-user-menu">
+      <sl:user-menu placement="header" id="header-user-menu">
         <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
       </sl:user-menu>
     </sl:slot>
@@ -1295,7 +1296,7 @@ Attributes of `<sl:sidebar>`: The application's navigation, inside `sl:sidebar-p
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
 | `id` | *string* | `sidebar` | The id the trigger points at (`sl:sidebar-trigger`'s `for`). |
-| `side` | `start`, `end` | `start` | The edge it sits on: the start of a line (the left, or the right on a right-to-left page) or the end. |
+| `side` | `left`, `right` | `left` | The edge it sits on, as on `sl:sheet`: `left` is the start of a line and `right` the end, so they swap on a right-to-left page. |
 | `placement` | `sidebar`, `header` | `sidebar` | Where it sits on a desktop: `sidebar` is a column beside the page; `header` a row of links inside `sl:site-header` (the header layout), which never collapses: `collapsible`, the collapsed state and the trigger do not apply there (the trigger is hidden), and `side` only picks the phone panel's edge. Collapsible items and the parts marked `panel-only` are left out of the row; the phone panel is the same for both. |
 | `variant` | `sidebar`, `floating`, `inset` | `sidebar` | How it looks on a desktop: `sidebar` is a column along the edge with a border; `floating` a panel with a margin all round; `inset` lays the sidebar's ground around the page, which (`sl:sidebar-inset`) becomes a card on it. The phone panel looks the same for all three. In the header placement only `inset` counts: the page becomes a card below the header. |
 | `collapsible` | `offcanvas`, `icon`, `none` | `offcanvas` | How it collapses on a desktop: `offcanvas` moves it out of view entirely; `icon` narrows it to a strip of its menu buttons' icons (labels, badges, actions and sub-menus hidden; a menu button's `tooltip` shows its label); `none` never collapses it, and the trigger is hidden on a desktop. The phone panel is the same for all three. |

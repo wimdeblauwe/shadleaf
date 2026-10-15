@@ -26,7 +26,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/current/components/sheet/
         <sl:input name="username" value="@peduarte"/>
       </sl:field>
     </sl:field-group>
-    <sl:sheet-footer close-button>
+    <sl:sheet-footer show-close-button>
       <sl:button type="submit">Save changes</sl:button>
     </sl:sheet-footer>
   </sl:sheet>
@@ -51,7 +51,7 @@ settings, the details of a row. It is `<sl:sheet>` plus the parts you need, as i
     <sl:field-group>
       ...
     </sl:field-group>
-    <sl:sheet-footer close-button>
+    <sl:sheet-footer show-close-button>
       <sl:button type="submit">Save changes</sl:button>
     </sl:sheet-footer>
   </sl:sheet>
@@ -93,7 +93,7 @@ view.
       </sl:field>
     </sl:field-group>
   </sl:sheet-body>
-  <sl:sheet-footer close-button>
+  <sl:sheet-footer show-close-button>
     <sl:button type="submit">Save changes</sl:button>
   </sl:sheet-footer>
 </sl:sheet>
@@ -117,28 +117,28 @@ quarters of its width, up to a maximum.
     <sl:sheet-title>From the top</sl:sheet-title>
     <sl:sheet-description>A sheet on the top edge, as wide as the screen.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 <sl:sheet id="sheet-right" side="right">
   <sl:sheet-header>
     <sl:sheet-title>From the right</sl:sheet-title>
     <sl:sheet-description>The default: the end of the line, which is the left on a right-to-left page.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 <sl:sheet id="sheet-bottom" side="bottom">
   <sl:sheet-header>
     <sl:sheet-title>From the bottom</sl:sheet-title>
     <sl:sheet-description>A sheet on the bottom edge, as wide as the screen.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 <sl:sheet id="sheet-left" side="left">
   <sl:sheet-header>
     <sl:sheet-title>From the left</sl:sheet-title>
     <sl:sheet-description>The start of the line, which is the right on a right-to-left page.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 ```
 
@@ -150,19 +150,19 @@ it only fades.
 
 ## Close buttons
 
-The close button in the corner is on by default; `close-button="false"` leaves it out. `<sl:sheet-footer
-close-button>` adds an outline "Close" button after the footer's own actions.
+The close button in the corner is on by default; `show-close-button="false"` leaves it out. `<sl:sheet-footer
+show-close-button>` adds an outline "Close" button after the footer's own actions.
 
-**Example: No close button in the corner.** close-button="false" leaves the x out; the footer's close button remains.
+**Example: No close button in the corner.** show-close-button="false" leaves the x out; the footer's close button remains.
 
 ```html
 <sl:button variant="outline" commandfor="sheet-notifications" command="show-modal">Notifications</sl:button>
-<sl:sheet id="sheet-notifications" close-button="false">
+<sl:sheet id="sheet-notifications" show-close-button="false">
   <sl:sheet-header>
     <sl:sheet-title>Notifications</sl:sheet-title>
     <sl:sheet-description>You have no unread messages.</sl:sheet-description>
   </sl:sheet-header>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 ```
 
@@ -191,7 +191,7 @@ sheet closes, so it never shows the previous row while the next one loads.
        <sl:sheet-title>Member details</sl:sheet-title>
      </sl:sheet-header>
      <sl:sheet-body/>
-     <sl:sheet-footer close-button/>
+     <sl:sheet-footer show-close-button/>
    </sl:sheet>
    ```
 
@@ -239,7 +239,7 @@ spinner:
     <sl:sheet-title>Member details</sl:sheet-title>
   </sl:sheet-header>
   <sl:sheet-body data-loading="true"/>
-  <sl:sheet-footer close-button/>
+  <sl:sheet-footer show-close-button/>
 </sl:sheet>
 ```
 
@@ -274,7 +274,7 @@ in the page and the form is what htmx loads, so the submit button points at the 
     <sl:sheet-title>Edit member</sl:sheet-title>
   </sl:sheet-header>
   <sl:sheet-body/>
-  <sl:sheet-footer close-button>
+  <sl:sheet-footer show-close-button>
     <sl:button type="submit" form="member-edit-form">Save</sl:button>
   </sl:sheet-footer>
 </sl:sheet>
@@ -351,7 +351,7 @@ Attributes of `<sl:sheet>`: A dialog that slides in from an edge of the screen, 
 | `id` | *string* | **required** | The sheet's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it. |
 | `side` | `top`, `right`, `bottom`, `left` | `right` | The edge it slides in from. `right` and `left` are the end and the start of a line: on a right-to-left page a `right` sheet opens on the left. |
 | `open` | *boolean* | — | Open the sheet as soon as it is on the page, for a sheet the server renders in answer to a request (an htmx swap). Needs Alpine. |
-| `close-button` | *boolean* | `true` | A close button (an x) in the corner. |
+| `show-close-button` | *boolean* | `true` | A close button (an x) in the corner. |
 
 Every prop can also be set from an expression: `th:id="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -393,9 +393,9 @@ Attributes of `<sl:sheet-footer>`: The bottom of a `sl:sheet`, for its actions, 
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `close-button` | *boolean* | — | An outline "Close" button after the other actions. |
+| `show-close-button` | *boolean* | — | An outline "Close" button after the other actions. |
 
-Every prop can also be set from an expression: `th:close-button="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:show-close-button="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ## JavaScript
 

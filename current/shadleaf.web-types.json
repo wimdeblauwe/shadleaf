@@ -1,7 +1,7 @@
 {
   "$schema" : "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name" : "shadleaf",
-  "version" : "0.8.0",
+  "version" : "0.9.0",
   "description-markup" : "markdown",
   "contributions" : {
     "html" : {
@@ -337,7 +337,35 @@
       }, {
         "name" : "sl:alert-title",
         "description" : "The title of an alert, inside `sl:alert`.",
-        "attributes" : [ ]
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:avatar",
         "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead while the image has no `src`, is loading or fails to load. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
@@ -485,7 +513,7 @@
         "attributes" : [ ]
       }, {
         "name" : "sl:button",
-        "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`. Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
+        "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `button`. Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
         "attributes" : [ {
           "name" : "variant",
           "description" : "Visual style of the button.",
@@ -796,11 +824,11 @@
           }, {
             "name" : "outline"
           }, {
-            "name" : "secondary"
-          }, {
             "name" : "ghost"
           }, {
             "name" : "destructive"
+          }, {
+            "name" : "secondary"
           }, {
             "name" : "link"
           } ]
@@ -862,7 +890,7 @@
             "required" : false
           }
         }, {
-          "name" : "close-button",
+          "name" : "show-close-button",
           "description" : "A close button (an x) in the corner.",
           "value" : {
             "kind" : "plain",
@@ -890,8 +918,8 @@
             "required" : false
           }
         }, {
-          "name" : "th:close-button",
-          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "name" : "th:show-close-button",
+          "description" : "`show-close-button` from a Thymeleaf expression, e.g. `th:show-close-button=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -930,15 +958,15 @@
         "name" : "sl:dialog-footer",
         "description" : "The bottom of a `sl:dialog`, for its actions: side by side at the end on a wide screen, stacked with the first one at the bottom on a narrow one.",
         "attributes" : [ {
-          "name" : "close-button",
+          "name" : "show-close-button",
           "description" : "An outline \"Close\" button after the other actions.",
           "value" : {
             "kind" : "no-value",
             "required" : false
           }
         }, {
-          "name" : "th:close-button",
-          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "name" : "th:show-close-button",
+          "description" : "`show-close-button` from a Thymeleaf expression, e.g. `th:show-close-button=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -2450,7 +2478,7 @@
             "required" : false
           }
         }, {
-          "name" : "close-button",
+          "name" : "show-close-button",
           "description" : "A close button (an x) in the corner.",
           "value" : {
             "kind" : "plain",
@@ -2485,8 +2513,8 @@
             "required" : false
           }
         }, {
-          "name" : "th:close-button",
-          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "name" : "th:show-close-button",
+          "description" : "`show-close-button` from a Thymeleaf expression, e.g. `th:show-close-button=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -2525,15 +2553,15 @@
         "name" : "sl:sheet-footer",
         "description" : "The bottom of a `sl:sheet`, for its actions, stacked. It stays at the bottom of a sheet on the side of the screen however little content there is above it.",
         "attributes" : [ {
-          "name" : "close-button",
+          "name" : "show-close-button",
           "description" : "An outline \"Close\" button after the other actions.",
           "value" : {
             "kind" : "no-value",
             "required" : false
           }
         }, {
-          "name" : "th:close-button",
-          "description" : "`close-button` from a Thymeleaf expression, e.g. `th:close-button=\"${...}\"`.",
+          "name" : "th:show-close-button",
+          "description" : "`show-close-button` from a Thymeleaf expression, e.g. `th:show-close-button=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -2589,18 +2617,18 @@
           "default" : "sidebar"
         }, {
           "name" : "side",
-          "description" : "The edge it sits on: the start of a line (the left, or the right on a right-to-left page) or the end.",
+          "description" : "The edge it sits on, as on `sl:sheet`: `left` is the start of a line and `right` the end, so they swap on a right-to-left page.",
           "value" : {
             "kind" : "plain",
             "type" : "enum",
             "required" : false
           },
           "values" : [ {
-            "name" : "start"
+            "name" : "left"
           }, {
-            "name" : "end"
+            "name" : "right"
           } ],
-          "default" : "start"
+          "default" : "left"
         }, {
           "name" : "placement",
           "description" : "Where it sits on a desktop: `sidebar` is a column beside the page; `header` a row of links inside `sl:site-header` (the header layout), which never collapses: `collapsible`, the collapsed state and the trigger do not apply there (the trigger is hidden), and `side` only picks the phone panel's edge. Collapsible items and the parts marked `panel-only` are left out of the row; the phone panel is the same for both.",
@@ -3585,15 +3613,15 @@
         "name" : "sl:table-selection-count",
         "description" : "How many rows of a `sl:table` are selected: \"2 of 20 selected\" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as shadcn/ui's data table does. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.",
         "attributes" : [ {
-          "name" : "table",
+          "name" : "for",
           "description" : "The `id` of the table whose rows it counts (`sl:table` puts its `id` on the `table`).",
           "value" : {
             "kind" : "plain",
             "required" : false
           }
         }, {
-          "name" : "th:table",
-          "description" : "`table` from a Thymeleaf expression, e.g. `th:table=\"${...}\"`.",
+          "name" : "th:for",
+          "description" : "`for` from a Thymeleaf expression, e.g. `th:for=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -4145,7 +4173,7 @@
         "name" : "sl:user-menu",
         "description" : "The signed-in user (`#slUser.current`) with a menu that signs out, or a Sign in link for an anonymous visitor. In the sidebar's footer a large menu button with the user's picture, name and email (or username, when it is not the name); in the site header a button with the picture alone. Both open a `sl:dropdown-menu`: the user's name and email, the items in its content (Account, Settings), and Sign out, which posts to `#slUser.logoutUrl` (`shadleaf.security.logout-url`) from a form of its own, so `th:action` adds Spring Security's CSRF token. The picture goes through `sl:avatar`: while it loads, without one and when it fails to load, the initials show. Every attribute that is not a prop passes through to the button (or the Sign in link), except an `aria-label`, which only names the header's button: in the sidebar the button's name is the text it shows, and Sign in is named by its text.",
         "attributes" : [ {
-          "name" : "as",
+          "name" : "placement",
           "description" : "`sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named \"Account: \" and the user's name.",
           "value" : {
             "kind" : "plain",
@@ -4200,8 +4228,8 @@
           } ],
           "default" : "end"
         }, {
-          "name" : "th:as",
-          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "name" : "th:placement",
+          "description" : "`placement` from a Thymeleaf expression, e.g. `th:placement=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

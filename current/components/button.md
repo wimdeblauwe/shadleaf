@@ -140,7 +140,7 @@ so the button works with htmx and Alpine. `class` is appended to the component's
 
 ## Attributes
 
-Attributes of `<sl:button>`: A button, or with `as="a"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`.
+Attributes of `<sl:button>`: A button, or with `as="a"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `button`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
