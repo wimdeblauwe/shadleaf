@@ -1,0 +1,83 @@
+# Content-Security-Policy
+
+> Run Shadleaf under a strict CSP, with a nonce or a hash, and no 'unsafe-inline'.
+
+Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/csp/
+
+Shadleaf renders no inline styles and no inline event handlers. The only inline code is the theme script
+(`~{sl/layout :: theme-script}`), which has to run before the first paint to avoid a flash of the wrong theme. A strict
+policy can allow it in two ways, without `'unsafe-inline'`.
+
+## With a nonce
+
+Put a fresh nonce in a request attribute on every request, and the fragment renders it as `nonce="…"` on the script.
+The attribute is `cspNonce`, or whatever `shadleaf.csp.nonce-attribute` says. Use the same nonce in the header.
+
+Spring Security 7 has no nonce support for servlet applications, so add a filter before its `HeaderWriterFilter`:
+
+```java
+public class CspNonceFilter extends OncePerRequestFilter {
+
+  private final SecureRandom random = new SecureRandom();
+
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+      throws ServletException, IOException {
+    byte[] nonce = new byte[16];
+    random.nextBytes(nonce);
+    request.setAttribute("cspNonce", Base64.getEncoder().encodeToString(nonce));
+    chain.doFilter(request, response);
+  }
+}
+```
+
+and write the header with a `HeaderWriter` that reads it:
+
+```java
+public class CspHeaderWriter implements HeaderWriter {
+
+  @Override
+  public void writeHeaders(HttpServletRequest request, HttpServletResponse response) {
+    response.setHeader("Content-Security-Policy",
+        "default-src 'self'; script-src 'self' 'nonce-" + request.getAttribute("cspNonce") + "'; "
+            + "style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; "
+            + "frame-ancestors 'none'");
+  }
+}
+```
+
+```java
+http
+    .headers(headers -> headers.addHeaderWriter(new CspHeaderWriter()))
+    .addFilterBefore(new CspNonceFilter(), HeaderWriterFilter.class);
+```
+
+## With a hash
+
+For a policy that is the same on every response, allow the script by its hash. The `ShadleafThemeScript` bean computes
+it from the script it renders, so a header built from it stays correct across upgrades:
+
+```java
+String scriptSrc = "script-src 'self' " + themeScript.getCspHash();
+```
+
+For this version of Shadleaf that is:
+
+```text
+script-src 'self' 'sha256-ewffi8zKmIW+zI2vwENPE6/RaQgcGL/MObd1E+H3wJo='
+```
+
+A hash pasted into a static configuration goes stale when an upgrade changes the script, so prefer the bean.
+
+## Alpine.js
+
+Alpine's standard build needs `'unsafe-eval'`. Under a policy without it, set `shadleaf.assets.alpine=csp` to load
+Alpine's CSP build instead; see [Alpine.js](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/alpine.md#csp) for what that means for your own Alpine markup. Shadleaf's
+script is served from your application, so `script-src 'self'` allows it.
+
+## A working example
+
+`samples/shadleaf-sample-02` in the repository runs behind Spring Security with exactly this policy, switchable between
+the two modes with `sample.csp.mode=nonce|hash`, and loads Alpine's CSP build. Its tests check that the header holds no `'unsafe-inline'`, that the
+nonce in the header matches the script's and changes on every request, and that the page holds no `<style>`, `style=`
+or `on*=` attributes.
