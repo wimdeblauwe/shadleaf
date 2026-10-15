@@ -3,8 +3,8 @@
   "projectTitle": "Shadleaf",
   "description": "shadcn/ui for Thymeleaf, packaged as a Spring Boot starter: server-rendered sl:* components (buttons, forms, dialogs, menus, tables, application shell) with htmx and Alpine.js support.",
   "folders": ["docs/src/content/docs"],
-  "excludeFolders": ["docs/tests", "docs/src/pages", "samples", "shadleaf-spring-boot-starter"],
-  "excludeFiles": ["CLAUDE.md"],
+  "excludeFolders": ["docs/tests", "docs/src/pages", "samples", "shadleaf-spring-boot-starter", "references", "scripts"],
+  "excludeFiles": ["AGENTS.md", "CLAUDE.md", "CLAUDE.local.md"],
   "rules": [
     "Shadleaf components are Thymeleaf tags with the sl: prefix (xmlns:sl=\"https://shadleaf.dev/sl\"), rendered on the server; do not write React, JSX, Radix or asChild.",
     "The complete examples and attribute tables are in the docs as Markdown: https://wimdeblauwe.github.io/shadleaf/current/llms.txt (each page also at <page>.md).",
