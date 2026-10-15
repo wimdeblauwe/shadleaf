@@ -1,4 +1,9 @@
-# Shadleaf
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="branding/shadleaf-logo-dark.svg">
+    <img alt="Shadleaf" src="branding/shadleaf-logo-light.svg" width="204" height="48">
+  </picture>
+</h1>
 
 shadcn/ui for Thymeleaf, packaged as a Spring Boot starter.
 

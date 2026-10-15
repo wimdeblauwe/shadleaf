@@ -24,6 +24,7 @@ export default defineConfig({
       title: 'Shadleaf',
       description: 'shadcn/ui for Thymeleaf, as a Spring Boot starter.',
       customCss: ['./src/styles/docs.css'],
+      components: {SiteTitle: './src/components/SiteTitle.astro'},
       // Links each page's Markdown copy (src/pages/[...slug].md.ts), so an agent that fetched the HTML finds it.
       routeMiddleware: './src/routeData.ts',
       social: [{icon: 'github', label: 'GitHub', href: 'https://github.com/wimdeblauwe/shadleaf'}],

@@ -2,3 +2,36 @@
 :root {
   --sl-content-width: 52rem;
 }
+
+/* Brand colours: pine teal on slate. Starlight's dark theme is :root, its light theme :root[data-theme='light']. */
+:root {
+  --sl-color-accent-low: #0c2725;
+  --sl-color-accent: #3bbfb1;
+  --sl-color-accent-high: #c2ece6;
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #f1f5f9;
+  --sl-color-gray-2: #cbd5e1;
+  --sl-color-gray-3: #94a3b8;
+  --sl-color-gray-4: #64748b;
+  --sl-color-gray-5: #334155;
+  --sl-color-gray-6: #1e293b;
+  --sl-color-black: #0f172a;
+  /* The shaded half of the logo's leaf (SiteTitle.astro). */
+  --shadleaf-leaf-shade: #13665e;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #d3ecea;
+  --sl-color-accent: #0f6e66;
+  --sl-color-accent-high: #0a3a36;
+  --sl-color-white: #0f172a;
+  --sl-color-gray-1: #1e293b;
+  --sl-color-gray-2: #334155;
+  --sl-color-gray-3: #475569;
+  --sl-color-gray-4: #94a3b8;
+  --sl-color-gray-5: #cbd5e1;
+  --sl-color-gray-6: #f1f5f9;
+  --sl-color-gray-7: #f8fafc;
+  --sl-color-black: #ffffff;
+  --shadleaf-leaf-shade: #6fcfc3;
+}

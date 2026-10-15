@@ -20,6 +20,7 @@ works, read its template, CSS, script, tests and docs page; this file holds what
 - `samples/shadleaf-sample-01|02|03/`: standalone Maven projects, not in the reactor (see Samples).
 - `docs/`: the documentation site, a standalone pnpm project (Astro + Starlight), with the Playwright browser tests in
   `docs/tests/`. `docs/README.md` explains the generation pipeline.
+- `branding/`: the logo (SVG and PNG), its colours and typeface; written by `docs/scripts/logo.mjs` (`pnpm run logo`).
 - `.github/`: CI (`build.yml`), docs publishing, the release workflow.
 - `references/`: git-ignored clones of the reference projects (see Reference material).
 
