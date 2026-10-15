@@ -66,20 +66,20 @@ dialog and `command` says what to do. No JavaScript of yours is involved.
 </sl:dialog>
 ```
 
-The close button in the corner does the same; `close-button="false"` leaves it out. `<sl:dialog-footer close-button>`
+The close button in the corner does the same; `show-close-button="false"` leaves it out. `<sl:dialog-footer show-close-button>`
 adds an outline "Close" button after the footer's own actions.
 
 **Example: Close button in the footer.** No close button in the corner; the footer has one instead.
 
 ```html
 <sl:button variant="outline" commandfor="share-link" command="show-modal">Share</sl:button>
-<sl:dialog id="share-link" close-button="false">
+<sl:dialog id="share-link" show-close-button="false">
   <sl:dialog-header>
     <sl:dialog-title>Share link</sl:dialog-title>
     <sl:dialog-description>Anyone who has this link will be able to view this.</sl:dialog-description>
   </sl:dialog-header>
   <sl:input aria-label="Link" value="https://ui.shadcn.com/docs/installation" readonly/>
-  <sl:dialog-footer close-button/>
+  <sl:dialog-footer show-close-button/>
 </sl:dialog>
 ```
 
@@ -210,7 +210,7 @@ form swaps itself, and `HX-Trigger: sl-dialog-close` closes the dialog.
     <sl:dialog-description>Changes are saved when you click Save.</sl:dialog-description>
   </sl:dialog-header>
   <sl:dialog-body data-loading="true"/>
-  <sl:dialog-footer close-button/>
+  <sl:dialog-footer show-close-button/>
 </sl:dialog>
 ```
 
@@ -271,7 +271,7 @@ Attributes of `<sl:dialog>`: A modal dialog on the native `dialog` element: the 
 | --- | --- | --- | --- |
 | `id` | *string* | **required** | The dialog's id, which the buttons that open and close it point at with `commandfor`. The title and description ids derive from it. |
 | `open` | *boolean* | — | Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap, or a page shown after a redirect). Needs Alpine. |
-| `close-button` | *boolean* | `true` | A close button (an x) in the corner. |
+| `show-close-button` | *boolean* | `true` | A close button (an x) in the corner. |
 
 Every prop can also be set from an expression: `th:id="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -313,9 +313,9 @@ Attributes of `<sl:dialog-footer>`: The bottom of a `sl:dialog`, for its actions
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `close-button` | *boolean* | — | An outline "Close" button after the other actions. |
+| `show-close-button` | *boolean* | — | An outline "Close" button after the other actions. |
 
-Every prop can also be set from an expression: `th:close-button="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:show-close-button="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ## JavaScript
 

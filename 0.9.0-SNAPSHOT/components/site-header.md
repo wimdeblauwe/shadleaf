@@ -148,7 +148,7 @@ it.
     <sl:slot name="end">
       <sl:button variant="ghost" size="icon-sm" aria-label="Search"><sl:icon name="search"/></sl:button>
       <sl:theme-toggle/>
-      <sl:user-menu as="header" id="header-user-menu">
+      <sl:user-menu placement="header" id="header-user-menu">
         <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
       </sl:user-menu>
     </sl:slot>

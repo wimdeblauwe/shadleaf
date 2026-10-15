@@ -4,7 +4,7 @@
 
 Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/layouts/sidebar-end/
 
-A sidebar on the end of the line (`side="end"`): the right, or the left on a right-to-left page (`dir="rtl"`). Here
+A sidebar on the end of the line (`side="right"`): the right, or the left on a right-to-left page (`dir="rtl"`). Here
 it holds a table of contents under a group label, with the sections and their pages in sub-menus. The trigger is at
 the end of the page's header, in the [site header](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/site-header.md)'s `end` slot, on the same side as
 the sidebar; its icon shows a panel on that side. On a phone the panel slides in from the end.
@@ -17,7 +17,7 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 The whole layout file, with what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). The
 sidebar comes after `<sl:sidebar-inset>` in the markup, as in the block, so the keyboard and a screen reader reach the
-page first and the table of contents after it. `side="end"` puts it on the end either way: written before the inset,
+page first and the table of contents after it. `side="right"` puts it on the end either way: written before the inset,
 it is still drawn there, and reached first.
 
 ```html
@@ -49,7 +49,7 @@ it is still drawn there, and reached first.
       <div th:replace="${content}"></div>
     </div>
   </sl:sidebar-inset>
-  <sl:sidebar side="end">
+  <sl:sidebar side="right">
     <sl:sidebar-content>
       <sl:sidebar-group id="toc">
         <sl:sidebar-group-label>Table of Contents</sl:sidebar-group-label>

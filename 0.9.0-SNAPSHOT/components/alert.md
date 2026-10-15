@@ -83,7 +83,11 @@ Every prop can also be set from an expression: `th:variant="${...}"`. Any other 
 
 Attributes of `<sl:alert-title>`: The title of an alert, inside `sl:alert`.
 
-`sl:alert-title` declares no props; every attribute passes through.
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui. |
+
+Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ### sl:alert-description
 

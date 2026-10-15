@@ -119,7 +119,7 @@ in the header ([Navigation in the header](https://wimdeblauwe.github.io/shadleaf
 ## The signed-in user
 
 Both layouts have a place for the user: the sidebar's footer, and the site header's `end` slot. The
-[user menu](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/user-menu.md) goes in either (`as="header"` in the site header): the signed-in user from
+[user menu](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/user-menu.md) goes in either (`placement="header"` in the site header): the signed-in user from
 Spring Security with a menu that signs out, or a Sign in link for an anonymous visitor, so one layout serves public
 pages too. Sign out posts a form with the CSRF token; `hx-boost="false"` on it keeps a boosted body from sending it
 with htmx. Where the user comes from, and how to change it, is in the [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/spring-security.md#the-signed-in-user)

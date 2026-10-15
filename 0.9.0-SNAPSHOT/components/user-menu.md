@@ -51,10 +51,10 @@ login's user is named by the username), or nothing.
 
 ## In the site header
 
-`as="header"` makes it a round button with the picture alone, for the `end` slot of a
+`placement="header"` makes it a round button with the picture alone, for the `end` slot of a
 [site header](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/site-header.md), as in the header layout:
 
-**Example: In the site header.** as="header": a round button with the picture, named "Account: " and the user's name, at the end of a sl:site-header. The menu opens below it, lined up with its end.
+**Example: In the site header.** placement="header": a round button with the picture, named "Account: " and the user's name, at the end of a sl:site-header. The menu opens below it, lined up with its end.
 
 ```html
 <sl:site-header>
@@ -63,7 +63,7 @@ login's user is named by the username), or nothing.
     Acme Inc.
   </sl:button>
   <sl:slot name="end">
-    <sl:user-menu as="header" id="user-menu-header">
+    <sl:user-menu placement="header" id="user-menu-header">
       <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
       <sl:dropdown-menu-item as="a" href="/settings"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
     </sl:user-menu>
@@ -76,7 +76,7 @@ login's user is named by the username), or nothing.
   ...
   <sl:slot name="end">
     <sl:theme-toggle/>
-    <sl:user-menu as="header">
+    <sl:user-menu placement="header">
       <sl:dropdown-menu-item as="a" th:href="@{/account}"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
     </sl:user-menu>
   </sl:slot>
@@ -98,7 +98,7 @@ image.
 ```html
 <sl:site-header>
   <sl:slot name="end">
-    <sl:user-menu as="header" id="user-menu-initials"/>
+    <sl:user-menu placement="header" id="user-menu-initials"/>
   </sl:slot>
 </sl:site-header>
 ```
@@ -118,7 +118,7 @@ client (`/oauth2/authorization/github`), or what `shadleaf.security.login-url` s
     Acme Inc.
   </sl:button>
   <sl:slot name="end">
-    <sl:user-menu as="header"/>
+    <sl:user-menu placement="header"/>
   </sl:slot>
 </sl:site-header>
 ```
@@ -171,7 +171,7 @@ sl.user-menu.sign-in=Sign in
 sl.user-menu.sign-out=Sign out
 ```
 
-`{0}` is the user's name. An `aria-label` on `<sl:user-menu as="header">` replaces the header button's name for one
+`{0}` is the user's name. An `aria-label` on `<sl:user-menu placement="header">` replaces the header button's name for one
 menu. In the sidebar the button is named by the name and email it shows, and the Sign in link by its text, so an
 `aria-label` is left out there.
 
@@ -210,9 +210,9 @@ Attributes of `<sl:user-menu>`: The signed-in user (`#slUser.current`) with a me
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `as` | `sidebar`, `header` | `sidebar` | `sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named "Account: " and the user's name. |
+| `placement` | `sidebar`, `header` | `sidebar` | `sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named "Account: " and the user's name. |
 | `id` | *string* | `user-menu` | The menu's id. Its button gets the id with `-trigger` added, the sign-out form with `-sign-out`. Two user menus on a page need different ids. |
 | `side` | `top`, `right`, `bottom`, `left` | — | The side of the button the menu opens on, as on `sl:dropdown-menu-content`. By default `right` in the sidebar (below the button in the phone panel) and `bottom` in the header. |
 | `align` | `start`, `center`, `end` | `end` | How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`. |
 
-Every prop can also be set from an expression: `th:as="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:placement="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
