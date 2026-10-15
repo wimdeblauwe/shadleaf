@@ -102,7 +102,7 @@ class DialogComponentTest {
 
   @Test
   void closeButtonCanBeLeftOut() {
-    Element dialog = tester.render("<sl:dialog id=\"edit\" close-button=\"false\">Content</sl:dialog>").root();
+    Element dialog = tester.render("<sl:dialog id=\"edit\" show-close-button=\"false\">Content</sl:dialog>").root();
 
     assertThat(dialog.selectFirst("button")).isNull();
   }
@@ -118,8 +118,8 @@ class DialogComponentTest {
   @Test
   void footerCloseButton() {
     Element dialog = tester.render("""
-        <sl:dialog id="edit" close-button="false">
-          <sl:dialog-footer close-button><sl:button type="submit">Save</sl:button></sl:dialog-footer>
+        <sl:dialog id="edit" show-close-button="false">
+          <sl:dialog-footer show-close-button><sl:button type="submit">Save</sl:button></sl:dialog-footer>
         </sl:dialog>""").root();
 
     Element close = dialog.select(".dialog-footer > button").last();

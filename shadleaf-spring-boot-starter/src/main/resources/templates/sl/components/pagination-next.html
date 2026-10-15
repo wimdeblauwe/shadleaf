@@ -13,14 +13,14 @@
 <body>
 <!--/* As sl:pagination-link, at the default size. The chevron turns around on a right-to-left page. */-->
 <a th:fragment="pagination-next"
-   class="btn pagination-link pagination-next"
+   class="button pagination-link pagination-next"
    data-variant="ghost"
    th:attr="aria-label=#{sl.pagination.next.label},
             aria-disabled=${props.disabled ? 'true' : null},
             role=${props.disabled ? 'link' : null},
             tabindex=${props.disabled ? '-1' : null}"
    sl:attrs="${props.disabled ? attrs.without('href') : attrs}"><span class="pagination-next-text"><sl:slot><th:block
-    th:text="#{sl.pagination.next}">Next</th:block></sl:slot></span><span class="btn-icon" data-icon="inline-end"><sl:icon
+    th:text="#{sl.pagination.next}">Next</th:block></sl:slot></span><span class="button-icon" data-icon="inline-end"><sl:icon
     name="chevron-right"/></span></a>
 </body>
 </html>

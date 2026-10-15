@@ -13,7 +13,7 @@ import org.jsoup.nodes.Element;
  *
  * assertThat(tester.render("<sl:button variant='outline'>Save</sl:button>")).root()
  *     .hasTag("button")
- *     .hasClassName("btn")
+ *     .hasClassName("button")
  *     .hasAttribute("data-variant", "outline")
  *     .hasNoAttribute("variant");
  * assertThatRenderFailure(() -> tester.render("<sl:button size='icon'><sl:icon name='x'/></sl:button>"))

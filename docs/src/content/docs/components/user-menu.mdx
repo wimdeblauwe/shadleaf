@@ -33,7 +33,7 @@ login's user is named by the username), or nothing.
 
 ## In the site header
 
-`as="header"` makes it a round button with the picture alone, for the `end` slot of a
+`placement="header"` makes it a round button with the picture alone, for the `end` slot of a
 [site header](../site-header/), as in the header layout:
 
 <ComponentPreview id="user-menu--header" />
@@ -43,7 +43,7 @@ login's user is named by the username), or nothing.
   ...
   <sl:slot name="end">
     <sl:theme-toggle/>
-    <sl:user-menu as="header">
+    <sl:user-menu placement="header">
       <sl:dropdown-menu-item as="a" th:href="@{/account}"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
     </sl:user-menu>
   </sl:slot>
@@ -118,7 +118,7 @@ sl.user-menu.sign-in=Sign in
 sl.user-menu.sign-out=Sign out
 ```
 
-`{0}` is the user's name. An `aria-label` on `<sl:user-menu as="header">` replaces the header button's name for one
+`{0}` is the user's name. An `aria-label` on `<sl:user-menu placement="header">` replaces the header button's name for one
 menu. In the sidebar the button is named by the name and email it shows, and the Sign in link by its text, so an
 `aria-label` is left out there.
 

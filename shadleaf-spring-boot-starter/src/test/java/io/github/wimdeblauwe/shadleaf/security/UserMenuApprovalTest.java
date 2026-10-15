@@ -20,8 +20,8 @@ class UserMenuApprovalTest {
             <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
             <sl:dropdown-menu-item as="a" href="/settings"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
           </sl:user-menu>""",
-      "<sl:user-menu as=\"header\"/>",
-      "<sl:user-menu as=\"header\" id=\"account\" side=\"left\" align=\"start\" aria-label=\"Your account\"/>");
+      "<sl:user-menu placement=\"header\"/>",
+      "<sl:user-menu placement=\"header\" id=\"account\" side=\"left\" align=\"start\" aria-label=\"Your account\"/>");
 
   @Test
   void signedIn() {

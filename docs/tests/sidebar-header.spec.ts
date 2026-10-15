@@ -33,7 +33,7 @@ function shell({title = 'Home', current = '/', side = 'start', inset = true, mor
       .replace(new RegExp(`(<a class="sidebar-menu-button")((?:(?!data-size="lg")[^>])*? href="${current}")`),
           '$1 aria-current="page"$2')
       .replace(' data-variant="inset"', inset ? ' data-variant="inset"' : '')
-      .replace('data-placement="header"', `data-placement="header"${side === 'end' ? ' data-side="end"' : ''}`)
+      .replace('data-placement="header"', `data-placement="header"${side === 'end' ? ' data-side="right"' : ''}`)
       .replace(/(<a class="sidebar-menu-button" href="\/documents">[\s\S]*?<\/li>)/,
           `$1${extra}<li class="sidebar-menu-item"><a class="sidebar-menu-button" href="#section">`
           + '<span class="sidebar-menu-button-label">Section</span></a></li>')

@@ -8,7 +8,7 @@ sidebar:
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import LayoutCode from '../../../components/LayoutCode.astro';
 
-A sidebar on the end of the line (`side="end"`): the right, or the left on a right-to-left page (`dir="rtl"`). Here
+A sidebar on the end of the line (`side="right"`): the right, or the left on a right-to-left page (`dir="rtl"`). Here
 it holds a table of contents under a group label, with the sections and their pages in sub-menus. The trigger is at
 the end of the page's header, in the [site header](../../components/site-header/)'s `end` slot, on the same side as
 the sidebar; its icon shows a panel on that side. On a phone the panel slides in from the end.
@@ -21,7 +21,7 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 The whole layout file, with what [every layout needs](../../components/application-shell/#what-every-layout-needs). The
 sidebar comes after `<sl:sidebar-inset>` in the markup, as in the block, so the keyboard and a screen reader reach the
-page first and the table of contents after it. `side="end"` puts it on the end either way: written before the inset,
+page first and the table of contents after it. `side="right"` puts it on the end either way: written before the inset,
 it is still drawn there, and reached first.
 
 <LayoutCode id="layout--sidebar-end" part="template" />

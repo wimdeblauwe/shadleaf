@@ -67,7 +67,7 @@ class ToastComponentTest {
         .hasNoElement("> svg");
     assertThat(rendered).element(".toast-content > .toast-title").hasText("Event created");
     assertThat(rendered).element(".toast-content > .toast-description").hasText("Monday, January 3rd at 6:00pm");
-    assertThat(rendered).element(".toast > button.btn.toast-close")
+    assertThat(rendered).element(".toast > button.button.toast-close")
         .hasAttribute("type", "button")
         .hasAttribute("aria-label", "Close")
         .hasAttribute("data-variant", "ghost")

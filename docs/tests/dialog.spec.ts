@@ -221,7 +221,7 @@ function dialog(id: string, content: string, {open = false} = {}): string {
       open ? ' data-show-modal="true"' : ''}>
     <div class="dialog-header"><div class="dialog-title" role="heading" aria-level="2" id="${id}-title">Title of ${id}</div></div>
     ${content}
-    <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="${id}"
+    <button class="button dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="${id}"
             command="close" aria-label="Close">x</button>
   </dialog>`;
 }
@@ -232,7 +232,7 @@ function alertDialog(id: string, actions: string, {open = false} = {}): string {
       aria-labelledby="${id}-title" data-size="sm"${open ? ' data-show-modal="true"' : ''}>
     <div class="alert-dialog-header"><div class="alert-dialog-title" role="heading" aria-level="2" id="${id}-title">Sure?</div></div>
     <div class="alert-dialog-footer">
-      <button class="btn alert-dialog-cancel" type="button" data-variant="outline" commandfor="${id}" command="close"
+      <button class="button alert-dialog-cancel" type="button" data-variant="outline" commandfor="${id}" command="close"
               autofocus>Cancel</button>
       ${actions}
     </div>
@@ -245,7 +245,7 @@ function sheet(id: string, content: string, {open = false} = {}): string {
       open ? ' data-show-modal="true"' : ''}>
     <div class="sheet-header"><div class="sheet-title" role="heading" aria-level="2" id="${id}-title">Title of ${id}</div></div>
     ${content}
-    <button class="btn sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="${id}"
+    <button class="button sheet-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="${id}"
             command="close" aria-label="Close">x</button>
   </dialog>`;
 }
@@ -525,7 +525,7 @@ async function openConfirmFixture(page: Page) {
     htmx: true,
     routes: {
       '/members/1/delete': () => ({
-        body: alertDialog('delete-member', `<button type="button" id="confirm" class="btn" data-variant="destructive"
+        body: alertDialog('delete-member', `<button type="button" id="confirm" class="button" data-variant="destructive"
             hx-delete="/members/1" hx-target="#member-1" hx-swap="outerHTML">Delete</button>`, {open: true}),
       }),
       '/members/1': () => {

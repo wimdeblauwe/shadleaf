@@ -11,7 +11,7 @@
       it loads, without one and when it fails to load, the initials show. Every attribute that is not a prop passes
       through to the button (or the Sign in link), except an <code>aria-label</code>, which only names the header's
       button: in the sidebar the button's name is the text it shows, and Sign in is named by its text.</sl:description>
-    <sl:prop name="as" default="sidebar" values="sidebar header"><code>sidebar</code>: a
+    <sl:prop name="placement" default="sidebar" values="sidebar header"><code>sidebar</code>: a
       <code>sl:sidebar-menu</code> with one large menu button, for the <code>sl:sidebar-footer</code> (shadcn's
       NavUser). <code>header</code>: a round button with the picture, for the <code>end</code> slot of
       <code>sl:site-header</code>, named "Account: " and the user's name.</sl:prop>
@@ -36,7 +36,7 @@
 <th:block th:fragment="user-menu"
           th:with="slUserMenuUser=${#slUser.current},
                    slUserMenuId=${props.id},
-                   slUserMenuSide=${props.side ?: (props.as == 'sidebar' ? 'right' : 'bottom')},
+                   slUserMenuSide=${props.side ?: (props.placement == 'sidebar' ? 'right' : 'bottom')},
                    slUserMenuAlign=${props.align},
                    slUserMenuFormId=${props.id + '-sign-out'},
                    slUserMenuAttrs=${attrs.containsKey('th:aria-label') ? attrs : attrs.without('aria-label')},
@@ -44,7 +44,7 @@
   <th:block th:if="${slUserMenuUser != null}"
             th:with="slUserMenuDetail=${slUserMenuUser.email ?: (slUserMenuUser.username != slUserMenuUser.name ? slUserMenuUser.username : null)},
                      slUserMenuLabel=${attrs['aria-label'] ?: #messages.msg('sl.user-menu.trigger', slUserMenuUser.name)}">
-    <sl:sidebar-menu th:if="${props.as == 'sidebar'}" class="user-menu">
+    <sl:sidebar-menu th:if="${props.placement == 'sidebar'}" class="user-menu">
       <sl:sidebar-menu-item>
         <sl:dropdown-menu th:id="${slUserMenuId}">
           <sl:dropdown-menu-trigger as="sidebar-menu-button"
@@ -62,7 +62,7 @@
         <th:block th:replace="~{sl/components/user-menu :: sign-out-form}"/>
       </sl:sidebar-menu-item>
     </sl:sidebar-menu>
-    <th:block th:unless="${props.as == 'sidebar'}">
+    <th:block th:unless="${props.placement == 'sidebar'}">
       <sl:dropdown-menu th:id="${slUserMenuId}">
         <sl:dropdown-menu-trigger variant="ghost"
                                   size="icon"
@@ -77,7 +77,7 @@
   </th:block>
   <th:block th:if="${slUserMenuUser == null}"
             th:with="slUserMenuLoginUrl=@{${#slUser.loginUrl}}">
-    <sl:sidebar-menu th:if="${props.as == 'sidebar'}" class="user-menu">
+    <sl:sidebar-menu th:if="${props.placement == 'sidebar'}" class="user-menu">
       <sl:sidebar-menu-item>
         <sl:sidebar-menu-button class="user-menu-sign-in"
                                 th:href="${slUserMenuLoginUrl}"
@@ -89,7 +89,7 @@
         </sl:sidebar-menu-button>
       </sl:sidebar-menu-item>
     </sl:sidebar-menu>
-    <sl:button th:unless="${props.as == 'sidebar'}"
+    <sl:button th:unless="${props.placement == 'sidebar'}"
                as="a"
                variant="outline"
                class="user-menu-sign-in"

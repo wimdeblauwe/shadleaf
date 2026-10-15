@@ -33,7 +33,7 @@ class ButtonComponentTest {
     assertThat(rendered).root()
         .hasTag("button")
         .hasAttributeNames("class", "type")
-        .hasClassName("btn")
+        .hasClassName("button")
         .hasAttribute("type", "button")
         .hasText("Save");
   }
@@ -98,7 +98,7 @@ class ButtonComponentTest {
         <sl:button variant="destructive" size="sm" class="ml-auto" hx-delete="/orders/42"
                    hx-confirm="Delete this order?" x-on:click="open = false" aria-describedby="help"
                    data-order="42" id="delete">Delete order</sl:button>""")).root()
-        .hasClassName("btn ml-auto")
+        .hasClassName("button ml-auto")
         .hasAttribute("hx-delete", "/orders/42")
         .hasAttribute("hx-confirm", "Delete this order?")
         .hasAttribute("x-on:click", "open = false")
@@ -134,7 +134,7 @@ class ButtonComponentTest {
   void anchorLooksTheSameAndKeepsItsHref() {
     assertThat(tester.render("<sl:button as=\"a\" variant=\"outline\" href=\"/orders\">Orders</sl:button>")).root()
         .hasTag("a")
-        .hasClassName("btn")
+        .hasClassName("button")
         .hasAttribute("data-variant", "outline")
         .hasAttribute("href", "/orders")
         .hasNoAttribute("type", "aria-disabled", "tabindex", "role")
@@ -168,7 +168,7 @@ class ButtonComponentTest {
         .hasNoAttribute("href")
         .hasAttribute("aria-disabled", "true")
         .hasAttribute("aria-busy", "true")
-        .element(".btn-spinner");
+        .element(".button-spinner");
   }
 
   // --- loading ----------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ class ButtonComponentTest {
         .hasAttribute("aria-busy", "true")
         .hasAttribute("disabled")
         .as("the hidden label is read first").hasText("Loading Save");
-    button.element("> .btn-icon[data-icon=inline-start] > svg.sl-icon.btn-spinner").hasAttribute("aria-hidden", "true");
+    button.element("> .button-icon[data-icon=inline-start] > svg.icon.button-spinner").hasAttribute("aria-hidden", "true");
     button.element("> .sl-sr-only").hasText("Loading");
   }
 
@@ -191,8 +191,8 @@ class ButtonComponentTest {
           Save
         </sl:button>""");
 
-    assertThat(rendered).elements(".btn > .btn-icon").hasSize(1);
-    assertThat(rendered).elements("svg").singleElement().satisfies(svg -> assertThat(svg).hasClass("btn-spinner"));
+    assertThat(rendered).elements(".button > .button-icon").hasSize(1);
+    assertThat(rendered).elements("svg").singleElement().satisfies(svg -> assertThat(svg).hasClass("button-spinner"));
   }
 
   @Test
@@ -200,7 +200,7 @@ class ButtonComponentTest {
     Rendered rendered = tester.render("""
         <sl:button size="icon" loading aria-label="Delete"><sl:icon name="trash"/></sl:button>""");
 
-    assertThat(rendered).elements("svg").singleElement().satisfies(svg -> assertThat(svg).hasClass("btn-spinner"));
+    assertThat(rendered).elements("svg").singleElement().satisfies(svg -> assertThat(svg).hasClass("button-spinner"));
     assertThat(rendered).root().hasAttribute("aria-label", "Delete");
   }
 
@@ -227,14 +227,14 @@ class ButtonComponentTest {
           Delete order
         </sl:button>""");
 
-    assertThat(rendered).elements(".btn > span.btn-icon").hasSize(1);
+    assertThat(rendered).elements(".button > span.button-icon").hasSize(1);
     assertThat(rendered).elements("svg path").hasSize(5);
     var button = assertThat(rendered).root()
         .hasText("Delete order")
         .as("the icon's props do not leak into the button").hasAttribute("data-variant", "destructive");
-    button.element("> span.btn-icon")
+    button.element("> span.button-icon")
         .hasAttribute("data-icon", "inline-start")
-        .element("> svg.sl-icon").hasAttribute("aria-hidden", "true");
+        .element("> svg.icon").hasAttribute("aria-hidden", "true");
   }
 
   @Test
@@ -242,13 +242,13 @@ class ButtonComponentTest {
     Rendered rendered = tester.render("""
         <sl:button>Next<sl:slot name="icon-end"><sl:icon name="arrow-right"/></sl:slot></sl:button>""");
 
-    assertThat(rendered).element(".btn > span.btn-icon").hasAttribute("data-icon", "inline-end");
-    assertThat(rendered).element(".btn > :last-child").hasClass("btn-icon");
+    assertThat(rendered).element(".button > span.button-icon").hasAttribute("data-icon", "inline-end");
+    assertThat(rendered).element(".button > :last-child").hasClass("button-icon");
   }
 
   @Test
   void noIconWrapperWithoutIcons() {
-    assertThat(tester.render("<sl:button>Save</sl:button>")).hasNoElement(".btn-icon");
+    assertThat(tester.render("<sl:button>Save</sl:button>")).hasNoElement(".button-icon");
   }
 
   @Test

@@ -43,8 +43,8 @@ import tools.jackson.databind.json.JsonMapper;
  * and a checkbox (not a switch) an {@code :indeterminate} rule. The focusable element can sit inside the root: the checkbox's {@code .checkbox} in its wrapper.
  * <p>
  * The expected selectors come from rendering the component, not from a list kept here: {@code variant="outline"}
- * renders {@code data-variant="outline"} and needs {@code .btn[data-variant="outline"]}, while the default renders no
- * attribute and needs {@code .btn:not([data-variant])}.
+ * renders {@code data-variant="outline"} and needs {@code .button[data-variant="outline"]}, while the default renders no
+ * attribute and needs {@code .button:not([data-variant])}.
  * <p>
  * This checks that the rules exist, not that they draw anything. A rule that compiles but is invisible, such as an
  * outline width with {@code outline-style: none}, is only caught in a browser.

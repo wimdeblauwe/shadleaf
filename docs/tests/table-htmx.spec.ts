@@ -50,13 +50,13 @@ function results(url: URL, fragment: boolean) {
       .map(([name, value]) => `<input type="hidden" name="${escape(name)}" value="${escape(value)}" form="search">`)
       .join('');
   const pageLink = (id: string, target: number, enabled: boolean, text: string) => enabled
-      ? `<a class="btn pagination-link" data-variant="ghost" id="${id}" href="${link(url, {page: String(target)})}">${text}</a>`
-      : `<a class="btn pagination-link" data-variant="ghost" id="${id}" aria-disabled="true" role="link" tabindex="-1">${text}</a>`;
+      ? `<a class="button pagination-link" data-variant="ghost" id="${id}" href="${link(url, {page: String(target)})}">${text}</a>`
+      : `<a class="button pagination-link" data-variant="ghost" id="${id}" aria-disabled="true" role="link" tabindex="-1">${text}</a>`;
   return `<div id="results" hx-boost="true" hx-target="#results" hx-select="#results" hx-swap="outerHTML show:none">
     ${hidden}
     ${fragment ? `<p id="status" hx-swap-oob="innerHTML">${found.length} found</p>` : ''}
     <div class="table-container"><table class="table">
-      <thead><tr><th class="table-head" aria-sort="${descending ? 'descending' : 'ascending'}"><a class="btn table-sort"
+      <thead><tr><th class="table-head" aria-sort="${descending ? 'descending' : 'ascending'}"><a class="button table-sort"
         data-variant="ghost" data-size="sm" id="sort-name"
         href="${link(url, {sort: descending ? 'name,asc' : 'name,desc', page: null})}">Name</a></th></tr></thead>
       <tbody>${rows.map(name => `<tr><td>${name}</td></tr>`).join('')
@@ -261,7 +261,7 @@ function feedRows(url: URL, {revealed = false, selection = false}: Feed, from: n
   const trigger = revealed
       ? `<span class="sl-sr-only" hx-get="${next}" hx-trigger="revealed" hx-target="closest tr" hx-swap="outerHTML"
           hx-replace-url="true">Loading more</span>`
-      : `<a class="btn" data-variant="outline" href="${next}#row-${to + 1}" hx-get="${next}" hx-target="closest tr"
+      : `<a class="button" data-variant="outline" href="${next}#row-${to + 1}" hx-get="${next}" hx-target="closest tr"
           hx-swap="outerHTML" hx-replace-url="true">Load more</a>`;
   return `${rows}<tr class="load-more-row"><td colspan="${columns}">${trigger}</td></tr>`;
 }

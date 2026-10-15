@@ -135,7 +135,7 @@ scenarios:
           </tr>
         </tbody>
       </sl:table>
-      <sl:table-selection-count table="people-selection"/>
+      <sl:table-selection-count for="people-selection"/>
     renderSource: |-
       <sl:table id="people-selection">
         <thead>
@@ -163,7 +163,7 @@ scenarios:
           </tr>
         </tbody>
       </sl:table>
-      <sl:table-selection-count table="people-selection"/>
+      <sl:table-selection-count for="people-selection"/>
 
   - id: row-actions
     title: Actions per row

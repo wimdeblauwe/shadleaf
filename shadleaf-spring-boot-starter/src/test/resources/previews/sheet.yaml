@@ -25,7 +25,7 @@ scenarios:
               <sl:input name="username" value="@peduarte"/>
             </sl:field>
           </sl:field-group>
-          <sl:sheet-footer close-button>
+          <sl:sheet-footer show-close-button>
             <sl:button type="submit">Save changes</sl:button>
           </sl:sheet-footer>
         </sl:sheet>
@@ -44,41 +44,41 @@ scenarios:
           <sl:sheet-title>From the top</sl:sheet-title>
           <sl:sheet-description>A sheet on the top edge, as wide as the screen.</sl:sheet-description>
         </sl:sheet-header>
-        <sl:sheet-footer close-button/>
+        <sl:sheet-footer show-close-button/>
       </sl:sheet>
       <sl:sheet id="sheet-right" side="right">
         <sl:sheet-header>
           <sl:sheet-title>From the right</sl:sheet-title>
           <sl:sheet-description>The default: the end of the line, which is the left on a right-to-left page.</sl:sheet-description>
         </sl:sheet-header>
-        <sl:sheet-footer close-button/>
+        <sl:sheet-footer show-close-button/>
       </sl:sheet>
       <sl:sheet id="sheet-bottom" side="bottom">
         <sl:sheet-header>
           <sl:sheet-title>From the bottom</sl:sheet-title>
           <sl:sheet-description>A sheet on the bottom edge, as wide as the screen.</sl:sheet-description>
         </sl:sheet-header>
-        <sl:sheet-footer close-button/>
+        <sl:sheet-footer show-close-button/>
       </sl:sheet>
       <sl:sheet id="sheet-left" side="left">
         <sl:sheet-header>
           <sl:sheet-title>From the left</sl:sheet-title>
           <sl:sheet-description>The start of the line, which is the right on a right-to-left page.</sl:sheet-description>
         </sl:sheet-header>
-        <sl:sheet-footer close-button/>
+        <sl:sheet-footer show-close-button/>
       </sl:sheet>
 
   - id: no-close-button
     title: No close button in the corner
-    description: close-button="false" leaves the x out; the footer's close button remains.
+    description: show-close-button="false" leaves the x out; the footer's close button remains.
     source: |-
       <sl:button variant="outline" commandfor="sheet-notifications" command="show-modal">Notifications</sl:button>
-      <sl:sheet id="sheet-notifications" close-button="false">
+      <sl:sheet id="sheet-notifications" show-close-button="false">
         <sl:sheet-header>
           <sl:sheet-title>Notifications</sl:sheet-title>
           <sl:sheet-description>You have no unread messages.</sl:sheet-description>
         </sl:sheet-header>
-        <sl:sheet-footer close-button/>
+        <sl:sheet-footer show-close-button/>
       </sl:sheet>
 
   - id: body
@@ -107,7 +107,7 @@ scenarios:
             </sl:field>
           </sl:field-group>
         </sl:sheet-body>
-        <sl:sheet-footer close-button>
+        <sl:sheet-footer show-close-button>
           <sl:button type="submit">Save changes</sl:button>
         </sl:sheet-footer>
       </sl:sheet>
@@ -124,5 +124,5 @@ scenarios:
           <sl:sheet-title>Member details</sl:sheet-title>
         </sl:sheet-header>
         <sl:sheet-body data-loading="true"/>
-        <sl:sheet-footer close-button/>
+        <sl:sheet-footer show-close-button/>
       </sl:sheet>

@@ -94,7 +94,7 @@
     <!--/* Laid out as shadcn/ui's data table footer: the selection count at the start, the summary, rows per page and
       the pages at the end. */-->
     <div class="table-footer">
-      <sl:table-selection-count table="people-table"/>
+      <sl:table-selection-count for="people-table"/>
       <div class="table-footer-controls">
         <sl:pagination-summary th:page="${people}"/>
         <sl:pagination-size th:page="${people}"/>

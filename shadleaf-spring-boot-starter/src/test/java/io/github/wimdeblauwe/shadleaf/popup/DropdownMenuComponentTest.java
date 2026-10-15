@@ -29,7 +29,7 @@ class DropdownMenuComponentTest {
     // The root renders no element of its own: the trigger and the menu are siblings.
     assertThat(rendered.document().body().children()).hasSize(2);
     assertThat(rendered).element("button.dropdown-menu-trigger")
-        .hasClass("btn")
+        .hasClass("button")
         .hasAttribute("id", "account-trigger")
         .hasAttribute("popovertarget", "account")
         .hasAttribute("aria-haspopup", "menu")

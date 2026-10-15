@@ -81,10 +81,10 @@ class SidebarComponentTest {
 
   @Test
   void theSidebarTakesAnIdASideAndItsOwnName() {
-    assertThat(tester.render("<sl:sidebar id=\"docs-nav\" side=\"end\" aria-label=\"Documentation\">x</sl:sidebar>"))
+    assertThat(tester.render("<sl:sidebar id=\"docs-nav\" side=\"right\" aria-label=\"Documentation\">x</sl:sidebar>"))
         .root()
         .hasAttribute("id", "docs-nav")
-        .hasAttribute("data-side", "end")
+        .hasAttribute("data-side", "right")
         .hasAttribute("aria-label", "Documentation");
   }
 
@@ -107,7 +107,7 @@ class SidebarComponentTest {
     assertThat(rendered).hasNoLeakedMarkup();
     assertThat(rendered).root()
         .hasTag("button")
-        .hasClass("btn", "sidebar-trigger")
+        .hasClass("button", "sidebar-trigger")
         .hasAttribute("type", "button")
         .hasAttribute("data-variant", "ghost")
         .hasAttribute("data-size", "icon-sm")
@@ -141,7 +141,7 @@ class SidebarComponentTest {
 
     assertThat(rendered).root()
         .hasAttribute("id", "menu-button")
-        .hasClass("btn", "sidebar-trigger", "me-2")
+        .hasClass("button", "sidebar-trigger", "me-2")
         .hasAttribute("data-variant", "outline")
         .hasAttribute("data-size", "icon");
     assertThat(rendered).root().hasNoElement(".sidebar-trigger-icon");

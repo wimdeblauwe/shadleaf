@@ -22,7 +22,7 @@ public class ElementAssert extends AbstractAssert<ElementAssert, Element> {
     return this;
   }
 
-  /** The {@code class} attribute is exactly this, in this order, such as {@code "btn ml-auto"}. */
+  /** The {@code class} attribute is exactly this, in this order, such as {@code "button ml-auto"}. */
   public ElementAssert hasClassName(String className) {
     isNotNull();
     if (!actual.className().equals(className)) {

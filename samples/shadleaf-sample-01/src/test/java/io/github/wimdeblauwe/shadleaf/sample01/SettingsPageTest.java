@@ -99,7 +99,7 @@ class SettingsPageTest {
 
     assertThat(collapsible.hasAttr("open")).isFalse();
     assertThat(collapsible.child(0).tagName()).isEqualTo("summary");
-    assertThat(collapsible.child(0).classNames()).contains("btn", "collapsible-trigger");
+    assertThat(collapsible.child(0).classNames()).contains("button", "collapsible-trigger");
     assertThat(collapsible.select(".collapsible-content .switch")).hasSize(1);
   }
 }

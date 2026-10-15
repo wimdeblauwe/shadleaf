@@ -93,7 +93,7 @@ class SheetComponentTest {
 
   @Test
   void closeButtonCanBeLeftOut() {
-    assertThat(tester.render("<sl:sheet id=\"filters\" close-button=\"false\">Content</sl:sheet>").root()
+    assertThat(tester.render("<sl:sheet id=\"filters\" show-close-button=\"false\">Content</sl:sheet>").root()
         .selectFirst("button")).isNull();
   }
 
@@ -107,8 +107,8 @@ class SheetComponentTest {
   @Test
   void footerCloseButton() {
     Element close = tester.render("""
-        <sl:sheet id="filters" close-button="false">
-          <sl:sheet-footer close-button><sl:button type="submit">Apply</sl:button></sl:sheet-footer>
+        <sl:sheet id="filters" show-close-button="false">
+          <sl:sheet-footer show-close-button><sl:button type="submit">Apply</sl:button></sl:sheet-footer>
         </sl:sheet>""").root().select(".sheet-footer > button").last();
 
     assertThat(close)

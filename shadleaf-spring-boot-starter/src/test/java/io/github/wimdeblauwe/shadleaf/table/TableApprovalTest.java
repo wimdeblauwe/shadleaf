@@ -32,8 +32,8 @@ class TableApprovalTest {
         "<sl:table-select-all/>",
         "<sl:table-select-all name=\"ids\" id=\"people-select-all\" form=\"bulk\" class=\"extra\"/>",
         "<sl:table-select-all aria-label=\"Select all people on this page\"/>",
-        "<sl:table-selection-count table=\"people\"/>",
-        "<sl:table-selection-count table=\"people\" id=\"people-count\" class=\"extra\"/>",
+        "<sl:table-selection-count for=\"people\"/>",
+        "<sl:table-selection-count for=\"people\" id=\"people-count\" class=\"extra\"/>",
         """
             <sl:table qualifier="members">
               <caption>Members</caption>

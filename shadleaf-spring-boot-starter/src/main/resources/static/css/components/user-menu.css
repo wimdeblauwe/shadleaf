@@ -19,7 +19,7 @@
   }
 
   /* The header's button is the picture: no padding around it. */
-  .btn.user-menu-trigger {
+  .button.user-menu-trigger {
     @apply overflow-hidden p-0;
   }
 }

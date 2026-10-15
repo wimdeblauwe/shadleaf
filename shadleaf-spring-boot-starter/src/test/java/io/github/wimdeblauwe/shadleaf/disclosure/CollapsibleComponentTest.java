@@ -24,19 +24,19 @@ class CollapsibleComponentTest {
         .hasNoAttribute("open", "name", "x-data");
     assertThat(rendered.root().child(0)).hasTag("summary").hasClass("collapsible-trigger")
         .hasNoAttribute("data-variant", "data-size");
-    assertThat(rendered.root().child(0).classNames()).doesNotContain("btn");
+    assertThat(rendered.root().child(0).classNames()).doesNotContain("button");
     assertThat(rendered).element("div.collapsible-content").hasText("More");
   }
 
   @Test
   void aVariantOrSizeDrawsTheTriggerAsAButton() {
     assertThat(tester.render("<sl:collapsible-trigger variant=\"ghost\" class=\"w-full\">x</sl:collapsible-trigger>"))
-        .root().hasClass("btn", "collapsible-trigger", "w-full").hasAttribute("data-variant", "ghost")
+        .root().hasClass("button", "collapsible-trigger", "w-full").hasAttribute("data-variant", "ghost")
         .hasNoAttribute("data-size");
     assertThat(tester.render("<sl:collapsible-trigger size=\"sm\">x</sl:collapsible-trigger>"))
-        .root().hasClass("btn").hasAttribute("data-size", "sm").hasNoAttribute("data-variant");
+        .root().hasClass("button").hasAttribute("data-size", "sm").hasNoAttribute("data-variant");
     assertThat(tester.render("<sl:collapsible-trigger variant=\"default\" size=\"default\">x</sl:collapsible-trigger>"))
-        .root().hasClass("btn").hasNoAttribute("data-size", "data-variant");
+        .root().hasClass("button").hasNoAttribute("data-size", "data-variant");
   }
 
   @Test

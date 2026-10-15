@@ -96,7 +96,7 @@ class BreadcrumbComponentTest {
     assertThat(rendered).hasNoLeakedMarkup();
     assertThat(rendered).hasNoElement(".breadcrumb-ellipsis");
     assertThat(rendered).element("button")
-        .hasClass("btn", "dropdown-menu-trigger", "breadcrumb-ellipsis-trigger")
+        .hasClass("button", "dropdown-menu-trigger", "breadcrumb-ellipsis-trigger")
         .hasAttribute("id", "breadcrumb-more-trigger")
         .hasAttribute("popovertarget", "breadcrumb-more")
         .hasAttribute("aria-haspopup", "menu")

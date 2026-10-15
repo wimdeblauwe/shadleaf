@@ -22,7 +22,7 @@ class SheetApprovalTest {
         "<sl:sheet id=\"s4\" side=\"bottom\">Content</sl:sheet>",
         "<sl:sheet id=\"s5\" side=\"left\">Content</sl:sheet>",
         "<sl:sheet id=\"s6\" open>Content</sl:sheet>",
-        "<sl:sheet id=\"s7\" close-button=\"false\">Content</sl:sheet>",
+        "<sl:sheet id=\"s7\" show-close-button=\"false\">Content</sl:sheet>",
         "<sl:sheet-header>Header</sl:sheet-header>",
         "<sl:sheet-title>Edit profile</sl:sheet-title>",
         "<sl:sheet-title level=\"3\">Edit profile</sl:sheet-title>",
@@ -37,7 +37,7 @@ class SheetApprovalTest {
                 <sl:sheet-description>Make changes to your profile.</sl:sheet-description>
               </sl:sheet-header>
               <p>Content</p>
-              <sl:sheet-footer close-button>
+              <sl:sheet-footer show-close-button>
                 <sl:button type="submit">Save changes</sl:button>
               </sl:sheet-footer>
             </sl:sheet>"""));

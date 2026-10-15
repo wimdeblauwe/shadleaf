@@ -160,7 +160,12 @@
     "tag" : "sl:alert-title",
     "description" : "The title of an alert, inside `sl:alert`.",
     "declared" : true,
-    "props" : [ ]
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui."
+    } ]
   }, {
     "name" : "avatar",
     "tag" : "sl:avatar",
@@ -258,7 +263,7 @@
   }, {
     "name" : "button",
     "tag" : "sl:button",
-    "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `btn`.",
+    "description" : "A button, or with `as=\"a\"` an anchor that looks the same. Every attribute that is not a prop (`hx-*`, `x-*`, `aria-*`, `data-*`, `href`) passes through; `class` is appended to `button`.",
     "declared" : true,
     "props" : [ {
       "name" : "variant",
@@ -410,7 +415,7 @@
     "props" : [ {
       "name" : "variant",
       "type" : "enum",
-      "values" : [ "default", "outline", "secondary", "ghost", "destructive", "link" ],
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
       "description" : "Draw the trigger as a button of this variant, as on `sl:button`."
     }, {
       "name" : "size",
@@ -440,7 +445,7 @@
       "values" : [ ],
       "description" : "Open the dialog as soon as it is on the page, for a dialog the server renders in answer to a request (an htmx swap, or a page shown after a redirect). Needs Alpine."
     }, {
-      "name" : "close-button",
+      "name" : "show-close-button",
       "type" : "boolean",
       "defaultValue" : "true",
       "values" : [ ],
@@ -470,7 +475,7 @@
     "description" : "The bottom of a `sl:dialog`, for its actions: side by side at the end on a wide screen, stacked with the first one at the bottom on a narrow one.",
     "declared" : true,
     "props" : [ {
-      "name" : "close-button",
+      "name" : "show-close-button",
       "type" : "boolean",
       "defaultValue" : "false",
       "values" : [ ],
@@ -1194,7 +1199,7 @@
       "values" : [ ],
       "description" : "Open the sheet as soon as it is on the page, for a sheet the server renders in answer to a request (an htmx swap). Needs Alpine."
     }, {
-      "name" : "close-button",
+      "name" : "show-close-button",
       "type" : "boolean",
       "defaultValue" : "true",
       "values" : [ ],
@@ -1224,7 +1229,7 @@
     "description" : "The bottom of a `sl:sheet`, for its actions, stacked. It stays at the bottom of a sheet on the side of the screen however little content there is above it.",
     "declared" : true,
     "props" : [ {
-      "name" : "close-button",
+      "name" : "show-close-button",
       "type" : "boolean",
       "defaultValue" : "false",
       "values" : [ ],
@@ -1262,9 +1267,9 @@
     }, {
       "name" : "side",
       "type" : "enum",
-      "defaultValue" : "start",
-      "values" : [ "start", "end" ],
-      "description" : "The edge it sits on: the start of a line (the left, or the right on a right-to-left page) or the end."
+      "defaultValue" : "left",
+      "values" : [ "left", "right" ],
+      "description" : "The edge it sits on, as on `sl:sheet`: `left` is the start of a line and `right` the end, so they swap on a right-to-left page."
     }, {
       "name" : "placement",
       "type" : "enum",
@@ -1729,7 +1734,7 @@
     "description" : "How many rows of a `sl:table` are selected: \"2 of 20 selected\" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as shadcn/ui's data table does. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.",
     "declared" : true,
     "props" : [ {
-      "name" : "table",
+      "name" : "for",
       "type" : "string",
       "values" : [ ],
       "description" : "The `id` of the table whose rows it counts (`sl:table` puts its `id` on the `table`).",
@@ -1955,7 +1960,7 @@
     "description" : "The signed-in user (`#slUser.current`) with a menu that signs out, or a Sign in link for an anonymous visitor. In the sidebar's footer a large menu button with the user's picture, name and email (or username, when it is not the name); in the site header a button with the picture alone. Both open a `sl:dropdown-menu`: the user's name and email, the items in its content (Account, Settings), and Sign out, which posts to `#slUser.logoutUrl` (`shadleaf.security.logout-url`) from a form of its own, so `th:action` adds Spring Security's CSRF token. The picture goes through `sl:avatar`: while it loads, without one and when it fails to load, the initials show. Every attribute that is not a prop passes through to the button (or the Sign in link), except an `aria-label`, which only names the header's button: in the sidebar the button's name is the text it shows, and Sign in is named by its text.",
     "declared" : true,
     "props" : [ {
-      "name" : "as",
+      "name" : "placement",
       "type" : "enum",
       "defaultValue" : "sidebar",
       "values" : [ "sidebar", "header" ],

@@ -54,7 +54,7 @@ class AssetsBehindSecurityTest {
     mockMvc.perform(get(cssUrl))
         .andExpect(status().isOk())
         .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("text/css")))
-        .andExpect(content().string(org.hamcrest.Matchers.containsString(".btn")));
+        .andExpect(content().string(org.hamcrest.Matchers.containsString(".button")));
   }
 
   @ParameterizedTest

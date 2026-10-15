@@ -41,10 +41,10 @@ function shell({state = 'expanded', side = 'start', variant = 'sidebar', collaps
       .replace('<details class="sidebar-menu-collapsible">',
           `<details class="sidebar-menu-collapsible"${current.startsWith('/documents') ? ' open' : ''}>`)
       .replace('data-state="expanded"', `data-state="${state}"`)
-      .replace('aria-label="Main">', `aria-label="Main"${side === 'end' ? ' data-side="end"' : ''}${
+      .replace('aria-label="Main">', `aria-label="Main"${side === 'end' ? ' data-side="right"' : ''}${
           variant === 'sidebar' ? '' : ` data-variant="${variant}"`}${
           collapsible === 'offcanvas' ? '' : ` data-collapsible="${collapsible}"`}>`)
-      .replace('</nav>', '<a class="btn" data-variant="ghost" href="#section">Section</a></nav>')
+      .replace('</nav>', '<a class="button" data-variant="ghost" href="#section">Section</a></nav>')
       .replace('aria-current="page">Home</span>', `aria-current="page">${title}</span>`)
       .replace('<h1>Home</h1>', `<h1>${title}</h1><button id="in-main" type="button">In main</button>`
           + '<p id="section">Section</p>');

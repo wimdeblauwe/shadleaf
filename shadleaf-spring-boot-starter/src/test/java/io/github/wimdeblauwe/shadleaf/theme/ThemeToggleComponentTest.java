@@ -24,7 +24,7 @@ class ThemeToggleComponentTest {
         .hasClassName("theme-toggle")
         .hasAttribute("x-data", "slThemeToggle");
     assertThat(rendered).element(".theme-toggle > button.dropdown-menu-trigger")
-        .hasClass("btn", "theme-toggle-trigger")
+        .hasClass("button", "theme-toggle-trigger")
         .hasAttribute("id", "theme-toggle-trigger")
         .hasAttribute("popovertarget", "theme-toggle")
         .hasAttribute("aria-haspopup", "menu")
@@ -54,7 +54,7 @@ class ThemeToggleComponentTest {
     assertThat(rendered).hasNoLeakedMarkup();
     assertThat(rendered).hasNoElement(".dropdown-menu-content");
     assertThat(rendered).element(".theme-toggle > button.theme-toggle-button")
-        .hasClass("btn", "theme-toggle-trigger")
+        .hasClass("button", "theme-toggle-trigger")
         .hasAttribute("type", "button")
         .hasAttribute("aria-label", "Dark mode")
         .hasAttribute("data-variant", "ghost")

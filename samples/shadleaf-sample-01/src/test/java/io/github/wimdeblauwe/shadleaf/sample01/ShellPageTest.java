@@ -106,7 +106,7 @@ class ShellPageTest {
 
     assertThat(header).isNotNull();
     assertThat(header.children().stream().map(Element::className))
-        .containsExactly("btn sidebar-trigger", "separator", "breadcrumb", "site-header-end");
+        .containsExactly("button sidebar-trigger", "separator", "breadcrumb", "site-header-end");
     Element trigger = header.selectFirst(".sidebar-trigger");
     assertThat(trigger.attr("popovertarget")).isEqualTo("sidebar");
     assertThat(trigger.attr("aria-label")).isEqualTo("Toggle sidebar");

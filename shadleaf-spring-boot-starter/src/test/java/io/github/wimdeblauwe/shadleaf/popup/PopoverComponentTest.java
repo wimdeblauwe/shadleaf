@@ -28,7 +28,7 @@ class PopoverComponentTest {
     assertThat(rendered).hasNoLeakedMarkup();
     assertThat(rendered.document().body().children()).hasSize(2);
     assertThat(rendered).element("button.popover-trigger")
-        .hasClass("btn")
+        .hasClass("button")
         .hasAttribute("popovertarget", "dimensions")
         .hasAttribute("aria-haspopup", "dialog")
         .hasNoAttribute("aria-expanded");

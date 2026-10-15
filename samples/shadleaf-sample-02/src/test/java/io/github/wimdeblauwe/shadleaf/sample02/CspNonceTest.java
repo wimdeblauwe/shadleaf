@@ -77,7 +77,7 @@ class CspNonceTest {
     assertThat(page.getAllElements()).allSatisfy(element -> assertThat(element.attributes().asList())
         .as("inline event handlers on <%s>", element.tagName())
         .noneMatch(attribute -> attribute.getKey().startsWith("on")));
-    assertThat(page.select(".btn")).as("the page uses Shadleaf buttons").isNotEmpty();
+    assertThat(page.select(".button")).as("the page uses Shadleaf buttons").isNotEmpty();
   }
 
   @Test

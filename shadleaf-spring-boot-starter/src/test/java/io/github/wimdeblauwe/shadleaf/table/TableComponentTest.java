@@ -62,7 +62,7 @@ class TableComponentTest {
         .hasAttribute("aria-sort", "descending")
         .hasNoAttribute("data-align", "sort");
     assertThat(rendered).element("th:nth-child(1) > a")
-        .hasClass("btn", "table-sort")
+        .hasClass("button", "table-sort")
         .hasAttribute("data-variant", "ghost")
         .hasAttribute("data-size", "sm")
         .hasAttribute("id", "sort-name")

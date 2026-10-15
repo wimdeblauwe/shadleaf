@@ -30,10 +30,10 @@ class DropdownMenuTriggerComponentTest {
 
     assertThat(rendered).hasNoLeakedMarkup();
     assertThat(rendered).element("button.dropdown-menu-trigger")
-        .hasClass("btn")
+        .hasClass("button")
         .hasAttribute("popovertarget", "sort");
-    assertThat(rendered.select(".dropdown-menu-trigger > .btn-icon[data-icon='inline-start'] > svg")).hasSize(1);
-    assertThat(rendered.select(".dropdown-menu-trigger > .btn-icon[data-icon='inline-end'] > svg")).hasSize(1);
+    assertThat(rendered.select(".dropdown-menu-trigger > .button-icon[data-icon='inline-start'] > svg")).hasSize(1);
+    assertThat(rendered.select(".dropdown-menu-trigger > .button-icon[data-icon='inline-end'] > svg")).hasSize(1);
   }
 
   @Test
@@ -43,7 +43,7 @@ class DropdownMenuTriggerComponentTest {
           <sl:dropdown-menu-trigger>Open</sl:dropdown-menu-trigger>
         </sl:dropdown-menu>""");
 
-    assertThat(rendered.select(".btn-icon")).isEmpty();
+    assertThat(rendered.select(".button-icon")).isEmpty();
     assertThat(rendered).element(".dropdown-menu-trigger").hasText("Open");
   }
 
@@ -72,7 +72,7 @@ class DropdownMenuTriggerComponentTest {
         .hasNoAttribute("data-variant", "aria-current", "aria-expanded");
     // icon-start, label, icon-end, then the tooltip
     assertThat(rendered.select(".sidebar-menu-button > *").eachAttr("class")).containsExactly(
-        "sl-icon", "sidebar-menu-button-label", "sl-icon", "tooltip-content sidebar-menu-tooltip");
+        "icon", "sidebar-menu-button-label", "icon", "tooltip-content sidebar-menu-tooltip");
     assertThat(rendered).element(".sidebar-menu-button-label > strong").hasText("Acme Inc.");
     assertThat(rendered).element(".sidebar-menu-tooltip")
         .hasText("Acme Inc.")

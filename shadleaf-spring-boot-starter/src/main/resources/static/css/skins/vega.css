@@ -5,7 +5,7 @@
 */
 @layer components {
   /* Button. Icons without an explicit size (<sl:icon size>, or a size-* class) take the button's icon size. */
-  .btn {
+  .button {
     @apply rounded-md border border-transparent bg-clip-padding text-sm font-medium
       focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
       aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20
@@ -14,48 +14,48 @@
       [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
   }
 
-  .btn:not([data-size]),
-  .btn[data-size='default'] {
+  .button:not([data-size]),
+  .button[data-size='default'] {
     @apply h-9 gap-1.5 px-2.5 has-[[data-icon='inline-end']]:pe-2 has-[[data-icon='inline-start']]:ps-2;
   }
 
-  .btn[data-size='xs'] {
+  .button[data-size='xs'] {
     @apply h-6 gap-1 rounded-[min(--theme(--radius-md),8px)] px-2 text-xs
       has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
       [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
   }
 
-  .btn[data-size='sm'] {
+  .button[data-size='sm'] {
     @apply h-8 gap-1 rounded-[min(--theme(--radius-md),10px)] px-2.5
       has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5;
   }
 
-  .btn[data-size='lg'] {
+  .button[data-size='lg'] {
     @apply h-10 gap-1.5 px-2.5 has-[[data-icon='inline-end']]:pe-2 has-[[data-icon='inline-start']]:ps-2;
   }
 
-  .btn[data-size='icon'] {
+  .button[data-size='icon'] {
     @apply size-9;
   }
 
-  .btn[data-size='icon-xs'] {
+  .button[data-size='icon-xs'] {
     @apply size-6 rounded-[min(--theme(--radius-md),8px)] [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
   }
 
-  .btn[data-size='icon-sm'] {
+  .button[data-size='icon-sm'] {
     @apply size-8 rounded-[min(--theme(--radius-md),10px)];
   }
 
-  .btn[data-size='icon-lg'] {
+  .button[data-size='icon-lg'] {
     @apply size-10;
   }
 
-  .btn:not([data-variant]),
-  .btn[data-variant='default'] {
+  .button:not([data-variant]),
+  .button[data-variant='default'] {
     @apply bg-primary text-primary-foreground hover:bg-primary/80;
   }
 
-  .btn[data-variant='secondary'] {
+  .button[data-variant='secondary'] {
     @apply bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)];
   }
 
@@ -64,33 +64,33 @@
     it is expanded whenever the sidebar is, which is most of the time (shadcn's has no aria-expanded). :where keeps the
     specificity of the variant's own rules.
   */
-  .btn[data-variant='secondary'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+  .button[data-variant='secondary'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
     @apply bg-secondary text-secondary-foreground;
   }
 
-  .btn[data-variant='outline'] {
+  .button[data-variant='outline'] {
     @apply border-border bg-background shadow-xs hover:bg-muted hover:text-foreground
       dark:border-input dark:bg-input/30 dark:hover:bg-input/50;
   }
 
-  .btn[data-variant='outline'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+  .button[data-variant='outline'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
     @apply bg-muted text-foreground;
   }
 
-  .btn[data-variant='ghost'] {
+  .button[data-variant='ghost'] {
     @apply hover:bg-muted hover:text-foreground dark:hover:bg-muted/50;
   }
 
-  .btn[data-variant='ghost'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+  .button[data-variant='ghost'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
     @apply bg-muted text-foreground;
   }
 
-  .btn[data-variant='link'] {
+  .button[data-variant='link'] {
     @apply text-primary underline-offset-4 hover:underline;
   }
 
   /* text-destructive-legible (components/base.css): shadcn's text-destructive is under 4.5:1 on the tint. */
-  .btn[data-variant='destructive'] {
+  .button[data-variant='destructive'] {
     @apply bg-destructive/10 text-destructive-legible hover:bg-destructive/20
       focus-visible:border-destructive/40 focus-visible:ring-destructive/20
       dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
@@ -728,7 +728,7 @@
     @apply text-xs;
   }
 
-  .btn.user-menu-trigger {
+  .button.user-menu-trigger {
     @apply rounded-full;
   }
 
@@ -805,7 +805,7 @@
       [&_p:not(:last-child)]:mb-4;
   }
 
-  /* Collapsible. A trigger drawn as a button (.btn) gets the rest from the button's rules. */
+  /* Collapsible. A trigger drawn as a button (.button) gets the rest from the button's rules. */
   .collapsible-trigger {
     @apply rounded-md focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50;
   }
@@ -815,7 +815,7 @@
     @apply mt-2;
   }
 
-  .collapsible-trigger:not(.btn) {
+  .collapsible-trigger:not(.button) {
     @apply text-sm font-medium;
   }
 
@@ -984,7 +984,7 @@
   }
 
   /*
-    Pagination. The links are ghost buttons, the current page an outline one (.btn rules). Previous and Next keep
+    Pagination. The links are ghost buttons, the current page an outline one (.button rules). Previous and Next keep
     their own padding on the chevron's side, as shadcn/ui's.
   */
   .pagination-content {
@@ -999,11 +999,11 @@
     @apply size-4;
   }
 
-  .btn.pagination-previous:has(> [data-icon]) {
+  .button.pagination-previous:has(> [data-icon]) {
     @apply ps-2;
   }
 
-  .btn.pagination-next:has(> [data-icon]) {
+  .button.pagination-next:has(> [data-icon]) {
     @apply pe-2;
   }
 
@@ -1022,7 +1022,7 @@
 
   /*
     Breadcrumb, after shadcn's vega style: muted levels, the current page in the foreground colour, a hovered link
-    too. The ellipsis's menu button is a ghost button (.btn rules).
+    too. The ellipsis's menu button is a ghost button (.button rules).
   */
   .breadcrumb-list {
     @apply gap-1.5 text-sm text-muted-foreground sm:gap-2.5;

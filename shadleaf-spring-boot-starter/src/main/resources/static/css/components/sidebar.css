@@ -50,7 +50,7 @@
     @apply rtl:-scale-x-100;
   }
 
-  .sidebar-provider:has(> .sidebar[data-side='end']) .sidebar-trigger-icon {
+  .sidebar-provider:has(> .sidebar[data-side='right']) .sidebar-trigger-icon {
     @apply -scale-x-100 rtl:scale-x-100;
   }
 
@@ -70,7 +70,7 @@
       --sidebar-from: -100%;
     }
 
-    .sidebar[data-side='end'] {
+    .sidebar[data-side='right'] {
       @apply start-auto end-0 border-s;
       --sidebar-from: 100%;
     }
@@ -79,7 +79,7 @@
       --sidebar-from: 100%;
     }
 
-    .sidebar[data-side='end']:dir(rtl) {
+    .sidebar[data-side='right']:dir(rtl) {
       --sidebar-from: -100%;
     }
 
@@ -119,11 +119,11 @@
       @apply border-e;
     }
 
-    .sidebar:not([data-placement])[data-side='end'] {
+    .sidebar:not([data-placement])[data-side='right'] {
       @apply order-1;
     }
 
-    .sidebar:not([data-placement])[data-side='end']:not([data-variant]) {
+    .sidebar:not([data-placement])[data-side='right']:not([data-variant]) {
       @apply border-s;
     }
 
@@ -156,7 +156,7 @@
       @apply ms-0;
     }
 
-    .sidebar-provider:has(> .sidebar[data-variant='inset'][data-side='end']) > .sidebar-inset {
+    .sidebar-provider:has(> .sidebar[data-variant='inset'][data-side='right']) > .sidebar-inset {
       @apply me-0;
     }
 
@@ -177,7 +177,7 @@
       margin-inline-start: calc(-1 * var(--sidebar-width));
     }
 
-    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible])[data-side='end'] {
+    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible])[data-side='right'] {
       margin-inline-end: calc(-1 * var(--sidebar-width));
     }
 
@@ -186,7 +186,7 @@
       margin-inline-start: calc(-1 * (var(--sidebar-width) - --spacing(2)));
     }
 
-    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible])[data-variant='floating'][data-side='end'] {
+    .sidebar-provider[data-state='collapsed'] > .sidebar:not([data-collapsible])[data-variant='floating'][data-side='right'] {
       margin-inline-end: calc(-1 * (var(--sidebar-width) - --spacing(2)));
     }
 
@@ -283,14 +283,14 @@
   }
 
   /* On a sidebar at the end it shows on the other side, the start (the menu button renders side="right"). */
-  .sidebar[data-side='end'] .sidebar-menu-tooltip {
+  .sidebar[data-side='right'] .sidebar-menu-tooltip {
     --popup-side: inline-start;
     --popup-margin-inline: 0 var(--popup-offset);
     --popup-from: var(--popup-slide) 0;
     transform-origin: right;
   }
 
-  .sidebar[data-side='end'] .sidebar-menu-tooltip:dir(rtl) {
+  .sidebar[data-side='right'] .sidebar-menu-tooltip:dir(rtl) {
     --popup-from: calc(-1 * var(--popup-slide)) 0;
     transform-origin: left;
   }

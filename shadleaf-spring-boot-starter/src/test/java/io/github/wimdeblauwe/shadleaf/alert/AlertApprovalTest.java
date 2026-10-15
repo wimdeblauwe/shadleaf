@@ -19,6 +19,7 @@ class AlertApprovalTest {
         "<sl:alert variant=\"default\">Saved</sl:alert>",
         "<sl:alert variant=\"destructive\">Not saved</sl:alert>",
         "<sl:alert-title>Heads up</sl:alert-title>",
+        "<sl:alert-title level=\"2\">Heads up</sl:alert-title>",
         "<sl:alert-description>You can add components to your app.</sl:alert-description>",
         """
             <sl:alert variant="destructive" role="alert" id="payment-error">

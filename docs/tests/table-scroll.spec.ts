@@ -13,7 +13,7 @@ import {openFixture} from './fixture';
 const cells = (count: number) => Array.from({length: count}, (_, index) => `<td>A long cell, number ${index}</td>`)
     .join('');
 const head = (links: boolean) => Array.from({length: 8}, (_, index) => links
-    ? `<th class="table-head"><a class="btn table-sort" data-variant="ghost" data-size="sm" id="sort-${index}"
+    ? `<th class="table-head"><a class="button table-sort" data-variant="ghost" data-size="sm" id="sort-${index}"
         href="#sort-${index}">Column ${index}</a></th>`
     : `<th class="table-head">Column ${index}</th>`).join('');
 const table = (links: boolean, columns = 8) => `<button id="before">Before</button>

@@ -15,7 +15,7 @@
       <code>right</code> sheet opens on the left.</sl:prop>
     <sl:prop name="open" type="boolean">Open the sheet as soon as it is on the page, for a sheet the server renders
       in answer to a request (an htmx swap). Needs Alpine.</sl:prop>
-    <sl:prop name="close-button" type="boolean" default="true">A close button (an x) in the corner.</sl:prop>
+    <sl:prop name="show-close-button" type="boolean" default="true">A close button (an x) in the corner.</sl:prop>
   </sl:props>
 </head>
 <body>
@@ -31,7 +31,7 @@
                  aria-describedby=${slots.contains('sheet-description', 'sheet') ? slDialogId + '-description' : null},
                  data-side=${props.unlessDefault('side')},
                  data-show-modal=${props.open ? 'true' : null}"
-        sl:attrs><sl:slot/><sl:button th:if="${props['close-button']}"
+        sl:attrs><sl:slot/><sl:button th:if="${props['show-close-button']}"
                                       variant="ghost"
                                       size="icon-sm"
                                       class="sheet-close"

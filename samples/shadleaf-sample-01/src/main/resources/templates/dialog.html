@@ -34,7 +34,7 @@
       <dt>New order</dt>
       <dd><sl:kbd>N</sl:kbd></dd>
     </dl>
-    <sl:dialog-footer close-button/>
+    <sl:dialog-footer show-close-button/>
   </sl:dialog>
 
   <h2>From the server, with htmx</h2>
@@ -124,7 +124,7 @@
       <sl:sheet-description>They get an email with a link to join the team.</sl:sheet-description>
     </sl:sheet-header>
     <form th:replace="~{dialog :: invite-form}"></form>
-    <sl:sheet-footer close-button>
+    <sl:sheet-footer show-close-button>
       <sl:button type="submit" form="invite-member-form">Send invitation</sl:button>
     </sl:sheet-footer>
   </sl:sheet>
@@ -137,7 +137,7 @@
     <sl:sheet-body>
       <sl:slot name="error">The member could not be loaded.</sl:slot>
     </sl:sheet-body>
-    <sl:sheet-footer close-button/>
+    <sl:sheet-footer show-close-button/>
   </sl:sheet>
 
   <sl:dialog id="edit-member">

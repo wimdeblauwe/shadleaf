@@ -25,7 +25,7 @@
       th:with="slSort=${#slPaging.sort(slTablePage, props.sort, slTableQualifier)}"
       class="table-head"
       th:attr="data-align=${props.unlessDefault('align')}, aria-sort=${slSort.ariaSort}"
-      sl:attrs><a class="btn table-sort"
+      sl:attrs><a class="button table-sort"
       data-variant="ghost"
       data-size="sm"
       th:href="${slSort.href}"

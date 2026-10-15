@@ -47,7 +47,7 @@ class WithoutSpringSecurityTest {
           assertThat(page.getElementById("user").text()).isEmpty();
           assertThat(page.getElementById("login").attr("href")).isEqualTo("/sign-in");
           assertThat(page.getElementById("logout").text()).isEqualTo("/logout");
-          assertThat(page.select("button.btn")).hasSize(1);
+          assertThat(page.select("button.button")).hasSize(1);
         });
   }
 

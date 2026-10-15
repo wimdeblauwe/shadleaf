@@ -1,5 +1,5 @@
 /*
-  Pagination: structure only. The links are buttons (.btn), whose rules set their look; the skins set the gaps and the
+  Pagination: structure only. The links are buttons (.button), whose rules set their look; the skins set the gaps and the
   ellipsis's size. Summary and size menu are separate, so the application lays out a table's footer itself.
 */
 @layer components {
@@ -22,8 +22,8 @@
     @apply hidden sm:block;
   }
 
-  .pagination-previous > .btn-icon,
-  .pagination-next > .btn-icon {
+  .pagination-previous > .button-icon,
+  .pagination-next > .button-icon {
     @apply rtl:-scale-x-100;
   }
 

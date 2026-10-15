@@ -27,7 +27,7 @@ settings, the details of a row. It is `<sl:sheet>` plus the parts you need, as i
     <sl:field-group>
       ...
     </sl:field-group>
-    <sl:sheet-footer close-button>
+    <sl:sheet-footer show-close-button>
       <sl:button type="submit">Save changes</sl:button>
     </sl:sheet-footer>
   </sl:sheet>
@@ -62,8 +62,8 @@ it only fades.
 
 ## Close buttons
 
-The close button in the corner is on by default; `close-button="false"` leaves it out. `<sl:sheet-footer
-close-button>` adds an outline "Close" button after the footer's own actions.
+The close button in the corner is on by default; `show-close-button="false"` leaves it out. `<sl:sheet-footer
+show-close-button>` adds an outline "Close" button after the footer's own actions.
 
 <ComponentPreview id="sheet--no-close-button" />
 
@@ -94,7 +94,7 @@ sheet closes, so it never shows the previous row while the next one loads.
        <sl:sheet-title>Member details</sl:sheet-title>
      </sl:sheet-header>
      <sl:sheet-body/>
-     <sl:sheet-footer close-button/>
+     <sl:sheet-footer show-close-button/>
    </sl:sheet>
    ```
 
@@ -168,7 +168,7 @@ in the page and the form is what htmx loads, so the submit button points at the 
     <sl:sheet-title>Edit member</sl:sheet-title>
   </sl:sheet-header>
   <sl:sheet-body/>
-  <sl:sheet-footer close-button>
+  <sl:sheet-footer show-close-button>
     <sl:button type="submit" form="member-edit-form">Save</sl:button>
   </sl:sheet-footer>
 </sl:sheet>

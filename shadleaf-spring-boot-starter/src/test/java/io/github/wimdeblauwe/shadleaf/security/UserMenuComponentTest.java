@@ -43,7 +43,7 @@ class UserMenuComponentTest {
         .hasNoAttribute("aria-label");
     // avatar, name and email, chevrons, the tooltip for icon mode
     assertThat(rendered.select(".user-menu-trigger > *").eachAttr("class")).containsExactly(
-        "avatar user-menu-avatar", "sidebar-menu-button-label", "sl-icon", "tooltip-content sidebar-menu-tooltip");
+        "avatar user-menu-avatar", "sidebar-menu-button-label", "icon", "tooltip-content sidebar-menu-tooltip");
     assertThat(rendered).element(".user-menu-trigger .sidebar-menu-button-label > strong").hasText("Ada Lovelace");
     assertThat(rendered).element(".user-menu-trigger .sidebar-menu-button-label > small").hasText("ada@example.com");
     assertThat(rendered).element(".user-menu-trigger .sidebar-menu-tooltip").hasText("Ada Lovelace");
@@ -138,7 +138,7 @@ class UserMenuComponentTest {
 
   @Test
   void aUsernameAndPassword() {
-    Rendered rendered = render(user("grace"), "<sl:user-menu as=\"header\"/>");
+    Rendered rendered = render(user("grace"), "<sl:user-menu placement=\"header\"/>");
 
     assertThat(rendered).element(".user-menu-trigger").hasAttribute("aria-label", "Account: grace");
     assertThat(rendered).element(".user-menu-label .user-menu-name").hasText("grace");
@@ -150,14 +150,14 @@ class UserMenuComponentTest {
   @Test
   void headerSignedIn() {
     Rendered rendered = render(ADA, """
-        <sl:user-menu as="header">
+        <sl:user-menu placement="header">
           <sl:dropdown-menu-item as="a" href="/account">Account</sl:dropdown-menu-item>
         </sl:user-menu>""");
 
     assertThat(rendered).hasNoLeakedMarkup();
     assertThat(rendered.select(".sidebar-menu")).isEmpty();
     assertThat(rendered).element("button.user-menu-trigger")
-        .hasClass("btn")
+        .hasClass("button")
         .hasClass("dropdown-menu-trigger")
         .hasAttribute("data-variant", "ghost")
         .hasAttribute("data-size", "icon")
@@ -175,7 +175,7 @@ class UserMenuComponentTest {
   @Test
   void aCallersAriaLabelAndAttributesGoToTheButton() {
     Rendered rendered = render(ADA, """
-        <sl:user-menu as="header" id="account" aria-label="Your account" data-test="x" side="left" align="start"/>""");
+        <sl:user-menu placement="header" id="account" aria-label="Your account" data-test="x" side="left" align="start"/>""");
 
     assertThat(rendered).element("button.user-menu-trigger")
         .hasAttribute("id", "account-trigger")
@@ -208,9 +208,9 @@ class UserMenuComponentTest {
     Rendered rendered = ComponentRenderTester.builder()
         .userSource(UserSource.anonymous("/oauth2/authorization/github", "/logout"))
         .build()
-        .render("<sl:user-menu as=\"header\" data-test=\"x\"/>");
+        .render("<sl:user-menu placement=\"header\" data-test=\"x\"/>");
 
-    assertThat(rendered).element("a.btn.user-menu-sign-in")
+    assertThat(rendered).element("a.button.user-menu-sign-in")
         .hasAttribute("href", "/oauth2/authorization/github")
         .hasAttribute("data-variant", "outline")
         .hasAttribute("hx-boost", "false")
@@ -225,7 +225,7 @@ class UserMenuComponentTest {
     assertThat(render(ADA, snippet)).element(".user-menu-trigger").hasNoAttribute("aria-label");
     assertThat(ComponentRenderTester.create().render(snippet)).element(".user-menu-sign-in")
         .hasNoAttribute("aria-label");
-    assertThat(ComponentRenderTester.create().render("<sl:user-menu as=\"header\" aria-label=\"Your account\"/>"))
+    assertThat(ComponentRenderTester.create().render("<sl:user-menu placement=\"header\" aria-label=\"Your account\"/>"))
         .element(".user-menu-sign-in").hasNoAttribute("aria-label");
   }
 

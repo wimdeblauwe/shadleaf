@@ -37,7 +37,7 @@ scenarios:
   - id: header
     title: In the site header
     description: >-
-      as="header": a round button with the picture, named "Account: " and the user's name, at the end of a
+      placement="header": a round button with the picture, named "Account: " and the user's name, at the end of a
       sl:site-header. The menu opens below it, lined up with its end.
     user:
       name: shadcn
@@ -50,7 +50,7 @@ scenarios:
           Acme Inc.
         </sl:button>
         <sl:slot name="end">
-          <sl:user-menu as="header" id="user-menu-header">
+          <sl:user-menu placement="header" id="user-menu-header">
             <sl:dropdown-menu-item as="a" href="/account"><sl:icon name="badge-check"/>Account</sl:dropdown-menu-item>
             <sl:dropdown-menu-item as="a" href="/settings"><sl:icon name="settings"/>Settings</sl:dropdown-menu-item>
           </sl:user-menu>
@@ -67,7 +67,7 @@ scenarios:
     source: |-
       <sl:site-header>
         <sl:slot name="end">
-          <sl:user-menu as="header" id="user-menu-initials"/>
+          <sl:user-menu placement="header" id="user-menu-initials"/>
         </sl:slot>
       </sl:site-header>
   - id: anonymous
@@ -83,7 +83,7 @@ scenarios:
           Acme Inc.
         </sl:button>
         <sl:slot name="end">
-          <sl:user-menu as="header"/>
+          <sl:user-menu placement="header"/>
         </sl:slot>
       </sl:site-header>
   - id: anonymous-sidebar

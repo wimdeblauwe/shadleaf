@@ -35,10 +35,10 @@ class ButtonOverrideTest {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString());
 
-    Elements buttons = page.select(".btn");
+    Elements buttons = page.select(".button");
     assertThat(buttons).hasSizeGreaterThan(30);
     assertThat(buttons).allSatisfy(button -> assertThat(button.attr("data-ejected")).isEqualTo("shadleaf-sample-01"));
-    assertThat(page.select("a.btn")).as("the as=\"a\" branch too").isNotEmpty();
+    assertThat(page.select("a.button")).as("the as=\"a\" branch too").isNotEmpty();
   }
 
   @Test

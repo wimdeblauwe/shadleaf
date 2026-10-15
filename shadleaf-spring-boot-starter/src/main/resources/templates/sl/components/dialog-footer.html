@@ -4,12 +4,12 @@
   <sl:props>
     <sl:description>The bottom of a <code>sl:dialog</code>, for its actions: side by side at the end on a wide
       screen, stacked with the first one at the bottom on a narrow one.</sl:description>
-    <sl:prop name="close-button" type="boolean">An outline "Close" button after the other actions.</sl:prop>
+    <sl:prop name="show-close-button" type="boolean">An outline "Close" button after the other actions.</sl:prop>
   </sl:props>
 </head>
 <body>
 <div th:fragment="dialog-footer" class="dialog-footer" sl:attrs><sl:slot/><sl:button
-    th:if="${props['close-button']}"
+    th:if="${props['show-close-button']}"
     variant="outline"
     th:commandfor="${slDialogId}"
     command="close"

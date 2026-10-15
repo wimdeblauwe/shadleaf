@@ -23,7 +23,7 @@
 <svg th:fragment="icon"
      th:with="slIcon=${#slIcons.get(props.name)}"
      xmlns="http://www.w3.org/2000/svg"
-     class="sl-icon"
+     class="icon"
      sl:attrs="${#slIcons.svgAttributes(slIcon, props.size, props['stroke-width'], props.label, attrs)}"
      th:utext="${slIcon.body}"></svg>
 </body>

@@ -67,7 +67,7 @@ class TableSelectionComponentTest {
 
   @Test
   void theCountNamesItsTableAndIsEmptyUntilAlpineFillsItIn() {
-    Rendered rendered = TESTER.render("<sl:table-selection-count table=\"people\" id=\"people-count\"/>");
+    Rendered rendered = TESTER.render("<sl:table-selection-count for=\"people\" id=\"people-count\"/>");
 
     assertThat(rendered).hasNoLeakedMarkup();
     assertThat(rendered).root()
@@ -93,7 +93,7 @@ class TableSelectionComponentTest {
     StaticMessageSource messages = new StaticMessageSource();
     messages.addMessage("sl.table.selection.count", Locale.ENGLISH, "{0} van {1} geselecteerd");
     Rendered rendered = ComponentRenderTester.builder().messageSource(messages).locale(Locale.ENGLISH).build()
-        .render("<sl:table-selection-count table=\"people\"/>");
+        .render("<sl:table-selection-count for=\"people\"/>");
 
     assertThat(rendered).root().hasAttribute("data-format", "{0} van {1} geselecteerd");
   }

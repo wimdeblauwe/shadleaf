@@ -1,6 +1,6 @@
 # A layout for the docs' Layouts section, rendered by PreviewGeneratorTest (see its javadoc for the keys). docs/tests/
 # layouts.spec.ts opens it at a desktop and a phone width; it expects the sub-button "Data Fetching" to be the current
-# page, and the sidebar on the end (side="end") after the inset.
+# page, and the sidebar on the end (side="right") after the inset.
 title: On the end
 description: >-
   A table of contents on the end of the line: the right, or the left on a right-to-left page. The sidebar comes after
@@ -48,7 +48,7 @@ source: |-
         <div th:replace="${content}"></div>
       </div>
     </sl:sidebar-inset>
-    <sl:sidebar side="end">
+    <sl:sidebar side="right">
       <sl:sidebar-content>
         <sl:sidebar-group id="toc">
           <sl:sidebar-group-label>Table of Contents</sl:sidebar-group-label>

@@ -8,7 +8,7 @@
   developed against it; a real application keeps its copy in src/main/resources.
 
   <sl:button> renders a <button>, or with as="a" an anchor that looks the same. Every attribute that is not a prop
-  (hx-*, x-*, aria-*, data-*, href) passes through; class is appended to "btn".
+  (hx-*, x-*, aria-*, data-*, href) passes through; class is appended to "button".
 -->
 <head>
   <sl:props>
@@ -34,7 +34,7 @@
 -->
 <th:block th:fragment="button">
   <button th:if="${props.as == 'button'}"
-          class="btn"
+          class="button"
           data-ejected="shadleaf-sample-01"
           th:type="${props.type}"
           th:disabled="${props.disabled or props.loading}"
@@ -49,7 +49,7 @@
   */-->
   <a th:unless="${props.as == 'button'}"
      th:with="slInactive=${props.disabled or props.loading}"
-     class="btn"
+     class="button"
      data-ejected="shadleaf-sample-01"
      th:attr="data-variant=${props.unlessDefault('variant')},
               data-size=${props.unlessDefault('size')},
@@ -67,13 +67,13 @@
 -->
 <th:block th:fragment="button-content"
           th:with="slIconOnly=${#strings.startsWith(props.size, 'icon')}">
-  <span th:if="${props.loading}" class="btn-icon" data-icon="inline-start"><sl:icon name="loader-circle"
-                                                                                  class="btn-spinner"/></span>
+  <span th:if="${props.loading}" class="button-icon" data-icon="inline-start"><sl:icon name="loader-circle"
+                                                                                  class="button-spinner"/></span>
   <span th:if="${props.loading}" class="sl-sr-only" th:text="#{sl.button.loading}">Loading</span>
-  <span th:if="${!props.loading and slots.has('icon-start')}" class="btn-icon" data-icon="inline-start"><sl:slot
+  <span th:if="${!props.loading and slots.has('icon-start')}" class="button-icon" data-icon="inline-start"><sl:slot
       name="icon-start"/></span>
   <th:block th:unless="${props.loading and slIconOnly}"><sl:slot>Button</sl:slot></th:block>
-  <span th:if="${slots.has('icon-end')}" class="btn-icon" data-icon="inline-end"><sl:slot name="icon-end"/></span>
+  <span th:if="${slots.has('icon-end')}" class="button-icon" data-icon="inline-end"><sl:slot name="icon-end"/></span>
 </th:block>
 </body>
 </html>

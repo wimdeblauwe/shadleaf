@@ -31,25 +31,25 @@
 
 <!-- <sl:table-head sort="name">Name</sl:table-head> -->
 <th class="table-head" aria-sort="descending">
-  <a class="btn table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=name,asc" id="sort-name">
+  <a class="button table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=name,asc" id="sort-name">
     Name
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </a>
 </th>
 
 <!-- <sl:table-head sort="email">Email</sl:table-head> -->
 <th class="table-head">
-  <a class="btn table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=email,asc" id="sort-email">
+  <a class="button table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=email,asc" id="sort-email">
     Email
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </a>
 </th>
 
 <!-- <sl:table-head sort="amount" align="end">Amount</sl:table-head> -->
 <th class="table-head" data-align="end">
-  <a class="btn table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=amount,asc" id="sort-amount">
+  <a class="button table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=amount,asc" id="sort-amount">
     Amount
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </a>
 </th>
 
@@ -66,31 +66,31 @@
 <!-- <sl:table-select-all/> -->
 <span class="checkbox-wrapper table-select-all" x-data="slTableSelection" x-cloak data-format="{0} of {1} selected">
   <input type="checkbox" class="checkbox" aria-label="Select all rows on this page">
-  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
-  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   <span class="sl-sr-only" role="status"></span>
 </span>
 
 <!-- <sl:table-select-all name="ids" id="people-select-all" form="bulk" class="extra"/> -->
 <span class="checkbox-wrapper table-select-all extra" x-data="slTableSelection" x-cloak data-name="ids" data-format="{0} of {1} selected">
   <input type="checkbox" class="checkbox" aria-label="Select all rows on this page" id="people-select-all" form="bulk">
-  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
-  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   <span class="sl-sr-only" role="status"></span>
 </span>
 
 <!-- <sl:table-select-all aria-label="Select all people on this page"/> -->
 <span class="checkbox-wrapper table-select-all" x-data="slTableSelection" x-cloak data-format="{0} of {1} selected">
   <input type="checkbox" class="checkbox" aria-label="Select all people on this page">
-  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
-  <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon checkbox-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon checkbox-indeterminate-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   <span class="sl-sr-only" role="status"></span>
 </span>
 
-<!-- <sl:table-selection-count table="people"/> -->
+<!-- <sl:table-selection-count for="people"/> -->
 <span class="table-selection-count" x-data="slTableSelectionCount" x-cloak data-table="people" data-format="{0} of {1} selected"></span>
 
-<!-- <sl:table-selection-count table="people" id="people-count" class="extra"/> -->
+<!-- <sl:table-selection-count for="people" id="people-count" class="extra"/> -->
 <span class="table-selection-count extra" x-data="slTableSelectionCount" x-cloak data-table="people" data-format="{0} of {1} selected" id="people-count"></span>
 
 <!-- <sl:table qualifier="members">
@@ -114,9 +114,9 @@
     <thead>
       <tr>
         <th class="table-head">
-          <a class="btn table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=name,desc&amp;page=2&amp;members_sort=name,asc" id="members-sort-name">
+          <a class="button table-sort" data-variant="ghost" data-size="sm" href="/people?q=ada&amp;sort=name,desc&amp;page=2&amp;members_sort=name,asc" id="members-sort-name">
             Name
-            <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
           </a>
         </th>
         <th class="table-head" data-align="end">Orders</th>

@@ -13,8 +13,9 @@
       instead, where from 768&nbsp;px it is a row of links; on a phone it is the same panel.</sl:description>
     <sl:prop name="id" default="sidebar">The id the trigger points at (<code>sl:sidebar-trigger</code>'s
       <code>for</code>).</sl:prop>
-    <sl:prop name="side" default="start" values="start end">The edge it sits on: the start of a line (the left, or the
-      right on a right-to-left page) or the end.</sl:prop>
+    <sl:prop name="side" default="left" values="left right">The edge it sits on, as on <code>sl:sheet</code>:
+      <code>left</code> is the start of a line and <code>right</code> the end, so they swap on a right-to-left
+      page.</sl:prop>
     <sl:prop name="placement" default="sidebar" values="sidebar header">Where it sits on a desktop:
       <code>sidebar</code> is a column beside the page; <code>header</code> a row of links inside
       <code>sl:site-header</code> (the header layout), which never collapses: <code>collapsible</code>, the collapsed

@@ -18,7 +18,7 @@ class IconComponentTest {
     Element svg = render("<sl:icon name=\"trash\"/>");
 
     assertThat(svg.tagName()).isEqualTo("svg");
-    assertThat(svg.className()).isEqualTo("sl-icon");
+    assertThat(svg.className()).isEqualTo("icon");
     assertThat(svg.attr("viewBox")).isEqualTo("0 0 24 24");
     assertThat(svg.attr("width")).isEqualTo("24");
     assertThat(svg.attr("height")).isEqualTo("24");
@@ -83,7 +83,7 @@ class IconComponentTest {
   void classMergesAndOtherAttributesPassThrough() {
     Element svg = render("<sl:icon name=\"x\" class=\"text-red\" data-test=\"close\" x-show=\"open\"/>");
 
-    assertThat(svg.className()).isEqualTo("sl-icon text-red");
+    assertThat(svg.className()).isEqualTo("icon text-red");
     assertThat(svg.attr("data-test")).isEqualTo("close");
     assertThat(svg.attr("x-show")).isEqualTo("open");
   }
@@ -113,7 +113,7 @@ class IconComponentTest {
     assertThat(logo.attr("fill")).isEqualTo("currentColor");
     assertThat(logo.hasAttr("stroke")).isFalse();
     assertThat(logo.attr("width")).isEqualTo("24");
-    assertThat(logo.className()).isEqualTo("sl-icon");
+    assertThat(logo.className()).isEqualTo("icon");
     assertThat(logo.id()).isEmpty();
     assertThat(logo.select("circle")).hasSize(1);
 
@@ -148,7 +148,7 @@ class IconComponentTest {
           <sl:slot name="header"><sl:icon name="x"/> Title</sl:slot>
         </sl:test-card>""");
 
-    assertThat(card.selectFirst(".card-header > svg.sl-icon")).isNotNull();
+    assertThat(card.selectFirst(".card-header > svg.icon")).isNotNull();
     assertThat(card.selectFirst(".card-header").text()).isEqualTo("Title");
   }
 

@@ -18,7 +18,7 @@ class DialogApprovalTest {
     HtmlApproval.verifyRenders("dialog", tester, List.of(
         "<sl:dialog id=\"d1\">Content</sl:dialog>",
         "<sl:dialog id=\"d2\" open>Content</sl:dialog>",
-        "<sl:dialog id=\"d3\" close-button=\"false\">Content</sl:dialog>",
+        "<sl:dialog id=\"d3\" show-close-button=\"false\">Content</sl:dialog>",
         "<sl:dialog-header>Header</sl:dialog-header>",
         "<sl:dialog-title>Edit profile</sl:dialog-title>",
         "<sl:dialog-title level=\"3\">Edit profile</sl:dialog-title>",
@@ -33,7 +33,7 @@ class DialogApprovalTest {
                 <sl:dialog-description>Make changes to your profile.</sl:dialog-description>
               </sl:dialog-header>
               <p>Content</p>
-              <sl:dialog-footer close-button>
+              <sl:dialog-footer show-close-button>
                 <sl:button type="submit">Save changes</sl:button>
               </sl:dialog-footer>
             </sl:dialog>""",

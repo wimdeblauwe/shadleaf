@@ -484,7 +484,7 @@ const css = previews.skins[0].css;
 
 /** A menu marked up as <sl:dropdown-menu> renders it (see dropdown-menu.approved.html). */
 function menu(id: string, items: string): string {
-  return `<button class="btn dropdown-menu-trigger" type="button" id="${id}-trigger" popovertarget="${id}"
+  return `<button class="button dropdown-menu-trigger" type="button" id="${id}-trigger" popovertarget="${id}"
       aria-haspopup="menu">Actions</button>
     <div class="dropdown-menu-content" id="${id}" role="menu" popover tabindex="-1" x-data="slDropdownMenu"
       aria-labelledby="${id}-trigger">${items}</div>`;
@@ -497,7 +497,7 @@ function item(text: string, attributes = ''): string {
 
 /** A popover marked up as <sl:popover> renders it (see popover.approved.html). */
 function popover(id: string, content: string): string {
-  return `<button class="btn popover-trigger" type="button" popovertarget="${id}" aria-haspopup="dialog">Open</button>
+  return `<button class="button popover-trigger" type="button" popovertarget="${id}" aria-haspopup="dialog">Open</button>
     <div class="popover-content" id="${id}" role="dialog" popover tabindex="-1" x-data="slPopover"
       aria-label="Popover ${id}">${content}</div>`;
 }

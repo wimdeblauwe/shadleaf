@@ -93,7 +93,7 @@ class PaginationSummaryAndSizeTest {
     assertThat(rendered).root().hasTag("div").hasClass("pagination-size", "extra");
     assertThat(rendered).element("#page-size-label").hasClass("pagination-size-label").hasText("Rows per page");
     assertThat(rendered).element("#page-size-trigger")
-        .hasClass("btn", "dropdown-menu-trigger", "pagination-size-trigger")
+        .hasClass("button", "dropdown-menu-trigger", "pagination-size-trigger")
         .hasAttribute("data-variant", "outline")
         .hasAttribute("data-size", "sm")
         .hasAttribute("popovertarget", "page-size")

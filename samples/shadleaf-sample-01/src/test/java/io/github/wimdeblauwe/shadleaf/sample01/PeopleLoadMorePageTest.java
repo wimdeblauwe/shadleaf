@@ -56,7 +56,7 @@ class PeopleLoadMorePageTest {
     assertThat(emails(rows)).hasSize(PeopleController.PAGE_SIZE);
     assertThat(rows.get(0).id()).isEqualTo("people-row-1");
     assertThat(page.select("tr[tabindex], [autofocus]")).isEmpty();
-    Element link = page.select(".load-more-row a.btn").first();
+    Element link = page.select(".load-more-row a.button").first();
     assertThat(link.text()).isEqualTo("Load more");
     assertThat(link.attr("href")).isEqualTo("/people-load-more?page=1#people-row-21");
     assertThat(link.attr("hx-get")).isEqualTo("/people-load-more?page=1");
@@ -64,7 +64,7 @@ class PeopleLoadMorePageTest {
     assertThat(link.attr("hx-swap")).isEqualTo("outerHTML");
     assertThat(link.attr("hx-replace-url")).isEqualTo("true");
     // The spinner htmx shows while the request is in flight (htmx-indicator inside the requesting link).
-    assertThat(link.select("> .htmx-indicator > svg.btn-spinner[aria-hidden=true]")).hasSize(1);
+    assertThat(link.select("> .htmx-indicator > svg.button-spinner[aria-hidden=true]")).hasSize(1);
     // A Slice has no total: no pagination summary, and the sort links still work.
     assertThat(page.getElementById("sort-email").attr("href")).isEqualTo("/people-load-more?sort=email,asc");
     assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();

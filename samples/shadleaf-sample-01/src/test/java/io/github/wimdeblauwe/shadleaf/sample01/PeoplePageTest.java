@@ -302,7 +302,7 @@ class PeoplePageTest {
 
     assertThat(page.select("h1").text()).isEqualTo(person.getName());
     assertThat(page.select(".person-details").text()).contains(person.getEmail(), person.getRole().getLabel());
-    assertThat(page.select("a.btn").last().attr("href")).isEqualTo("/people");
+    assertThat(page.select("a.button").last().attr("href")).isEqualTo("/people");
     mockMvc.perform(get("/people/999999")).andExpect(status().isNotFound());
   }
 
@@ -379,7 +379,7 @@ class PeoplePageTest {
     assertThat(form.attr("method")).isEqualTo("post");
     assertThat(form.attr("action")).isEqualTo("/people?q=a&sort=orders,desc&page=1");
     assertThat(form.select("button[type=submit][name=delete]").attr("value")).isEqualTo(String.valueOf(person.getId()));
-    assertThat(form.select("a.btn").attr("href")).isEqualTo("/people?q=a&sort=orders,desc&page=1");
+    assertThat(form.select("a.button").attr("href")).isEqualTo("/people?q=a&sort=orders,desc&page=1");
     assertThat(page.select("dialog")).isEmpty();
 
     Document dialog = Jsoup.parseBodyFragment(html(url, "HX-Request", "true"));

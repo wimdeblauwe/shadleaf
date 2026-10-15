@@ -4,7 +4,7 @@
   <sl:props>
     <sl:description>A button, or with <code>as="a"</code> an anchor that looks the same. Every attribute that is not
       a prop (<code>hx-*</code>, <code>x-*</code>, <code>aria-*</code>, <code>data-*</code>, <code>href</code>) passes
-      through; <code>class</code> is appended to <code>btn</code>.</sl:description>
+      through; <code>class</code> is appended to <code>button</code>.</sl:description>
     <sl:prop name="variant" default="default" values="default outline ghost destructive secondary link">
       Visual style of the button.</sl:prop>
     <sl:prop name="size" default="default" values="xs sm default lg icon icon-xs icon-sm icon-lg">
@@ -27,7 +27,7 @@
 -->
 <th:block th:fragment="button">
   <button th:if="${props.as == 'button'}"
-          class="btn"
+          class="button"
           th:type="${props.type}"
           th:disabled="${props.disabled or props.loading}"
           th:attr="data-variant=${props.unlessDefault('variant')},
@@ -41,7 +41,7 @@
   */-->
   <a th:unless="${props.as == 'button'}"
      th:with="slInactive=${props.disabled or props.loading}"
-     class="btn"
+     class="button"
      th:attr="data-variant=${props.unlessDefault('variant')},
               data-size=${props.unlessDefault('size')},
               aria-busy=${props.loading ? 'true' : null},
@@ -58,13 +58,13 @@
 -->
 <th:block th:fragment="button-content"
           th:with="slIconOnly=${#strings.startsWith(props.size, 'icon')}">
-  <span th:if="${props.loading}" class="btn-icon" data-icon="inline-start"><sl:icon name="loader-circle"
-                                                                                  class="btn-spinner"/></span>
+  <span th:if="${props.loading}" class="button-icon" data-icon="inline-start"><sl:icon name="loader-circle"
+                                                                                  class="button-spinner"/></span>
   <span th:if="${props.loading}" class="sl-sr-only" th:text="#{sl.button.loading}">Loading</span>
-  <span th:if="${!props.loading and slots.has('icon-start')}" class="btn-icon" data-icon="inline-start"><sl:slot
+  <span th:if="${!props.loading and slots.has('icon-start')}" class="button-icon" data-icon="inline-start"><sl:slot
       name="icon-start"/></span>
   <th:block th:unless="${props.loading and slIconOnly}"><sl:slot>Button</sl:slot></th:block>
-  <span th:if="${slots.has('icon-end')}" class="btn-icon" data-icon="inline-end"><sl:slot name="icon-end"/></span>
+  <span th:if="${slots.has('icon-end')}" class="button-icon" data-icon="inline-end"><sl:slot name="icon-end"/></span>
 </th:block>
 </body>
 </html>

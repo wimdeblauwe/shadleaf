@@ -1,7 +1,7 @@
 /*
   Table: structure only. sl:table renders a container that scrolls sideways around a table; the rows and cells are
   the application's own plain elements. Every selector reaches them through child combinators, so a table nested in a
-  cell is not styled twice. The sort link is a button (.btn), whose rules set its look.
+  cell is not styled twice. The sort link is a button (.button), whose rules set its look.
 */
 @layer components {
   .table-container {

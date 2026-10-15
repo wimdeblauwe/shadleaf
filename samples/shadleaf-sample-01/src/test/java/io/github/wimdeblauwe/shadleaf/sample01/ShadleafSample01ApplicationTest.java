@@ -41,7 +41,7 @@ class ShadleafSample01ApplicationTest {
 
     mockMvc.perform(get(matcher.group(1)))
         .andExpect(status().isOk())
-        .andExpect(content().string(containsString(".btn[data-variant=\"destructive\"]")))
+        .andExpect(content().string(containsString(".button[data-variant=\"destructive\"]")))
         .andExpect(content().string(containsString("--primary:")));
   }
 

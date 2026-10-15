@@ -51,7 +51,7 @@ class PaginationComponentTest {
     assertThat(rendered).element("nav > ul").hasClass("pagination-content");
     Assertions.assertThat(entries(rendered)).containsExactly("1", "…", "4", "5", "6", "…", "27");
     assertThat(rendered).element("#page-previous")
-        .hasClass("btn", "pagination-link", "pagination-previous")
+        .hasClass("button", "pagination-link", "pagination-previous")
         .hasAttribute("data-variant", "ghost")
         .hasNoAttribute("data-size", "aria-disabled", "role", "tabindex")
         .hasAttribute("aria-label", "Go to previous page")
@@ -62,7 +62,7 @@ class PaginationComponentTest {
         .hasAttribute("href", "/people?q=ada&sort=name,asc&size=10&page=5")
         .hasText("Next");
     assertThat(rendered).element("#page-5")
-        .hasClass("btn", "pagination-link")
+        .hasClass("button", "pagination-link")
         .hasAttribute("data-variant", "outline")
         .hasAttribute("data-size", "icon")
         .hasAttribute("aria-current", "page")

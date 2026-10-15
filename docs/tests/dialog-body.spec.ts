@@ -23,7 +23,7 @@ function dialogOf(scenario: string, previewId: string, id: string): string {
 
 type BodyOptions = { content?: string, footer?: string, bodyAttributes?: string };
 
-/** A sheet as <sl:sheet><sl:sheet-header>...<sl:sheet-body/><sl:sheet-footer close-button/></sl:sheet> renders it. */
+/** A sheet as <sl:sheet><sl:sheet-header>...<sl:sheet-body/><sl:sheet-footer show-close-button/></sl:sheet> renders it. */
 function sheet(id: string, {content = '', footer = '', bodyAttributes = ''}: BodyOptions = {}): string {
   let html = dialogOf('sheet--loading', 'sheet-loading', id)
       .replace('<div class="sheet-footer">', `<div class="sheet-footer">${footer}`)
@@ -34,7 +34,7 @@ function sheet(id: string, {content = '', footer = '', bodyAttributes = ''}: Bod
   return html;
 }
 
-/** A dialog as <sl:dialog> with a header, <sl:dialog-body/> and <sl:dialog-footer close-button/> renders it. */
+/** A dialog as <sl:dialog> with a header, <sl:dialog-body/> and <sl:dialog-footer show-close-button/> renders it. */
 function dialog(id: string): string {
   return dialogOf('dialog--loading', 'dialog-loading', id);
 }

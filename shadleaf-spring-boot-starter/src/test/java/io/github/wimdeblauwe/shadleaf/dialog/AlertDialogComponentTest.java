@@ -98,7 +98,7 @@ class AlertDialogComponentTest {
 
     assertThat(cancel)
         .hasText("Cancel")
-        .hasClass("btn", "alert-dialog-cancel")
+        .hasClass("button", "alert-dialog-cancel")
         .hasAttribute("type", "button")
         .hasAttribute("data-variant", "outline")
         .hasNoAttribute("data-size")
@@ -117,7 +117,7 @@ class AlertDialogComponentTest {
 
     assertThat(cancel)
         .hasText("Keep it")
-        .hasAttribute("class", "btn alert-dialog-cancel wide")
+        .hasAttribute("class", "button alert-dialog-cancel wide")
         .hasAttribute("data-variant", "ghost")
         .hasAttribute("data-size", "sm")
         .hasAttribute("data-test", "x")

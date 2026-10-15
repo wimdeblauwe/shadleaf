@@ -50,7 +50,7 @@
             <sl:button as="a" variant="outline"
                        th:href="|${next}#people-row-${(people.number + 1) * people.size + 1}|"
                        th:hx-get="${next}" hx-target="closest tr" hx-swap="outerHTML" hx-replace-url="true">
-              <span class="btn-icon htmx-indicator"><sl:icon name="loader-circle" class="btn-spinner"/></span>
+              <span class="button-icon htmx-indicator"><sl:icon name="loader-circle" class="button-spinner"/></span>
               Load more
             </sl:button>
           </td>

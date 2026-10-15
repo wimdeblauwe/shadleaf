@@ -1,20 +1,20 @@
 <!-- <sl:dialog id="d1">Content</sl:dialog> -->
 <dialog class="dialog" id="d1" closedby="any" x-data="slDialog">
   Content
-  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d1" command="close" aria-label="Close">
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <button class="button dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d1" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </button>
 </dialog>
 
 <!-- <sl:dialog id="d2" open>Content</sl:dialog> -->
 <dialog class="dialog" id="d2" closedby="any" x-data="slDialog" data-show-modal="true">
   Content
-  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d2" command="close" aria-label="Close">
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <button class="button dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d2" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </button>
 </dialog>
 
-<!-- <sl:dialog id="d3" close-button="false">Content</sl:dialog> -->
+<!-- <sl:dialog id="d3" show-close-button="false">Content</sl:dialog> -->
 <dialog class="dialog" id="d3" closedby="any" x-data="slDialog">Content</dialog>
 
 <!-- <sl:dialog-header>Header</sl:dialog-header> -->
@@ -36,16 +36,16 @@
 <dialog class="dialog" id="d4" closedby="any" x-data="slDialog">
   <div class="dialog-body">
     <div class="alert dialog-body-error" data-variant="destructive" role="alert" hidden>
-      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
       <div class="alert-title">Something went wrong. Please try again.</div>
     </div>
     <div class="dialog-body-content" id="d4-body" data-clear-on-close="true"></div>
     <div class="dialog-body-loading" aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon dialog-body-spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon dialog-body-spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
     </div>
   </div>
-  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d4" command="close" aria-label="Close">
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <button class="button dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d4" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </button>
 </dialog>
 
@@ -53,18 +53,18 @@
 <dialog class="dialog" id="d5" closedby="any" x-data="slDialog">
   <div class="dialog-body" data-on-load-error="inline">
     <div class="alert dialog-body-error" data-variant="destructive" role="alert" hidden>
-      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
       <div class="alert-title">Something went wrong. Please try again.</div>
     </div>
     <div class="dialog-body-content" id="d5-body">
       <p>Content</p>
     </div>
     <div class="dialog-body-loading" aria-hidden="true">
-      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon dialog-body-spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon dialog-body-spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
     </div>
   </div>
-  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d5" command="close" aria-label="Close">
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <button class="button dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="d5" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </button>
 </dialog>
 
@@ -74,7 +74,7 @@
     <sl:dialog-description>Make changes to your profile.</sl:dialog-description>
   </sl:dialog-header>
   <p>Content</p>
-  <sl:dialog-footer close-button>
+  <sl:dialog-footer show-close-button>
     <sl:button type="submit">Save changes</sl:button>
   </sl:dialog-footer>
 </sl:dialog> -->
@@ -85,11 +85,11 @@
   </div>
   <p>Content</p>
   <div class="dialog-footer">
-    <button class="btn" type="submit">Save changes</button>
-    <button class="btn" type="button" data-variant="outline" commandfor="edit-profile" command="close">Close</button>
+    <button class="button" type="submit">Save changes</button>
+    <button class="button" type="button" data-variant="outline" commandfor="edit-profile" command="close">Close</button>
   </div>
-  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="edit-profile" command="close" aria-label="Close">
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <button class="button dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="edit-profile" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </button>
 </dialog>
 
@@ -98,7 +98,7 @@
 </sl:dialog> -->
 <dialog class="dialog" id="delete-42" closedby="any" x-data="slDialog" aria-label="Delete order">
   <p>Delete order 42?</p>
-  <button class="btn dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="delete-42" command="close" aria-label="Close">
-    <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <button class="button dialog-close" type="button" data-variant="ghost" data-size="icon-sm" commandfor="delete-42" command="close" aria-label="Close">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
   </button>
 </dialog>

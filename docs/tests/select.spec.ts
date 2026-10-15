@@ -215,7 +215,7 @@ const FRUITS: Item[] = ['Apple', 'Banana', {value: 'blueberry', text: 'Blueberry
 function option(item: Item): string {
   const {value, text, disabled, selected} = typeof item === 'string' ? {value: item.toLowerCase(), text: item} : item;
   return `<option class="select-item" value="${value}"${disabled ? ' disabled' : ''}${selected ? ' selected' : ''}>${
-      text ?? value}<svg class="sl-icon select-item-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></option>`;
+      text ?? value}<svg class="icon select-item-indicator" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></option>`;
 }
 
 /** A select marked up as <sl:select> renders it (see select.approved.html). */
@@ -224,8 +224,8 @@ function select({id = 'fruit', name = 'fruit', items = FRUITS, placeholder = '',
       + '<button type="button"><selectedcontent></selectedcontent></button>'
       + (placeholder ? `<option class="select-item" value="" hidden data-placeholder="true">${placeholder}</option>` : '')
       + items.map(option).join('')
-      + '</select><svg class="sl-icon select-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'
-      + '<template class="select-indicator-template"><svg class="sl-icon select-item-indicator" viewBox="0 0 24 24"'
+      + '</select><svg class="icon select-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>'
+      + '<template class="select-indicator-template"><svg class="icon select-item-indicator" viewBox="0 0 24 24"'
       + ' aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></template></div>';
 }
 
@@ -603,7 +603,7 @@ for (const mode of ['base-select', 'listbox'] as Mode[]) {
         });
 
     test('an icon in an item is 16 pixels, in the list and on the select', async ({page}) => {
-      const icon = (id: string) => `<svg class="sl-icon" id="${id}" viewBox="0 0 24 24" width="24" height="24"`
+      const icon = (id: string) => `<svg class="icon" id="${id}" viewBox="0 0 24 24" width="24" height="24"`
           + ' aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>';
       await openFixture(page, mode, `<label for="fruit">Fruit</label>${select({
         items: [{value: 'sun', text: `${icon('sun-icon')}Light`, selected: true}, {value: 'moon', text: `${icon('moon-icon')}Dark`}],
@@ -779,7 +779,7 @@ test.describe('base-select only', () => {
 
   test('the list is the browser\'s picker: no list box, the chosen item\'s icon shows in the select', async ({page}) => {
     await openFixture(page, 'base-select', `<label for="fruit">Fruit</label>${select({
-      items: [{value: 'sun', text: '<svg class="sl-icon" id="sun-icon" viewBox="0 0 24 24" aria-hidden="true"></svg>Light'}],
+      items: [{value: 'sun', text: '<svg class="icon" id="sun-icon" viewBox="0 0 24 24" aria-hidden="true"></svg>Light'}],
     })}`);
     const s = new Select(page, page.locator('.select-wrapper'));
     expect(await s.mode()).toBe('base-select');

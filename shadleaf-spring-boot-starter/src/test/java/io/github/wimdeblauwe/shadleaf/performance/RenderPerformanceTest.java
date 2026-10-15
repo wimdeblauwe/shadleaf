@@ -33,7 +33,7 @@ class RenderPerformanceTest {
   private static final long MEASURE_NANOS = 5_000_000_000L;
 
   private static final String TRASH_SVG = """
-      <svg xmlns="http://www.w3.org/2000/svg" class="sl-icon" viewBox="0 0 24 24" width="24" height="24" \
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" \
       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" \
       aria-hidden="true" focusable="false"><path d="M10 11v6"/><path d="M14 11v6"/>\
       <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/>\
@@ -41,8 +41,8 @@ class RenderPerformanceTest {
 
   private static final List<Scenario> SCENARIOS = List.of(
       new Scenario("hand-written markup", """
-          <th:block th:each="item : ${items}"><button class="btn" type="button" data-variant="outline">\
-          <span class="btn-icon" data-icon="inline-start">%s</span>[[${item}]]</button></th:block>"""
+          <th:block th:each="item : ${items}"><button class="button" type="button" data-variant="outline">\
+          <span class="button-icon" data-icon="inline-start">%s</span>[[${item}]]</button></th:block>"""
           .formatted(TRASH_SVG)),
       new Scenario("Thymeleaf fragment", """
           <th:block th:each="item : ${items}">\
@@ -84,7 +84,7 @@ class RenderPerformanceTest {
     Rendered component = render(SCENARIOS.get(3));
     assertThat(render(SCENARIOS.get(0)).normalizedHtml()).isEqualTo(fragment.normalizedHtml());
     assertThat(component.normalizedHtml()).isEqualTo(fragment.normalizedHtml());
-    assertThat(component.select("button.btn[data-variant=outline] > .btn-icon > svg")).hasSize(ITEMS);
+    assertThat(component.select("button.button[data-variant=outline] > .button-icon > svg")).hasSize(ITEMS);
   }
 
   private long[] runFor(Scenario scenario, long nanos) {
