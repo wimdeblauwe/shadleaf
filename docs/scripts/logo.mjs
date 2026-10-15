@@ -101,6 +101,7 @@ for (const sample of readdirSync(samplesDir).filter(name => name.startsWith('sha
 }
 
 // Swatches: a rounded square with a faint outline, so white and near-black still show on either GitHub theme.
+// GitHub strips `style`, but keeps `align`: absmiddle centres the swatch on the text instead of the baseline.
 const readmePath = join(brandingDir, 'README.md');
 const swatchesDir = join(brandingDir, 'swatches');
 const swatchImg = /<img src="swatches\/[0-9a-f]{6}\.svg"[^>]*> /g;
@@ -114,7 +115,7 @@ const readme = formatTables(readFileSync(readmePath, 'utf8').split('\n').map(lin
   if (!line.startsWith('|')) return line;
   return line.replace(swatchImg, '').replace(hexCode, (code, hex) => {
     swatchColors.add(hex.toLowerCase());
-    return `<img src="swatches/${hex.toLowerCase()}.svg" width="16" height="16" alt=""> ${code}`;
+    return `<img src="swatches/${hex.toLowerCase()}.svg" width="16" height="16" alt="" align="absmiddle"> ${code}`;
   });
 })).join('\n');
 rmSync(swatchesDir, {recursive: true, force: true});
