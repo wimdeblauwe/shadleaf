@@ -32,6 +32,8 @@ The SVGs have the wordmark as outlines, so they need no font installed. Elsewher
 
 - `docs/public/favicon.svg` and `samples/*/src/main/resources/static/favicon.svg`: the mark, switching colours with
   the system's colour scheme (written by the same script).
+- `swatches/`: the colour squares in the tables below, one per colour (written by the same script, which also adds
+  them to the tables: GitHub shows no colour for a hex code in a Markdown file).
 - `docs/src/components/SiteTitle.astro`: the docs header, which draws the mark inline and sets the wordmark as text,
   taking its colours from `docs/src/styles/docs.css`.
 
@@ -48,12 +50,12 @@ For a README or other Markdown on GitHub, pick the file by colour scheme:
 
 ### Logo
 
-| Part                       | Light background | Dark background |
-|----------------------------|------------------|-----------------|
-| Lit half of the leaf, stem | `#0f6e66`        | `#3bbfb1`       |
-| Shaded half of the leaf    | `#6fcfc3`        | `#13665e`       |
-| "shad"                     | `#475569`        | `#94a3b8`       |
-| "leaf"                     | `#0f172a`        | `#f1f5f9`       |
+| Part                       | Light background                                                        | Dark background                                                         |
+|----------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| Lit half of the leaf, stem | <img src="swatches/0f6e66.svg" width="16" height="16" alt=""> `#0f6e66` | <img src="swatches/3bbfb1.svg" width="16" height="16" alt=""> `#3bbfb1` |
+| Shaded half of the leaf    | <img src="swatches/6fcfc3.svg" width="16" height="16" alt=""> `#6fcfc3` | <img src="swatches/13665e.svg" width="16" height="16" alt=""> `#13665e` |
+| "shad"                     | <img src="swatches/475569.svg" width="16" height="16" alt=""> `#475569` | <img src="swatches/94a3b8.svg" width="16" height="16" alt=""> `#94a3b8` |
+| "leaf"                     | <img src="swatches/0f172a.svg" width="16" height="16" alt=""> `#0f172a` | <img src="swatches/f1f5f9.svg" width="16" height="16" alt=""> `#f1f5f9` |
 
 On a dark background the shaded half is the darker teal and on a light one the paler teal, so the lit half is always
 the one that stands out.
@@ -62,13 +64,13 @@ the one that stands out.
 
 The accent is pine teal; the greys are Tailwind's slate. Set in `docs/src/styles/docs.css`.
 
-| Token                           | Light     | Dark      |
-|---------------------------------|-----------|-----------|
-| `--sl-color-accent-low`         | `#d3ecea` | `#0c2725` |
-| `--sl-color-accent`             | `#0f6e66` | `#3bbfb1` |
-| `--sl-color-accent-high`        | `#0a3a36` | `#c2ece6` |
-| Background (`--sl-color-black`) | `#ffffff` | `#0f172a` |
-| Text (`--sl-color-white`)       | `#0f172a` | `#ffffff` |
+| Token                           | Light                                                                   | Dark                                                                    |
+|---------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| `--sl-color-accent-low`         | <img src="swatches/d3ecea.svg" width="16" height="16" alt=""> `#d3ecea` | <img src="swatches/0c2725.svg" width="16" height="16" alt=""> `#0c2725` |
+| `--sl-color-accent`             | <img src="swatches/0f6e66.svg" width="16" height="16" alt=""> `#0f6e66` | <img src="swatches/3bbfb1.svg" width="16" height="16" alt=""> `#3bbfb1` |
+| `--sl-color-accent-high`        | <img src="swatches/0a3a36.svg" width="16" height="16" alt=""> `#0a3a36` | <img src="swatches/c2ece6.svg" width="16" height="16" alt=""> `#c2ece6` |
+| Background (`--sl-color-black`) | <img src="swatches/ffffff.svg" width="16" height="16" alt=""> `#ffffff` | <img src="swatches/0f172a.svg" width="16" height="16" alt=""> `#0f172a` |
+| Text (`--sl-color-white`)       | <img src="swatches/0f172a.svg" width="16" height="16" alt=""> `#0f172a` | <img src="swatches/ffffff.svg" width="16" height="16" alt=""> `#ffffff` |
 
 `#0f6e66` on white has a contrast of 6:1, so it works for links and small text; on dark backgrounds use `#3bbfb1` or
 lighter.

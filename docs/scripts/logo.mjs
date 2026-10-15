@@ -4,6 +4,10 @@
 //   branding/shadleaf-mark-{light,dark}.svg|png   the mark alone
 //   docs/public/favicon.svg                       the mark, following the system's colour scheme
 //   samples/*/src/main/resources/static/favicon.svg   the same, for the sample applications
+//   branding/swatches/<hex>.svg                   a swatch for every colour in a table of branding/README.md
+//
+// GitHub shows no colour for a hex code in a Markdown file, so the script puts a swatch image before each one in the
+// README's tables (and re-pads the tables). The README is the list of colours: add a row there and run the script.
 //
 // The wordmark is turned into outlines from Schibsted Grotesk (@fontsource), so the SVGs need no font: GitHub and
 // most image viewers load none. The PNGs are rendered by Playwright's Chromium, on a transparent background.
@@ -12,7 +16,7 @@
 
 import opentype from 'opentype.js';
 import {chromium} from '@playwright/test';
-import {mkdirSync, readdirSync, writeFileSync} from 'node:fs';
+import {mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {createRequire} from 'node:module';
 
@@ -96,6 +100,47 @@ for (const sample of readdirSync(samplesDir).filter(name => name.startsWith('sha
   writeFileSync(join(samplesDir, sample, 'src', 'main', 'resources', 'static', 'favicon.svg'), favicon);
 }
 
+// Swatches: a rounded square with a faint outline, so white and near-black still show on either GitHub theme.
+const readmePath = join(brandingDir, 'README.md');
+const swatchesDir = join(brandingDir, 'swatches');
+const swatchImg = /<img src="swatches\/[0-9a-f]{6}\.svg"[^>]*> /g;
+const hexCode = /`#([0-9a-fA-F]{6})`/g;
+const swatch = hex => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <rect x="0.5" y="0.5" width="15" height="15" rx="3.5" fill="#${hex}" stroke="#8b949e" stroke-opacity="0.5"/>
+</svg>
+`;
+const swatchColors = new Set();
+const readme = formatTables(readFileSync(readmePath, 'utf8').split('\n').map(line => {
+  if (!line.startsWith('|')) return line;
+  return line.replace(swatchImg, '').replace(hexCode, (code, hex) => {
+    swatchColors.add(hex.toLowerCase());
+    return `<img src="swatches/${hex.toLowerCase()}.svg" width="16" height="16" alt=""> ${code}`;
+  });
+})).join('\n');
+rmSync(swatchesDir, {recursive: true, force: true});
+mkdirSync(swatchesDir);
+for (const hex of swatchColors) writeFileSync(join(swatchesDir, `${hex}.svg`), swatch(hex));
+writeFileSync(readmePath, readme);
+
+// Pads every Markdown table's cells to its column widths.
+function formatTables(lines) {
+  const result = [];
+  for (let i = 0; i < lines.length;) {
+    if (!lines[i].startsWith('|')) {
+      result.push(lines[i++]);
+      continue;
+    }
+    const rows = [];
+    while (i < lines.length && lines[i].startsWith('|')) rows.push(lines[i++].slice(1, -1).split('|').map(cell => cell.trim()));
+    const isRule = row => row.every(cell => /^:?-+:?$/.test(cell));
+    const widths = rows[0].map((_, c) => Math.max(...rows.filter(row => !isRule(row)).map(row => row[c].length)));
+    for (const row of rows) {
+      result.push('|' + row.map((cell, c) => isRule(row) ? '-'.repeat(widths[c] + 2) : ` ${cell.padEnd(widths[c])} `).join('|') + '|');
+    }
+  }
+  return result;
+}
+
 const browser = await chromium.launch();
 try {
   for (const file of files) {
@@ -108,4 +153,4 @@ try {
 } finally {
   await browser.close();
 }
-console.log(`Wrote ${files.length} SVGs, ${files.length} PNGs and the favicons.`);
+console.log(`Wrote ${files.length} SVGs, ${files.length} PNGs, the favicons and ${swatchColors.size} swatches.`);
