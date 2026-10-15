@@ -24,7 +24,7 @@ public class SecurityConfiguration {
     return http
         .authorizeHttpRequests(requests -> requests
             .requestMatchers("/shadleaf/**").permitAll()
-            .requestMatchers("/css/**", "/webjars/**").permitAll()
+            .requestMatchers("/css/**", "/webjars/**", "/favicon.svg").permitAll()
             // The path, whatever the query: oauth2Login's permitAll() matches /login and /login?error exactly.
             .requestMatchers("/login").permitAll()
             .anyRequest().authenticated())

@@ -30,8 +30,8 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            // WebJars (htmx) are served by Spring Boot, although their paths end in .js
-            '^/webjars/': {
+            // WebJars (htmx) and the favicon are served by Spring Boot, although their paths end in .js and .svg
+            '^/(webjars/|favicon\\.svg$)': {
                 target: 'http://localhost:8080',
                 changeOrigin: true,
                 secure: false

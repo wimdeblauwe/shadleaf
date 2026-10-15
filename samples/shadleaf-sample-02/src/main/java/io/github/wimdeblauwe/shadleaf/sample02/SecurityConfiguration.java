@@ -23,7 +23,7 @@ public class SecurityConfiguration {
         .authorizeHttpRequests(requests -> requests
             // Everything Shadleaf serves lives under /shadleaf/**: one matcher for the library's assets.
             .requestMatchers("/shadleaf/**").permitAll()
-            .requestMatchers("/css/**", "/webjars/**").permitAll()
+            .requestMatchers("/css/**", "/webjars/**", "/favicon.svg").permitAll()
             // This rule is the security: the layout only hides the Admin link from users who would get a 403 here.
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated())

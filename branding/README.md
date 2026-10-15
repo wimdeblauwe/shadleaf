@@ -30,7 +30,8 @@ The colours, pine teal on slate greys, are deliberately cooler than Thymeleaf's 
 
 The SVGs have the wordmark as outlines, so they need no font installed. Elsewhere in the repository:
 
-- `docs/public/favicon.svg`: the mark, switching colours with the system's colour scheme (written by the same script).
+- `docs/public/favicon.svg` and `samples/*/src/main/resources/static/favicon.svg`: the mark, switching colours with
+  the system's colour scheme (written by the same script).
 - `docs/src/components/SiteTitle.astro`: the docs header, which draws the mark inline and sets the wordmark as text,
   taking its colours from `docs/src/styles/docs.css`.
 

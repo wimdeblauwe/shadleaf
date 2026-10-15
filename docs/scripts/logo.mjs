@@ -3,6 +3,7 @@
 //   branding/shadleaf-logo-{light,dark}.svg|png   the mark and the wordmark
 //   branding/shadleaf-mark-{light,dark}.svg|png   the mark alone
 //   docs/public/favicon.svg                       the mark, following the system's colour scheme
+//   samples/*/src/main/resources/static/favicon.svg   the same, for the sample applications
 //
 // The wordmark is turned into outlines from Schibsted Grotesk (@fontsource), so the SVGs need no font: GitHub and
 // most image viewers load none. The PNGs are rendered by Playwright's Chromium, on a transparent background.
@@ -11,7 +12,7 @@
 
 import opentype from 'opentype.js';
 import {chromium} from '@playwright/test';
-import {mkdirSync, writeFileSync} from 'node:fs';
+import {mkdirSync, readdirSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {createRequire} from 'node:module';
 
@@ -90,6 +91,10 @@ for (const [theme, c] of Object.entries(colors)) {
 }
 for (const file of files) writeFileSync(join(brandingDir, `${file.name}.svg`), file.svg);
 writeFileSync(join(docsDir, 'public', 'favicon.svg'), favicon);
+const samplesDir = join(docsDir, '..', 'samples');
+for (const sample of readdirSync(samplesDir).filter(name => name.startsWith('shadleaf-sample-'))) {
+  writeFileSync(join(samplesDir, sample, 'src', 'main', 'resources', 'static', 'favicon.svg'), favicon);
+}
 
 const browser = await chromium.launch();
 try {
@@ -103,4 +108,4 @@ try {
 } finally {
   await browser.close();
 }
-console.log(`Wrote ${files.length} SVGs, ${files.length} PNGs and the favicon.`);
+console.log(`Wrote ${files.length} SVGs, ${files.length} PNGs and the favicons.`);
