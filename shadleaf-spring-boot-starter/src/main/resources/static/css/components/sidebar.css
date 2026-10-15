@@ -237,6 +237,8 @@
       @apply hidden;
     }
 
+    /* sr-only, not hidden: the menu button's aria-describedby points here, and a display: none element contributes
+       all its text, aria-hidden children included ("12 12 unread"). min-w-0 beats the skins' min-w-5. */
     .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-badge {
       @apply sr-only min-w-0;
     }

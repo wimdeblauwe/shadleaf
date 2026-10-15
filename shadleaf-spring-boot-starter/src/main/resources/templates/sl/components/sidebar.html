@@ -35,7 +35,9 @@
 </head>
 <body>
 <!--/* popover (auto): the phone panel's top layer, ::backdrop, light dismiss and focus back on the trigger. From
-  768 px the CSS shows it in the page flow instead, where it is a plain navigation landmark. */-->
+  768 px the CSS shows it in the page flow instead, where it is a plain navigation landmark. Not a <dialog>: its
+  dialog role wraps the nav on a desktop (role=none is not allowed on a dialog), Firefox makes it a tab stop, and
+  without script it stays modal across the breakpoint. */-->
 <nav th:fragment="sidebar"
      class="sidebar"
      th:id="${props.id}"
