@@ -19,9 +19,8 @@ a Thymeleaf dialect with a library of components, each one an ordinary Thymeleaf
 </sl:button>
 ```
 
-- **Nothing to install on the frontend.** The jar ships compiled Tailwind CSS and serves it under `/shadleaf/**`, so
-  your application needs no Node.js and no Tailwind. If you do compile Tailwind yourself, an embedded bundle fits into
-  your build.
+- **Fits your build.** The jar ships compiled CSS and JavaScript and serves them under `/shadleaf/**`, so a plain
+  Maven build is enough. If you already compile Tailwind yourself, an embedded bundle fits into your own build.
 - **shadcn's design tokens, verbatim.** `--primary`, `--radius`, `--ring`: a shadcn theme drops in unchanged, with
   light and dark mode.
 - **Checked props.** Each component declares its props, so `variant="destructve"` or an icon-only button without an
