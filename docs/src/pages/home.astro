@@ -1,0 +1,403 @@
+---
+// The home page. Built into every version as <base>/home/, but published once, unversioned, at the site's root, with
+// its links and assets pointing into current/: publish-docs.yml copies it there at a release, publish-home.yml rebuilds
+// it between releases against the release's generated docs.
+import '@fontsource/schibsted-grotesk/latin-400.css';
+import '@fontsource/schibsted-grotesk/latin-800.css';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import {Code} from '@astrojs/starlight/components';
+import ComponentPreview from '../components/ComponentPreview.astro';
+import HomeDemo from '../components/HomeDemo.astro';
+import {previews, withBase} from '../lib/generated';
+
+// The site's root, where the page is published: the base without its version directory (/shadleaf/current/ ->
+// /shadleaf/).
+const root = new URL(import.meta.env.BASE_URL.replace(/\/?$/, '/').replace(/[^/]+\/$/, ''), Astro.site);
+
+const layoutCount = previews.scenarios.filter(s => s.layout).length;
+
+const typo = `<sl:button variant="destructve">Delete</sl:button>`;
+const failure = `Invalid value 'destructve' for prop 'variant' of <sl:button>.
+Must be one of: default, outline, ghost, destructive, secondary, link.`;
+
+// Lucide icons (ISC), inlined: lucide-static is a dependency of the library's build, not of the docs.
+const icons = {
+  package: '<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/>',
+  palette: '<path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>',
+  swatchBook: '<path d="M11 17a4 4 0 0 1-8 0V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2Z"/><path d="M16.7 13H19a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H7"/><path d="M 7 17h.01"/><path d="m11 8 2.3-2.3a2.4 2.4 0 0 1 3.404.004L18.6 7.6a2.4 2.4 0 0 1 .026 3.434L9.9 19.8"/>',
+  bot: '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+  repeat: '<path d="m2 9 3-3 3 3"/><path d="M13 18H7a2 2 0 0 1-2-2V6"/><path d="m22 15-3 3-3-3"/><path d="M11 6h6a2 2 0 0 1 2 2v10"/>',
+  textCursorInput: '<path d="M12 20h-1a2 2 0 0 1-2-2 2 2 0 0 1-2 2H6"/><path d="M13 8h7a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-7"/><path d="M5 16H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h1"/><path d="M6 4h1a2 2 0 0 1 2 2 2 2 0 0 1 2-2h1"/><path d="M9 6v12"/>',
+};
+
+const features = [
+  {
+    icon: icons.package,
+    term: 'Fits your build',
+    text: 'The jar ships compiled CSS and JavaScript, so a plain Maven build is enough. Already compiling Tailwind? Switch to the embedded bundle and it fits into your own build.',
+    href: 'getting-started/#already-compiling-tailwind',
+  },
+  {
+    icon: icons.palette,
+    term: 'shadcn’s token names',
+    text: 'Shadleaf reads the same CSS variables as shadcn/ui (--primary, --radius, --ring), so a shadcn theme works unchanged in light and dark mode.',
+  },
+  {
+    icon: icons.swatchBook,
+    term: 'Two skins',
+    text: 'Vega has shadcn’s classic look and Lyra is boxy and sharp. The shadleaf.skin property switches between them; your templates stay the same.',
+  },
+  {
+    icon: icons.bot,
+    term: 'Ready for coding agents',
+    text: 'Every docs page is also Markdown, listed in llms.txt. Paste the suggested rules into AGENTS.md or CLAUDE.md and your agent writes Shadleaf tags instead of React.',
+    href: 'coding-agents/',
+  },
+  {
+    icon: icons.repeat,
+    term: 'htmx-ready',
+    text: 'Dialogs, menus and toasts keep working when htmx swaps them in or restores a page from history. An HX-Trigger header can pop up a toast.',
+    href: 'guides/htmx/',
+  },
+  {
+    icon: icons.textCursorInput,
+    term: 'Completion in your IDE',
+    text: 'IntelliJ IDEA completes every component, prop and legal value as you type, from the web-types Shadleaf generates.',
+    href: 'ide-completion/',
+  },
+];
+---
+
+<StarlightPage
+  frontmatter={{
+    title: 'Shadleaf',
+    description: 'shadcn/ui for Thymeleaf, as a Spring Boot starter.',
+    template: 'splash',
+    // Search results would link to <base>/home/, which is not published.
+    pagefind: false,
+    head: [
+      {tag: 'link', attrs: {rel: 'canonical', href: root.href}},
+      {tag: 'meta', attrs: {property: 'og:url', content: root.href}},
+    ],
+  }}
+>
+  <div class="home not-content">
+    <section class="home-hero">
+      <p class="home-hero__title">UI components for Spring Boot and Thymeleaf</p>
+      <p class="home-hero__tagline">shadcn/ui, rendered by Thymeleaf.</p>
+      <p class="home-hero__lead">
+        Shadleaf is a Spring Boot starter. Add the dependency, write <code>&lt;sl:dialog&gt;</code> in a template,
+        and your page gets shadcn’s dialog, rendered on the server.
+      </p>
+      <div class="home-actions">
+        <a class="home-button home-button--primary" href={withBase('getting-started/')}>Add Shadleaf to your project</a>
+        <a class="home-button" href={withBase('components/')}>Browse the components</a>
+      </div>
+      {previews.version && (
+        <p class="home-hero__meta">Version {previews.version}, for Spring Boot 4 and Java 17 or later.</p>
+      )}
+    </section>
+
+    <section class="home-demo-section" aria-label="Example">
+      <HomeDemo/>
+    </section>
+
+    <section class="home-section home-split">
+      <div>
+        <h2>Catch a typo the first time the page renders</h2>
+        <p>
+          Every component declares its props and their legal values. Misspell a variant and the page stops with a
+          message that lists the right ones. An icon-only button without an accessible name stops it too.
+        </p>
+      </div>
+      <div class="home-typo">
+        <Code code={typo} lang="html" wrap/>
+        <pre class="home-typo__error" aria-label="The error"><code>{failure}</code></pre>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <h2>What comes in the jar</h2>
+      <dl class="home-features">
+        {features.map(feature => (
+          <div>
+            <dt>
+              <svg class="home-features__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={feature.icon}/>
+              {feature.href ? <a href={withBase(feature.href)}>{feature.term}</a> : feature.term}
+            </dt>
+            <dd>{feature.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="home-section">
+      <div class="home-section__intro">
+        <h2>The application around your pages</h2>
+        <p class="home-section__lead">
+          Shadleaf comes with {layoutCount} layouts to copy into your project, from a sidebar that collapses to
+          icons to a header with a user menu. Building a business application, a SaaS product, an admin tool or a
+          customer portal? Copy a layout and you are up and running in no time.{' '}
+          <a href={withBase('layouts/')}>Browse the {layoutCount} layouts</a>.
+        </p>
+      </div>
+      <div class="home-layout">
+        <ComponentPreview id="layout--collapses-to-icons" bare/>
+      </div>
+    </section>
+
+    <section class="home-section home-closing">
+      <h2>Ready to build your first page?</h2>
+      <p>
+        The getting started guide takes you from the Maven dependency to your first <code>&lt;sl:button&gt;</code>.
+      </p>
+      <div class="home-actions">
+        <a class="home-button home-button--primary" href={withBase('getting-started/')}>Add Shadleaf to your project</a>
+        <a class="home-button" href={withBase('components/')}>Browse the components</a>
+      </div>
+    </section>
+  </div>
+</StarlightPage>
+
+<style is:global>
+  /* The splash template's column is a docs page's; the demo wants room for two halves. */
+  .sl-container:has(.home) {
+    max-width: 76rem;
+  }
+
+  /* The splash template's title banner, "Shadleaf": the page's h1 and the skip link's target, so hidden only from
+     sight. The hero's tagline stands in for it. */
+  .content-panel:has(#_top) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  :root {
+    --home-shade: var(--sl-color-gray-6);
+  }
+
+  :root[data-theme='light'] {
+    --home-shade: var(--sl-color-gray-7);
+  }
+</style>
+
+<style>
+  .home {
+    padding-block: 2rem 4rem;
+  }
+
+  .home-hero {
+    max-width: 48rem;
+    padding-block: 2rem 2.5rem;
+  }
+
+  .home-hero__title {
+    margin: 0;
+    font-family: 'Schibsted Grotesk', var(--sl-font);
+    font-weight: 800;
+    font-size: clamp(2.5rem, 6vw, 4.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--sl-color-white);
+    text-wrap: balance;
+  }
+
+  .home-hero__tagline {
+    margin: 1rem 0 0;
+    font-family: 'Schibsted Grotesk', var(--sl-font);
+    font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    color: var(--sl-color-accent);
+  }
+
+  .home-hero__lead {
+    max-width: 38rem;
+    margin: 1.5rem 0 0;
+    font-size: var(--sl-text-lg);
+    line-height: 1.6;
+    color: var(--sl-color-gray-2);
+  }
+
+  .home-hero__meta {
+    margin: 1.25rem 0 0;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+  }
+
+  .home code {
+    font-family: var(--__sl-font-mono);
+    font-size: 0.9em;
+    color: var(--sl-color-accent-high);
+  }
+
+  .home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-start: 2rem;
+  }
+
+  .home-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.625rem 1.125rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    color: var(--sl-color-white);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .home-button:hover {
+    border-color: var(--sl-color-gray-4);
+    background: var(--sl-color-gray-6);
+  }
+
+  .home-button:focus-visible {
+    outline: 2px solid var(--sl-color-accent);
+    outline-offset: 2px;
+  }
+
+  .home-button--primary {
+    border-color: var(--sl-color-accent);
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+  }
+
+  .home-button--primary:hover {
+    border-color: var(--sl-color-accent-high);
+    background: var(--sl-color-accent-high);
+  }
+
+  .home-section {
+    margin-block-start: 6rem;
+  }
+
+  .home h2 {
+    margin: 0;
+    font-family: 'Schibsted Grotesk', var(--sl-font);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: var(--sl-color-white);
+    text-wrap: balance;
+  }
+
+  .home-section p {
+    max-width: 36rem;
+    margin: 1rem 0 0;
+    line-height: 1.65;
+    color: var(--sl-color-gray-2);
+  }
+
+  .home-section a:not(.home-button) {
+    color: var(--sl-color-accent);
+  }
+
+  .home-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .home-split {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: 4rem;
+    }
+  }
+
+  .home-typo {
+    min-width: 0;
+
+    & :global(.expressive-code) {
+      margin: 0;
+    }
+  }
+
+  .home-typo__error {
+    margin: 0.5rem 0 0;
+    padding: 0.875rem 1rem;
+    border-inline-start: 3px solid #e5484d;
+    border-radius: 0.25rem;
+    background: color-mix(in oklab, #e5484d 10%, transparent);
+    color: var(--sl-color-white);
+    font-size: var(--sl-text-sm);
+    line-height: 1.6;
+    white-space: pre-wrap;
+
+    & code {
+      color: inherit;
+    }
+  }
+
+  .home-features {
+    display: grid;
+    gap: 2rem 3rem;
+    margin: 2.5rem 0 0;
+
+    & > div {
+      padding-block-start: 1rem;
+      border-block-start: 1px solid var(--sl-color-gray-5);
+    }
+
+    & dt {
+      font-weight: 600;
+      color: var(--sl-color-white);
+    }
+
+    & .home-features__icon {
+      display: block;
+      width: 1.5rem;
+      height: 1.5rem;
+      color: var(--sl-color-accent);
+      margin-block-end: 0.75rem;
+    }
+
+    & dt a {
+      text-decoration: none;
+    }
+
+    & dt a:hover {
+      text-decoration: underline;
+    }
+
+    & dd {
+      margin: 0.375rem 0 0;
+      line-height: 1.6;
+      color: var(--sl-color-gray-3);
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .home-features {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .home-features {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .home-section p.home-section__lead {
+    max-width: 44rem;
+  }
+
+  .home-layout {
+    margin-block-start: 2rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+</style>

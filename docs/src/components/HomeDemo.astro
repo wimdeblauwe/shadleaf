@@ -1,0 +1,187 @@
+---
+// The home page's demo: a few scenarios, each as its Thymeleaf source (the shaded half) beside what the library
+// rendered from it (the lit half), the two halves of the logo's leaf. The buttons switch scenario.
+import {Code} from '@astrojs/starlight/components';
+import ComponentPreview from './ComponentPreview.astro';
+import Missing from './Missing.astro';
+import {previews} from '../lib/generated';
+
+const skins = previews.skins.map(skin => skin.name);
+
+const choices = [
+  {id: 'card--default', label: 'Card'},
+  {id: 'field--default', label: 'Form field'},
+  {id: 'table--default', label: 'Table'},
+  {id: 'dialog--default', label: 'Dialog'},
+].flatMap(choice => {
+  const scenario = previews.scenarios.find(s => s.id === choice.id);
+  return scenario ? [{...choice, source: scenario.source}] : [];
+});
+---
+
+{choices.length === 0 ? <Missing what="previews for the home page"/> : (
+  <div class="home-demo">
+    <div class="home-demo__toolbar">
+      <div class="home-demo__choices" role="group" aria-label="Example">
+        {choices.map((choice, i) => (
+          <button type="button" data-demo={choice.id} aria-pressed={i === 0 ? 'true' : 'false'}>{choice.label}</button>
+        ))}
+      </div>
+      {skins.length > 1 && (
+        <div class="home-demo__choices home-demo__skins" role="group" aria-label="Skin">
+          {skins.map((skin, i) => (
+            <button type="button" data-skin={skin} aria-pressed={i === 0 ? 'true' : 'false'}>{skin}</button>
+          ))}
+        </div>
+      )}
+    </div>
+    {choices.map((choice, i) => (
+      <div class="home-demo__pair" data-demo={choice.id} hidden={i !== 0}>
+        <div class="home-demo__source">
+          <p class="home-demo__caption">You write</p>
+          <Code code={choice.source} lang="html" wrap/>
+        </div>
+        <div class="home-demo__render">
+          <p class="home-demo__caption">Your users get</p>
+          <ComponentPreview id={choice.id} bare skin={skins[0]}/>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+<style>
+  .home-demo__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-block-end: 0.75rem;
+  }
+
+  .home-demo__skins button {
+    text-transform: capitalize;
+  }
+
+  .home-demo__choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+
+    & button {
+      margin: 0;
+      padding: 0.25rem 0.75rem;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--sl-color-gray-3);
+      font: inherit;
+      font-size: var(--sl-text-sm);
+      cursor: pointer;
+    }
+
+    & button:hover {
+      color: var(--sl-color-white);
+    }
+
+    & button[aria-pressed='true'] {
+      border-color: var(--sl-color-gray-5);
+      background: var(--sl-color-gray-6);
+      color: var(--sl-color-white);
+    }
+
+    & button:focus-visible {
+      outline: 2px solid var(--sl-color-accent);
+      outline-offset: 2px;
+    }
+  }
+
+  .home-demo__pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  .home-demo__pair[hidden] {
+    display: none;
+  }
+
+  @media (min-width: 60rem) {
+    .home-demo__pair {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+  }
+
+  .home-demo__source {
+    min-width: 0;
+    background: var(--home-shade);
+
+    & :global(.expressive-code) {
+      margin: 0;
+    }
+
+    & :global(.expressive-code .frame) {
+      box-shadow: none;
+    }
+
+    & :global(.expressive-code pre) {
+      border: 0;
+      background: transparent;
+    }
+  }
+
+  .home-demo__render {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    border-block-start: 1px solid var(--sl-color-gray-5);
+
+    & :global(.sl-docs-preview) {
+      flex: 1;
+      display: grid;
+      align-content: center;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .home-demo__render {
+      border-block-start: 0;
+      border-inline-start: 1px solid var(--sl-color-gray-5);
+    }
+  }
+
+  .home-demo__caption {
+    margin: 0;
+    padding: 0.75rem 1rem 0;
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-xs);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.home-demo').forEach(demo => {
+    // The skin applies to the demo's previews only, and is not remembered: the docs pages keep their own choice.
+    const skinButtons = demo.querySelectorAll<HTMLButtonElement>('button[data-skin]');
+    skinButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        skinButtons.forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+        demo.querySelectorAll<HTMLElement>('.sl-docs-preview').forEach(figure => {
+          figure.dataset.skin = button.dataset.skin;
+        });
+        document.dispatchEvent(new Event('sl-docs-preview-skin'));
+      });
+    });
+
+    const buttons = demo.querySelectorAll<HTMLButtonElement>('button[data-demo]');
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        buttons.forEach(other => other.setAttribute('aria-pressed', String(other === button)));
+        demo.querySelectorAll<HTMLElement>('.home-demo__pair').forEach(pair => {
+          pair.hidden = pair.dataset.demo !== button.dataset.demo;
+        });
+      });
+    });
+  });
+</script>

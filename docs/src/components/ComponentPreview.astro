@@ -18,9 +18,13 @@ import {previews, withBase} from '../lib/generated';
 interface Props {
   /** Scenario id, e.g. "button--variants". */
   id: string;
+  /** Only the rendered component: no title bar (skin and width switches) and no source underneath. */
+  bare?: boolean;
+  /** A skin for this preview alone, instead of the one chosen for the whole site. */
+  skin?: string;
 }
 
-const {id} = Astro.props;
+const {id, bare = false, skin} = Astro.props;
 const scenario = previews.scenarios.find(s => s.id === id);
 const skins = previews.skins.map(skin => ({name: skin.name, href: withBase(skin.css)}));
 // The bundled script, as an application with the default shadleaf.assets.alpine loads it: interactive components work.
@@ -77,6 +81,7 @@ const srcdoc = scenario?.layout ? layoutSrcdoc : scenario && skins.length > 0
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" id="shadleaf-skin" href="${skins[0].href}">
+  ${bare ? '<style>html, body { background: transparent; } .stage { justify-content: center; }</style>' : ''}
   <style>
     html, body { margin: 0; }
     body { padding: 1.5rem; }
@@ -118,8 +123,9 @@ ${resize}
 
 {
   scenario && skins.length > 0 ? (
-    <figure class="sl-docs-preview" data-skins={JSON.stringify(skins)}>
-      <div class="sl-docs-preview__bar">
+    <figure class:list={['sl-docs-preview', {'sl-docs-preview--bare': bare}]} data-skins={JSON.stringify(skins)}
+            data-skin={skin}>
+      {!bare && <div class="sl-docs-preview__bar">
         <figcaption>
           {scenario.title && <strong>{scenario.title}</strong>}
           {scenario.description && <span>{scenario.description}</span>}
@@ -139,7 +145,7 @@ ${resize}
             ))}
           </div>
         )}
-      </div>
+      </div>}
       {scenario.layout ? (
         <div class="sl-docs-preview__stage sl-docs-preview__viewport" data-mode="desktop">
           <iframe class="sl-docs-preview__frame sl-docs-preview__page" loading="lazy"
@@ -152,16 +158,18 @@ ${resize}
                   data-width={scenario.width ?? undefined}></iframe>
         </div>
       )}
-      {!scenario.layout && (
+      {!bare && !scenario.layout && (
         <details class="sl-docs-preview__code">
           <summary>Thymeleaf source</summary>
           <Code code={scenario.source} lang="html"/>
         </details>
       )}
-      <details class="sl-docs-preview__code">
-        <summary>Rendered HTML</summary>
-        <Code code={scenario.normalizedHtml} lang="html"/>
-      </details>
+      {!bare && (
+        <details class="sl-docs-preview__code">
+          <summary>Rendered HTML</summary>
+          <Code code={scenario.normalizedHtml} lang="html"/>
+        </details>
+      )}
     </figure>
   ) : (
     <Missing what={`preview for ${id}`}/>
@@ -174,6 +182,12 @@ ${resize}
     border: 1px solid var(--sl-color-gray-5);
     border-radius: 0.5rem;
     overflow: hidden;
+  }
+
+  .sl-docs-preview--bare {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
   }
 
   .sl-docs-preview__bar {
@@ -293,7 +307,8 @@ ${resize}
 
   function apply(figure: HTMLElement) {
     const skins: SkinLink[] = JSON.parse(figure.dataset.skins ?? '[]');
-    const skin = skins.find(s => s.name === storedSkin()) ?? skins[0];
+    // A figure's own data-skin (the home page's demo) wins over the docs-wide choice.
+    const skin = skins.find(s => s.name === (figure.dataset.skin ?? storedSkin())) ?? skins[0];
     figure.querySelectorAll<HTMLButtonElement>('button[data-skin]').forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.skin === skin?.name));
     });
@@ -309,6 +324,9 @@ ${resize}
   }
 
   const figures = () => document.querySelectorAll<HTMLElement>('.sl-docs-preview');
+
+  // Sent by a page that changed a figure's data-skin.
+  document.addEventListener('sl-docs-preview-skin', () => figures().forEach(apply));
 
   figures().forEach(figure => {
     figure.querySelector('iframe')?.addEventListener('load', () => apply(figure));
@@ -359,6 +377,15 @@ ${resize}
   // Starlight's theme picker sets data-theme on <html>.
   new MutationObserver(() => figures().forEach(apply))
       .observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+
+  // A frame that loaded before this (deferred) script ran posted its height to no one: measure it here, which the
+  // srcdoc frames allow as they are same-origin. Layout frames have a fixed size.
+  document.querySelectorAll<HTMLIFrameElement>('.sl-docs-preview__frame:not(.sl-docs-preview__page)').forEach(frame => {
+    const doc = frame.contentDocument;
+    if (doc?.URL === 'about:srcdoc' && doc.readyState === 'complete') {
+      frame.style.height = `${Math.ceil(doc.body.getBoundingClientRect().height)}px`;
+    }
+  });
 
   addEventListener('message', event => {
     const height = (event.data as { shadleafPreviewHeight?: number })?.shadleafPreviewHeight;
