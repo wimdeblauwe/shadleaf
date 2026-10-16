@@ -1,0 +1,92 @@
+name: Publish home page
+
+# Rebuilds the home page (https://wimdeblauwe.github.io/shadleaf/) between releases, so a change to its text or layout
+# needs no release. The page comes from this commit's docs/, its data (version, previews, bundles) from the newest
+# release: the generated docs publish-docs.yml keeps in current/generated-docs/. So it always shows, and links to, what
+# was released. A release writes the home page itself (publish-docs.yml).
+#
+# Runs on every push to main that touches docs/, and by hand. To publish the home page before current/ has generated
+# docs (a release made before this workflow existed), run publish-docs.yml by hand with that release as `ref` first.
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/publish-home.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # The repository name: the path GitHub serves a project page under (as in publish-docs.yml).
+  SITE_PATH: /shadleaf
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Shared with publish-docs.yml: both push to gh-pages.
+    concurrency:
+      group: publish-docs
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check out gh-pages
+        id: pages
+        run: |
+          if ! git ls-remote --exit-code --heads origin gh-pages > /dev/null; then
+            echo "::notice::No gh-pages branch yet: nothing to build the home page from"
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git fetch --depth 1 origin gh-pages
+          git worktree add gh-pages FETCH_HEAD
+          git -C gh-pages switch -c gh-pages
+          if [[ ! -f gh-pages/current/generated-docs/previews.json ]]; then
+            echo "::notice::current/ has no generated docs: run publish-docs.yml with the newest release as ref first"
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "found=true" >> "$GITHUB_OUTPUT"
+
+      # pnpm, Node.js and `pnpm install --frozen-lockfile` in docs/, with the pnpm store cached on the lockfile.
+      - uses: pnpm/setup@v3
+        if: steps.pages.outputs.found == 'true'
+        with:
+          version: 12.6.0
+          runtime: node@24
+          working-directory: docs
+          require-lockfile: true
+          cache: true
+          cache-dependency-path: docs/pnpm-lock.yaml
+
+      # Where docs/scripts/sync.mjs looks for the library's generated docs: the release's, not this commit's.
+      - name: Build the site against the release
+        if: steps.pages.outputs.found == 'true'
+        run: |
+          mkdir -p shadleaf-spring-boot-starter/target
+          cp -r gh-pages/current/generated-docs shadleaf-spring-boot-starter/target/generated-docs
+          (cd docs && DOCS_BASE="$SITE_PATH/current" pnpm run build)
+
+      # Only the page and its assets: the rest of current/ stays the release's. Astro's assets have hashed names, so
+      # adding them never replaces one of the release's; the next release replaces current/ and clears them out.
+      - name: Copy the home page
+        if: steps.pages.outputs.found == 'true'
+        run: |
+          cp docs/dist/home/index.html gh-pages/index.html
+          rsync -a --ignore-existing docs/dist/_astro/ gh-pages/current/_astro/
+
+      - name: Commit and push
+        if: steps.pages.outputs.found == 'true'
+        working-directory: gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing changed"
+            exit 0
+          fi
+          git commit -m "docs: publish the home page from ${GITHUB_SHA::7}"
+          git push origin gh-pages

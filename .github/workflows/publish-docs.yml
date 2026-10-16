@@ -3,13 +3,22 @@ name: Publish docs
 # Publishes the docs site to the gh-pages branch, one directory per version, served as a GitHub project page:
 #   https://wimdeblauwe.github.io/shadleaf/<version>/   every release, and the SNAPSHOT of every push to main
 #   https://wimdeblauwe.github.io/shadleaf/current/     the newest release
-# The site root redirects to current/ (to the published version until there is a release). GitHub Pages must be set
-# to deploy from the gh-pages branch, root folder.
+#   https://wimdeblauwe.github.io/shadleaf/             the home page (docs/src/pages/home.astro), unversioned
+# A release writes the home page from its current/ build and keeps its generated docs (previews.json, the bundles) in
+# current/generated-docs/, from which publish-home.yml rebuilds the home page between releases. Until there is a home
+# page, the site root redirects to current/ (to the published version until there is a release). GitHub Pages must be
+# set to deploy from the gh-pages branch, root folder.
 # The Build workflow calls this after its docs job passed on main, and the Release workflow after a release, both
 # handing over the previews they already rendered. (Not on `release: published`: a release made with the GITHUB_TOKEN,
 # as JReleaser's is, never triggers a workflow.)
 on:
+  # By hand: a release's docs again (ref = its tag), e.g. to keep its generated docs in current/ for publish-home.yml.
   workflow_dispatch:
+    inputs:
+      ref:
+        description: The commit, branch or tag to build the site from; the selected branch when empty
+        type: string
+        default: ''
   workflow_call:
     inputs:
       generated-docs-artifact:
@@ -119,6 +128,18 @@ jobs:
           (cd docs && DOCS_BASE="$SITE_PATH/current" pnpm run build)
           rm -rf gh-pages/current
           cp -r docs/dist gh-pages/current
+          # What publish-home.yml builds the home page from until the next release.
+          cp -r shadleaf-spring-boot-starter/target/generated-docs gh-pages/current/generated-docs
+
+      # The home page is unversioned: one copy at the root, its links and assets pointing into current/. A version
+      # built before the home page existed has no home/: the root then stays as it is.
+      - name: Copy the home page from current/
+        if: steps.current.outputs.update == 'true'
+        run: |
+          if [[ -f gh-pages/current/home/index.html ]]; then
+            cp gh-pages/current/home/index.html gh-pages/index.html
+          fi
+          rm -rf gh-pages/current/home
 
       - name: Root redirect and .nojekyll
         env:
@@ -126,6 +147,12 @@ jobs:
         run: |
           # Without .nojekyll, GitHub Pages drops Astro's _astro/ directory.
           touch gh-pages/.nojekyll
+          # The home page lives at the root only; no version directory publishes a copy.
+          rm -rf "gh-pages/$VERSION/home"
+          # Until there is a home page the root redirects; a home page is left alone.
+          if [[ -f gh-pages/index.html ]] && ! grep -q 'http-equiv="refresh"' gh-pages/index.html; then
+            exit 0
+          fi
           # Before the first release there is no current/: point at the version just published.
           target=current/
           [[ -d gh-pages/current ]] || target="$VERSION/"
