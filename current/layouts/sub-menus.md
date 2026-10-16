@@ -2,23 +2,23 @@
 
 > A sidebar of sections with their pages in sub-menus that are always open, as documentation has.
 
-Source: https://wimdeblauwe.github.io/shadleaf/current/layouts/sub-menus/
+Source: https://shadleaf.dev/current/layouts/sub-menus/
 
 A sidebar for an application whose pages fall into a handful of sections, such as documentation: each section is a
-link of its own with its pages in a [sub-menu](https://wimdeblauwe.github.io/shadleaf/current/components/sidebar.md#collapsible-groups) below it, always open, so
+link of its own with its pages in a [sub-menu](https://shadleaf.dev/current/components/sidebar.md#collapsible-groups) below it, always open, so
 the whole structure is in view. The application's name and version are at the top. The page's header has the
-trigger and the [breadcrumb](https://wimdeblauwe.github.io/shadleaf/current/components/breadcrumb.md). On a desktop the trigger moves the sidebar out of view; on
+trigger and the [breadcrumb](https://shadleaf.dev/current/components/breadcrumb.md). On a desktop the trigger moves the sidebar out of view; on
 a phone it opens the same sidebar as a panel. Switch the preview to Phone to see it.
 
 **Example: Sub-menus.** A sidebar of sections, each with its pages in a sub-menu that is always open, as in documentation. The current page is a sub-button; the trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
 
 For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-03) this layout is based on.
 
-The [floating variant](https://wimdeblauwe.github.io/shadleaf/current/layouts/floating-sub-menus.md) has the same menus in a panel with a margin round it.
+The [floating variant](https://shadleaf.dev/current/layouts/floating-sub-menus.md) has the same menus in a panel with a margin round it.
 
 ## The layout
 
-The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/current/components/application-shell.md#what-every-layout-needs): the
+The whole layout file. It has what [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs): the
 theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
 title, and the toaster. `#slNav.current` marks the current page from the request: the sections compare the exact path
 (`true`), so a section is not marked as well when one of its pages is shown.

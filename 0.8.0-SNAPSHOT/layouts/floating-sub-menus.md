@@ -2,13 +2,13 @@
 
 > The sections and sub-menus of the Sub-menus layout in a floating sidebar, wider and with more room between the sections.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/floating-sub-menus/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/floating-sub-menus/
 
-The [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md) layout with `variant="floating"`: on a desktop the sidebar is a panel with a margin all
+The [Sub-menus](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/sub-menus.md) layout with `variant="floating"`: on a desktop the sidebar is a panel with a margin all
 round, rounded corners (in the vega skin) and a shadow, instead of a column along the edge of the screen. The
 application's CSS makes it wider (19 rem), puts more room between the sections and takes the line away from the
 sub-menus. The page's header has no border. On a phone the panel is the same as for every
-[variant](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#variants).
+[variant](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md#variants).
 
 **Example: Floating, with sub-menus.** The same sections and sub-menus in a floating sidebar: a panel with a margin all round, rounded and with a shadow, wider than the default, with more room between the sections and no line along the sub-menus.
 
@@ -16,7 +16,7 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 ## The layout
 
-The whole layout file, with what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). The
+The whole layout file, with what [every layout needs](https://shadleaf.dev/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). The
 sub-menus have a class of their own, `docs-nav-sub`, for the CSS below.
 
 ```html
@@ -198,7 +198,7 @@ sub-menus have a class of their own, `docs-nav-sub`, for the CSS below.
 
 ## A page
 
-A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md#a-page)
+A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/sub-menus.md#a-page)
 layout:
 
 ```html

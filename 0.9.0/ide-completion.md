@@ -2,7 +2,7 @@
 
 > Completion for sl:* tags, their attributes and values in IntelliJ IDEA and WebStorm.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/ide-completion/
+Source: https://shadleaf.dev/0.9.0/ide-completion/
 
 IntelliJ IDEA and WebStorm complete `<sl:button>`, its attributes and their allowed values from a
 [web-types](https://github.com/JetBrains/web-types) file. The IDE finds that file through the `web-types` property of a
@@ -37,7 +37,7 @@ Add `shadleaf.web-types.json` to `.gitignore`, and commit the `package.json`. If
 ## Or download it
 
 The file for this version of the docs, describing the library's own components:
-[shadleaf.web-types.json](https://wimdeblauwe.github.io/shadleaf/0.9.0/shadleaf.web-types.json). Save it next to the
+[shadleaf.web-types.json](https://shadleaf.dev/0.9.0/shadleaf.web-types.json). Save it next to the
 `package.json` above.
 
 ## What it contains

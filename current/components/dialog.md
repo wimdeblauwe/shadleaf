@@ -2,7 +2,7 @@
 
 > A modal window over the page, on the native dialog element.
 
-Source: https://wimdeblauwe.github.io/shadleaf/current/components/dialog/
+Source: https://shadleaf.dev/current/components/dialog/
 
 **Example: Dialog.** A form in a dialog. The form wraps the dialog, so the submit button in its footer submits it.
 
@@ -142,7 +142,7 @@ sits in the footer, outside the form, and points at it with `form`:
 ```
 
 With errors, the controller returns the form alone: the dialog stays open and focus moves to the first field with an
-error (see [form errors](https://wimdeblauwe.github.io/shadleaf/current/components/form-errors.md)). When the save succeeds, it closes the dialog with an `HX-Trigger`
+error (see [form errors](https://shadleaf.dev/current/components/form-errors.md)). When the save succeeds, it closes the dialog with an `HX-Trigger`
 response header, swaps nothing where the form is, and updates the member's row out of band:
 
 ```java
@@ -166,7 +166,7 @@ give the button an id (`th:id="|edit-member-${member.id}|"`): htmx moves focus t
 swap. Without one, focus falls back to the top of the page. Use `HX-Trigger`, not `HX-Trigger-After-Swap` or `-After-Settle`: those
 fire after the swap, when the element that made the request may be gone.
 
-`open` needs Alpine (on by default: see [Alpine](https://wimdeblauwe.github.io/shadleaf/current/guides/alpine.md)); the browser has no attribute that opens a
+`open` needs Alpine (on by default: see [Alpine](https://shadleaf.dev/current/guides/alpine.md)); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
 inertness with it. Before htmx saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
 the back button never brings one back.
@@ -229,7 +229,7 @@ What the body does with a request that targets it (or an element inside it):
 ### When a request fails
 
 When the request that opened the dialog fails (an error status, no connection, a timeout), the dialog closes and the
-error is shown as a [toast](https://wimdeblauwe.github.io/shadleaf/current/components/toast.md). Without an `<sl:toaster>` on the page, or with `load-error="inline"`, the dialog
+error is shown as a [toast](https://shadleaf.dev/current/components/toast.md). Without an `<sl:toaster>` on the page, or with `load-error="inline"`, the dialog
 stays open and the error is shown in it, above the content. A failed request from inside the dialog, such as a save,
 always shows the error in the dialog, so nothing the user typed is lost; the next request hides it.
 
@@ -325,7 +325,7 @@ A small Alpine component, `slDialog`, adds what the browser's `<dialog>` cannot 
 - **Most of it works without Alpine.** Opening and closing with `commandfor`, Escape, a click outside and focus
   returning to the button are the browser's. Alpine is needed for `open`, for the `sl-dialog-close` event, for a
   body that htmx loads, and for invoker commands and a click outside in browsers that lack them. Alpine is included by default; see
-  [Alpine](https://wimdeblauwe.github.io/shadleaf/current/guides/alpine.md).
+  [Alpine](https://shadleaf.dev/current/guides/alpine.md).
 - **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
   enough.
 - **Keep your own `x-data` off `<sl:dialog>`.** An element has one `x-data`, and attributes on `<sl:dialog>` end up on

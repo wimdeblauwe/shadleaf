@@ -2,7 +2,7 @@
 
 > Panels of content shown one at a time, chosen from a row of tabs.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/components/tabs/
+Source: https://shadleaf.dev/0.9.0/components/tabs/
 
 **Example: Tabs.** The arrow keys move between the tabs; Tab moves on to the panel.
 
@@ -295,7 +295,7 @@ A small Alpine component, `slTabs`, is on `<sl:tabs>`: it renders as
 `<div class="tabs" x-data="slTabs">`.
 
 - **Without Alpine** the active panel shows, and link triggers load the page with another tab active. Button triggers
-  need Alpine. Alpine is included by default; see [Alpine](https://wimdeblauwe.github.io/shadleaf/0.9.0/guides/alpine.md).
+  need Alpine. Alpine is included by default; see [Alpine](https://shadleaf.dev/0.9.0/guides/alpine.md).
 - **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
   enough.
 - **Keep your own `x-data` off `<sl:tabs>`.** An element has one `x-data`; put yours on an element inside.

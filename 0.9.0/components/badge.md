@@ -2,7 +2,7 @@
 
 > A small label for a status, a count or a category.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/components/badge/
+Source: https://shadleaf.dev/0.9.0/components/badge/
 
 **Example: Badge.**
 
@@ -12,7 +12,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/components/badge/
 
 ## Variants
 
-The same variants as the [button](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/button.md).
+The same variants as the [button](https://shadleaf.dev/0.9.0/components/button.md).
 
 **Example: Variants.**
 
@@ -27,7 +27,7 @@ The same variants as the [button](https://wimdeblauwe.github.io/shadleaf/0.9.0/c
 
 ## With an icon
 
-Put an [`<sl:icon>`](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/icon.md) in the `icon-start` or `icon-end` slot. It takes the badge's colour and a 12 pixel size.
+Put an [`<sl:icon>`](https://shadleaf.dev/0.9.0/components/icon.md) in the `icon-start` or `icon-end` slot. It takes the badge's colour and a 12 pixel size.
 
 **Example: With an icon.**
 

@@ -2,7 +2,7 @@
 
 > A label for a form control.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/components/label/
+Source: https://shadleaf.dev/0.9.0/components/label/
 
 **Example: Label.**
 
@@ -25,7 +25,7 @@ A label can also hold its control, and then needs no `for`:
 <sl:label><input type="checkbox" name="newsletter"> Send me the newsletter</sl:label>
 ```
 
-In a [field](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/field.md), use `<sl:field-label>`: it points at the field's control by itself.
+In a [field](https://shadleaf.dev/0.9.0/components/field.md), use `<sl:field-label>`: it points at the field's control by itself.
 
 ## Disabled
 

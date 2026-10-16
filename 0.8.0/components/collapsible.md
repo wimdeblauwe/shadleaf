@@ -2,7 +2,7 @@
 
 > Content that a button shows and hides, on the browser's details element.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/collapsible/
+Source: https://shadleaf.dev/0.8.0/components/collapsible/
 
 **Example: Collapsible.**
 
@@ -40,13 +40,13 @@ tells a screen reader whether it is expanded. Two consequences for porting a sha
 - **Everything else goes in the trigger or the content.** Text next to the trigger (shadcn's "@peduarte starred 3
   repositories" heading) can be part of the trigger.
 
-`open` renders it open. As with the [accordion](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/accordion.md), find-in-page and a link to an element inside open a
+`open` renders it open. As with the [accordion](https://shadleaf.dev/0.8.0/components/accordion.md), find-in-page and a link to an element inside open a
 closed collapsible on a match (Chrome and Edge 97, Firefox 148, Safari 26.2). It does not animate, as shadcn/ui's does
 not.
 
 ## Drawn as a button
 
-The trigger is plain text by default. `variant` or `size` draws it as a [button](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/button.md), with the button's
+The trigger is plain text by default. `variant` or `size` draws it as a [button](https://shadleaf.dev/0.8.0/components/button.md), with the button's
 variants and sizes, where shadcn/ui writes `<CollapsibleTrigger asChild><Button …>`. An icon-only trigger
 (`size="icon"`) needs an `aria-label`.
 

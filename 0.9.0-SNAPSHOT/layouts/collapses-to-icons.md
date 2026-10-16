@@ -2,15 +2,15 @@
 
 > A team switcher, collapsible sections and projects beside the page, collapsing to a strip of icons on a desktop, with the page as a card and the signed-in user's menu at the bottom.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/layouts/collapses-to-icons/
+Source: https://shadleaf.dev/0.9.0-SNAPSHOT/layouts/collapses-to-icons/
 
 A sidebar for an application with more pages than fit in a header row. At the top, a team switcher: a
-[dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/dropdown-menu.md#opened-from-the-sidebar) opened from a large menu button. Then the
-platform's sections as [collapsible items](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/sidebar.md#collapsible-groups), each with its pages in a
-sub-menu, the projects with a "More" menu each, and at the bottom the [user menu](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/user-menu.md). The
+[dropdown menu](https://shadleaf.dev/0.9.0-SNAPSHOT/components/dropdown-menu.md#opened-from-the-sidebar) opened from a large menu button. Then the
+platform's sections as [collapsible items](https://shadleaf.dev/0.9.0-SNAPSHOT/components/sidebar.md#collapsible-groups), each with its pages in a
+sub-menu, the projects with a "More" menu each, and at the bottom the [user menu](https://shadleaf.dev/0.9.0-SNAPSHOT/components/user-menu.md). The
 page is a card beside the sidebar (`variant="inset"`). The page's header is a
-[site header](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/site-header.md) with the trigger, a separator, the page's
-[breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/breadcrumb.md) and the theme toggle.
+[site header](https://shadleaf.dev/0.9.0-SNAPSHOT/components/site-header.md) with the trigger, a separator, the page's
+[breadcrumb](https://shadleaf.dev/0.9.0-SNAPSHOT/components/breadcrumb.md) and the theme toggle.
 
 On a desktop the trigger (or Ctrl/⌘+B) collapses the sidebar to a strip of icons (`collapsible="icon"`), with a
 tooltip on every menu button, and a cookie remembers the choice. The projects have no icons worth a strip of their
@@ -23,9 +23,9 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 ## The layout
 
-The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs).
+The whole layout file. It has what [every layout needs](https://shadleaf.dev/0.9.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs).
 The first sample application (sample-01) has a shorter version of it, with its own pages and no team switcher.
-`hx-boost` on the body loads every page with htmx; see [With htmx](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/application-shell.md#with-htmx) for
+`hx-boost` on the body loads every page with htmx; see [With htmx](https://shadleaf.dev/0.9.0-SNAPSHOT/components/application-shell.md#with-htmx) for
 the one check a controller then needs. Leave out the script and the attribute for a layout without htmx.
 
 ```html
@@ -308,10 +308,10 @@ the one check a controller then needs. Leave out the script and the attribute fo
 
 The teams are links, and the server checks the current one (`checked`), so the switcher works without JavaScript; an
 application sets it with `th:checked` and lists its teams with `th:each`. The projects' menus are links too: a delete
-link leads to a page (or, with htmx, an [alert dialog](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/alert-dialog.md)) that asks first.
+link leads to a page (or, with htmx, an [alert dialog](https://shadleaf.dev/0.9.0-SNAPSHOT/components/alert-dialog.md)) that asks first.
 
 Without `variant="inset"` the sidebar is a column along the edge of the screen; with `collapsible="offcanvas"` it
-moves out of view instead of collapsing to icons. The [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/sidebar.md) page has every part and
+moves out of view instead of collapsing to icons. The [Sidebar](https://shadleaf.dev/0.9.0-SNAPSHOT/components/sidebar.md) page has every part and
 option.
 
 ## A page

@@ -2,7 +2,7 @@
 
 > A text input, bound to a form field with th:field.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/input/
+Source: https://shadleaf.dev/0.8.0/components/input/
 
 **Example: Input.**
 
@@ -14,7 +14,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/input/
 ## Binding to a form field
 
 Inside a form with `th:object`, write `th:field` as on a plain `<input>`. Spring sets the input's `id`, `name` and
-`value`, so a [label](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/label.md) with `for` set to the field name points at it:
+`value`, so a [label](https://shadleaf.dev/0.8.0/components/label.md) with `for` set to the field name points at it:
 
 ```html
 <form th:object="${profile}" th:action="@{/profile}" method="post">
@@ -23,7 +23,7 @@ Inside a form with `th:object`, write `th:field` as on a plain `<input>`. Spring
 </form>
 ```
 
-An explicit `id` wins over the one `th:field` gives. In a [field](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/field.md), put `th:field` on the field instead: it
+An explicit `id` wins over the one `th:field` gives. In a [field](https://shadleaf.dev/0.8.0/components/field.md), put `th:field` on the field instead: it
 adds the label, description and error messages and wires them to the input.
 
 ## Types
@@ -45,7 +45,7 @@ their own.
 ## Invalid
 
 When the field has errors after a `@Valid` submit, the input marks itself `aria-invalid="true"`, which the skins draw
-in the destructive colour. A [field](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/field.md) shows the error message and links it with `aria-describedby`; outside
+in the destructive colour. A [field](https://shadleaf.dev/0.8.0/components/field.md) shows the error message and links it with `aria-describedby`; outside
 one, an `aria-describedby` you write passes through.
 
 **Example: Invalid.** With th:field, a field that has errors marks the input aria-invalid by itself.

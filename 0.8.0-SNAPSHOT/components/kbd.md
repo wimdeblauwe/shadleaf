@@ -2,7 +2,7 @@
 
 > A key on the keyboard, or a combination of keys.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/kbd/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/components/kbd/
 
 **Example: Kbd.**
 
@@ -38,7 +38,7 @@ Text between the keys, such as `+`, is up to you.
 
 ## Icons
 
-A key can hold an [`<sl:icon>`](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/icon.md). Give the icon a `label`, as a screen reader has no text to read otherwise.
+A key can hold an [`<sl:icon>`](https://shadleaf.dev/0.8.0-SNAPSHOT/components/icon.md). Give the icon a `label`, as a screen reader has no text to read otherwise.
 An `aria-label` on the key itself would not do: `<kbd>` has no role that takes a name.
 
 Lucide has icons for the usual keys, so you never need to type a symbol: `command`, `option`, `arrow-big-up` (Shift),

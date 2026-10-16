@@ -2,10 +2,10 @@
 
 > A sidebar of sections that open and close, each with its pages in a sub-menu, only the current page's section open.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapsible-sub-menus/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/collapsible-sub-menus/
 
-The [sub-menus layout](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/sub-menus.md) for more pages than fit in view: every section is a
-[collapsible item](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#collapsible-groups) that opens and closes its sub-menu, and the server
+The [sub-menus layout](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/sub-menus.md) for more pages than fit in view: every section is a
+[collapsible item](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md#collapsible-groups) that opens and closes its sub-menu, and the server
 opens only the section that holds the current page (`th:open="${#slNav.current('/build')}"`). The sections are no
 pages of their own: the whole row opens and closes. At the top, the application's name and version and a search
 field. On a desktop the trigger moves the sidebar out of view; on a phone it opens the same sidebar as a panel.
@@ -18,7 +18,7 @@ plus and minus are Shadleaf's turning chevron here.
 
 ## The layout
 
-The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
+The whole layout file. It has what [every layout needs](https://shadleaf.dev/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
 theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
 title, and the toaster.
 

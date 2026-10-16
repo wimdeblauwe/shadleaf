@@ -2,7 +2,7 @@
 
 > A multi-line text input, bound to a form field with th:field.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/textarea/
+Source: https://shadleaf.dev/0.8.0/components/textarea/
 
 **Example: Textarea.**
 
@@ -27,7 +27,7 @@ With `th:field`, Spring fills the textarea from the field. Without it, the compo
 
 ## Invalid
 
-As with the [input](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/input.md), a field with errors marks the textarea `aria-invalid="true"`.
+As with the [input](https://shadleaf.dev/0.8.0/components/input.md), a field with errors marks the textarea `aria-invalid="true"`.
 
 **Example: Invalid.**
 
@@ -38,7 +38,7 @@ As with the [input](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/inpu
 
 ## Disabled
 
-As the [input](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/input.md#disabled): faded, not focusable and not submitted; lyra adds a grey background.
+As the [input](https://shadleaf.dev/0.8.0/components/input.md#disabled): faded, not focusable and not submitted; lyra adds a grey background.
 
 **Example: Disabled.**
 
@@ -49,7 +49,7 @@ As the [input](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/input.md#
 
 ## Read-only
 
-As the [input](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/input.md#read-only): a muted background and full text colour; it takes focus and is submitted.
+As the [input](https://shadleaf.dev/0.8.0/components/input.md#read-only): a muted background and full text colour; it takes focus and is submitted.
 
 **Example: Read-only.**
 

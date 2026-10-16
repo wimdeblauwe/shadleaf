@@ -2,14 +2,14 @@
 
 > Sections that are pages of their own with a chevron for their sub-menus, projects, a secondary navigation and the user menu, beside the page as a card.
 
-Source: https://wimdeblauwe.github.io/shadleaf/current/layouts/inset-secondary-navigation/
+Source: https://shadleaf.dev/current/layouts/inset-secondary-navigation/
 
 A sidebar whose sections are pages of their own: the section's name is a link, and a chevron beside it opens and
-closes its pages in a [collapsible sub-menu](https://wimdeblauwe.github.io/shadleaf/current/components/sidebar.md#a-section-that-is-a-page-too). The server
+closes its pages in a [collapsible sub-menu](https://shadleaf.dev/current/components/sidebar.md#a-section-that-is-a-page-too). The server
 opens the current page's section. Below them the projects, each with a "More" menu, and at the bottom of the content
 a secondary navigation (Support, Feedback) in small buttons. The footer holds the
-[user menu](https://wimdeblauwe.github.io/shadleaf/current/components/user-menu.md). The page is a card beside the sidebar (`variant="inset"`), and its header
-has the trigger, the [breadcrumb](https://wimdeblauwe.github.io/shadleaf/current/components/breadcrumb.md) and the theme toggle. On a desktop the trigger moves
+[user menu](https://shadleaf.dev/current/components/user-menu.md). The page is a card beside the sidebar (`variant="inset"`), and its header
+has the trigger, the [breadcrumb](https://shadleaf.dev/current/components/breadcrumb.md) and the theme toggle. On a desktop the trigger moves
 the sidebar out of view; on a phone it opens the same sidebar as a panel. Switch the preview to Phone to see it.
 
 **Example: Inset with secondary navigation.** Sections that are pages of their own, with a chevron beside each that opens its sub-menu, projects with a menu each, a secondary navigation at the bottom and the signed-in user's menu, and the page as a card beside it.
@@ -18,7 +18,7 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 ## The layout
 
-The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/current/components/application-shell.md#what-every-layout-needs): the
+The whole layout file. It has what [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs): the
 theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
 title, and the toaster. The chevrons are `summary` elements and need a name each (`aria-label`), as an icon button
 does: "Playground's pages".

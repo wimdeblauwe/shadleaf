@@ -2,11 +2,11 @@
 
 > For an application with a handful of pages, the pages as a row of links in the site header and the page as a card below it; on a phone the same navigation is a panel.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/layouts/header/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/header/
 
-For an application with a handful of pages. The [site header](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/site-header.md) holds the menu button
+For an application with a handful of pages. The [site header](https://shadleaf.dev/0.10.0-SNAPSHOT/components/site-header.md) holds the menu button
 (on a phone), the application's name, the pages as a row of links, and the theme toggle and the
-[user menu](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/user-menu.md) at the end. The page is a card below the header (`variant="inset"`).
+[user menu](https://shadleaf.dev/0.10.0-SNAPSHOT/components/user-menu.md) at the end. The page is a card below the header (`variant="inset"`).
 
 The row is a `<sl:sidebar placement="header">`. On a phone the menu button opens that same navigation as a panel,
 with the icons and the parts marked `panel-only`: here the panel's own header and a More group (Settings, Help).
@@ -18,10 +18,10 @@ For reference: Flux's [header layout](https://fluxui.dev/layouts/header) this la
 
 ## The layout
 
-The whole layout file, with what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). It is
+The whole layout file, with what [every layout needs](https://shadleaf.dev/0.10.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs). It is
 the layout of the second sample application (sample-02's `layout/main.html`, which runs under a strict
 Content-Security-Policy). Sample-02 also has an Admin link for admins only, left out here: see
-[Navigation by role](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/application-shell.md#navigation-by-role).
+[Navigation by role](https://shadleaf.dev/0.10.0-SNAPSHOT/components/application-shell.md#navigation-by-role).
 
 ```html
 <!DOCTYPE html>
@@ -133,8 +133,8 @@ Content-Security-Policy). Sample-02 also has an Admin link for admins only, left
 
 In the row, the links show their labels without icons and the current page is marked as in a sidebar; group actions,
 separators and collapsible items are left out of the row, and the menu button is hidden on a desktop. When the links do
-not fit, the row scrolls sideways. See [In the header](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/sidebar.md#in-the-header) and
-[Panel-only parts](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/sidebar.md#panel-only-parts).
+not fit, the row scrolls sideways. See [In the header](https://shadleaf.dev/0.10.0-SNAPSHOT/components/sidebar.md#in-the-header) and
+[Panel-only parts](https://shadleaf.dev/0.10.0-SNAPSHOT/components/sidebar.md#panel-only-parts).
 
 ## A page
 

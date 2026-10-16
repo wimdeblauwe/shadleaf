@@ -2,7 +2,7 @@
 
 > A callout for a message the user should notice.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/alert/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/components/alert/
 
 **Example: Alert.**
 
@@ -16,7 +16,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/alert/
 
 ## Built from parts
 
-`<sl:alert>` holds an optional [`<sl:icon>`](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/icon.md), then `<sl:alert-title>` and `<sl:alert-description>`, as in
+`<sl:alert>` holds an optional [`<sl:icon>`](https://shadleaf.dev/0.10.0-SNAPSHOT/components/icon.md), then `<sl:alert-title>` and `<sl:alert-description>`, as in
 shadcn/ui. The icon takes the alert's colour and sits beside both. Use either part on its own.
 
 **Example: Title only, no icon.**
@@ -53,7 +53,7 @@ order with everything else; announcing them too would interrupt the user for no 
 When an alert appears later, for example in the response to an htmx request, add `role="alert"`. A screen reader then
 reads it as soon as it is inserted. Like any other attribute, `role` passes through to the rendered element. An
 alert that takes the focus when it appears (`tabindex="-1"` and `autofocus`, which htmx honours in swapped content) is
-read out because of the focus, and needs no role; see [Forms with htmx](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/htmx.md).
+read out because of the focus, and needs no role; see [Forms with htmx](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/htmx.md).
 
 **Example: Announced.** role="alert" makes a screen reader read the alert as soon as it appears.
 

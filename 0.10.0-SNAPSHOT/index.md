@@ -2,7 +2,7 @@
 
 > shadcn/ui for Thymeleaf, as a Spring Boot starter.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/
 
 Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) design system to Thymeleaf. Add one dependency, include two
 fragments in your layout's `<head>`, and write `<sl:button>`:

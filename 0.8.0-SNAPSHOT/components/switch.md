@@ -2,7 +2,7 @@
 
 > An on/off control, bound to a boolean form field with th:field.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/switch/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/components/switch/
 
 **Example: Switch.**
 
@@ -11,7 +11,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/switch/
 ```
 
 A switch is a checkbox with `role="switch"`, so a screen reader announces it as on or off and a form submits it as a
-checkbox. `th:field` on a boolean field works as it does on the [checkbox](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/checkbox.md), including the numbered `id`:
+checkbox. `th:field` on a boolean field works as it does on the [checkbox](https://shadleaf.dev/0.8.0-SNAPSHOT/components/checkbox.md), including the numbered `id`:
 put the switch inside its label.
 
 Use a switch for a setting that takes effect as it is, and a checkbox for a choice the user confirms by submitting a

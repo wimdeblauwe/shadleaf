@@ -2,7 +2,7 @@
 
 > Inline SVG icons from lucide, or your own.
 
-Source: https://wimdeblauwe.github.io/shadleaf/current/components/icon/
+Source: https://shadleaf.dev/current/components/icon/
 
 `<sl:icon>` inlines the SVG of a [lucide](https://lucide.dev) icon into the page: no sprite, no extra request, and it
 works inside htmx swaps. It draws in `currentColor`, so it takes the colour of the text around it. An unknown name

@@ -2,7 +2,7 @@
 
 > A placeholder that pulses while content loads.
 
-Source: https://wimdeblauwe.github.io/shadleaf/current/components/skeleton/
+Source: https://shadleaf.dev/current/components/skeleton/
 
 **Example: Skeleton.**
 

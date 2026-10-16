@@ -2,7 +2,7 @@
 
 > A picture of a person, with initials when there is no picture.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/avatar/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/components/avatar/
 
 **Example: Avatar.**
 
@@ -16,7 +16,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/avatar/
 ## Image and fallback
 
 Write both parts, as in shadcn/ui: `<sl:avatar-image>` with the picture's `src` or `th:src`, and
-`<sl:avatar-fallback>` with what to show without one, usually initials or an [`<sl:icon>`](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/icon.md). The avatar shows
+`<sl:avatar-fallback>` with what to show without one, usually initials or an [`<sl:icon>`](https://shadleaf.dev/0.8.0-SNAPSHOT/components/icon.md). The avatar shows
 the fallback when the image has no `src` or an empty one. A `th:src` whose value is null renders an empty `src`, so a
 user without a photo needs no `th:if`:
 

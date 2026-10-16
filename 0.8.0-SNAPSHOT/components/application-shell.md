@@ -2,25 +2,25 @@
 
 > Choosing between a sidebar and a header for the frame around every page, and what every layout needs whichever you pick.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/components/application-shell/
 
 The application shell is what every page shares: the navigation, a header, and the places where dialogs and toasts
-appear. Shadleaf has two kinds of layout for it, both built from the [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md) family:
+appear. Shadleaf has two kinds of layout for it, both built from the [Sidebar](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md) family:
 
-- **A sidebar**: the navigation in a column beside the page, as in [Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md),
+- **A sidebar**: the navigation in a column beside the page, as in [Collapses to icons](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md),
   which collapses to a strip of icons on a desktop.
-- **A header**: the navigation as a row of links in a [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md) across the top, as in
-  [Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md).
+- **A header**: the navigation as a row of links in a [site header](https://shadleaf.dev/0.8.0-SNAPSHOT/components/site-header.md) across the top, as in
+  [Navigation in the header](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/header.md).
 
 In both, the navigation is one `<sl:sidebar>`. Below 768 px the menu button opens that same element as a panel over
-the page, so the layouts work the same way on a phone. The [Layouts](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts.md) section has each as a whole layout file with a page
+the page, so the layouts work the same way on a phone. The [Layouts](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts.md) section has each as a whole layout file with a page
 that uses it and its CSS. Copy one into your application (the samples keep theirs in `templates/layout/main.html`) and
 change what you need: the templates are yours, and so is the CSS around the components. This page helps you pick one
 and says what every layout needs, whichever you pick.
 
 ## Which one
 
-|                         | [A sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md)                                 | [A header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md)                                          |
+|                         | [A sidebar](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md)                                 | [A header](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/header.md)                                          |
 |-------------------------|--------------------------------------------------------------------------------|----------------------------------------------------------------------------|
 | Pages in the navigation | Many, in labelled groups, with sub-menus                                       | A handful of top-level pages                                               |
 | On a desktop            | A column the user collapses to icons (or out of view) and the cookie remembers | A row of links that scrolls sideways when it does not fit; never collapses |
@@ -32,7 +32,7 @@ and says what every layout needs, whichever you pick.
 Pick a sidebar when the application has more pages than fit in a header row or needs groups and sub-menus. Pick
 the header for a smaller application. Moving from one to the other later means changing the layout template, not the
 pages: both take the same `pageTitle` and `content` (a sidebar layout takes the breadcrumb's levels too). The other
-[layouts](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts.md#the-layouts) are sidebars as well: grouped by section, with sub-menus, floating, on the
+[layouts](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts.md#the-layouts) are sidebars as well: grouped by section, with sub-menus, floating, on the
 end, and more, most of them after one of shadcn/ui's sidebar blocks.
 
 ## What every layout needs
@@ -41,7 +41,7 @@ Whichever you choose, the layout template has the same pieces. Every layout in t
 
 - **In the `head`**, `~{sl/layout :: theme-script}` and then `~{sl/layout :: assets}`, then your own stylesheet. The
   theme script sets the dark class before the first paint. Under a strict policy it needs its nonce or hash (see
-  [Content-Security-Policy](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp.md)).
+  [Content-Security-Policy](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/csp.md)).
 - **`<sl:skip-link/>` first in the body.** It lets a keyboard user jump past the navigation to the page.
 - **One `main`:** `<sl:sidebar-inset>` renders `<main id="main" tabindex="-1">`, the skip link's target. Put nothing
   of the page outside it.
@@ -49,8 +49,8 @@ Whichever you choose, the layout template has the same pieces. Every layout in t
 - **The current page** marked in the navigation with `th:active="${#slNav.current('/people')}"`, which reads the
   request, so no controller has to say which page it is.
 - **`<sl:toaster>` at the end of the body**, with the toasts a controller put in the `toasts` flash attribute before a
-  redirect (see [Toast](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/toast.md)).
-- **A `<div id="modal-root">`**, if htmx fetches dialogs into the page (see [Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md)).
+  redirect (see [Toast](https://shadleaf.dev/0.8.0-SNAPSHOT/components/toast.md)).
+- **A `<div id="modal-root">`**, if htmx fetches dialogs into the page (see [Dialog](https://shadleaf.dev/0.8.0-SNAPSHOT/components/dialog.md)).
 
 The CSS for the page itself (its padding, the `h1`, the logo in the sidebar) is the application's. Shadleaf's CSS styles
 its components, not the page around them.
@@ -82,9 +82,9 @@ below.
 
 ## With htmx
 
-`hx-boost` on the body (as [Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md) has it) loads every page with htmx. The server renders the whole page
+`hx-boost` on the body (as [Collapses to icons](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/collapses-to-icons.md) has it) loads every page with htmx. The server renders the whole page
 each time, so the current page, the breadcrumb and the sidebar's collapsed state are always right, and a link in the
-phone panel closes it. The [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#htmx) page says what happens with history and when only
+phone panel closes it. The [Sidebar](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md#htmx) page says what happens with history and when only
 the main area is boosted.
 
 A boosted link sends `HX-Request` too. A controller that answers other htmx requests with a fragment (a table's rows,
@@ -101,12 +101,12 @@ static boolean wantsFragment(HtmxRequest request) {
 ```
 
 A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
-table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/tables-htmx.md).
+table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/tables-htmx.md).
 
 A boosted link or form made after the session expired would get the sign-in page swapped into the body (or, for a
 form, nothing at all, as its CSRF token went with the session). The Spring Security guide shows how to send the browser
 to the page instead, which then asks the user to sign in and comes back to it:
-[htmx after the session expired](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired).
+[htmx after the session expired](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired).
 
 ## A sidebar below a full-width header
 
@@ -114,15 +114,15 @@ shadcn/ui's sidebar-16 puts a header across the whole top of the page and the si
 support that layout. From 768 px the sidebar is sticky at the top of the screen and as tall as the screen, so below a
 header it would slide under the header and run past the bottom of the screen. `<sl:sidebar-provider>` has to start
 at the top of the page. Put the page's header inside `<sl:sidebar-inset>` (a sidebar layout), or put the navigation
-in the header ([Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/header.md)).
+in the header ([Navigation in the header](https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/header.md)).
 
 ## The signed-in user
 
 Both layouts have a place for the user: the sidebar's footer, and the site header's `end` slot. The
-[user menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu.md) goes in either (`as="header"` in the site header): the signed-in user from
+[user menu](https://shadleaf.dev/0.8.0-SNAPSHOT/components/user-menu.md) goes in either (`as="header"` in the site header): the signed-in user from
 Spring Security with a menu that signs out, or a Sign in link for an anonymous visitor, so one layout serves public
 pages too. Sign out posts a form with the CSRF token; `hx-boost="false"` on it keeps a boosted body from sending it
-with htmx. Where the user comes from, and how to change it, is in the [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#the-signed-in-user)
+with htmx. Where the user comes from, and how to change it, is in the [Spring Security](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/spring-security.md#the-signed-in-user)
 guide.
 
 ## Navigation by role
@@ -174,5 +174,5 @@ mockMvc.perform(get("/admin").with(user("grace").roles("USER")))
     .andExpect(status().isForbidden());
 ```
 
-The [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#navigation-by-role) guide has the same in short, next to where the
+The [Spring Security](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/spring-security.md#navigation-by-role) guide has the same in short, next to where the
 signed-in user comes from.

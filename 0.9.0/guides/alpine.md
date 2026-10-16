@@ -2,7 +2,7 @@
 
 > Let Shadleaf bring Alpine, use its CSP build, or register with the Alpine your application already loads.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/guides/alpine/
+Source: https://shadleaf.dev/0.9.0/guides/alpine/
 
 Shadleaf's interactive components (dialog, dropdown menu, tabs and the like, from 0.4 on) use [Alpine.js](https://alpinejs.dev)
 for what the native elements cannot do on their own. A page can only have **one** Alpine: two copies would both
@@ -23,7 +23,7 @@ In every case the script is served from your own application under `/shadleaf/**
 
 ## bundled
 
-Nothing to do: include the `assets` fragment as shown in [Getting started](https://wimdeblauwe.github.io/shadleaf/0.9.0/getting-started.md). You can use Alpine
+Nothing to do: include the `assets` fragment as shown in [Getting started](https://shadleaf.dev/0.9.0/getting-started.md). You can use Alpine
 in your own markup too (`x-data`, `x-show`, `@click`, ...) without loading it yourself.
 
 To register your own components or plugins, listen for `alpine:init` in a script that runs **before** the `assets`
@@ -74,7 +74,7 @@ assignments to nested properties, or globals such as `Math`, `document` and `con
 </div>
 ```
 
-The [Content-Security-Policy guide](https://wimdeblauwe.github.io/shadleaf/0.9.0/guides/csp.md) covers the rest of a strict policy. `samples/shadleaf-sample-02` in the
+The [Content-Security-Policy guide](https://shadleaf.dev/0.9.0/guides/csp.md) covers the rest of a strict policy. `samples/shadleaf-sample-02` in the
 repository uses `csp` behind exactly that policy.
 
 ## external

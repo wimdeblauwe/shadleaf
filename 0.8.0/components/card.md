@@ -2,7 +2,7 @@
 
 > A container for related content and actions, built from its parts.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/card/
+Source: https://shadleaf.dev/0.8.0/components/card/
 
 **Example: Card.**
 

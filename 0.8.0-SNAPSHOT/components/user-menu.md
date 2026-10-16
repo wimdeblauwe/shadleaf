@@ -2,7 +2,7 @@
 
 > The signed-in user with a menu that signs out, or a Sign in link, for the sidebar's footer or the site header.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-menu/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/components/user-menu/
 
 **Example: User menu.** In the sidebar's footer, the signed-in user as a large menu button: picture, name and email. It opens a menu beside the sidebar (below the button in the phone panel) with the user, the application's items and Sign out, which posts to #slUser.logoutUrl with the CSRF token. Collapsed to icons, the picture stays, with the name as a tooltip.
 
@@ -28,7 +28,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/user-me
 
 ## Usage
 
-Put it in the [sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md)'s footer:
+Put it in the [sidebar](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md)'s footer:
 
 ```html
 <sl:sidebar-footer>
@@ -40,11 +40,11 @@ Put it in the [sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/co
 ```
 
 It shows who is signed in, as Spring Security knows them: the user's picture, name and email, in a large
-[menu button](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menu-buttons) (shadcn's `NavUser`). The button opens a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md)
+[menu button](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md#menu-buttons) (shadcn's `NavUser`). The button opens a [dropdown menu](https://shadleaf.dev/0.8.0-SNAPSHOT/components/dropdown-menu.md)
 with the user at the top, then the items you put inside `<sl:user-menu>`, then **Sign out**. Without items there is
 nothing between the user and Sign out but a separator.
 
-The user comes from `#slUser` (see [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/spring-security.md#the-signed-in-user)), so no
+The user comes from `#slUser` (see [Spring Security](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/spring-security.md#the-signed-in-user)), so no
 controller adds anything to the model, and the menu works on every page, error pages included. The second line is the
 email, or the username when there is no email (GitHub often sends none) and it is not the name already (a form
 login's user is named by the username), or nothing.
@@ -52,7 +52,7 @@ login's user is named by the username), or nothing.
 ## In the site header
 
 `as="header"` makes it a round button with the picture alone, for the `end` slot of a
-[site header](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/site-header.md), as in the header layout:
+[site header](https://shadleaf.dev/0.8.0-SNAPSHOT/components/site-header.md), as in the header layout:
 
 **Example: In the site header.** as="header": a round button with the picture, named "Account: " and the user's name, at the end of a sl:site-header. The menu opens below it, lined up with its end.
 
@@ -88,7 +88,7 @@ button". The menu opens below it, lined up with its end.
 
 ## The picture
 
-The picture goes through an [avatar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/avatar.md): while it loads, when the user has none and when it fails to load,
+The picture goes through an [avatar](https://shadleaf.dev/0.8.0-SNAPSHOT/components/avatar.md): while it loads, when the user has none and when it fails to load,
 the initials show instead (from the name, or from the email's local part), and the user icon when there are no
 initials either. A picture that is gone, as an identity provider's often are after a while, never shows a broken
 image.
@@ -145,18 +145,18 @@ names it (`form="user-menu-sign-out"`).
 The form's `th:action` is what adds the token, as on every form of yours; nothing to configure. Spring Security's
 default `/logout` then signs the user out and redirects to `/login?logout`. With OpenID Connect, sign out at the
 provider too with Spring Security's `OidcClientInitiatedLogoutSuccessHandler`: see
-[Signing out at Keycloak](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/oauth2.md#signing-out-at-keycloak).
+[Signing out at Keycloak](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/oauth2.md#signing-out-at-keycloak).
 
-`hx-boost="false"` keeps a [boosted](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/htmx.md) page from sending it with htmx: signing out should load a
+`hx-boost="false"` keeps a [boosted](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/htmx.md) page from sending it with htmx: signing out should load a
 whole page, with a new CSRF token. The Sign in link has it too, as signing in usually redirects to an identity
 provider, which an htmx request cannot follow.
 
 ## Where it opens
 
 In the sidebar, the menu opens beside it (`side="right"`), its end lined up with the button's: from the footer, it
-grows upwards. Collapsed to icons the button is the picture, with the name as a [tooltip](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#collapsed-to-icons);
+grows upwards. Collapsed to icons the button is the picture, with the name as a [tooltip](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md#collapsed-to-icons);
 the tooltip and the menu are never shown together. In the phone panel there is no room beside the button, so the menu
-opens above or below it, as every [menu in the sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar) does. `side` and `align`
+opens above or below it, as every [menu in the sidebar](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar) does. `side` and `align`
 change it:
 
 ```html
@@ -178,7 +178,7 @@ menu. In the sidebar the button is named by the name and email it shows, and the
 ## A different user menu
 
 `<sl:user-menu>` covers shadcn's `NavUser`. A menu laid out differently (another trigger, items above the user, a
-second group) is a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md) of your own that reads `#slUser`:
+second group) is a [dropdown menu](https://shadleaf.dev/0.8.0-SNAPSHOT/components/dropdown-menu.md) of your own that reads `#slUser`:
 
 ```html
 <sl:dropdown-menu id="account-menu" th:if="${#slUser.signedIn}">
@@ -196,12 +196,12 @@ second group) is a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-
 Keep the form outside `role="menu"`, and keep `th:action`: it adds the CSRF token.
 
 A team or version switcher in the sidebar's header is built the same way, from a dropdown menu: see
-[Menus in the sidebar](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar).
+[Menus in the sidebar](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar).
 
 ## Without JavaScript
 
 The menu is a popover, opened by the browser, so it opens and Sign out signs out without JavaScript. The arrow keys,
-typeahead and closing after an item need Alpine, as in every [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md). Without JavaScript the
+typeahead and closing after an item need Alpine, as in every [dropdown menu](https://shadleaf.dev/0.8.0-SNAPSHOT/components/dropdown-menu.md). Without JavaScript the
 picture lies over the initials and covers them once loaded.
 
 ## Attributes

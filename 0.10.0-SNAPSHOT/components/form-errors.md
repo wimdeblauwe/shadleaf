@@ -2,7 +2,7 @@
 
 > The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/form-errors/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/components/form-errors/
 
 **Example: Form errors.** The binding has a global error, from a class-level constraint or reject(...) in the controller. It shows above the fields (here first in the field group, which spaces it like a field); the field errors stay with their fields.
 
@@ -24,7 +24,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/form-e
 
 Some errors are about no single field: two passwords that do not match, a date range that ends before it starts, or a
 service that refused the request. Spring keeps them in the `BindingResult` as global errors. `<sl:form-errors/>`
-shows them as a destructive [alert](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/alert.md), and renders nothing while there are none:
+shows them as a destructive [alert](https://shadleaf.dev/0.10.0-SNAPSHOT/components/alert.md), and renders nothing while there are none:
 
 ```html
 <form th:object="${signup}" th:action="@{/signup}" method="post" novalidate>
@@ -48,7 +48,7 @@ With one global error, that renders:
 
 As the first thing in a `<sl:field-group>`, it gets the same space as a field. One message is shown as text, several
 as a list, each message once. By default field errors are not repeated: they stay with
-their [fields](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/field.md). To list them too, see [All errors](#all-errors).
+their [fields](https://shadleaf.dev/0.10.0-SNAPSHOT/components/field.md). To list them too, see [All errors](#all-errors).
 
 **Example: Several errors.**
 
@@ -117,7 +117,7 @@ sometimes.
 
 - **No `role="alert"`.** After a submit the whole page loads again. A live region that is there when the page loads
   is read out by some screen readers and ignored by others, and when it is read, it talks over the page itself. The
-  [field errors](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/field.md#errors) leave out `role="alert"` for the same reason. When focus moves to the problem, as
+  [field errors](https://shadleaf.dev/0.10.0-SNAPSHOT/components/field.md#errors) leave out `role="alert"` for the same reason. When focus moves to the problem, as
   below, the screen reader reads it there, and a live region would only say it a second time.
 - **No `autofocus` by default.** Moving focus on load skips the reader past the page's heading, so it fits a form
   that is the page's only task, or one that htmx swaps in, where the submit button that had the focus is gone. It is
@@ -141,13 +141,13 @@ With `autofocus`, focus goes to the problem when the form comes back with errors
 Content of your own always shows, so with it the summary takes the focus. The summary decides before the controls
 below it render, so keep it above the fields, where it belongs anyway. It works on any control with a `th:field` in
 the form, inside a field or not. A control with a `disabled` attribute cannot take focus, so it is passed over (see
-[disabled and read-only fields](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/field.md#disabled-and-read-only)); a read-only one takes it.
+[disabled and read-only fields](https://shadleaf.dev/0.10.0-SNAPSHOT/components/field.md#disabled-and-read-only)); a read-only one takes it.
 
 For a form that reloads the page, also put the outcome in the page title, such as `Error: Sign up`: it is the first
 thing a screen reader reads after a page load.
 
 htmx honours `autofocus` in the content it swaps in, after its own attempt to keep focus on the element that had it.
-The [htmx guide](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/htmx.md) shows a form that posts with htmx and falls back to a plain POST.
+The [htmx guide](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/htmx.md) shows a form that posts with htmx and falls back to a plain POST.
 
 ## Id
 

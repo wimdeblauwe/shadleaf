@@ -2,7 +2,7 @@
 
 > Rich content in a panel next to the button that opens it, on the browser's Popover API.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/popover/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/components/popover/
 
 **Example: Popover.** A small form next to its trigger. Focus moves to the first field when it opens.
 
@@ -128,7 +128,7 @@ its history cache.
 - **`PopoverAnchor`**: the popover is placed against its trigger.
 - **`PopoverPortal`**: the top layer does what the portal is for.
 - **State in the browser** (`open`/`onOpenChange`): the trigger opens it; the `sl-popover-close` event closes it.
-- **`modal`**: a popover never makes the rest of the page inert. Use a [dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dialog.md) for that.
+- **`modal`**: a popover never makes the rest of the page inert. Use a [dialog](https://shadleaf.dev/0.8.0-SNAPSHOT/components/dialog.md) for that.
 
 ## Attributes
 
@@ -194,7 +194,7 @@ A small Alpine component, `slPopover`, adds what the browser's popover lacks: `<
 - **The basics work without Alpine.** The trigger opens and closes the popover, and Escape and a click outside close
   it. Alpine is needed for moving the focus into it when it opens, closing it when the focus leaves, the
   `sl-popover-close` event, `aria-expanded` on the trigger, and placing it in browsers without CSS anchor positioning.
-  Alpine is included by default; see [Alpine](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/alpine.md).
+  Alpine is included by default; see [Alpine](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/alpine.md).
 - **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
   enough.
 - **Keep your own `x-data` off `<sl:popover-content>`.** An element has one `x-data`, and attributes on it end up on

@@ -2,7 +2,7 @@
 
 > The one matcher the library's assets need, the signed-in user in templates (#slUser), and htmx requests after the session expired.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/guides/spring-security/
+Source: https://shadleaf.dev/0.9.0/guides/spring-security/
 
 Everything Shadleaf serves lives under `/shadleaf/**`: the stylesheet of each skin and the Alpine.js scripts, each
 with a content hash in its name.
@@ -23,12 +23,12 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 The files are static resources inside the jar, so nothing else is exposed by it: the Vite manifest that maps names to
 hashed files is kept outside the served directory.
 
-To run under a strict Content-Security-Policy as well, see [CSP](https://wimdeblauwe.github.io/shadleaf/0.9.0/guides/csp.md).
+To run under a strict Content-Security-Policy as well, see [CSP](https://shadleaf.dev/0.9.0/guides/csp.md).
 
 ## The signed-in user
 
 Templates read the signed-in user from `#slUser`, an expression object, so no controller has to add a user to the
-model, and error pages and fragments see it too. The [user menu](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/user-menu.md) is built on it.
+model, and error pages and fragments see it too. The [user menu](https://shadleaf.dev/0.9.0/components/user-menu.md) is built on it.
 
 | Expression | Value |
 | --- | --- |
@@ -49,7 +49,7 @@ model, and error pages and fragments see it too. The [user menu](https://wimdebl
 Spring Security is an optional dependency of the starter. Without it `#slUser` is still there, and nobody is signed in.
 
 Signing in with Keycloak or GitHub, and what each sends to the user menu, is in
-[Signing in with OAuth2](https://wimdeblauwe.github.io/shadleaf/0.9.0/guides/oauth2.md).
+[Signing in with OAuth2](https://shadleaf.dev/0.9.0/guides/oauth2.md).
 
 ### Where the user comes from
 
@@ -104,7 +104,7 @@ shadleaf.security.logout-url=/logout
 ```
 
 Sign out is a POST with the CSRF token, which `th:action` adds to the form; see the
-[user menu](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/user-menu.md#signing-out).
+[user menu](https://shadleaf.dev/0.9.0/components/user-menu.md#signing-out).
 
 ### Navigation by role
 
@@ -119,7 +119,7 @@ Security 7):
 ```
 
 Hiding the link is no security: protect the URL itself in the security configuration. The
-[Application shell](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/application-shell.md#navigation-by-role) page shows both in a layout, and the same check on
+[Application shell](https://shadleaf.dev/0.9.0/components/application-shell.md#navigation-by-role) page shows both in a layout, and the same check on
 content inside a page.
 
 ## htmx after the session expired
@@ -160,7 +160,7 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
   required role still gets a plain 403, and so does a request with a wrong token.
 - **Every request that is not an htmx request** goes to the entry point you pass, so it behaves as before. With OAuth2
   login, that is `new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/<registration id>")`, the same URL as
-  [Sign in](#sign-in-and-sign-out-urls) (see [Signing in with OAuth2](https://wimdeblauwe.github.io/shadleaf/0.9.0/guides/oauth2.md#with-htmx)). If you have an access
+  [Sign in](#sign-in-and-sign-out-urls) (see [Signing in with OAuth2](https://shadleaf.dev/0.9.0/guides/oauth2.md#with-htmx)). If you have an access
   denied handler of your own, pass it to `HxRedirectToPageAccessDeniedHandler`, which hands every other denial to it.
 - **`/webjars/**`** is permitted so the sign-in page can load htmx, if your layout loads it there too.
 

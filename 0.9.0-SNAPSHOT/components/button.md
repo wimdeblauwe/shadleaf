@@ -2,7 +2,7 @@
 
 > A button, or a link that looks like one.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/button/
+Source: https://shadleaf.dev/0.9.0-SNAPSHOT/components/button/
 
 **Example: Button.**
 
@@ -62,7 +62,7 @@ must have an `aria-label` (or `aria-labelledby`); rendering fails without one.
 
 ## With an icon
 
-Put an [`<sl:icon>`](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/icon.md) in the `icon-start` or `icon-end` slot. It takes the button's colour and a 16 pixel size.
+Put an [`<sl:icon>`](https://shadleaf.dev/0.9.0-SNAPSHOT/components/icon.md) in the `icon-start` or `icon-end` slot. It takes the button's colour and a 16 pixel size.
 
 **Example: With an icon.**
 

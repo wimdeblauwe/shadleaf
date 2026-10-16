@@ -2,7 +2,7 @@
 
 > A link past the navigation to the page's content, for keyboard users.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/skip-link/
+Source: https://shadleaf.dev/0.9.0-SNAPSHOT/components/skip-link/
 
 **Example: Skip link.** Hidden until it has the focus: click into the frame and press Tab. It skips to the element with id="main" (here the paragraph below), which tabindex="-1" lets take the focus.
 
@@ -31,7 +31,7 @@ Following it moves the focus to the page's `main`, and the next Tab goes on from
 
 ## The target
 
-The link goes to the element with `id="main"`; `for` points it at another id. [`<sl:sidebar-inset>`](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/sidebar.md) is
+The link goes to the element with `id="main"`; `for` points it at another id. [`<sl:sidebar-inset>`](https://shadleaf.dev/0.9.0-SNAPSHOT/components/sidebar.md) is
 `<main id="main" tabindex="-1">`, so with a sidebar there is nothing to set up.
 
 The target needs `tabindex="-1"` when it is no control of its own, as a `main` is. Without it, Chromium and Firefox

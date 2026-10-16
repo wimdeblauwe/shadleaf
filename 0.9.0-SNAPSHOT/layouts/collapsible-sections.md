@@ -2,10 +2,10 @@
 
 > A sidebar of sections whose labels open and close them, with a version switcher and a search field, as documentation has.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/layouts/collapsible-sections/
+Source: https://shadleaf.dev/0.9.0-SNAPSHOT/layouts/collapsible-sections/
 
-The [grouped layout](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/layouts/grouped-by-section.md) with sections that open and close: each section is a
-[collapsible group](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/sidebar.md#collapsible-sections) whose label is what the user clicks, with a
+The [grouped layout](https://shadleaf.dev/0.9.0-SNAPSHOT/layouts/grouped-by-section.md) with sections that open and close: each section is a
+[collapsible group](https://shadleaf.dev/0.9.0-SNAPSHOT/components/sidebar.md#collapsible-sections) whose label is what the user clicks, with a
 chevron that turns when it opens. Every section starts open here; a long sidebar can open only the current page's
 section with `th:open="${#slNav.current('/build')}"`. At the top, a version switcher and a search field. On a desktop
 the trigger moves the sidebar out of view; on a phone it opens the same sidebar as a panel. Switch the preview to
@@ -17,7 +17,7 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 ## The layout
 
-The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
+The whole layout file. It has what [every layout needs](https://shadleaf.dev/0.9.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
 theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
 title, and the toaster. A section is the browser's `details` element, so it opens and closes without JavaScript, and
 a closed one is still found by the browser's find in page.

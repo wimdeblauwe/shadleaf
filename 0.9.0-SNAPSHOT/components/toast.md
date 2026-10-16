@@ -2,7 +2,7 @@
 
 > A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/toast/
+Source: https://shadleaf.dev/0.9.0-SNAPSHOT/components/toast/
 
 **Example: Toast.** The button sends an sl-toast event; the toaster shows it, and a screen reader announces it.
 
@@ -109,7 +109,7 @@ toaster's duration like any other.
 A screen reader announces such a toast a moment after the page loads (see [Announcement](#announcement)), but that
 moment is also when it starts reading the new page, and not every screen reader lets one interrupt the other. When
 the outcome is the whole point of the page, say it in the page too: in the title, or in an
-[alert](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/alert.md).
+[alert](https://shadleaf.dev/0.9.0-SNAPSHOT/components/alert.md).
 
 ### Out of band
 
@@ -246,7 +246,7 @@ while it shows. The region is only a landmark while it holds toasts.
 
 A toast must not take the focus: it goes away, and the focus would fall to the top of the page with it. When an action
 removes the element that had the focus, such as a Delete button in a table row, move the focus to what comes next and
-let the toast say what happened. The [alert dialog's htmx example](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/alert-dialog.md#confirming-with-htmx) moves it to
+let the toast say what happened. The [alert dialog's htmx example](https://shadleaf.dev/0.9.0-SNAPSHOT/components/alert-dialog.md#confirming-with-htmx) moves it to
 the next row.
 
 ## No action button
@@ -307,7 +307,7 @@ A small Alpine component, `slToaster`, is on `<sl:toaster>`: it renders as
 `<div class="toaster" x-data="slToaster">`.
 
 - **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
-  enough. See [Alpine](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/alpine.md).
+  enough. See [Alpine](https://shadleaf.dev/0.9.0-SNAPSHOT/guides/alpine.md).
 - **Keep your own `x-data` off `<sl:toaster>`.** An element has one `x-data`.
 - **One toaster per page.** A second one works, but the first takes every event.
 - **htmx history:** the toaster removes its toasts before htmx saves the page in its history cache, so going back never

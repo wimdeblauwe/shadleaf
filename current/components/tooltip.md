@@ -2,7 +2,7 @@
 
 > A short text that shows while the pointer rests on an element or the keyboard focuses it.
 
-Source: https://wimdeblauwe.github.io/shadleaf/current/components/tooltip/
+Source: https://shadleaf.dev/current/components/tooltip/
 
 **Example: Tooltip.** Shows while the pointer rests on the button, and at once when the keyboard focuses it.
 
@@ -76,11 +76,11 @@ technology (`aria-hidden` on the content) and describes nothing. It still shows 
 </sl:tooltip>
 ```
 
-The [sidebar's](https://wimdeblauwe.github.io/shadleaf/current/components/sidebar.md#collapsed-to-icons) menu buttons use this for their labels while it is collapsed to icons.
+The [sidebar's](https://shadleaf.dev/current/components/sidebar.md#collapsed-to-icons) menu buttons use this for their labels while it is collapsed to icons.
 
 Keep the text short and plain. A tooltip cannot hold links or buttons (it hides when the pointer or focus leaves), and
 nobody on a touch screen sees it, so never put information in it that is not available another way. For richer
-content that the user can interact with, use a [popover](https://wimdeblauwe.github.io/shadleaf/current/components/popover.md).
+content that the user can interact with, use a [popover](https://shadleaf.dev/current/components/popover.md).
 
 A disabled button fires no pointer events and cannot take focus, so its tooltip never shows. Wrap it in an element
 that takes focus (`<span tabindex="0">`) when the tooltip explains why it is disabled, or better, say why next to it.
@@ -146,7 +146,7 @@ The tooltip is shown and hidden by a small Alpine component, `slTooltip`: `<sl:t
 `<span class="tooltip" x-data="slTooltip">`.
 
 - **It needs Alpine.** Browsers cannot show a popup on hover by themselves yet, so without Alpine the trigger still
-  works but no tooltip shows. Alpine is included by default; see [Alpine](https://wimdeblauwe.github.io/shadleaf/current/guides/alpine.md).
+  works but no tooltip shows. Alpine is included by default; see [Alpine](https://shadleaf.dev/current/guides/alpine.md).
 - **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
   enough.
 - **Keep your own `x-data` off `<sl:tooltip>`.** An element has one `x-data`, and attributes on `<sl:tooltip>` end up

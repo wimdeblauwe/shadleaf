@@ -2,18 +2,18 @@
 
 > Search as you type, sort and page a server-side table with htmx, act on a row from its menu, load more rows, keep the focus and the back button, and keep it working without JavaScript.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/tables-htmx/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/guides/tables-htmx/
 
-A Shadleaf [table](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md) sorts and pages on the server through plain links: its column headers,
-its [pagination](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/pagination.md) and the rows-per-page menu all link to the same page with other
+A Shadleaf [table](https://shadleaf.dev/0.8.0-SNAPSHOT/components/table.md) sorts and pages on the server through plain links: its column headers,
+its [pagination](https://shadleaf.dev/0.8.0-SNAPSHOT/components/pagination.md) and the rows-per-page menu all link to the same page with other
 parameters, built from the request that rendered it. A search above it is a plain `GET` form, which
-[`sl:query-params`](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/query-params.md) keeps in step with the table's order and size. None of it needs
+[`sl:query-params`](https://shadleaf.dev/0.8.0-SNAPSHOT/components/query-params.md) keeps in step with the table's order and size. None of it needs
 JavaScript, and none of the library's templates has an `hx-*` attribute. htmx makes it faster: it searches while the
 user types and replaces only the table, and the links and the address bar stay what they would be without it.
 
 This guide follows sample-01's `/people` page (`samples/shadleaf-sample-01`): 270 people in an H2 database, sorted,
 paged and searched by Spring Data JPA, with a menu of actions per row; and its `/people-load-more` page, which reads
-them a `Slice` at a time. Loading htmx is in [Forms with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/htmx.md#loading-htmx).
+them a `Slice` at a time. Loading htmx is in [Forms with htmx](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/htmx.md#loading-htmx).
 
 ## The page
 
@@ -60,7 +60,7 @@ same without a context path.)
 
 ## The controller
 
-The controller answers an htmx request with the results alone, as the [htmx form](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/htmx.md) does, and every other
+The controller answers an htmx request with the results alone, as the [htmx form](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/htmx.md) does, and every other
 request with the page:
 
 ```java
@@ -83,10 +83,10 @@ public String people(@RequestParam(required = false) String q,
 ```
 
 A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. So does a link
-that `hx-boost` on the body sends, such as the [sidebar's](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md#htmx): it has `HX-Boosted` and no
+that `hx-boost` on the body sends, such as the [sidebar's](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md#htmx): it has `HX-Boosted` and no
 `HX-Target` (the body has no id), where the table's own boosted links target the results. htmx-spring-boot
 adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
-page. Limit the sortable properties and add a unique last sort key as the [table](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#limit-what-can-be-sorted)
+page. Limit the sortable properties and add a unique last sort key as the [table](https://shadleaf.dev/0.8.0-SNAPSHOT/components/table.md#limit-what-can-be-sorted)
 explains; the sample does both.
 
 ## Ask for the page's own URL
@@ -133,7 +133,7 @@ links in the headers, the page links and the rows-per-page menu's items. They in
 - **Focus.** htmx gives the focus back to the element with the id of the one that had it, if the swap replaced that
   element. Every link Shadleaf builds has a stable id (`sort-name`, `page-next`, `page-3`, and the size menu's button
   `page-size-trigger`, which the menu focuses before it follows the chosen size), so after a click on Next the focus is
-  on the new Next, and the keyboard user can press Enter again. Ids get the [qualifier](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#two-tables-on-one-page)
+  on the new Next, and the keyboard user can press Enter again. Ids get the [qualifier](https://shadleaf.dev/0.8.0-SNAPSHOT/components/table.md#two-tables-on-one-page)
   as a prefix, so two tables on a page keep theirs apart.
 - **Scrolling.** A boosted link scrolls to the top of the target by default (`scrollIntoViewOnBoost`). `show:none` in
   `hx-swap` keeps the page where it is, which suits a pagination at the bottom of a long table; the focused link stays
@@ -143,7 +143,7 @@ links in the headers, the page links and the rows-per-page menu's items. They in
 
 ## Actions per row
 
-Each row of `/people` has a [menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#actions-per-row): View, Change role (one radio item per
+Each row of `/people` has a [menu](https://shadleaf.dev/0.8.0-SNAPSHOT/components/table.md#actions-per-row): View, Change role (one radio item per
 role, the current one checked) and Delete.
 
 ```html
@@ -197,7 +197,7 @@ role, the current one checked) and Delete.
   htmx the same URL answers `HX-Request` with an alert dialog for `#modal-root`; `hx-select="unset"` drops the
   `#people-results` the item would inherit. The dialog's Delete button has `hx:post` to the people page's address
   and `hx-target`/`hx-select` `#people-results`; the answer closes the dialog with `sl-dialog-close`, then shows the
-  toast, as in the [confirm with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/alert-dialog.md) example.
+  toast, as in the [confirm with htmx](https://shadleaf.dev/0.8.0-SNAPSHOT/components/alert-dialog.md) example.
 
 ### Where the focus goes
 
@@ -245,7 +245,7 @@ the better answer.
 
 ## Selection and a bulk action
 
-Sample-01's `/people-multiselect` page is the same page with a form around the table, with a checkbox per row, [select-all](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#selecting-rows)
+Sample-01's `/people-multiselect` page is the same page with a form around the table, with a checkbox per row, [select-all](https://shadleaf.dev/0.8.0-SNAPSHOT/components/table.md#selecting-rows)
 in the header, the selection count in the footer, and a Delete selected button that opens an alert dialog:
 
 ```html
@@ -318,7 +318,7 @@ link, which appends the next slice's rows.
   `.people-rows > tr:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; }`.
 - **Without JavaScript** the link opens `?page=1#people-row-21`: the page with every slice up to the next one, and the
   browser scrolls to the first new row and focuses it (it takes the focus, `tabindex="-1"`).
-- **Selection.** In a table with [row selection](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#selecting-rows), select-all and the count
+- **Selection.** In a table with [row selection](https://shadleaf.dev/0.8.0-SNAPSHOT/components/table.md#selecting-rows), select-all and the count
   follow the appended rows: three of three selected becomes three of six, and select-all is indeterminate.
 
 The controller answers `HX-Request` with the fragment of one slice, and every other request with all of them:
@@ -346,7 +346,7 @@ public String loadMore(@PageableDefault(size = 20, sort = "name") Pageable pagea
 ```
 
 `Slice<Person> findAllBy(Pageable pageable)` in the repository reads one row more than the slice to know whether there
-is a next one, and never counts. Add a unique last sort key, as for [a stable order](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#a-stable-order-across-pages),
+is a next one, and never counts. Add a unique last sort key, as for [a stable order](https://shadleaf.dev/0.8.0-SNAPSHOT/components/table.md#a-stable-order-across-pages),
 or a row can be loaded twice or never.
 
 ### Endless scrolling

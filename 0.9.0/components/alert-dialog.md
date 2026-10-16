@@ -2,7 +2,7 @@
 
 > A modal dialog that interrupts the user with something important and waits for an answer.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/components/alert-dialog/
+Source: https://shadleaf.dev/0.9.0/components/alert-dialog/
 
 **Example: Alert dialog.** A question the user has to answer. Cancel has the focus when it opens.
 
@@ -45,7 +45,7 @@ An alert dialog asks a question the user has to answer before going on, such as 
 </sl:alert-dialog>
 ```
 
-It works like a [dialog](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/dialog.md), with the differences an alert dialog needs:
+It works like a [dialog](https://shadleaf.dev/0.9.0/components/dialog.md), with the differences an alert dialog needs:
 
 - It has `role="alertdialog"`, so a screen reader announces it as an alert and reads the description with the title.
 - A click outside does not close it: the user has to choose. Escape still does, as in Radix, and counts as cancel.
@@ -129,7 +129,7 @@ For an action that deletes something, give the action `variant="destructive"`, a
 
 ## Confirming with htmx
 
-The alert dialog can come from the server, as the [dialog](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/dialog.md#rendered-by-the-server-htmx) does: a Delete
+The alert dialog can come from the server, as the [dialog](https://shadleaf.dev/0.9.0/components/dialog.md#rendered-by-the-server-htmx) does: a Delete
 button in a row fetches it into an empty element on the page, and `open` shows it as soon as it is there.
 
 ```html
@@ -160,7 +160,7 @@ The fragment has the question, and the destructive button sends the request:
 ```
 
 The controller deletes, closes the dialog with the `sl-dialog-close` event (the same one that closes a dialog), says
-what happened in a [toast](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/toast.md) and answers with nothing for the row, which removes it:
+what happened in a [toast](https://shadleaf.dev/0.9.0/components/toast.md) and answers with nothing for the row, which removes it:
 
 ```java
 @HxRequest
@@ -272,7 +272,7 @@ Every prop can also be set from an expression: `th:variant="${...}"`. Any other 
 
 ## JavaScript
 
-An alert dialog uses the dialog's Alpine component, `slDialog`; see [Dialog](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/dialog.md#javascript).
+An alert dialog uses the dialog's Alpine component, `slDialog`; see [Dialog](https://shadleaf.dev/0.9.0/components/dialog.md#javascript).
 
 - **Most of it works without Alpine.** Opening from a button, closing with Escape or Cancel, and focus on Cancel are
   the browser's. Alpine is needed for `open` and the `sl-dialog-close` event.

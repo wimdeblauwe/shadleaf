@@ -2,7 +2,7 @@
 
 > A stack of sections, each with a heading that shows or hides its content, on the browser's details element.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/accordion/
+Source: https://shadleaf.dev/0.8.0/components/accordion/
 
 **Example: Accordion.** One section open at a time. Opening another closes it; the open one closes on a click.
 
@@ -98,7 +98,7 @@ a heading; the heading goes inside it instead. The trigger renders
 `<summary><span role="heading" aria-level="3">…</span><svg …/></summary>`: the summary keeps its own role, a
 disclosure with its expanded state, and screen reader users can still jump from question to question by heading.
 `level` sets the level (3 by default); pick the one that fits the page's outline. For content that is not a list of
-headed sections, use a [collapsible](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/collapsible.md).
+headed sections, use a [collapsible](https://shadleaf.dev/0.8.0/components/collapsible.md).
 
 ## Find in page and links
 

@@ -2,7 +2,7 @@
 
 > A menu of actions or links that opens from a button, on the browser's Popover API.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/dropdown-menu/
+Source: https://shadleaf.dev/0.9.0-SNAPSHOT/components/dropdown-menu/
 
 **Example: Dropdown menu.** Labels, groups, separators and shortcuts; links and buttons; a disabled item.
 
@@ -99,7 +99,7 @@ The menu is labelled by its trigger. A menu opened by a button of your own needs
 ```
 
 The trigger is the same element the part renders on its own, with the menu's `popovertarget`, `aria-haspopup` and
-id, so it looks and lines up like the entries around it. The [Sidebar](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar) page shows
+id, so it looks and lines up like the entries around it. The [Sidebar](https://shadleaf.dev/0.9.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar) page shows
 the team switcher, the version switcher and the "More" menu, and where each opens: beside the sidebar on a desktop
 (`side="right"`), below its trigger in the phone panel and in the header layout's row.
 
@@ -113,7 +113,7 @@ anything a button or link does, and the menu closes once it is chosen, with focu
 | `<sl:dropdown-menu-item as="a" th:href="@{/orders/{id}(id=${order.id})}">` | Navigates. |
 | `<sl:dropdown-menu-item hx:post="@{/orders/{id}/duplicate(id=${order.id})}">` | Sends an htmx request. |
 | `<sl:dropdown-menu-item type="submit" form="logout-form">` | Submits a form (a POST logout). |
-| `<sl:dropdown-menu-item commandfor="rename-dialog" command="show-modal">` | Opens a [dialog](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/dialog.md); closing it returns focus to the menu's trigger. |
+| `<sl:dropdown-menu-item commandfor="rename-dialog" command="show-modal">` | Opens a [dialog](https://shadleaf.dev/0.9.0-SNAPSHOT/components/dialog.md); closing it returns focus to the menu's trigger. |
 
 `variant="destructive"` is for an item that deletes something. `disabled` disables an item: the arrow keys skip it, a
 disabled button cannot be clicked (htmx included), and a disabled link loses its `href`. `inset` indents an item (or a
@@ -213,7 +213,7 @@ The menu opens below its trigger, lined up with its start. `side="top|right|bott
 `align="start|center|end"` on `<sl:dropdown-menu-content>` change that, and the menu flips to the other side when there
 is no room. `right` and `left` are the end and the start of a line, so they swap on a right-to-left page. Inside the
 sidebar's phone panel and its header row a `right` or `left` menu opens below its trigger instead (see
-[Sidebar](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar)).
+[Sidebar](https://shadleaf.dev/0.9.0-SNAPSHOT/components/sidebar.md#menus-in-the-sidebar)).
 
 It is placed with [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning),
 which every current browser supports (Chrome and Edge 133, Safari 26, Firefox 147). In older ones the menu's small
@@ -262,7 +262,7 @@ A menu per row of a table takes its id from an expression; the parts derive thei
 
 The trigger's id is the menu's id plus `-trigger` (`order-1042-actions-trigger`). When a response replaces the row,
 htmx puts the focus back on the element with the same id in the new row, so the user does not lose their place. An item
-that fetches a [dialog](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx) closes the menu first, so the dialog returns the
+that fetches a [dialog](https://shadleaf.dev/0.9.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx) closes the menu first, so the dialog returns the
 focus to the trigger when it closes.
 
 ## With htmx
@@ -407,7 +407,7 @@ renders as `<div class="dropdown-menu-content" role="menu" popover x-data="slDro
 - **The basics work without Alpine.** The trigger opens and closes the menu, Escape and a click outside close it, and
   items work with the mouse and with Tab. Alpine is needed for the arrow keys and typeahead, for closing the menu after
   an item is chosen, for `aria-expanded` on the trigger, and for placing the menu in browsers without CSS anchor
-  positioning. Alpine is included by default; see [Alpine](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/alpine.md).
+  positioning. Alpine is included by default; see [Alpine](https://shadleaf.dev/0.9.0-SNAPSHOT/guides/alpine.md).
 - **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
   enough.
 - **Keep your own `x-data` off `<sl:dropdown-menu-content>`.** An element has one `x-data`, and attributes on it end up

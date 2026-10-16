@@ -2,7 +2,7 @@
 
 > Point Claude Code, Codex, Cursor, Copilot and other coding agents at these docs, and give them the rules they get wrong.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/coding-agents/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/coding-agents/
 
 Coding agents are great company when you build with Shadleaf, with a little help to get started. Shadleaf is new, so
 models haven't learned it yet, and because it looks so much like shadcn/ui, an agent tends to reach for what it knows
@@ -22,7 +22,7 @@ your `pom.xml`, so the agent reads the docs of the version you use.
 
 - The UI uses Shadleaf: shadcn/ui as Thymeleaf tags with the `sl:` prefix
   (`xmlns:sl="https://shadleaf.dev/sl"`), rendered on the server. Not React: no JSX, no Radix, no `asChild`.
-- Docs as Markdown: https://wimdeblauwe.github.io/shadleaf/<version>/llms.txt. Read the component's page
+- Docs as Markdown: https://shadleaf.dev/<version>/llms.txt. Read the component's page
   (`.../components/<name>.md`) before using a component; it ends with the attribute table.
 - An attribute that is not a prop passes through to the HTML silently, so a misspelt prop does nothing.
   Use only the props in the attribute table; `th:<prop>="${...}"` sets one from an expression.
@@ -63,7 +63,7 @@ the line for each setting that matches your `application.properties`, below the 
   `sl/layout :: assets` fragment, and it registers the Alpine plugins it needs.
 ```
 
-See [Getting started](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/getting-started.md#already-compiling-tailwind) and the [Alpine.js guide](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/alpine.md) for
+See [Getting started](https://shadleaf.dev/0.10.0-SNAPSHOT/getting-started.md#already-compiling-tailwind) and the [Alpine.js guide](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/alpine.md) for
 what each setting does.
 
 Keep it short: it is loaded in every session. Your coding agent will read more documentation as it needs.
@@ -83,6 +83,6 @@ The site's root also has the files of the [llms.txt](https://llmstxt.org) conven
 | `llms-components.txt` | All component pages in one file: every example and attribute table.                         |
 | `llms-guides.txt`     | The "Start here" pages, the layouts and the guides in one file.                             |
 
-Every version of the docs has its own set, under `/shadleaf/<version>/`; `/shadleaf/current/` is the latest release.
-In a session without the rules above, a prompt such as "read https://wimdeblauwe.github.io/shadleaf/current/llms.txt,
+Every version of the docs has its own set, under `/<version>/`; `/current/` is the latest release.
+In a session without the rules above, a prompt such as "read https://shadleaf.dev/current/llms.txt,
 then add a delete confirmation to the members table" is enough to get started.

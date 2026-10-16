@@ -2,7 +2,7 @@
 
 > A label, a control, a description and the binding's error messages, wired together from one th:field.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0/components/field/
+Source: https://shadleaf.dev/0.9.0/components/field/
 
 **Example: Field.**
 
@@ -81,12 +81,12 @@ only show with errors.
 The error has no `role="alert"`. After a submit the whole page loads again, and a screen reader would read out every
 error at once. The control is `aria-invalid` and described by its error instead, so the message is read when the user
 reaches the control. When htmx swaps the whole form in, `<sl:form-errors autofocus/>` moves focus to the first
-control with an error, which reads it out; see [Forms with htmx](https://wimdeblauwe.github.io/shadleaf/0.9.0/guides/htmx.md). If you swap a single field in
+control with an error, which reads it out; see [Forms with htmx](https://shadleaf.dev/0.9.0/guides/htmx.md). If you swap a single field in
 while focus stays elsewhere, for example to validate it as the user leaves it, add `role="alert"` to its error
 yourself.
 
 Errors that belong to the whole form rather than one field, such as `reject(...)` in the controller, go in a
-[`<sl:form-errors/>`](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/form-errors.md) above the fields.
+[`<sl:form-errors/>`](https://shadleaf.dev/0.9.0/components/form-errors.md) above the fields.
 
 ## Ids
 
@@ -286,7 +286,7 @@ options' labels fade with them.
 </sl:field-set>
 ```
 
-A read-only control changes nothing in the field: its label stays as it is. See the [input](https://wimdeblauwe.github.io/shadleaf/0.9.0/components/input.md#read-only) for
+A read-only control changes nothing in the field: its label stays as it is. See the [input](https://shadleaf.dev/0.9.0/components/input.md#read-only) for
 how it looks.
 
 **Example: Read-only.** A read-only input keeps its label as it is. It still takes focus, and its value is submitted.

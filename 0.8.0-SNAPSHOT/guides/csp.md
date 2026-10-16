@@ -2,7 +2,7 @@
 
 > Run Shadleaf under a strict CSP, with a nonce or a hash, and no 'unsafe-inline'.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/csp/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/guides/csp/
 
 Shadleaf renders no inline styles and no inline event handlers. The only inline code is the theme script
 (`~{sl/layout :: theme-script}`), which has to run before the first paint to avoid a flash of the wrong theme. A strict
@@ -72,7 +72,7 @@ A hash pasted into a static configuration goes stale when an upgrade changes the
 ## Alpine.js
 
 Alpine's standard build needs `'unsafe-eval'`. Under a policy without it, set `shadleaf.assets.alpine=csp` to load
-Alpine's CSP build instead; see [Alpine.js](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/alpine.md#csp) for what that means for your own Alpine markup. Shadleaf's
+Alpine's CSP build instead; see [Alpine.js](https://shadleaf.dev/0.8.0-SNAPSHOT/guides/alpine.md#csp) for what that means for your own Alpine markup. Shadleaf's
 script is served from your application, so `script-src 'self'` allows it.
 
 ## A working example

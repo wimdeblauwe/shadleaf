@@ -2,7 +2,7 @@
 
 > A table in shadcn/ui's look, whose column headers sort it on the server.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/table/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/components/table/
 
 **Example: Table.**
 
@@ -214,7 +214,7 @@ The page the repository returns carries the order it was sorted by, so the table
 ### A stable order across pages
 
 Rows with the same value in the sorted column (two people with 59 orders) come back from the database in no particular
-order, and not necessarily the same one for every page. Once the table has [pages](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/pagination.md), such a row can
+order, and not necessarily the same one for every page. Once the table has [pages](https://shadleaf.dev/0.10.0-SNAPSHOT/components/pagination.md), such a row can
 show up on two pages, or on none. Add a unique key the reader does not see, such as the id, as the last sort key before
 you query:
 
@@ -268,14 +268,14 @@ roles by rank, sort the database by the rank:
 ### Focus after an htmx swap
 
 Each sort link has an id (`sort-name`, or `members-sort-name` with a qualifier), so when htmx replaces the table it
-gives the focus back to the link that was clicked. [Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/tables-htmx.md) puts it together.
+gives the focus back to the link that was clicked. [Tables with htmx](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tables-htmx.md) puts it together.
 
 ## Search and filters
 
 A search or filter above the table is a `GET` form the controller reads (`?q=ada`). Put
-[`<sl:query-params except="q"/>`](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/query-params.md) in it, so sending it keeps the table's order and page size and
+[`<sl:query-params except="q"/>`](https://shadleaf.dev/0.10.0-SNAPSHOT/components/query-params.md) in it, so sending it keeps the table's order and page size and
 starts on the first page; the sort and page links keep `q` by themselves. To search as the user types, see
-[Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/tables-htmx.md).
+[Tables with htmx](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tables-htmx.md).
 
 ## Nothing found
 
@@ -311,7 +311,7 @@ the text.
 
 ## Actions per row
 
-Put a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/dropdown-menu.md) in the last cell, as shadcn's data table does. Give each menu an id built
+Put a [dropdown menu](https://shadleaf.dev/0.10.0-SNAPSHOT/components/dropdown-menu.md) in the last cell, as shadcn's data table does. Give each menu an id built
 from its row, so every trigger has a stable id of its own (`people-12-actions-trigger`), and name the trigger after the
 row: a screen reader user tabbing through the table hears "Actions for Ada Lovelace, menu button". The header cell
 above the menus needs a name too, read out with each cell: `<span class="sl-sr-only">Actions</span>`.
@@ -368,11 +368,11 @@ above the menus needs a name too, read out with each cell: `<span class="sl-sr-o
 
 An item that changes something is a submit button of a `post` form. A `role="menu"` may only hold menu items, so the
 form goes around the menu: a hidden input names the row, and each item sends its own `name` and `value` (`role=ADMIN`).
-View is a link; Delete is a link to a page that asks first. [Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/tables-htmx.md#actions-per-row)
+View is a link; Delete is a link to a page that asks first. [Tables with htmx](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tables-htmx.md#actions-per-row)
 turns the same menu into htmx requests, with an alert dialog for Delete, and keeps the focus on the row's menu button.
 
 A menu per row is markup per row: 50 rows with a badge and the menu above render in about 9 ms and 222 KB of HTML,
-5 KB once compressed (see [the cost](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/tables-htmx.md#the-cost-of-a-menu-per-row)).
+5 KB once compressed (see [the cost](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tables-htmx.md#the-cost-of-a-menu-per-row)).
 
 ## Selecting rows
 
@@ -476,8 +476,8 @@ public String delete(@RequestParam(name = "ids", required = false) List<Long> id
 }
 ```
 
-Ask before a destructive action with an [alert dialog](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/alert-dialog.md) inside the form: its destructive button is a
-submit button. With htmx, answer with the table alone; [Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/tables-htmx.md#selection-and-a-bulk-action)
+Ask before a destructive action with an [alert dialog](https://shadleaf.dev/0.10.0-SNAPSHOT/components/alert-dialog.md) inside the form: its destructive button is a
+submit button. With htmx, answer with the table alone; [Tables with htmx](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tables-htmx.md#selection-and-a-bulk-action)
 shows how, and sample-01's `/people-multiselect` page does both.
 
 ### Selection across pages
@@ -512,7 +512,7 @@ A bulk action can listen to it, for instance to show how many people it would de
 ```
 
 A checkbox of your own can be indeterminate too: set its `indeterminate` property, or render
-[`<sl:checkbox indeterminate>`](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/checkbox.md#indeterminate).
+[`<sl:checkbox indeterminate>`](https://shadleaf.dev/0.10.0-SNAPSHOT/components/checkbox.md#indeterminate).
 
 ## Left out
 

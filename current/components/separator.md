@@ -2,7 +2,7 @@
 
 > A thin line between content.
 
-Source: https://wimdeblauwe.github.io/shadleaf/current/components/separator/
+Source: https://shadleaf.dev/current/components/separator/
 
 **Example: Separator.**
 

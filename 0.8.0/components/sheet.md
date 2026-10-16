@@ -2,7 +2,7 @@
 
 > A dialog that slides in from an edge of the screen.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/sheet/
+Source: https://shadleaf.dev/0.8.0/components/sheet/
 
 **Example: Sheet.** A form in a sheet. The form wraps the sheet, so the submit button in its footer submits it.
 
@@ -35,7 +35,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/sheet/
 
 ## Built from parts
 
-A sheet is a [dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/dialog.md) on an edge of the screen, for content that complements the page: filters,
+A sheet is a [dialog](https://shadleaf.dev/0.8.0/components/dialog.md) on an edge of the screen, for content that complements the page: filters,
 settings, the details of a row. It is `<sl:sheet>` plus the parts you need, as in shadcn/ui: `<sl:sheet-header>`
 (holding `<sl:sheet-title>` and `<sl:sheet-description>`), your own content and `<sl:sheet-footer>`.
 
@@ -168,7 +168,7 @@ close-button>` adds an outline "Close" button after the footer's own actions.
 
 ## Loaded into the sheet: a body
 
-`<sl:sheet-body>` is what htmx loads, as the [dialog's body](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/dialog.md#loaded-into-the-dialog-a-body). You put the sheet
+`<sl:sheet-body>` is what htmx loads, as the [dialog's body](https://shadleaf.dev/0.8.0/components/dialog.md#loaded-into-the-dialog-a-body). You put the sheet
 in the page once, closed. A request that targets its body (`#<sheet id>-body`) opens it at once and shows a spinner
 until the answer is swapped in:
 
@@ -246,7 +246,7 @@ spinner:
 ### When loading fails
 
 When the request fails (an error status, no connection, a timeout), the sheet closes again and a
-[toast](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/toast.md) shows "Something went wrong. Please try again." The `error` slot replaces that message:
+[toast](https://shadleaf.dev/0.8.0/components/toast.md) shows "Something went wrong. Please try again." The `error` slot replaces that message:
 
 ```html
 <sl:sheet-body>
@@ -319,7 +319,7 @@ public String update(@PathVariable long id, @Valid @ModelAttribute("memberForm")
 
 htmx fires `sl-dialog-close` on the form, inside the sheet, which closes; the focus returns to the Edit button. Give
 that button an id if the row is replaced, so htmx puts the focus back on the new one (see
-[Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/dialog.md#rendered-by-the-server-htmx)). A failed save (an error status) shows the error in the sheet and
+[Dialog](https://shadleaf.dev/0.8.0/components/dialog.md#rendered-by-the-server-htmx)). A failed save (an error status) shows the error in the sheet and
 keeps what was typed.
 
 ## Width
@@ -399,7 +399,7 @@ Every prop can also be set from an expression: `th:close-button="${...}"`. Any o
 
 ## JavaScript
 
-A sheet uses the dialog's Alpine component, `slDialog`; see [Dialog](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/dialog.md#javascript).
+A sheet uses the dialog's Alpine component, `slDialog`; see [Dialog](https://shadleaf.dev/0.8.0/components/dialog.md#javascript).
 
 - **Most of it works without Alpine.** Opening from a button, Escape, a click outside and the close buttons are the
   browser's. Alpine is needed for `open`, the `sl-dialog-close` event, which closes a sheet as it closes a dialog, and

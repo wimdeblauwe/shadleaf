@@ -2,7 +2,7 @@
 
 > Post a Shadleaf form with htmx, get it back with its errors without a page load, and keep it working as a plain POST.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/htmx/
+Source: https://shadleaf.dev/0.9.0-SNAPSHOT/guides/htmx/
 
 Shadleaf's form components render plain HTML with every `id`, `aria-invalid` and `aria-describedby` in place, so a
 form that htmx swaps in is as accessible as one that loaded with the page. Shadleaf has no dependency on htmx and
@@ -44,16 +44,16 @@ headers, and htmx itself from its webjar, pinned in the pom:
 ```
 
 - **A webjar, served by your application.** It needs no Node build, and it comes from your own origin, so a policy
-  with `script-src 'self'` allows it (add the [nonce](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/csp.md) if your policy uses one). With `webjars-locator-lite`
+  with `script-src 'self'` allows it (add the [nonce](https://shadleaf.dev/0.9.0-SNAPSHOT/guides/csp.md) if your policy uses one). With `webjars-locator-lite`
   the template leaves the version out, and Spring Boot writes it into the URL (`/webjars/htmx.org/2.0.11/...`), which
   also busts caches on an upgrade. An application that bundles its JavaScript with Vite can `import 'htmx.org'`
   instead.
-- **The config keeps htmx within a strict [CSP](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/csp.md).** By default htmx adds an inline `<style>` for its request
+- **The config keeps htmx within a strict [CSP](https://shadleaf.dev/0.9.0-SNAPSHOT/guides/csp.md).** By default htmx adds an inline `<style>` for its request
   indicator, which `style-src 'self'` blocks, and evaluates `hx-on` handlers and `js:` values with `eval`. Turn both
   off unless you use them.
 
 Behind Spring Security, an htmx request made after the session expired gets the sign-in page swapped into its
-target, or, for a POST, nothing at all. See [htmx after the session expired](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired).
+target, or, for a POST, nothing at all. See [htmx after the session expired](https://shadleaf.dev/0.9.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired).
 
 ## One form, two ways to post
 
@@ -132,7 +132,7 @@ When htmx replaces the form, the submit button that had the focus is gone, and f
 
 htmx focuses the first `[autofocus]` in content it swaps in. It first tries to put focus back on the element that had
 it, by id, so a user who pressed <kbd>Enter</kbd> in the name field would stay there; `autofocus` runs later and
-wins. See [Form errors](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/form-errors.md#announcement-and-focus) for the details.
+wins. See [Form errors](https://shadleaf.dev/0.9.0-SNAPSHOT/components/form-errors.md#announcement-and-focus) for the details.
 
 ## Announcement
 
@@ -142,7 +142,7 @@ errors, in the htmx response or anywhere else. A live region would read the same
 same reason: a live region inserted together with its text is not announced reliably anyway.
 
 Add `role="alert"` when content changes without moving focus, for example a single field that htmx validates as the
-user leaves it: see [Field](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/field.md#errors).
+user leaves it: see [Field](https://shadleaf.dev/0.9.0-SNAPSHOT/components/field.md#errors).
 
 ## Back button and history
 
@@ -157,25 +157,25 @@ failed form keeps the user's input in its `value` attributes. For a form with pe
 A dialog can come from the server too: a button fetches `<sl:dialog open>` into an empty element, the form in it
 swaps only itself while it has errors, and an `HX-Trigger: sl-dialog-close` response header closes it after a valid
 save. Open dialogs close before htmx snapshots a page for its history, so back never restores one. See
-[Dialog](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.
+[Dialog](https://shadleaf.dev/0.9.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.
 
-The same works for an [alert dialog](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/alert-dialog.md#confirming-with-htmx) that confirms a delete: its
+The same works for an [alert dialog](https://shadleaf.dev/0.9.0-SNAPSHOT/components/alert-dialog.md#confirming-with-htmx) that confirms a delete: its
 destructive button sends `hx-delete`, and the response closes it with the same event, shows a toast saying what
-happened, removes the row and moves the focus to the next row. A [sheet](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/sheet.md) is a dialog too, with the same `open`
+happened, removes the row and moves the focus to the next row. A [sheet](https://shadleaf.dev/0.9.0-SNAPSHOT/components/sheet.md) is a dialog too, with the same `open`
 and `sl-dialog-close`.
 
 ## Menus and popovers
 
-A [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/dropdown-menu.md) item takes `hx-*` like a button: it sends its request and the menu
+A [dropdown menu](https://shadleaf.dev/0.9.0-SNAPSHOT/components/dropdown-menu.md) item takes `hx-*` like a button: it sends its request and the menu
 closes, with the focus back on the trigger. A menu of row actions whose response replaces the row keeps the focus in
 place when the trigger has an id, which it gets from the menu's (`th:id="|order-${order.id}-actions|"` gives
-`order-42-actions-trigger`). A form in a [popover](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/popover.md#a-form-in-a-popover-with-htmx) closes
+`order-42-actions-trigger`). A form in a [popover](https://shadleaf.dev/0.9.0-SNAPSHOT/components/popover.md#a-form-in-a-popover-with-htmx) closes
 it with `HX-Trigger: sl-popover-close`. A swap that replaces an open menu or popover leaves nothing open behind it,
 and back never restores one open: whether a popover is open is not part of the markup htmx saves.
 
 ## Toasts
 
-An `HX-Trigger: sl-toast` response header shows a [toast](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/toast.md), whatever the response swaps:
+An `HX-Trigger: sl-toast` response header shows a [toast](https://shadleaf.dev/0.9.0-SNAPSHOT/components/toast.md), whatever the response swaps:
 `htmxResponse.addTrigger("sl-toast", Toast.success("Member deleted"))`. A response can also swap `<sl:toast>`s into
 the toaster out of band. Use `HX-Trigger` rather than `HX-Trigger-After-Swap`/`-After-Settle`, whose events are lost
 when the swap removed the element that sent the request, and a flash attribute rather than a toast when the response

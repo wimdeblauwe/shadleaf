@@ -2,7 +2,7 @@
 
 > Switches the page between the light and the dark theme, and remembers the choice in the browser.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/theme-toggle/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/components/theme-toggle/
 
 **Example: Theme toggle.** An icon button opening a menu with Light, Dark and System; the icon shows the page's theme.
 
@@ -12,7 +12,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/theme-
 
 ## Usage
 
-Put the theme script in the `<head>` of your layout, as [Getting started](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/getting-started.md) shows, and the
+Put the theme script in the `<head>` of your layout, as [Getting started](https://shadleaf.dev/0.10.0-SNAPSHOT/getting-started.md) shows, and the
 toggle wherever it belongs, usually the page header:
 
 ```html
@@ -83,7 +83,7 @@ sl.theme-toggle.system=System
 `sl.theme-toggle.label` names the menu's button and `sl.theme-toggle.dark-mode` the single button; an `aria-label` on
 `<sl:theme-toggle>` replaces either for one toggle.
 
-There is no tooltip. The sun and the moon are what people look for, and a [tooltip](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/tooltip.md) would only repeat the
+There is no tooltip. The sun and the moon are what people look for, and a [tooltip](https://shadleaf.dev/0.10.0-SNAPSHOT/components/tooltip.md) would only repeat the
 button's name to a screen reader, as its description.
 
 ## Without JavaScript
@@ -116,12 +116,12 @@ Every prop can also be set from an expression: `th:as="${...}"`. Any other attri
 ## JavaScript
 
 A small Alpine component, `slThemeToggle`, does the work: `<sl:theme-toggle>` renders as
-`<div class="theme-toggle" x-data="slThemeToggle">`, around a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/dropdown-menu.md) (whose own
+`<div class="theme-toggle" x-data="slThemeToggle">`, around a [dropdown menu](https://shadleaf.dev/0.10.0-SNAPSHOT/components/dropdown-menu.md) (whose own
 `slDropdownMenu` handles the keyboard) or a button.
 
 - **It needs Alpine**, and no Alpine plugin: it writes the key itself, not with `$persist`, which would store
   `"dark"` as JSON, quotes included, where the theme script expects `dark`. Alpine is included by default; see
-  [Alpine](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/alpine.md).
+  [Alpine](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/alpine.md).
 - **Attributes go to the button**, `class` and your own `x-data` included; the wrapper around it has no box.
 - **It changes nothing when it starts.** The page is already in the stored theme; a page that sets the `dark` class
   some other way keeps it until someone chooses.

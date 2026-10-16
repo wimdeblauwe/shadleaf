@@ -2,7 +2,7 @@
 
 > The trail of pages above the one shown now, with a menu for the levels a long trail leaves out.
 
-Source: https://wimdeblauwe.github.io/shadleaf/current/components/breadcrumb/
+Source: https://shadleaf.dev/current/components/breadcrumb/
 
 **Example: Breadcrumb.**
 
@@ -38,8 +38,8 @@ level is the page shown now.
 `<sl:breadcrumb-link>` is a link: give it an `href` or `th:href`. `<sl:breadcrumb-page>` is plain text with
 `aria-current="page"`. The list wraps onto a second line when there is no room, as on a phone.
 
-In an [application shell](https://wimdeblauwe.github.io/shadleaf/current/components/sidebar.md) the breadcrumb goes in the page header, after the sidebar's trigger and a
-vertical [separator](https://wimdeblauwe.github.io/shadleaf/current/components/separator.md).
+In an [application shell](https://shadleaf.dev/current/components/sidebar.md) the breadcrumb goes in the page header, after the sidebar's trigger and a
+vertical [separator](https://shadleaf.dev/current/components/separator.md).
 
 ## A level without a page
 
@@ -99,7 +99,7 @@ levels".
 
 ### With a menu
 
-Give the ellipsis the levels it stands for, as [dropdown menu](https://wimdeblauwe.github.io/shadleaf/current/components/dropdown-menu.md) items, and it becomes a ghost icon
+Give the ellipsis the levels it stands for, as [dropdown menu](https://shadleaf.dev/current/components/dropdown-menu.md) items, and it becomes a ghost icon
 button that opens a menu of them, as in shadcn's example:
 
 **Example: With a menu.** An ellipsis with the hidden levels as its content is a button that opens a menu of them. Arrow keys move through the menu, Escape closes it.
@@ -135,7 +135,7 @@ button that opens a menu of them, as in shadcn's example:
 
 The button is named "Show more levels"; an `aria-label` replaces it, and any other attribute goes to the button too.
 The menu's id is `breadcrumb-more` (the button's `breadcrumb-more-trigger`): give a second breadcrumb with a menu on the
-same page another `id`. The menu behaves as every [dropdown menu](https://wimdeblauwe.github.io/shadleaf/current/components/dropdown-menu.md): arrow keys, Home, End and
+same page another `id`. The menu behaves as every [dropdown menu](https://shadleaf.dev/current/components/dropdown-menu.md): arrow keys, Home, End and
 typeahead move through the levels, Enter follows one, Escape closes it and gives the focus back to the button.
 
 ## Separator
@@ -230,5 +230,5 @@ Every prop can also be set from an expression: `th:id="${...}"`. Any other attri
 
 ## JavaScript
 
-Only the ellipsis with a menu needs any: it is a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/current/components/dropdown-menu.md#javascript), which needs Alpine and
+Only the ellipsis with a menu needs any: it is a [dropdown menu](https://shadleaf.dev/current/components/dropdown-menu.md#javascript), which needs Alpine and
 no plugin. Without it the button still opens the menu (the browser's popover), without the arrow keys.

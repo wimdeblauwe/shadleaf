@@ -2,7 +2,7 @@
 
 > A set of the browser's own radio buttons, styled, bound to a form field with th:field.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/radio-group/
+Source: https://shadleaf.dev/0.8.0/components/radio-group/
 
 **Example: Radio group.**
 
@@ -20,12 +20,12 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/radio-group/
 
 Write `th:field` on every item, with the item's own `value` or `th:value`. Spring gives them the field's `name`,
 numbers their ids (`plan1`, `plan2`, ...) and checks the one whose value matches the field. Because of the numbered
-ids, put each item inside its [label](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/label.md).
+ids, put each item inside its [label](https://shadleaf.dev/0.8.0/components/label.md).
 
 The group is announced as a radio group. Name it with `aria-labelledby`, pointing at the question, or with
 `aria-label`.
 
-In a [field set](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/field.md#radio-buttons-and-checkbox-groups), `th:field` goes on the field set once, and the items
+In a [field set](https://shadleaf.dev/0.8.0/components/field.md#radio-buttons-and-checkbox-groups), `th:field` goes on the field set once, and the items
 take it. Its legend asks the question, and it shows the error message and describes the group with it.
 
 ## Horizontal
@@ -56,7 +56,7 @@ A field with errors marks every item `aria-invalid="true"`.
 ## Disabled
 
 A disabled radio button and its label fade, and the keyboard skips it. To disable the whole group, put it in a
-[field set](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/field.md#disabled) with `disabled`.
+[field set](https://shadleaf.dev/0.8.0/components/field.md#disabled) with `disabled`.
 
 **Example: Disabled item.**
 

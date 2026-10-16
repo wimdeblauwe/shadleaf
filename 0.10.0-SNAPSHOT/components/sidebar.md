@@ -2,7 +2,7 @@
 
 > The application's navigation beside the page, and a panel over it on a phone.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/sidebar/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/components/sidebar/
 
 **Example: Sidebar.** Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the sidebar's ground (from 768 px), and collapsible="icon" collapses it to a strip of icons whose tooltips show the labels, as sample-01's layout. Documents opens a sub-menu. The footer ends in the signed-in user's menu (sl:user-menu). The large button in the header is a team switcher: it opens a dropdown menu beside the sidebar (below it in the panel) with the current team checked, and "More" beside Design Engineering opens one too.
 
@@ -178,8 +178,8 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/sideba
 > **Tip: Layouts to copy**
 >
 > The Layouts section has whole layouts built from these parts, such as [Collapses to
-> icons](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/layouts/collapses-to-icons.md) and [Navigation in the header](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/layouts/header.md). The
-> [Application shell](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/application-shell.md) page says what every layout needs around them.
+> icons](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/collapses-to-icons.md) and [Navigation in the header](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/header.md). The
+> [Application shell](https://shadleaf.dev/0.10.0-SNAPSHOT/components/application-shell.md) page says what every layout needs around them.
 
 ## Built from parts
 
@@ -188,7 +188,7 @@ An application shell with a sidebar is four components, as in shadcn/ui:
 - `<sl:sidebar-provider>` wraps the whole page and holds the state: is the sidebar expanded or collapsed on a desktop.
 - `<sl:sidebar>` is the navigation itself: a `<nav>` landmark named "Main".
 - `<sl:sidebar-inset>` is the page's `<main>`, beside the sidebar: `<main id="main" tabindex="-1">`, the target of
-  the [skip link](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/skip-link.md).
+  the [skip link](https://shadleaf.dev/0.10.0-SNAPSHOT/components/skip-link.md).
 - `<sl:sidebar-trigger>` is the icon button that collapses the sidebar, or opens it on a phone. It usually sits in a
   header at the top of the inset.
 
@@ -214,18 +214,18 @@ An application shell with a sidebar is four components, as in shadcn/ui:
 Put the sidebar straight inside the provider (not in an element of your own): the CSS that collapses it looks for it
 there.
 
-The [skip link](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/skip-link.md) comes first in the body: the sidebar puts many links before the content, and it lets a
+The [skip link](https://shadleaf.dev/0.10.0-SNAPSHOT/components/skip-link.md) comes first in the body: the sidebar puts many links before the content, and it lets a
 keyboard user jump past them to the inset. The header at the top of the inset holds the trigger, a vertical
-[separator](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/separator.md) and the [breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/breadcrumb.md), as shadcn's blocks have it. Lay it out as a row
-yourself, or use a [site header](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/site-header.md), which does it for you, as the
-[Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/layouts/collapses-to-icons.md) layout does.
+[separator](https://shadleaf.dev/0.10.0-SNAPSHOT/components/separator.md) and the [breadcrumb](https://shadleaf.dev/0.10.0-SNAPSHOT/components/breadcrumb.md), as shadcn's blocks have it. Lay it out as a row
+yourself, or use a [site header](https://shadleaf.dev/0.10.0-SNAPSHOT/components/site-header.md), which does it for you, as the
+[Collapses to icons](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/collapses-to-icons.md) layout does.
 
 ## What goes inside
 
 The sidebar holds a header, the content and a footer, with shadcn/ui's names:
 
 - `<sl:sidebar-header>` at the top (the application or team) and `<sl:sidebar-footer>` at the bottom (settings, help,
-  the signed-in user's [user menu](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/user-menu.md)). They stay in view.
+  the signed-in user's [user menu](https://shadleaf.dev/0.10.0-SNAPSHOT/components/user-menu.md)). They stay in view.
 - `<sl:sidebar-content>` between them, which scrolls when there is more than fits. It is a plain `div`: the sidebar
   itself is the navigation landmark.
 - `<sl:sidebar-separator>` draws a line between parts; screen readers skip it.
@@ -413,7 +413,7 @@ renders a menu button, `as="sidebar-menu-action"` a menu action (shadcn's `<Drop
 takes the part's props (`size`, `variant`, `tooltip`; `show-on-hover`) and its `icon-start` and `icon-end` slots, and
 any other attribute passes through. Put the `<sl:dropdown-menu>` in the `<sl:sidebar-menu-item>`, where the part would
 be. The default example above has three: a team switcher in the header, "More" beside Design Engineering, and the
-[user menu](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/user-menu.md) in the footer, which is one component.
+[user menu](https://shadleaf.dev/0.10.0-SNAPSHOT/components/user-menu.md) in the footer, which is one component.
 
 ```html
 <sl:sidebar-header>
@@ -460,7 +460,7 @@ be. The default example above has three: a team switcher in the header, "More" b
 
 **The current team or version** is a checked radio item: a menu of links, one per team (or version), the current one
 checked by the server. A screen reader says "Acme Inc., radio menu item, checked", the check mark shows it, and it works without
-JavaScript, as the [radio items](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/dropdown-menu.md#checkbox-and-radio-items) of a sort menu do. The menu is labelled by its
+JavaScript, as the [radio items](https://shadleaf.dev/0.10.0-SNAPSHOT/components/dropdown-menu.md#checkbox-and-radio-items) of a sort menu do. The menu is labelled by its
 trigger; the group of teams by the label above it.
 
 A version switcher (shadcn's sidebar-01) is the same menu with the versions, opened from the header's large menu button:
@@ -653,7 +653,7 @@ collapsible item.
 
 The keyboard reaches the link, then the chevron. Collapsed to icons, the chevron and the sub-menu are hidden, and the
 section's icon shows when the current page is one of its pages. The
-[Inset with secondary navigation](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/layouts/inset-secondary-navigation.md) layout has four such sections.
+[Inset with secondary navigation](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/inset-secondary-navigation.md) layout has four such sections.
 
 ### Collapsible sections
 
@@ -671,7 +671,7 @@ group's first part. The label still names the group. `open` renders it open.
 ```
 
 Collapsed to icons, and in the [header row](#in-the-header), the label is out of view, so every collapsible group
-shows its links whether it is open or not. The [Collapsible sections](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/layouts/collapsible-sections.md) layout
+shows its links whether it is open or not. The [Collapsible sections](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/collapsible-sections.md) layout
 has one per section.
 
 ## One element for a desktop and a phone
@@ -748,7 +748,7 @@ The phone panel ignores the state: it always opens with everything in it.
   as the plain sidebar, so a page lays out the same with either.
 - `inset` gives the sidebar no edge: its colour lies around the page, and `<sl:sidebar-inset>` becomes a card on it,
   with a margin, rounded corners (vega) and a shadow. The example at the top of this page, and the
-  [Collapses to icons](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/layouts/collapses-to-icons.md) layout, use it.
+  [Collapses to icons](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/collapses-to-icons.md) layout, use it.
 
 **Example: Variants.** variant="sidebar" (the default) is a column along the edge with a border, variant="floating" a panel with a margin all round; the inset variant is the first example. On a phone the panel is the same for all three.
 
@@ -807,7 +807,7 @@ margin around it.
   labels move out of view but still name their groups.
 - `tooltip` on a menu button shows its label beside it, on hover and on keyboard focus, while the sidebar is collapsed
   to icons; never while it is expanded or on a phone. It repeats the button's name, so it is hidden from screen
-  readers and describes nothing (as a [tooltip](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/tooltip.md#when-it-repeats-the-name) with `mode="label"`). Give every
+  readers and describes nothing (as a [tooltip](https://shadleaf.dev/0.10.0-SNAPSHOT/components/tooltip.md#when-it-repeats-the-name) with `mode="label"`). Give every
   menu button one: without it, the icon alone has to say where the link goes.
 - A menu button that [opens a menu](#menus-in-the-sidebar) still does, beside the strip; its tooltip never shows
   while the menu is open.
@@ -896,7 +896,7 @@ panel, as with the other two.
 `side="right"` puts the sidebar at the end of the line: the right, or the left on a right-to-left page (`dir="rtl"`).
 The default, `left`, is the start of the line: the left, or the right on a right-to-left page. The sheet's sides work
 the same way. The panel slides in from the same edge, and
-the trigger's icon shows the panel on that side. The [On the end](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/layouts/sidebar-end.md) layout puts a table of
+the trigger's icon shows the panel on that side. The [On the end](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/sidebar-end.md) layout puts a table of
 contents there.
 
 **Example: On the end.** side="right" puts the sidebar on the end of the line (the right, or the left on a right-to-left page).
@@ -933,7 +933,7 @@ contents there.
 
 ## In the header
 
-`placement="header"` puts the same `<sl:sidebar>` inside a [`<sl:site-header>`](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/site-header.md) instead of beside the
+`placement="header"` puts the same `<sl:sidebar>` inside a [`<sl:site-header>`](https://shadleaf.dev/0.10.0-SNAPSHOT/components/site-header.md) instead of beside the
 page: from 768 px it is a row of links in the header, and narrower it is the panel, as in the sidebar layout. Nothing
 is rendered twice: it is one `nav` with one set of ids at every width. Inside `<sl:sidebar-provider>`, the header goes
 first and `<sl:sidebar-inset>` below it:
@@ -1259,7 +1259,7 @@ would.
 A boosted link sends `HX-Request` too. A controller that answers htmx with a fragment (a table's rows, a dialog) must
 tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
 `HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The
-[Application shell](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/application-shell.md#with-htmx) page shows the check.
+[Application shell](https://shadleaf.dev/0.10.0-SNAPSHOT/components/application-shell.md#with-htmx) page shows the check.
 
 ## Left out
 
@@ -1489,7 +1489,7 @@ A small Alpine component, `slSidebar`, does the work: `<sl:sidebar-provider>` re
 
 - **It needs Alpine**, and no Alpine plugin. It writes the cookie itself (a plain cookie, not `$persist`, which would
   store JSON in the browser where the server cannot read it). Alpine is included by default; see
-  [Alpine](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/alpine.md).
+  [Alpine](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/alpine.md).
 - **On a desktop it takes `popovertarget` off the trigger** and sets `aria-expanded` from the state instead: browsers
   report a `popovertarget` button as collapsed while its popover is closed, which the sidebar on a desktop always is.
   Below 768 px it puts it back. It finds the trigger by its `aria-controls`.

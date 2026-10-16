@@ -2,13 +2,13 @@
 
 > A sidebar of sections, each a group of pages under its label, with a version switcher and a search field, as documentation has.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/layouts/grouped-by-section/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/layouts/grouped-by-section/
 
 A sidebar for an application whose pages fall into a handful of sections, such as documentation: each section is a
-[group](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/sidebar.md) whose label names it, with its pages below, so the whole structure is in view. At
-the top, a version switcher (a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/dropdown-menu.md#opened-from-the-sidebar) opened from a
+[group](https://shadleaf.dev/0.8.0-SNAPSHOT/components/sidebar.md) whose label names it, with its pages below, so the whole structure is in view. At
+the top, a version switcher (a [dropdown menu](https://shadleaf.dev/0.8.0-SNAPSHOT/components/dropdown-menu.md#opened-from-the-sidebar) opened from a
 large menu button) and a search field. The page's header has the trigger and the
-[breadcrumb](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/breadcrumb.md). On a desktop the trigger moves the sidebar out of view; on a phone it opens
+[breadcrumb](https://shadleaf.dev/0.8.0-SNAPSHOT/components/breadcrumb.md). On a desktop the trigger moves the sidebar out of view; on a phone it opens
 the same sidebar as a panel. Switch the preview to Phone to see it.
 
 **Example: Grouped by section.** A sidebar of sections, each a group of pages under its label, with a version switcher and a search field at the top, as in documentation. The trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
@@ -17,7 +17,7 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 ## The layout
 
-The whole layout file. It has what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
+The whole layout file. It has what [every layout needs](https://shadleaf.dev/0.8.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the
 theme script and Shadleaf's assets in the head, the skip link first, one `main` (`<sl:sidebar-inset>`), the page's
 title, and the toaster. `#slNav.current` marks the current page from the request.
 

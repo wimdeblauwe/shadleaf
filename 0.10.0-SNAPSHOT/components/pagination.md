@@ -2,7 +2,7 @@
 
 > Links to the other pages of a list, built from the Spring Data Page the controller returns.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/pagination/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/components/pagination/
 
 **Example: From a page.** Page 5 of 27, in a request for /people?sort=name,asc&page=4. Each link keeps the sort.
 
@@ -30,7 +30,7 @@ room. `siblings` sets how many pages show on each side of the current one:
 
 Each link is the request that rendered the page with another page number: every other parameter in the address (the
 sort, the page size, a search) is kept as it was. The controller needs nothing new, as the `Pageable` that sorts the
-[table](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/table.md) also reads the page:
+[table](https://shadleaf.dev/0.10.0-SNAPSHOT/components/table.md) also reads the page:
 
 ```java
 @GetMapping("/people")
@@ -41,7 +41,7 @@ String people(@PageableDefault(size = 20, sort = "name") Pageable pageable, Mode
 ```
 
 Sort the rows by a unique key last, or a row can show up on two pages or on none: see
-[a stable order across pages](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/table.md#a-stable-order-across-pages).
+[a stable order across pages](https://shadleaf.dev/0.10.0-SNAPSHOT/components/table.md#a-stable-order-across-pages).
 
 The page shown now is an outline button with `aria-current="page"`. On the first page Previous is disabled, and on the
 last page Next, the way a disabled link button is: no `href`, `aria-disabled="true"`, out of the tab order. An empty
@@ -64,7 +64,7 @@ saves the count query on a large table:
 <sl:pagination th:page="${activity}" qualifier="activity" aria-label="Activity pages"/>
 ```
 
-A list read a `Slice` at a time can also grow instead: [Load more](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/tables-htmx.md#load-more) appends the
+A list read a `Slice` at a time can also grow instead: [Load more](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tables-htmx.md#load-more) appends the
 next slice's rows with htmx, and is a link to the next page without it.
 
 ### Without Spring Data
@@ -79,7 +79,7 @@ Without a `Page`, pass the page shown now (counting from 1) and the number of pa
 ```
 
 The links ask for the page with the same parameter Spring Data would read, zero-based unless
-`spring.data.web.pageable.one-indexed-parameters` is set (see [parameter names](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/table.md#parameter-names)); the
+`spring.data.web.pageable.one-indexed-parameters` is set (see [parameter names](https://shadleaf.dev/0.10.0-SNAPSHOT/components/table.md#parameter-names)); the
 controller reads it itself. `sl:pagination-summary` and `sl:pagination-size` need a `Page` or `Slice`: without Spring
 Data, write the summary with `#messages` and the sizes as links of your own.
 
@@ -87,7 +87,7 @@ Data, write the summary with `#messages` and the sizes as links of your own.
 
 The `qualifier` of the controller's second `Pageable` (`@Qualifier("members")`) gives a pagination its own parameter
 (`members_page`) and its links their own ids (`members-page-2`), as it does for the
-[table's headers](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/table.md#two-tables-on-one-page).
+[table's headers](https://shadleaf.dev/0.10.0-SNAPSHOT/components/table.md#two-tables-on-one-page).
 
 ## Written by hand
 
@@ -144,7 +144,7 @@ or translates them; the numbers are formatted for the locale ("1,001–1,010 of 
 
 ## Rows per page
 
-`<sl:pagination-size>` is a label and a [dropdown menu](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/dropdown-menu.md) of sizes, as in shadcn/ui's data table:
+`<sl:pagination-size>` is a label and a [dropdown menu](https://shadleaf.dev/0.10.0-SNAPSHOT/components/dropdown-menu.md) of sizes, as in shadcn/ui's data table:
 
 **Example: Rows per page.** In a request for /people?sort=name,asc&page=3&size=20. Each size keeps the sort and starts on the first page.
 
@@ -186,7 +186,7 @@ Sample-01's `/people` page does this.
 Every link has an id: `page-previous`, `page-next` and `page-<number>` (prefixed with the qualifier). When htmx replaces
 the list and its pagination, it gives the focus back to the element with the id that had it, so after Next the focus is
 on the new Next. The size menu's button is `page-size-trigger`: the menu gives the focus back to it before the chosen
-link is followed. [Tables with htmx](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/guides/tables-htmx.md) shows the whole page.
+link is followed. [Tables with htmx](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tables-htmx.md) shows the whole page.
 
 ## Accessibility
 

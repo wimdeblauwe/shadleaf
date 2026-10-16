@@ -2,7 +2,7 @@
 
 > shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/components/select/
+Source: https://shadleaf.dev/0.8.0/components/select/
 
 **Example: Select.** A placeholder until an option is chosen; th:field marks the bound one.
 
@@ -52,7 +52,7 @@ Both are a real `<select>` underneath, bind with `th:field` and submit with the 
 - **`<sl:select>`** looks like shadcn/ui's Select: its list is drawn in the page's style, with a check mark on the
   chosen item, and items can start with an icon. Use it where the look matters and the list is short enough to scan:
   a few to a few dozen items.
-- **[`<sl:native-select>`](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/select-native.md)** styles only the closed control and leaves the list to the operating
+- **[`<sl:native-select>`](https://shadleaf.dev/0.8.0/components/select-native.md)** styles only the closed control and leaves the list to the operating
   system: on a phone that is the system's own picker wheel or sheet, which many people find easier to use. Use it for
   long lists (countries, years), inside dense forms, and for `multiple`, which `<sl:select>` does not support.
 
@@ -87,7 +87,7 @@ error instead.
 </sl:field>
 ```
 
-An item may start with an [icon](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/icon.md). The closed select shows the chosen item's icon and text.
+An item may start with an [icon](https://shadleaf.dev/0.8.0/components/icon.md). The closed select shows the chosen item's icon and text.
 
 **Example: Icons.** An item may start with an icon; the select shows it with the chosen item's text. Older browsers, which drop markup inside an option, show the text alone.
 
@@ -160,10 +160,10 @@ both; every other attribute goes to the `<select>`.
 
 ## In a form
 
-- **`th:field`**, on the select or on its [field](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/field.md), binds it. In a field, the select also takes the field's
+- **`th:field`**, on the select or on its [field](https://shadleaf.dev/0.8.0/components/field.md), binds it. In a field, the select also takes the field's
   `id` (the label points at it) and `aria-describedby` (the description and, while there are errors, the error).
 - **Errors.** A field with errors marks the select `aria-invalid="true"`, and
-  [`<sl:form-errors autofocus/>`](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/form-errors.md) gives it `autofocus` when it is the first control with errors.
+  [`<sl:form-errors autofocus/>`](https://shadleaf.dev/0.8.0/components/form-errors.md) gives it `autofocus` when it is the first control with errors.
 - **In a field set** with a `th:field` of its own (`<sl:field-set th:field="*{plan}">`), the select takes the field
   but no id; give it an `aria-label`, as the legend names the group, not the select.
 - **Events.** Choosing an option fires `input` and `change` on the `<select>`, in every browser and with Shadleaf's
@@ -191,7 +191,7 @@ also gives it a grey background. `disabled` on an item leaves it in the list, fa
 it.
 
 HTML has no read-only select: `readonly` does nothing on one, and Shadleaf's list box ignores it too. To show a choice
-that cannot be changed, use a read-only [input](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/input.md#read-only) with the item's text, and a hidden input if the
+that cannot be changed, use a read-only [input](https://shadleaf.dev/0.8.0/components/input.md#read-only) with the item's text, and a hidden input if the
 value has to be submitted.
 
 **Example: Disabled.** A disabled select, and a disabled item that the keyboard and the pointer skip.
@@ -237,7 +237,7 @@ also works around a Chrome bug: after a form reset the select showed the option 
 ## With htmx
 
 - A response that renders the form again with errors keeps the chosen value (`th:field` marks it), and focus goes
-  where `autofocus` says, the select included; see [Forms with htmx](https://wimdeblauwe.github.io/shadleaf/0.8.0/guides/htmx.md).
+  where `autofocus` says, the select included; see [Forms with htmx](https://shadleaf.dev/0.8.0/guides/htmx.md).
 - A swap that replaces an open select leaves nothing open behind.
 - Back restores the select as htmx saved it; Shadleaf's list box builds itself again from the restored select.
 - A select can trigger a request itself: `hx-get="/cities" hx-trigger="change" hx-target="#city-field"`. Swapping in
@@ -263,8 +263,8 @@ These shadcn/Radix parts and props have no counterpart, on purpose:
   does the same, so both look alike.
 - **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
   value with `th:field`, and the select's `change` event reports a new one.
-- **`multiple`**, which shadcn does not have either: use [`<sl:native-select multiple>`](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/select-native.md) or a
-  [field set](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/field.md) of checkboxes.
+- **`multiple`**, which shadcn does not have either: use [`<sl:native-select multiple>`](https://shadleaf.dev/0.8.0/components/select-native.md) or a
+  [field set](https://shadleaf.dev/0.8.0/components/field.md) of checkboxes.
 - **`SelectItem`'s `textValue`**: typeahead reads the item's text.
 
 ## How it is drawn
@@ -282,7 +282,7 @@ Browsers are halfway through gaining the
 
 The server always renders the same markup, a real select, so the choice happens in the browser and needs nothing
 from you. That also means the form works before Alpine starts and without it: the select submits, binds, validates
-and takes the keyboard like any select (rule 4 of [Alpine](https://wimdeblauwe.github.io/shadleaf/0.8.0/guides/alpine.md)).
+and takes the keyboard like any select (rule 4 of [Alpine](https://shadleaf.dev/0.8.0/guides/alpine.md)).
 
 The customizable select is used wherever the browser has it, rather than Shadleaf's list box everywhere, because the
 browser's own is simply the better control: the keyboard, the screen reader, the top layer, the placing next to the

@@ -2,7 +2,7 @@
 
 > The browser's own select, styled, bound to a form field with th:field.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/select-native/
+Source: https://shadleaf.dev/0.10.0-SNAPSHOT/components/select-native/
 
 **Example: Native select.**
 
@@ -19,7 +19,7 @@ Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/select
 Both are a real `<select>` underneath, bind with `th:field` and submit with the form. This one styles only the closed
 control and leaves the list to the operating system: on a phone that is the system's own picker, which many people
 find easier to use. Use it for long lists (countries, years), in dense forms, and for `multiple`.
-[`<sl:select>`](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/select.md) draws its list in the page's style, like shadcn/ui's Select, with a check mark on the
+[`<sl:select>`](https://shadleaf.dev/0.10.0-SNAPSHOT/components/select.md) draws its list in the page's style, like shadcn/ui's Select, with a check mark on the
 chosen item and room for an icon; use it where the look matters and the list is short enough to scan.
 
 ## Options
@@ -68,7 +68,7 @@ both; every other attribute goes to the `<select>`.
 
 ## Invalid
 
-As with the [input](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/input.md), a field with errors marks the select `aria-invalid="true"`.
+As with the [input](https://shadleaf.dev/0.10.0-SNAPSHOT/components/input.md), a field with errors marks the select `aria-invalid="true"`.
 
 **Example: Invalid.** With th:field, a field that has errors marks the select aria-invalid by itself.
 
@@ -80,7 +80,7 @@ As with the [input](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/compo
 
 The select fades with its chevron; the lyra skin also gives it a grey background, as it does a disabled input. HTML has
 no read-only select: `readonly` does nothing on one. To show a choice that cannot be changed, use a read-only
-[input](https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/components/input.md#read-only) with the option's text, and a hidden input if the value has to be submitted.
+[input](https://shadleaf.dev/0.10.0-SNAPSHOT/components/input.md#read-only) with the option's text, and a hidden input if the value has to be submitted.
 
 **Example: Disabled.**
 

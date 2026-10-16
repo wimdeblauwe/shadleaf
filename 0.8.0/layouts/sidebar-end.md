@@ -2,11 +2,11 @@
 
 > A table of contents in a sidebar on the end of the line, the right in a left-to-right page, with the trigger at the end of the page's header.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0/layouts/sidebar-end/
+Source: https://shadleaf.dev/0.8.0/layouts/sidebar-end/
 
 A sidebar on the end of the line (`side="end"`): the right, or the left on a right-to-left page (`dir="rtl"`). Here
 it holds a table of contents under a group label, with the sections and their pages in sub-menus. The trigger is at
-the end of the page's header, in the [site header](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/site-header.md)'s `end` slot, on the same side as
+the end of the page's header, in the [site header](https://shadleaf.dev/0.8.0/components/site-header.md)'s `end` slot, on the same side as
 the sidebar; its icon shows a panel on that side. On a phone the panel slides in from the end.
 
 **Example: On the end.** A table of contents on the end of the line: the right, or the left on a right-to-left page. The sidebar comes after the page in the markup, so the keyboard reaches the page first, and the trigger sits at the end of the page's header.
@@ -15,7 +15,7 @@ For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sideba
 
 ## The layout
 
-The whole layout file, with what [every layout needs](https://wimdeblauwe.github.io/shadleaf/0.8.0/components/application-shell.md#what-every-layout-needs). The
+The whole layout file, with what [every layout needs](https://shadleaf.dev/0.8.0/components/application-shell.md#what-every-layout-needs). The
 sidebar comes after `<sl:sidebar-inset>` in the markup, as in the block, so the keyboard and a screen reader reach the
 page first and the table of contents after it. `side="end"` puts it on the end either way: written before the inset,
 it is still drawn there, and reached first.
@@ -190,7 +190,7 @@ it is still drawn there, and reached first.
 
 ## A page
 
-A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](https://wimdeblauwe.github.io/shadleaf/0.8.0/layouts/sub-menus.md#a-page)
+A page passes its title, its breadcrumb's levels and its content, as for the [Sub-menus](https://shadleaf.dev/0.8.0/layouts/sub-menus.md#a-page)
 layout:
 
 ```html

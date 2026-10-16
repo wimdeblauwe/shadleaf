@@ -2,12 +2,12 @@
 
 > Keycloak (OpenID Connect, signing out at Keycloak too) and GitHub as the way users sign in, and what the user menu shows for each.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/oauth2/
+Source: https://shadleaf.dev/0.9.0-SNAPSHOT/guides/oauth2/
 
 With Spring Security's OAuth2 login, users sign in at an identity provider, and Shadleaf's
-[user menu](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/components/user-menu.md) shows what the provider sent: name, email or login, and picture. This page
+[user menu](https://shadleaf.dev/0.9.0-SNAPSHOT/components/user-menu.md) shows what the provider sent: name, email or login, and picture. This page
 sets up two providers that differ in every one of those: Keycloak, an OpenID Connect provider you run yourself, and
-GitHub, which speaks plain OAuth2. The [Spring Security](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/spring-security.md) guide has what holds for any sign-in:
+GitHub, which speaks plain OAuth2. The [Spring Security](https://shadleaf.dev/0.9.0-SNAPSHOT/guides/spring-security.md) guide has what holds for any sign-in:
 `#slUser`, the sign-in and sign-out URLs, navigation by role.
 
 Sample-03 (`samples/shadleaf-sample-03`) is this page as an application: Keycloak by default, GitHub next to it with
@@ -111,7 +111,7 @@ reads those.
 
 The `user:email` scope does not change this: it allows asking GitHub's emails endpoint, but the attributes stay the
 same. An application that needs the address asks for it itself and puts it in a
-[`CurrentUserResolver`](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/spring-security.md#where-the-user-comes-from) of its own.
+[`CurrentUserResolver`](https://shadleaf.dev/0.9.0-SNAPSHOT/guides/spring-security.md#where-the-user-comes-from) of its own.
 
 Signing out only signs out of the application: GitHub has no end-session endpoint, so the next Sign in with GitHub
 goes straight through while the browser is signed in at GitHub.
@@ -166,7 +166,7 @@ has it already): the provider is another origin, which an htmx request cannot fo
 ## With htmx
 
 An htmx request made after the session expired needs the treatment the Spring Security guide describes in
-[htmx after the session expired](https://wimdeblauwe.github.io/shadleaf/0.9.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired), more so with OAuth2: the provider
+[htmx after the session expired](https://shadleaf.dev/0.9.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired), more so with OAuth2: the provider
 is another origin, so the htmx request fails outright instead of swapping a page in. Give
 `HxRedirectToPageAuthenticationEntryPoint` the URL Sign in goes to; `UserSource`, the bean behind `#slUser`, knows it:
 

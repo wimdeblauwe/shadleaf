@@ -2,7 +2,7 @@
 
 > The browser's own checkbox, styled, bound to a form field with th:field.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/checkbox/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/components/checkbox/
 
 **Example: Checkbox.**
 
@@ -23,7 +23,7 @@ For a collection field, give each checkbox a `value` (or `th:value`), as with a 
 
 ## Labelling it
 
-Put the checkbox inside its [label](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/label.md): clicking the text toggles it, and it needs no `id`. Spring numbers the
+Put the checkbox inside its [label](https://shadleaf.dev/0.8.0-SNAPSHOT/components/label.md): clicking the text toggles it, and it needs no `id`. Spring numbers the
 `id` of a checkbox (`terms1`), so a label with `for="terms"` would miss it. For a label beside the checkbox, give the
 checkbox an explicit `id`, which wins over the numbered one:
 
@@ -34,7 +34,7 @@ checkbox an explicit `id`, which wins over the numbered one:
 <sl:label for="checkbox-notify">Notify me by email</sl:label>
 ```
 
-In a [field](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/field.md) with `th:field`, the checkbox gets the field's name as its `id` (`terms`), and the field's
+In a [field](https://shadleaf.dev/0.8.0-SNAPSHOT/components/field.md) with `th:field`, the checkbox gets the field's name as its `id` (`terms`), and the field's
 label points at it. The field also shows the error message.
 
 ## Checked
@@ -60,11 +60,11 @@ component, so it also runs with `shadleaf.assets.alpine=external`; without JavaS
 <sl:label><sl:checkbox name="toppings-all" indeterminate/>All toppings</sl:label>
 ```
 
-[Select-all in a table](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/table.md#selecting-rows) is the common case, and sets the state itself.
+[Select-all in a table](https://shadleaf.dev/0.8.0-SNAPSHOT/components/table.md#selecting-rows) is the common case, and sets the state itself.
 
 ## Invalid
 
-A field with errors marks the checkbox `aria-invalid="true"`, as with the [input](https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/components/input.md).
+A field with errors marks the checkbox `aria-invalid="true"`, as with the [input](https://shadleaf.dev/0.8.0-SNAPSHOT/components/input.md).
 
 **Example: Invalid.** With th:field, a field that has errors marks the checkbox aria-invalid by itself.
 

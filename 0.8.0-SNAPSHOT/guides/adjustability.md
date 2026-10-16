@@ -2,7 +2,7 @@
 
 > Five ways to make the components your own, from a prop to owning the template.
 
-Source: https://wimdeblauwe.github.io/shadleaf/0.8.0-SNAPSHOT/guides/adjustability/
+Source: https://shadleaf.dev/0.8.0-SNAPSHOT/guides/adjustability/
 
 Each step is more powerful, and more work to maintain, than the one before it. Take the first one that solves your
 problem.
