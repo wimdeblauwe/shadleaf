@@ -1,0 +1,4 @@
+{
+  "cspHash" : "'sha256-ewffi8zKmIW+zI2vwENPE6/RaQgcGL/MObd1E+H3wJo='",
+  "script" : "(function () {\n  try {\n    var theme = localStorage.getItem('shadleaf-theme');\n    var dark = theme === 'dark' || (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);\n    document.documentElement.classList.toggle('dark', dark);\n  } catch (e) {\n  }\n})();"
+}
