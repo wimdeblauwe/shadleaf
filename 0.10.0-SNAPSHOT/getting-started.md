@@ -4,7 +4,8 @@
 
 Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/getting-started/
 
-Shadleaf needs Java 17, Spring Boot 4 and Thymeleaf. Your application needs no Node.js and no Tailwind.
+Shadleaf needs Java 17, Spring Boot 4 and Thymeleaf. The jar ships compiled CSS and JavaScript, so a plain Maven
+build is enough; if you already compile Tailwind, see [Already compiling Tailwind?](#already-compiling-tailwind).
 
 ## Add the dependency
 

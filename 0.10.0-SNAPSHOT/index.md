@@ -4,8 +4,8 @@
 
 Source: https://wimdeblauwe.github.io/shadleaf/0.10.0-SNAPSHOT/
 
-Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) design system to Thymeleaf. Add one dependency, include one
-fragment, and write `<sl:button>`:
+Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) design system to Thymeleaf. Add one dependency, include two
+fragments in your layout's `<head>`, and write `<sl:button>`:
 
 **Example: Variants.**
 
@@ -18,7 +18,9 @@ fragment, and write `<sl:button>`:
 <sl:button variant="link">Link</sl:button>
 ```
 
-- **No Node, no Tailwind in your application.** The jar ships compiled CSS, served under `/shadleaf/**`.
+- **Fits your build.** The jar ships compiled CSS, served under `/shadleaf/**`, so a plain Maven build is enough.
+  Already compiling Tailwind? The [embedded bundle](getting-started/#already-compiling-tailwind) fits into your own
+  build.
 - **shadcn's token names, verbatim.** `--primary`, `--radius`, `--ring`: any shadcn theme drops in unchanged.
 - **Declared props.** A typo such as `variant="destructve"` fails with the legal values, and an icon-only button
   without an `aria-label` fails too, instead of shipping.
