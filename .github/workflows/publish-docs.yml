@@ -1,9 +1,11 @@
 name: Publish docs
 
-# Publishes the docs site to the gh-pages branch, one directory per version, served as a GitHub project page:
-#   https://wimdeblauwe.github.io/shadleaf/<version>/   every release, and the SNAPSHOT of every push to main
-#   https://wimdeblauwe.github.io/shadleaf/current/     the newest release
-#   https://wimdeblauwe.github.io/shadleaf/             the home page (docs/src/pages/home.astro), unversioned
+# Publishes the docs site to the gh-pages branch, one directory per version, served by GitHub Pages on the custom
+# domain shadleaf.dev (the CNAME file at the branch's root):
+#   https://shadleaf.dev/<version>/   every release, and the SNAPSHOT of every push to main
+#   https://shadleaf.dev/current/     the newest release
+#   https://shadleaf.dev/             the home page (docs/src/pages/home.astro), unversioned
+# GitHub redirects the old project page, https://wimdeblauwe.github.io/shadleaf/<path>, to https://shadleaf.dev/<path>.
 # A release writes the home page from its current/ build and keeps its generated docs (previews.json, the bundles) in
 # current/generated-docs/, from which publish-home.yml rebuilds the home page between releases. Until there is a home
 # page, the site root redirects to current/ (to the published version until there is a release). GitHub Pages must be
@@ -34,8 +36,8 @@ permissions:
   contents: write
 
 env:
-  # The repository name: the path GitHub serves a project page under.
-  SITE_PATH: /shadleaf
+  # The path the site is served under: empty, as the custom domain serves it at its root.
+  SITE_PATH: ''
 
 jobs:
   publish:
@@ -147,6 +149,8 @@ jobs:
         run: |
           # Without .nojekyll, GitHub Pages drops Astro's _astro/ directory.
           touch gh-pages/.nojekyll
+          # The custom domain. Written on every publish, so a rebuild of the branch can never drop it.
+          echo shadleaf.dev > gh-pages/CNAME
           # The home page lives at the root only; no version directory publishes a copy.
           rm -rf "gh-pages/$VERSION/home"
           # Until there is a home page the root redirects; a home page is left alone.

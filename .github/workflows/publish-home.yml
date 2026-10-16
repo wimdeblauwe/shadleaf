@@ -1,6 +1,6 @@
 name: Publish home page
 
-# Rebuilds the home page (https://wimdeblauwe.github.io/shadleaf/) between releases, so a change to its text or layout
+# Rebuilds the home page (https://shadleaf.dev/) between releases, so a change to its text or layout
 # needs no release. The page comes from this commit's docs/, its data (version, previews, bundles) from the newest
 # release: the generated docs publish-docs.yml keeps in current/generated-docs/. So it always shows, and links to, what
 # was released. A release writes the home page itself (publish-docs.yml).
@@ -19,8 +19,8 @@ permissions:
   contents: write
 
 env:
-  # The repository name: the path GitHub serves a project page under (as in publish-docs.yml).
-  SITE_PATH: /shadleaf
+  # The path the site is served under (as in publish-docs.yml): empty, as the custom domain serves it at its root.
+  SITE_PATH: ''
 
 jobs:
   publish:

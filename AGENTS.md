@@ -3,7 +3,7 @@
 shadcn/ui for Thymeleaf, packaged as a Spring Boot starter.
 
 This file is for coding agents and contributors working **on** Shadleaf. People using the library find its
-documentation at https://wimdeblauwe.github.io/shadleaf/current/ (as Markdown: `llms.txt`). For how one component
+documentation at https://shadleaf.dev/current/ (as Markdown: `llms.txt`). For how one component
 works, read its template, CSS, script, tests and docs page; this file holds what applies to all of them.
 
 ## Repository layout

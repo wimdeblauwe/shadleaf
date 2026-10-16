@@ -7,7 +7,7 @@
   "excludeFiles": ["AGENTS.md", "CLAUDE.md", "CLAUDE.local.md"],
   "rules": [
     "Shadleaf components are Thymeleaf tags with the sl: prefix (xmlns:sl=\"https://shadleaf.dev/sl\"), rendered on the server; do not write React, JSX, Radix or asChild.",
-    "The complete examples and attribute tables are in the docs as Markdown: https://wimdeblauwe.github.io/shadleaf/current/llms.txt (each page also at <page>.md).",
+    "The complete examples and attribute tables are in the docs as Markdown: https://shadleaf.dev/current/llms.txt (each page also at <page>.md).",
     "An attribute that is not a declared prop passes through to the HTML silently; use only the props in a component's attribute table, and th:<prop> for expressions.",
     "Do not put Tailwind utility classes on components to change them; the library's stylesheet has none. Use props such as variant, size and border.",
     "A link styled as a button is <sl:button as=\"a\" th:href=\"@{/x}\">; sl:button renders type=\"button\", so the submit button needs type=\"submit\".",

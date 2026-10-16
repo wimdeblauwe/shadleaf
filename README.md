@@ -29,23 +29,23 @@ a Thymeleaf dialect with a library of components, each one an ordinary Thymeleaf
 - **Works under a strict Content-Security-Policy** and with Spring Security, and completes in IntelliJ IDEA through
   web-types.
 
-The [documentation](https://wimdeblauwe.github.io/shadleaf/) shows every component with live previews, rendered by the
-library itself. Start with [Getting started](https://wimdeblauwe.github.io/shadleaf/current/getting-started/) to add
+The [documentation](https://shadleaf.dev/) shows every component with live previews, rendered by the
+library itself. Start with [Getting started](https://shadleaf.dev/current/getting-started/) to add
 the starter to your application.
 
 ## Compatibility
 
 | Shadleaf                                                            | Spring Boot | Minimum Java version | Docs                                                                 |
 |---------------------------------------------------------------------|-------------|----------------------|----------------------------------------------------------------------|
-| [0.9.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.9.0) | 4.1.x       | 17                   | [Documentation 0.9.0](https://wimdeblauwe.github.io/shadleaf/0.9.0/) |
-| [0.8.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.8.0) | 4.1.x       | 17                   | [Documentation 0.8.0](https://wimdeblauwe.github.io/shadleaf/0.8.0/) |
-| [0.7.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.7.0) | 4.1.x       | 17                   | [Documentation 0.7.0](https://wimdeblauwe.github.io/shadleaf/0.7.0/) |
-| [0.6.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.6.0) | 4.1.x       | 17                   | [Documentation 0.6.0](https://wimdeblauwe.github.io/shadleaf/0.6.0/) |
-| [0.5.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.5.0) | 4.1.x       | 17                   | [Documentation 0.5.0](https://wimdeblauwe.github.io/shadleaf/0.5.0/) |
-| [0.4.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.4.0) | 4.1.x       | 17                   | [Documentation 0.4.0](https://wimdeblauwe.github.io/shadleaf/0.4.0/) |
-| [0.3.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.3.0) | 4.1.x       | 17                   | [Documentation 0.3.0](https://wimdeblauwe.github.io/shadleaf/0.3.0/) |
-| [0.2.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.2.0) | 4.1.x       | 17                   | [Documentation 0.2.0](https://wimdeblauwe.github.io/shadleaf/0.2.0/) |
-| [0.1.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.1.0) | 4.1.x       | 17                   | [Documentation 0.1.0](https://wimdeblauwe.github.io/shadleaf/0.1.0/) |
+| [0.9.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.9.0) | 4.1.x       | 17                   | [Documentation 0.9.0](https://shadleaf.dev/0.9.0/) |
+| [0.8.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.8.0) | 4.1.x       | 17                   | [Documentation 0.8.0](https://shadleaf.dev/0.8.0/) |
+| [0.7.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.7.0) | 4.1.x       | 17                   | [Documentation 0.7.0](https://shadleaf.dev/0.7.0/) |
+| [0.6.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.6.0) | 4.1.x       | 17                   | [Documentation 0.6.0](https://shadleaf.dev/0.6.0/) |
+| [0.5.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.5.0) | 4.1.x       | 17                   | [Documentation 0.5.0](https://shadleaf.dev/0.5.0/) |
+| [0.4.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.4.0) | 4.1.x       | 17                   | [Documentation 0.4.0](https://shadleaf.dev/0.4.0/) |
+| [0.3.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.3.0) | 4.1.x       | 17                   | [Documentation 0.3.0](https://shadleaf.dev/0.3.0/) |
+| [0.2.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.2.0) | 4.1.x       | 17                   | [Documentation 0.2.0](https://shadleaf.dev/0.2.0/) |
+| [0.1.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.1.0) | 4.1.x       | 17                   | [Documentation 0.1.0](https://shadleaf.dev/0.1.0/) |
 
 ## Building
 
@@ -90,7 +90,7 @@ development version (e.g. `1.1.0-SNAPSHOT`). It:
 3. deploys the parent and the starter to Maven Central with the `release` profile (sources, javadoc, signatures,
    central-publishing-maven-plugin), waiting until they are published;
 4. creates the GitHub release on the tag, with JReleaser's notes since the previous release;
-5. publishes the docs to `/shadleaf/1.0.0/` and `/shadleaf/current/`;
+5. publishes the docs to `https://shadleaf.dev/1.0.0/` and `https://shadleaf.dev/current/`;
 6. sets the next development version, commits it and runs the Build workflow, which creates the pre-release of the next snapshot.
 
 The `chore(release):` commits are left out of the notes. After a release, add a row to the

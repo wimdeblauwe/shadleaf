@@ -1,7 +1,7 @@
 # Shadleaf Sample App 1
 
 A Spring Boot application that uses most Shadleaf components, in the sidebar layout (collapsing to icons) of the
-[Application shell](https://wimdeblauwe.github.io/shadleaf/current/components/application-shell/) page, with htmx on
+[Application shell](https://shadleaf.dev/current/components/application-shell/) page, with htmx on
 every page (`hx-boost` on the body).
 
 | Page                  | What it shows                                                                                            |

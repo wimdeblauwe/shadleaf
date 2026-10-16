@@ -1,7 +1,7 @@
 # Shadleaf Sample App 3
 
 Shadleaf with OAuth2 login, as in the
-[Signing in with OAuth2](https://wimdeblauwe.github.io/shadleaf/current/guides/oauth2/) guide:
+[Signing in with OAuth2](https://shadleaf.dev/current/guides/oauth2/) guide:
 
 - **Keycloak** (OpenID Connect): the user menu shows the name, email and picture from the ID token, and Sign out ends
   the session at Keycloak too (`OidcClientInitiatedLogoutSuccessHandler`), so the next Sign in asks for the password

@@ -7,7 +7,7 @@ CSS is a plain static file.
   and allows the theme script by a nonce per request or by its hash (`sample.csp.mode=nonce|hash` in
   `application.properties`).
 - **Header layout:** the navigation as a row of links in the site header, the same nav as a panel on a phone, and the
-  user menu at the end (see the [Application shell](https://wimdeblauwe.github.io/shadleaf/current/components/application-shell/)
+  user menu at the end (see the [Application shell](https://shadleaf.dev/current/components/application-shell/)
   page).
 - **Form login** with two users: `ada` (an admin) and `grace`, both with password `password`. Admins see an Admin page
   (navigation by role with `sec:authorize`, the URL protected in `SecurityConfiguration`). Sign out posts with the

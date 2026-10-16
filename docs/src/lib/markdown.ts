@@ -44,7 +44,7 @@ export async function sections(): Promise<Section[]> {
 }
 
 /**
- * The site's root as an absolute URL, with a trailing slash: https://wimdeblauwe.github.io/shadleaf/current/ when
+ * The site's root as an absolute URL, with a trailing slash: https://shadleaf.dev/current/ when
  * published, http://localhost:4321/ for a local build (astro.config.mjs).
  */
 export function siteRoot(): URL {

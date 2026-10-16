@@ -54,7 +54,7 @@ export const themeScript = themeScriptJson as { cspHash: string; script: string 
 /** The command that fills the generated files, for the hints shown when they are empty. */
 export const GENERATE_COMMAND = 'pnpm run generate';
 
-/** A path under the site's base, e.g. withBase('shadleaf/assets/x.css') -> /shadleaf/current/shadleaf/assets/x.css */
+/** A path under the site's base, e.g. withBase('shadleaf/assets/x.css') -> /current/shadleaf/assets/x.css */
 export function withBase(path: string): string {
   return import.meta.env.BASE_URL.replace(/\/$/, '') + '/' + path.replace(/^\//, '');
 }

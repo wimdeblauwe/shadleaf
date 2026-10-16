@@ -137,7 +137,7 @@
               </authors>
               <links>
                 <homepage>https://github.com/wimdeblauwe/shadleaf</homepage>
-                <documentation>https://wimdeblauwe.github.io/shadleaf/</documentation>
+                <documentation>https://shadleaf.dev/</documentation>
               </links>
               <snapshot>
                 <pattern>.*-SNAPSHOT</pattern>

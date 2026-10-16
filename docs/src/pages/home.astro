@@ -10,8 +10,7 @@ import ComponentPreview from '../components/ComponentPreview.astro';
 import HomeDemo from '../components/HomeDemo.astro';
 import {previews, withBase} from '../lib/generated';
 
-// The site's root, where the page is published: the base without its version directory (/shadleaf/current/ ->
-// /shadleaf/).
+// The site's root, where the page is published: the base without its version directory (/current/ -> /).
 const root = new URL(import.meta.env.BASE_URL.replace(/\/?$/, '/').replace(/[^/]+\/$/, ''), Astro.site);
 
 const layoutCount = previews.scenarios.filter(s => s.layout).length;

@@ -6,7 +6,7 @@ run-name: Release ${{ inputs.release-version }}
 #   2. builds and tests everything, then pushes the commit and the tag
 #   3. deploys to Maven Central (central-publishing-maven-plugin, waits until published)
 #   4. creates the GitHub release with JReleaser's notes from the conventional commits since the previous release
-#   5. publishes the docs (/shadleaf/<version>/ and /shadleaf/current/)
+#   5. publishes the docs (/<version>/ and /current/ on shadleaf.dev)
 #   6. sets the next development version, commits it and runs the Build workflow for the next snapshot pre-release
 # Secrets: MAVEN_CENTRAL_USERNAME and MAVEN_CENTRAL_PASSWORD (a Central Portal user token), MAVEN_GPG_KEY (ASCII-armored
 # secret key: gpg --armor --export-secret-keys <id>) and MAVEN_GPG_PASSPHRASE.
