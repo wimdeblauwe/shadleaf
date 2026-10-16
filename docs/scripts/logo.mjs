@@ -5,6 +5,7 @@
 //   docs/public/favicon.svg                       the mark, following the system's colour scheme
 //   samples/*/src/main/resources/static/favicon.svg   the same, for the sample applications
 //   branding/swatches/<hex>.svg                   a swatch for every colour in a table of branding/README.md
+//   docs/public/social.png                        the preview image a link to the site shows when shared (Open Graph)
 //
 // GitHub shows no colour for a hex code in a Markdown file, so the script puts a swatch image before each one in the
 // README's tables (and re-pads the tables). The README is the list of colours: add a row there and run the script.
@@ -142,6 +143,49 @@ function formatTables(lines) {
   return result;
 }
 
+// The social image: 1200×630, the size Open Graph, X, LinkedIn and Slack all crop least. The dark logo on the docs'
+// dark background, the home page's title and tagline, and the leaf large on the right. Rendered at 2× for sharp text.
+const fontFace = weight => `@font-face {
+    font-family: 'Schibsted Grotesk';
+    font-weight: ${weight};
+    src: url(data:font/woff2;base64,${readFileSync(join(fontDir, `schibsted-grotesk-latin-${weight}-normal.woff2`)).toString('base64')}) format('woff2');
+  }`;
+const social = `<style>
+  ${fontFace(400)}
+  ${fontFace(800)}
+  html, body { margin: 0; }
+  body {
+    box-sizing: border-box;
+    width: 1200px;
+    height: 630px;
+    padding: 72px 80px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(circle at 88% 40%, #0c2725 0, #0f172a 62%);
+    color: #f1f5f9;
+    font-family: 'Schibsted Grotesk', sans-serif;
+  }
+  .logo { display: block; align-self: flex-start; height: 52px; width: ${logoWidth * 52 / logoHeight}px; }
+  .mark { position: absolute; inset-inline-end: 64px; inset-block-start: 115px; width: 400px; height: 400px; }
+  h1 {
+    margin: auto 0 0;
+    max-width: 700px;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+  p { margin: 24px 0 0; font-size: 34px; letter-spacing: -0.015em; color: #3bbfb1; }
+  footer { display: flex; justify-content: space-between; margin-block-start: auto; font-size: 24px; color: #94a3b8; }
+</style>
+${logo(colors.dark).replace(/<svg /, '<svg class="logo" ')}
+<svg class="mark" viewBox="0 0 32 32" aria-hidden="true">${markPaths(colors.dark)}</svg>
+<h1>UI components for Spring Boot and Thymeleaf</h1>
+<p>shadcn/ui, rendered by Thymeleaf.</p>
+<footer><span>A Spring Boot starter</span><span>shadleaf.dev</span></footer>`;
+
 const browser = await chromium.launch();
 try {
   for (const file of files) {
@@ -151,7 +195,12 @@ try {
     await page.screenshot({path: join(brandingDir, `${file.name}.png`), omitBackground: true});
     await page.close();
   }
+  const page = await browser.newPage({viewport: {width: 1200, height: 630}, deviceScaleFactor: 2});
+  await page.setContent(social);
+  await page.evaluate(() => document.fonts.ready);
+  await page.screenshot({path: join(docsDir, 'public', 'social.png')});
+  await page.close();
 } finally {
   await browser.close();
 }
-console.log(`Wrote ${files.length} SVGs, ${files.length} PNGs, the favicons and ${swatchColors.size} swatches.`);
+console.log(`Wrote ${files.length} SVGs, ${files.length} PNGs, the favicons, ${swatchColors.size} swatches and the social image.`);

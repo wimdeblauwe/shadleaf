@@ -32,6 +32,8 @@ The SVGs have the wordmark as outlines, so they need no font installed. Elsewher
 
 - `docs/public/favicon.svg` and `samples/*/src/main/resources/static/favicon.svg`: the mark, switching colours with
   the system's colour scheme (written by the same script).
+- `docs/public/social.png`: the preview image a shared link to the site shows (Open Graph), 1200×630 rendered at
+  2×: the dark logo, the home page's title and tagline, and the leaf (written by the same script).
 - `swatches/`: the colour squares in the tables below, one per colour (written by the same script, which also adds
   them to the tables: GitHub shows no colour for a hex code in a Markdown file).
 - `docs/src/components/SiteTitle.astro`: the docs header, which draws the mark inline and sets the wordmark as text,

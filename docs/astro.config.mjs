@@ -16,14 +16,28 @@ checkComponentGroups(readdirSync(new URL('./src/content/docs/components/', impor
 // Every internal link and asset must go through import.meta.env.BASE_URL, never a hard-coded "/".
 // Without DOCS_BASE the site is the local dev or preview server (Astro's default port), so the absolute links in
 // llms.txt and the Markdown copies of the pages work where the site is served.
+const site = process.env.DOCS_BASE ? 'https://shadleaf.dev' : 'http://localhost:4321';
+const base = process.env.DOCS_BASE ?? '/';
+
+// The preview image of a shared link (public/social.png, written by scripts/logo.mjs). Starlight sets the other Open
+// Graph and Twitter tags, but none for an image, which must be an absolute URL.
+const socialImage = new URL(base.replace(/\/?$/, '/') + 'social.png', site).href;
+
 export default defineConfig({
-  site: process.env.DOCS_BASE ? 'https://shadleaf.dev' : 'http://localhost:4321',
-  base: process.env.DOCS_BASE ?? '/',
+  site,
+  base,
   integrations: [
     starlight({
       title: 'Shadleaf',
       description: 'shadcn/ui for Thymeleaf, as a Spring Boot starter.',
       customCss: ['./src/styles/docs.css'],
+      head: [
+        {tag: 'meta', attrs: {property: 'og:image', content: socialImage}},
+        {tag: 'meta', attrs: {property: 'og:image:width', content: '1200'}},
+        {tag: 'meta', attrs: {property: 'og:image:height', content: '630'}},
+        {tag: 'meta', attrs: {property: 'og:image:alt', content: 'Shadleaf: UI components for Spring Boot and Thymeleaf. shadcn/ui, rendered by Thymeleaf.'}},
+        {tag: 'meta', attrs: {name: 'twitter:image', content: socialImage}},
+      ],
       components: {SiteTitle: './src/components/SiteTitle.astro'},
       // Links each page's Markdown copy (src/pages/[...slug].md.ts), so an agent that fetched the HTML finds it.
       routeMiddleware: './src/routeData.ts',
