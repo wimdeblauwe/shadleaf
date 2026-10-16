@@ -50,10 +50,57 @@ every control and requires a visible change in outline or box-shadow. Both run f
 
 ## Publishing
 
-`.github/workflows/publish-docs.yml` builds the site once per destination, with `DOCS_BASE` as Astro's `base`:
-`/<version>/` for every release, and `/current/` for the newest one (on https://shadleaf.dev). Every link and asset therefore
-goes through `import.meta.env.BASE_URL` (`withBase()` in `src/lib/generated.ts`), never a hard-coded `/`.
+The site is served by GitHub Pages from the `gh-pages` branch, on the custom domain https://shadleaf.dev:
 
-It runs on every published release, by hand, and from the Build workflow after the `docs` job passed on a push to
-`main`. That last one reuses the previews the `build` job rendered and publishes `/<version>-SNAPSHOT/`;
-`current/` only moves for releases. Until the first release, the site root redirects to the published version.
+| Path                | What                                                                    | Written by                       |
+|---------------------|-------------------------------------------------------------------------|----------------------------------|
+| `/<version>/`       | The docs of every release, and the SNAPSHOT of every push to `main`     | `publish-docs.yml`               |
+| `/current/`         | The newest release                                                      | `publish-docs.yml`, at a release |
+| `/`                 | The home page, unversioned                                              | see [The home page](#the-home-page) |
+| `/CNAME`            | The custom domain, written on every publish                             | `publish-docs.yml`               |
+
+`.github/workflows/publish-docs.yml` builds the site once per destination, with `DOCS_BASE` as Astro's `base`
+(`/0.9.0`, `/current`). Every link and asset therefore goes through `import.meta.env.BASE_URL` (`withBase()` in
+`src/lib/generated.ts`), never a hard-coded `/`.
+
+It runs from the Build workflow after the `docs` job passed on a push to `main` (reusing the previews the `build` job
+rendered; it publishes `/<version>-SNAPSHOT/`), from the Release workflow (which also moves `current/`), and by hand,
+with an optional `ref` to rebuild the docs of a tag.
+
+## The home page
+
+`src/pages/home.astro` (with `src/components/HomeDemo.astro`) is a Starlight page of its own, so it shares the docs'
+look and live previews. `pnpm run dev` shows it at http://localhost:4321/home/.
+
+Every build of the site renders it as `<base>/home/`, but it is published once, at the root, with its links and assets
+pointing into `/current/`; no version directory keeps a copy. Its canonical URL is the root, and it is left out of
+search. Two workflows write it:
+
+- **A release** (`publish-docs.yml`, when `current/` moves): copies `current/home/index.html` to the root, and keeps
+  the release's generated docs (`previews.json`, the bundles, ...) in `current/generated-docs/`.
+- **Between releases** (`.github/workflows/publish-home.yml`): runs on every push to `main` that touches `docs/`, and
+  by hand (Actions, "Publish home page", Run workflow). It builds `main`'s `docs/` against `current/generated-docs/`
+  instead of the SNAPSHOT's previews, then copies `home/index.html` to the root and adds the new hashed files of
+  `_astro/` to `current/_astro/` (the next release replaces `current/` and clears them out).
+
+So a change to the home page's text or layout goes live with its push, without a release, while the page keeps
+showing the released version, its components and links into the released docs. A change to a component shows on the
+home page with the next release.
+
+If `current/` has no `generated-docs/` (a release published before this existed), `publish-home.yml` skips with a
+notice: run "Publish docs" by hand with `ref` set to that release's tag first.
+
+## The domain
+
+shadleaf.dev is registered at behostings, with its DNS at Netlify DNS (the registrar only sets the nameservers; the
+domain is not attached to a Netlify site). The records point it at GitHub Pages:
+
+| Type  | Name                                  | Value                                                                    |
+|-------|---------------------------------------|--------------------------------------------------------------------------|
+| A     | (apex)                                | `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` |
+| AAAA  | (apex)                                | `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153` |
+| CNAME | `www`                                 | `wimdeblauwe.github.io`                                                  |
+| TXT   | `_github-pages-challenge-wimdeblauwe` | the verification of the domain in the GitHub account's Pages settings    |
+
+The repository's Pages settings have the custom domain and "Enforce HTTPS" on. GitHub redirects the former project
+page, `https://wimdeblauwe.github.io/shadleaf/<path>`, to `https://shadleaf.dev/<path>`, so old links keep working.
