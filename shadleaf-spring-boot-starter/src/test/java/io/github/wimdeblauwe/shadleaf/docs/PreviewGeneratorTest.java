@@ -52,7 +52,8 @@ import tools.jackson.databind.json.JsonMapper;
  *   <li>{@code previews.json}: every scenario in {@code src/test/resources/previews/*.yaml}, rendered through
  *   {@link ComponentRenderTester}, the same harness the component tests use, so a preview cannot show markup the
  *   library does not emit;</li>
- *   <li>{@code shadleaf/assets/*.css}: the standalone bundle of every skin, found through the Vite manifest;</li>
+ *   <li>{@code shadleaf/assets/*.css}: the standalone bundle of every skin, found through the Vite manifest, with the
+ *   fonts it links;</li>
  *   <li>{@code shadleaf/assets/*.js}: the script of every {@link AlpineVariant}, with the chunks it imports, for the
  *   showcase and the behaviour tests;</li>
  *   <li>{@code components.json} and {@code web-types.json}: the registry export behind the attribute tables, and the
@@ -196,8 +197,14 @@ class PreviewGeneratorTest {
     }
     List<Skin> skins = new ArrayList<>();
     for (String name : names) {
-      String file = manifest.getEntry(AssetVariant.STANDALONE.cssEntry(name)).file();
+      ViteManifestParser.ViteManifestEntry entry = manifest.getEntry(AssetVariant.STANDALONE.cssEntry(name));
+      String file = entry.file();
       copyAsset(file);
+      for (String asset : entry.assets()) {
+        if (!Files.exists(OUTPUT_DIRECTORY.resolve("shadleaf").resolve(asset))) {
+          copyAsset(asset);
+        }
+      }
       Skin skin = new Skin(name, "shadleaf/" + file);
       skins.add(name.equals(DEFAULT_SKIN) ? 0 : skins.size(), skin);
     }

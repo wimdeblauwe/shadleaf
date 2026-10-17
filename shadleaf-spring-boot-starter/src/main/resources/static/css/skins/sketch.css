@@ -1,0 +1,1421 @@
+/*
+  Skin: sketch, a hand-drawn look for mockups and prototypes, after Balsamiq's wireframes: 2px pencil lines with
+  uneven corners, a handwritten font, wavy underlines, hatched placeholders and a hard offset shadow under what is
+  raised. The only skin that follows none of shadcn's styles; sizes and spacing are vega's. Same markup, same tokens:
+  a theme still sets the colours, and the pencil is --foreground. It sets the page's font (on the body), so headings
+  and text around the components are handwritten too; an application's own font on the body wins.
+*/
+
+/*
+  Balsamiq Sans, Copyright 2011 The Balsamiq Sans Project Authors (https://github.com/balsamiq/balsamiqsans), under the
+  SIL Open Font License 1.1 (fonts/balsamiq-sans/OFL.txt, in the jar as META-INF/licenses/fonts/balsamiq-sans/OFL.txt).
+  Latin only: other scripts fall back to the next font in the stack. Vite hashes the files into the assets next to the
+  bundle.
+*/
+@font-face {
+  font-family: 'Balsamiq Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../../fonts/balsamiq-sans/balsamiq-sans-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Balsamiq Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../../fonts/balsamiq-sans/balsamiq-sans-latin-700-normal.woff2') format('woff2');
+}
+
+/*
+  The hand-drawn shapes: elliptical corners of uneven sizes, which the browser scales down to fit the box, so one shape
+  wobbles differently on a wide button, a tall card and a square. sketch-shape is for boxes of 32px and more,
+  sketch-shape-alt its mirror (so neighbours do not look stamped), sketch-shape-sm for small ones (a checkbox, a kbd, a
+  menu item), sketch-shape-pill for pills (switch, badge) and sketch-shape-round for circles. Only used through @apply,
+  so the bundle emits no class for them.
+*/
+@utility sketch-shape {
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+}
+
+@utility sketch-shape-alt {
+  border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px;
+}
+
+@utility sketch-shape-sm {
+  border-radius: 10px 3px 9px 3px / 3px 9px 3px 10px;
+}
+
+@utility sketch-shape-pill {
+  border-radius: 999px 850px 999px 900px / 850px 999px 900px 999px;
+}
+
+@utility sketch-shape-round {
+  border-radius: 58% 42% 53% 47% / 45% 55% 45% 55%;
+}
+
+@utility sketch-font {
+  font-family: 'Balsamiq Sans', 'Comic Neue', 'Comic Sans MS', 'Chalkboard SE', cursive;
+}
+
+/* A hard shadow, as a felt-tip line drawn under the edge: small under controls and cards, larger under overlays. */
+@utility sketch-shadow {
+  @apply shadow-[2px_3px_0_color-mix(in_oklch,var(--foreground)_18%,transparent)];
+}
+
+@utility sketch-shadow-lg {
+  @apply shadow-[4px_5px_0_color-mix(in_oklch,var(--foreground)_18%,transparent)];
+}
+
+@layer base {
+  body {
+    @apply sketch-font;
+  }
+}
+
+@layer components {
+  /*
+    Button. Icons without an explicit size (<sl:icon size>, or a size-* class) take the button's icon size. Square ones
+    take the small shape: the large one would turn a square into a leaf.
+  */
+  .button {
+    @apply sketch-shape border-2 border-transparent bg-clip-padding text-sm font-normal
+      focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      motion-safe:active:not-aria-[haspopup]:translate-y-px
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .button:not([data-size]),
+  .button[data-size='default'] {
+    @apply h-9 gap-1.5 px-3 has-[[data-icon='inline-end']]:pe-2.5 has-[[data-icon='inline-start']]:ps-2.5;
+  }
+
+  .button[data-size='xs'] {
+    @apply h-6 gap-1 px-2 text-xs has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .button[data-size='sm'] {
+    @apply h-8 gap-1 px-2.5 has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5;
+  }
+
+  .button[data-size='lg'] {
+    @apply h-10 gap-1.5 px-4 has-[[data-icon='inline-end']]:pe-3 has-[[data-icon='inline-start']]:ps-3;
+  }
+
+  .button[data-size='icon'] {
+    @apply size-9 sketch-shape-sm;
+  }
+
+  .button[data-size='icon-xs'] {
+    @apply size-6 sketch-shape-sm [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .button[data-size='icon-sm'] {
+    @apply size-8 sketch-shape-sm;
+  }
+
+  .button[data-size='icon-lg'] {
+    @apply size-10 sketch-shape-sm;
+  }
+
+  .button:not([data-variant]),
+  .button[data-variant='default'] {
+    @apply border-foreground/80 bg-primary text-primary-foreground sketch-shadow hover:bg-primary/85;
+  }
+
+  .button[data-variant='secondary'] {
+    @apply border-foreground/80 bg-secondary text-secondary-foreground
+      hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)];
+  }
+
+  /*
+    An open menu's trigger keeps the hover look (aria-expanded), as shadcn's. Not the sidebar's trigger: on a desktop
+    it is expanded whenever the sidebar is, which is most of the time (shadcn's has no aria-expanded). :where keeps the
+    specificity of the variant's own rules.
+  */
+  .button[data-variant='secondary'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-secondary text-secondary-foreground;
+  }
+
+  .button[data-variant='outline'] {
+    @apply border-foreground/80 bg-background sketch-shadow hover:bg-muted hover:text-foreground;
+  }
+
+  .button[data-variant='outline'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-muted text-foreground;
+  }
+
+  .button[data-variant='ghost'] {
+    @apply hover:bg-muted hover:text-foreground dark:hover:bg-muted/50;
+  }
+
+  .button[data-variant='ghost'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-muted text-foreground;
+  }
+
+  .button[data-variant='link'] {
+    @apply text-primary underline underline-offset-4 hover:decoration-wavy;
+  }
+
+  /* text-destructive-legible (components/base.css): shadcn's text-destructive is under 4.5:1 on the tint. */
+  .button[data-variant='destructive'] {
+    @apply border-destructive bg-destructive/10 text-destructive-legible hover:bg-destructive/20
+      focus-visible:border-destructive focus-visible:ring-destructive/20
+      dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
+  }
+
+  /* Badge. Only a linked badge (as="a") changes on hover; a plain one is not interactive. */
+  .badge {
+    @apply h-5 gap-1 sketch-shape-pill border-[1.5px] border-transparent px-2 py-0.5 text-xs
+      focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40
+      has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .badge:not([data-variant]),
+  .badge[data-variant='default'] {
+    @apply border-foreground/80 bg-primary text-primary-foreground [a]:hover:bg-primary/85;
+  }
+
+  .badge[data-variant='secondary'] {
+    @apply border-foreground/80 bg-secondary text-secondary-foreground
+      [a]:hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)];
+  }
+
+  .badge[data-variant='outline'] {
+    @apply border-foreground/80 text-foreground [a]:hover:bg-muted;
+  }
+
+  .badge[data-variant='ghost'] {
+    @apply text-foreground [a]:hover:bg-muted dark:[a]:hover:bg-muted/50;
+  }
+
+  .badge[data-variant='link'] {
+    @apply text-primary underline underline-offset-4 [a]:hover:decoration-wavy;
+  }
+
+  .badge[data-variant='destructive'] {
+    @apply border-destructive bg-destructive/10 text-destructive-legible
+      [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20
+      dark:bg-destructive/20 dark:[a]:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
+  }
+
+  /*
+    Card: the outline is a ring, so a photo at the top or bottom can take the card's corners. data-size on the card sets
+    the spacing of its direct parts; a border between the header or footer and the content is dashed.
+  */
+  .card {
+    @apply sketch-shape bg-card text-sm text-card-foreground ring-2 ring-foreground/80 sketch-shadow
+      has-[>img:first-child]:pt-0 [&>img:first-child]:rounded-t-[inherit] [&>img:last-child]:rounded-b-[inherit];
+  }
+
+  .card:not([data-size]),
+  .card[data-size='default'] {
+    @apply gap-6 py-6;
+  }
+
+  .card[data-size='sm'] {
+    @apply gap-4 py-4;
+  }
+
+  .card:is(:not([data-size]), [data-size='default']) > :is(.card-header, .card-content, .card-footer) {
+    @apply px-6;
+  }
+
+  .card[data-size='sm'] > :is(.card-header, .card-content, .card-footer) {
+    @apply px-4;
+  }
+
+  .card-header {
+    @apply gap-1 data-border:border-b-2 data-border:border-dashed data-border:border-foreground/40 data-border:pb-6;
+  }
+
+  .card[data-size='sm'] > .card-header {
+    @apply data-border:pb-4;
+  }
+
+  .card-title {
+    @apply text-lg leading-normal font-bold;
+  }
+
+  .card[data-size='sm'] > .card-header > .card-title {
+    @apply text-base;
+  }
+
+  .card-description {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .card-footer {
+    @apply gap-2 data-border:border-t-2 data-border:border-dashed data-border:border-foreground/40 data-border:pt-6;
+  }
+
+  .card[data-size='sm'] > .card-footer {
+    @apply data-border:pt-4;
+  }
+
+  /* Alert */
+  .alert {
+    @apply gap-y-0.5 sketch-shape-alt border-2 px-4 py-3 text-start text-sm has-[>svg]:gap-x-3
+      [&>svg]:translate-y-0.5 [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .alert:not([data-variant]) {
+    @apply border-foreground/80 bg-card text-card-foreground;
+  }
+
+  .alert[data-variant='destructive'] {
+    @apply border-destructive bg-card text-destructive-legible;
+  }
+
+  .alert-title {
+    @apply min-h-4 font-bold;
+  }
+
+  .alert-description {
+    @apply gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed;
+  }
+
+  .alert[data-variant='destructive'] > .alert-description {
+    @apply text-destructive-legible;
+  }
+
+  /* Form errors: the focus ring for when autofocus, a link or a script moves focus to it (tabindex="-1"). */
+  .form-errors {
+    @apply focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  /* Separator: a pencil line, rounded at its ends. */
+  .separator {
+    @apply rounded-full bg-foreground/40;
+  }
+
+  .separator:not([data-orientation]),
+  .separator[data-orientation='horizontal'] {
+    @apply h-0.5;
+  }
+
+  .separator[data-orientation='vertical'] {
+    @apply w-0.5;
+  }
+
+  /*
+    Skeleton: a hatched placeholder in a dashed outline, as a wireframe marks what comes later. The sizes are defaults;
+    an application's own class overrides them.
+  */
+  .skeleton {
+    @apply border-2 border-dashed border-foreground/30
+      bg-[repeating-linear-gradient(-45deg,color-mix(in_oklch,var(--foreground)_12%,transparent)_0_2px,transparent_2px_7px)] motion-safe:animate-pulse;
+  }
+
+  .skeleton:not([data-shape]),
+  .skeleton[data-shape='line'] {
+    @apply h-4 w-full sketch-shape-sm;
+  }
+
+  .skeleton[data-shape='circle'] {
+    @apply size-10 sketch-shape-round;
+  }
+
+  /* Consecutive lines are spaced like lines of text. */
+  .skeleton:is(:not([data-shape]), [data-shape='line']) + .skeleton:is(:not([data-shape]), [data-shape='line']) {
+    @apply mt-2;
+  }
+
+  /*
+    Kbd: a key, drawn with a heavier line along the bottom. text-muted-legible (components/base.css): shadcn's
+    text-muted-foreground is under 4.5:1 on --muted.
+  */
+  .kbd {
+    @apply h-5 min-w-5 gap-1 sketch-shape-sm border border-b-2 border-foreground/50 bg-muted px-1 sketch-font text-xs
+      text-muted-legible [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .kbd-group {
+    @apply gap-1;
+  }
+
+  /* Avatar. text-muted-legible (components/base.css): shadcn's text-muted-foreground is under 4.5:1 on --muted. */
+  .avatar {
+    @apply sketch-shape-round bg-muted ring-2 ring-foreground/80;
+  }
+
+  .avatar:not([data-size]),
+  .avatar[data-size='default'] {
+    @apply size-8;
+  }
+
+  .avatar[data-size='sm'] {
+    @apply size-6 ring-[1.5px];
+  }
+
+  .avatar[data-size='lg'] {
+    @apply size-10;
+  }
+
+  .avatar-fallback {
+    @apply text-sm text-muted-legible [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .avatar[data-size='sm'] > .avatar-fallback {
+    @apply text-xs [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  /* Label */
+  .label {
+    @apply gap-2 text-sm leading-none;
+  }
+
+  /*
+    Read-only (input and textarea): the muted background says it cannot be changed, and the line is fainter. The text
+    keeps its full colour, which keeps it apart from disabled (faded) and legible (read-only is not exempt from contrast
+    rules, as disabled is); the placeholder gets the legible mix on --muted. It still takes focus and its focus ring. An
+    error (aria-invalid) still colours the border and ring; the background stays.
+  */
+
+  /* Input. text-base under md keeps iOS from zooming into a focused input. */
+  .input {
+    @apply h-9 sketch-shape border-2 border-foreground/80 bg-transparent px-2.5 py-1 text-base
+      motion-safe:transition-[color,box-shadow]
+      file:h-7 file:text-sm file:font-bold file:text-foreground placeholder:text-muted-foreground
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      readonly:border-foreground/40 readonly:bg-muted readonly:placeholder:text-muted-legible
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      md:text-sm;
+  }
+
+  /* Textarea */
+  .textarea {
+    @apply sketch-shape-alt border-2 border-foreground/80 bg-transparent px-2.5 py-2 text-base
+      motion-safe:transition-[color,box-shadow]
+      placeholder:text-muted-foreground
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      readonly:border-foreground/40 readonly:bg-muted readonly:placeholder:text-muted-legible
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      md:text-sm;
+  }
+
+  /* Native select. The end padding leaves room for the chevron. */
+  .native-select {
+    @apply sketch-shape border-2 border-foreground/80 bg-transparent py-1 ps-2.5 pe-8 text-sm
+      motion-safe:transition-[color,box-shadow]
+      hover:bg-muted/50
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      [&[multiple]]:sketch-shape-alt [&[multiple]]:pe-2.5;
+  }
+
+  .native-select-wrapper:not([data-size]) > .native-select:not([multiple]),
+  .native-select-wrapper[data-size='default'] > .native-select:not([multiple]) {
+    @apply h-9;
+  }
+
+  .native-select-wrapper[data-size='sm'] > .native-select:not([multiple]) {
+    @apply h-8;
+  }
+
+  .native-select-icon {
+    @apply text-foreground;
+  }
+
+  /*
+    Select. Its trigger looks like the native select; the list like the dropdown menu, in the picker of the
+    customizable select and in slSelect's list box alike. The item under the pointer or the keyboard has the accent
+    background; keyboard focus adds the ring, as in the menu.
+  */
+  .select {
+    @apply gap-1.5 sketch-shape border-2 border-foreground/80 bg-transparent ps-2.5 pe-8 text-sm
+      motion-safe:transition-[color,box-shadow]
+      hover:bg-muted/50
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      [&_:is(selectedcontent,.select-value)]:gap-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .select-wrapper:not([data-size]) > .select,
+  .select-wrapper[data-size='default'] > .select {
+    @apply h-9;
+  }
+
+  .select-wrapper[data-size='sm'] > .select {
+    @apply h-8;
+  }
+
+  .select:has(> option[data-placeholder]:checked),
+  .select[data-placeholder] {
+    @apply text-muted-foreground;
+  }
+
+  .select-icon {
+    @apply text-foreground;
+  }
+
+  .select-content {
+    @apply sketch-shape-alt bg-popover p-1 text-popover-foreground ring-2 ring-foreground/80 sketch-shadow-lg
+      duration-100;
+  }
+
+  /* The customizable select's list. A rule of its own: a browser without it drops a rule that names it. */
+  .select::picker(select) {
+    @apply sketch-shape-alt bg-popover p-1 text-popover-foreground ring-2 ring-foreground/80 sketch-shadow-lg
+      duration-100;
+  }
+
+  .select-content,
+  .select {
+    --popup-offset: --spacing(1.5);
+    --popup-slide: --spacing(2);
+  }
+
+  .select-item {
+    @apply gap-2 sketch-shape-sm py-1.5 ps-2 pe-8 text-sm
+      hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
+      data-active:bg-accent data-active:text-accent-foreground;
+  }
+
+  .select-item svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .select-item:focus-visible,
+  .select-wrapper:has(> .select:focus-visible) .select-item[data-active] {
+    @apply ring-[3px] ring-ring/50 ring-inset;
+  }
+
+  .select-item-indicator {
+    @apply end-2;
+  }
+
+  .select-group,
+  .select-label {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .select-label {
+    @apply px-2 py-1.5;
+  }
+
+  .select-group > .select-item {
+    @apply text-sm text-popover-foreground;
+  }
+
+  .select-separator {
+    @apply -mx-1 my-1 bg-foreground/30;
+  }
+
+  /* Checkbox: a box with a tick drawn in it, in the pencil's colour, checked or not. */
+  .checkbox {
+    @apply size-4 sketch-shape-sm border-2 border-foreground/80 bg-transparent
+      motion-safe:transition-shadow
+      checked:border-foreground/80 indeterminate:border-foreground/80
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  .checkbox-indicator,
+  .checkbox-indeterminate-indicator {
+    @apply size-3.5 text-foreground [stroke-width:3];
+  }
+
+  /* Radio group. The dot is a gradient in the checked item's background, in the pencil's colour. */
+  .radio-group {
+    @apply gap-3;
+  }
+
+  .radio-group-item {
+    @apply size-4 sketch-shape-round border-2 border-foreground/80 bg-transparent bg-size-[0.375rem]
+      checked:bg-[radial-gradient(circle_closest-side,var(--foreground)_calc(100%-1px),transparent_100%)]
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  /*
+    Switch. The thumb is the track's background (components/switch.css), coloured with --switch-thumb; padding with
+    background-origin keeps it off the line around the track.
+  */
+  .switch {
+    @apply sketch-shape-pill border-2 border-foreground/80 bg-transparent bg-clip-padding bg-origin-content p-0.5
+      [--switch-thumb:var(--foreground)]
+      checked:bg-primary checked:[--switch-thumb:var(--primary-foreground)]
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  .switch:not([data-size]),
+  .switch[data-size='default'] {
+    @apply h-5 w-9 bg-size-[0.75rem];
+  }
+
+  .switch[data-size='sm'] {
+    @apply h-4 w-7 bg-size-[0.5rem];
+  }
+
+  /*
+    Field. An invalid field's label (or fieldset's legend) and the error use text-destructive-legible
+    (components/base.css), as the destructive alert does; the control keeps its own text colour.
+  */
+  .field-set {
+    @apply gap-6 has-[>.radio-group]:gap-3
+      has-[>.field[data-orientation='horizontal']]:gap-3;
+  }
+
+  .field-legend {
+    @apply mb-3 font-bold;
+  }
+
+  .field-legend:not([data-variant]),
+  .field-legend[data-variant='legend'] {
+    @apply text-base;
+  }
+
+  .field-legend[data-variant='label'] {
+    @apply text-sm;
+  }
+
+  .field-group {
+    @apply gap-7 [&>.field-group]:gap-4;
+  }
+
+  .field {
+    @apply gap-3;
+  }
+
+  .field-content {
+    @apply gap-1;
+  }
+
+  .field-label {
+    @apply leading-snug;
+  }
+
+  .field[data-invalid='true'] > .field-label,
+  .field[data-invalid='true'] > .field-content > .field-label,
+  .field-set[data-invalid='true'] > .field-legend {
+    @apply text-destructive-legible;
+  }
+
+  .field-description {
+    @apply text-sm leading-normal text-muted-foreground;
+  }
+
+  :is(.field-legend:not([data-variant]), .field-legend[data-variant='legend']) + .field-description {
+    @apply -mt-1.5;
+  }
+
+  .field-error {
+    @apply text-sm text-destructive-legible;
+  }
+
+  /* Dialog */
+  .dialog {
+    @apply max-w-[calc(100%-2rem)] gap-6 sketch-shape-alt bg-popover p-6 text-sm text-popover-foreground ring-2
+      ring-foreground/80 sketch-shadow-lg duration-100 sm:max-w-md
+      backdrop:bg-black/10 backdrop:duration-100 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .dialog-close {
+    @apply top-4 end-4;
+  }
+
+  .dialog-header {
+    @apply gap-2;
+  }
+
+  .dialog-title {
+    @apply text-lg leading-none font-bold;
+  }
+
+  .dialog-description {
+    @apply text-sm text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground
+      [&_a:hover]:decoration-wavy;
+  }
+
+  .dialog-footer {
+    @apply gap-2;
+  }
+
+  /* A dialog's or sheet's body: the error above the content, and the loading layer over it. */
+  :is(.dialog-body, .sheet-body) {
+    @apply gap-4;
+  }
+
+  :is(.dialog-body-loading, .sheet-body-loading) {
+    @apply bg-popover/70 text-muted-foreground;
+  }
+
+  :is(.dialog-body-spinner, .sheet-body-spinner) {
+    @apply size-6;
+  }
+
+  /* Alert dialog */
+  .alert-dialog {
+    @apply max-w-xs gap-6 sketch-shape-alt bg-popover p-6 text-sm text-popover-foreground ring-2 ring-foreground/80
+      sketch-shadow-lg duration-100
+      backdrop:bg-black/10 backdrop:duration-100 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .alert-dialog:not([data-size]) {
+    @apply sm:max-w-lg;
+  }
+
+  .alert-dialog[data-size='sm'] {
+    @apply max-w-xs;
+  }
+
+  .alert-dialog-header {
+    @apply gap-1.5 has-[>.alert-dialog-media]:gap-x-6;
+  }
+
+  .alert-dialog-media {
+    @apply mb-2 size-16 sketch-shape-sm border-2 [&_svg:not([class*='size-'],[data-icon-size])]:size-8;
+  }
+
+  .alert-dialog-media:not([data-variant]) {
+    @apply border-foreground/80 bg-muted;
+  }
+
+  .alert-dialog-media[data-variant='destructive'] {
+    @apply border-destructive bg-destructive/10 text-destructive dark:bg-destructive/20;
+  }
+
+  .alert-dialog-title {
+    @apply text-lg font-bold;
+  }
+
+  .alert-dialog-description {
+    @apply text-sm text-balance text-muted-foreground md:text-pretty
+      [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground [&_a:hover]:decoration-wavy;
+  }
+
+  .alert-dialog-footer {
+    @apply gap-2;
+  }
+
+  /* Sheet */
+  .sheet {
+    @apply gap-4 border-foreground/80 bg-popover bg-clip-padding text-sm text-popover-foreground shadow-lg duration-200
+      ease-in-out
+      backdrop:bg-black/10 backdrop:duration-200 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+    --sheet-slide: --spacing(10);
+  }
+
+  .sheet:not([data-side]),
+  .sheet[data-side='left'] {
+    @apply w-3/4 sm:max-w-sm;
+  }
+
+  /* Content between the header and the footer lines up with them (shadcn's examples give it px-4). */
+  .sheet > :not(.sheet-header, .sheet-footer, .sheet-close, .sheet-body),
+  .sheet-body-content {
+    @apply px-4;
+  }
+
+  .sheet-body-error {
+    @apply mx-4;
+  }
+
+  .sheet-close {
+    @apply top-4 end-4;
+  }
+
+  .sheet-header {
+    @apply gap-1.5 p-4;
+  }
+
+  .sheet-footer {
+    @apply gap-2 p-4;
+  }
+
+  .sheet-title {
+    @apply text-lg font-bold text-foreground;
+  }
+
+  .sheet-description {
+    @apply text-sm text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground
+      [&_a:hover]:decoration-wavy;
+  }
+
+  /*
+    Dropdown menu. An item under the pointer or the keyboard has the focus, and the accent background shows it, as in
+    shadcn; keyboard focus adds the ring, which the accent alone (barely lighter than the menu) does not make visible.
+  */
+  .dropdown-menu-content {
+    @apply sketch-shape-alt bg-popover p-1 text-popover-foreground ring-2 ring-foreground/80 sketch-shadow-lg
+      duration-100;
+    --popup-offset: --spacing(1.5);
+    --popup-slide: --spacing(2);
+  }
+
+  .dropdown-menu-item,
+  .dropdown-menu-checkbox-item,
+  .dropdown-menu-radio-item {
+    @apply gap-2 sketch-shape-sm py-1.5 text-sm focus:bg-accent focus:text-accent-foreground
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .dropdown-menu-item:focus-visible,
+  .dropdown-menu-checkbox-item:focus-visible,
+  .dropdown-menu-radio-item:focus-visible {
+    @apply ring-[3px] ring-ring/50 ring-inset;
+  }
+
+  .dropdown-menu-item {
+    @apply px-2 data-inset:ps-8;
+  }
+
+  .dropdown-menu-checkbox-item,
+  .dropdown-menu-radio-item {
+    @apply ps-2 pe-8 data-inset:ps-8;
+  }
+
+  .dropdown-menu-item:not([data-variant]) {
+    @apply focus:**:text-accent-foreground;
+  }
+
+  .dropdown-menu-item[data-variant='destructive'] {
+    @apply text-destructive-legible focus:bg-destructive/10 dark:focus:bg-destructive/20 *:[svg]:text-destructive;
+  }
+
+  .dropdown-menu-item-indicator {
+    @apply end-2;
+  }
+
+  .dropdown-menu-label {
+    @apply px-2 py-1.5 text-xs text-muted-foreground data-inset:ps-8;
+  }
+
+  /*
+    The user menu's label: the user, in the menu's text colour (shadcn's NavUser), not a muted heading. After
+    .dropdown-menu-label, which it overrides. The header's button is round, as the picture it shows.
+  */
+  .dropdown-menu-label.user-menu-label {
+    @apply gap-2 px-1 py-1.5 text-sm font-normal leading-tight text-popover-foreground;
+  }
+
+  .user-menu-name {
+    @apply font-bold;
+  }
+
+  .user-menu-detail {
+    @apply text-xs;
+  }
+
+  .button.user-menu-trigger {
+    @apply sketch-shape-round;
+  }
+
+  .dropdown-menu-separator {
+    @apply -mx-1 my-1 bg-foreground/30;
+  }
+
+  .dropdown-menu-shortcut {
+    @apply text-xs tracking-widest text-muted-foreground;
+  }
+
+  :focus > .dropdown-menu-shortcut {
+    @apply text-accent-foreground;
+  }
+
+  /* Popover */
+  .popover-content {
+    @apply w-72 gap-4 sketch-shape-alt bg-popover p-4 text-sm text-popover-foreground ring-2 ring-foreground/80
+      sketch-shadow-lg duration-100;
+    --popup-offset: --spacing(1.5);
+    --popup-slide: --spacing(2);
+  }
+
+  /* The panel has the focus when it has no control of its own. */
+  .popover-content:focus-visible {
+    @apply ring-[3px] ring-ring/50;
+  }
+
+  .popover-header {
+    @apply gap-1 text-sm;
+  }
+
+  .popover-title {
+    @apply font-bold;
+  }
+
+  .popover-description {
+    @apply text-muted-foreground;
+  }
+
+  /* Tooltip. A kbd in it takes the tooltip's colours, as in shadcn. */
+  .tooltip-content {
+    @apply max-w-xs gap-1.5 sketch-shape-sm bg-foreground px-3 py-1.5 text-xs text-background duration-100
+      has-[.kbd]:pe-1.5;
+    --popup-offset: --spacing(1.5);
+    --popup-slide: --spacing(2);
+  }
+
+  .tooltip-arrow {
+    @apply size-2.5 rounded-[2px] bg-foreground;
+  }
+
+  .tooltip-content .kbd {
+    @apply border-background/40 bg-background/20 text-background dark:bg-background/10;
+  }
+
+  /*
+    Accordion: items apart by a dashed line, a hovered trigger underlined with a wavy line. The height animation's
+    speed (components/accordion.css) is --accordion-duration.
+  */
+  .accordion-item {
+    @apply border-dashed border-foreground/40 not-last:border-b-2;
+    --accordion-duration: 200ms;
+  }
+
+  .accordion-trigger {
+    @apply sketch-shape-sm py-4 text-sm font-bold underline-offset-4 hover:underline hover:decoration-wavy
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50;
+  }
+
+  .accordion-trigger-icon {
+    @apply size-4 text-foreground;
+  }
+
+  .accordion-content {
+    @apply pt-0 pb-4 text-sm [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground
+      [&_a:hover]:decoration-wavy [&_p:not(:last-child)]:mb-4;
+  }
+
+  /* Collapsible. A trigger drawn as a button (.button) gets the rest from the button's rules. */
+  .collapsible-trigger {
+    @apply sketch-shape-sm focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50;
+  }
+
+  /* shadcn's examples put gap-2 between the trigger and the content. */
+  .collapsible-content {
+    @apply mt-2;
+  }
+
+  .collapsible-trigger:not(.button) {
+    @apply text-sm font-bold;
+  }
+
+  /*
+    Tabs. The inactive tabs' text is mixed from the foreground, as in shadcn; the active one is drawn as a box on the
+    muted track, and in the line variant a pencil line marks it.
+  */
+  .tabs {
+    @apply gap-2;
+  }
+
+  .tabs-list {
+    @apply sketch-shape p-[3px] text-muted-foreground;
+  }
+
+  .tabs:not([data-orientation]) > .tabs-list {
+    @apply h-10;
+  }
+
+  .tabs-list:not([data-variant]) {
+    @apply bg-muted;
+  }
+
+  .tabs-list[data-variant='line'] {
+    @apply gap-1 rounded-none bg-transparent;
+  }
+
+  .tabs-trigger {
+    @apply gap-1.5 sketch-shape-sm border-2 border-transparent px-2 py-1 text-sm text-foreground/70
+      hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground
+      focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1
+      focus-visible:outline-ring motion-safe:transition-all
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .tabs:not([data-orientation]) > .tabs-list > .tabs-trigger {
+    @apply h-[calc(100%-1px)];
+  }
+
+  .tabs-trigger:has(> svg:first-child) {
+    @apply ps-1.5;
+  }
+
+  .tabs-trigger:has(> svg:last-child) {
+    @apply pe-1.5;
+  }
+
+  .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected='true'] {
+    @apply border-foreground/80 bg-background text-foreground dark:text-foreground;
+  }
+
+  .tabs-list[data-variant='line'] > .tabs-trigger {
+    @apply after:rounded-full after:bg-foreground/80;
+  }
+
+  .tabs-list[data-variant='line'] > .tabs-trigger[aria-selected='true'] {
+    @apply font-bold text-foreground;
+  }
+
+  /* The panel takes the focus after the tabs (tabindex="0"). */
+  .tabs-content {
+    @apply sketch-shape-sm text-sm focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  /*
+    Toast: a note in a pencil outline with a hard shadow. Only the icon tells the variants apart, as in shadcn; an
+    error's icon takes the destructive colour.
+  */
+  .toast {
+    @apply gap-1.5 sketch-shape-alt border-2 border-foreground/80 bg-popover p-4 text-[13px] text-popover-foreground
+      sketch-shadow-lg focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  .toast > svg {
+    @apply size-4;
+  }
+
+  .toast:not([data-variant]) > svg,
+  .toast[data-variant='success'] > svg,
+  .toast[data-variant='info'] > svg,
+  .toast[data-variant='warning'] > svg {
+    @apply text-current;
+  }
+
+  .toast[data-variant='error'] > svg {
+    @apply text-destructive-legible;
+  }
+
+  .toast-content {
+    @apply gap-0.5;
+  }
+
+  .toast-title {
+    @apply leading-normal font-bold;
+  }
+
+  .toast-description {
+    @apply leading-snug text-muted-foreground;
+  }
+
+  .toast-close {
+    @apply -my-1 -me-2;
+  }
+
+  /*
+    Table: a pencil line under the head and above the foot, dashed lines between the rows. Rows and cells are plain
+    elements, reached through child combinators so a nested table keeps its own look. The sort link's padding sticks
+    out of the cell's, so its label lines up with the cells below, as in shadcn/ui's data table.
+  */
+  .table {
+    @apply text-sm;
+  }
+
+  .table > thead > tr {
+    @apply border-b-2 border-foreground/80;
+  }
+
+  .table > :is(tbody, tfoot) > tr {
+    @apply border-b border-dashed border-foreground/30;
+  }
+
+  .table > tbody > tr {
+    @apply hover:bg-muted/50 motion-safe:transition-colors;
+  }
+
+  /* A selected row, as shadcn/ui's data-state=selected: one whose first cell holds a checked checkbox. */
+  .table > tbody > tr:has(> :first-child .checkbox:checked) {
+    @apply bg-muted;
+  }
+
+  .table > tbody > tr:last-child,
+  .table > tfoot > tr:last-child {
+    @apply border-b-0;
+  }
+
+  .table > tfoot {
+    @apply border-t-2 border-foreground/80 bg-muted/50 font-bold;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > th {
+    @apply h-10 px-2 font-bold text-foreground;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > td {
+    @apply p-2;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td):has(> .checkbox-wrapper) {
+    @apply pe-0;
+  }
+
+  .table > caption {
+    @apply mt-4 text-sm text-muted-foreground;
+  }
+
+  .table-sort {
+    @apply -ms-2.5;
+  }
+
+  .table-head[data-align='center'] > .table-sort {
+    @apply ms-0;
+  }
+
+  .table-head[data-align='end'] > .table-sort {
+    @apply ms-0 -me-2.5;
+  }
+
+  .table > tbody > tr.table-empty > td {
+    @apply h-24;
+  }
+
+  /*
+    Pagination. The links are ghost buttons, the current page an outline one (.button rules). Previous and Next keep
+    their own padding on the chevron's side, as shadcn/ui's.
+  */
+  .pagination-content {
+    @apply gap-1;
+  }
+
+  .pagination-ellipsis {
+    @apply size-9;
+  }
+
+  .pagination-ellipsis > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .button.pagination-previous:has(> [data-icon]) {
+    @apply ps-2;
+  }
+
+  .button.pagination-next:has(> [data-icon]) {
+    @apply pe-2;
+  }
+
+  .pagination-summary,
+  .table-selection-count {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .pagination-size {
+    @apply gap-2;
+  }
+
+  .pagination-size-label {
+    @apply text-sm;
+  }
+
+  /*
+    Breadcrumb: muted levels, the current page in the foreground colour, a hovered link too, underlined with a wavy
+    line. The ellipsis's menu button is a ghost button (.button rules).
+  */
+  .breadcrumb-list {
+    @apply gap-1.5 text-sm text-muted-foreground sm:gap-2.5;
+  }
+
+  .breadcrumb-item {
+    @apply gap-1.5;
+  }
+
+  .breadcrumb-link {
+    @apply sketch-shape-sm underline-offset-4 transition-colors hover:text-foreground hover:underline
+      hover:decoration-wavy focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  .breadcrumb-page {
+    @apply font-normal text-foreground;
+  }
+
+  .breadcrumb-separator > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .breadcrumb-ellipsis {
+    @apply size-5;
+  }
+
+  .breadcrumb-ellipsis > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  /* Skip link: drawn as an outline button once it has the focus. */
+  .skip-link:focus {
+    @apply inline-flex h-9 items-center sketch-shape border-2 border-foreground/80 bg-background px-4 text-sm
+      text-foreground sketch-shadow;
+  }
+
+  .skip-link:focus-visible {
+    @apply border-ring ring-[3px] ring-ring/50;
+  }
+
+  /*
+    Site header, after shadcn's page headers (sidebar-16's site header, sidebar-07's inset header): 3.5rem high,
+    px-4, gap-2. Across the top of the page it is the page's ground with a pencil line below; inside the inset, or above
+    an inset card (it then lies on the sidebar's ground), it has neither. The trigger sits a little outside the padding,
+    and a vertical separator keeps some room before what follows.
+  */
+  .site-header {
+    --site-header-height: 3.5rem;
+    @apply gap-2 border-b-2 border-foreground/80 bg-background px-4;
+  }
+
+  .sidebar-inset > .site-header,
+  .sidebar-provider > .site-header:has(> .sidebar[data-variant='inset']) {
+    @apply border-b-0 bg-transparent;
+  }
+
+  .site-header-end {
+    @apply gap-2;
+  }
+
+  .site-header > .sidebar-trigger {
+    @apply -ms-1;
+  }
+
+  .site-header > .separator[data-orientation='vertical'] {
+    @apply me-2;
+  }
+
+  /*
+    Sidebar. shadcn's widths: 16rem beside the page, 18rem as the panel on a phone. The sidebar has its own colours
+    (--sidebar*), the inset the page's; its edge is a pencil line in the sidebar's text colour.
+  */
+  .sidebar-provider {
+    --sidebar-width: 16rem;
+    --sidebar-width-mobile: 18rem;
+    --sidebar-width-icon: 3rem;
+  }
+
+  .sidebar {
+    @apply border-sidebar-foreground/80 bg-sidebar text-sm text-sidebar-foreground duration-200 ease-linear
+      backdrop:bg-black/10 backdrop:duration-200 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .sidebar:popover-open {
+    @apply sketch-shadow-lg;
+  }
+
+  .sidebar-inset {
+    @apply bg-background;
+  }
+
+  /*
+    Variants on a desktop: floating is a hand-drawn panel with a hard shadow; inset puts the sidebar's colour around the
+    page, which becomes a hand-drawn card. Margins and edges are structure.
+  */
+  .sidebar[data-variant='floating'] {
+    @apply md:sketch-shape-alt md:sketch-shadow;
+  }
+
+  .sidebar-provider:has(> .sidebar[data-variant='inset'], > .site-header > .sidebar[data-variant='inset']) {
+    @apply bg-sidebar;
+  }
+
+  .sidebar-provider:has(> .sidebar[data-variant='inset'], > .site-header > .sidebar[data-variant='inset']) > .sidebar-inset {
+    @apply duration-200 ease-linear md:sketch-shape-alt md:ring-2 md:ring-foreground/80 md:sketch-shadow;
+  }
+
+  /*
+    The sidebar's content parts. The current entry ([aria-current]) and a hovered one take the accent; the focus ring
+    is the sidebar's. A badge follows the colour of the button it describes.
+  */
+  .sidebar-header,
+  .sidebar-footer {
+    @apply gap-2 p-2;
+  }
+
+  /*
+    Firefox makes the content a tab stop of its own when it scrolls (so do other browsers when nothing in it can take
+    the focus): an outline inside its edge shows it has the focus.
+  */
+  .sidebar-content {
+    @apply gap-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sidebar-ring;
+  }
+
+  .sidebar-separator {
+    @apply mx-2 bg-sidebar-foreground/30;
+  }
+
+  .sidebar-group {
+    @apply p-2;
+  }
+
+  .sidebar-group-label {
+    @apply h-8 sketch-shape-sm px-2 text-xs text-sidebar-foreground/70 ring-sidebar-ring focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  /* The label of a collapsible group opens and closes it. */
+  summary.sidebar-group-label {
+    @apply hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
+  }
+
+  .sidebar-group-content {
+    @apply text-sm;
+  }
+
+  .sidebar-menu {
+    @apply gap-1;
+  }
+
+  .sidebar-menu-button:not([data-variant]) {
+    @apply bg-transparent;
+  }
+
+  .sidebar-menu-button[data-variant='outline'] {
+    @apply bg-background hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      shadow-[0_0_0_2px_color-mix(in_oklch,var(--sidebar-foreground)_80%,transparent)];
+  }
+
+  /* After the variants, so hover and the current entry win over their background. */
+  .sidebar-menu-button {
+    @apply gap-2 sketch-shape-sm p-2 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      active:bg-sidebar-accent active:text-sidebar-accent-foreground focus-visible:ring-2
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-button:is([aria-current='page'], [aria-current='true']) {
+    @apply bg-sidebar-accent font-bold text-sidebar-accent-foreground;
+  }
+
+  /* A menu button or action whose dropdown menu is open. */
+  .sidebar-menu-button[aria-expanded='true'],
+  .sidebar-menu-action[aria-expanded='true'] {
+    @apply bg-sidebar-accent text-sidebar-accent-foreground;
+  }
+
+  .sidebar-menu-button:not([data-size]) {
+    @apply h-8 text-sm;
+  }
+
+  .sidebar-menu-button[data-size='sm'] {
+    @apply h-7 text-xs;
+  }
+
+  .sidebar-menu-button[data-size='lg'] {
+    @apply h-12 text-sm;
+  }
+
+  .sidebar-menu-button-label > small {
+    @apply text-xs;
+  }
+
+  .sidebar-group-action {
+    @apply end-3 top-3.5 w-5 sketch-shape-sm p-0 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-action {
+    @apply end-1 top-1 w-6 sketch-shape-sm p-0 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-badge {
+    @apply end-1 top-1.5 h-5 min-w-5 sketch-shape-sm px-1 text-xs text-sidebar-foreground;
+  }
+
+  .sidebar-menu-button[data-size='sm'] ~ .sidebar-menu-badge {
+    @apply top-1;
+  }
+
+  .sidebar-menu-button[data-size='lg'] ~ .sidebar-menu-badge {
+    @apply top-3.5;
+  }
+
+  /* 24px at every width (WCAG 2.2's target size; shadcn's 20px is flagged by axe once shown), centred on the button. */
+  .sidebar-menu-button[data-size='sm'] ~ .sidebar-menu-action {
+    @apply top-0.5;
+  }
+
+  .sidebar-menu-button[data-size='lg'] ~ .sidebar-menu-action {
+    @apply top-3;
+  }
+
+  .sidebar-menu-button:is(:hover, [aria-current='page'], [aria-current='true'], [aria-expanded='true']) ~ :is(.sidebar-menu-action, .sidebar-menu-badge) {
+    @apply text-sidebar-accent-foreground;
+  }
+
+  /*
+    A sub-menu: indented along a dashed line from the middle of the icons above it. Its buttons look like the menu's,
+    a little lower.
+  */
+  .sidebar-menu-sub {
+    @apply mx-3.5 gap-1 border-s-2 border-dashed border-sidebar-foreground/40 px-2.5 py-0.5;
+  }
+
+  .sidebar-menu-sub-button {
+    @apply h-7 gap-2 sketch-shape-sm px-2 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      active:bg-sidebar-accent active:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg]:text-sidebar-accent-foreground [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true']) {
+    @apply bg-sidebar-accent font-bold text-sidebar-accent-foreground;
+  }
+
+  .sidebar-menu-sub-button:not([data-size]) {
+    @apply text-sm;
+  }
+
+  .sidebar-menu-sub-button[data-size='sm'] {
+    @apply text-xs;
+  }
+
+  /*
+    Collapsed to icons (desktop only): every menu button is a square as large as the default height around its icon
+    (the structure hides the label); a large one loses its padding, so a logo of that size fills it. Group labels move
+    up out of view (they still name their groups). A collapsible item whose hidden sub-menu holds the current page
+    shows it on its icon. Width, padding and the label's move follow the sidebar only without reduced motion.
+  */
+  @media (width >= 48rem) {
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-button {
+      @apply size-8 p-2;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-button[data-size='lg'] {
+      @apply p-0;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-group-label {
+      @apply -mt-8 opacity-0;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
+      .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button,
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
+      .sidebar-menu-item:has(> .sidebar-menu-sub-collapsible .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button {
+      @apply bg-sidebar-accent font-bold text-sidebar-accent-foreground;
+    }
+  }
+
+  @media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
+    .sidebar[data-collapsible='icon'] .sidebar-menu-button {
+      @apply transition-[width,height,padding] duration-200 ease-linear;
+    }
+
+    .sidebar[data-collapsible='icon'] .sidebar-group-label {
+      @apply transition-[margin,opacity] duration-200 ease-linear;
+    }
+  }
+
+  /*
+    On a phone the group actions are 24px too (WCAG 2.2's target size; shadcn's 20px with a larger pseudo-element hit
+    area does not count). On a desktop they stand alone beside the label, with room around them.
+  */
+  @media (width < 48rem) {
+    .sidebar-group-action {
+      @apply top-3 w-6;
+    }
+  }
+}

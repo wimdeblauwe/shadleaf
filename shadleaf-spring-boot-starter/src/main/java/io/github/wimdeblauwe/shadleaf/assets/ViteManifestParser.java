@@ -41,14 +41,20 @@ public class ViteManifestParser {
     }
   }
 
-  public record ViteManifestEntry(String file, String src, boolean isEntry, List<String> css, List<String> imports) {
+  /**
+   * @param assets the files the entry links, such as the fonts of a stylesheet
+   */
+  public record ViteManifestEntry(String file, String src, boolean isEntry, List<String> css, List<String> imports,
+                                  List<String> assets) {
 
-    public ViteManifestEntry(String file, String src, boolean isEntry, List<String> css, List<String> imports) {
+    public ViteManifestEntry(String file, String src, boolean isEntry, List<String> css, List<String> imports,
+                             List<String> assets) {
       this.file = file;
       this.src = src;
       this.isEntry = isEntry;
       this.css = css != null ? css : Collections.emptyList();
       this.imports = imports != null ? imports : Collections.emptyList();
+      this.assets = assets != null ? assets : Collections.emptyList();
     }
   }
 }

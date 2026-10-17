@@ -15,7 +15,9 @@ const scenario = previews.scenarios.find(s => s.id === 'sidebar--header');
 <head>
   <ShowcaseHead title="Shadleaf showcase: header layout"/>
   <style>
-    body { margin: 0; font-family: system-ui, sans-serif; }
+    /* On the root, not the body: the sketch skin sets its handwritten font on the body. */
+    :global(html) { font-family: system-ui, sans-serif; }
+    body { margin: 0; }
     .stage :global(.sidebar-inset) { padding: 1rem 1.5rem; }
     .stage :global(.sidebar-inset h1) { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; }
   </style>

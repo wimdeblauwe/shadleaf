@@ -51,9 +51,9 @@ Live reload while working on components:
   Every deviation a shadcn user should know goes on the docs page `coming-from-shadcn.mdx`.
 - Settled decisions (ask before revisiting): no Spring Boot 3.x; Java 17 baseline, Spring Boot 4, Thymeleaf 3.1,
   Tailwind CSS v4; the `sl:` prefix is fixed (namespace URI `https://shadleaf.dev/sl`, only an identifier);
-  configuration under `shadleaf.*`; no htmx in the starter; the skins are shadcn's styles (`vega` the default), none
-  of Shadleaf's own; no `shadleaf-test` module yet; ttcli integration just before 1.0; a sidebar below a full-width
-  header is unsupported.
+  configuration under `shadleaf.*`; no htmx in the starter; the skins are shadcn's styles (`vega` the default) and
+  one of Shadleaf's own, `sketch` (hand-drawn, for mockups), no others; no `shadleaf-test` module yet; ttcli
+  integration just before 1.0; a sidebar below a full-width header is unsupported.
 
 ## Reference material (read-only)
 

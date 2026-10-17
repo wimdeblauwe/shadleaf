@@ -88,6 +88,14 @@
           <exclude>static/**</exclude>
         </excludes>
       </resource>
+      <resource>
+        <!-- The licence of the fonts Vite bundles (the sketch skin's), which must ship with them -->
+        <directory>src/main/resources/static/fonts</directory>
+        <targetPath>META-INF/licenses/fonts</targetPath>
+        <includes>
+          <include>**/OFL.txt</include>
+        </includes>
+      </resource>
     </resources>
     <plugins>
       <plugin>

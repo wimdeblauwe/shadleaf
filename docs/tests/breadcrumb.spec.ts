@@ -153,7 +153,7 @@ test('forced colours: a focused link and the skip link get an outline', async ({
   expect(await outline()).toBe('solid 2px');
 });
 
-// shadcn's sizes: vega text-sm with gap-1.5 (gap-2.5 from sm), the others without the larger gap; every skin a 14 px
+// shadcn's sizes: vega (and sketch) text-sm with gap-1.5 (gap-2.5 from sm), the others without the larger gap; every skin a 14 px
 // chevron and the ellipsis a 20 px box around a 16 px icon, except mira's smaller one. On the showcase, where all skins are.
 const listSizes: Record<string, { font: string, gap: string, ellipsis?: string, dots?: string }> = {
   vega: {font: '14px', gap: '10px'},
@@ -164,6 +164,7 @@ const listSizes: Record<string, { font: string, gap: string, ellipsis?: string, 
   luma: {font: '14px', gap: '10px'},
   rhea: {font: '14px', gap: '10px'},
   sera: {font: '12px', gap: '10px'},
+  sketch: {font: '14px', gap: '10px'},
 };
 for (const skin of skins) {
   test(`sizes follow shadcn: ${skin}`, async ({page}) => {

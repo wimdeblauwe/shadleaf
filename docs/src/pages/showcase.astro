@@ -30,7 +30,9 @@ const components = [...new Set(scenarios.map(s => s.component))];
 <head>
   <ShowcaseHead title="Shadleaf showcase"/>
   <style>
-    body { padding: 2rem; font-family: system-ui, sans-serif; }
+    /* On the root, not the body: the sketch skin sets its handwritten font on the body. */
+    :global(html) { font-family: system-ui, sans-serif; }
+    body { padding: 2rem; }
     /* A phone's usual gutter. With 2rem, the invoice table (text only, so no tab stop of its own in WebKit: axe's
        scrollable-region-focusable) was a few pixels from scrolling at 390 px, and did scroll with a CI runner's fonts. */
     @media (width < 48rem) {

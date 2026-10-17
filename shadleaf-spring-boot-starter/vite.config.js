@@ -44,7 +44,10 @@ export default defineConfig({
       output: {
         // Vite names a CSS-only entry after its file name up to the first dot, which would give
         // shadleaf-vega.css and shadleaf-vega.embedded.css the same asset name.
-        assetFileNames: asset => `assets/${path.basename(asset.originalFileNames[0] ?? asset.names[0], '.css')}-[hash][extname]`
+        assetFileNames: asset => {
+          const name = asset.originalFileNames[0] ?? asset.names[0];
+          return `assets/${path.basename(name, path.extname(name))}-[hash][extname]`;
+        }
       }
     },
     // Served by Spring Boot under /shadleaf/** from the jar
@@ -53,5 +56,9 @@ export default defineConfig({
     copyPublicDir: false,
     // Keep the bundles readable: they ship in a jar, not over a slow network, and the build tests read them.
     cssMinify: false
+  },
+  experimental: {
+    // A font a stylesheet links (the sketch skin's) is found next to it, wherever the application serves /shadleaf/**.
+    renderBuiltUrl: (filename, {hostType}) => hostType === 'css' ? {relative: true} : undefined
   },
 });
