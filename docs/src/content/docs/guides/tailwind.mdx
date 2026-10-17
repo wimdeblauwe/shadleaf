@@ -1,0 +1,214 @@
+---
+title: Tailwind CSS
+description: Use Shadleaf without Tailwind, or load the embedded bundle into the Tailwind build your application already has.
+sidebar:
+  order: 6
+---
+
+Shadleaf's components are styled with [Tailwind CSS](https://tailwindcss.com) v4, but the jar ships the compiled
+result: your application does not need Tailwind, Node.js or a CSS build to use them.
+
+The default assumes that you don't use Tailwind in your application, and it loads the `standalone` bundle.
+If you do, load the `embedded` bundle.
+
+```properties
+shadleaf.assets.variant=standalone   # the default
+```
+
+| Value        | The `assets` fragment links                                         | Choose it when                             |
+|--------------|---------------------------------------------------------------------|--------------------------------------------|
+| `standalone` | Tailwind's preflight reset, the page base styles and the components | your application does not compile Tailwind |
+| `embedded`   | only the tokens and the components                                  | your application compiles Tailwind itself  |
+
+Be sure to actually add Tailwind to your application if you choose `embedded`,
+otherwise, no utility classes will work.
+
+## standalone
+
+Nothing to do: include the `assets` fragment as shown in [Getting started](../../getting-started/). The bundle
+carries Tailwind's preflight, so headings, lists and paragraphs lose their browser styles until your stylesheet
+gives them some, and it sets the page's background, text colour and border colour from the tokens.
+
+Style your own markup in plain CSS, with the tokens where it should match the components:
+
+```css
+.muted {
+  color: var(--muted-foreground);
+}
+```
+
+## embedded
+
+Your application compiles Tailwind, and two copies of preflight, or two sets of Tailwind's theme variables, would
+fight over the page. The embedded bundle leaves them out:
+
+- no preflight and no page base styles: your build's reset is the only one;
+- no theme variables (`--spacing`, `--text-sm`, `--color-*`, ...): their values are compiled into Shadleaf's rules,
+  so your `@theme` stays your own, and changing it does not change the components;
+- the tokens (`--primary`, `--radius`, ...) on `:root` and `.dark`, as with `standalone`.
+
+```properties
+shadleaf.assets.variant=embedded
+```
+
+Load your stylesheet **after** the `assets` fragment:
+
+```html
+<head>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}"/>
+</head>
+```
+
+Both stylesheets use Tailwind's cascade layers (`theme`, `base`, `components`, `utilities`). Shadleaf's components
+sit in `components`, so a utility class from your build wins over them, and so does any CSS you write outside a layer.
+
+### Your stylesheet
+
+The components need nothing from your stylesheet: the embedded bundle brings their tokens and rules. Importing
+Tailwind is enough:
+
+```css
+/* src/main/resources/static/css/application.css */
+@import "tailwindcss";
+```
+
+To make Tailwind's utilities follow the tokens from Shadleaf, add the following blocks to your stylesheet.
+
+#### The page background
+
+If you use `standalone`, the page background is automatically set from the tokens.
+If you use `embedded`, Tailwind's reset leaves the page background white, while the components turn dark when the user picks dark mode.
+
+Add this to your stylesheet to make the page background follow the tokens, and the dark mode follow the theme toggle:
+
+```css
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+```
+
+Nearly every application wants this one.
+
+#### `dark:` that follows the theme toggle
+
+By default, Tailwind's `dark:` classes apply when the operating system is in dark mode. Shadleaf's components don't
+look at the operating system: they turn dark when the theme script or [`<sl:theme-toggle>`](../../components/theme-toggle/)
+sets `class="dark"` on `<html>`. The two can disagree. A user whose operating system is in light mode picks dark in
+the toggle: the components turn dark, but `dark:bg-slate-900` in your markup does not apply, so your own markup stays
+light. Make `dark:` follow the class instead:
+
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+You need it only when you write `dark:` classes yourself.
+
+#### Utilities on Shadleaf's tokens
+
+Tailwind has no `primary`, `muted-foreground` or `border` colour of its own. To write `bg-primary`,
+`text-muted-foreground` or `border-border` in your markup, so it matches the components and follows your token
+overrides, map them onto the tokens:
+
+```css
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+```
+
+Secondary text next to a heading, for example, then takes the grey the components use for their descriptions, in
+light and dark mode:
+
+```html
+<h1>Orders</h1>
+<p class="text-sm text-muted-foreground">Updated 5 minutes ago</p>
+```
+
+Tailwind's own palette (`bg-slate-100`) keeps working next to these colours, but it does not follow the tokens: it
+stays the same in dark mode and after a token override.
+
+`inline` makes `bg-primary` compile to `var(--primary)` itself, so a token you override reaches your utilities and
+the components alike. Add `--color-chart-*` and `--color-sidebar-*` the same way when you use them. The token names
+are shadcn/ui's: a shadcn theme from its generator or tweakcn drops in as it is, see
+[Token overrides](../adjustability/#3-token-overrides).
+
+
+#### Borders in the components' colour
+
+Tailwind draws a `border` in `currentColor`. The components set their own border colour; to give the borders in your
+markup the same one, as the standalone bundle does:
+
+```css
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
+```
+
+### Your templates
+
+Tailwind generates the classes it finds in your files. It detects them on its own, but skips everything in your
+`.gitignore` (`target/` among it). If your build runs from somewhere else than the project root, point it at the
+templates, relative to the stylesheet:
+
+```css
+@source "../../templates";
+```
+
+Shadleaf's own templates need no `@source`: their styles are already in the bundle.
+
+## Utility classes on components
+
+`class` on a component is appended to the component's own class, so with `embedded` a utility class places or sizes
+it:
+
+```html
+<sl:button class="w-full mt-4" type="submit">Save</sl:button>
+<sl:dialog id="edit-member" class="sm:max-w-2xl">...</sl:dialog>
+```
+
+Use them for layout: width, margins, the place in a grid. Not for colours: the skin gives a component a different
+look on hover, on focus, when disabled and in dark mode, and a utility class beats all of those rules at once.
+`class="bg-green-600"` on a button stays the same green on hover, when disabled and in dark mode, whatever the skin.
+
+To recolour a component, override the token it is drawn with instead. The skin then derives every state from it:
+
+```css
+.positive {
+  --primary: oklch(0.55 0.15 150);
+  --primary-foreground: oklch(0.98 0 0);
+}
+```
+
+```html
+<sl:button class="positive" type="submit">Save</sl:button>
+```
+
+The other ways to change a component, from a prop (`variant`, `size`) to your own template, are on
+[the adjustability ladder](../adjustability/).
