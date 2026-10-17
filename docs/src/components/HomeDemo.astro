@@ -29,9 +29,12 @@ const choices = [
         ))}
       </div>
       {skins.length > 1 && (
-        <select class="home-demo__skins" aria-label="Skin">
-          {skins.map((skin, i) => <option value={skin} selected={i === 0}>{capitalize(skin)}</option>)}
-        </select>
+        <label class="home-demo__skin">
+          <span>Skin</span>
+          <select class="home-demo__skins">
+            {skins.map((skin, i) => <option value={skin} selected={i === 0}>{capitalize(skin)}</option>)}
+          </select>
+        </label>
       )}
     </div>
     {choices.map((choice, i) => (
@@ -58,9 +61,34 @@ const choices = [
     margin-block-end: 0.75rem;
   }
 
-  .home-demo__skins {
+  .home-demo__skin {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     margin: 0;
-    padding: 0.25rem 0.75rem;
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-sm);
+
+    /* The chevron, drawn with borders: the native one differs per browser and ignores the font size. */
+    &::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      inset-inline-end: 0.875rem;
+      top: 50%;
+      width: 0.375rem;
+      height: 0.375rem;
+      border-inline-end: 1.5px solid currentColor;
+      border-block-end: 1.5px solid currentColor;
+      transform: translateY(-70%) rotate(45deg);
+    }
+  }
+
+  .home-demo__skins {
+    appearance: none;
+    margin: 0;
+    padding: 0.25rem 2.25rem 0.25rem 0.875rem;
     border: 1px solid var(--sl-color-gray-5);
     border-radius: 999px;
     background-color: var(--sl-color-gray-6);
@@ -68,6 +96,10 @@ const choices = [
     font: inherit;
     font-size: var(--sl-text-sm);
     cursor: pointer;
+
+    &:hover {
+      border-color: var(--sl-color-gray-4);
+    }
 
     &:focus-visible {
       outline: 2px solid var(--sl-color-accent);

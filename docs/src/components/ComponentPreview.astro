@@ -27,6 +27,7 @@ interface Props {
 const {id, bare = false, skin} = Astro.props;
 const scenario = previews.scenarios.find(s => s.id === id);
 const skins = previews.skins.map(skin => ({name: skin.name, href: withBase(skin.css)}));
+const capitalize = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 // The bundled script, as an application with the default shadleaf.assets.alpine loads it: interactive components work.
 const script = previews.scripts?.bundled ? `<script type="module" src="${withBase(previews.scripts.bundled)}"></script>` : '';
 
@@ -137,9 +138,12 @@ ${resize}
           </div>
         )}
         {skins.length > 1 && (
-          <select class="sl-docs-preview__skins" aria-label="Skin">
-            {skins.map((skin, i) => <option value={skin.name} selected={i === 0}>{skin.name}</option>)}
-          </select>
+          <label class="sl-docs-preview__skin">
+            <span>Skin</span>
+            <select class="sl-docs-preview__skins">
+              {skins.map((skin, i) => <option value={skin.name} selected={i === 0}>{capitalize(skin.name)}</option>)}
+            </select>
+          </label>
         )}
       </div>}
       {scenario.layout ? (
@@ -206,15 +210,51 @@ ${resize}
   }
 
   /* One select for the skins: a group of buttons would not fit the bar once there are more than a few. */
-  .sl-docs-preview__skins {
+  .sl-docs-preview__skin {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     margin: 0;
-    padding: 0.125rem 0.5rem;
+    color: var(--sl-color-gray-3);
+
+    /* The chevron, drawn with borders: the native one differs per browser and ignores the font size. */
+    &::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      inset-inline-end: 0.75rem;
+      top: 50%;
+      width: 0.375rem;
+      height: 0.375rem;
+      border-inline-end: 1.5px solid currentColor;
+      border-block-end: 1.5px solid currentColor;
+      transform: translateY(-70%) rotate(45deg);
+      color: var(--sl-color-gray-3);
+    }
+  }
+
+  .sl-docs-preview__skins {
+    appearance: none;
+    margin: 0;
+    padding: 0.125rem 2rem 0.125rem 0.75rem;
     border: 1px solid var(--sl-color-gray-5);
-    border-radius: 0.25rem;
-    background-color: var(--sl-color-bg);
-    color: var(--sl-color-gray-2);
+    border-radius: 999px;
+    background-color: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
     font: inherit;
+    font-size: var(--sl-text-sm);
+    line-height: 1.5;
     cursor: pointer;
+
+    &:hover {
+      border-color: var(--sl-color-gray-4);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--sl-color-accent);
+      outline-offset: 2px;
+    }
   }
 
   .sl-docs-preview__widths {
