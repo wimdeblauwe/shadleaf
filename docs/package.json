@@ -19,6 +19,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "test": "playwright test",
+    "test:full": "SHADLEAF_TEST_FULL=1 playwright test",
     "astro": "astro"
   },
   "dependencies": {

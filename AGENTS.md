@@ -30,7 +30,9 @@ works, read its template, CSS, script, tests and docs page; this file holds what
   first. `-DskipTests` also skips `PreviewGeneratorTest`, which feeds the docs, so they get stale CSS.
 - Each sample: `mvn verify` in its own directory (sample-03 starts Keycloak with Testcontainers: it needs Docker).
 - Docs: `pnpm run generate:watch` and `pnpm run dev` in `docs/`; `pnpm run build && pnpm test` for the browser tests
-  (`pnpm exec playwright install chromium firefox` once). Run the starter's tests first.
+  in Chromium and the vega skin (CI runs these), `pnpm run test:full` for every skin and Firefox too, after a change
+  to a skin or to behaviour that differs between browsers (`pnpm exec playwright install chromium firefox` once). Run
+  the starter's tests first.
 - Accept changed approval files with `-Dshadleaf.approve`; `-Pperformance` runs the performance tests.
 
 Live reload while working on components:
@@ -185,7 +187,7 @@ there instead of fetching from the web.
   fails otherwise). A new MDX component needs a case in `docs/src/lib/markdown.ts` (the `.md`/`llms.txt` output).
 - **Browser tests** (`docs/tests/<name>.spec.ts`) for anything with behaviour: the showcase in both skins and themes,
   and fixture pages (`fixture.ts`: strict CSP, the `csp` build, Alpine on/off, htmx, served routes). Add the spec to
-  the Firefox project's `testMatch` in `docs/playwright.config.ts` when browsers differ.
+  the Firefox project's `testMatch` in `docs/playwright.config.ts` when browsers differ (it runs in `test:full` only).
 - Pitfalls: jsoup drops markup inside `<select>` (`Rendered` works around it) and finds elements inside
   `<template>`s; Playwright's role queries see neither `summary`, hidden popover content nor `inert`; focus after
   opening a popup lands a task later (`expect.poll`); wait for `.htmx-settling` to go before pressing Tab after an

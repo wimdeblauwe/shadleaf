@@ -1,7 +1,11 @@
 import {expect, type Page} from '@playwright/test';
 import previews from '../src/generated/previews.json' with {type: 'json'};
 
-export const skins: string[] = previews.skins.map(skin => skin.name);
+/** The full suite (`pnpm run test:full`): every skin, and Firefox too (playwright.config.ts). */
+export const full = !!process.env.SHADLEAF_TEST_FULL;
+
+/** The skins the showcase is checked in: the default skin (vega, first), or every skin in the full suite. */
+export const skins: string[] = previews.skins.map(skin => skin.name).slice(0, full ? undefined : 1);
 export const themes = ['light', 'dark'] as const;
 
 /**

@@ -1,6 +1,9 @@
 import {defineConfig, devices} from '@playwright/test';
 
-// Runs against the built site (pnpm run build first), served by `astro preview` at base /.
+// Runs against the built site (pnpm run build first), served by `astro preview` at base /. By default in Chromium and
+// the default skin only; SHADLEAF_TEST_FULL (`pnpm run test:full`) adds Firefox and every other skin (tests/showcase.ts).
+const full = !!process.env.SHADLEAF_TEST_FULL;
+
 export default defineConfig({
   testDir: 'tests',
   forbidOnly: !!process.env.CI,
@@ -22,8 +25,8 @@ export default defineConfig({
     // scripting media feature. Firefox makes a scrolling table container a tab stop of its own. Skip links and the
     // breadcrumb's menu depend on how each browser moves the focus. htmx's HX-Redirect after an expired session is a
     // navigation each browser makes itself. The layouts are sidebars too.
-    {name: 'firefox', use: {...devices['Desktop Firefox']},
-      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|dialog-body|table-scroll|sidebar|sidebar-header|breadcrumb|user-menu|session-expiry|layouts)\.spec\.ts/},
+    ...(full ? [{name: 'firefox', use: {...devices['Desktop Firefox']},
+      testMatch: /(select|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|dialog-body|table-scroll|sidebar|sidebar-header|breadcrumb|user-menu|session-expiry|layouts)\.spec\.ts/}] : []),
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

@@ -37,16 +37,18 @@ pnpm run generate          # render the previews (runs Maven) and sync them in
 pnpm run generate:watch    # ... and again whenever a template, the CSS or a preview changes
 pnpm run dev               # http://localhost:4321
 pnpm run build             # into dist/
-pnpm test                  # axe-core and the keyboard focus pass over /showcase/ (build first)
+pnpm test                  # the browser tests, in Chromium and the vega skin (build first); CI runs these
+pnpm run test:full         # ... in every skin, and the browser-specific ones in Firefox too
 ```
 
-`pnpm exec playwright install chromium` once, before the first `pnpm test`.
+`pnpm exec playwright install chromium firefox` once, before the first `pnpm test` (Firefox only for `test:full`).
 
 ## The showcase and its checks
 
 `/showcase/` renders every scenario on one bare page with only the library's CSS; `?skin=lyra&theme=dark` selects the
 combination. `tests/a11y.spec.ts` runs axe-core over it, resting and hovered, and `tests/focus.spec.ts` tabs through
-every control and requires a visible change in outline or box-shadow. Both run for every skin, light and dark, in CI.
+every control and requires a visible change in outline or box-shadow. Both run light and dark, for vega in CI and for
+every skin in `pnpm run test:full`.
 
 ## Publishing
 
