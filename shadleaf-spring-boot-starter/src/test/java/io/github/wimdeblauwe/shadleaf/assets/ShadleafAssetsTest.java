@@ -1,7 +1,6 @@
 package io.github.wimdeblauwe.shadleaf.assets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ class ShadleafAssetsTest {
 
   @Test
   void buildModeResolvesTheHashedCssFromTheManifest() {
-    ShadleafAssets assets = new ShadleafAssets("vega", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, null, parser);
+    ShadleafAssets assets = new ShadleafAssets(Skin.VEGA, AssetVariant.STANDALONE, AlpineVariant.BUNDLED, null, parser);
 
     assertThat(assets.isDevMode()).isFalse();
     assertThat(assets.getViteClientUrl()).isNull();
@@ -25,12 +24,12 @@ class ShadleafAssetsTest {
 
   @ParameterizedTest
   @CsvSource({
-      "vega,    STANDALONE, shadleaf-vega-",
-      "vega,    EMBEDDED,   shadleaf-vega.embedded-",
-      "lyra,    STANDALONE, shadleaf-lyra-",
-      "lyra,    EMBEDDED,   shadleaf-lyra.embedded-"
+      "VEGA,    STANDALONE, shadleaf-vega-",
+      "VEGA,    EMBEDDED,   shadleaf-vega.embedded-",
+      "LYRA,    STANDALONE, shadleaf-lyra-",
+      "LYRA,    EMBEDDED,   shadleaf-lyra.embedded-"
   })
-  void buildModeCssUrlPointsAtARealClasspathResourceForEverySkinAndVariant(String skin, AssetVariant variant,
+  void buildModeCssUrlPointsAtARealClasspathResourceForEverySkinAndVariant(Skin skin, AssetVariant variant,
       String fileNamePrefix) {
     ShadleafAssets assets = new ShadleafAssets(skin, variant, AlpineVariant.BUNDLED, null, parser);
 
@@ -50,7 +49,7 @@ class ShadleafAssetsTest {
   })
   void buildModeJsUrlPointsAtARealClasspathResourceForEveryAlpineVariant(AlpineVariant alpine,
       String fileNamePrefix) {
-    ShadleafAssets assets = new ShadleafAssets("vega", AssetVariant.STANDALONE, alpine, null, parser);
+    ShadleafAssets assets = new ShadleafAssets(Skin.VEGA, AssetVariant.STANDALONE, alpine, null, parser);
 
     assertThat(assets.getJsUrl()).matches("/shadleaf/assets/" + Pattern.quote(fileNamePrefix) + "[\\w-]+\\.js");
     String classpathLocation = "META-INF/resources" + assets.getJsUrl();
@@ -60,15 +59,8 @@ class ShadleafAssetsTest {
   }
 
   @Test
-  void unknownSkinFailsWithTheAvailableSkins() {
-    assertThatThrownBy(() -> new ShadleafAssets("glossy", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, null, parser))
-        .isInstanceOf(IllegalStateException.class)
-        .hasMessage("Unknown Shadleaf skin 'glossy' (shadleaf.skin). Available skins: [luma, lyra, maia, mira, nova, rhea, sera, sketch, vega]");
-  }
-
-  @Test
   void devModeUsesTheViteServer() {
-    ShadleafAssets assets = new ShadleafAssets("vega", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, "http://localhost:5174/", parser);
+    ShadleafAssets assets = new ShadleafAssets(Skin.VEGA, AssetVariant.STANDALONE, AlpineVariant.BUNDLED, "http://localhost:5174/", parser);
 
     assertThat(assets.isDevMode()).isTrue();
     assertThat(assets.getCssUrl()).isEqualTo("http://localhost:5174/css/entries/shadleaf-vega.css");
@@ -78,7 +70,7 @@ class ShadleafAssetsTest {
 
   @Test
   void devModeServesTheEntryForTheConfiguredSkinAndVariant() {
-    ShadleafAssets assets = new ShadleafAssets("lyra", AssetVariant.EMBEDDED, AlpineVariant.CSP, "http://localhost:5174",
+    ShadleafAssets assets = new ShadleafAssets(Skin.LYRA, AssetVariant.EMBEDDED, AlpineVariant.CSP, "http://localhost:5174",
         parser);
 
     assertThat(assets.getCssUrl()).isEqualTo("http://localhost:5174/css/entries/shadleaf-lyra.embedded.css");

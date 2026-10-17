@@ -67,7 +67,7 @@ class ShadleafAutoConfigurationTest {
   void unknownSkinFailsTheStartup() {
     contextRunner.withPropertyValues("shadleaf.skin=glossy")
         .run(context -> assertThat(context).getFailure().rootCause()
-            .hasMessageContaining("Unknown Shadleaf skin 'glossy'"));
+            .hasMessageContaining("glossy"));
   }
 
   @Test

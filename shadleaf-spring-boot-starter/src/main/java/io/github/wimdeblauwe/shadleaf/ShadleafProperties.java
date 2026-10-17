@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.shadleaf;
 
 import io.github.wimdeblauwe.shadleaf.assets.AlpineVariant;
 import io.github.wimdeblauwe.shadleaf.assets.AssetVariant;
+import io.github.wimdeblauwe.shadleaf.assets.Skin;
 import org.jspecify.annotations.Nullable;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -14,13 +15,13 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  *               margins), {@code maia} (rounded, with generous spacing), {@code mira} (compact), {@code luma} (fluid
  *               and soft), {@code rhea} (a compact luma) or {@code sera} (editorial and typographic); or
  *               {@code sketch}, Shadleaf's own, which looks hand-drawn, for mockups. Same markup and tokens, different
- *               geometry, spacing, type size and shadow.
+ *               geometry, spacing, type size and shadow. See {@link Skin}.
  * @param assets which builds of the stylesheet and the script to load
  * @param csp    Content-Security-Policy support for the inline theme script
  * @param dev    settings for working on the library itself with live reload
  */
 @ConfigurationProperties(prefix = "shadleaf")
-public record ShadleafProperties(@DefaultValue("vega") String skin,
+public record ShadleafProperties(@DefaultValue("vega") Skin skin,
                                  @DefaultValue AssetsProperties assets,
                                  @DefaultValue CspProperties csp,
                                  @DefaultValue DevProperties dev,
