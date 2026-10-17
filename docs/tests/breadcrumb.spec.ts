@@ -154,12 +154,13 @@ test('forced colours: a focused link and the skip link get an outline', async ({
 });
 
 // shadcn's sizes: vega text-sm with gap-1.5 (gap-2.5 from sm), the others without the larger gap; every skin a 14 px
-// chevron and the ellipsis a 20 px box around a 16 px icon. On the showcase, where all skins are.
-const listSizes: Record<string, { font: string, gap: string }> = {
+// chevron and the ellipsis a 20 px box around a 16 px icon, except mira's smaller one. On the showcase, where all skins are.
+const listSizes: Record<string, { font: string, gap: string, ellipsis?: string, dots?: string }> = {
   vega: {font: '14px', gap: '10px'},
   lyra: {font: '12px', gap: '6px'},
   nova: {font: '14px', gap: '6px'},
   maia: {font: '14px', gap: '10px'},
+  mira: {font: '12px', gap: '6px', ellipsis: '16px', dots: '14px'},
 };
 for (const skin of skins) {
   test(`sizes follow shadcn: ${skin}`, async ({page}) => {
@@ -175,6 +176,6 @@ for (const skin of skins) {
         dots: px(list.querySelector('.breadcrumb-ellipsis > svg')!, 'width'),
       };
     });
-    expect(sizes).toEqual({...listSizes[skin], chevron: '14px', ellipsis: '20px', dots: '16px'});
+    expect(sizes).toEqual({chevron: '14px', ellipsis: '20px', dots: '16px', ...listSizes[skin]});
   });
 }

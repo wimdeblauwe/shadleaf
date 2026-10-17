@@ -63,7 +63,7 @@ class ShadleafAssetsTest {
   void unknownSkinFailsWithTheAvailableSkins() {
     assertThatThrownBy(() -> new ShadleafAssets("glossy", AssetVariant.STANDALONE, AlpineVariant.BUNDLED, null, parser))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessage("Unknown Shadleaf skin 'glossy' (shadleaf.skin). Available skins: [lyra, maia, nova, vega]");
+        .hasMessage("Unknown Shadleaf skin 'glossy' (shadleaf.skin). Available skins: [lyra, maia, mira, nova, vega]");
   }
 
   @Test

@@ -11,8 +11,8 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
  *
  * @param skin   the visual identity of the components, named after the shadcn/ui style it follows: {@code vega} (the
  *               default, shadcn's classic look), {@code lyra} (boxy and sharp), {@code nova} (reduced padding and
- *               margins) or {@code maia} (rounded, with generous spacing). Same markup and tokens, different geometry,
- *               spacing, type size and shadow.
+ *               margins), {@code maia} (rounded, with generous spacing) or {@code mira} (compact). Same markup and
+ *               tokens, different geometry, spacing, type size and shadow.
  * @param assets which builds of the stylesheet and the script to load
  * @param csp    Content-Security-Policy support for the inline theme script
  * @param dev    settings for working on the library itself with live reload

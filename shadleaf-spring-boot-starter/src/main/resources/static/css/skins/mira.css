@@ -1,0 +1,1346 @@
+/*
+  Skin: mira, shadcn/ui's style "made for compact interfaces": small type (text-xs), 28px controls on a tinted
+  ground, a 2px focus ring and tight spacing, for dense screens. Follows shadcn's Mira style, through basecoat's
+  styles/mira.css, with the same fixes as the vega skin (contrast, hover only on links, a focus ring on every control).
+  Same markup, same tokens as the vega skin.
+*/
+@layer components {
+  /* Button. Icons without an explicit size (<sl:icon size>, or a size-* class) take the button's icon size. */
+  .button {
+    @apply rounded-md border border-transparent bg-clip-padding text-xs/relaxed font-medium
+      focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30
+      aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      motion-safe:active:not-aria-[haspopup]:translate-y-px
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .button:not([data-size]),
+  .button[data-size='default'] {
+    @apply h-7 gap-1 px-2 has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3.5;
+  }
+
+  .button[data-size='xs'] {
+    @apply h-5 gap-1 rounded-sm px-2 text-[0.625rem]
+      has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-2.5;
+  }
+
+  .button[data-size='sm'] {
+    @apply h-6 gap-1 px-2 has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .button[data-size='lg'] {
+    @apply h-8 gap-1 px-2.5 has-[[data-icon='inline-end']]:pe-2 has-[[data-icon='inline-start']]:ps-2;
+  }
+
+  .button[data-size='icon'] {
+    @apply size-7 [&_svg:not([class*='size-'],[data-icon-size])]:size-3.5;
+  }
+
+  .button[data-size='icon-xs'] {
+    @apply size-5 rounded-sm [&_svg:not([class*='size-'],[data-icon-size])]:size-2.5;
+  }
+
+  .button[data-size='icon-sm'] {
+    @apply size-6 [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .button[data-size='icon-lg'] {
+    @apply size-8;
+  }
+
+  .button:not([data-variant]),
+  .button[data-variant='default'] {
+    @apply bg-primary text-primary-foreground hover:bg-primary/80;
+  }
+
+  .button[data-variant='secondary'] {
+    @apply bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)];
+  }
+
+  /*
+    An open menu's trigger keeps the hover look (aria-expanded), as shadcn's. Not the sidebar's trigger: on a desktop
+    it is expanded whenever the sidebar is, which is most of the time (shadcn's has no aria-expanded). :where keeps the
+    specificity of the variant's own rules.
+  */
+  .button[data-variant='secondary'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-secondary text-secondary-foreground;
+  }
+
+  .button[data-variant='outline'] {
+    @apply border-border hover:bg-input/50 hover:text-foreground dark:bg-input/30;
+  }
+
+  .button[data-variant='outline'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-muted text-foreground;
+  }
+
+  .button[data-variant='ghost'] {
+    @apply hover:bg-muted hover:text-foreground dark:hover:bg-muted/50;
+  }
+
+  .button[data-variant='ghost'][aria-expanded='true']:where(:not(.sidebar-trigger)) {
+    @apply bg-muted text-foreground;
+  }
+
+  .button[data-variant='link'] {
+    @apply text-primary underline-offset-4 hover:underline;
+  }
+
+  /* text-destructive-legible (components/base.css): shadcn's text-destructive is under 4.5:1 on the tint. */
+  .button[data-variant='destructive'] {
+    @apply bg-destructive/10 text-destructive-legible hover:bg-destructive/20
+      focus-visible:border-destructive/40 focus-visible:ring-destructive/20
+      dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
+  }
+
+  /* Badge. Only a linked badge (as="a") changes on hover; a plain one is not interactive. The hover text stays
+     --foreground where shadcn uses --muted-foreground, which is under 4.5:1 on --muted. */
+  .badge {
+    @apply h-5 gap-1 rounded-full border border-transparent px-2 py-0.5 text-[0.625rem] font-medium
+      focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40
+      has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-2.5;
+  }
+
+  .badge:not([data-variant]),
+  .badge[data-variant='default'] {
+    @apply bg-primary text-primary-foreground [a]:hover:bg-primary/80;
+  }
+
+  .badge[data-variant='secondary'] {
+    @apply bg-secondary text-secondary-foreground
+      [a]:hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)];
+  }
+
+  .badge[data-variant='outline'] {
+    @apply border-border bg-input/20 text-foreground [a]:hover:bg-muted dark:bg-input/30;
+  }
+
+  .badge[data-variant='ghost'] {
+    @apply text-foreground [a]:hover:bg-muted dark:[a]:hover:bg-muted/50;
+  }
+
+  .badge[data-variant='link'] {
+    @apply text-primary underline-offset-4 [a]:hover:underline;
+  }
+
+  .badge[data-variant='destructive'] {
+    @apply bg-destructive/10 text-destructive-legible
+      [a]:hover:bg-destructive/20 focus-visible:ring-destructive/20
+      dark:bg-destructive/20 dark:[a]:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40;
+  }
+
+  /* Card. data-size on the card sets the spacing of its direct parts. */
+  .card {
+    @apply rounded-lg bg-card text-xs/relaxed text-card-foreground ring-1 ring-foreground/10
+      has-[>img:first-child]:pt-0 [&>img:first-child]:rounded-t-lg [&>img:last-child]:rounded-b-lg;
+  }
+
+  .card:not([data-size]),
+  .card[data-size='default'] {
+    @apply gap-4 py-4;
+  }
+
+  .card[data-size='sm'] {
+    @apply gap-3 py-3;
+  }
+
+  .card:is(:not([data-size]), [data-size='default']) > :is(.card-header, .card-content, .card-footer) {
+    @apply px-4;
+  }
+
+  .card[data-size='sm'] > :is(.card-header, .card-content, .card-footer) {
+    @apply px-3;
+  }
+
+  .card-header {
+    @apply gap-1 data-border:border-b data-border:pb-4;
+  }
+
+  .card[data-size='sm'] > .card-header {
+    @apply data-border:pb-3;
+  }
+
+  .card-title {
+    @apply text-sm font-medium;
+  }
+
+  .card-description {
+    @apply text-xs/relaxed text-muted-foreground;
+  }
+
+  .card-footer {
+    @apply gap-2 data-border:border-t data-border:pt-4;
+  }
+
+  .card[data-size='sm'] > .card-footer {
+    @apply data-border:pt-3;
+  }
+
+  /* Alert */
+  .alert {
+    @apply gap-y-0.5 rounded-lg border px-2 py-1.5 text-start text-xs/relaxed has-[>svg]:gap-x-1.5
+      [&>svg]:translate-y-0.5 [&>svg:not([class*='size-'],[data-icon-size])]:size-3.5;
+  }
+
+  .alert:not([data-variant]) {
+    @apply bg-card text-card-foreground;
+  }
+
+  .alert[data-variant='destructive'] {
+    @apply bg-card text-destructive-legible;
+  }
+
+  .alert-title {
+    @apply min-h-4 font-medium tracking-tight;
+  }
+
+  .alert-description {
+    @apply gap-1 text-xs/relaxed text-muted-foreground;
+  }
+
+  .alert[data-variant='destructive'] > .alert-description {
+    @apply text-destructive-legible;
+  }
+
+  /* Form errors: the focus ring for when autofocus, a link or a script moves focus to it (tabindex="-1"). */
+  .form-errors {
+    @apply focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30;
+  }
+
+  /* Separator */
+  .separator {
+    @apply bg-border;
+  }
+
+  .separator:not([data-orientation]),
+  .separator[data-orientation='horizontal'] {
+    @apply h-px;
+  }
+
+  .separator[data-orientation='vertical'] {
+    @apply w-px;
+  }
+
+  /* Skeleton. The sizes are defaults; an application's own class overrides them. */
+  .skeleton {
+    @apply bg-accent motion-safe:animate-pulse;
+  }
+
+  .skeleton:not([data-shape]),
+  .skeleton[data-shape='line'] {
+    @apply h-4 w-full rounded-md;
+  }
+
+  .skeleton[data-shape='circle'] {
+    @apply size-10;
+  }
+
+  /* Consecutive lines are spaced like lines of text. */
+  .skeleton:is(:not([data-shape]), [data-shape='line']) + .skeleton:is(:not([data-shape]), [data-shape='line']) {
+    @apply mt-2;
+  }
+
+  /* Kbd. text-muted-legible (components/base.css): shadcn's text-muted-foreground is under 4.5:1 on --muted. */
+  .kbd {
+    @apply h-5 min-w-5 gap-1 rounded-xs bg-muted px-1 font-sans text-[0.625rem] font-medium text-muted-legible
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  .kbd-group {
+    @apply gap-1;
+  }
+
+  /* Avatar. text-muted-legible (components/base.css): shadcn's text-muted-foreground is under 4.5:1 on --muted. */
+  .avatar {
+    @apply rounded-full bg-muted;
+  }
+
+  .avatar:not([data-size]),
+  .avatar[data-size='default'] {
+    @apply size-8;
+  }
+
+  .avatar[data-size='sm'] {
+    @apply size-6;
+  }
+
+  .avatar[data-size='lg'] {
+    @apply size-10;
+  }
+
+  .avatar-fallback {
+    @apply text-sm text-muted-legible [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .avatar[data-size='sm'] > .avatar-fallback {
+    @apply text-xs [&_svg:not([class*='size-'],[data-icon-size])]:size-3;
+  }
+
+  /* Label */
+  .label {
+    @apply gap-2 text-xs/relaxed font-medium;
+  }
+
+  /*
+    Read-only (input and textarea): the muted background says it cannot be changed. The text keeps its full colour, which keeps it apart from disabled (faded) and legible (read-only is
+    not exempt from contrast rules, as disabled is); the placeholder gets the legible mix on --muted. It still takes
+    focus and its focus ring. An error (aria-invalid) still colours the border and ring; the background stays.
+  */
+
+  /* Input */
+  .input {
+    @apply h-7 rounded-md border border-input bg-input/20 px-2 py-0.5 text-sm
+      motion-safe:transition-colors
+      file:h-6 file:text-xs/relaxed file:font-medium file:text-foreground placeholder:text-muted-foreground
+      focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30
+      aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20
+      readonly:bg-muted readonly:placeholder:text-muted-legible
+      dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      md:text-xs/relaxed;
+  }
+
+  /* Textarea */
+  .textarea {
+    @apply rounded-md border border-input bg-input/20 px-2 py-2 text-sm
+      motion-safe:transition-colors
+      placeholder:text-muted-foreground
+      focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30
+      aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20
+      readonly:bg-muted readonly:placeholder:text-muted-legible
+      dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      md:text-xs/relaxed;
+  }
+
+  /* Native select. The end padding leaves room for the chevron. */
+  .native-select {
+    @apply rounded-md border border-input bg-input/20 py-0.5 ps-2 pe-6 text-xs/relaxed
+      motion-safe:transition-colors
+      focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30
+      aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20
+      dark:bg-input/30 dark:hover:bg-input/50
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      [&[multiple]]:pe-2;
+  }
+
+  .native-select-wrapper:not([data-size]) > .native-select:not([multiple]),
+  .native-select-wrapper[data-size='default'] > .native-select:not([multiple]) {
+    @apply h-7;
+  }
+
+  .native-select-wrapper[data-size='sm'] > .native-select:not([multiple]) {
+    @apply h-6 text-[0.625rem];
+  }
+
+  .native-select-icon {
+    @apply end-1.5 size-3.5 text-muted-foreground;
+  }
+
+  .native-select-wrapper[data-size='sm'] > .native-select-icon {
+    @apply size-3;
+  }
+
+  /*
+    Select. Its trigger looks like the native select; the list like the dropdown menu, in the picker of the
+    customizable select and in slSelect's list box alike. The item under the pointer or the keyboard has the accent
+    background; keyboard focus adds the ring, as in the menu.
+  */
+  .select {
+    @apply gap-1.5 rounded-md border border-input bg-input/20 ps-2 pe-6 text-xs/relaxed
+      motion-safe:transition-colors
+      focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30
+      aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20
+      dark:bg-input/30 dark:hover:bg-input/50
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40
+      [&_:is(selectedcontent,.select-value)]:gap-1.5
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3.5;
+  }
+
+  .select-wrapper:not([data-size]) > .select,
+  .select-wrapper[data-size='default'] > .select {
+    @apply h-7;
+  }
+
+  /* 2px above shadcn's h-6: the button inside the customizable select is the border's width smaller, and must stay
+     24px (WCAG 2.2's target size). */
+  .select-wrapper[data-size='sm'] > .select {
+    @apply h-6.5;
+  }
+
+  /* text-muted-legible (components/base.css): shadcn's text-muted-foreground is under 4.5:1 on the tinted field. */
+  .select:has(> option[data-placeholder]:checked),
+  .select[data-placeholder] {
+    @apply text-muted-legible;
+  }
+
+  .select-icon {
+    @apply end-1.5 size-3.5 text-muted-foreground;
+  }
+
+  .select-content {
+    @apply rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100;
+  }
+
+  /* The customizable select's list. A rule of its own: a browser without it drops a rule that names it. */
+  .select::picker(select) {
+    @apply rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100;
+  }
+
+  .select-content,
+  .select {
+    --popup-offset: --spacing(1);
+    --popup-slide: --spacing(2);
+  }
+
+  .select-item {
+    @apply min-h-7 gap-2 rounded-md py-1 ps-2 pe-8 text-xs/relaxed
+      hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
+      data-active:bg-accent data-active:text-accent-foreground;
+  }
+
+  .select-item svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .select-item:focus-visible,
+  .select-wrapper:has(> .select:focus-visible) .select-item[data-active] {
+    @apply ring-[3px] ring-ring/50 ring-inset;
+  }
+
+  .select-item-indicator {
+    @apply end-2;
+  }
+
+  .select-group,
+  .select-label {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .select-label {
+    @apply px-2 py-1.5;
+  }
+
+  .select-group > .select-item {
+    @apply text-xs/relaxed text-popover-foreground;
+  }
+
+  .select-separator {
+    @apply -mx-1 my-1 bg-border/50;
+  }
+
+  /* Checkbox */
+  .checkbox {
+    @apply size-4 rounded-[4px] border border-input bg-transparent
+      motion-safe:transition-shadow
+      checked:border-primary checked:bg-primary indeterminate:border-primary indeterminate:bg-primary
+      focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30
+      aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20
+      aria-invalid:checked:border-primary aria-invalid:indeterminate:border-primary
+      dark:bg-input/30 dark:checked:bg-primary dark:indeterminate:bg-primary
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  .checkbox-indicator,
+  .checkbox-indeterminate-indicator {
+    @apply size-3.5 text-primary-foreground;
+  }
+
+  /* Radio group. The dot is a gradient in the checked item's background. */
+  .radio-group {
+    @apply gap-3;
+  }
+
+  .radio-group-item {
+    @apply size-4 border border-input bg-transparent
+      checked:border-primary checked:bg-primary bg-size-[0.5rem]
+      checked:bg-[radial-gradient(circle_closest-side,var(--primary-foreground)_calc(100%-1px),transparent_100%)]
+      focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50
+      aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20
+      aria-invalid:checked:border-primary
+      dark:bg-input/30 dark:checked:bg-primary
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  /* Switch. The thumb is the track's background (components/switch.css), coloured with --switch-thumb. */
+  .switch {
+    @apply border border-transparent bg-input [--switch-thumb:var(--background)]
+      checked:bg-primary
+      focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30
+      aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20
+      dark:bg-input/80 dark:[--switch-thumb:var(--foreground)]
+      dark:checked:bg-primary dark:checked:[--switch-thumb:var(--primary-foreground)]
+      dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
+  }
+
+  .switch:not([data-size]),
+  .switch[data-size='default'] {
+    @apply h-[16.6px] w-7 bg-size-[0.875rem];
+  }
+
+  .switch[data-size='sm'] {
+    @apply h-3.5 w-6 bg-size-[0.75rem];
+  }
+
+  /*
+    Field. An invalid field's label (or fieldset's legend) and the error use text-destructive-legible
+    (components/base.css), as the destructive alert does; the control keeps its own text colour.
+  */
+  .field-set {
+    @apply gap-4 has-[>.radio-group]:gap-3
+      has-[>.field[data-orientation='horizontal']]:gap-3;
+  }
+
+  .field-legend {
+    @apply mb-2 font-medium;
+  }
+
+  .field-legend:not([data-variant]),
+  .field-legend[data-variant='legend'] {
+    @apply text-sm;
+  }
+
+  .field-legend[data-variant='label'] {
+    @apply text-xs/relaxed;
+  }
+
+  .field-group {
+    @apply gap-4 [&>.field-group]:gap-4;
+  }
+
+  .field {
+    @apply gap-2;
+  }
+
+  .field-content {
+    @apply gap-0.5;
+  }
+
+  .field-label {
+    @apply leading-snug;
+  }
+
+  .field[data-invalid='true'] > .field-label,
+  .field[data-invalid='true'] > .field-content > .field-label,
+  .field-set[data-invalid='true'] > .field-legend {
+    @apply text-destructive-legible;
+  }
+
+  .field-description {
+    @apply text-xs/relaxed text-muted-foreground;
+  }
+
+  :is(.field-legend:not([data-variant]), .field-legend[data-variant='legend']) + .field-description {
+    @apply -mt-1.5;
+  }
+
+  .field-error {
+    @apply text-xs/relaxed text-destructive-legible;
+  }
+
+  /* Dialog */
+  .dialog {
+    @apply max-w-[calc(100%-2rem)] gap-4 rounded-xl bg-popover p-4 text-xs/relaxed text-popover-foreground ring-1
+      ring-foreground/10 duration-100 sm:max-w-sm
+      backdrop:bg-black/80 backdrop:duration-100 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .dialog-close {
+    @apply top-2 end-2;
+  }
+
+  .dialog-header {
+    @apply gap-1;
+  }
+
+  .dialog-title {
+    @apply text-sm font-medium;
+  }
+
+  .dialog-description {
+    @apply text-xs/relaxed text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground;
+  }
+
+  .dialog-footer {
+    @apply gap-2;
+  }
+
+  /* A dialog's or sheet's body: the error above the content, and the loading layer over it. */
+  :is(.dialog-body, .sheet-body) {
+    @apply gap-4;
+  }
+
+  :is(.dialog-body-loading, .sheet-body-loading) {
+    @apply bg-popover/70 text-muted-foreground;
+  }
+
+  :is(.dialog-body-spinner, .sheet-body-spinner) {
+    @apply size-6;
+  }
+
+  /* Alert dialog */
+  .alert-dialog {
+    @apply max-w-xs gap-3 rounded-xl bg-popover p-4 text-xs/relaxed text-popover-foreground ring-1 ring-foreground/10
+      duration-100 backdrop:bg-black/80 backdrop:duration-100 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .alert-dialog:not([data-size]) {
+    @apply sm:max-w-sm;
+  }
+
+  .alert-dialog[data-size='sm'] {
+    @apply max-w-64;
+  }
+
+  .alert-dialog-header {
+    @apply gap-1 has-[>.alert-dialog-media]:gap-x-4;
+  }
+
+  .alert-dialog-media {
+    @apply mb-2 size-8 rounded-md [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .alert-dialog-media:not([data-variant]) {
+    @apply bg-muted;
+  }
+
+  .alert-dialog-media[data-variant='destructive'] {
+    @apply bg-destructive/10 text-destructive dark:bg-destructive/20;
+  }
+
+  .alert-dialog-title {
+    @apply text-sm font-medium;
+  }
+
+  .alert-dialog-description {
+    @apply text-xs/relaxed text-balance text-muted-foreground md:text-pretty
+      [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground;
+  }
+
+  .alert-dialog-footer {
+    @apply gap-2;
+  }
+
+  /* Sheet */
+  .sheet {
+    @apply border-border bg-popover bg-clip-padding text-xs/relaxed text-popover-foreground shadow-lg duration-200 ease-in-out
+      backdrop:bg-black/80 backdrop:duration-200 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+    --sheet-slide: --spacing(10);
+  }
+
+  .sheet:not([data-side]),
+  .sheet[data-side='left'] {
+    @apply w-3/4 sm:max-w-sm;
+  }
+
+  /* Content between the header and the footer lines up with them. */
+  .sheet > :not(.sheet-header, .sheet-footer, .sheet-close, .sheet-body),
+  .sheet-body-content {
+    @apply px-6;
+  }
+
+  .sheet-body-error {
+    @apply mx-6;
+  }
+
+  .sheet-close {
+    @apply top-4 end-4;
+  }
+
+  .sheet-header {
+    @apply gap-1.5 p-6;
+  }
+
+  .sheet-footer {
+    @apply gap-2 p-6;
+  }
+
+  .sheet-title {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  .sheet-description {
+    @apply text-xs/relaxed text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground;
+  }
+
+  /*
+    Dropdown menu. An item under the pointer or the keyboard has the focus, and the accent background shows it, as in
+    shadcn; keyboard focus adds the ring, which the accent alone (barely lighter than the menu) does not make visible.
+  */
+  .dropdown-menu-content {
+    @apply rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100;
+    --popup-offset: --spacing(1);
+    --popup-slide: --spacing(2);
+  }
+
+  .dropdown-menu-item,
+  .dropdown-menu-checkbox-item,
+  .dropdown-menu-radio-item {
+    @apply min-h-7 gap-2 rounded-md py-1 text-xs/relaxed focus:bg-accent focus:text-accent-foreground
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3.5;
+  }
+
+  .dropdown-menu-item:focus-visible,
+  .dropdown-menu-checkbox-item:focus-visible,
+  .dropdown-menu-radio-item:focus-visible {
+    @apply ring-[3px] ring-ring/50 ring-inset;
+  }
+
+  .dropdown-menu-item {
+    @apply px-2 data-inset:ps-7.5;
+  }
+
+  .dropdown-menu-checkbox-item,
+  .dropdown-menu-radio-item {
+    @apply ps-2 pe-8 data-inset:ps-7.5;
+  }
+
+  .dropdown-menu-item:not([data-variant]) {
+    @apply focus:**:text-accent-foreground;
+  }
+
+  .dropdown-menu-item[data-variant='destructive'] {
+    @apply text-destructive-legible focus:bg-destructive/10 dark:focus:bg-destructive/20 *:[svg]:text-destructive;
+  }
+
+  .dropdown-menu-item-indicator {
+    @apply end-2;
+  }
+
+  .dropdown-menu-label {
+    @apply px-2 py-1.5 text-xs text-muted-foreground data-inset:ps-7.5;
+  }
+
+  /*
+    The user menu's label: the user, in the menu's text colour (shadcn's NavUser), not a muted heading. After
+    .dropdown-menu-label, which it overrides. The header's button is round, as the picture it shows.
+  */
+  .dropdown-menu-label.user-menu-label {
+    @apply gap-2 px-1 py-1.5 text-xs font-normal leading-tight text-popover-foreground;
+  }
+
+  .user-menu-name {
+    @apply font-medium;
+  }
+
+  .user-menu-detail {
+    @apply text-xs;
+  }
+
+  .button.user-menu-trigger {
+    @apply rounded-full;
+  }
+
+  .dropdown-menu-separator {
+    @apply -mx-1 my-1 bg-border/50;
+  }
+
+  .dropdown-menu-shortcut {
+    @apply text-[0.625rem] tracking-widest text-muted-foreground;
+  }
+
+  :focus > .dropdown-menu-shortcut {
+    @apply text-accent-foreground;
+  }
+
+  /* Popover */
+  .popover-content {
+    @apply w-72 gap-4 rounded-lg bg-popover p-2.5 text-xs text-popover-foreground shadow-md ring-1 ring-foreground/10
+      duration-100;
+    --popup-offset: --spacing(1);
+    --popup-slide: --spacing(2);
+  }
+
+  /* The panel has the focus when it has no control of its own. */
+  .popover-content:focus-visible {
+    @apply ring-[3px] ring-ring/50;
+  }
+
+  .popover-header {
+    @apply gap-1 text-xs;
+  }
+
+  .popover-title {
+    @apply text-sm font-medium;
+  }
+
+  .popover-description {
+    @apply text-muted-foreground;
+  }
+
+  /* Tooltip. A kbd in it takes the tooltip's colours, as in shadcn. */
+  .tooltip-content {
+    @apply max-w-xs gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-xs text-background duration-100
+      has-[.kbd]:pe-1.5;
+    --popup-offset: --spacing(1.5);
+    --popup-slide: --spacing(2);
+  }
+
+  .tooltip-arrow {
+    @apply size-2.5 rounded-[2px] bg-foreground;
+  }
+
+  .tooltip-content .kbd {
+    @apply rounded-sm bg-background/20 text-background dark:bg-background/10;
+  }
+
+  /*
+    Accordion: a rounded box with a border. The height animation's speed (components/accordion.css) is
+    --accordion-duration. The focus ring lies inside the trigger, as the box clips what sticks out (shadcn's mira has
+    none).
+  */
+  .accordion {
+    @apply overflow-hidden rounded-md border border-border;
+  }
+
+  .accordion-item {
+    @apply border-border not-last:border-b;
+    --accordion-duration: 200ms;
+  }
+
+  .accordion-trigger {
+    @apply gap-6 p-2 text-xs/relaxed font-medium hover:underline
+      focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:ring-inset;
+  }
+
+  .accordion-trigger-icon {
+    @apply size-4 text-muted-foreground;
+  }
+
+  .accordion-content {
+    @apply px-2 pt-0 pb-4 text-xs/relaxed [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground
+      [&_p:not(:last-child)]:mb-4;
+  }
+
+  /* Collapsible. A trigger drawn as a button (.button) gets the rest from the button's rules. */
+  .collapsible-trigger {
+    @apply rounded-md focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30;
+  }
+
+  /* shadcn's examples put gap-2 between the trigger and the content. */
+  .collapsible-content {
+    @apply mt-2;
+  }
+
+  .collapsible-trigger:not(.button) {
+    @apply text-xs/relaxed font-medium;
+  }
+
+  /*
+    Tabs. The inactive tabs' text is mixed from the foreground, as in shadcn, and the active one raised on the muted
+    track; in the line variant a bar in the foreground colour marks it.
+  */
+  .tabs {
+    @apply gap-2;
+  }
+
+  .tabs-list {
+    @apply rounded-lg p-[3px] text-muted-foreground;
+  }
+
+  .tabs:not([data-orientation]) > .tabs-list {
+    @apply h-8;
+  }
+
+  .tabs-list:not([data-variant]) {
+    @apply bg-muted;
+  }
+
+  .tabs-list[data-variant='line'] {
+    @apply gap-1 rounded-none bg-transparent;
+  }
+
+  .tabs-trigger {
+    @apply gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-xs font-medium text-foreground/60
+      hover:text-foreground dark:text-muted-foreground dark:hover:text-foreground
+      focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1
+      focus-visible:outline-ring motion-safe:transition-all
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-3.5;
+  }
+
+  .tabs:not([data-orientation]) > .tabs-list > .tabs-trigger {
+    @apply h-[calc(100%-1px)];
+  }
+
+  .tabs[data-orientation='vertical'] > .tabs-list > .tabs-trigger {
+    @apply py-[calc(--spacing(1.25))];
+  }
+
+  .tabs-trigger:has(> svg:first-child) {
+    @apply ps-1;
+  }
+
+  .tabs-trigger:has(> svg:last-child) {
+    @apply pe-1;
+  }
+
+  .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected='true'] {
+    @apply bg-background text-foreground dark:border-input dark:bg-input/30 dark:text-foreground;
+  }
+
+  .tabs-list[data-variant='line'] > .tabs-trigger {
+    @apply after:bg-foreground;
+  }
+
+  .tabs-list[data-variant='line'] > .tabs-trigger[aria-selected='true'] {
+    @apply text-foreground;
+  }
+
+  /* The panel takes the focus after the tabs (tabindex="0"). */
+  .tabs-content {
+    @apply rounded-md text-xs/relaxed focus-visible:ring-2 focus-visible:ring-ring/30;
+  }
+
+  /*
+    Toast: Sonner's look as shadcn sets it up (the popover's colours, a border, 13px type, a shadow). Only the icon tells
+    the variants apart, as in shadcn; an error's icon takes the destructive colour.
+  */
+  .toast {
+    @apply gap-1.5 border bg-popover p-4 text-[13px] text-popover-foreground shadow-lg
+      focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 rounded-md;
+  }
+
+  .toast > svg {
+    @apply size-4;
+  }
+
+  .toast:not([data-variant]) > svg,
+  .toast[data-variant='success'] > svg,
+  .toast[data-variant='info'] > svg,
+  .toast[data-variant='warning'] > svg {
+    @apply text-current;
+  }
+
+  .toast[data-variant='error'] > svg {
+    @apply text-destructive-legible;
+  }
+
+  .toast-content {
+    @apply gap-0.5;
+  }
+
+  .toast-title {
+    @apply leading-normal font-medium;
+  }
+
+  .toast-description {
+    @apply leading-snug text-muted-foreground;
+  }
+
+  .toast-close {
+    @apply -my-1 -me-2;
+  }
+
+  /*
+    Table. Rows and cells are plain elements, reached through child combinators so a nested table keeps its own look.
+    The sort link's padding sticks out of the cell's, so its label lines up with the cells below, as in shadcn/ui's
+    data table.
+  */
+  .table {
+    @apply text-xs;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr {
+    @apply border-b border-border;
+  }
+
+  .table > tbody > tr {
+    @apply hover:bg-muted/50 motion-safe:transition-colors;
+  }
+
+  /* A selected row, as shadcn/ui's data-state=selected: one whose first cell holds a checked checkbox. */
+  .table > tbody > tr:has(> :first-child .checkbox:checked) {
+    @apply bg-muted;
+  }
+
+  .table > tbody > tr:last-child,
+  .table > tfoot > tr:last-child {
+    @apply border-b-0;
+  }
+
+  .table > tfoot {
+    @apply border-t border-border bg-muted/50 font-medium;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > th {
+    @apply h-10 px-2 font-medium text-foreground;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > td {
+    @apply p-2;
+  }
+
+  .table > :is(thead, tbody, tfoot) > tr > :is(th, td):has(> .checkbox-wrapper) {
+    @apply pe-0;
+  }
+
+  .table > caption {
+    @apply mt-4 text-xs text-muted-foreground;
+  }
+
+  .table-sort {
+    @apply -ms-2;
+  }
+
+  .table-head[data-align='center'] > .table-sort {
+    @apply ms-0;
+  }
+
+  .table-head[data-align='end'] > .table-sort {
+    @apply ms-0 -me-2;
+  }
+
+  .table > tbody > tr.table-empty > td {
+    @apply h-24;
+  }
+
+  /*
+    Pagination. The links are ghost buttons, the current page an outline one (.button rules). Previous and Next keep
+    their own padding on the chevron's side, as shadcn/ui's.
+  */
+  .pagination-content {
+    @apply gap-0.5;
+  }
+
+  .pagination-ellipsis {
+    @apply size-7;
+  }
+
+  .pagination-ellipsis > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .button.pagination-previous:has(> [data-icon]) {
+    @apply ps-1.5;
+  }
+
+  .button.pagination-next:has(> [data-icon]) {
+    @apply pe-1.5;
+  }
+
+  .pagination-summary,
+  .table-selection-count {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .pagination-size {
+    @apply gap-2;
+  }
+
+  .pagination-size-label {
+    @apply text-xs font-medium;
+  }
+
+  /*
+    Breadcrumb, after shadcn's mira style: muted levels, the current page in the foreground colour, a hovered link
+    too. The ellipsis's menu button is a ghost button (.button rules).
+  */
+  .breadcrumb-list {
+    @apply gap-1.5 text-xs/relaxed text-muted-foreground;
+  }
+
+  .breadcrumb-item {
+    @apply gap-1;
+  }
+
+  .breadcrumb-link {
+    @apply rounded-sm transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/30;
+  }
+
+  .breadcrumb-page {
+    @apply font-normal text-foreground;
+  }
+
+  .breadcrumb-separator > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .breadcrumb-ellipsis {
+    @apply size-4;
+  }
+
+  .breadcrumb-ellipsis > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  /* Skip link: drawn as an outline button once it has the focus. */
+  .skip-link:focus {
+    @apply inline-flex h-7 rounded-md px-2 text-xs/relaxed items-center border border-border bg-background font-medium
+      text-foreground shadow-md;
+  }
+
+  .skip-link:focus-visible {
+    @apply border-ring ring-2 ring-ring/30;
+  }
+
+  /*
+    Site header, after shadcn's page headers (sidebar-16's site header, sidebar-07's inset header): 3.5rem high,
+    px-4, gap-2. Across the top of the page it is the page's ground with a border below; inside the inset, or above an
+    inset card (it then lies on the sidebar's ground), it has neither. The trigger sits a little outside the padding,
+    and a vertical separator keeps some room before what follows.
+  */
+  .site-header {
+    --site-header-height: 3.5rem;
+    @apply gap-2 border-b border-border bg-background px-4;
+  }
+
+  .sidebar-inset > .site-header,
+  .sidebar-provider > .site-header:has(> .sidebar[data-variant='inset']) {
+    @apply border-b-0 bg-transparent;
+  }
+
+  .site-header-end {
+    @apply gap-2;
+  }
+
+  .site-header > .sidebar-trigger {
+    @apply -ms-1;
+  }
+
+  .site-header > .separator[data-orientation='vertical'] {
+    @apply me-2;
+  }
+
+  /*
+    Sidebar. shadcn's widths: 16rem beside the page, 18rem as the panel on a phone. The sidebar has its own colours
+    (--sidebar*), the inset the page's.
+  */
+  .sidebar-provider {
+    --sidebar-width: 16rem;
+    --sidebar-width-mobile: 18rem;
+    --sidebar-width-icon: 3rem;
+  }
+
+  .sidebar {
+    @apply border-sidebar-border bg-sidebar text-xs text-sidebar-foreground duration-200 ease-linear
+      backdrop:bg-black/80 backdrop:duration-200 supports-backdrop-filter:backdrop:backdrop-blur-xs;
+  }
+
+  .sidebar:popover-open {
+    @apply shadow-lg;
+  }
+
+  .sidebar-inset {
+    @apply bg-background;
+  }
+
+  /*
+    Variants on a desktop, after shadcn's mira style: floating is a rounded panel with a shadow; inset puts the
+    sidebar's colour around the page, which becomes a rounded card with a shadow. Margins and edges are structure.
+  */
+  .sidebar[data-variant='floating'] {
+    @apply md:rounded-lg md:shadow-sm;
+  }
+
+  .sidebar-provider:has(> .sidebar[data-variant='inset'], > .site-header > .sidebar[data-variant='inset']) {
+    @apply bg-sidebar;
+  }
+
+  .sidebar-provider:has(> .sidebar[data-variant='inset'], > .site-header > .sidebar[data-variant='inset']) > .sidebar-inset {
+    @apply duration-200 ease-linear md:rounded-xl md:shadow-sm;
+  }
+
+  /*
+    The sidebar's content parts, after shadcn's mira style. The current entry
+    ([aria-current]) and a hovered one take the accent; the focus ring is the sidebar's. A badge follows the
+    colour of the button it describes.
+  */
+  .sidebar-header,
+  .sidebar-footer {
+    @apply gap-2 p-2;
+  }
+
+  /*
+    Firefox makes the content a tab stop of its own when it scrolls (so do other browsers when nothing in it can take
+    the focus): an outline inside its edge shows it has the focus.
+  */
+  .sidebar-content {
+    @apply gap-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-sidebar-ring;
+  }
+
+  .sidebar-separator {
+    @apply mx-2 bg-sidebar-border;
+  }
+
+  .sidebar-group {
+    @apply px-2 py-1;
+  }
+
+  .sidebar-group-label {
+    @apply h-8 rounded-md px-2 text-xs text-sidebar-foreground/70 ring-sidebar-ring focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  /* The label of a collapsible group opens and closes it. */
+  summary.sidebar-group-label {
+    @apply hover:bg-sidebar-accent hover:text-sidebar-accent-foreground;
+  }
+
+  .sidebar-group-content {
+    @apply text-xs;
+  }
+
+  .sidebar-menu {
+    @apply gap-px;
+  }
+
+  .sidebar-menu-button:not([data-variant]) {
+    @apply bg-transparent;
+  }
+
+  .sidebar-menu-button[data-variant='outline'] {
+    @apply bg-background hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      shadow-[0_0_0_1px_var(--sidebar-border)] hover:shadow-[0_0_0_1px_var(--sidebar-accent)];
+  }
+
+  /* After the variants, so hover and the current entry win over their background. */
+  .sidebar-menu-button {
+    @apply gap-2 rounded-[calc(--theme(--radius-sm)+2px)] p-2 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      active:bg-sidebar-accent active:text-sidebar-accent-foreground focus-visible:ring-2
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-button:is([aria-current='page'], [aria-current='true']) {
+    @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground;
+  }
+
+  /* A menu button or action whose dropdown menu is open. */
+  .sidebar-menu-button[aria-expanded='true'],
+  .sidebar-menu-action[aria-expanded='true'] {
+    @apply bg-sidebar-accent text-sidebar-accent-foreground;
+  }
+
+  .sidebar-menu-button:not([data-size]) {
+    @apply h-8 text-xs;
+  }
+
+  .sidebar-menu-button[data-size='sm'] {
+    @apply h-7 text-xs;
+  }
+
+  .sidebar-menu-button[data-size='lg'] {
+    @apply h-12 text-xs;
+  }
+
+  .sidebar-menu-button-label > small {
+    @apply text-xs;
+  }
+
+  .sidebar-group-action {
+    @apply end-3 top-3.5 w-5 rounded-md p-0 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-action {
+    @apply end-1 top-1 w-6 rounded-[calc(--theme(--radius-sm)-2px)] p-0 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-badge {
+    @apply end-1 top-1.5 h-5 min-w-5 rounded-[calc(--theme(--radius-sm)-2px)] px-1 text-xs font-medium text-sidebar-foreground;
+  }
+
+  .sidebar-menu-button[data-size='sm'] ~ .sidebar-menu-badge {
+    @apply top-1;
+  }
+
+  .sidebar-menu-button[data-size='lg'] ~ .sidebar-menu-badge {
+    @apply top-3.5;
+  }
+
+  /* 24px at every width (WCAG 2.2's target size; shadcn's 20px is flagged by axe once shown), centred on the button. */
+  .sidebar-menu-button[data-size='sm'] ~ .sidebar-menu-action {
+    @apply top-0.5;
+  }
+
+  .sidebar-menu-button[data-size='lg'] ~ .sidebar-menu-action {
+    @apply top-3;
+  }
+
+  .sidebar-menu-button:is(:hover, [aria-current='page'], [aria-current='true'], [aria-expanded='true']) ~ :is(.sidebar-menu-action, .sidebar-menu-badge) {
+    @apply text-sidebar-accent-foreground;
+  }
+
+  /*
+    A sub-menu, after shadcn's mira style: indented along a line from the middle of the icons above it. Its buttons
+    look like the menu's, a little lower.
+  */
+  .sidebar-menu-sub {
+    @apply mx-3.5 gap-1 border-s border-sidebar-border px-2.5 py-0.5;
+  }
+
+  .sidebar-menu-sub-button {
+    @apply h-7 gap-2 rounded-md px-2 text-sidebar-foreground ring-sidebar-ring
+      hover:bg-sidebar-accent hover:text-sidebar-accent-foreground
+      active:bg-sidebar-accent active:text-sidebar-accent-foreground focus-visible:ring-2
+      [&>svg]:text-sidebar-accent-foreground [&>svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true']) {
+    @apply bg-sidebar-accent text-sidebar-accent-foreground;
+  }
+
+  .sidebar-menu-sub-button:not([data-size]) {
+    @apply text-xs;
+  }
+
+  .sidebar-menu-sub-button[data-size='sm'] {
+    @apply text-xs;
+  }
+
+  /*
+    Collapsed to icons (desktop only), after shadcn's mira style: every menu button is a square as large as the
+    default height around its icon (the structure hides the label); a large one loses its padding, so a logo of
+    that size fills it. Group
+    labels move up out of view (they still name their groups). A collapsible item whose hidden sub-menu holds the
+    current page shows it on its icon. Width, padding and the label's move follow the sidebar only without reduced
+    motion.
+  */
+  @media (width >= 48rem) {
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-button {
+      @apply size-8 p-2;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-menu-button[data-size='lg'] {
+      @apply p-0;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon'] .sidebar-group-label {
+      @apply -mt-8 opacity-0;
+    }
+
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
+      .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button,
+    .sidebar-provider[data-state='collapsed'] > .sidebar[data-collapsible='icon']
+      .sidebar-menu-item:has(> .sidebar-menu-sub-collapsible .sidebar-menu-sub-button:is([aria-current='page'], [aria-current='true'])) > .sidebar-menu-button {
+      @apply bg-sidebar-accent font-medium text-sidebar-accent-foreground;
+    }
+  }
+
+  @media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
+    .sidebar[data-collapsible='icon'] .sidebar-menu-button {
+      @apply transition-[width,height,padding] duration-200 ease-linear;
+    }
+
+    .sidebar[data-collapsible='icon'] .sidebar-group-label {
+      @apply transition-[margin,opacity] duration-200 ease-linear;
+    }
+  }
+
+  /*
+    On a phone the group actions are 24px too (WCAG 2.2's target size; shadcn's 20px with a larger pseudo-element hit
+    area does not count). On a desktop they stand alone beside the label, with room around them.
+  */
+  @media (width < 48rem) {
+    .sidebar-group-action {
+      @apply top-3 w-6;
+    }
+  }
+}
