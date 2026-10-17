@@ -52,9 +52,27 @@ shadcn theme generator's output can be pasted in unchanged.
 shadleaf.skin=lyra
 ```
 
-A skin changes geometry, type size and shadow: the same markup and the same tokens, a different look. Each skin follows
-one of shadcn/ui's styles: `vega` (the default) is shadcn's classic look, `lyra` its boxy and sharp one. Token overrides keep
-working under every skin. Use the skin switch on any preview in these docs to compare.
+A skin changes geometry, spacing, type size and shadow: the same markup and the same tokens, a different look. Each skin
+but one follows one of shadcn/ui's styles:
+
+| Skin   | shadcn/ui's style                                                          |
+|--------|----------------------------------------------------------------------------|
+| `vega` | The default: shadcn's classic look, clean and neutral.                     |
+| `lyra` | Boxy and sharp: square corners, small type and a thin focus ring.          |
+| `nova` | Reduced padding and margins: vega one size smaller, with a muted footer.   |
+| `maia` | Rounded, with generous spacing: pill-shaped buttons and fields.            |
+| `mira` | Made for compact interfaces: small type and 28px controls.                 |
+| `luma` | Fluid, luminous and soft: maia's shapes, borderless fields, soft shadows.  |
+| `rhea` | Like luma, but compact: smaller controls, tighter menus and tables.        |
+| `sera` | Editorial and typographic: square, uppercase labels, underlined fields.   |
+
+`sketch` is Shadleaf's own: it makes the components look hand-drawn, as a wireframe in Balsamiq does, for mockups and
+prototypes that should not pass for the finished application. Pencil lines with uneven corners, wavy underlines, hatched
+skeletons and a handwritten font, Balsamiq Sans, which ships with the skin (SIL Open Font License). It sets that font on
+the page's body, so your headings and text are handwritten too; a font of your own on the body wins. The colours still
+come from the tokens: a theme applies, and the pencil is `--foreground`.
+
+Token overrides keep working under every skin. Use the skin switch on any preview in these docs to compare.
 
 ## 5. Own the template
 

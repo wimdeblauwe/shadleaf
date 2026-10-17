@@ -63,7 +63,7 @@ the line for each setting that matches your `application.properties`, below the 
   `sl/layout :: assets` fragment, and it registers the Alpine plugins it needs.
 ```
 
-See [Getting started](https://shadleaf.dev/current/getting-started.md#already-compiling-tailwind) and the [Alpine.js guide](https://shadleaf.dev/current/guides/alpine.md) for
+See the [Tailwind CSS guide](https://shadleaf.dev/current/guides/tailwind.md) and the [Alpine.js guide](https://shadleaf.dev/current/guides/alpine.md) for
 what each setting does.
 
 Keep it short: it is loaded in every session. Your coding agent will read more documentation as it needs.

@@ -2,7 +2,7 @@
 
 > Getting started with Shadleaf, its conventions, the layouts and the guides.
 
-Shadleaf 0.9.0.
+Shadleaf 0.10.0.
 
 ## Shadleaf
 
@@ -10,8 +10,8 @@ Shadleaf 0.9.0.
 
 Source: https://shadleaf.dev/current/
 
-Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) design system to Thymeleaf. Add one dependency, include one
-fragment, and write `<sl:button>`:
+Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) design system to Thymeleaf. Add one dependency, include two
+fragments in your layout's `<head>`, and write `<sl:button>`:
 
 **Example: Variants.**
 
@@ -24,7 +24,9 @@ fragment, and write `<sl:button>`:
 <sl:button variant="link">Link</sl:button>
 ```
 
-- **No Node, no Tailwind in your application.** The jar ships compiled CSS, served under `/shadleaf/**`.
+- **Fits your build.** The jar ships compiled CSS, served under `/shadleaf/**`, so a plain Maven build is enough.
+  Already compiling Tailwind? The [embedded bundle](guides/tailwind/) fits into your own
+  build.
 - **shadcn's token names, verbatim.** `--primary`, `--radius`, `--ring`: any shadcn theme drops in unchanged.
 - **Declared props.** A typo such as `variant="destructve"` fails with the legal values, and an icon-only button
   without an `aria-label` fails too, instead of shipping.
@@ -47,17 +49,27 @@ exactly the markup your application gets.
 
 Source: https://shadleaf.dev/current/getting-started/
 
-Shadleaf needs Java 17, Spring Boot 4 and Thymeleaf. Your application needs no Node.js and no Tailwind.
+Shadleaf needs Java 17, Spring Boot 4 and Thymeleaf. The jar ships compiled CSS and JavaScript, so a plain Maven
+build is enough to get started.
 
 ### Add the dependency
+
+Add the dependency to your `pom.xml` of your Spring Boot with Thymeleaf application:
 
 ```xml
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>shadleaf-spring-boot-starter</artifactId>
-  <version>0.9.0</version>
+  <version>0.10.0</version>
 </dependency>
 ```
+
+> **Note: Don't have an application yet?**
+>
+> You can generate an application from [Spring Initializr](https://start.spring.io/) with the Spring Web & Thymeleaf dependencies.
+>
+> Alternatively, use [ttcli](https://github.com/wimdeblauwe/ttcli) to generate an application.
+> It allows to have a very nice live-reload setup for quick development.
 
 ### Include the stylesheet and the theme script
 
@@ -72,15 +84,20 @@ In the `<head>` of your layout:
 </head>
 ```
 
-`assets` links the stylesheet of the configured skin and loads the script with Alpine.js, which the interactive
-components use; see [Alpine.js](https://shadleaf.dev/current/guides/alpine.md) if your application loads Alpine itself. `theme-script` is a tiny inline script that sets `class="dark"`
-on `<html>` before the first paint: `localStorage['shadleaf-theme']` set to `light` or `dark` wins, anything else follows
-the operating system. [`<sl:theme-toggle>`](https://shadleaf.dev/current/components/theme-toggle.md) lets the user choose. Behind a
-Content-Security-Policy, see [CSP](https://shadleaf.dev/current/guides/csp.md).
+The `theme-script` reads the user's preference from `localStorage` and sets the `class="dark"` on `<html>` before the first paint.
+Place the [`<sl:theme-toggle>`](https://shadleaf.dev/current/components/theme-toggle.md) on your page to let the user choose between light and dark mode.
+
+The `assets` block renders the CSS and JS links.
+By default, Alpine.js is loaded and you can use it in your own pages.
+See [Alpine.js](https://shadleaf.dev/current/guides/alpine.md) if your application loads Alpine itself.
+
+If you want to use Tailwind CSS in your own pages, see [Tailwind CSS](https://shadleaf.dev/current/guides/tailwind.md) for how to set it up.
+
+If you have a Content-Security-Policy, see [CSP](https://shadleaf.dev/current/guides/csp.md) for more information.
 
 ### Use the components
 
-Declare the namespace, then use the tags:
+Add a component to your Thymeleaf template:
 
 ```html
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
@@ -89,33 +106,20 @@ Declare the namespace, then use the tags:
 <sl:button type="submit">Save</sl:button>
 ```
 
-> **Note: type="button" is the default**
->
-> `<sl:button>` renders `type="button"`, unlike HTML's `<button>`, so a button inside a form never submits it by
-> accident. Write `type="submit"` on the button that should.
+See the [Components](https://shadleaf.dev/current/components.md) section for all available components and their attributes.
+There are also [Layouts](https://shadleaf.dev/current/layouts.md) with whole page layouts to copy.
 
 ### Configuration
 
-| Property | Default | |
-| --- | --- | --- |
-| `shadleaf.skin` | `vega` | The visual identity, named after the shadcn/ui style it follows: `vega` or `lyra`. |
-| `shadleaf.assets.variant` | `standalone` | `embedded` leaves out Tailwind's reset, for applications that compile Tailwind themselves. |
-| `shadleaf.assets.alpine` | `bundled` | Where Alpine.js comes from: `bundled`, `csp` or `external`; see [Alpine.js](https://shadleaf.dev/current/guides/alpine.md). |
-| `shadleaf.csp.nonce-attribute` | `cspNonce` | The request attribute holding a CSP nonce for the theme script. |
-| `shadleaf.dev.web-types-file` | | Writes IDE metadata for your components; see [IDE completion](https://shadleaf.dev/current/ide-completion.md). |
-
-### Already compiling Tailwind?
-
-Load the `embedded` bundle (`shadleaf.assets.variant=embedded`). It carries no preflight and no theme variables, so
-your own Tailwind build keeps its reset, its headings and its `@theme`. Utility classes such as `w-full mt-4` on a
-component come from your build: the library's bundles define none.
-
-### A layout for every page
-
-The Layouts section has whole layouts to copy, with the navigation in a sidebar
-([Collapses to icons](https://shadleaf.dev/current/layouts/collapses-to-icons.md)) or in a header ([Navigation in the header](https://shadleaf.dev/current/layouts/header.md)),
-a panel on a phone, the skip link, the breadcrumb, the theme toggle and the toasts already in place. The
-[Application shell](https://shadleaf.dev/current/components/application-shell.md) page helps you pick one and says what every layout needs.
+| Property                       | Default      |                                                                                                                                                                                  |
+|--------------------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `shadleaf.skin`                | `vega`       | The visual identity, named after the shadcn/ui style it follows; see [Skin](https://shadleaf.dev/current/guides/adjustability.md#4-skin) for the list.                                                       |
+| `shadleaf.assets.variant`      | `standalone` | `embedded` leaves out Tailwind's reset, for applications that compile Tailwind themselves.                                                                                       |
+| `shadleaf.assets.alpine`       | `bundled`    | Where Alpine.js comes from: `bundled`, `csp` or `external`; see [Alpine.js](https://shadleaf.dev/current/guides/alpine.md).                                                                                  |
+| `shadleaf.csp.nonce-attribute` | `cspNonce`   | The request attribute holding a CSP nonce for the theme script.                                                                                                                  |
+| `shadleaf.security.login-url`  | `/login`     | Where the user menu's Sign in link goes; `/oauth2/authorization/<id>` with one OAuth2 login client. See [Spring Security](https://shadleaf.dev/current/guides/spring-security.md#sign-in-and-sign-out-urls). |
+| `shadleaf.security.logout-url` | `/logout`    | Where the user menu's sign-out form posts to; see [Spring Security](https://shadleaf.dev/current/guides/spring-security.md#sign-in-and-sign-out-urls).                                                       |
+| `shadleaf.dev.web-types-file`  |              | Writes IDE metadata for your components; see [IDE completion](https://shadleaf.dev/current/ide-completion.md).                                                                                               |
 
 ---
 
@@ -130,8 +134,9 @@ Most of what you know from shadcn/ui carries over. The component and part names 
 tokens are shadcn's, verbatim: a theme from tweakcn or the shadcn theme generator drops in unchanged. Porting an example
 is mostly a matter of renaming tags.
 
-The skins are shadcn's styles too. `shadleaf.skin=vega` (the default) is shadcn's classic look, and `lyra` its boxy
-and sharp one. shadcn's other styles (Nova, Maia, Mira, Luma) are not available yet.
+The skins are shadcn's styles too, all eight of them: `shadleaf.skin=vega` (the default), `nova`, `maia`, `lyra`,
+`mira`, `luma`, `sera` and `rhea`; [Skin](https://shadleaf.dev/current/guides/adjustability.md#4-skin) lists them. One more is Shadleaf's own:
+`sketch`, which looks hand-drawn, for mockups.
 
 This page lists where Shadleaf differs. Some differences come from running on the server with Thymeleaf instead of in
 React; the others are deliberate, mostly for accessibility.
@@ -562,8 +567,8 @@ takes keyboard focus, when it is a link (`as="a"`).
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
   on any radio button or checkbox. The indeterminate state is the input's own (`indeterminate` prop, or the DOM
   property) and shows a minus; shadcn's checkbox shows its check mark for `checked="indeterminate"`.
-- A disabled checkbox fades as a whole, check mark included. In the lyra skin a disabled native select gets the same
-  grey background as a disabled input (shadcn's lyra only gives it to input and textarea).
+- A disabled checkbox fades as a whole, check mark included. In the lyra and nova skins a disabled native select and
+  select get the same grey background as a disabled input (shadcn's lyra and nova only give it to input and textarea).
 
 #### Field
 
@@ -710,7 +715,7 @@ the line for each setting that matches your `application.properties`, below the 
   `sl/layout :: assets` fragment, and it registers the Alpine plugins it needs.
 ```
 
-See [Getting started](https://shadleaf.dev/current/getting-started.md#already-compiling-tailwind) and the [Alpine.js guide](https://shadleaf.dev/current/guides/alpine.md) for
+See the [Tailwind CSS guide](https://shadleaf.dev/current/guides/tailwind.md) and the [Alpine.js guide](https://shadleaf.dev/current/guides/alpine.md) for
 what each setting does.
 
 Keep it short: it is loaded in every session. Your coding agent will read more documentation as it needs.
@@ -3264,9 +3269,27 @@ shadcn theme generator's output can be pasted in unchanged.
 shadleaf.skin=lyra
 ```
 
-A skin changes geometry, type size and shadow: the same markup and the same tokens, a different look. Each skin follows
-one of shadcn/ui's styles: `vega` (the default) is shadcn's classic look, `lyra` its boxy and sharp one. Token overrides keep
-working under every skin. Use the skin switch on any preview in these docs to compare.
+A skin changes geometry, spacing, type size and shadow: the same markup and the same tokens, a different look. Each skin
+but one follows one of shadcn/ui's styles:
+
+| Skin   | shadcn/ui's style                                                          |
+|--------|----------------------------------------------------------------------------|
+| `vega` | The default: shadcn's classic look, clean and neutral.                     |
+| `lyra` | Boxy and sharp: square corners, small type and a thin focus ring.          |
+| `nova` | Reduced padding and margins: vega one size smaller, with a muted footer.   |
+| `maia` | Rounded, with generous spacing: pill-shaped buttons and fields.            |
+| `mira` | Made for compact interfaces: small type and 28px controls.                 |
+| `luma` | Fluid, luminous and soft: maia's shapes, borderless fields, soft shadows.  |
+| `rhea` | Like luma, but compact: smaller controls, tighter menus and tables.        |
+| `sera` | Editorial and typographic: square, uppercase labels, underlined fields.   |
+
+`sketch` is Shadleaf's own: it makes the components look hand-drawn, as a wireframe in Balsamiq does, for mockups and
+prototypes that should not pass for the finished application. Pencil lines with uneven corners, wavy underlines, hatched
+skeletons and a handwritten font, Balsamiq Sans, which ships with the skin (SIL Open Font License). It sets that font on
+the page's body, so your headings and text are handwritten too; a font of your own on the body wins. The colours still
+come from the tokens: a theme applies, and the pencil is `--foreground`.
+
+Token overrides keep working under every skin. Use the skin switch on any preview in these docs to compare.
 
 ### 5. Own the template
 
@@ -3877,6 +3900,221 @@ The avatar's broken-image fallback is in the same script but is no Alpine compon
 
 The script is on every page that includes the `assets` fragment, whether that page uses an interactive component or
 not. That keeps the setup to one fragment. `bundled` and `csp` add about 20 KB, compressed, and are cached across pages.
+
+---
+
+## Tailwind CSS
+
+> Use Shadleaf without Tailwind, or load the embedded bundle into the Tailwind build your application already has.
+
+Source: https://shadleaf.dev/current/guides/tailwind/
+
+Shadleaf's components are styled with [Tailwind CSS](https://tailwindcss.com) v4, but the jar ships the compiled
+result: your application does not need Tailwind, Node.js or a CSS build to use them.
+
+The default assumes that you don't use Tailwind in your application, and it loads the `standalone` bundle.
+If you do, load the `embedded` bundle.
+
+```properties
+shadleaf.assets.variant=standalone   # the default
+```
+
+| Value        | The `assets` fragment links                                         | Choose it when                             |
+|--------------|---------------------------------------------------------------------|--------------------------------------------|
+| `standalone` | Tailwind's preflight reset, the page base styles and the components | your application does not compile Tailwind |
+| `embedded`   | only the tokens and the components                                  | your application compiles Tailwind itself  |
+
+Be sure to actually add Tailwind to your application if you choose `embedded`,
+otherwise, no utility classes will work.
+
+### standalone
+
+Nothing to do: include the `assets` fragment as shown in [Getting started](https://shadleaf.dev/current/getting-started.md). The bundle
+carries Tailwind's preflight, so headings, lists and paragraphs lose their browser styles until your stylesheet
+gives them some, and it sets the page's background, text colour and border colour from the tokens.
+
+Style your own markup in plain CSS, with the tokens where it should match the components:
+
+```css
+.muted {
+  color: var(--muted-foreground);
+}
+```
+
+### embedded
+
+Your application compiles Tailwind, and two copies of preflight, or two sets of Tailwind's theme variables, would
+fight over the page. The embedded bundle leaves them out:
+
+- no preflight and no page base styles: your build's reset is the only one;
+- no theme variables (`--spacing`, `--text-sm`, `--color-*`, ...): their values are compiled into Shadleaf's rules,
+  so your `@theme` stays your own, and changing it does not change the components;
+- the tokens (`--primary`, `--radius`, ...) on `:root` and `.dark`, as with `standalone`.
+
+```properties
+shadleaf.assets.variant=embedded
+```
+
+Load your stylesheet **after** the `assets` fragment:
+
+```html
+<head>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}"/>
+</head>
+```
+
+Both stylesheets use Tailwind's cascade layers (`theme`, `base`, `components`, `utilities`). Shadleaf's components
+sit in `components`, so a utility class from your build wins over them, and so does any CSS you write outside a layer.
+
+#### Your stylesheet
+
+The components need nothing from your stylesheet: the embedded bundle brings their tokens and rules. Importing
+Tailwind is enough:
+
+```css
+/* src/main/resources/static/css/application.css */
+@import "tailwindcss";
+```
+
+To make Tailwind's utilities follow the tokens from Shadleaf, add the following blocks to your stylesheet.
+
+##### The page background
+
+If you use `standalone`, the page background is automatically set from the tokens.
+If you use `embedded`, Tailwind's reset leaves the page background white, while the components turn dark when the user picks dark mode.
+
+Add this to your stylesheet to make the page background follow the tokens, and the dark mode follow the theme toggle:
+
+```css
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+```
+
+Nearly every application wants this one.
+
+##### `dark:` that follows the theme toggle
+
+By default, Tailwind's `dark:` classes apply when the operating system is in dark mode. Shadleaf's components don't
+look at the operating system: they turn dark when the theme script or [`<sl:theme-toggle>`](https://shadleaf.dev/current/components/theme-toggle.md)
+sets `class="dark"` on `<html>`. The two can disagree. A user whose operating system is in light mode picks dark in
+the toggle: the components turn dark, but `dark:bg-slate-900` in your markup does not apply, so your own markup stays
+light. Make `dark:` follow the class instead:
+
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+You need it only when you write `dark:` classes yourself.
+
+##### Utilities on Shadleaf's tokens
+
+Tailwind has no `primary`, `muted-foreground` or `border` colour of its own. To write `bg-primary`,
+`text-muted-foreground` or `border-border` in your markup, so it matches the components and follows your token
+overrides, map them onto the tokens:
+
+```css
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+```
+
+Secondary text next to a heading, for example, then takes the grey the components use for their descriptions, in
+light and dark mode:
+
+```html
+<h1>Orders</h1>
+<p class="text-sm text-muted-foreground">Updated 5 minutes ago</p>
+```
+
+Tailwind's own palette (`bg-slate-100`) keeps working next to these colours, but it does not follow the tokens: it
+stays the same in dark mode and after a token override.
+
+`inline` makes `bg-primary` compile to `var(--primary)` itself, so a token you override reaches your utilities and
+the components alike. Add `--color-chart-*` and `--color-sidebar-*` the same way when you use them. The token names
+are shadcn/ui's: a shadcn theme from its generator or tweakcn drops in as it is, see
+[Token overrides](https://shadleaf.dev/current/guides/adjustability.md#3-token-overrides).
+
+##### Borders in the components' colour
+
+Tailwind draws a `border` in `currentColor`. The components set their own border colour; to give the borders in your
+markup the same one, as the standalone bundle does:
+
+```css
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}
+```
+
+#### Your templates
+
+Tailwind generates the classes it finds in your files. It detects them on its own, but skips everything in your
+`.gitignore` (`target/` among it). If your build runs from somewhere else than the project root, point it at the
+templates, relative to the stylesheet:
+
+```css
+@source "../../templates";
+```
+
+Shadleaf's own templates need no `@source`: their styles are already in the bundle.
+
+### Utility classes on components
+
+`class` on a component is appended to the component's own class, so with `embedded` a utility class places or sizes
+it:
+
+```html
+<sl:button class="w-full mt-4" type="submit">Save</sl:button>
+<sl:dialog id="edit-member" class="sm:max-w-2xl">...</sl:dialog>
+```
+
+Use them for layout: width, margins, the place in a grid. Not for colours: the skin gives a component a different
+look on hover, on focus, when disabled and in dark mode, and a utility class beats all of those rules at once.
+`class="bg-green-600"` on a button stays the same green on hover, when disabled and in dark mode, whatever the skin.
+
+To recolour a component, override the token it is drawn with instead. The skin then derives every state from it:
+
+```css
+.positive {
+  --primary: oklch(0.55 0.15 150);
+  --primary-foreground: oklch(0.98 0 0);
+}
+```
+
+```html
+<sl:button class="positive" type="submit">Save</sl:button>
+```
+
+The other ways to change a component, from a prop (`variant`, `size`) to your own template, are on
+[the adjustability ladder](https://shadleaf.dev/current/guides/adjustability.md).
 
 ---
 

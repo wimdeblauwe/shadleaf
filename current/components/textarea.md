@@ -38,7 +38,7 @@ As with the [input](https://shadleaf.dev/current/components/input.md), a field w
 
 ## Disabled
 
-As the [input](https://shadleaf.dev/current/components/input.md#disabled): faded, not focusable and not submitted; lyra adds a grey background.
+As the [input](https://shadleaf.dev/current/components/input.md#disabled): faded, not focusable and not submitted; lyra and nova add a grey background.
 
 **Example: Disabled.**
 

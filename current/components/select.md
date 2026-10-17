@@ -186,9 +186,9 @@ both; every other attribute goes to the `<select>`.
 
 ## Disabled
 
-`disabled` on the select, or on a `<sl:field-set>` around it, disables it: it fades with its chevron, and the lyra skin
-also gives it a grey background. `disabled` on an item leaves it in the list, faded; the keyboard and the pointer skip
-it.
+`disabled` on the select, or on a `<sl:field-set>` around it, disables it: it fades with its chevron, and the lyra and
+nova skins also give it a grey background. `disabled` on an item leaves it in the list, faded; the keyboard and the
+pointer skip it.
 
 HTML has no read-only select: `readonly` does nothing on one, and Shadleaf's list box ignores it too. To show a choice
 that cannot be changed, use a read-only [input](https://shadleaf.dev/current/components/input.md#read-only) with the item's text, and a hidden input if the
