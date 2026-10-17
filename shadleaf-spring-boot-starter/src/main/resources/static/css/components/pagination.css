@@ -3,8 +3,9 @@
   ellipsis's size. Summary and size menu are separate, so the application lays out a table's footer itself.
 */
 @layer components {
+  /* Safe: a pagination wider than its container keeps its start in view, and overflows at the end. */
   .pagination {
-    @apply mx-auto flex w-full justify-center;
+    @apply mx-auto flex w-full justify-center-safe;
   }
 
   /* The embedded bundle has no preflight of its own: an application without one still gets a bare list. */
