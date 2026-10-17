@@ -137,13 +137,9 @@ ${resize}
           </div>
         )}
         {skins.length > 1 && (
-          <div class="sl-docs-preview__skins" role="group" aria-label="Skin">
-            {skins.map((skin, i) => (
-              <button type="button" data-skin={skin.name} aria-pressed={i === 0 ? 'true' : 'false'}>
-                {skin.name}
-              </button>
-            ))}
-          </div>
+          <select class="sl-docs-preview__skins" aria-label="Skin">
+            {skins.map((skin, i) => <option value={skin.name} selected={i === 0}>{skin.name}</option>)}
+          </select>
         )}
       </div>}
       {scenario.layout ? (
@@ -209,7 +205,19 @@ ${resize}
     }
   }
 
-  .sl-docs-preview__skins, .sl-docs-preview__widths {
+  /* One select for the skins: a group of buttons would not fit the bar once there are more than a few. */
+  .sl-docs-preview__skins {
+    margin: 0;
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.25rem;
+    background-color: var(--sl-color-bg);
+    color: var(--sl-color-gray-2);
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .sl-docs-preview__widths {
     display: flex;
     gap: 0.25rem;
     margin: 0;
@@ -309,9 +317,10 @@ ${resize}
     const skins: SkinLink[] = JSON.parse(figure.dataset.skins ?? '[]');
     // A figure's own data-skin (the home page's demo) wins over the docs-wide choice.
     const skin = skins.find(s => s.name === (figure.dataset.skin ?? storedSkin())) ?? skins[0];
-    figure.querySelectorAll<HTMLButtonElement>('button[data-skin]').forEach(button => {
-      button.setAttribute('aria-pressed', String(button.dataset.skin === skin?.name));
-    });
+    const select = figure.querySelector<HTMLSelectElement>('select.sl-docs-preview__skins');
+    if (select && skin) {
+      select.value = skin.name;
+    }
     const doc = figure.querySelector('iframe')?.contentDocument;
     const link = doc?.getElementById('shadleaf-skin') as HTMLLinkElement | null;
     if (!doc || !link || !skin) {
@@ -331,15 +340,13 @@ ${resize}
   figures().forEach(figure => {
     figure.querySelector('iframe')?.addEventListener('load', () => apply(figure));
     apply(figure);
-    figure.querySelectorAll<HTMLButtonElement>('button[data-skin]').forEach(button => {
-      button.addEventListener('click', () => {
-        try {
-          localStorage.setItem(SKIN_KEY, button.dataset.skin ?? '');
-        } catch {
-          // the choice then lasts for this page only
-        }
-        figures().forEach(apply);
-      });
+    figure.querySelector<HTMLSelectElement>('select.sl-docs-preview__skins')?.addEventListener('change', event => {
+      try {
+        localStorage.setItem(SKIN_KEY, (event.target as HTMLSelectElement).value);
+      } catch {
+        // the choice then lasts for this page only
+      }
+      figures().forEach(apply);
     });
   });
 

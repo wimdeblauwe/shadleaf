@@ -1,12 +1,13 @@
 ---
 // The home page's demo: a few scenarios, each as its Thymeleaf source (the shaded half) beside what the library
-// rendered from it (the lit half), the two halves of the logo's leaf. The buttons switch scenario.
+// rendered from it (the lit half), the two halves of the logo's leaf. The buttons switch scenario, the select skin.
 import {Code} from '@astrojs/starlight/components';
 import ComponentPreview from './ComponentPreview.astro';
 import Missing from './Missing.astro';
 import {previews} from '../lib/generated';
 
 const skins = previews.skins.map(skin => skin.name);
+const capitalize = (name: string) => name.charAt(0).toUpperCase() + name.slice(1);
 
 const choices = [
   {id: 'card--default', label: 'Card'},
@@ -28,11 +29,9 @@ const choices = [
         ))}
       </div>
       {skins.length > 1 && (
-        <div class="home-demo__choices home-demo__skins" role="group" aria-label="Skin">
-          {skins.map((skin, i) => (
-            <button type="button" data-skin={skin} aria-pressed={i === 0 ? 'true' : 'false'}>{skin}</button>
-          ))}
-        </div>
+        <select class="home-demo__skins" aria-label="Skin">
+          {skins.map((skin, i) => <option value={skin} selected={i === 0}>{capitalize(skin)}</option>)}
+        </select>
       )}
     </div>
     {choices.map((choice, i) => (
@@ -59,8 +58,21 @@ const choices = [
     margin-block-end: 0.75rem;
   }
 
-  .home-demo__skins button {
-    text-transform: capitalize;
+  .home-demo__skins {
+    margin: 0;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    background-color: var(--sl-color-gray-6);
+    color: var(--sl-color-white);
+    font: inherit;
+    font-size: var(--sl-text-sm);
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--sl-color-accent);
+      outline-offset: 2px;
+    }
   }
 
   .home-demo__choices {
@@ -163,15 +175,12 @@ const choices = [
 <script>
   document.querySelectorAll<HTMLElement>('.home-demo').forEach(demo => {
     // The skin applies to the demo's previews only, and is not remembered: the docs pages keep their own choice.
-    const skinButtons = demo.querySelectorAll<HTMLButtonElement>('button[data-skin]');
-    skinButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        skinButtons.forEach(other => other.setAttribute('aria-pressed', String(other === button)));
-        demo.querySelectorAll<HTMLElement>('.sl-docs-preview').forEach(figure => {
-          figure.dataset.skin = button.dataset.skin;
-        });
-        document.dispatchEvent(new Event('sl-docs-preview-skin'));
+    demo.querySelector<HTMLSelectElement>('select.home-demo__skins')?.addEventListener('change', event => {
+      const skin = (event.target as HTMLSelectElement).value;
+      demo.querySelectorAll<HTMLElement>('.sl-docs-preview').forEach(figure => {
+        figure.dataset.skin = skin;
       });
+      document.dispatchEvent(new Event('sl-docs-preview-skin'));
     });
 
     const buttons = demo.querySelectorAll<HTMLButtonElement>('button[data-demo]');
