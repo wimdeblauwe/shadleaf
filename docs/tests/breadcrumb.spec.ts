@@ -162,6 +162,7 @@ const listSizes: Record<string, { font: string, gap: string, ellipsis?: string, 
   maia: {font: '14px', gap: '10px'},
   mira: {font: '12px', gap: '6px', ellipsis: '16px', dots: '14px'},
   luma: {font: '14px', gap: '10px'},
+  rhea: {font: '14px', gap: '10px'},
 };
 for (const skin of skins) {
   test(`sizes follow shadcn: ${skin}`, async ({page}) => {
