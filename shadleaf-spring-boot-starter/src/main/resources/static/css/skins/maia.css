@@ -286,9 +286,10 @@
   }
 
   /*
-    Read-only (input and textarea): the muted background says it cannot be changed. The text keeps its full colour, which keeps it apart from disabled (faded) and legible (read-only is
-    not exempt from contrast rules, as disabled is); the placeholder gets the legible mix on --muted. It still takes
-    focus and its focus ring. An error (aria-invalid) still colours the border and ring; the background stays.
+    Read-only (input and textarea): the muted background says it cannot be changed. The text keeps its full colour,
+    which keeps it apart from disabled (faded) and legible (read-only is not exempt from contrast rules, as disabled
+    is); the placeholder gets the legible mix on --muted. It still takes focus and its focus ring. An error
+    (aria-invalid) still colours the border and ring; the background stays.
   */
 
   /* Input. text-base under md keeps iOS from zooming into a focused input. */

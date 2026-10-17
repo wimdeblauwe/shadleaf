@@ -288,9 +288,10 @@
   }
 
   /*
-    Read-only (input and textarea): the muted background says it cannot be changed. The text keeps its full colour, which keeps it apart from disabled (faded) and legible (read-only is
-    not exempt from contrast rules, as disabled is); the placeholder gets the legible mix on --muted. It still takes
-    focus and its focus ring. An error (aria-invalid) still colours the border and ring; the background stays.
+    Read-only (input and textarea): the muted background says it cannot be changed. The text keeps its full colour,
+    which keeps it apart from disabled (faded) and legible (read-only is not exempt from contrast rules, as disabled
+    is); the placeholder gets the legible mix on --muted. It still takes focus and its focus ring. An error
+    (aria-invalid) still colours the border and ring; the background stays.
   */
 
   /* Input */
@@ -1244,7 +1245,8 @@
   }
 
   .sidebar-menu-badge {
-    @apply end-1 top-1.5 h-5 min-w-5 rounded-[calc(--theme(--radius-sm)-2px)] px-1 text-xs font-medium text-sidebar-foreground;
+    @apply end-1 top-1.5 h-5 min-w-5 rounded-[calc(--theme(--radius-sm)-2px)] px-1 text-xs font-medium
+      text-sidebar-foreground;
   }
 
   .sidebar-menu-button[data-size='sm'] ~ .sidebar-menu-badge {
