@@ -3,6 +3,15 @@
   --sl-content-width: 52rem;
 }
 
+/* The GitHub link in the header: in the text colour, the accent only on hover (Starlight has it the other way round). */
+.social-icons a {
+  color: var(--sl-color-white);
+}
+
+.social-icons a:hover {
+  color: var(--sl-color-text-accent);
+}
+
 /* Brand colours: pine teal on slate. Starlight's dark theme is :root, its light theme :root[data-theme='light']. */
 :root {
   --sl-color-accent-low: #0c2725;

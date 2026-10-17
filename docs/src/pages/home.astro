@@ -43,7 +43,7 @@ const features = [
   },
   {
     icon: icons.swatchBook,
-    term: 'shadcn’s eight styles',
+    term: 'Predefined skins',
     text: 'Every style of shadcn’s is a skin, from Vega’s classic look to boxy Lyra, soft Luma and editorial Sera, plus a hand-drawn Sketch of Shadleaf’s own for mockups. The shadleaf.skin property switches between them; your templates stay the same.',
   },
   {
@@ -101,20 +101,6 @@ const features = [
       <HomeDemo/>
     </section>
 
-    <section class="home-section home-split">
-      <div>
-        <h2>Catch a typo the first time the page renders</h2>
-        <p>
-          Every component declares its props and their legal values. Misspell a variant and the page stops with a
-          message that lists the right ones. An icon-only button without an accessible name stops it too.
-        </p>
-      </div>
-      <div class="home-typo">
-        <Code code={typo} lang="html" wrap/>
-        <pre class="home-typo__error" aria-label="The error"><code>{failure}</code></pre>
-      </div>
-    </section>
-
     <section class="home-section">
       <h2>What comes in the jar</h2>
       <dl class="home-features">
@@ -146,6 +132,20 @@ const features = [
       </div>
     </section>
 
+    <section class="home-section home-split">
+      <div>
+        <h2>Catch a typo the first time the page renders</h2>
+        <p>
+          Every component declares its props and their legal values. Misspell a variant and the page stops with a
+          message that lists the right ones. An icon-only button without an accessible name stops it too.
+        </p>
+      </div>
+      <div class="home-typo">
+        <Code code={typo} lang="html" wrap/>
+        <pre class="home-typo__error" aria-label="The error"><code>{failure}</code></pre>
+      </div>
+    </section>
+
     <section class="home-section home-closing">
       <h2>Ready to build your first page?</h2>
       <p>
@@ -160,9 +160,10 @@ const features = [
 </StarlightPage>
 
 <style is:global>
-  /* The splash template's column is a docs page's; the demo wants room for two halves. */
-  .sl-container:has(.home) {
-    max-width: 76rem;
+  /* The splash template's column is a docs page's; the demo wants room for two halves. Set as the content width, not
+     as the container's max-width, so the header lines the search box up with the column. */
+  :root:has(.home) {
+    --sl-content-width: 76rem;
   }
 
   /* The splash template's title banner, "Shadleaf": the page's h1 and the skip link's target, so hidden only from
@@ -351,7 +352,7 @@ const features = [
 
     & dt {
       font-weight: 600;
-      color: var(--sl-color-white);
+      color: var(--sl-color-accent);
     }
 
     & .home-features__icon {
