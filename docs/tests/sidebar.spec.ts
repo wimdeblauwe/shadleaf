@@ -753,13 +753,13 @@ test.describe('variants', () => {
     expect(await styleOf(sidebar(page))).toMatchObject({borders: [1, 1, 1, 1], borderStyle: 'solid'});
   });
 
-  // The showcase's shell is the preview's, inset, in every skin: vega rounds the card, lyra keeps it square.
+  // The showcase's shell is the preview's, inset, in every skin: most round the card, lyra and sera keep it square.
   for (const skin of skins) {
     test(`showcase, ${skin}: the inset card's corners`, async ({page}) => {
       await page.setViewportSize({width: 1280, height: 720});
       await openShowcase(page, skin, 'light');
       const card = await styleOf(page.locator('.sidebar-inset'));
-      expect(card.radius > 0, `${skin}: ${card.radius}`).toBe(skin !== 'lyra');
+      expect(card.radius > 0, `${skin}: ${card.radius}`).toBe(!['lyra', 'sera'].includes(skin));
       expect(card.shadow).not.toBe('none');
     });
   }
