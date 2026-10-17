@@ -1,0 +1,178 @@
+# Spring Security
+
+> The one matcher the library's assets need, the signed-in user in templates (#slUser), and htmx requests after the session expired.
+
+Source: https://shadleaf.dev/0.11.0-SNAPSHOT/guides/spring-security/
+
+Everything Shadleaf serves lives under `/shadleaf/**`: the stylesheet of each skin and the Alpine.js scripts, each
+with a content hash in its name.
+Permit that path for anonymous visitors, or every page they can see, such as your login page, renders unstyled:
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  return http
+      .authorizeHttpRequests(requests -> requests
+          .requestMatchers("/shadleaf/**").permitAll()
+          .anyRequest().authenticated())
+      .formLogin(login -> login.loginPage("/login").permitAll())
+      .build();
+}
+```
+
+The files are static resources inside the jar, so nothing else is exposed by it: the Vite manifest that maps names to
+hashed files is kept outside the served directory.
+
+To run under a strict Content-Security-Policy as well, see [CSP](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/csp.md).
+
+## The signed-in user
+
+Templates read the signed-in user from `#slUser`, an expression object, so no controller has to add a user to the
+model, and error pages and fragments see it too. The [user menu](https://shadleaf.dev/0.11.0-SNAPSHOT/components/user-menu.md) is built on it.
+
+| Expression | Value |
+| --- | --- |
+| `#slUser.signedIn` | Whether someone is signed in. Remember-me counts; an anonymous visitor does not. |
+| `#slUser.current` | The user (a `ShadleafUser`), or `null` for an anonymous visitor. |
+| `#slUser.current.name` | What to call the user. Never empty. |
+| `#slUser.current.username` | The name the user signs in with (GitHub's `login`, OpenID Connect's `preferred_username`, a `UserDetails` username), or `null`. |
+| `#slUser.current.email` | The email address, or `null`. |
+| `#slUser.current.picture` | The URL of a picture, or `null`. |
+| `#slUser.current.initials` | One or two letters for the avatar: the first and last word of the name ("Ludwig van Beethoven": LB), or from the email. |
+| `#slUser.loginUrl` | Where Sign in goes, for `@{...}`. |
+| `#slUser.logoutUrl` | Where the sign-out form posts to, for `@{...}`. |
+
+```html
+<p th:if="${#slUser.signedIn}">Welcome back, [[${#slUser.current.name}]].</p>
+```
+
+Spring Security is an optional dependency of the starter. Without it `#slUser` is still there, and nobody is signed in.
+
+Signing in with Keycloak or GitHub, and what each sends to the user menu, is in
+[Signing in with OAuth2](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/oauth2.md).
+
+### Where the user comes from
+
+The default `CurrentUserResolver` reads what each kind of sign-in provides:
+
+| Sign-in | Name | Email, picture |
+| --- | --- | --- |
+| OpenID Connect (Keycloak, Google, ...) | `name`, else `given_name` and `family_name`, else `preferred_username`, else the email | `email`, `picture` |
+| OAuth2 (GitHub) | `name`, else `login` | `email` (often missing), `avatar_url` |
+| A JWT (resource server) | as OpenID Connect, from its claims | as OpenID Connect |
+| Form login, HTTP Basic (`UserDetails`) | the username | none |
+| Anything else | `Authentication.getName()` | none |
+
+An application that knows its users better (a display name from its own database, say) declares its own:
+
+```java
+@Bean
+CurrentUserResolver currentUserResolver(MemberRepository members) {
+  return authentication -> members.findByUsername(authentication.getName())
+      .map(member -> ShadleafUser.of(member.getDisplayName(), member.getUsername(), member.getEmail(),
+          member.getPhotoUrl()))
+      .orElse(null);
+}
+```
+
+It is only asked for an authenticated user; returning `null` treats the visitor as anonymous.
+
+When your own `UserDetailsService` already loads the name (a subclass of Spring Security's `User` with a display
+name, say), read it from the principal and leave other sign-ins to the default. Sample-02 does this for its two users:
+
+```java
+@Bean
+CurrentUserResolver currentUserResolver() {
+  CurrentUserResolver fallback = new DefaultCurrentUserResolver();
+  return authentication -> authentication.getPrincipal() instanceof AppUser user
+      ? ShadleafUser.of(user.getDisplayName(), user.getUsername(), user.getEmail(), null)
+      : fallback.resolve(authentication);
+}
+```
+
+Load a new user object on every `loadUserByUsername` call: Spring Security erases the password of the user it signs
+in, so handing out the same object twice breaks the second sign-in.
+
+### Sign-in and sign-out URLs
+
+```properties
+# Where Sign in goes. Default: the authorization endpoint of the one OAuth2 login client
+# (/oauth2/authorization/<id>) when there is exactly one, else /login.
+shadleaf.security.login-url=/login
+# Where Sign out posts to. Default: /logout, Spring Security's.
+shadleaf.security.logout-url=/logout
+```
+
+Sign out is a POST with the CSRF token, which `th:action` adds to the form; see the
+[user menu](https://shadleaf.dev/0.11.0-SNAPSHOT/components/user-menu.md#signing-out).
+
+### Navigation by role
+
+Hide a link a user may not follow with the Thymeleaf extras for Spring Security
+(`thymeleaf-extras-springsecurity6`, which Spring Boot configures when it is on the classpath, also with Spring
+Security 7):
+
+```html
+<sl:sidebar-menu-item sec:authorize="hasRole('ADMIN')">
+  <sl:sidebar-menu-button th:href="@{/admin}">Admin</sl:sidebar-menu-button>
+</sl:sidebar-menu-item>
+```
+
+Hiding the link is no security: protect the URL itself in the security configuration. The
+[Application shell](https://shadleaf.dev/0.11.0-SNAPSHOT/components/application-shell.md#navigation-by-role) page shows both in a layout, and the same check on
+content inside a page.
+
+## htmx after the session expired
+
+When the session has expired, Spring Security answers an htmx request the way it answers a browser, and htmx cannot
+follow that:
+
+- **A GET** (a lazily loaded tab, a table's rows, a dialog fetched into `#modal-root`) is redirected to the sign-in
+  page. The browser's XHR follows the redirect, and htmx swaps the sign-in page into the request's target.
+- **A POST** fails its CSRF check, because the token lived in the session: a 403, which htmx does not swap. Nothing
+  happens on the page.
+- **After signing in** the user is sent to the request Spring Security saved before it asked them to sign in. For an
+  htmx request that is its URL, which may be a fragment endpoint that renders a few table rows as a page.
+
+[htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot) (5.2.0 and later) has an entry point and an
+access denied handler that answer such a request with `HX-Redirect` to the page it was made from:
+
+```java
+@Bean
+SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  return http
+      .authorizeHttpRequests(requests -> requests
+          .requestMatchers("/shadleaf/**", "/webjars/**").permitAll()
+          .anyRequest().authenticated())
+      .formLogin(login -> login.loginPage("/login").permitAll())
+      .exceptionHandling(exceptions -> exceptions
+          .authenticationEntryPoint(new HxRedirectToPageAuthenticationEntryPoint(
+              new LoginUrlAuthenticationEntryPoint("/login")))
+          .accessDeniedHandler(new HxRedirectToPageAccessDeniedHandler()))
+      .build();
+}
+```
+
+- **The page** is the one the user is on (htmx's `HX-Current-URL`), or for a boosted link the page it links to. The
+  browser loads it as a normal navigation, the sign-in page asks the user to sign in, and the page is what they come
+  back to, not the fragment.
+- **A POST** gets the same answer, but only when its CSRF token went with the session. A signed-in user without the
+  required role still gets a plain 403, and so does a request with a wrong token.
+- **Every request that is not an htmx request** goes to the entry point you pass, so it behaves as before. With OAuth2
+  login, that is `new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/<registration id>")`, the same URL as
+  [Sign in](#sign-in-and-sign-out-urls) (see [Signing in with OAuth2](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/oauth2.md#with-htmx)). If you have an access
+  denied handler of your own, pass it to `HxRedirectToPageAccessDeniedHandler`, which hands every other denial to it.
+- **`/webjars/**`** is permitted so the sign-in page can load htmx, if your layout loads it there too.
+
+Form input that was not sent is lost: the session that held the CSRF token is gone, so the POST cannot be replayed.
+An htmx request that needs a session made from a page anyone may see sends the visitor back to that page, still
+signed out; such a page should send them to Sign in itself.
+
+Spring Security's own suggestion, `defaultAuthenticationEntryPointFor(entryPoint, htmxRequestMatcher)`, also works for
+htmx requests, but makes the htmx entry point the default for every request that does not ask for HTML (a `fetch`
+without an `Accept` header, a MockMvc test without `accept(...)`): those then get a 401 instead of the redirect to
+the sign-in page. The htmx-spring-boot README has the details, and how this combines with a sign-in form that is itself
+sent with htmx.
+
+Sample-02 (`samples/shadleaf-sample-02`) has it: `hx-boost` on the body, a tab on its Data page that loads with htmx,
+and a form. Its `SessionExpiryTest` makes these requests without a session.
