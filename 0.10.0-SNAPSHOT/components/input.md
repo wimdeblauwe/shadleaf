@@ -59,9 +59,9 @@ Without `th:field`, write `aria-invalid="true"` yourself.
 
 ## Disabled
 
-A disabled input fades and cannot be focused, as in shadcn; the lyra skin also gives it a grey background. Its value is
-not submitted, and its label fades with it. In Windows' high-contrast mode it turns the system's grey text colour
-instead of fading.
+A disabled input fades and cannot be focused, as in shadcn; the lyra and nova skins also give it a grey background. Its
+value is not submitted, and its label fades with it. In Windows' high-contrast mode it turns the system's grey text
+colour instead of fading.
 
 **Example: Disabled.**
 

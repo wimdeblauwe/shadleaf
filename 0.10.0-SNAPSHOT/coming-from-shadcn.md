@@ -9,8 +9,9 @@ Most of what you know from shadcn/ui carries over. The component and part names 
 tokens are shadcn's, verbatim: a theme from tweakcn or the shadcn theme generator drops in unchanged. Porting an example
 is mostly a matter of renaming tags.
 
-The skins are shadcn's styles too. `shadleaf.skin=vega` (the default) is shadcn's classic look, and `lyra` its boxy
-and sharp one. shadcn's other styles (Nova, Maia, Mira, Luma) are not available yet.
+The skins are shadcn's styles too, all eight of them: `shadleaf.skin=vega` (the default), `nova`, `maia`, `lyra`,
+`mira`, `luma`, `sera` and `rhea`; [Skin](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/adjustability.md#4-skin) lists them. One more is Shadleaf's own:
+`sketch`, which looks hand-drawn, for mockups.
 
 This page lists where Shadleaf differs. Some differences come from running on the server with Thymeleaf instead of in
 React; the others are deliberate, mostly for accessibility.
@@ -441,8 +442,8 @@ takes keyboard focus, when it is a link (`as="a"`).
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
   on any radio button or checkbox. The indeterminate state is the input's own (`indeterminate` prop, or the DOM
   property) and shows a minus; shadcn's checkbox shows its check mark for `checked="indeterminate"`.
-- A disabled checkbox fades as a whole, check mark included. In the lyra skin a disabled native select gets the same
-  grey background as a disabled input (shadcn's lyra only gives it to input and textarea).
+- A disabled checkbox fades as a whole, check mark included. In the lyra and nova skins a disabled native select and
+  select get the same grey background as a disabled input (shadcn's lyra and nova only give it to input and textarea).
 
 ### Field
 

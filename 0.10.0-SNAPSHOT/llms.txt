@@ -103,6 +103,7 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 - [Spring Security](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/spring-security.md): The one matcher the library's assets need, the signed-in user in templates (#slUser), and htmx requests after the session expired.
 - [Signing in with OAuth2](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/oauth2.md): Keycloak (OpenID Connect, signing out at Keycloak too) and GitHub as the way users sign in, and what the user menu shows for each.
 - [Alpine.js](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/alpine.md): Let Shadleaf bring Alpine, use its CSP build, or register with the Alpine your application already loads.
+- [Tailwind CSS](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tailwind.md): Use Shadleaf without Tailwind, or load the embedded bundle into the Tailwind build your application already has.
 - [Forms with htmx](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/htmx.md): Post a Shadleaf form with htmx, get it back with its errors without a page load, and keep it working as a plain POST.
 - [Tables with htmx](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tables-htmx.md): Search as you type, sort and page a server-side table with htmx, act on a row from its menu, load more rows, keep the focus and the back button, and keep it working without JavaScript.
 

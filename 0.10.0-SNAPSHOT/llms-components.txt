@@ -1094,9 +1094,9 @@ Without `th:field`, write `aria-invalid="true"` yourself.
 
 ### Disabled
 
-A disabled input fades and cannot be focused, as in shadcn; the lyra skin also gives it a grey background. Its value is
-not submitted, and its label fades with it. In Windows' high-contrast mode it turns the system's grey text colour
-instead of fading.
+A disabled input fades and cannot be focused, as in shadcn; the lyra and nova skins also give it a grey background. Its
+value is not submitted, and its label fades with it. In Windows' high-contrast mode it turns the system's grey text
+colour instead of fading.
 
 **Example: Disabled.**
 
@@ -1184,7 +1184,7 @@ As with the [input](https://shadleaf.dev/0.10.0-SNAPSHOT/components/input.md), a
 
 ### Disabled
 
-As the [input](https://shadleaf.dev/0.10.0-SNAPSHOT/components/input.md#disabled): faded, not focusable and not submitted; lyra adds a grey background.
+As the [input](https://shadleaf.dev/0.10.0-SNAPSHOT/components/input.md#disabled): faded, not focusable and not submitted; lyra and nova add a grey background.
 
 **Example: Disabled.**
 
@@ -1400,9 +1400,9 @@ both; every other attribute goes to the `<select>`.
 
 ### Disabled
 
-`disabled` on the select, or on a `<sl:field-set>` around it, disables it: it fades with its chevron, and the lyra skin
-also gives it a grey background. `disabled` on an item leaves it in the list, faded; the keyboard and the pointer skip
-it.
+`disabled` on the select, or on a `<sl:field-set>` around it, disables it: it fades with its chevron, and the lyra and
+nova skins also give it a grey background. `disabled` on an item leaves it in the list, faded; the keyboard and the
+pointer skip it.
 
 HTML has no read-only select: `readonly` does nothing on one, and Shadleaf's list box ignores it too. To show a choice
 that cannot be changed, use a read-only [input](https://shadleaf.dev/0.10.0-SNAPSHOT/components/input.md#read-only) with the item's text, and a hidden input if the
@@ -1642,8 +1642,8 @@ As with the [input](https://shadleaf.dev/0.10.0-SNAPSHOT/components/input.md), a
 
 ### Disabled
 
-The select fades with its chevron; the lyra skin also gives it a grey background, as it does a disabled input. HTML has
-no read-only select: `readonly` does nothing on one. To show a choice that cannot be changed, use a read-only
+The select fades with its chevron; the lyra and nova skins also give it a grey background, as they do a disabled input.
+HTML has no read-only select: `readonly` does nothing on one. To show a choice that cannot be changed, use a read-only
 [input](https://shadleaf.dev/0.10.0-SNAPSHOT/components/input.md#read-only) with the option's text, and a hidden input if the value has to be submitted.
 
 **Example: Disabled.**

@@ -5,9 +5,11 @@
 Source: https://shadleaf.dev/0.10.0-SNAPSHOT/getting-started/
 
 Shadleaf needs Java 17, Spring Boot 4 and Thymeleaf. The jar ships compiled CSS and JavaScript, so a plain Maven
-build is enough; if you already compile Tailwind, see [Already compiling Tailwind?](#already-compiling-tailwind).
+build is enough to get started.
 
 ## Add the dependency
+
+Add the dependency to your `pom.xml` of your Spring Boot with Thymeleaf application:
 
 ```xml
 <dependency>
@@ -16,6 +18,13 @@ build is enough; if you already compile Tailwind, see [Already compiling Tailwin
   <version>0.10.0-SNAPSHOT</version>
 </dependency>
 ```
+
+> **Note: Don't have an application yet?**
+>
+> You can generate an application from [Spring Initializr](https://start.spring.io/) with the Spring Web & Thymeleaf dependencies.
+>
+> Alternatively, use [ttcli](https://github.com/wimdeblauwe/ttcli) to generate an application.
+> It allows to have a very nice live-reload setup for quick development.
 
 ## Include the stylesheet and the theme script
 
@@ -30,15 +39,20 @@ In the `<head>` of your layout:
 </head>
 ```
 
-`assets` links the stylesheet of the configured skin and loads the script with Alpine.js, which the interactive
-components use; see [Alpine.js](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/alpine.md) if your application loads Alpine itself. `theme-script` is a tiny inline script that sets `class="dark"`
-on `<html>` before the first paint: `localStorage['shadleaf-theme']` set to `light` or `dark` wins, anything else follows
-the operating system. [`<sl:theme-toggle>`](https://shadleaf.dev/0.10.0-SNAPSHOT/components/theme-toggle.md) lets the user choose. Behind a
-Content-Security-Policy, see [CSP](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/csp.md).
+The `theme-script` reads the user's preference from `localStorage` and sets the `class="dark"` on `<html>` before the first paint.
+Place the [`<sl:theme-toggle>`](https://shadleaf.dev/0.10.0-SNAPSHOT/components/theme-toggle.md) on your page to let the user choose between light and dark mode.
+
+The `assets` block renders the CSS and JS links.
+By default, Alpine.js is loaded and you can use it in your own pages.
+See [Alpine.js](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/alpine.md) if your application loads Alpine itself.
+
+If you want to use Tailwind CSS in your own pages, see [Tailwind CSS](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/tailwind.md) for how to set it up.
+
+If you have a Content-Security-Policy, see [CSP](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/csp.md) for more information.
 
 ## Use the components
 
-Declare the namespace, then use the tags:
+Add a component to your Thymeleaf template:
 
 ```html
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
@@ -47,30 +61,17 @@ Declare the namespace, then use the tags:
 <sl:button type="submit">Save</sl:button>
 ```
 
-> **Note: type="button" is the default**
->
-> `<sl:button>` renders `type="button"`, unlike HTML's `<button>`, so a button inside a form never submits it by
-> accident. Write `type="submit"` on the button that should.
+See the [Components](https://shadleaf.dev/0.10.0-SNAPSHOT/components.md) section for all available components and their attributes.
+There are also [Layouts](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts.md) with whole page layouts to copy.
 
 ## Configuration
 
-| Property | Default | |
-| --- | --- | --- |
-| `shadleaf.skin` | `vega` | The visual identity, named after the shadcn/ui style it follows: `vega` or `lyra`. |
-| `shadleaf.assets.variant` | `standalone` | `embedded` leaves out Tailwind's reset, for applications that compile Tailwind themselves. |
-| `shadleaf.assets.alpine` | `bundled` | Where Alpine.js comes from: `bundled`, `csp` or `external`; see [Alpine.js](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/alpine.md). |
-| `shadleaf.csp.nonce-attribute` | `cspNonce` | The request attribute holding a CSP nonce for the theme script. |
-| `shadleaf.dev.web-types-file` | | Writes IDE metadata for your components; see [IDE completion](https://shadleaf.dev/0.10.0-SNAPSHOT/ide-completion.md). |
-
-## Already compiling Tailwind?
-
-Load the `embedded` bundle (`shadleaf.assets.variant=embedded`). It carries no preflight and no theme variables, so
-your own Tailwind build keeps its reset, its headings and its `@theme`. Utility classes such as `w-full mt-4` on a
-component come from your build: the library's bundles define none.
-
-## A layout for every page
-
-The Layouts section has whole layouts to copy, with the navigation in a sidebar
-([Collapses to icons](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/collapses-to-icons.md)) or in a header ([Navigation in the header](https://shadleaf.dev/0.10.0-SNAPSHOT/layouts/header.md)),
-a panel on a phone, the skip link, the breadcrumb, the theme toggle and the toasts already in place. The
-[Application shell](https://shadleaf.dev/0.10.0-SNAPSHOT/components/application-shell.md) page helps you pick one and says what every layout needs.
+| Property                       | Default      |                                                                                                                                                                                  |
+|--------------------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `shadleaf.skin`                | `vega`       | The visual identity, named after the shadcn/ui style it follows; see [Skin](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/adjustability.md#4-skin) for the list.                                                       |
+| `shadleaf.assets.variant`      | `standalone` | `embedded` leaves out Tailwind's reset, for applications that compile Tailwind themselves.                                                                                       |
+| `shadleaf.assets.alpine`       | `bundled`    | Where Alpine.js comes from: `bundled`, `csp` or `external`; see [Alpine.js](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/alpine.md).                                                                                  |
+| `shadleaf.csp.nonce-attribute` | `cspNonce`   | The request attribute holding a CSP nonce for the theme script.                                                                                                                  |
+| `shadleaf.security.login-url`  | `/login`     | Where the user menu's Sign in link goes; `/oauth2/authorization/<id>` with one OAuth2 login client. See [Spring Security](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/spring-security.md#sign-in-and-sign-out-urls). |
+| `shadleaf.security.logout-url` | `/logout`    | Where the user menu's sign-out form posts to; see [Spring Security](https://shadleaf.dev/0.10.0-SNAPSHOT/guides/spring-security.md#sign-in-and-sign-out-urls).                                                       |
+| `shadleaf.dev.web-types-file`  |              | Writes IDE metadata for your components; see [IDE completion](https://shadleaf.dev/0.10.0-SNAPSHOT/ide-completion.md).                                                                                               |
