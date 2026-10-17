@@ -35,17 +35,18 @@ the starter to your application.
 
 ## Compatibility
 
-| Shadleaf                                                            | Spring Boot | Minimum Java version | Docs                                                                 |
-|---------------------------------------------------------------------|-------------|----------------------|----------------------------------------------------------------------|
-| [0.9.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.9.0) | 4.1.x       | 17                   | [Documentation 0.9.0](https://shadleaf.dev/0.9.0/) |
-| [0.8.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.8.0) | 4.1.x       | 17                   | [Documentation 0.8.0](https://shadleaf.dev/0.8.0/) |
-| [0.7.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.7.0) | 4.1.x       | 17                   | [Documentation 0.7.0](https://shadleaf.dev/0.7.0/) |
-| [0.6.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.6.0) | 4.1.x       | 17                   | [Documentation 0.6.0](https://shadleaf.dev/0.6.0/) |
-| [0.5.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.5.0) | 4.1.x       | 17                   | [Documentation 0.5.0](https://shadleaf.dev/0.5.0/) |
-| [0.4.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.4.0) | 4.1.x       | 17                   | [Documentation 0.4.0](https://shadleaf.dev/0.4.0/) |
-| [0.3.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.3.0) | 4.1.x       | 17                   | [Documentation 0.3.0](https://shadleaf.dev/0.3.0/) |
-| [0.2.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.2.0) | 4.1.x       | 17                   | [Documentation 0.2.0](https://shadleaf.dev/0.2.0/) |
-| [0.1.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.1.0) | 4.1.x       | 17                   | [Documentation 0.1.0](https://shadleaf.dev/0.1.0/) |
+| Shadleaf                                                              | Spring Boot | Minimum Java version | Docs                                                 |
+|-----------------------------------------------------------------------|-------------|----------------------|------------------------------------------------------|
+| [0.10.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.10.0) | 4.1.x       | 17                   | [Documentation 0.10.0](https://shadleaf.dev/0.10.0/) |
+| [0.9.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.9.0)   | 4.1.x       | 17                   | [Documentation 0.9.0](https://shadleaf.dev/0.9.0/)   |
+| [0.8.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.8.0)   | 4.1.x       | 17                   | [Documentation 0.8.0](https://shadleaf.dev/0.8.0/)   |
+| [0.7.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.7.0)   | 4.1.x       | 17                   | [Documentation 0.7.0](https://shadleaf.dev/0.7.0/)   |
+| [0.6.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.6.0)   | 4.1.x       | 17                   | [Documentation 0.6.0](https://shadleaf.dev/0.6.0/)   |
+| [0.5.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.5.0)   | 4.1.x       | 17                   | [Documentation 0.5.0](https://shadleaf.dev/0.5.0/)   |
+| [0.4.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.4.0)   | 4.1.x       | 17                   | [Documentation 0.4.0](https://shadleaf.dev/0.4.0/)   |
+| [0.3.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.3.0)   | 4.1.x       | 17                   | [Documentation 0.3.0](https://shadleaf.dev/0.3.0/)   |
+| [0.2.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.2.0)   | 4.1.x       | 17                   | [Documentation 0.2.0](https://shadleaf.dev/0.2.0/)   |
+| [0.1.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.1.0)   | 4.1.x       | 17                   | [Documentation 0.1.0](https://shadleaf.dev/0.1.0/)   |
 
 ## Building
 
