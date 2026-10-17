@@ -159,6 +159,7 @@ const listSizes: Record<string, { font: string, gap: string }> = {
   vega: {font: '14px', gap: '10px'},
   lyra: {font: '12px', gap: '6px'},
   nova: {font: '14px', gap: '6px'},
+  maia: {font: '14px', gap: '10px'},
 };
 for (const skin of skins) {
   test(`sizes follow shadcn: ${skin}`, async ({page}) => {
