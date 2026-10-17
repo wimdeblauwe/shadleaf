@@ -21,7 +21,7 @@ const layouts = (previews.scenarios as Layout[]).filter(scenario => scenario.lay
  * header, where the trigger is hidden), the current page its YAML renders, and whether it has a breadcrumb.
  */
 type Expected = {
-  side: 'start' | 'end', floating: boolean, collapse: 'offcanvas' | 'icon' | 'header', current: string,
+  side: 'start' | 'end', floating: boolean, collapse: 'offcanvas' | 'icon' | 'header' | 'none', current: string,
   breadcrumb: boolean,
 };
 const DOCS = {floating: false, collapse: 'offcanvas', current: 'Data Fetching', breadcrumb: true} as const;
@@ -35,6 +35,7 @@ const expected: Record<string, Expected> = {
   'layout--inset-secondary-navigation': {side: 'start', floating: false, collapse: 'offcanvas', current: 'History', breadcrumb: true},
   'layout--collapses-to-icons': {side: 'start', floating: false, collapse: 'icon', current: 'History', breadcrumb: true},
   'layout--header': {side: 'start', floating: false, collapse: 'header', current: 'Forms', breadcrumb: false},
+  'layout--top-bar': {side: 'start', floating: false, collapse: 'none', current: 'Users', breadcrumb: false},
 };
 
 const [DESKTOP, PHONE] = widths.map(width => width.viewport);
@@ -101,6 +102,11 @@ for (const layout of layouts) {
       } else {
         expect(right).toBe(DESKTOP.width - margin);
       }
+      if (collapse === 'none') {
+        // Always beside the page: nothing to collapse, so no trigger on a desktop.
+        await expect(trigger(page)).toBeHidden();
+        return;
+      }
 
       if (collapse === 'icon') {
         await expect(sidebar(page).locator('#nav-projects')).toBeVisible();
@@ -141,7 +147,7 @@ for (const layout of layouts) {
     });
 
     test('the trigger\'s icon shows the panel on the sidebar\'s side, left to right and right to left', async ({page}) => {
-      test.skip(collapse === 'header', 'the header\'s menu button has an icon of its own');
+      test.skip(collapse === 'header' || collapse === 'none', 'the menu button has an icon of its own');
       await page.setViewportSize(DESKTOP);
       const icon = () => page.locator('.sidebar-trigger-icon')
           .evaluate(element => getComputedStyle(element).scale.startsWith('-') ? 'turned' : 'as drawn');

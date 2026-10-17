@@ -1,0 +1,44 @@
+---
+title: Sidebar and top bar
+description: A sidebar that is always there on a desktop, with the pages, the user's teams and Settings, and a bar across the top with a search field, the notifications and the signed-in user's menu.
+sidebar:
+  order: 9
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import LayoutCode from '../../../components/LayoutCode.astro';
+
+A sidebar for an application that keeps its navigation in view: the pages with their icons, a "Your teams" group with
+each team's initial where a page has its icon, and Settings at the bottom (`<sl:sidebar-footer>`). It never collapses
+on a desktop (`collapsible="none"`), so there is no trigger there. Across the top of the page, a
+[site header](../../components/site-header/) that stays in view while the page scrolls: a search field that takes the
+free room, a notifications button and the [user menu](../../components/user-menu/). On a phone the menu button at the
+start of the bar opens the sidebar as a panel. Switch the preview to Phone to see it.
+
+<ComponentPreview id="layout--top-bar" />
+
+## The layout
+
+The whole layout file. It has what [every layout needs](../../components/application-shell/#what-every-layout-needs).
+`#slNav.current` marks the current page from the request.
+
+<LayoutCode id="layout--top-bar" part="template" />
+
+The search field is a plain `GET` form; Shadleaf has no search of its own. The notifications button is a link to a
+page here; give it a [badge](../../components/badge/) or open a [popover](../../components/popover/) from it as the
+application needs. The teams are links; an application lists its own with `th:each` and takes the initial with
+`${#strings.substring(team.name, 0, 1)}`.
+
+## A page
+
+A page passes its title and its content:
+
+<LayoutCode id="layout--top-bar" part="page" />
+
+## The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the teams' initials, the bar (its height, the
+border below it and staying in view), the search field without a border until it has focus, and the page's padding.
+
+<LayoutCode id="layout--top-bar" part="css" />
