@@ -153,8 +153,13 @@ test('forced colours: a focused link and the skip link get an outline', async ({
   expect(await outline()).toBe('solid 2px');
 });
 
-// shadcn's sizes: vega text-sm with gap-1.5 (gap-2.5 from sm), lyra text-xs with gap-1.5; both a 14 px chevron and the
-// ellipsis a 20 px box around a 16 px icon. On the showcase, where both skins are.
+// shadcn's sizes: vega text-sm with gap-1.5 (gap-2.5 from sm), the others without the larger gap; every skin a 14 px
+// chevron and the ellipsis a 20 px box around a 16 px icon. On the showcase, where all skins are.
+const listSizes: Record<string, { font: string, gap: string }> = {
+  vega: {font: '14px', gap: '10px'},
+  lyra: {font: '12px', gap: '6px'},
+  nova: {font: '14px', gap: '6px'},
+};
 for (const skin of skins) {
   test(`sizes follow shadcn: ${skin}`, async ({page}) => {
     await openShowcase(page, skin, 'light');
@@ -169,8 +174,6 @@ for (const skin of skins) {
         dots: px(list.querySelector('.breadcrumb-ellipsis > svg')!, 'width'),
       };
     });
-    expect(sizes).toEqual(skin === 'lyra'
-        ? {font: '12px', gap: '6px', chevron: '14px', ellipsis: '20px', dots: '16px'}
-        : {font: '14px', gap: '10px', chevron: '14px', ellipsis: '20px', dots: '16px'});
+    expect(sizes).toEqual({...listSizes[skin], chevron: '14px', ellipsis: '20px', dots: '16px'});
   });
 }
