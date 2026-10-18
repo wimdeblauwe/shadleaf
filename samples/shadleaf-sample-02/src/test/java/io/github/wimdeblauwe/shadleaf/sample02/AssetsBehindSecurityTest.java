@@ -5,10 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.github.wimdeblauwe.shadleaf.assets.AlpineVariant;
-import io.github.wimdeblauwe.shadleaf.assets.AssetVariant;
-import io.github.wimdeblauwe.shadleaf.assets.ShadleafAssets;
-import io.github.wimdeblauwe.shadleaf.assets.ViteManifestParser;
+import io.github.wimdeblauwe.shadleaf.assets.*;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
@@ -42,12 +40,12 @@ class AssetsBehindSecurityTest {
 
   @ParameterizedTest(name = "{0} {1}")
   @CsvSource({
-      "vega,    STANDALONE",
-      "vega,    EMBEDDED",
-      "lyra,    STANDALONE",
-      "lyra,    EMBEDDED"
+      "VEGA,    STANDALONE",
+      "VEGA,    EMBEDDED",
+      "LYRA,    STANDALONE",
+      "LYRA,    EMBEDDED"
   })
-  void everyBundleIsServedAnonymously(String skin, AssetVariant variant) throws Exception {
+  void everyBundleIsServedAnonymously(Skin skin, AssetVariant variant) throws Exception {
     String cssUrl = new ShadleafAssets(skin, variant, AlpineVariant.BUNDLED, null, manifestParser).getCssUrl();
 
     assertThat(cssUrl).startsWith("/shadleaf/");
@@ -60,7 +58,7 @@ class AssetsBehindSecurityTest {
   @ParameterizedTest
   @EnumSource(AlpineVariant.class)
   void everyScriptAndTheChunksItImportsAreServedAnonymously(AlpineVariant alpine) throws Exception {
-    String jsUrl = new ShadleafAssets("vega", AssetVariant.STANDALONE, alpine, null, manifestParser).getJsUrl();
+    String jsUrl = new ShadleafAssets(Skin.VEGA, AssetVariant.STANDALONE, alpine, null, manifestParser).getJsUrl();
 
     assertThat(jsUrl).startsWith("/shadleaf/");
     String script = mockMvc.perform(get(jsUrl))
@@ -81,7 +79,7 @@ class AssetsBehindSecurityTest {
         .andReturn().getResponse().getContentAsString();
 
     String href = Jsoup.parse(html).head().selectFirst("link[href^=/shadleaf/]").attr("href");
-    assertThat(href).isEqualTo(new ShadleafAssets("vega", AssetVariant.STANDALONE, AlpineVariant.CSP, null,
+    assertThat(href).isEqualTo(new ShadleafAssets(Skin.VEGA, AssetVariant.STANDALONE, AlpineVariant.CSP, null,
         manifestParser).getCssUrl());
     mockMvc.perform(get(href)).andExpect(status().isOk());
   }
@@ -93,7 +91,7 @@ class AssetsBehindSecurityTest {
         .andReturn().getResponse().getContentAsString();
 
     String src = Jsoup.parse(html).head().selectFirst("script[type=module][src^=/shadleaf/]").attr("src");
-    assertThat(src).isEqualTo(new ShadleafAssets("vega", AssetVariant.STANDALONE, AlpineVariant.CSP, null,
+    assertThat(src).isEqualTo(new ShadleafAssets(Skin.VEGA, AssetVariant.STANDALONE, AlpineVariant.CSP, null,
         manifestParser).getJsUrl());
   }
 
