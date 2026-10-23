@@ -1,0 +1,83 @@
+# Scenarios for the date picker's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# Ids are unique across the showcase: th:field gives the input the field's name as its id.
+component: date-picker
+scenarios:
+  - id: default
+    title: Date picker
+    description: A date in a field. The button shows "Pick a date" until a date is chosen; a pick closes the popover.
+    source: |-
+      <sl:field th:field="*{pickupDate}">
+        <sl:field-label>Pickup date</sl:field-label>
+        <sl:date-picker/>
+      </sl:field>
+    form:
+      values: {pickupDate: ''}
+
+  - id: chosen
+    title: With a date
+    description: The server formats the bound date in the page's locale; the browser formats it the same way after a pick.
+    source: |-
+      <sl:field th:field="*{appointmentDate}">
+        <sl:field-label>Appointment</sl:field-label>
+        <sl:date-picker/>
+      </sl:field>
+    form:
+      values: {appointmentDate: '2026-10-23'}
+
+  - id: range
+    title: Range
+    description: Two date inputs, the start and the end, make a range; the popover closes after the second pick.
+    source: |-
+      <sl:date-picker aria-label="Trip" format="medium" number-of-months="2">
+        <sl:input type="date" th:field="*{tripStart}" aria-label="Departure"/>
+        <sl:input type="date" th:field="*{tripEnd}" aria-label="Return"/>
+      </sl:date-picker>
+    form:
+      values: {tripStart: '2026-10-12', tripEnd: '2026-10-21'}
+
+  - id: date-of-birth
+    title: Date of birth
+    description: The calendar's props pass through, such as caption-layout="dropdown" for a date far from today.
+    source: |-
+      <sl:field th:field="*{dateOfBirth}">
+        <sl:field-label>Date of birth</sl:field-label>
+        <sl:date-picker format="medium" placeholder="Select date" caption-layout="dropdown" start-month="1926-01"
+                        end-month="2026-12" max="2026-10-23"/>
+      </sl:field>
+    form:
+      values: {dateOfBirth: ''}
+
+  - id: format
+    title: Format
+    description: format is Intl's dateStyle (Java's FormatStyle on the server); long is the default.
+    source: |-
+      <sl:field-group>
+        <sl:field th:field="*{reminderShort}">
+          <sl:field-label>Short</sl:field-label>
+          <sl:date-picker format="short"/>
+        </sl:field>
+        <sl:field th:field="*{reminderFull}">
+          <sl:field-label>Full</sl:field-label>
+          <sl:date-picker format="full"/>
+        </sl:field>
+      </sl:field-group>
+    form:
+      values: {reminderShort: '2026-10-23', reminderFull: '2026-10-23'}
+
+  - id: invalid
+    title: With errors
+    description: The field's error marks the button aria-invalid and describes it. A required empty date opens the popover on submit.
+    source: |-
+      <sl:field th:field="*{returnDate}">
+        <sl:field-label>Return date</sl:field-label>
+        <sl:date-picker required default-month="2026-10"/>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {returnDate: ''}
+      errors: {returnDate: must not be empty}
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:date-picker name="archivedOn" aria-label="Archived on" value="2026-10-23" disabled/>

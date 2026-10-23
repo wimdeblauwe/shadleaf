@@ -11,8 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.github.wimdeblauwe.shadleaf.toast.Toast;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Locale;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -53,6 +56,10 @@ class FormPageTest {
     Element callbackDate = page.getElementById("callbackDate");
     assertThat(callbackDate.attr("type")).isEqualTo("date");
     assertThat(callbackDate.parent().attr("x-data")).as("a sl:calendar draws over it").isEqualTo("slCalendar");
+    Element datePicker = callbackDate.closest(".date-picker");
+    assertThat(datePicker).as("in a sl:date-picker's popover").isNotNull();
+    assertThat(datePicker.selectFirst(".date-picker-trigger").attr("data-empty")).isEqualTo("true");
+    assertThat(datePicker.selectFirst(".date-picker-value").text()).isEqualTo("Pick a date");
     assertThat(callbackDate.attr("min")).isEqualTo(LocalDate.now().toString());
     assertThat(callbackDate.parent().attr("data-disabled-dates")).isEqualTo("sat,sun");
     assertThat(callbackDate.attr("aria-describedby")).isEqualTo("callbackDate-description");
@@ -107,6 +114,8 @@ class FormPageTest {
     assertThat(name.hasAttr("aria-invalid")).isFalse();
     assertThat(page.getElementById("callbackDate").val()).isEqualTo(nextWeekday().toString());
     assertThat(page.getElementById("callbackDate").hasAttr("aria-invalid")).isFalse();
+    assertThat(page.selectFirst(".date-picker-value").text()).as("the button shows the date, formatted for the locale")
+        .isEqualTo(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withLocale(Locale.ENGLISH).format(nextWeekday()));
 
     for (String id : new String[] {"email", "topic", "message"}) {
       Element control = page.getElementById(id);

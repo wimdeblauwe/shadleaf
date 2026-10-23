@@ -501,6 +501,24 @@
     @apply opacity-50 forced-colors:text-[GrayText] forced-colors:opacity-100;
   }
 
+  /*
+    Date picker, as shadcn's example: the outline button in the body's weight, its text muted while no date is chosen
+    (text-muted-legible: on the outline button's tinted background shadcn's text-muted-foreground is under 4.5:1; the
+    foreground, as for any outline button, on the hover and open backgrounds); the popover fits the calendar, which
+    brings its own padding.
+  */
+  .button.date-picker-trigger {
+    @apply font-normal;
+  }
+
+  .button.date-picker-trigger[data-empty] {
+    @apply text-muted-legible hover:text-foreground aria-expanded:text-foreground;
+  }
+
+  .popover-content.date-picker-content {
+    @apply w-auto p-0;
+  }
+
   /* Checkbox */
   .checkbox {
     @apply size-4 rounded-[6px] border border-input bg-transparent

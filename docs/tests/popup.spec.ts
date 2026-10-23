@@ -87,7 +87,9 @@ for (const {skin, theme} of combinations) {
   test(`every popover works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
     await page.waitForFunction(() => 'Alpine' in window);
-    const ids = await page.locator('.showcase .popover-content').evaluateAll(popovers => popovers.map(popover => popover.id));
+    // A date picker's popover opens on its day, its last stop, rather than its first: date-picker.spec.ts checks it.
+    const ids = await page.locator('.showcase .popover-content:not(.date-picker-content)')
+        .evaluateAll(popovers => popovers.map(popover => popover.id));
     expect(ids.length, 'the showcase has popovers').toBeGreaterThan(0);
 
     const failures: string[] = [];

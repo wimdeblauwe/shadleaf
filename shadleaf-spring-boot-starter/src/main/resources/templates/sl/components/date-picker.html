@@ -1,0 +1,61 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A button showing the chosen date that opens a <code>sl:calendar</code> in a popover: shadcn/ui's
+      date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs,
+      so <code>th:field</code> binds it and the form submits ISO dates. Every attribute that is not a prop goes to the
+      <code>sl:calendar</code> inside, except <code>class</code>, which stays on the date picker: the calendar's props
+      (<code>caption-layout</code>, <code>number-of-months</code>, <code>disabled-dates</code>, ...) and, for a single
+      date, the attributes of its input (<code>th:field</code>, <code>name</code>, <code>required</code>,
+      <code>min</code>, <code>max</code>). In a <code>sl:field</code>, the input takes the field's
+      <code>th:field</code>, id and <code>aria-describedby</code>, and the button is named by the field's label. For a
+      range, give it two <code>sl:input type="date"</code>s as content, the start and the end, and an
+      <code>aria-label</code>. A pick closes the popover; for a range the second pick does. Needs JavaScript
+      (<code>slDatePicker</code>).</sl:description>
+    <sl:prop name="placeholder">The button's text while no date is chosen. By default "Pick a date".</sl:prop>
+    <sl:prop name="format" default="long" values="short medium long full">How the button shows the date, in the page's
+      locale: as <code>Intl.DateTimeFormat</code>'s <code>dateStyle</code> and Java's <code>FormatStyle</code>
+      (<code>10/23/26</code>, <code>Oct 23, 2026</code>, <code>October 23, 2026</code>, <code>Friday, October 23,
+      2026</code>).</sl:prop>
+    <sl:prop name="popover-id">The popover's id, which the button points at with <code>popovertarget</code>. By default
+      a generated one (<code>sl-date-picker-</code> and eight random characters).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The server formats the date (#slCalendar.format) for the first paint, from the values the inputs will get
+  (#slFields.values), which it reads before they render: a th:field's, th:value's or value's. slDatePicker formats it
+  again with Intl, and after every pick. data-date-style, not data-format: it is read by slDatePicker, not styled.
+  The button is a sl:button, not a sl:popover-trigger, for its icon-start slot. The attributes go to the calendar,
+  which binds its own input to the field (or keeps a range's inputs): a #slFields.control call here would take the
+  field's id away from it. */-->
+<div th:fragment="date-picker"
+     th:with="slPopoverId=${props['popover-id'] ?: 'sl-date-picker-' + #strings.randomAlphanumeric(8).toLowerCase()},
+              slDateValues=${#slFields.values(attrs, slField, slots)},
+              slDateFrom=${#slCalendar.format(slDateValues.size() > 0 ? slDateValues[0] : null, props.format)},
+              slDateTo=${#slCalendar.format(slDateValues.size() > 1 ? slDateValues[1] : null, props.format)},
+              slDateText=${slDateFrom == null ? null
+                  : (slDateTo == null ? slDateFrom : #messages.msg('sl.date-picker.range', slDateFrom, slDateTo))},
+              slDatePlaceholder=${props.placeholder ?: #messages.msg('sl.date-picker.placeholder')},
+              slDateDisabled=${!slots.hasDefault() and attrs.has('disabled')}"
+     class="date-picker"
+     x-data="slDatePicker"
+     th:attr="data-date-style=${props.unlessDefault('format')},
+              data-placeholder=${slDatePlaceholder},
+              data-range-format=${#messages.msg('sl.date-picker.range', '{0}', '{1}')}"
+     sl:attrs="${attrs.only('class', 'classappend')}">
+  <sl:button variant="outline"
+             class="popover-trigger date-picker-trigger"
+             th:popovertarget="${slPopoverId}"
+             aria-haspopup="dialog"
+             th:disabled="${slDateDisabled}"
+             th:data-empty="${slDateText == null ? 'true' : null}"><sl:slot name="icon-start"><sl:icon
+      name="calendar"/></sl:slot><span class="date-picker-value"
+      th:text="${slDateText ?: slDatePlaceholder}"></span></sl:button>
+  <sl:popover-content align="start"
+                      class="date-picker-content"
+                      th:aria-label="#{sl.date-picker.dialog}"><sl:calendar
+      sl:attrs="${attrs.without('class', 'classappend')}"><sl:slot/></sl:calendar></sl:popover-content>
+</div>
+</body>
+</html>
