@@ -55,12 +55,29 @@ export const componentScenarios = previews.scenarios.filter(scenario => scenario
  */
 export async function keepComponentOnly(page: Page) {
   if (component) {
-    await page.locator('[data-scenario]').evaluateAll((stages, selector) => {
-      for (const stage of stages.filter(stage => !stage.matches(selector))) {
-        stage.remove();
-      }
-    }, componentScenarios.join(', '));
+    await keepScenarios(page, componentScenarios);
   }
+}
+
+/** Takes every scenario but the given ones (selectors) off the opened showcase. */
+export async function keepScenarios(page: Page, scenarios: string[]) {
+  await page.locator('[data-scenario]').evaluateAll((stages, selector) => {
+    for (const stage of stages.filter(stage => !stage.matches(selector))) {
+      stage.remove();
+    }
+  }, scenarios.join(', '));
+}
+
+/**
+ * The components a showcase page shows (only SHADLEAF_TEST_COMPONENT's with it), each with a selector per scenario: for
+ * checks too slow to walk the whole page in one test.
+ */
+export function showcaseComponents(showcase: (typeof showcasePages)[number]): {name: string, scenarios: string[]}[] {
+  const shown = previews.scenarios.filter(scenario => showcase.shows(scenario) && covers(scenario.component));
+  return [...new Set(shown.map(scenario => scenario.component))].map(name => ({
+    name,
+    scenarios: shown.filter(scenario => scenario.component === name).map(scenario => `[data-scenario="${scenario.id}"]`),
+  }));
 }
 
 /** Every skin in both themes: the combinations the showcase is checked in. */
