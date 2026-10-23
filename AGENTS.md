@@ -106,7 +106,8 @@ there instead of fetching from the web.
   their field binding, id, `aria-describedby` and `aria-invalid` from `#slFields` (see `field.html` and
   `input.html`); new form controls follow the same pattern.
 - **Expression objects** (dialect, so they work without Spring beans): `#slIcons`, `#slFields`, `#slPaging`, `#slNav`,
-  `#slUser`, `#slSidebar`. Templates cannot use `@bean` or `#ctx` inside `th:attr`/`th:src`; read them with `th:with`.
+  `#slUser`, `#slSidebar`, `#slCalendar`. Templates cannot use `@bean` or `#ctx` inside `th:attr`/`th:src`; read them
+  with `th:with`.
 - **Optional dependencies** (Spring Data, Spring Security, OAuth2 client): a single class touches each, guarded by
   a `PRESENT` check, and the starter must work without them (`WithoutSpringSecurityTest` runs in its own surefire
   execution with those jars removed).
@@ -138,7 +139,9 @@ there instead of fetching from the web.
 ### CSS
 
 - `components/<name>.css` holds structure, `skins/<skin>.css` the identity (colours, radius, sizes, focus ring),
-  for **both** skins. A new file in `css/components/` is picked up by `scripts/css-entries.js`.
+  for **every** skin (vega, lyra, nova, maia, mira, luma, rhea, sera, sketch); shadcn's values per style are in its
+  sources' `apps/v4/registry/styles/style-<name>.css`. A new file in `css/components/` is picked up by
+  `scripts/css-entries.js`.
 - Skins use tokens only (shadcn's names, `tokens.css`), never literal colours. Text on `--muted` or destructive text
   uses `text-muted-legible` / `text-destructive-legible` (shadcn's pairs fail 4.5:1).
 - Utility classes are no API: the standalone bundle has none. What shadcn does with a class (`border-b`) is a prop.
@@ -166,7 +169,7 @@ there instead of fetching from the web.
 ### Accessibility
 
 - axe runs on the showcase (every preview scenario), at rest, on hover and with popups open; every interactive element needs a visible
-  `:focus-visible` style in both skins.
+  `:focus-visible` style in every skin.
 - `aria-label` on a `<span>`, `<div>` or `<kbd>` (generic role) is prohibited; titles are `role="heading"` with
   `aria-level` (a `level` prop), not `h1`–`h6`, so an app's heading styles don't apply.
 - No `role="alert"` by default on server-rendered content: a full page load would announce it.
@@ -187,7 +190,7 @@ there instead of fetching from the web.
   control labelled, and landmarks named uniquely; `showcase: false` keeps a scenario off the showcase.
 - **Docs page:** `docs/src/content/docs/components/<name>.mdx`, listed in `docs/src/component-groups.mjs` (the build
   fails otherwise). A new MDX component needs a case in `docs/src/lib/markdown.ts` (the `.md`/`llms.txt` output).
-- **Browser tests** (`docs/tests/<name>.spec.ts`) for anything with behaviour: the showcase in both skins and themes,
+- **Browser tests** (`docs/tests/<name>.spec.ts`) for anything with behaviour: the showcase in every skin and theme,
   and fixture pages (`fixture.ts`: strict CSP, the `csp` build, Alpine on/off, htmx, served routes). Add the spec to
   the Firefox project's `testMatch` in `docs/playwright.config.ts` when browsers differ (it runs in `test:full` only).
 - Pitfalls: jsoup drops markup inside `<select>` (`Rendered` works around it) and finds elements inside

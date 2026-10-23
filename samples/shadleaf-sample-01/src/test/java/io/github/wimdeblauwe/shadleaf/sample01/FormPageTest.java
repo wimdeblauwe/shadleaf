@@ -9,6 +9,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.wimdeblauwe.shadleaf.toast.Toast;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -47,7 +50,12 @@ class FormPageTest {
     assertThat(page.getElementById("email-description").text()).isNotBlank();
     assertThat(page.getElementById("message").attr("aria-describedby")).isEqualTo("message-description");
     assertThat(page.getElementById("email").attr("type")).isEqualTo("email");
-    assertThat(page.getElementById("callbackDate").attr("type")).isEqualTo("date");
+    Element callbackDate = page.getElementById("callbackDate");
+    assertThat(callbackDate.attr("type")).isEqualTo("date");
+    assertThat(callbackDate.parent().attr("x-data")).as("a sl:calendar draws over it").isEqualTo("slCalendar");
+    assertThat(callbackDate.attr("min")).isEqualTo(LocalDate.now().toString());
+    assertThat(callbackDate.parent().attr("data-disabled-dates")).isEqualTo("sat,sun");
+    assertThat(callbackDate.attr("aria-describedby")).isEqualTo("callbackDate-description");
     Element topic = page.getElementById("topic");
     assertThat(topic.classNames()).containsExactly("select");
     assertThat(topic.parent().attr("x-data")).as("sl:select, not the native select").isEqualTo("slSelect");
@@ -84,7 +92,7 @@ class FormPageTest {
             .param("name", "Wim")
             .param("email", "not-an-email")
             .param("topic", "")
-            .param("callbackDate", "2026-10-15")
+            .param("callbackDate", nextWeekday().toString())
             .param("message", "Too short")
             .param("newsletter", "true")
             .param("_newsletter", "on")
@@ -97,7 +105,8 @@ class FormPageTest {
     assertThat(page.getElementById("reference").val()).as("the read-only value was posted back")
         .isEqualTo("REQ-123456");
     assertThat(name.hasAttr("aria-invalid")).isFalse();
-    assertThat(page.getElementById("callbackDate").val()).isEqualTo("2026-10-15");
+    assertThat(page.getElementById("callbackDate").val()).isEqualTo(nextWeekday().toString());
+    assertThat(page.getElementById("callbackDate").hasAttr("aria-invalid")).isFalse();
 
     for (String id : new String[] {"email", "topic", "message"}) {
       Element control = page.getElementById(id);
@@ -185,5 +194,36 @@ class FormPageTest {
 
     Document next = Jsoup.parse(mockMvc.perform(get("/form")).andReturn().getResponse().getContentAsString());
     assertThat(next.select("#toaster .toaster-list > li")).isEmpty();
+  }
+
+  @Test
+  void aCallbackDateOnAWeekendOrInThePastIsRejected() throws Exception {
+    LocalDate saturday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+    for (LocalDate date : List.of(saturday, LocalDate.now().minusDays(1))) {
+      Document page = Jsoup.parse(mockMvc.perform(post("/form")
+              .param("name", "Wim")
+              .param("email", "wim@example.com")
+              .param("topic", "support")
+              .param("callbackDate", date.toString())
+              .param("message", "Please call me back.")
+              .param("replyBy", "phone")
+              .param("terms", "true"))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString());
+
+      Element callbackDate = page.getElementById("callbackDate");
+      assertThat(callbackDate.val()).isEqualTo(date.toString());
+      assertThat(callbackDate.attr("aria-invalid")).as("%s", date).isEqualTo("true");
+      assertThat(page.getElementById("callbackDate-error").text()).isEqualTo("must be a weekday from today on");
+    }
+  }
+
+  /** Tomorrow, or the Monday after it when that is a weekend: a callback date the form accepts. */
+  private static LocalDate nextWeekday() {
+    LocalDate date = LocalDate.now().plusDays(1);
+    while (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+      date = date.plusDays(1);
+    }
+    return date;
   }
 }

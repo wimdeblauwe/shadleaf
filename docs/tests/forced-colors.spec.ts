@@ -40,8 +40,10 @@ for (const skin of skins) {
         }
       };
 
+      // Not a calendar's inputs and selects, which it hides on purpose (it draws the month, and the selects' values).
       const controls = [...document.querySelectorAll('.showcase :is(input:not([type=hidden]), select, textarea)')]
-          .filter(control => control.matches(':disabled'));
+          .filter(control => control.matches(':disabled'))
+          .filter(control => !control.matches('.calendar[data-enhanced] > input, .calendar-select'));
       for (const control of controls) {
         check(control, !control.matches('[type=checkbox], [type=radio]'));
       }
@@ -55,6 +57,11 @@ for (const skin of skins) {
       }
       for (const icon of document.querySelectorAll('.showcase :is(.native-select-wrapper, .select-wrapper):has(> select:disabled) > svg')) {
         check(icon, true);
+      }
+      // A disabled calendar's days and navigation, and the days a calendar cannot pick.
+      for (const button of document.querySelectorAll('.showcase :is(.calendar-day-button, .calendar-nav-button)'
+          + ':is(:disabled, [aria-disabled=true])')) {
+        check(button, true);
       }
       // A disabled accordion item's or collapsible's trigger, and a disabled tab.
       for (const trigger of document.querySelectorAll('.showcase :is(details[data-disabled] > summary, '

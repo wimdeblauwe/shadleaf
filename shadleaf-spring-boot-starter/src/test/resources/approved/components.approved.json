@@ -307,6 +307,61 @@
       "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
     }
   }, {
+    "name" : "calendar",
+    "tag" : "sl:calendar",
+    "description" : "A month calendar to pick a date or a range of dates, drawn over native date inputs: the inputs are its value, so `th:field` binds it and the form submits ISO dates (`2026-10-23`). Without content, it renders one date input itself, which takes every attribute that is not a prop except `class` (`th:field`, `name`, `required`, `min`, `max`), and in a `sl:field` the field's `th:field`, id and `aria-describedby`. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end; its attributes then go to the calendar. `slCalendar` hides the inputs and draws the month; without JavaScript the inputs show as they are.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "caption-layout",
+      "type" : "enum",
+      "defaultValue" : "label",
+      "values" : [ "label", "dropdown", "dropdown-months", "dropdown-years" ],
+      "description" : "The month's caption: its name, or selects for the month and year, the month, or the year."
+    }, {
+      "name" : "number-of-months",
+      "type" : "number",
+      "defaultValue" : "1",
+      "values" : [ ],
+      "description" : "How many months show side by side (stacked on a narrow screen)."
+    }, {
+      "name" : "show-outside-days",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "Show the days of the previous and next month that fill the first and last week."
+    }, {
+      "name" : "show-week-number",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe)."
+    }, {
+      "name" : "week-starts-on",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides."
+    }, {
+      "name" : "default-month",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The month shown first, as `2026-10`. By default the month of the chosen date (or of the start of the range), or else the current month."
+    }, {
+      "name" : "start-month",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The first month the calendar navigates to, as `2026-01`; also the first year of the year select. By default the month of the inputs' `min`, or else 100 years ago."
+    }, {
+      "name" : "end-month",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The last month the calendar navigates to, as `2026-12`; also the last year of the year select. By default the month of the inputs' `max`, or else 10 years from now."
+    }, {
+      "name" : "disabled-dates",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Days that cannot be picked, comma-separated: a date (`2026-12-25`), a range (`2026-12-24..2026-12-31`) or a day of the week (`sat`, `sun`). The inputs' `min` and `max` disable the days outside them too. Only the calendar knows: check the date on the server as well."
+    } ]
+  }, {
     "name" : "card",
     "tag" : "sl:card",
     "description" : "A container for related content and actions. Build it from its parts, in any order and number: `sl:card-header` (holding `sl:card-title`, `sl:card-description` and `sl:card-action`), `sl:card-content` and `sl:card-footer`. An `img` as the first or last child runs to the card's edges.",

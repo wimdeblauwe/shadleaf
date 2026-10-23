@@ -157,6 +157,31 @@ select.
 - The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
   item at once, as on any select, where Radix opens the list. See [Select](../components/select/#left-out).
 
+### Calendar is drawn over date inputs
+
+`<sl:calendar>` holds its value in `<input type="date">` elements, so `th:field` binds it and the form submits ISO
+dates. A small Alpine component draws the month over them; without Alpine the date inputs show.
+
+```html
+<!-- shadcn: <Calendar mode="single" selected={date} onSelect={setDate}/> -->
+<sl:calendar th:field="*{dueDate}"/>
+
+<!-- shadcn: <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2}/> -->
+<sl:calendar aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:calendar>
+```
+
+- No `mode`: one date input is a single date, two (start and end) are a range. No `mode="multiple"` yet.
+- No `selected`/`onSelect`: `th:field` renders the value, and the input fires `change`.
+- `disabled` disables the whole calendar, as on an input; the days that cannot be picked are `disabled-dates`
+  (`sat,sun,2026-12-24..2026-12-31`), plus the inputs' `min` and `max`.
+- The page's locale sets the first day of the week and the week numbering; `week-starts-on` overrides the first day.
+- No `timeZone`, `buttonVariant`, `classNames`, `components` or `formatters`. See
+  [Calendar](../components/calendar/#left-out).
+- There is no date picker (a calendar in a popover) yet.
+
 ### Accordion and collapsible are details elements
 
 Each accordion item and each collapsible is a `<details>` element with the trigger as its `<summary>`, so they need

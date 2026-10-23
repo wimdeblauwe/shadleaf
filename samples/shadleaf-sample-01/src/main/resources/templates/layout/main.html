@@ -74,6 +74,13 @@
                 Form with htmx
               </sl:sidebar-menu-button>
             </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/leave}" th:active="${#slNav.current('/leave')}"
+                                      tooltip="Leave request">
+                <sl:slot name="icon-start"><sl:icon name="calendar-range"/></sl:slot>
+                Leave request
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
           </sl:sidebar-menu>
         </sl:sidebar-group-content>
       </sl:sidebar-group>

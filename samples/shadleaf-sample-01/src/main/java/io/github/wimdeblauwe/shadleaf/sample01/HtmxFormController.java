@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.shadleaf.sample01;
 
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,11 @@ public class HtmxFormController {
     return FormController.REPLY_CHANNELS;
   }
 
+  @ModelAttribute("today")
+  LocalDate today() {
+    return LocalDate.now();
+  }
+
   @GetMapping("/htmx-form")
   public String form(Model model) {
     model.addAttribute("contactForm", new ContactForm());
@@ -40,6 +46,7 @@ public class HtmxFormController {
   public String submit(@Valid @ModelAttribute("contactForm") ContactForm contactForm, BindingResult bindingResult,
       HtmxRequest htmxRequest, Model model, RedirectAttributes redirectAttributes) {
     FormController.rejectLinks(contactForm, bindingResult);
+    FormController.rejectCallbackDate(contactForm, bindingResult, today());
     if (HtmxRequests.wantsFragment(htmxRequest)) {
       if (!bindingResult.hasErrors()) {
         model.addAttribute("sentTo", contactForm.getEmail());

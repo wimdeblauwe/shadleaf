@@ -434,6 +434,79 @@
     @apply -mx-1 my-1 bg-border/50;
   }
 
+  /*
+    Calendar, as shadcn's: the navigation and the days are ghost icon buttons of --cell-size, the picked day and the
+    ends of a range --primary, the days between them, today and the band of a range --muted. The days of the next and
+    previous month are muted (text-muted-legible on --muted, where text-muted-foreground is under 4.5:1); disabled days
+    fade.
+  */
+  .calendar {
+    @apply bg-background p-3;
+    --cell-size: --spacing(6);
+    --cell-radius: --theme(--radius-md);
+  }
+
+  .calendar-nav-button {
+    @apply rounded-(--cell-radius) hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/30;
+  }
+
+  .calendar-caption,
+  .calendar-dropdowns {
+    @apply text-xs/relaxed font-medium;
+  }
+
+  .calendar-dropdown {
+    @apply border border-input;
+  }
+
+  .calendar-dropdown:has(> .calendar-select:focus-visible) {
+    @apply border-ring ring-2 ring-ring/30;
+  }
+
+  .calendar-dropdown-label {
+    @apply h-7 bg-input/20 pe-1.5 ps-2 dark:bg-input/30;
+  }
+
+  .calendar-dropdown-label > svg {
+    @apply text-muted-foreground;
+  }
+
+  .calendar-weekday,
+  .calendar-week-number {
+    @apply text-[0.8rem] font-normal text-muted-foreground;
+  }
+
+  .calendar-day-button {
+    @apply text-xs font-normal hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/30;
+  }
+
+  .calendar-day[data-today]:not([data-selected], [data-range-start], [data-range-end]),
+  .calendar-day[data-range-start],
+  .calendar-day[data-range-end] {
+    @apply bg-muted text-foreground after:bg-muted;
+  }
+
+  .calendar-day-button[data-outside] {
+    @apply text-muted-foreground;
+  }
+
+  .calendar-day-button[data-outside]:is([data-today], [data-range-middle], :hover) {
+    @apply text-muted-legible;
+  }
+
+  .calendar-day-button[data-range-middle] {
+    @apply bg-muted text-foreground;
+  }
+
+  .calendar-day-button[data-selected]:not([data-range-middle]) {
+    @apply bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground;
+  }
+
+  .calendar-day-button[data-disabled],
+  .calendar-day-button:disabled {
+    @apply opacity-50 forced-colors:text-[GrayText] forced-colors:opacity-100;
+  }
+
   /* Checkbox */
   .checkbox {
     @apply size-4 rounded-[4px] border border-input bg-transparent

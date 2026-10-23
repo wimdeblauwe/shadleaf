@@ -3,9 +3,9 @@
   about each other through these selectors (always with >, so a nested field does not leak); the templates only share
   the field's binding.
 
-  Vertical: every child but the label, a checkbox, radio button or switch takes the full width, so a select fills the
-  field as an input does. Horizontal: a checkbox or switch, then its label (or a field-content holding label and
-  description), which takes the remaining space. Responsive: vertical, until the enclosing field-group is at least
+  Vertical: every child but the label, a checkbox, radio button, switch or calendar takes the full width, so a select
+  fills the field as an input does. Horizontal: a checkbox or switch, then its label (or a field-content holding label
+  and description), which takes the remaining space. Responsive: vertical, until the enclosing field-group is at least
   28rem wide.
 */
 @layer components {
@@ -32,7 +32,7 @@
   }
 
   :is(.field:not([data-orientation]), .field[data-orientation='vertical'], .field[data-orientation='responsive'])
-    > :not(.field-label, .checkbox-wrapper, .switch, .radio-group-item, .sl-sr-only) {
+    > :not(.field-label, .checkbox-wrapper, .switch, .radio-group-item, .calendar, .sl-sr-only) {
     @apply w-full;
   }
 

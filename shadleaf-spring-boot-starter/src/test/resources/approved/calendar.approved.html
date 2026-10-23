@@ -1,0 +1,186 @@
+<!-- <sl:calendar caption-layout="label" name="due" aria-label="Due"/> -->
+<div class="calendar" x-data="slCalendar" role="group" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+  <input type="date" class="input calendar-input" name="due" aria-label="Due">
+  <template class="calendar-template">
+    <div class="calendar-nav">
+      <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+      <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </div>
+    <label class="calendar-dropdown" data-unit="month">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Month"></select>
+    </label>
+    <label class="calendar-dropdown" data-unit="year">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Year"></select>
+    </label>
+    <span class="calendar-week-number-label">Week</span>
+  </template>
+</div>
+
+<!-- <sl:calendar caption-layout="dropdown" name="due" aria-label="Due"/> -->
+<div class="calendar" x-data="slCalendar" role="group" data-caption="dropdown" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+  <input type="date" class="input calendar-input" name="due" aria-label="Due">
+  <template class="calendar-template">
+    <div class="calendar-nav">
+      <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+      <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </div>
+    <label class="calendar-dropdown" data-unit="month">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Month"></select>
+    </label>
+    <label class="calendar-dropdown" data-unit="year">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Year"></select>
+    </label>
+    <span class="calendar-week-number-label">Week</span>
+  </template>
+</div>
+
+<!-- <sl:calendar caption-layout="dropdown-months" name="due" aria-label="Due"/> -->
+<div class="calendar" x-data="slCalendar" role="group" data-caption="dropdown-months" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+  <input type="date" class="input calendar-input" name="due" aria-label="Due">
+  <template class="calendar-template">
+    <div class="calendar-nav">
+      <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+      <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </div>
+    <label class="calendar-dropdown" data-unit="month">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Month"></select>
+    </label>
+    <label class="calendar-dropdown" data-unit="year">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Year"></select>
+    </label>
+    <span class="calendar-week-number-label">Week</span>
+  </template>
+</div>
+
+<!-- <sl:calendar caption-layout="dropdown-years" name="due" aria-label="Due"/> -->
+<div class="calendar" x-data="slCalendar" role="group" data-caption="dropdown-years" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+  <input type="date" class="input calendar-input" name="due" aria-label="Due">
+  <template class="calendar-template">
+    <div class="calendar-nav">
+      <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+      <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </div>
+    <label class="calendar-dropdown" data-unit="month">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Month"></select>
+    </label>
+    <label class="calendar-dropdown" data-unit="year">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Year"></select>
+    </label>
+    <span class="calendar-week-number-label">Week</span>
+  </template>
+</div>
+
+<!-- <sl:calendar name="due" value="2026-10-23" min="2026-01-01" max="2026-12-31" required class="w-full"
+             number-of-months="2" show-outside-days="false" show-week-number week-starts-on="1"
+             default-month="2026-09" start-month="2026-01" end-month="2026-12"
+             disabled-dates="sat,sun,2026-12-24..2026-12-31" hx-post="/due" hx-trigger="change"/> -->
+<div class="calendar w-full" x-data="slCalendar" role="group" data-number-of-months="2" data-show-outside-days="false" data-show-week-number="true" data-locale="en" data-week-starts-on="1" data-first-week-min-days="1" data-default-month="2026-09" data-start-month="2026-01" data-end-month="2026-12" data-disabled-dates="sat,sun,2026-12-24..2026-12-31">
+  <input type="date" class="input calendar-input" name="due" value="2026-10-23" min="2026-01-01" max="2026-12-31" required hx-post="/due" hx-trigger="change">
+  <template class="calendar-template">
+    <div class="calendar-nav">
+      <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+      <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </div>
+    <label class="calendar-dropdown" data-unit="month">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Month"></select>
+    </label>
+    <label class="calendar-dropdown" data-unit="year">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Year"></select>
+    </label>
+    <span class="calendar-week-number-label">Week</span>
+  </template>
+</div>
+
+<!-- <sl:calendar aria-label="Stay" class="w-full" week-starts-on="0">
+  <sl:input type="date" name="from" value="2026-10-12" aria-label="Check-in"/>
+  <sl:input type="date" name="to" value="2026-10-16" aria-label="Check-out"/>
+</sl:calendar> -->
+<div class="calendar w-full" x-data="slCalendar" role="group" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1" aria-label="Stay">
+  <input class="input" type="date" name="from" value="2026-10-12" aria-label="Check-in">
+  <input class="input" type="date" name="to" value="2026-10-16" aria-label="Check-out">
+  <template class="calendar-template">
+    <div class="calendar-nav">
+      <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+      <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </div>
+    <label class="calendar-dropdown" data-unit="month">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Month"></select>
+    </label>
+    <label class="calendar-dropdown" data-unit="year">
+      <span class="calendar-dropdown-label">
+        <span></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </span>
+      <select class="calendar-select" aria-label="Year"></select>
+    </label>
+    <span class="calendar-week-number-label">Week</span>
+  </template>
+</div>

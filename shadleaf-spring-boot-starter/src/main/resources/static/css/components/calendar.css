@@ -1,0 +1,156 @@
+/*
+  Calendar: structure only. Padding, the cell size and radius (--cell-size, --cell-radius), colours, type and the
+  focus ring are identity and live in the skins. Disabled parts fade; in forced-colors mode they turn GrayText
+  instead.
+
+  Before slCalendar runs, and without it, the calendar shows its date inputs, drawn as sl:input, one under the other.
+  Once it runs (data-enhanced), the inputs stay in the form, hidden over the calendar, so the browser's validation
+  message points at it, and slCalendar draws the months after them:
+
+    .calendar-months
+      .calendar-nav            .calendar-previous and .calendar-next (.calendar-nav-button), over the captions
+      .calendar-month          one per month
+        .calendar-caption      .calendar-caption-label, or .calendar-dropdowns with a .calendar-dropdown per select
+        table.calendar-grid    .calendar-weekdays, then a .calendar-week per week of .calendar-day cells, each
+                               holding a .calendar-day-button (or nothing, for a hidden outside day)
+
+  A day's state is on its cell and its button alike: data-today, data-outside, data-disabled, data-selected and, in a
+  range, data-range-start, data-range-middle and data-range-end. The range is drawn on the cells: a band between the
+  start and the end, the rounded start and end buttons on top of it.
+*/
+@layer components {
+  .calendar {
+    @apply relative w-fit;
+  }
+
+  .calendar:not([data-enhanced]) {
+    @apply flex flex-col gap-2;
+  }
+
+  .popover-content > .calendar,
+  .card-content > .calendar {
+    @apply bg-transparent;
+  }
+
+  /* Hidden, not removed: they submit, reset and validate. */
+  .calendar[data-enhanced] > input {
+    @apply pointer-events-none absolute inset-0 size-full opacity-0;
+  }
+
+  .calendar-months {
+    @apply relative flex flex-col gap-4 md:flex-row;
+  }
+
+  .calendar-month {
+    @apply flex w-full flex-col gap-4;
+  }
+
+  .calendar-nav {
+    @apply pointer-events-none absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1;
+  }
+
+  .calendar-nav-button {
+    @apply pointer-events-auto inline-flex size-(--cell-size) shrink-0 cursor-default items-center justify-center p-0
+      outline-none select-none disabled:pointer-events-none disabled:opacity-50
+      [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 rtl:[&_svg]:rotate-180
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid
+      forced-colors:disabled:text-[GrayText] forced-colors:disabled:opacity-100;
+  }
+
+  .calendar-caption {
+    @apply flex h-(--cell-size) w-full items-center justify-center px-(--cell-size) select-none;
+  }
+
+  .calendar-dropdowns {
+    @apply flex h-(--cell-size) w-full items-center justify-center gap-1.5;
+  }
+
+  /* The select lies over its label, invisible: the label shows the chosen value, the select takes the click. */
+  .calendar-dropdown {
+    @apply relative rounded-(--cell-radius);
+  }
+
+  .calendar-dropdown > .calendar-select {
+    @apply absolute inset-0 size-full cursor-default appearance-none opacity-0 disabled:cursor-not-allowed;
+  }
+
+  .calendar-dropdown-label {
+    @apply flex items-center gap-1 rounded-(--cell-radius) select-none [&>svg]:size-3.5;
+  }
+
+  .calendar-dropdown:has(> .calendar-select:disabled) {
+    @apply opacity-50 forced-colors:text-[GrayText] forced-colors:opacity-100;
+  }
+
+  .calendar-grid {
+    @apply w-full border-collapse;
+  }
+
+  .calendar-weekdays {
+    @apply flex;
+  }
+
+  .calendar-weekday {
+    @apply flex-1 rounded-(--cell-radius) select-none;
+  }
+
+  .calendar-week {
+    @apply mt-2 flex w-full;
+  }
+
+  /* Fixed width beside the days, which share the rest; the number in the middle of the row's height. */
+  .calendar-week-number-header {
+    @apply w-(--cell-size) shrink-0 select-none;
+  }
+
+  .calendar-week-number {
+    @apply flex w-(--cell-size) shrink-0 items-center justify-center p-0 text-center select-none;
+  }
+
+  .calendar-day {
+    @apply relative aspect-square h-full w-full rounded-(--cell-radius) p-0 text-center select-none;
+  }
+
+  /* The band of a range, under the start and end buttons and reaching into the next and previous cell. */
+  .calendar-day[data-range-start] {
+    @apply isolate z-0 rounded-s-(--cell-radius) after:absolute after:inset-y-0 after:end-0 after:w-4;
+  }
+
+  .calendar-day[data-range-end] {
+    @apply isolate z-0 rounded-e-(--cell-radius) after:absolute after:inset-y-0 after:start-0 after:w-4;
+  }
+
+  .calendar-day[data-range-start][data-range-end] {
+    @apply after:hidden;
+  }
+
+  .calendar-day[data-range-middle] {
+    @apply rounded-none;
+  }
+
+  /* A band that starts or ends at the edge of a week gets the rounded corner there. */
+  .calendar-day[data-range-middle]:first-child > .calendar-day-button,
+  .calendar-week-number + .calendar-day[data-range-middle] > .calendar-day-button {
+    @apply rounded-s-(--cell-radius);
+  }
+
+  .calendar-day[data-range-middle]:last-child > .calendar-day-button {
+    @apply rounded-e-(--cell-radius);
+  }
+
+  .calendar-day-button {
+    @apply relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) cursor-default flex-col
+      items-center justify-center rounded-(--cell-radius) border-0 bg-transparent p-0 leading-none outline-none
+      select-none disabled:pointer-events-none
+      focus-visible:z-20
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:-outline-offset-2
+      forced-colors:focus-visible:outline-solid
+      forced-colors:data-selected:outline-2 forced-colors:data-selected:-outline-offset-2
+      forced-colors:data-selected:outline-solid
+      forced-colors:disabled:text-[GrayText];
+  }
+
+  .calendar-day-button[data-range-middle] {
+    @apply rounded-none;
+  }
+}
