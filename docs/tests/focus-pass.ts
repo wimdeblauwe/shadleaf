@@ -9,9 +9,9 @@ type Indicator = { outline: string; boxShadow: string };
 
 /**
  * Tabs from the focus's current place through every control in `scope` (a selector), in document order, and expects
- * each one to get a visible focus indicator.
+ * each one to get a visible focus indicator. `allowNone` for a scope that may have no controls at all (a badge's).
  */
-export async function expectVisibleFocus(page: Page, scope: string) {
+export async function expectVisibleFocus(page: Page, scope: string, {allowNone = false} = {}) {
   const tabbable = await page.evaluate(scope => {
     const candidates = document.querySelectorAll<HTMLElement>(
         `${scope} :is(a[href], button, input:not([type=hidden]), select, textarea, summary, [tabindex])`);
@@ -43,7 +43,9 @@ export async function expectVisibleFocus(page: Page, scope: string) {
           };
         });
   }, scope);
-  expect(tabbable.length).toBeGreaterThan(0);
+  if (!allowNone) {
+    expect(tabbable.length).toBeGreaterThan(0);
+  }
 
   const invisible: string[] = [];
   const readFocused = () => page.evaluate(() => {

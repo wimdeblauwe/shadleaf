@@ -1,16 +1,18 @@
 import {expect, test} from '@playwright/test';
-import {openShowcase, skins} from './showcase';
+import {component, covers, keepComponentOnly, openShowcase, skins} from './showcase';
 
 // In forced-colors mode (Windows' high contrast) a disabled control should use the system's GrayText, not half
 // opacity: fading turns the colours the user chose into ones they did not. The text-like controls, the selects'
 // chevron, the labels and legends that fade with a control, and disabled accordion, collapsible and tab triggers turn
 // GrayText; the checkbox, radio button and switch are
 // drawn by the browser (appearance: auto), which draws its own disabled state, so they only must not be faded.
+// SHADLEAF_TEST_COMPONENT limits this to one component's controls, and skips the checks below of other components.
 
 for (const skin of skins) {
   test(`disabled controls use GrayText in forced-colors mode: ${skin}`, async ({page}) => {
     await page.emulateMedia({forcedColors: 'active'});
     await openShowcase(page, skin, 'light');
+    await keepComponentOnly(page);
 
     const problems = await page.evaluate(() => {
       const probe = document.createElement('span');
@@ -62,7 +64,9 @@ for (const skin of skins) {
       return {checked: controls.length, problems};
     });
 
-    expect(problems.checked, 'the showcase has disabled controls').toBeGreaterThan(0);
+    if (!component) {
+      expect(problems.checked, 'the showcase has disabled controls').toBeGreaterThan(0);
+    }
     expect(problems.problems, problems.problems.join('\n')).toEqual([]);
   });
 }
@@ -70,6 +74,7 @@ for (const skin of skins) {
 // Forced colors drop backgrounds and box-shadows, so the accent background and the ring of a focused menu item are
 // gone: the item needs an outline there. (outline-none sets outline-style none, which a width alone does not undo.)
 test('a focused menu item draws an outline in forced-colors mode', async ({page}) => {
+  test.skip(!covers('dropdown-menu'), `not ${component}'s`);
   await page.emulateMedia({forcedColors: 'active'});
   await openShowcase(page, skins[0], 'light');
   await page.waitForFunction(() => 'Alpine' in window);
@@ -89,6 +94,7 @@ test('a focused menu item draws an outline in forced-colors mode', async ({page}
 // The accordion and collapsible triggers, the tabs and the tab panels show focus with a ring (a box-shadow), which
 // forced colors drop: each needs an outline there. The active tab loses its raised background, so it is underlined.
 test('accordion, collapsible and tabs show focus and the active tab in forced-colors mode', async ({page}) => {
+  test.skip(!covers('accordion', 'collapsible', 'tabs'), `not ${component}'s`);
   await page.emulateMedia({forcedColors: 'active'});
   await openShowcase(page, skins[0], 'light');
   await page.waitForFunction(() => 'Alpine' in window);
@@ -119,6 +125,7 @@ test('accordion, collapsible and tabs show focus and the active tab in forced-co
 // dash, so neither icon is drawn over it.
 for (const skin of skins) {
   test(`an indeterminate checkbox is the browser's own in forced-colors mode: ${skin}`, async ({page}) => {
+    test.skip(!covers('checkbox', 'table'), `not ${component}'s`);
     await page.emulateMedia({forcedColors: 'active'});
     await openShowcase(page, skin, 'light');
     await page.waitForFunction(() => 'Alpine' in window);

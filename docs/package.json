@@ -20,6 +20,7 @@
     "preview": "astro preview",
     "test": "playwright test",
     "test:full": "SHADLEAF_TEST_FULL=1 playwright test",
+    "test:component": "node scripts/test-component.mjs",
     "astro": "astro"
   },
   "dependencies": {
