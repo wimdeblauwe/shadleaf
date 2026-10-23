@@ -18,13 +18,50 @@ export const widths = [
 ] as const;
 
 /**
- * The showcase pages: every scenario (with the sidebar layout's shell), and the header layout's shell alone (a page
- * holds one main).
+ * The component the showcase checks (a11y, focus, forced-colors) are limited to, from SHADLEAF_TEST_COMPONENT
+ * (`pnpm run test:component -- calendar`): its `component` in previews.json, which a family (select with its parts)
+ * shares. Unset, they check every component, as CI does.
  */
-export const showcasePages = [
-  {name: 'components', path: ''},
-  {name: 'header layout', path: 'header/'},
-] as const;
+export const component: string | undefined = process.env.SHADLEAF_TEST_COMPONENT || undefined;
+if (component && !previews.scenarios.some(scenario => scenario.component === component)) {
+  throw new Error(`SHADLEAF_TEST_COMPONENT: no previews for ${component}; one of ${
+      [...new Set(previews.scenarios.map(scenario => scenario.component))].join(', ')}`);
+}
+
+/** Whether the checks of the given components run: always without SHADLEAF_TEST_COMPONENT. */
+export const covers = (...components: string[]) => !component || components.includes(component);
+
+/**
+ * The showcase pages: every scenario (with the sidebar layout's shell), and the header layout's shell alone (a page
+ * holds one main). With SHADLEAF_TEST_COMPONENT, only those that show one of its scenarios.
+ */
+export const showcasePages = ([
+  {name: 'components', path: '', shows: (scenario: Scenario) => scenario.showcase !== false},
+  {name: 'header layout', path: 'header/', shows: (scenario: Scenario) => scenario.id === 'sidebar--header'},
+] as const).filter(showcase => previews.scenarios.some(scenario => showcase.shows(scenario) && covers(scenario.component)));
+
+type Scenario = (typeof previews.scenarios)[number];
+
+/**
+ * A selector per scenario of SHADLEAF_TEST_COMPONENT (none without it). For axe's include, which leaves out the
+ * page-level rules (one main, landmarks) then; the unfiltered run checks those.
+ */
+export const componentScenarios = previews.scenarios.filter(scenario => scenario.component === component)
+    .map(scenario => `[data-scenario="${scenario.id}"]`);
+
+/**
+ * With SHADLEAF_TEST_COMPONENT, takes every other scenario off the opened showcase, so the hover and focus passes and the
+ * forced-colors checks walk that component's controls only. Without it, does nothing.
+ */
+export async function keepComponentOnly(page: Page) {
+  if (component) {
+    await page.locator('[data-scenario]').evaluateAll((stages, selector) => {
+      for (const stage of stages.filter(stage => !stage.matches(selector))) {
+        stage.remove();
+      }
+    }, componentScenarios.join(', '));
+  }
+}
 
 /** Every skin in both themes: the combinations the showcase is checked in. */
 export const combinations = skins.flatMap(skin => themes.map(theme => ({skin, theme})));

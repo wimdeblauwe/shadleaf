@@ -1,10 +1,10 @@
 import {expect, test} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import axe, {type Result} from 'axe-core';
-import {combinations, openShowcase, showcasePages, widths} from './showcase';
+import {combinations, componentScenarios, keepComponentOnly, openShowcase, showcasePages, widths} from './showcase';
 
 // axe-core over every preview scenario, in each skin, light and dark: contrast, names, roles, ARIA. It does not check
-// that focus is visible; focus.spec.ts does.
+// that focus is visible; focus.spec.ts does. SHADLEAF_TEST_COMPONENT limits both checks to one component (showcase.ts).
 
 function describe(violations: Result[]): string[] {
   return violations.map(violation =>
@@ -18,9 +18,10 @@ for (const {skin, theme} of combinations) {
         await page.setViewportSize(width.viewport);
         await openShowcase(page, skin, theme, showcase.path);
 
-        const results = await new AxeBuilder({page})
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'])
-            .analyze();
+        const builder = new AxeBuilder({page})
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice']);
+        componentScenarios.forEach(scenario => builder.include(scenario));
+        const results = await builder.analyze();
 
         const summary = describe(results.violations);
         expect(summary, summary.join('\n')).toEqual([]);
@@ -34,6 +35,7 @@ for (const {skin, theme} of combinations) {
         // A hover and an axe run per control: some 15 s on a laptop, twice that on a CI runner.
         test.slow();
         await openShowcase(page, skin, theme, showcase.path);
+        await keepComponentOnly(page);
         // evaluate, not addScriptTag: a page's Content-Security-Policy does not apply to it
         await page.evaluate(axe.source);
         // Every enabled link and button: only an interactive element has a hover state of its own. Those in a closed

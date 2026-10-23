@@ -32,7 +32,9 @@ works, read its template, CSS, script, tests and docs page; this file holds what
 - Docs: `pnpm run generate:watch` and `pnpm run dev` in `docs/`; `pnpm run build && pnpm test` for the browser tests
   in Chromium and the vega skin (CI runs these), `pnpm run test:full` for every skin and Firefox too, after a change
   to a skin or to behaviour that differs between browsers (`pnpm exec playwright install chromium firefox` once). Run
-  the starter's tests first.
+  the starter's tests first. While working on one component, `pnpm run test:component -- <component>` runs its own
+  specs and the showcase checks (axe, focus, forced colors) on its scenarios only (`SHADLEAF_TEST_FULL=1` for every
+  skin and Firefox); run the whole suite before you're done.
 - Accept changed approval files with `-Dshadleaf.approve`; `-Pperformance` runs the performance tests.
 
 Live reload while working on components:

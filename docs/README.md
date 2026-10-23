@@ -39,6 +39,7 @@ pnpm run dev               # http://localhost:4321
 pnpm run build             # into dist/
 pnpm test                  # the browser tests, in Chromium and the vega skin (build first); CI runs these
 pnpm run test:full         # ... in every skin, and the browser-specific ones in Firefox too
+pnpm run test:component -- calendar   # one component's specs, and the showcase checks on its scenarios only
 ```
 
 `pnpm exec playwright install chromium firefox` once, before the first `pnpm test` (Firefox only for `test:full`).
@@ -48,7 +49,8 @@ pnpm run test:full         # ... in every skin, and the browser-specific ones in
 `/showcase/` renders every scenario on one bare page with only the library's CSS; `?skin=lyra&theme=dark` selects the
 combination. `tests/a11y.spec.ts` runs axe-core over it, resting and hovered, and `tests/focus.spec.ts` tabs through
 every control and requires a visible change in outline or box-shadow. Both run light and dark, for vega in CI and for
-every skin in `pnpm run test:full`.
+every skin in `pnpm run test:full`. With `SHADLEAF_TEST_COMPONENT=<component>` (set by `pnpm run test:component`)
+they, and `tests/forced-colors.spec.ts`, check only that component's scenarios; axe then leaves out its page-level rules.
 
 ## Publishing
 
