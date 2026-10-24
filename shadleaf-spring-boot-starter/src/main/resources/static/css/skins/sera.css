@@ -369,7 +369,8 @@
     @apply end-0 size-3.5 text-muted-foreground;
   }
 
-  .select-content {
+  .select-content,
+  .combobox-content {
     @apply rounded-none bg-popover p-1.5 text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100;
   }
 
@@ -379,18 +380,21 @@
   }
 
   .select-content,
+  .combobox-content,
   .select {
     --popup-offset: --spacing(1);
     --popup-slide: --spacing(2);
   }
 
-  .select-item {
+  .select-item,
+  .combobox-item {
     @apply gap-2.5 rounded-none py-2 ps-3 pe-8 text-sm
       hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
       data-active:bg-accent data-active:text-accent-foreground;
   }
 
-  .select-item svg:not([class*='size-'], [data-icon-size]) {
+  .select-item svg:not([class*='size-'], [data-icon-size]),
+  .combobox-item svg:not([class*='size-'], [data-icon-size]) {
     @apply size-3.5;
   }
 
@@ -399,16 +403,19 @@
     @apply ring-[3px] ring-ring/50 ring-inset;
   }
 
-  .select-item-indicator {
+  .select-item-indicator,
+  .combobox-item-indicator {
     @apply end-2;
   }
 
   .select-group,
-  .select-label {
+  .select-label,
+  .combobox-label {
     @apply text-xs text-muted-foreground;
   }
 
-  .select-label {
+  .select-label,
+  .combobox-label {
     @apply px-3 py-2 font-semibold tracking-wider uppercase;
   }
 
@@ -416,8 +423,94 @@
     @apply text-sm text-popover-foreground;
   }
 
-  .select-separator {
+  .select-separator,
+  .combobox-separator {
     @apply -mx-1.5 my-1.5 bg-border/50;
+  }
+
+  /*
+    Combobox. Before slCombobox runs, the select looks like the native select. The control that takes its place looks
+    like the input, with the focus ring and the error of its input; the chips are shadcn's. The list is the select's
+    (above), and so are its items, headings and separators.
+  */
+  .combobox-select {
+    @apply rounded-none border border-transparent border-b-input bg-transparent py-2 ps-0 pe-8 text-sm
+      motion-safe:transition-[color,border-color] focus-visible:border-b-ring
+      focus-visible:shadow-[0_1px_0_var(--ring)] aria-invalid:border-b-destructive
+      dark:aria-invalid:border-b-destructive/50;
+  }
+
+  .combobox-select[multiple] {
+    @apply pe-0;
+  }
+
+  .combobox-select:not([multiple]) {
+    @apply h-10;
+  }
+
+  .combobox-icon {
+    @apply end-0 size-3.5 text-muted-foreground;
+  }
+
+  .combobox-control {
+    @apply min-h-10 rounded-none border border-transparent border-b-input bg-transparent px-0 py-1 text-base
+      motion-safe:transition-[color,border-color] md:text-sm;
+  }
+
+  .combobox-control:has(> .combobox-input[aria-invalid='true']) {
+    @apply border-b-destructive dark:border-b-destructive/50;
+  }
+
+  .combobox-control:has(> .combobox-input:focus-visible) {
+    @apply border-b-ring shadow-[0_1px_0_var(--ring)];
+  }
+
+  .combobox-control:has(> .combobox-input:disabled) {
+    @apply cursor-not-allowed;
+  }
+
+  .combobox-control:has(> .combobox-input[readonly]) {
+    @apply border-dashed;
+  }
+
+  .combobox-input {
+    @apply placeholder:text-muted-foreground;
+  }
+
+  .combobox[data-multiple] > .combobox-control {
+    @apply gap-1.5 py-1.5;
+  }
+
+  .combobox-clear,
+  .combobox-trigger {
+    @apply rounded-none text-muted-foreground hover:bg-muted hover:text-foreground;
+  }
+
+  .combobox-clear:focus-visible,
+  .combobox-trigger:focus-visible {
+    @apply ring-3 ring-ring/50;
+  }
+
+  .combobox-clear svg:not([class*='size-'], [data-icon-size]),
+  .combobox-trigger svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .combobox-chip {
+    @apply h-5.5 gap-1 rounded-none bg-muted px-2 text-xs font-medium text-foreground has-[>.combobox-chip-remove]:pe-0;
+  }
+
+  .combobox-chip-remove {
+    @apply -ms-1 rounded-none size-5 opacity-50 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2
+      focus-visible:ring-ring/50;
+  }
+
+  .combobox-chip-remove svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .combobox-empty {
+    @apply py-2 text-sm text-muted-foreground;
   }
 
   /*

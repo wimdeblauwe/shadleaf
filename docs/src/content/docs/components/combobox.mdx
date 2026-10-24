@@ -1,0 +1,259 @@
+---
+title: Combobox
+description: shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="combobox--default" />
+
+## Built from parts
+
+A combobox is `<sl:combobox>` holding `<sl:combobox-item>`s, optionally in `<sl:combobox-group>`s with
+`<sl:combobox-separator>`s between them. Like [`<sl:select>`](../select/), it renders a real `<select>` with
+`<option>`, `<optgroup>` and `<hr>` elements, so `th:field` binds it as it binds any select and the form submits the
+chosen value. Once Alpine runs, a text input and a list box take the select's place; typing filters the list.
+
+```html
+<form th:object="${project}" th:action="@{/projects}" method="post">
+  <sl:field th:field="*{framework}">
+    <sl:field-label>Framework</sl:field-label>
+    <sl:combobox placeholder="Select a framework">
+      <sl:combobox-item th:each="framework : ${frameworks}"
+                        th:value="${framework.id}">[[${framework.name}]]</sl:combobox-item>
+    </sl:combobox>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+Give an item its text as content (`[[${framework.name}]]`): the input, the chips and the filter use it.
+
+## Combobox or select?
+
+- **[`<sl:select>`](../select/)** for a short list people scan: a few to a few dozen items.
+- **`<sl:combobox>`** for a list people would rather search: many items, items whose names people know, or several
+  values at once (`multiple`). With `search-url`, the options can come from the server, for lists too long to put in
+  the page.
+- **[`<sl:native-select>`](../select-native/)** to leave the list to the operating system, as phones show it.
+
+## Multiple
+
+`multiple` lets people choose any number of items. The chosen ones are chips before the input, each with a button
+that removes it; the list stays open while choosing, with a check mark on every chosen item. The select is a
+`<select multiple>`, so `th:field` binds a collection (`List<String>`, `Set<Long>`, ...) and the form submits one
+value per chosen item. Spring's hidden marker input comes with it, so choosing none binds an empty collection.
+
+<ComponentPreview id="combobox--multiple" />
+
+## Placeholder and clearing
+
+`placeholder` is the input's text while nothing is chosen. For a single value it is also a first option with an empty
+value, hidden from the list, which is chosen while the field has no value: a `required` combobox with nothing chosen
+is invalid, as for a select.
+
+Emptying the input and leaving it clears the choice. `show-clear` adds a button that does the same, in place of the
+chevron while there is something to clear; in a multiple combobox it removes every chip.
+
+<ComponentPreview id="combobox--clear" />
+
+## Groups, separators and icons
+
+`<sl:combobox-group label="...">` is an `<optgroup>`: its label shows above its items, and hides while none of them
+match what was typed. `<sl:combobox-separator/>` is an `<hr>`, hidden while typing.
+
+<ComponentPreview id="combobox--groups" />
+
+An item may start with an [icon](../icon/). The list shows it; the input and the chips show the item's text.
+
+<ComponentPreview id="combobox--icons" />
+
+## Filtering and auto-highlight
+
+The list shows the items whose text contains what was typed, ignoring case and accents (`turk` finds Türkiye). By
+default nothing is highlighted while typing, so Enter does not choose by accident; `auto-highlight` highlights the
+first match, so typing a few letters and pressing Enter chooses it. Long lists scroll; the list never grows taller
+than the window.
+
+<ComponentPreview id="combobox--long-list" />
+
+## Options from the server
+
+`search-url` makes the combobox ask the server for the options as people type, for lists too long to put in the page.
+300 ms after the last key, it sends a `GET` to that URL with the text as `q`, and expects the HTML of
+`<sl:combobox-item>`s (and groups and separators, if you like) back. A Thymeleaf fragment renders them:
+
+```html
+<sl:combobox th:field="*{country}" placeholder="Search a country" th:search-url="@{/countries/search}">
+  <!-- The chosen country, which the controller looked up: the combobox shows it before anyone types. -->
+  <sl:combobox-item th:if="${chosenCountry != null}"
+                    th:value="${chosenCountry.code}">[[${chosenCountry.name}]]</sl:combobox-item>
+</sl:combobox>
+```
+
+```java
+@GetMapping("/countries/search")
+String searchCountries(@RequestParam String q, Model model) {
+  model.addAttribute("countries", countryService.search(q, 20));
+  return "countries :: options";
+}
+```
+
+```html
+<!-- countries.html -->
+<th:block th:fragment="options">
+  <sl:combobox-item th:each="country : ${countries}"
+                    th:value="${country.code}">[[${country.name}]]</sl:combobox-item>
+</th:block>
+```
+
+- **The answer replaces the options** that are not chosen. A chosen option stays, so the value does not change; when
+  the answer leaves it out, it stays hidden from the list. Render the chosen option(s) in the page, as above, so the
+  combobox can show and submit them before anyone types.
+- **The server filters.** The browser shows what the answer holds, without filtering it again; an empty answer shows
+  "No items found." (or `empty`). Limit the number of results on the server.
+- **An empty input** brings back the options the page came with: render a first few there, or none.
+- **A newer query aborts the request before it**, so a slow answer never replaces a newer one. While waiting, the list
+  says "Searching…"; an answer that is not a 2xx, or that was redirected (a session that expired and sent the request
+  to the login page), shows "The options could not be loaded."
+- **To add parameters**, such as another field's value for options that depend on it, listen for
+  `sl-combobox-search` on the select. It fires before each request, with `detail.query` and `detail.url`, a `URL`
+  whose `searchParams` you can change; `preventDefault()` skips the request.
+
+```js
+document.addEventListener('sl-combobox-search', event => {
+  if (event.target.id === 'city') {
+    event.detail.url.searchParams.set('country', document.getElementById('country').value);
+  }
+});
+```
+
+Searching needs JavaScript. Without it, the combobox is a select with the options in the page, so only those can be
+chosen.
+
+## Width
+
+The combobox sits in a wrapper that also holds the input and the list. `class` goes to that wrapper, so
+`class="w-full"` widens it; every other attribute goes to the `<select>`. The list is at least as wide as the input.
+
+## In a form
+
+- **`th:field`**, on the combobox or on its [field](../field/), binds it. In a field, the select takes the field's `id`
+  (the label points at it) and `aria-describedby`; the input takes them over from the select, so the label names the
+  input and the description and error describe it.
+- **Errors.** A field with errors marks the combobox `aria-invalid="true"`, and
+  [`<sl:form-errors autofocus/>`](../form-errors/) gives it `autofocus` when it is the first control with errors; the
+  focus goes on to the input.
+- **No free text.** Only the options can be chosen: what was typed without choosing is not submitted, and the input
+  shows the choice again when it loses the focus. For a text field with suggestions, use an
+  [input](../input/) with a `<datalist>`.
+- **Events.** Choosing fires `input` and `change` on the `<select>`, so `hx-trigger="change"` and your own listeners
+  work as for any select. A script that changes the select's options or value should fire `change` itself; the input
+  and the chips follow.
+- **Form reset** puts the combobox back to its rendered value.
+
+<ComponentPreview id="combobox--invalid" />
+
+## Disabled
+
+`disabled` on the combobox, or on a `<sl:field-set>` around it, disables it: it fades with its chips. `disabled` on an
+item leaves it in the list, faded; the keyboard and the pointer skip it.
+
+<ComponentPreview id="combobox--disabled" />
+
+## Keyboard
+
+The focus stays in the input; the highlighted item is announced through `aria-activedescendant`, as the
+[ARIA combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/)
+describes.
+
+| Key | Does |
+| --- | --- |
+| Typing | Opens the list and filters it |
+| Arrow down, arrow up | Opens the list on the chosen item; next, previous item |
+| Alt + arrow down | Opens the list without highlighting |
+| Page down, page up | Ten items further, back |
+| Enter | Chooses the highlighted item; in a multiple combobox, adds or removes it and keeps the list open |
+| Alt + arrow up | Chooses the highlighted item and closes the list |
+| Escape | Closes the list, putting back the text of the choice |
+| Tab | Closes the list without choosing and moves on |
+| Home, End | Move the caret, as in any text field |
+| Backspace (multiple, empty input) | Removes the last chip |
+| Arrow left (multiple, at the start of the input) | Moves to the chips' remove buttons: arrow left and right between them, Backspace or Delete removes one |
+
+The number of matches is announced once typing pauses. The clear and chevron buttons stay out of the tab order: each
+has a key. The item under the pointer is highlighted.
+
+## With htmx
+
+- A response that renders the form again with errors keeps the chosen values (`th:field` marks them).
+- A swap that replaces an open combobox leaves nothing open behind.
+- Back restores the combobox as htmx saved it; it builds its input and list again from the restored select.
+- A combobox can trigger a request itself: `hx-get="/cities" hx-trigger="change" hx-target="#city-field"`. Options
+  swapped into the select are picked up by the list.
+
+## Forced colours
+
+The input and the list keep a visible border, the highlighted item an outline and the chips a border, when the
+system's colours replace the page's (Windows High Contrast). A disabled combobox turns `GrayText` instead of fading.
+
+## Left out
+
+These shadcn/Base UI parts and props have no counterpart, on purpose:
+
+- **`ComboboxInput`, `ComboboxContent`, `ComboboxList`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipsInput`,
+  `ComboboxValue` and `ComboboxTrigger`.** `<sl:combobox>` draws them all: `showClear`, `showTrigger` and
+  `autoHighlight` are its `show-clear`, `show-trigger` and `auto-highlight`.
+- **`items` and the render function.** Items are written as `<sl:combobox-item>`s (with `th:each`): `value` and their
+  text take the place of `itemToStringValue`.
+- **`ComboboxEmpty`** is the `empty` attribute; **`ComboboxLabel`** is a group's `label`, and there is no
+  `ComboboxCollection`.
+- **The popup layout**, with a button as the trigger and the input inside the list, and **addons** in the input.
+- **Free text**, which Base UI's Combobox does not allow either (its Autocomplete does).
+- **Removing chips is always possible** (`showRemove`), and a chip shows the item's text.
+- **`side`, `align`**: the list opens below the input, or above it when there is no room.
+- **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
+  value with `th:field`, and the select's `change` event reports a new one.
+
+## Without JavaScript
+
+The server renders a real select, drawn like the [native select](../select-native/): a single combobox is a select
+with a chevron, a multiple one a list box (Ctrl- or Cmd-click chooses several). Both bind, submit and validate as any
+select. With Alpine, `slCombobox` puts its input and list in the select's place.
+
+## Attributes
+
+### sl:combobox
+
+<ComponentAttributes component="combobox" />
+
+### sl:combobox-item
+
+<ComponentAttributes component="combobox-item" />
+
+### sl:combobox-group
+
+<ComponentAttributes component="combobox-group" />
+
+### sl:combobox-separator
+
+<ComponentAttributes component="combobox-separator" />
+
+## JavaScript
+
+A small Alpine component, `slCombobox`, sits on the wrapper: `<div class="combobox" x-data="slCombobox">`.
+
+- **It hides the `<select>`** (it stays in the form, and still submits, resets and validates) and adds what the
+  wrapper's `<template>` holds after it: a `<div class="combobox-control">` with an
+  `<input role="combobox" class="combobox-input">` (and the chips, the clear and the chevron buttons), and a
+  `<div class="combobox-content" popover="manual">` with the `<div role="listbox" class="combobox-list">`. The input
+  takes the select's label (its `<label>`s, `aria-labelledby` or `aria-label`), `aria-describedby`, `aria-invalid`,
+  `required` and `disabled`, and follows them when they change. Focus that reaches the hidden select moves on to the
+  input.
+- **The list is a popover** in the top layer, so it shows above dialogs and sheets, placed with anchor positioning
+  (with a stand-in for browsers without it). Escape in the input closes the list, not the dialog around it.
+- **It works with Alpine's CSP build** and a strict Content Security Policy: no inline styles, no `eval`. A search
+  request is a `fetch` to the same origin (`connect-src 'self'`).
+- **Keep your own `x-data` off `<sl:combobox>`**: `class` is the only attribute that reaches the wrapper. Listen for
+  `change` on the select instead.

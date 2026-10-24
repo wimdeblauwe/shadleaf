@@ -1,0 +1,144 @@
+/*
+  Combobox: structure only. Height, radius, border, colours, type size, spacing and focus rings are identity and live
+  in the skins.
+
+  Two ways to draw it:
+  - before Alpine runs, and without it, the select is drawn like sl:native-select, with the chevron over its end; a
+    multiple select is a list box without one;
+  - once slCombobox runs, it hides the select (data-enhanced on the wrapper) and puts the control in its place: a box
+    drawn like an input, holding the chips (for a multiple select), the input and the clear and chevron buttons, and a
+    list box (.combobox-content, a popover placed by popup.css) whose options (.combobox-item), headings and separators
+    are styled as the select's.
+
+  Disabled fades the wrapper, so the chevron and the chips fade with it. In forced-colors mode they turn GrayText
+  instead.
+*/
+@layer components {
+  .combobox {
+    @apply relative w-fit
+      has-[>.combobox-select:disabled]:opacity-50 forced-colors:has-[>.combobox-select:disabled]:opacity-100;
+  }
+
+  .combobox:has(> .combobox-select:disabled) :is(.combobox-icon, .combobox-control, .combobox-input, .combobox-chip) {
+    @apply forced-colors:border-[GrayText] forced-colors:text-[GrayText];
+  }
+
+  /* hidden on the parts slCombobox shows and hides, whatever display their rules give them. */
+  .combobox [hidden]:not([hidden='until-found']) {
+    @apply hidden;
+  }
+
+  .combobox-select {
+    @apply w-full min-w-0 appearance-none outline-none select-none
+      disabled:pointer-events-none disabled:cursor-not-allowed
+      forced-colors:disabled:border-[GrayText] forced-colors:disabled:text-[GrayText];
+  }
+
+  .combobox-select :is(option, optgroup) {
+    @apply bg-[Canvas] text-[CanvasText];
+  }
+
+  .combobox-icon {
+    @apply pointer-events-none absolute top-1/2 end-2.5 size-4 -translate-y-1/2 select-none;
+  }
+
+  /* Hidden, not removed, once slCombobox has put its control in place: it still submits, resets and validates. */
+  .combobox[data-enhanced] > .combobox-select {
+    @apply pointer-events-none absolute inset-0 size-full opacity-0;
+  }
+
+  .combobox[data-enhanced] > .combobox-icon {
+    @apply hidden;
+  }
+
+  /* The box around the input: one line for a single value, wrapping chips for several. */
+  .combobox-control {
+    @apply flex w-full min-w-0 cursor-text items-center;
+  }
+
+  .combobox[data-multiple] > .combobox-control {
+    @apply flex-wrap;
+  }
+
+  .combobox-input {
+    @apply min-w-0 flex-1 self-stretch border-0 bg-transparent p-0 outline-none
+      disabled:cursor-not-allowed;
+    color: inherit;
+    font: inherit;
+  }
+
+  .combobox[data-multiple] .combobox-input {
+    @apply min-w-16;
+  }
+
+  .combobox-clear,
+  .combobox-trigger {
+    @apply inline-flex size-6 shrink-0 cursor-default items-center justify-center border-0 bg-transparent p-0
+      outline-none disabled:pointer-events-none
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid;
+    color: inherit;
+  }
+
+  /* shadcn's: the clear button takes the chevron's place while there is something to clear. */
+  .combobox-control:has(> .combobox-clear:not([hidden])) > .combobox-trigger {
+    @apply hidden;
+  }
+
+  .combobox-chip {
+    @apply inline-flex w-fit shrink-0 items-center whitespace-nowrap
+      forced-colors:border forced-colors:border-solid;
+  }
+
+  .combobox-chip-remove {
+    @apply inline-flex shrink-0 cursor-default items-center justify-center border-0 bg-transparent p-0 outline-none
+      disabled:pointer-events-none
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid;
+    color: inherit;
+  }
+
+  /*
+    The list box: at least as wide as the control, its list scrolling when taller than the viewport. Flex only while
+    open: a display of its own would override the browser's display: none on a closed popover.
+  */
+  .combobox-content {
+    @apply overflow-hidden border-0 outline-none;
+    min-inline-size: max(--spacing(36), anchor-size(self-inline));
+    max-block-size: calc(100dvh - --spacing(4));
+  }
+
+  .combobox-content:popover-open {
+    @apply flex flex-col;
+  }
+
+  .combobox-list {
+    @apply min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain outline-none;
+  }
+
+  .combobox-item {
+    @apply relative flex w-full cursor-default items-center outline-none select-none
+      aria-disabled:pointer-events-none aria-disabled:opacity-50
+      [&_svg]:pointer-events-none [&_svg]:shrink-0
+      forced-colors:data-active:outline-2 forced-colors:data-active:-outline-offset-2
+      forced-colors:data-active:outline-solid;
+  }
+
+  .combobox-item-indicator {
+    @apply pointer-events-none invisible absolute;
+  }
+
+  .combobox-item[aria-selected='true'] > .combobox-item-indicator {
+    @apply visible;
+  }
+
+  .combobox-separator {
+    @apply h-px border-0;
+  }
+
+  .combobox-empty {
+    @apply flex w-full justify-center text-center;
+  }
+
+  .combobox-status {
+    @apply sr-only;
+  }
+}

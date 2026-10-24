@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>An option in a <code>sl:combobox</code>: an <code>option</code>. <code>value</code> (or
+      <code>th:value</code>) and <code>disabled</code> pass through; <code>th:field</code> on the combobox marks the
+      bound one. The list shows its content, which may start with an icon, with a check mark while it is chosen; the
+      input, the chips and the filter use its text, which is all an older browser keeps of it.</sl:description>
+  </sl:props>
+</head>
+<body>
+<option th:fragment="combobox-item"
+        class="combobox-item"
+        sl:attrs><sl:slot/></option>
+</body>
+</html>

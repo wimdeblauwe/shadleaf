@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A group of <code>sl:combobox-item</code>s under a heading: an <code>optgroup</code>. The list
+      hides the heading while none of its items match.</sl:description>
+    <sl:prop name="label" required>The group's heading, shadcn/ui's <code>ComboboxLabel</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<optgroup th:fragment="combobox-group"
+          class="combobox-group"
+          th:attr="label=${props.label}"
+          sl:attrs><sl:slot/></optgroup>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!-- <sl:combobox name="framework" aria-label="Framework">
+  <sl:combobox-item value="next">Next.js</sl:combobox-item>
+</sl:combobox> -->
+<div class="combobox" x-data="slCombobox" data-result="1 result" data-results="{0} results">
+  <select class="combobox-select" name="framework" aria-label="Framework">
+    <option value="" hidden data-placeholder="true"></option>
+    <option class="combobox-item" value="next">Next.js</option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon combobox-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <template class="combobox-template">
+    <div class="combobox-control">
+      <input class="combobox-input" type="text" role="combobox" autocomplete="off" autocapitalize="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false">
+      <button type="button" class="combobox-trigger" tabindex="-1" aria-expanded="false" aria-label="Show options">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </div>
+    <div class="combobox-content" popover="manual">
+      <div class="combobox-list" role="listbox"></div>
+      <div class="combobox-empty">No items found.</div>
+    </div>
+    <div class="combobox-status" role="status"></div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon combobox-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </template>
+</div>
+
+<!-- <sl:combobox id="framework" name="framework" placeholder="Select a framework" class="w-full" required
+             show-clear auto-highlight empty="No frameworks found.">
+  <sl:combobox-group label="React">
+    <sl:combobox-item value="next">Next.js</sl:combobox-item>
+    <sl:combobox-item value="remix" disabled>Remix</sl:combobox-item>
+  </sl:combobox-group>
+  <sl:combobox-separator/>
+  <sl:combobox-group label="Vue">
+    <sl:combobox-item value="nuxt" selected>Nuxt.js</sl:combobox-item>
+  </sl:combobox-group>
+</sl:combobox> -->
+<div class="combobox w-full" x-data="slCombobox" data-auto-highlight="true" data-result="1 result" data-results="{0} results">
+  <select class="combobox-select" id="framework" name="framework" required>
+    <option value="" hidden data-placeholder="true">Select a framework</option>
+    <optgroup class="combobox-group" label="React">
+      <option class="combobox-item" value="next">Next.js</option>
+      <option class="combobox-item" value="remix" disabled>Remix</option>
+    </optgroup>
+    <hr class="combobox-separator">
+    <optgroup class="combobox-group" label="Vue">
+      <option class="combobox-item" value="nuxt" selected>Nuxt.js</option>
+    </optgroup>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon combobox-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <template class="combobox-template">
+    <div class="combobox-control">
+      <input class="combobox-input" type="text" role="combobox" autocomplete="off" autocapitalize="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" placeholder="Select a framework">
+      <button type="button" class="combobox-clear" tabindex="-1" hidden aria-label="Clear">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+      <button type="button" class="combobox-trigger" tabindex="-1" aria-expanded="false" aria-label="Show options">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </div>
+    <div class="combobox-content" popover="manual">
+      <div class="combobox-list" role="listbox"></div>
+      <div class="combobox-empty">No frameworks found.</div>
+    </div>
+    <div class="combobox-status" role="status"></div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon combobox-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </template>
+</div>
+
+<!-- <sl:combobox name="frameworks" aria-label="Frameworks" multiple placeholder="Add a framework"
+             show-trigger="false" disabled>
+  <sl:combobox-item value="next" selected>Next.js</sl:combobox-item>
+  <sl:combobox-item value="astro"><sl:icon name="rocket"/>Astro</sl:combobox-item>
+</sl:combobox> -->
+<div class="combobox" x-data="slCombobox" data-multiple="true" data-result="1 result" data-results="{0} results" data-remove-label="Remove {0}">
+  <select class="combobox-select" multiple name="frameworks" aria-label="Frameworks" disabled>
+    <option class="combobox-item" value="next" selected>Next.js</option>
+    <option class="combobox-item" value="astro">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      Astro
+    </option>
+  </select>
+  <template class="combobox-template">
+    <div class="combobox-control">
+      <input class="combobox-input" type="text" role="combobox" autocomplete="off" autocapitalize="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" placeholder="Add a framework">
+    </div>
+    <div class="combobox-content" popover="manual">
+      <div class="combobox-list" role="listbox"></div>
+      <div class="combobox-empty">No items found.</div>
+    </div>
+    <div class="combobox-status" role="status"></div>
+    <span class="combobox-chip">
+      <span class="combobox-chip-label"></span>
+      <button type="button" class="combobox-chip-remove" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </button>
+    </span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon combobox-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </template>
+</div>
+
+<!-- <sl:combobox name="country" aria-label="Country" search-url="/countries" show-trigger="false"
+             hx-post="/country" hx-trigger="change">
+  <sl:combobox-item value="be" selected>Belgium</sl:combobox-item>
+</sl:combobox> -->
+<div class="combobox" x-data="slCombobox" data-search-url="/countries" data-searching="Searching…" data-search-error="The options could not be loaded." data-result="1 result" data-results="{0} results">
+  <select class="combobox-select" name="country" aria-label="Country" hx-post="/country" hx-trigger="change">
+    <option value="" hidden data-placeholder="true"></option>
+    <option class="combobox-item" value="be" selected>Belgium</option>
+  </select>
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon combobox-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  <template class="combobox-template">
+    <div class="combobox-control">
+      <input class="combobox-input" type="text" role="combobox" autocomplete="off" autocapitalize="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false">
+    </div>
+    <div class="combobox-content" popover="manual">
+      <div class="combobox-list" role="listbox"></div>
+      <div class="combobox-empty">No items found.</div>
+    </div>
+    <div class="combobox-status" role="status"></div>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon combobox-item-indicator" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </template>
+</div>
+
+<!-- <sl:combobox-item th:value="${'astro'}">Astro</sl:combobox-item> -->
+<option class="combobox-item" value="astro">Astro</option>
+
+<!-- <sl:combobox-group th:label="${'Vue'}" class="x"><sl:combobox-item value="a">A</sl:combobox-item></sl:combobox-group> -->
+<optgroup class="combobox-group x" label="Vue">
+  <option class="combobox-item" value="a">A</option>
+</optgroup>
+
+<!-- <sl:combobox-separator/> -->
+<hr class="combobox-separator">

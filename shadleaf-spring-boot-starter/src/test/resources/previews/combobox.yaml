@@ -1,0 +1,286 @@
+# Scenarios for the combobox's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# Ids are unique across the showcase: th:field gives the select the field's name as its id.
+component: combobox
+parts: [combobox-item, combobox-group, combobox-separator]
+scenarios:
+  - id: default
+    title: Combobox
+    description: Type to filter the list; th:field marks the bound item.
+    source: |-
+      <sl:field th:field="*{framework}">
+        <sl:field-label>Framework</sl:field-label>
+        <sl:combobox placeholder="Select a framework">
+          <sl:combobox-item value="next">Next.js</sl:combobox-item>
+          <sl:combobox-item value="sveltekit">SvelteKit</sl:combobox-item>
+          <sl:combobox-item value="nuxt">Nuxt.js</sl:combobox-item>
+          <sl:combobox-item value="remix">Remix</sl:combobox-item>
+          <sl:combobox-item value="astro">Astro</sl:combobox-item>
+        </sl:combobox>
+      </sl:field>
+    form:
+      values: {framework: ''}
+
+  - id: multiple
+    title: Multiple
+    description: With multiple, the chosen items are chips before the input and th:field binds a collection.
+    source: |-
+      <sl:field th:field="*{frameworks}">
+        <sl:field-label>Frameworks</sl:field-label>
+        <sl:combobox multiple auto-highlight placeholder="Add a framework">
+          <sl:combobox-item value="next">Next.js</sl:combobox-item>
+          <sl:combobox-item value="sveltekit">SvelteKit</sl:combobox-item>
+          <sl:combobox-item value="nuxt">Nuxt.js</sl:combobox-item>
+          <sl:combobox-item value="remix">Remix</sl:combobox-item>
+          <sl:combobox-item value="astro">Astro</sl:combobox-item>
+        </sl:combobox>
+      </sl:field>
+    form:
+      values: {frameworks: [next]}
+
+  - id: clear
+    title: Clear button
+    description: show-clear puts a button that clears the choice in place of the chevron while there is one.
+    source: |-
+      <sl:field th:field="*{stack}">
+        <sl:field-label>Stack</sl:field-label>
+        <sl:combobox placeholder="Select a framework" show-clear>
+          <sl:combobox-item value="next">Next.js</sl:combobox-item>
+          <sl:combobox-item value="sveltekit">SvelteKit</sl:combobox-item>
+          <sl:combobox-item value="nuxt">Nuxt.js</sl:combobox-item>
+        </sl:combobox>
+      </sl:field>
+    form:
+      values: {stack: sveltekit}
+
+  - id: groups
+    title: Groups and separators
+    description: Some 80 time zones, too many to scan, so you type a city instead (bru finds Brussels). A group's heading hides while none of its items match; separators hide while you type.
+    source: |-
+      <sl:field th:field="*{meetingZone}">
+        <sl:field-label>Timezone</sl:field-label>
+        <sl:combobox placeholder="Select a timezone">
+          <sl:combobox-group label="Americas">
+            <sl:combobox-item value="Pacific/Honolulu">(GMT-10) Honolulu</sl:combobox-item>
+            <sl:combobox-item value="America/Anchorage">(GMT-9) Anchorage</sl:combobox-item>
+            <sl:combobox-item value="America/Los_Angeles">(GMT-8) Los Angeles</sl:combobox-item>
+            <sl:combobox-item value="America/Tijuana">(GMT-8) Tijuana</sl:combobox-item>
+            <sl:combobox-item value="America/Vancouver">(GMT-8) Vancouver</sl:combobox-item>
+            <sl:combobox-item value="America/Denver">(GMT-7) Denver</sl:combobox-item>
+            <sl:combobox-item value="America/Edmonton">(GMT-7) Edmonton</sl:combobox-item>
+            <sl:combobox-item value="America/Phoenix">(GMT-7) Phoenix</sl:combobox-item>
+            <sl:combobox-item value="America/Chicago">(GMT-6) Chicago</sl:combobox-item>
+            <sl:combobox-item value="America/Guatemala">(GMT-6) Guatemala</sl:combobox-item>
+            <sl:combobox-item value="America/Mexico_City">(GMT-6) Mexico City</sl:combobox-item>
+            <sl:combobox-item value="America/Winnipeg">(GMT-6) Winnipeg</sl:combobox-item>
+            <sl:combobox-item value="America/Bogota">(GMT-5) Bogota</sl:combobox-item>
+            <sl:combobox-item value="America/Havana">(GMT-5) Havana</sl:combobox-item>
+            <sl:combobox-item value="America/Lima">(GMT-5) Lima</sl:combobox-item>
+            <sl:combobox-item value="America/New_York">(GMT-5) New York</sl:combobox-item>
+            <sl:combobox-item value="America/Toronto">(GMT-5) Toronto</sl:combobox-item>
+            <sl:combobox-item value="America/Caracas">(GMT-4) Caracas</sl:combobox-item>
+            <sl:combobox-item value="America/Halifax">(GMT-4) Halifax</sl:combobox-item>
+            <sl:combobox-item value="America/La_Paz">(GMT-4) La Paz</sl:combobox-item>
+            <sl:combobox-item value="America/Santiago">(GMT-4) Santiago</sl:combobox-item>
+            <sl:combobox-item value="America/St_Johns">(GMT-3:30) St. John's</sl:combobox-item>
+            <sl:combobox-item value="America/Argentina/Buenos_Aires">(GMT-3) Buenos Aires</sl:combobox-item>
+            <sl:combobox-item value="America/Montevideo">(GMT-3) Montevideo</sl:combobox-item>
+            <sl:combobox-item value="America/Sao_Paulo">(GMT-3) São Paulo</sl:combobox-item>
+          </sl:combobox-group>
+          <sl:combobox-separator/>
+          <sl:combobox-group label="Europe">
+            <sl:combobox-item value="Europe/Dublin">(GMT+0) Dublin</sl:combobox-item>
+            <sl:combobox-item value="Europe/Lisbon">(GMT+0) Lisbon</sl:combobox-item>
+            <sl:combobox-item value="Europe/London">(GMT+0) London</sl:combobox-item>
+            <sl:combobox-item value="Atlantic/Reykjavik">(GMT+0) Reykjavik</sl:combobox-item>
+            <sl:combobox-item value="Europe/Amsterdam">(GMT+1) Amsterdam</sl:combobox-item>
+            <sl:combobox-item value="Europe/Berlin">(GMT+1) Berlin</sl:combobox-item>
+            <sl:combobox-item value="Europe/Brussels">(GMT+1) Brussels</sl:combobox-item>
+            <sl:combobox-item value="Europe/Budapest">(GMT+1) Budapest</sl:combobox-item>
+            <sl:combobox-item value="Europe/Copenhagen">(GMT+1) Copenhagen</sl:combobox-item>
+            <sl:combobox-item value="Europe/Madrid">(GMT+1) Madrid</sl:combobox-item>
+            <sl:combobox-item value="Europe/Oslo">(GMT+1) Oslo</sl:combobox-item>
+            <sl:combobox-item value="Europe/Paris">(GMT+1) Paris</sl:combobox-item>
+            <sl:combobox-item value="Europe/Prague">(GMT+1) Prague</sl:combobox-item>
+            <sl:combobox-item value="Europe/Rome">(GMT+1) Rome</sl:combobox-item>
+            <sl:combobox-item value="Europe/Stockholm">(GMT+1) Stockholm</sl:combobox-item>
+            <sl:combobox-item value="Europe/Vienna">(GMT+1) Vienna</sl:combobox-item>
+            <sl:combobox-item value="Europe/Warsaw">(GMT+1) Warsaw</sl:combobox-item>
+            <sl:combobox-item value="Europe/Zurich">(GMT+1) Zurich</sl:combobox-item>
+            <sl:combobox-item value="Europe/Athens">(GMT+2) Athens</sl:combobox-item>
+            <sl:combobox-item value="Europe/Bucharest">(GMT+2) Bucharest</sl:combobox-item>
+            <sl:combobox-item value="Europe/Helsinki">(GMT+2) Helsinki</sl:combobox-item>
+            <sl:combobox-item value="Europe/Kyiv">(GMT+2) Kyiv</sl:combobox-item>
+            <sl:combobox-item value="Europe/Istanbul">(GMT+3) Istanbul</sl:combobox-item>
+            <sl:combobox-item value="Europe/Moscow">(GMT+3) Moscow</sl:combobox-item>
+          </sl:combobox-group>
+          <sl:combobox-separator/>
+          <sl:combobox-group label="Africa">
+            <sl:combobox-item value="Africa/Accra">(GMT+0) Accra</sl:combobox-item>
+            <sl:combobox-item value="Africa/Casablanca">(GMT+0) Casablanca</sl:combobox-item>
+            <sl:combobox-item value="Africa/Algiers">(GMT+1) Algiers</sl:combobox-item>
+            <sl:combobox-item value="Africa/Kinshasa">(GMT+1) Kinshasa</sl:combobox-item>
+            <sl:combobox-item value="Africa/Lagos">(GMT+1) Lagos</sl:combobox-item>
+            <sl:combobox-item value="Africa/Cairo">(GMT+2) Cairo</sl:combobox-item>
+            <sl:combobox-item value="Africa/Johannesburg">(GMT+2) Johannesburg</sl:combobox-item>
+            <sl:combobox-item value="Africa/Addis_Ababa">(GMT+3) Addis Ababa</sl:combobox-item>
+            <sl:combobox-item value="Africa/Nairobi">(GMT+3) Nairobi</sl:combobox-item>
+          </sl:combobox-group>
+          <sl:combobox-separator/>
+          <sl:combobox-group label="Asia">
+            <sl:combobox-item value="Asia/Jerusalem">(GMT+2) Jerusalem</sl:combobox-item>
+            <sl:combobox-item value="Asia/Riyadh">(GMT+3) Riyadh</sl:combobox-item>
+            <sl:combobox-item value="Asia/Tehran">(GMT+3:30) Tehran</sl:combobox-item>
+            <sl:combobox-item value="Asia/Dubai">(GMT+4) Dubai</sl:combobox-item>
+            <sl:combobox-item value="Asia/Karachi">(GMT+5) Karachi</sl:combobox-item>
+            <sl:combobox-item value="Asia/Kolkata">(GMT+5:30) Kolkata</sl:combobox-item>
+            <sl:combobox-item value="Asia/Kathmandu">(GMT+5:45) Kathmandu</sl:combobox-item>
+            <sl:combobox-item value="Asia/Dhaka">(GMT+6) Dhaka</sl:combobox-item>
+            <sl:combobox-item value="Asia/Bangkok">(GMT+7) Bangkok</sl:combobox-item>
+            <sl:combobox-item value="Asia/Ho_Chi_Minh">(GMT+7) Ho Chi Minh City</sl:combobox-item>
+            <sl:combobox-item value="Asia/Jakarta">(GMT+7) Jakarta</sl:combobox-item>
+            <sl:combobox-item value="Asia/Hong_Kong">(GMT+8) Hong Kong</sl:combobox-item>
+            <sl:combobox-item value="Asia/Manila">(GMT+8) Manila</sl:combobox-item>
+            <sl:combobox-item value="Asia/Shanghai">(GMT+8) Shanghai</sl:combobox-item>
+            <sl:combobox-item value="Asia/Singapore">(GMT+8) Singapore</sl:combobox-item>
+            <sl:combobox-item value="Asia/Taipei">(GMT+8) Taipei</sl:combobox-item>
+            <sl:combobox-item value="Asia/Seoul">(GMT+9) Seoul</sl:combobox-item>
+            <sl:combobox-item value="Asia/Tokyo">(GMT+9) Tokyo</sl:combobox-item>
+          </sl:combobox-group>
+          <sl:combobox-separator/>
+          <sl:combobox-group label="Pacific">
+            <sl:combobox-item value="Australia/Perth">(GMT+8) Perth</sl:combobox-item>
+            <sl:combobox-item value="Australia/Adelaide">(GMT+9:30) Adelaide</sl:combobox-item>
+            <sl:combobox-item value="Australia/Brisbane">(GMT+10) Brisbane</sl:combobox-item>
+            <sl:combobox-item value="Australia/Melbourne">(GMT+10) Melbourne</sl:combobox-item>
+            <sl:combobox-item value="Pacific/Port_Moresby">(GMT+10) Port Moresby</sl:combobox-item>
+            <sl:combobox-item value="Australia/Sydney">(GMT+10) Sydney</sl:combobox-item>
+            <sl:combobox-item value="Pacific/Auckland">(GMT+12) Auckland</sl:combobox-item>
+            <sl:combobox-item value="Pacific/Fiji">(GMT+12) Fiji</sl:combobox-item>
+          </sl:combobox-group>
+        </sl:combobox>
+      </sl:field>
+    form:
+      values: {meetingZone: ''}
+
+  - id: icons
+    title: Custom items
+    description: An item may start with an icon. The input and the chips show its text.
+    source: |-
+      <sl:field th:field="*{issueStatus}">
+        <sl:field-label>Status</sl:field-label>
+        <sl:combobox placeholder="Set a status">
+          <sl:combobox-item value="backlog"><sl:icon name="circle-dashed"/>Backlog</sl:combobox-item>
+          <sl:combobox-item value="todo"><sl:icon name="circle"/>Todo</sl:combobox-item>
+          <sl:combobox-item value="in-progress"><sl:icon name="circle-dot"/>In progress</sl:combobox-item>
+          <sl:combobox-item value="done"><sl:icon name="circle-check"/>Done</sl:combobox-item>
+        </sl:combobox>
+      </sl:field>
+    form:
+      values: {issueStatus: todo}
+
+  - id: invalid
+    title: With errors
+    description: In a field with errors, the combobox is aria-invalid and described by the message.
+    source: |-
+      <sl:field th:field="*{language}">
+        <sl:field-label>Language</sl:field-label>
+        <sl:combobox placeholder="Select a language">
+          <sl:combobox-item value="java">Java</sl:combobox-item>
+          <sl:combobox-item value="kotlin">Kotlin</sl:combobox-item>
+          <sl:combobox-item value="groovy">Groovy</sl:combobox-item>
+        </sl:combobox>
+        <sl:field-error/>
+      </sl:field>
+      <sl:field th:field="*{languages}">
+        <sl:field-label>Other languages</sl:field-label>
+        <sl:combobox multiple placeholder="Add a language">
+          <sl:combobox-item value="java">Java</sl:combobox-item>
+          <sl:combobox-item value="kotlin">Kotlin</sl:combobox-item>
+          <sl:combobox-item value="groovy">Groovy</sl:combobox-item>
+        </sl:combobox>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {language: '', languages: []}
+      errors: {language: must not be empty, languages: pick at least one}
+
+  - id: disabled
+    title: Disabled
+    description: A disabled combobox, and disabled items that the keyboard and the pointer skip.
+    source: |-
+      <sl:field th:field="*{runtime}">
+        <sl:field-label>Runtime</sl:field-label>
+        <sl:combobox disabled>
+          <sl:combobox-item value="jvm">JVM</sl:combobox-item>
+        </sl:combobox>
+      </sl:field>
+      <sl:field th:field="*{plugins}">
+        <sl:field-label>Plugins</sl:field-label>
+        <sl:combobox multiple disabled>
+          <sl:combobox-item value="lombok">Lombok</sl:combobox-item>
+          <sl:combobox-item value="mapstruct">MapStruct</sl:combobox-item>
+        </sl:combobox>
+      </sl:field>
+      <sl:field th:field="*{build}">
+        <sl:field-label>Build tool</sl:field-label>
+        <sl:combobox placeholder="Select a build tool">
+          <sl:combobox-item value="maven">Maven</sl:combobox-item>
+          <sl:combobox-item value="ant" disabled>Ant</sl:combobox-item>
+          <sl:combobox-item value="gradle">Gradle</sl:combobox-item>
+        </sl:combobox>
+      </sl:field>
+    form:
+      values: {runtime: jvm, plugins: [lombok, mapstruct], build: ''}
+
+  - id: long-list
+    title: Long lists
+    description: The list scrolls when it is taller than the window; auto-highlight makes Enter choose the first match.
+    source: |-
+      <sl:field th:field="*{destination}">
+        <sl:field-label>Country</sl:field-label>
+        <sl:combobox placeholder="Select a country" auto-highlight>
+          <sl:combobox-item value="argentina">Argentina</sl:combobox-item>
+          <sl:combobox-item value="australia">Australia</sl:combobox-item>
+          <sl:combobox-item value="austria">Austria</sl:combobox-item>
+          <sl:combobox-item value="belgium">Belgium</sl:combobox-item>
+          <sl:combobox-item value="brazil">Brazil</sl:combobox-item>
+          <sl:combobox-item value="canada">Canada</sl:combobox-item>
+          <sl:combobox-item value="chile">Chile</sl:combobox-item>
+          <sl:combobox-item value="china">China</sl:combobox-item>
+          <sl:combobox-item value="colombia">Colombia</sl:combobox-item>
+          <sl:combobox-item value="czechia">Czechia</sl:combobox-item>
+          <sl:combobox-item value="denmark">Denmark</sl:combobox-item>
+          <sl:combobox-item value="egypt">Egypt</sl:combobox-item>
+          <sl:combobox-item value="finland">Finland</sl:combobox-item>
+          <sl:combobox-item value="france">France</sl:combobox-item>
+          <sl:combobox-item value="germany">Germany</sl:combobox-item>
+          <sl:combobox-item value="greece">Greece</sl:combobox-item>
+          <sl:combobox-item value="india">India</sl:combobox-item>
+          <sl:combobox-item value="indonesia">Indonesia</sl:combobox-item>
+          <sl:combobox-item value="ireland">Ireland</sl:combobox-item>
+          <sl:combobox-item value="italy">Italy</sl:combobox-item>
+          <sl:combobox-item value="japan">Japan</sl:combobox-item>
+          <sl:combobox-item value="kenya">Kenya</sl:combobox-item>
+          <sl:combobox-item value="mexico">Mexico</sl:combobox-item>
+          <sl:combobox-item value="morocco">Morocco</sl:combobox-item>
+          <sl:combobox-item value="netherlands">Netherlands</sl:combobox-item>
+          <sl:combobox-item value="new-zealand">New Zealand</sl:combobox-item>
+          <sl:combobox-item value="nigeria">Nigeria</sl:combobox-item>
+          <sl:combobox-item value="norway">Norway</sl:combobox-item>
+          <sl:combobox-item value="peru">Peru</sl:combobox-item>
+          <sl:combobox-item value="poland">Poland</sl:combobox-item>
+          <sl:combobox-item value="portugal">Portugal</sl:combobox-item>
+          <sl:combobox-item value="south-africa">South Africa</sl:combobox-item>
+          <sl:combobox-item value="south-korea">South Korea</sl:combobox-item>
+          <sl:combobox-item value="spain">Spain</sl:combobox-item>
+          <sl:combobox-item value="sweden">Sweden</sl:combobox-item>
+          <sl:combobox-item value="switzerland">Switzerland</sl:combobox-item>
+          <sl:combobox-item value="thailand">Thailand</sl:combobox-item>
+          <sl:combobox-item value="turkiye">Türkiye</sl:combobox-item>
+          <sl:combobox-item value="united-kingdom">United Kingdom</sl:combobox-item>
+          <sl:combobox-item value="united-states">United States</sl:combobox-item>
+          <sl:combobox-item value="vietnam">Vietnam</sl:combobox-item>
+        </sl:combobox>
+      </sl:field>
+    form:
+      values: {destination: ''}

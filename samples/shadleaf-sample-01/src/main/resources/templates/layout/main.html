@@ -81,6 +81,13 @@
                 Leave request
               </sl:sidebar-menu-button>
             </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/trip}" th:active="${#slNav.current('/trip')}"
+                                      tooltip="Trip">
+                <sl:slot name="icon-start"><sl:icon name="plane"/></sl:slot>
+                Trip
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
           </sl:sidebar-menu>
         </sl:sidebar-group-content>
       </sl:sidebar-group>
