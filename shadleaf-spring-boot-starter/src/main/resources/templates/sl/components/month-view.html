@@ -1,0 +1,95 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A month to look at, rendered on the server: each day shows content of its own (a badge, a short
+      text, a count) from the <code>day</code> slot, which is rendered once per day and sees the day as
+      <code>${slDay}</code> (<code>date</code>, a <code>LocalDate</code>, <code>iso</code>, <code>number</code>,
+      <code>label</code>, <code>outside</code>, <code>today</code>), and can link to a page for that day. Nothing is
+      picked: for a date in a form, use <code>sl:calendar</code>. The previous and next month are links to the same
+      page with <code>?month=2026-09</code>, every other parameter kept, so it needs no JavaScript and works with
+      htmx.</sl:description>
+    <sl:prop name="month">The month shown, as <code>2026-10</code> (a <code>YearMonth</code>) or a date in it. By
+      default the month the request asks for in <code>month-param</code>, or else the current month.</sl:prop>
+    <sl:prop name="month-param" default="month">The request parameter the links to the previous and next month set,
+      and that gives the month when <code>month</code> is not set.</sl:prop>
+    <sl:prop name="day-href">Makes every day a link: <code>{date}</code> is replaced by the day's ISO date
+      (<code>/agenda/{date}</code>, <code>?date={date}</code>), and the result is a Thymeleaf link, so a path starting
+      with <code>/</code> gets the context path. The <code>day</code> slot is then inside the link: put nothing
+      interactive in it.</sl:prop>
+    <sl:prop name="today">Today, as <code>2026-10-23</code> (a <code>LocalDate</code>), marked as the current date.
+      By default the server's date; pass it in the user's time zone when that differs.</sl:prop>
+    <sl:prop name="show-outside-days" type="boolean" default="true">Show the days of the previous and next month that
+      fill the first and last week.</sl:prop>
+    <sl:prop name="show-week-number" type="boolean" default="false">Show the week numbers, counted as the page's
+      locale counts them (ISO weeks in most of Europe).</sl:prop>
+    <sl:prop name="week-starts-on" type="number">The first day of the week: 0 is Sunday, 1 Monday, up to 6. By
+      default the page's locale decides.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The month comes from #slCalendar (the weeks, the names in the page's locale) and its links from #slPaging (the
+  request's path and query, the month parameter replaced), in th:with: restricted th:href would take the param of
+  month-param for the request's parameters. The table's caption names it. A day shows its number to
+  the eye and its whole date to screen readers, then the day slot, all inside the link when there is one, so the
+  link's name is the date and the day's content. */-->
+<div th:fragment="month-view"
+     th:with="slMonth=${#slCalendar.month(props.month, #slPaging.param(props['month-param']), props.today,
+                                          props['week-starts-on'])},
+              slPreviousHref=${#slPaging.link(props['month-param'], slMonth.previous)},
+              slNextHref=${#slPaging.link(props['month-param'], slMonth.next)}"
+     class="month-view"
+     sl:attrs>
+  <div class="month-view-nav">
+    <a class="month-view-nav-button month-view-previous"
+       th:href="${slPreviousHref}"
+       th:aria-label="#{sl.calendar.previous}"><sl:icon name="chevron-left"/></a>
+    <a class="month-view-nav-button month-view-next"
+       th:href="${slNextHref}"
+       th:aria-label="#{sl.calendar.next}"><sl:icon name="chevron-right"/></a>
+  </div>
+  <table class="month-view-grid">
+    <caption class="month-view-caption" th:text="${slMonth.caption}">October 2026</caption>
+    <thead>
+    <tr class="month-view-weekdays">
+      <th th:if="${props['show-week-number']}" scope="col" class="month-view-week-number-header"><span
+          class="sl-sr-only" th:text="#{sl.calendar.week-number}"></span></th>
+      <th th:each="slWeekday : ${slMonth.weekdays}"
+          scope="col"
+          class="month-view-weekday"
+          th:attr="aria-label=${slWeekday.longName}"
+          th:text="${slWeekday.shortName}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="slWeek : ${slMonth.weeks}" class="month-view-week">
+      <th th:if="${props['show-week-number']}"
+          scope="row"
+          class="month-view-week-number"
+          th:attr="aria-label=|#{sl.calendar.week-number} ${slWeek.number}|"
+          th:text="${slWeek.number}"></th>
+      <td th:each="slDay : ${slWeek.days}"
+          th:with="slDayHidden=${slDay.outside and !props['show-outside-days']}"
+          class="month-view-day"
+          th:attr="data-outside=${slDay.outside ? 'true' : null},
+                   data-today=${slDay.today ? 'true' : null},
+                   data-hidden=${slDayHidden ? 'true' : null}"><th:block th:unless="${slDayHidden}"><a
+          th:if="${props['day-href'] != null}"
+          class="month-view-day-link"
+          th:href="@{${#strings.replace(props['day-href'], '{date}', slDay.iso)}}"
+          th:attr="aria-current=${slDay.today ? 'date' : null}"><th:block
+          th:insert="~{sl/components/month-view :: month-view-day-content}"/></a><div
+          th:unless="${props['day-href'] != null}"
+          class="month-view-day-body"
+          th:attr="aria-current=${slDay.today ? 'date' : null}"><th:block
+          th:insert="~{sl/components/month-view :: month-view-day-content}"/></div></th:block></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<th:block th:fragment="month-view-day-content"><span class="month-view-day-number" aria-hidden="true"
+    th:text="${slDay.number}"></span><span class="sl-sr-only" th:text="${slDay.label}"></span><div
+    th:if="${slots.has('day')}" class="month-view-day-content"><sl:slot name="day"/></div></th:block>
+</body>
+</html>

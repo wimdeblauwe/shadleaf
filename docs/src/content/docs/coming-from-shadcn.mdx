@@ -211,6 +211,23 @@ dates. A small Alpine component draws the month over them; without Alpine the da
 - No `timeZone`, `buttonVariant`, `classNames`, `components` or `formatters`. See
   [Calendar](../components/calendar/#left-out).
 
+### Month view is a component
+
+shadcn's Calendar shows content per day through react-day-picker's `components={{DayButton}}`, and full-month
+calendars are blocks built on top of it. `<sl:month-view>` is a component of its own for that: rendered on the
+server, no picking, a `day` slot per day and a link per day.
+
+```html
+<!-- shadcn: <Calendar components={{DayButton: ({children, modifiers, day, ...props}) => <CalendarDayButton
+     day={day} modifiers={modifiers} {...props}>{children}<span>{events[day.date]}</span></CalendarDayButton>}}/> -->
+<sl:month-view day-href="/agenda/{date}">
+  <sl:slot name="day"><span th:text="${events[slDay.date]}"></span></sl:slot>
+</sl:month-view>
+```
+
+- The previous and next month are links to the server (`?month=2026-09`), not client state.
+- See [Month view](../components/month-view/).
+
 ### Date picker is a component
 
 shadcn has no date picker component: its docs compose a `Popover`, a `Button` and a `Calendar`, and the app's own

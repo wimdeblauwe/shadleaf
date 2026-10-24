@@ -127,6 +127,9 @@ test.describe('after the session expired', () => {
     await signIn(page);
     expect(state.returnedTo).toBe('/data');
     await expect(heading(page)).toHaveText('Data');
+    // Signing in loads the page, whose deferred htmx processes the button at DOMContentLoaded, after the heading
+    // shows: a click before that sends nothing. The load event comes after it.
+    await page.waitForLoadState();
     await page.locator('#load-about').click();
     await expect(page.locator('#about-text')).toBeVisible();
     expect(problems(messages)).toEqual([]);

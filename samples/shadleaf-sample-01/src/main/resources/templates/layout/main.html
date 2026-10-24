@@ -109,6 +109,13 @@
                 Settings
               </sl:sidebar-menu-button>
             </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/agenda}" th:active="${#slNav.current('/agenda')}"
+                                      tooltip="Team agenda">
+                <sl:slot name="icon-start"><sl:icon name="calendar-days"/></sl:slot>
+                Team agenda
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
           </sl:sidebar-menu>
         </sl:sidebar-group-content>
       </sl:sidebar-group>

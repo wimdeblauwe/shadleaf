@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Team agenda', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Interactive</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page>Team agenda</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  <p>A <code>sl:month-view</code>: each day shows its events from a <code>Map&lt;LocalDate, List&lt;String&gt;&gt;</code>
+    in the model, through the <code>day</code> slot. Every day links to <code>?date=…</code>, which lists that day's
+    events below. The previous and next month are links with <code>?month=…</code>; the boosted body swaps the page
+    with htmx, and without JavaScript they are plain links.</p>
+
+  <sl:month-view th:month="${month}" day-href="?date={date}">
+    <sl:slot name="day">
+      <sl:badge th:each="event : ${events[slDay.date]}"
+                th:variant="${event == 'Public holiday' ? 'outline' : 'secondary'}">[[${event}]]</sl:badge>
+    </sl:slot>
+  </sl:month-view>
+
+  <sl:card th:if="${chosen != null}" id="agenda-day" class="agenda-day">
+    <sl:card-header>
+      <sl:card-title level="2" th:text="${#temporals.format(chosen, 'EEEE d MMMM yyyy')}">Friday 23 October 2026</sl:card-title>
+    </sl:card-header>
+    <sl:card-content>
+      <ul th:unless="${chosenEvents.isEmpty()}">
+        <li th:each="event : ${chosenEvents}" th:text="${event}">Demo</li>
+      </ul>
+      <p th:if="${chosenEvents.isEmpty()}">Nothing planned.</p>
+    </sl:card-content>
+  </sl:card>
+</div>
+</body>
+</html>

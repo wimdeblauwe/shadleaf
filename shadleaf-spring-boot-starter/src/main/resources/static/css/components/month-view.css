@@ -1,0 +1,80 @@
+/*
+  Month view: structure only. The sizes (--cell-size for the navigation, the headers and a day's number,
+  --day-height, --day-radius), colours, type and the focus ring are identity and live in the skins.
+
+  The server renders it all; no script runs:
+
+    .month-view
+      .month-view-nav          .month-view-previous and .month-view-next (.month-view-nav-button), links over the
+                               caption
+      table.month-view-grid    caption.month-view-caption, the .month-view-weekdays, then a .month-view-week per week
+                               of .month-view-day cells (and a .month-view-week-number first), each holding a
+                               .month-view-day-link (with day-href) or a .month-view-day-body: the
+                               .month-view-day-number, the whole date for screen readers, and .month-view-day-content
+
+  A day's state is on its cell: data-today, data-outside, and data-hidden for an outside day left empty. The seven
+  columns share the width, so a day's content wraps or is cut off at the edge of its day, never widens it.
+*/
+@layer components {
+  .month-view {
+    @apply relative w-full;
+  }
+
+  .month-view-nav {
+    @apply pointer-events-none absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1;
+  }
+
+  .month-view-nav-button {
+    @apply pointer-events-auto inline-flex size-(--cell-size) shrink-0 items-center justify-center p-0 outline-none
+      select-none
+      [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 rtl:[&_svg]:rotate-180
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid;
+  }
+
+  .month-view-grid {
+    @apply w-full table-fixed border-separate border-spacing-1;
+  }
+
+  .month-view-caption {
+    @apply h-(--cell-size) px-(--cell-size) text-center leading-(--cell-size) select-none;
+  }
+
+  .month-view-weekday {
+    @apply h-(--cell-size) p-0 text-center select-none;
+  }
+
+  .month-view-week-number-header,
+  .month-view-week-number {
+    @apply w-(--cell-size) p-0 text-center align-middle select-none;
+  }
+
+  .month-view-day {
+    @apply h-(--day-height) p-0 align-top;
+  }
+
+  .month-view-day-link,
+  .month-view-day-body {
+    @apply relative flex size-full min-h-(--day-height) min-w-0 flex-col items-start gap-1 overflow-hidden
+      rounded-(--day-radius) p-1 text-start no-underline outline-none
+      forced-colors:border forced-colors:border-solid;
+  }
+
+  .month-view-day-link {
+    @apply focus-visible:z-10
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:-outline-offset-2
+      forced-colors:focus-visible:outline-solid;
+  }
+
+  .month-view-day-number {
+    @apply inline-flex h-(--cell-size) shrink-0 items-center rounded-(--cell-radius) px-1.5 leading-none;
+  }
+
+  .month-view-day[data-today] .month-view-day-number {
+    @apply forced-colors:outline-1 forced-colors:outline-solid;
+  }
+
+  /* The content starts where the number's text does. */
+  .month-view-day-content {
+    @apply flex w-full min-w-0 flex-col items-start gap-1 overflow-hidden px-1.5;
+  }
+}
