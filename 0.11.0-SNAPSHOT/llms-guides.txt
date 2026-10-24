@@ -163,6 +163,7 @@ example relies on a utility class to change a component, Shadleaf has a prop ins
 | `<CardHeader className="border-b">` | `<sl:card-header border>` |
 | `<Empty className="border border-dashed">` | `<sl:empty border>` |
 | `<Spinner className="size-8" />` | `<sl:spinner size="32"/>` |
+| `<Attachment className="w-full">` | `<sl:attachment full-width>` |
 | `<Skeleton className="h-4 w-full" />` | `<sl:skeleton/>` (a line is the default), `shape="circle"` for an avatar |
 
 Your own classes still work: `class` is appended to the component's own, so `class="w-64"` sizes a skeleton when your
@@ -605,6 +606,14 @@ shadcn's example wraps the ellipsis in a `DropdownMenuTrigger` by hand; here `<s
 "More levels", not "More", and the separator turns around on a right-to-left page. See
 [Breadcrumb](https://shadleaf.dev/0.11.0-SNAPSHOT/components/breadcrumb.md).
 
+#### Attachment: a trigger with `as`, and a label for the group
+
+The parts and props are shadcn's. `<AttachmentTrigger asChild>` around a link is `<sl:attachment-trigger as="a">`, and
+inside a `DialogTrigger` it is a trigger with `commandfor` and `command="show-modal"`. `<sl:attachment-action>`
+takes `as="a"` too, for a download link. Where shadcn tells you to add `tabIndex`, `role="group"` and an `aria-label`
+to a group of attachments without actions, `<sl:attachment-group label="...">` adds all three. shadcn's `shimmer` and
+`scroll-fade-x` utilities are part of the attachment's stylesheet. See [Attachment](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md).
+
 #### Skip link and main
 
 shadcn/ui has no skip link; `<sl:skip-link>` goes first in the body and skips to `<sl:sidebar-inset>`, which therefore
@@ -656,6 +665,11 @@ takes keyboard focus, when it is a link (`as="a"`).
 - The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
 - A tab panel shows the focus ring when Tab reaches it; shadcn's takes the focus without showing it. In Windows'
   high-contrast mode the active tab is underlined, as its background and shadow are gone there.
+- The attachment trigger draws the skin's focus ring around the card, only for keyboard focus; shadcn's card shows a
+  faint ring whenever anything in it has focus, a click included. An uploading or processing attachment is marked
+  `aria-busy`, and its title does not shimmer for users who ask for reduced motion or in Windows' high-contrast mode.
+  A failed attachment's text uses the legible destructive colour (see Contrast). The edges of an attachment group
+  stop fading while it has keyboard focus, so its focus ring shows.
 - Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
   `aria-label`.
 

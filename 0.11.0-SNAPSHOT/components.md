@@ -76,6 +76,7 @@ Start with the [overview](https://shadleaf.dev/0.11.0-SNAPSHOT/components/applic
 ## Display
 
 - [Card](https://shadleaf.dev/0.11.0-SNAPSHOT/components/card.md): A container for related content and actions, built from its parts.
+- [Attachment](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md): A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
 - [Badge](https://shadleaf.dev/0.11.0-SNAPSHOT/components/badge.md): A small label for a status, a count or a category.
 - [Avatar](https://shadleaf.dev/0.11.0-SNAPSHOT/components/avatar.md): A picture of a person, with initials when there is no picture.
 - [Icon](https://shadleaf.dev/0.11.0-SNAPSHOT/components/icon.md): Inline SVG icons from lucide, or your own.
