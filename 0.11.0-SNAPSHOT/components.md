@@ -27,6 +27,8 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Checkbox](https://shadleaf.dev/0.11.0-SNAPSHOT/components/checkbox.md): The browser's own checkbox, styled, bound to a form field with th:field.
 - [Radio Group](https://shadleaf.dev/0.11.0-SNAPSHOT/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field.
 - [Switch](https://shadleaf.dev/0.11.0-SNAPSHOT/components/switch.md): An on/off control, bound to a boolean form field with th:field.
+- [Toggle](https://shadleaf.dev/0.11.0-SNAPSHOT/components/toggle.md): A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
+- [Toggle Group](https://shadleaf.dev/0.11.0-SNAPSHOT/components/toggle-group.md): A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
 - [Calendar](https://shadleaf.dev/0.11.0-SNAPSHOT/components/calendar.md): shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
 - [Date Picker](https://shadleaf.dev/0.11.0-SNAPSHOT/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
 

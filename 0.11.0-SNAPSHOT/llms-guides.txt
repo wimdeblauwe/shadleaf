@@ -313,6 +313,34 @@ the chips and the list box in its place; without Alpine it is a select drawn lik
 - No popup layout (a button trigger with the input in the list), no input addons, no `showRemove` on a chip, no
   `side`/`align`. See [Combobox](https://shadleaf.dev/0.11.0-SNAPSHOT/components/combobox.md#left-out).
 
+#### Toggle and toggle group are checkboxes and radio buttons
+
+`<sl:toggle>` is a checkbox drawn as a button, and the items of `<sl:toggle-group>` are radio buttons
+(`type="single"`) or checkboxes (`type="multiple"`). So `th:field` binds them, the form submits them, and they work
+without JavaScript; a screen reader announces a toggle as a checkbox, checked or not, where Radix's is a toggle button,
+pressed or not.
+
+```html
+<!-- shadcn: <Toggle aria-label="Toggle italic" defaultPressed><Italic/></Toggle> -->
+<sl:toggle name="italic" aria-label="Toggle italic" checked><sl:icon name="italic"/></sl:toggle>
+
+<!-- shadcn: <ToggleGroup type="single" variant="outline" defaultValue="grid">
+             <ToggleGroupItem value="list">List</ToggleGroupItem>... -->
+<sl:toggle-group th:field="*{layout}" variant="outline" aria-label="Layout">
+  <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+  <sl:toggle-group-item value="grid">Grid</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+- No `pressed`/`defaultPressed`/`onPressedChange`, nor `value`/`defaultValue`/`onValueChange` on the group:
+  `checked` (or `th:field`) renders the state, and the inputs fire `change`.
+- The group takes the `th:field` or `name` its items share; Radix's has neither.
+- The keyboard is the browser's: in a `single` group the arrow keys move between the items and select them, and Tab
+  leaves the group; in a `multiple` group every item is a tab stop. Radix's arrow keys only move the focus, in both
+  types. There is no `loop` or `rovingFocus`.
+- A `single` group cannot be cleared by clicking its item again, as a radio button cannot.
+- `spacing` takes `0` to `4`, and `variant` and `size` are set on the group only, not per item.
+
 #### Calendar is drawn over date inputs
 
 `<sl:calendar>` holds its value in `<input type="date">` elements, so `th:field` binds it and the form submits ISO
