@@ -14,4 +14,9 @@ document.addEventListener('alpine:init', () => {
       return this.open ? 'true' : 'false';
     }
   }));
+  window.Alpine.data('testDestroyable', () => ({
+    destroy() {
+      window.testDestroyed = (window.testDestroyed ?? 0) + 1;
+    }
+  }));
 });

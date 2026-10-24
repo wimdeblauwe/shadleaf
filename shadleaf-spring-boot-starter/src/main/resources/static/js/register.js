@@ -23,6 +23,43 @@ function register(Alpine) {
   for (const [name, component] of components) {
     Alpine.data(name, component);
   }
+  watchRemovedAncestors(Alpine);
+}
+
+/*
+  Alpine only destroys a removed node it has marked (_x_marker), and it marks just the elements it walked from an
+  x-data root. When a swap removes a plain ancestor of a component (htmx swapping <main>), destroy() would never run:
+  listeners on document/window, timers and blob: URLs would leak. So destroy the components inside such a node
+  ourselves, once it is still disconnected a task later (a node that was moved, not removed, is left alone). Alpine's
+  destroyTree deletes the marker, so a component is never destroyed twice.
+*/
+let watchingRemovedAncestors = false;
+
+function watchRemovedAncestors(Alpine) {
+  if (watchingRemovedAncestors || typeof Alpine.destroyTree !== 'function') {
+    return;
+  }
+  watchingRemovedAncestors = true;
+  new MutationObserver(mutations => {
+    for (const mutation of mutations) {
+      for (const node of mutation.removedNodes) {
+        if (node.nodeType === Node.ELEMENT_NODE && !node._x_marker) {
+          setTimeout(() => destroyComponentsIn(Alpine, node), 0);
+        }
+      }
+    }
+  }).observe(document, {childList: true, subtree: true});
+}
+
+function destroyComponentsIn(Alpine, removed) {
+  if (removed.isConnected) {
+    return;
+  }
+  for (const el of removed.querySelectorAll('[x-data]')) {
+    if (el._x_marker && !el.isConnected) {
+      Alpine.destroyTree(el);
+    }
+  }
 }
 
 /** For the bundled entries: registers with the given Alpine and starts it, unless the page already has one. */

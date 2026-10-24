@@ -37,7 +37,7 @@ test.beforeAll(() => {
 });
 
 /** Serves a page with the given script tags in <head> and the disclosure in <body>; returns what the console said. */
-async function open(page: Page, headScripts: string[], csp: string): Promise<string[]> {
+async function open(page: Page, headScripts: string[], csp: string, body = DISCLOSURE): Promise<string[]> {
   const messages: string[] = [];
   page.on('console', message => {
     if (message.type() === 'error' || message.type() === 'warning') {
@@ -55,7 +55,7 @@ async function open(page: Page, headScripts: string[], csp: string): Promise<str
         contentType: 'text/html',
         headers: {'Content-Security-Policy': csp},
         body: `<!doctype html><html lang="en"><head><title>Fixture</title>${headScripts.join('')}</head>`
-            + `<body>${DISCLOSURE}</body></html>`,
+            + `<body>${body}</body></html>`,
       });
     }
     if (path === '/app/components.js') {
@@ -141,4 +141,33 @@ test('the showcase loads the bundled script and starts Alpine', async ({page}) =
 
   await page.waitForFunction(() => (window as any).Alpine !== undefined);
   expect(messages).toEqual([]);
+});
+
+// Alpine only destroys a removed node it marked, and it marks just what it walked from an x-data root: removing a
+// plain ancestor of a component (htmx swapping <main>) needs register.js's observer to run destroy().
+const WRAPPED_COMPONENT = '<main><div id="wrapper"><div x-data="testDestroyable"></div></div></main>';
+
+async function expectRemovedAncestorDestroysComponent(page: Page) {
+  await page.waitForFunction(() => (window as any).Alpine?.version !== undefined
+      && document.querySelector('[x-data]')?.hasOwnProperty('_x_marker'));
+  await page.evaluate(() => document.querySelector('main')!.remove());
+  await expect.poll(() => page.evaluate(() => (window as any).testDestroyed)).toBe(1);
+  // Not a second time.
+  await page.waitForTimeout(100);
+  expect(await page.evaluate(() => (window as any).testDestroyed)).toBe(1);
+}
+
+test('bundled: destroys components inside a removed plain ancestor', async ({page}) => {
+  await open(page, [tag.appComponents, tag.shadleaf('bundled')], EVAL_CSP, WRAPPED_COMPONENT);
+  await expectRemovedAncestorDestroysComponent(page);
+});
+
+test('csp: destroys components inside a removed plain ancestor', async ({page}) => {
+  await open(page, [tag.appComponents, tag.shadleaf('csp')], STRICT_CSP, WRAPPED_COMPONENT);
+  await expectRemovedAncestorDestroysComponent(page);
+});
+
+test('external: destroys components inside a removed plain ancestor', async ({page}) => {
+  await open(page, [tag.appComponents, tag.shadleaf('external'), tag.appAlpine], EVAL_CSP, WRAPPED_COMPONENT);
+  await expectRemovedAncestorDestroysComponent(page);
 });
