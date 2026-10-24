@@ -10,7 +10,8 @@
   With `describe` the content describes the trigger (aria-describedby, added to any the trigger has; the content gets
   an id if it has none). Without it the content repeats the trigger's name and the markup hides it from assistive
   technology. `when` (optional) is asked each time before it shows. The trigger is passed to showPopover() as its
-  source, which makes it the implicit anchor CSS positions against.
+  source, which makes it the implicit anchor CSS positions against. `control` (the trigger by default) is the element
+  that takes the focus and the description: the input inside a label that is the trigger.
 */
 import {placedSide, positionWithoutAnchoring, show} from './popup.js';
 
@@ -22,7 +23,8 @@ let lastHiddenAt = 0;
 let counter = 0;
 
 /** Sets the tooltip up; `listen` (popup.js's listener) collects what destroy() removes. Returns its hide(). */
-export function attachTooltip(trigger, content, {delay, describe = true, when = () => true}, listen) {
+export function attachTooltip(trigger, content, {delay, describe = true, when = () => true, control = trigger},
+    listen) {
   let showTimer = 0;
   let hideTimer = 0;
   let suppressed = false;
@@ -31,9 +33,9 @@ export function attachTooltip(trigger, content, {delay, describe = true, when = 
     if (!content.id) {
       content.id = `sl-tooltip-${++counter}`;
     }
-    const describedBy = (trigger.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
+    const describedBy = (control.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
     if (!describedBy.includes(content.id)) {
-      trigger.setAttribute('aria-describedby', [...describedBy, content.id].join(' '));
+      control.setAttribute('aria-describedby', [...describedBy, content.id].join(' '));
     }
   }
 
@@ -95,12 +97,12 @@ export function attachTooltip(trigger, content, {delay, describe = true, when = 
   });
   // A task later: focus can come back while the browser is still closing a popover (a menu the trigger opened, on
   // Escape), and showing another one then throws.
-  listen(trigger, 'focus', () => setTimeout(() => {
-    if (document.activeElement === trigger && trigger.matches(':focus-visible')) {
+  listen(control, 'focus', () => setTimeout(() => {
+    if (document.activeElement === control && control.matches(':focus-visible')) {
       open();
     }
   }));
-  listen(trigger, 'blur', () => self.hide());
+  listen(control, 'blur', () => self.hide());
   listen(content, 'pointerenter', () => clearTimeout(hideTimer));
   listen(content, 'pointerleave', hideSoon);
   listen(document, 'keydown', event => {

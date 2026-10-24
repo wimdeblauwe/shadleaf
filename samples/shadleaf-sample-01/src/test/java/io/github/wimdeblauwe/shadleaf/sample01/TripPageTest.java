@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * The trip page: a combobox whose options come from the server as the user types (search-url), a multiple combobox
- * bound to a list, and an input group in a field.
+ * bound to a list, an input group in a field, and a toggle group and a toggle.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -64,6 +64,36 @@ class TripPageTest {
     assertThat(budget.attr("aria-describedby")).isEqualTo("dailyBudget-description");
     assertThat(page.select("label[for=dailyBudget]")).hasSize(1);
     assertThat(budget.parent().select(".input-group-text")).extracting(Element::text).containsExactly("€", "EUR");
+  }
+
+  @Test
+  void travelByIsAToggleGroupOfRadioButtonsAndFlexibleDatesAToggle() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(get("/trip")).andExpect(status().isOk()).andReturn().getResponse()
+        .getContentAsString());
+
+    assertThat(page.select("fieldset .toggle-group[role=radiogroup] input.toggle-input"))
+        .extracting(input -> input.attr("type"), input -> input.attr("name"), Element::val,
+            input -> input.hasAttr("checked"))
+        .containsExactly(tuple("radio", "travelBy", "train", true), tuple("radio", "travelBy", "plane", false),
+            tuple("radio", "travelBy", "car", false));
+
+    Element flexible = page.getElementById("flexibleDates");
+    assertThat(flexible.attr("type")).isEqualTo("checkbox");
+    assertThat(flexible.parent().hasClass("toggle")).isTrue();
+    assertThat(flexible.attr("aria-describedby")).isEqualTo("flexibleDates-description");
+    assertThat(flexible.hasAttr("checked")).isFalse();
+  }
+
+  @Test
+  void anInvalidSubmitKeepsTheChosenTravelAndFlexibleDates() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(post("/trip")
+            .param("travelBy", "car")
+            .param("flexibleDates", "true")
+            .param("_flexibleDates", "on"))
+        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+
+    assertThat(page.select(".toggle-group input[checked]")).extracting(Element::val).containsExactly("car");
+    assertThat(page.getElementById("flexibleDates").hasAttr("checked")).isTrue();
   }
 
   @Test

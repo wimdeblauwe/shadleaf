@@ -137,24 +137,28 @@ for (const {skin, theme} of combinations) {
     for (let i = 0; i < count; i++) {
       const trigger = tooltips.nth(i).locator('> :not(.tooltip-content)').first();
       const content = tooltips.nth(i).locator('> .tooltip-content');
+      // A label around its control (a toggle) shows the tooltip, but the control takes the focus and the description.
+      const wrapsControl = await trigger.evaluate(element => element instanceof HTMLLabelElement
+          && element.control !== null && element.contains(element.control));
+      const control = wrapsControl ? trigger.locator('input').first() : trigger;
       // A label tooltip (mode="label") repeats the name: hidden from assistive technology, it describes nothing.
       if (await content.getAttribute('aria-hidden') === 'true') {
-        await expect(trigger).not.toHaveAttribute('aria-describedby');
+        await expect(control).not.toHaveAttribute('aria-describedby');
         await content.evaluate((element, n) => element.id ||= `label-tooltip-${n}`, i);
       }
       const contentId = await content.evaluate(element => element.id);
       if (await content.getAttribute('aria-hidden') !== 'true') {
-        await expect(trigger).toHaveAttribute('aria-describedby', new RegExp(`\\b${contentId}\\b`));
+        await expect(control).toHaveAttribute('aria-describedby', new RegExp(`\\b${contentId}\\b`));
       }
-      await trigger.focus();
+      await control.focus();
       await waitUntilOpen(content);
       const results = await new AxeBuilder({page}).include(`#${contentId}`).withTags(TAGS).analyze();
       failures.push(...axeFailures(contentId, results.violations));
 
       await page.keyboard.press('Escape');
       await expectClosed(content);
-      await expect(trigger).toBeFocused();
-      await trigger.blur();
+      await expect(control).toBeFocused();
+      await control.blur();
     }
     expect(failures, failures.join('\n')).toEqual([]);
   });

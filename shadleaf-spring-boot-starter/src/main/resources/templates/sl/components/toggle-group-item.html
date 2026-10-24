@@ -1,0 +1,26 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One item of a <code>sl:toggle-group</code>, drawn as a <code>sl:toggle</code>: a radio button in a
+      <code>single</code> group, a checkbox in a <code>multiple</code> one. Give it a <code>value</code>; it takes the
+      group's <code>th:field</code> or <code>name</code>, variant, size and <code>disabled</code>. The content is its
+      label; give an item that holds only an icon an <code>aria-label</code>. Every attribute that is not a prop
+      (<code>value</code>, <code>checked</code>, <code>disabled</code>, <code>aria-label</code>) passes through to the
+      <code>input</code>, except <code>class</code>, which goes to the <code>label</code> around it. With
+      <code>th:field</code>, the item is marked <code>aria-invalid</code> when its field has errors.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* The markup of sl:toggle, with the input's type from the group. The group's disabled goes into the attributes
+  before #slFields.control sees them, so a disabled item never takes the autofocus of sl:form-errors. */-->
+<th:block th:fragment="toggle-group-item"
+          th:with="slToggleClass='toggle toggle-group-item',
+                   slToggleVariant=${slToggleGroupVariant},
+                   slToggleSize=${slToggleGroupSize},
+                   slToggleType=${slToggleGroupType == 'multiple' ? 'checkbox' : 'radio'},
+                   slToggleName=${slToggleGroupName},
+                   slToggleAttrs=${slToggleGroupDisabled == true ? attrs.with('disabled', 'disabled') : attrs}"
+          th:insert="~{sl/components/toggle :: toggle-label}"></th:block>
+</body>
+</html>

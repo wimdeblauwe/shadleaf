@@ -1,0 +1,83 @@
+---
+title: Toggle Group
+description: A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="toggle-group--default" />
+
+The items of a toggle group are [toggles](../toggle/) around radio buttons (`type="single"`, the default: one item is
+on at a time) or checkboxes (`type="multiple"`: any number). The form submits them as such inputs, and they work
+without JavaScript. In a `single` group the arrow keys move between the items and Tab leaves the group, as in any
+group of radio buttons; in a `multiple` group every item is a tab stop.
+
+Name the group with `aria-label`, or with `aria-labelledby` pointing at its label. Give each item a `value`; an item
+that holds only an icon needs an `aria-label`.
+
+## Outline
+
+<ComponentPreview id="toggle-group--outline" />
+
+## In a form
+
+Write `th:field` on the group, once. The items share it: Spring gives them the field's `name`, numbers their ids
+(`layout1`, `layout2`, ...) and checks the one whose value matches the field. Without a form object, `name` on the
+group gives the items their name. A `single` group with neither gets a generated name, so its items still exclude
+each other; give it a `name` when the form should submit it.
+
+<ComponentPreview id="toggle-group--form" />
+
+In a [field set](../field/#radio-buttons-and-checkbox-groups) with `th:field`, the group takes the field set's, and
+the legend labels it.
+
+## Multiple
+
+With `type="multiple"`, bind a collection (a `List`, a `Set`, an array). Spring checks every item whose value is in
+it, and adds a hidden marker input, so a form with no item on clears the collection.
+
+<ComponentPreview id="toggle-group--multiple" />
+
+## Sizes
+
+<ComponentPreview id="toggle-group--sizes" />
+
+## Spacing
+
+`spacing` sets the gap between the items, in Tailwind's spacing steps: `2` (`0.5rem`) by default, `0` to join them
+into one control.
+
+<ComponentPreview id="toggle-group--spacing" />
+
+## Vertical
+
+<ComponentPreview id="toggle-group--vertical" />
+
+## Invalid
+
+A field with errors marks every item `aria-invalid="true"`.
+
+<ComponentPreview id="toggle-group--invalid" />
+
+## Disabled
+
+<ComponentPreview id="toggle-group--disabled" />
+
+## With tooltips
+
+Put an item in a [tooltip](../tooltip/). The group still joins the items, the tooltip shows on hover and when the
+keyboard focuses the item, and its text describes the item's input. An icon-only item already has its
+`aria-label`: give the `sl:tooltip` `mode="label"`, so a screen reader does not say it twice.
+
+<ComponentPreview id="toggle-group--tooltip" />
+
+## Attributes
+
+### sl:toggle-group
+
+<ComponentAttributes component="toggle-group" />
+
+### sl:toggle-group-item
+
+<ComponentAttributes component="toggle-group-item" />
