@@ -92,6 +92,11 @@ const srcdoc = scenario?.layout ? layoutSrcdoc : scenario && skins.length > 0
     /* An accordion fills its container, tabs and a collapsible fit their content: give them a width too. */
     .stage > .accordion { max-inline-size: 32rem; }
     .stage > :is(.tabs, .collapsible) { inline-size: 24rem; max-inline-size: 100%; }
+    /* A row of attachments scrolls inside the width a page's layout gives it; a full-width attachment fills that
+       width, stacked. */
+    .stage > .attachment-group { inline-size: 24rem; max-inline-size: 100%; }
+    .stage:has(> .attachment[data-width='full']) { flex-direction: column; align-items: flex-start; }
+    .stage > .attachment[data-width='full'] { inline-size: 24rem; max-inline-size: 100%; }
     /* A chart is as wide as its container, which a flex item is not: it takes the frame's width. */
     .stage > .chart { inline-size: 100%; }
     /* An application shell is as tall as the screen, which in a frame sized to its content would grow without end. */

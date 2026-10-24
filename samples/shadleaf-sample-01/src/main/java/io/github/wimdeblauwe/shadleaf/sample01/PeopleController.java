@@ -15,7 +15,10 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -155,12 +158,30 @@ public class PeopleController {
     return view;
   }
 
-  /** The person's page: View in the row menu. */
+  /** The person's page: View in the row menu. Lists the person's files, which are already on the server. */
   @GetMapping("/people/{id}")
   public String person(@PathVariable long id, Model model) {
-    model.addAttribute("person", person(id));
+    Person person = person(id);
+    model.addAttribute("person", person);
+    model.addAttribute("files", PersonFile.of(person));
     model.addAttribute("confirm", false);
     return "person";
+  }
+
+  /**
+   * One of a person's files, shown in the browser: the person page's attachments open it (a link, or an image in a
+   * dialog) and download it (a link with {@code download}).
+   */
+  @GetMapping("/people/{id}/files/{name}")
+  public ResponseEntity<byte[]> file(@PathVariable long id, @PathVariable String name) {
+    PersonFile file = PersonFile.of(person(id)).stream()
+        .filter(candidate -> candidate.name().equals(name))
+        .findFirst()
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    return ResponseEntity.ok()
+        .contentType(file.mediaType())
+        .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.inline().filename(file.name()).build().toString())
+        .body(file.content());
   }
 
   /**

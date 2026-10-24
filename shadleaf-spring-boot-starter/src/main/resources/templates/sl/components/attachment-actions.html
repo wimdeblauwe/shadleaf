@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The <code>sl:attachment-action</code>s of an attachment, at its end; in a vertical attachment,
+      over the top corner of the media. They sit above an <code>sl:attachment-trigger</code>, so they stay
+      clickable.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="attachment-actions"
+     class="attachment-actions"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

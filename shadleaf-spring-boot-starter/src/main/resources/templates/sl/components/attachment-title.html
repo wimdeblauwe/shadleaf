@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The name of an attachment, usually its file name, in <code>sl:attachment-content</code>. Cut off
+      with an ellipsis when it does not fit; shimmers while the attachment uploads or is processed, unless the user
+      asks for reduced motion.</sl:description>
+  </sl:props>
+</head>
+<body>
+<span th:fragment="attachment-title"
+      class="attachment-title"
+      sl:attrs><sl:slot/></span>
+</body>
+</html>

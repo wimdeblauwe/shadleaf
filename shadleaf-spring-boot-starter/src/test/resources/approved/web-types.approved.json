@@ -367,6 +367,266 @@
           }
         } ]
       }, {
+        "name" : "sl:attachment",
+        "description" : "A file or an image attached to something: a message, a form, a record. Holds an `sl:attachment-media`, an `sl:attachment-content` (title and description), optional `sl:attachment-actions` and an optional `sl:attachment-trigger` that makes the whole card open a link or a dialog. Purely presentational: the server renders its state. Say the state in the description too (\"Uploading · 64%\", \"Upload failed\"), so it is not told by colour alone.",
+        "attributes" : [ {
+          "name" : "state",
+          "description" : "Where the file is in its upload: `idle` (picked, not sent yet) draws a dashed border, `uploading` and `processing` shimmer the title and mark the attachment busy (`aria-busy`), `error` turns it destructive. `done` is a file that is there.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "idle"
+          }, {
+            "name" : "uploading"
+          }, {
+            "name" : "processing"
+          }, {
+            "name" : "error"
+          }, {
+            "name" : "done"
+          } ],
+          "default" : "done"
+        }, {
+          "name" : "size",
+          "description" : "Size of the attachment.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "xs"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "orientation",
+          "description" : "`vertical` puts the media above the content, for an image.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "full-width",
+          "description" : "Fill the width of the container, for a list of attachments (shadcn's `w-full` class). Without it the attachment is as wide as its content.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:state",
+          "description" : "`state` from a Thymeleaf expression, e.g. `th:state=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:full-width",
+          "description" : "`full-width` from a Thymeleaf expression, e.g. `th:full-width=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:attachment-action",
+        "description" : "A button in `sl:attachment-actions`, to remove, retry or download the file: a `sl:button`, ghost and an extra small icon by default. Give it an `aria-label` that names the file (\"Remove report.pdf\"). Any other attribute passes through to the `sl:button` (`href`, `type`, `disabled`, `hx-*`). Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "ghost"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button, as on `sl:button`. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "icon-xs"
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) to download or open the file.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:attachment-actions",
+        "description" : "The `sl:attachment-action`s of an attachment, at its end; in a vertical attachment, over the top corner of the media. They sit above an `sl:attachment-trigger`, so they stay clickable.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:attachment-content",
+        "description" : "The text of an `sl:attachment`: its `sl:attachment-title` and `sl:attachment-description`. Takes the space the media and the actions leave.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:attachment-description",
+        "description" : "What else to know about an attachment, below its title: the file type and size, or its state (\"Uploading · 64%\", \"Upload failed. Try again.\"). Cut off with an ellipsis when it does not fit.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:attachment-group",
+        "description" : "A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for attachments without any, give the group a `label`.",
+        "attributes" : [ {
+          "name" : "label",
+          "description" : "Accessible name of the group. With it the group is a named group (`role=\"group\"`) that takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:attachment-media",
+        "description" : "The icon or image of an `sl:attachment`: an icon (or an `sl:spinner` while it uploads) on a muted square, or an `&lt;img&gt;` that fills it.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "`icon` centres an icon on a muted square; `image` crops an `&lt;img&gt;` to fill the square, dimmed while the attachment uploads, is processed or failed.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "icon"
+          }, {
+            "name" : "image"
+          } ],
+          "default" : "icon"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:attachment-title",
+        "description" : "The name of an attachment, usually its file name, in `sl:attachment-content`. Cut off with an ellipsis when it does not fit; shimmers while the attachment uploads or is processed, unless the user asks for reduced motion.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:attachment-trigger",
+        "description" : "Makes a whole `sl:attachment` clickable: a button (to open an `sl:dialog` with `commandfor` and `command=\"show-modal\"`) or, with `as=\"a\"`, a link that covers the card behind its actions. It has no text of its own, so it needs an `aria-label` that says what it does (\"Open report.pdf\"). Put it last in the attachment. Requires `aria-label` or `aria-labelledby`.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) to open the file.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:avatar",
         "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead while the image has no `src`, is loading or fails to load. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
         "attributes" : [ {

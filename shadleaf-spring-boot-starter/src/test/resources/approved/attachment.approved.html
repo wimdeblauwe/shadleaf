@@ -1,0 +1,120 @@
+<!-- <sl:attachment>Content</sl:attachment> -->
+<div class="attachment">Content</div>
+
+<!-- <sl:attachment state="idle">Content</sl:attachment> -->
+<div class="attachment" data-state="idle">Content</div>
+
+<!-- <sl:attachment state="uploading">Content</sl:attachment> -->
+<div class="attachment" data-state="uploading" aria-busy="true">Content</div>
+
+<!-- <sl:attachment state="processing">Content</sl:attachment> -->
+<div class="attachment" data-state="processing" aria-busy="true">Content</div>
+
+<!-- <sl:attachment state="error">Content</sl:attachment> -->
+<div class="attachment" data-state="error">Content</div>
+
+<!-- <sl:attachment state="done">Content</sl:attachment> -->
+<div class="attachment">Content</div>
+
+<!-- <sl:attachment size="sm">Content</sl:attachment> -->
+<div class="attachment" data-size="sm">Content</div>
+
+<!-- <sl:attachment size="xs">Content</sl:attachment> -->
+<div class="attachment" data-size="xs">Content</div>
+
+<!-- <sl:attachment orientation="vertical">Content</sl:attachment> -->
+<div class="attachment" data-orientation="vertical">Content</div>
+
+<!-- <sl:attachment full-width>Content</sl:attachment> -->
+<div class="attachment" data-width="full">Content</div>
+
+<!-- <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media> -->
+<div class="attachment-media">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</div>
+
+<!-- <sl:attachment-media variant="image"><img src="/files/1/thumbnail" alt=""></sl:attachment-media> -->
+<div class="attachment-media" data-variant="image">
+  <img src="/files/1/thumbnail" alt="">
+</div>
+
+<!-- <sl:attachment-content>Content</sl:attachment-content> -->
+<div class="attachment-content">Content</div>
+
+<!-- <sl:attachment-title>report.pdf</sl:attachment-title> -->
+<span class="attachment-title">report.pdf</span>
+
+<!-- <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description> -->
+<span class="attachment-description">PDF · 2.4 MB</span>
+
+<!-- <sl:attachment-actions>Actions</sl:attachment-actions> -->
+<div class="attachment-actions">Actions</div>
+
+<!-- <sl:attachment-action aria-label="Remove report.pdf"><sl:icon name="x"/></sl:attachment-action> -->
+<button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Remove report.pdf">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</button>
+
+<!-- <sl:attachment-action as="a" href="/files/1" download size="icon-sm" variant="secondary"
+                      aria-label="Download report.pdf"><sl:icon name="download"/></sl:attachment-action> -->
+<a class="button attachment-action" data-variant="secondary" data-size="icon-sm" href="/files/1" download aria-label="Download report.pdf">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</a>
+
+<!-- <sl:attachment-trigger aria-label="Preview report.pdf" commandfor="preview" command="show-modal"/> -->
+<button class="attachment-trigger" type="button" aria-label="Preview report.pdf" commandfor="preview" command="show-modal"></button>
+
+<!-- <sl:attachment-trigger as="a" href="/files/1" aria-label="Open report.pdf"/> -->
+<a class="attachment-trigger" href="/files/1" aria-label="Open report.pdf"></a>
+
+<!-- <sl:attachment-group>Attachments</sl:attachment-group> -->
+<div class="attachment-group">Attachments</div>
+
+<!-- <sl:attachment-group label="Photos">Attachments</sl:attachment-group> -->
+<div class="attachment-group" role="group" tabindex="0" aria-label="Photos">Attachments</div>
+
+<!-- <sl:attachment state="error" id="upload-1">
+  <sl:attachment-media><sl:icon name="file-warning"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>financial-model.xlsx</sl:attachment-title>
+    <sl:attachment-description>Upload failed. Try again.</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Retry upload"><sl:icon name="refresh-cw"/></sl:attachment-action>
+    <sl:attachment-action aria-label="Remove financial-model.xlsx"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+  <sl:attachment-trigger as="a" href="/files/1" aria-label="Open financial-model.xlsx"/>
+</sl:attachment> -->
+<div class="attachment" data-state="error" id="upload-1">
+  <div class="attachment-media">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </div>
+  <div class="attachment-content">
+    <span class="attachment-title">financial-model.xlsx</span>
+    <span class="attachment-description">Upload failed. Try again.</span>
+  </div>
+  <div class="attachment-actions">
+    <button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Retry upload">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </button>
+    <button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Remove financial-model.xlsx">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </button>
+  </div>
+  <a class="attachment-trigger" href="/files/1" aria-label="Open financial-model.xlsx"></a>
+</div>
+
+<!-- <sl:attachment th:state="${'uploading'}" th:size="${'sm'}">
+  <sl:attachment-media><sl:spinner aria-hidden="true"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>[[${'design-system.zip'}]]</sl:attachment-title>
+  </sl:attachment-content>
+</sl:attachment> -->
+<div class="attachment" data-state="uploading" data-size="sm" aria-busy="true">
+  <div class="attachment-media">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon spinner" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="status" aria-label="Loading" aria-hidden="true"></svg>
+  </div>
+  <div class="attachment-content">
+    <span class="attachment-title">design-system.zip</span>
+  </div>
+</div>

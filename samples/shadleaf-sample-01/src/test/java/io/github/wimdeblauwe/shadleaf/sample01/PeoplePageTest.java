@@ -307,8 +307,65 @@ class PeoplePageTest {
 
     assertThat(page.select("h1").text()).isEqualTo(person.getName());
     assertThat(page.select(".person-details").text()).contains(person.getEmail(), person.getRole().getLabel());
-    assertThat(page.select("a.button").last().attr("href")).isEqualTo("/people");
+    assertThat(page.select(".card-footer > a.button").first().attr("href")).isEqualTo("/people");
     mockMvc.perform(get("/people/999999")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void viewListsThePersonsFilesAsAttachments() throws Exception {
+    Person person = repository.findAll().get(0);
+    String base = "/people/" + person.getId() + "/files/";
+    Document page = page("/people/" + person.getId());
+
+    List<Element> attachments = page.select(".person-files > li > .attachment");
+    assertThat(attachments).hasSize(3);
+    assertThat(page.select(".person-files .attachment-title").eachText())
+        .containsExactly("onboarding-notes.txt", "orders.csv", "team-offsite.jpg");
+    for (Element attachment : attachments) {
+      // A file on the server: the default done state, so no state attribute and nothing busy.
+      assertThat(attachment.hasAttr("data-state")).isFalse();
+      Element download = attachment.selectFirst(".attachment-actions > a.attachment-action");
+      String name = attachment.selectFirst(".attachment-title").text();
+      assertThat(download.attr("href")).isEqualTo(base + name);
+      assertThat(download.hasAttr("download")).isTrue();
+      // The body is boosted, and htmx boosts a download link too: it would swap the file into the page.
+      assertThat(download.attr("hx-boost")).isEqualTo("false");
+      assertThat(download.attr("aria-label")).isEqualTo("Download " + name);
+      assertThat(attachment.child(attachment.childrenSize() - 1).hasClass("attachment-trigger")).isTrue();
+    }
+
+    // A text file opens in the browser; the image shows its thumbnail and opens in a dialog.
+    Element notes = attachments.get(0);
+    assertThat(notes.selectFirst("a.attachment-trigger").attr("href")).isEqualTo(base + "onboarding-notes.txt");
+    assertThat(notes.selectFirst("a.attachment-trigger").attr("aria-label")).isEqualTo("Open onboarding-notes.txt");
+    Element photo = attachments.get(2);
+    assertThat(photo.selectFirst(".attachment-media[data-variant=image] > img").attr("src"))
+        .isEqualTo(base + "team-offsite.jpg");
+    Element trigger = photo.selectFirst("button.attachment-trigger");
+    assertThat(trigger.attr("command")).isEqualTo("show-modal");
+    assertThat(trigger.attr("aria-label")).isEqualTo("Preview team-offsite.jpg");
+    Element dialog = page.getElementById(trigger.attr("commandfor"));
+    assertThat(dialog.tagName()).isEqualTo("dialog");
+    assertThat(dialog.select("img").attr("src")).isEqualTo(base + "team-offsite.jpg");
+    assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
+  }
+
+  @Test
+  void servesThePersonsFiles() throws Exception {
+    Person person = repository.findAll().get(0);
+    String base = "/people/" + person.getId() + "/files/";
+
+    String notes = mockMvc.perform(get(base + "onboarding-notes.txt"))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Content-Type", "text/plain"))
+        .andExpect(header().string("Content-Disposition", "inline; filename=\"onboarding-notes.txt\""))
+        .andReturn().getResponse().getContentAsString();
+    assertThat(notes).contains(person.getName(), person.getEmail());
+    mockMvc.perform(get(base + "team-offsite.jpg"))
+        .andExpect(status().isOk())
+        .andExpect(header().string("Content-Type", "image/jpeg"));
+    mockMvc.perform(get(base + "missing.pdf")).andExpect(status().isNotFound());
+    mockMvc.perform(get("/people/999999/files/orders.csv")).andExpect(status().isNotFound());
   }
 
   @Test

@@ -1,0 +1,31 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A file or an image attached to something: a message, a form, a record. Holds an
+      <code>sl:attachment-media</code>, an <code>sl:attachment-content</code> (title and description), optional
+      <code>sl:attachment-actions</code> and an optional <code>sl:attachment-trigger</code> that makes the whole card
+      open a link or a dialog. Purely presentational: the server renders its state. Say the state in the
+      description too ("Uploading · 64%", "Upload failed"), so it is not told by colour alone.</sl:description>
+    <sl:prop name="state" default="done" values="idle uploading processing error done">Where the file is in its
+      upload: <code>idle</code> (picked, not sent yet) draws a dashed border, <code>uploading</code> and
+      <code>processing</code> shimmer the title and mark the attachment busy (<code>aria-busy</code>),
+      <code>error</code> turns it destructive. <code>done</code> is a file that is there.</sl:prop>
+    <sl:prop name="size" default="default" values="default sm xs">Size of the attachment.</sl:prop>
+    <sl:prop name="orientation" default="horizontal" values="horizontal vertical"><code>vertical</code> puts the
+      media above the content, for an image.</sl:prop>
+    <sl:prop name="full-width" type="boolean">Fill the width of the container, for a list of attachments (shadcn's
+      <code>w-full</code> class). Without it the attachment is as wide as its content.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="attachment"
+     class="attachment"
+     th:attr="data-state=${props.unlessDefault('state')},
+              data-size=${props.unlessDefault('size')},
+              data-orientation=${props.unlessDefault('orientation')},
+              data-width=${props['full-width'] ? 'full' : null},
+              aria-busy=${props.state == 'uploading' or props.state == 'processing' ? 'true' : null}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

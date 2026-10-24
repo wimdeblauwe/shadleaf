@@ -1,0 +1,352 @@
+# Scenarios for the attachment's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# After shadcn/ui's examples (attachment-demo, -image, -states, -sizes, -group, -trigger and message-attachment). The
+# images' renderSource takes the photos from previews/photos/ (drawn for these previews) instead of shadcn's
+# Unsplash photos, so the previews never fetch an image. An image's alt is empty: the title names the file.
+component: attachment
+parts: [attachment-media, attachment-content, attachment-title, attachment-description, attachment-actions,
+  attachment-action, attachment-trigger, attachment-group]
+scenarios:
+  - id: default
+    title: Attachment
+    source: |-
+      <sl:attachment>
+        <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>sales-dashboard.pdf</sl:attachment-title>
+          <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description>
+        </sl:attachment-content>
+        <sl:attachment-actions>
+          <sl:attachment-action aria-label="Remove sales-dashboard.pdf"><sl:icon name="x"/></sl:attachment-action>
+        </sl:attachment-actions>
+      </sl:attachment>
+
+  - id: image
+    title: Image
+    description: variant="image" crops the image to the media's square; orientation="vertical" puts it above the content. The trigger opens the file.
+    source: |-
+      <sl:attachment-group>
+        <sl:attachment orientation="vertical" th:each="photo : ${photos}">
+          <sl:attachment-media variant="image">
+            <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+          </sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>[[${photo.name}]]</sl:attachment-title>
+            <sl:attachment-description>[[${photo.meta}]]</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action th:aria-label="|Remove ${photo.name}|"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" th:href="@{/files/{id}(id=${photo.id})}" target="_blank"
+                                 th:aria-label="|Open ${photo.name}|"/>
+        </sl:attachment>
+      </sl:attachment-group>
+    renderSource: |-
+      <sl:attachment-group>
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image"><img th:src="${photos.dunes}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>dunes.png</sl:attachment-title>
+            <sl:attachment-description>PNG · 820 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove dunes.png"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/dunes.png" target="_blank" aria-label="Open dunes.png"/>
+        </sl:attachment>
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image"><img th:src="${photos.lake}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>lake-reference.jpg</sl:attachment-title>
+            <sl:attachment-description>JPG · 1.1 MB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove lake-reference.jpg"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/lake-reference.jpg" target="_blank"
+                                 aria-label="Open lake-reference.jpg"/>
+        </sl:attachment>
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image"><img th:src="${photos.forest}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>forest-reference.jpg</sl:attachment-title>
+            <sl:attachment-description>JPG · 940 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove forest-reference.jpg"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/forest-reference.jpg" target="_blank"
+                                 aria-label="Open forest-reference.jpg"/>
+        </sl:attachment>
+      </sl:attachment-group>
+
+  - id: states
+    title: States
+    description: idle draws a dashed border, uploading and processing shimmer the title, error turns destructive. The description says the state too.
+    source: |-
+      <sl:attachment state="idle" full-width>
+        <sl:attachment-media><sl:icon name="clock"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>selected-file.pdf</sl:attachment-title>
+          <sl:attachment-description>Ready to upload</sl:attachment-description>
+        </sl:attachment-content>
+        <sl:attachment-actions>
+          <sl:attachment-action aria-label="Remove selected-file.pdf"><sl:icon name="x"/></sl:attachment-action>
+        </sl:attachment-actions>
+      </sl:attachment>
+      <sl:attachment state="uploading" full-width>
+        <sl:attachment-media><sl:spinner aria-hidden="true"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>design-system.zip</sl:attachment-title>
+          <sl:attachment-description>Uploading · 64%</sl:attachment-description>
+        </sl:attachment-content>
+        <sl:attachment-actions>
+          <sl:attachment-action aria-label="Cancel upload of design-system.zip"><sl:icon name="x"/></sl:attachment-action>
+        </sl:attachment-actions>
+      </sl:attachment>
+      <sl:attachment state="processing" full-width>
+        <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>market-research.pdf</sl:attachment-title>
+          <sl:attachment-description>Processing document</sl:attachment-description>
+        </sl:attachment-content>
+        <sl:attachment-actions>
+          <sl:attachment-action aria-label="Remove market-research.pdf"><sl:icon name="x"/></sl:attachment-action>
+        </sl:attachment-actions>
+      </sl:attachment>
+      <sl:attachment state="error" full-width>
+        <sl:attachment-media><sl:icon name="file-warning"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>financial-model.xlsx</sl:attachment-title>
+          <sl:attachment-description>Upload failed. Try again.</sl:attachment-description>
+        </sl:attachment-content>
+        <sl:attachment-actions>
+          <sl:attachment-action aria-label="Retry upload of financial-model.xlsx"><sl:icon name="refresh-cw"/></sl:attachment-action>
+          <sl:attachment-action aria-label="Remove financial-model.xlsx"><sl:icon name="x"/></sl:attachment-action>
+        </sl:attachment-actions>
+      </sl:attachment>
+      <sl:attachment state="done" full-width>
+        <sl:attachment-media><sl:icon name="check"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>uploaded-report.pdf</sl:attachment-title>
+          <sl:attachment-description>Uploaded · 1.8 MB</sl:attachment-description>
+        </sl:attachment-content>
+        <sl:attachment-actions>
+          <sl:attachment-action aria-label="Remove uploaded-report.pdf"><sl:icon name="x"/></sl:attachment-action>
+        </sl:attachment-actions>
+      </sl:attachment>
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:attachment full-width>
+        <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>Default attachment</sl:attachment-title>
+          <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description>
+        </sl:attachment-content>
+      </sl:attachment>
+      <sl:attachment size="sm" full-width>
+        <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>Small attachment</sl:attachment-title>
+          <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description>
+        </sl:attachment-content>
+      </sl:attachment>
+      <sl:attachment size="xs" full-width>
+        <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>Extra small attachment</sl:attachment-title>
+        </sl:attachment-content>
+      </sl:attachment>
+
+  - id: group
+    title: Group
+    description: A row that scrolls sideways when the attachments do not fit, snapping to each one. Tab reaches the ones off screen through their actions.
+    source: |-
+      <sl:attachment-group>
+        <sl:attachment>
+          <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>briefing-notes.pdf</sl:attachment-title>
+            <sl:attachment-description>PDF · 1.4 MB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove briefing-notes.pdf"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+        </sl:attachment>
+        <sl:attachment>
+          <sl:attachment-media variant="image">
+            <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+          </sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>dunes.png</sl:attachment-title>
+            <sl:attachment-description>PNG · 820 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove dunes.png"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+        </sl:attachment>
+        <sl:attachment>
+          <sl:attachment-media><sl:icon name="table"/></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>customers.csv</sl:attachment-title>
+            <sl:attachment-description>CSV · 18 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove customers.csv"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+        </sl:attachment>
+        <sl:attachment>
+          <sl:attachment-media><sl:icon name="file-code"/></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>renderer.tsx</sl:attachment-title>
+            <sl:attachment-description>TSX · 12 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove renderer.tsx"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+        </sl:attachment>
+      </sl:attachment-group>
+    renderSource: |-
+      <sl:attachment-group>
+        <sl:attachment>
+          <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>briefing-notes.pdf</sl:attachment-title>
+            <sl:attachment-description>PDF · 1.4 MB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove briefing-notes.pdf"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+        </sl:attachment>
+        <sl:attachment>
+          <sl:attachment-media variant="image"><img th:src="${photos.dunes}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>dunes.png</sl:attachment-title>
+            <sl:attachment-description>PNG · 820 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove dunes.png"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+        </sl:attachment>
+        <sl:attachment>
+          <sl:attachment-media><sl:icon name="table"/></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>customers.csv</sl:attachment-title>
+            <sl:attachment-description>CSV · 18 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove customers.csv"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+        </sl:attachment>
+        <sl:attachment>
+          <sl:attachment-media><sl:icon name="file-code"/></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>renderer.tsx</sl:attachment-title>
+            <sl:attachment-description>TSX · 12 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove renderer.tsx"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+        </sl:attachment>
+      </sl:attachment-group>
+
+  - id: group-label
+    title: Group without actions
+    description: Attachments without actions or a trigger give the keyboard nothing to tab to. label makes the group a named group that takes the focus, so the arrow keys scroll it.
+    source: |-
+      <sl:attachment-group label="Reference photos">
+        <sl:attachment orientation="vertical" th:each="photo : ${photos}">
+          <sl:attachment-media variant="image">
+            <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" th:alt="${photo.description}" loading="lazy">
+          </sl:attachment-media>
+        </sl:attachment>
+      </sl:attachment-group>
+    renderSource: |-
+      <sl:attachment-group label="Reference photos">
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image">
+            <img th:src="${photos.dunes}" alt="Orange dunes under a low sun">
+          </sl:attachment-media>
+        </sl:attachment>
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image">
+            <img th:src="${photos.lake}" alt="A mountain lake">
+          </sl:attachment-media>
+        </sl:attachment>
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image">
+            <img th:src="${photos.forest}" alt="Three fir trees">
+          </sl:attachment-media>
+        </sl:attachment>
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image">
+            <img th:src="${photos.dunes}" alt="Orange dunes under a low sun">
+          </sl:attachment-media>
+        </sl:attachment>
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image">
+            <img th:src="${photos.lake}" alt="A mountain lake">
+          </sl:attachment-media>
+        </sl:attachment>
+        <sl:attachment orientation="vertical">
+          <sl:attachment-media variant="image">
+            <img th:src="${photos.forest}" alt="Three fir trees">
+          </sl:attachment-media>
+        </sl:attachment>
+      </sl:attachment-group>
+
+  - id: trigger
+    title: Trigger
+    description: The trigger covers the card and opens a dialog with commandfor; the actions above it stay clickable.
+    source: |-
+      <sl:attachment full-width>
+        <sl:attachment-media><sl:icon name="file-search"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>research-summary.pdf</sl:attachment-title>
+          <sl:attachment-description>Open preview dialog</sl:attachment-description>
+        </sl:attachment-content>
+        <sl:attachment-actions>
+          <sl:attachment-action aria-label="Copy link to research-summary.pdf"><sl:icon name="copy"/></sl:attachment-action>
+          <sl:attachment-action aria-label="Remove research-summary.pdf"><sl:icon name="x"/></sl:attachment-action>
+        </sl:attachment-actions>
+        <sl:attachment-trigger commandfor="research-summary-preview" command="show-modal"
+                               aria-label="Preview research-summary.pdf"/>
+      </sl:attachment>
+      <sl:dialog id="research-summary-preview">
+        <sl:dialog-header>
+          <sl:dialog-title>research-summary.pdf</sl:dialog-title>
+          <sl:dialog-description>The attachment trigger fills the card and opens the dialog, while the actions stay
+            independently clickable above it.</sl:dialog-description>
+        </sl:dialog-header>
+      </sl:dialog>
+
+  - id: download
+    title: Download
+    description: An action can be a link (as="a") in another variant and size, as in a message thread.
+    source: |-
+      <sl:attachment>
+        <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+        <sl:attachment-content>
+          <sl:attachment-title>sales-dashboard.pdf</sl:attachment-title>
+          <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description>
+        </sl:attachment-content>
+        <sl:attachment-actions>
+          <sl:attachment-action as="a" href="/files/sales-dashboard.pdf" download variant="secondary" size="icon-sm"
+                                aria-label="Download sales-dashboard.pdf"><sl:icon name="download"/></sl:attachment-action>
+        </sl:attachment-actions>
+      </sl:attachment>
+
+  - id: compact
+    title: Without content
+    description: An attachment can be only its media, as an image in a chat message. The image's alt is its name then.
+    source: |-
+      <sl:attachment orientation="vertical">
+        <sl:attachment-media variant="image">
+          <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="A mountain lake">
+        </sl:attachment-media>
+      </sl:attachment>
+    renderSource: |-
+      <sl:attachment orientation="vertical">
+        <sl:attachment-media variant="image"><img th:src="${photos.lake}" alt="A mountain lake"></sl:attachment-media>
+      </sl:attachment>
