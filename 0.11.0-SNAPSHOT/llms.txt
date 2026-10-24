@@ -62,6 +62,7 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 - [Table](https://shadleaf.dev/0.11.0-SNAPSHOT/components/table.md): A table in shadcn/ui's look, whose column headers sort it on the server.
 - [Pagination](https://shadleaf.dev/0.11.0-SNAPSHOT/components/pagination.md): Links to the other pages of a list, built from the Spring Data Page the controller returns.
 - [Query params](https://shadleaf.dev/0.11.0-SNAPSHOT/components/query-params.md): Hidden inputs that keep a table's order, page size and filters when a search form is sent.
+- [Month view](https://shadleaf.dev/0.11.0-SNAPSHOT/components/month-view.md): A month rendered on the server, with content of your own per day and a link per day; no picking.
 
 ### Application shell
 

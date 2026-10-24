@@ -2301,6 +2301,117 @@
         "description" : "A label for a form control. Point it at the control with `for` (the control's `id`; `th:field` gives the control an `id` equal to the field name), or put the control inside it.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:month-view",
+        "description" : "A month to look at, rendered on the server: each day shows content of its own (a badge, a short text, a count) from the `day` slot, which is rendered once per day and sees the day as `${slDay}` (`date`, a `LocalDate`, `iso`, `number`, `label`, `outside`, `today`), and can link to a page for that day. Nothing is picked: for a date in a form, use `sl:calendar`. The previous and next month are links to the same page with `?month=2026-09`, every other parameter kept, so it needs no JavaScript and works with htmx.",
+        "attributes" : [ {
+          "name" : "month",
+          "description" : "The month shown, as `2026-10` (a `YearMonth`) or a date in it. By default the month the request asks for in `month-param`, or else the current month.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "month-param",
+          "description" : "The request parameter the links to the previous and next month set, and that gives the month when `month` is not set.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "month"
+        }, {
+          "name" : "day-href",
+          "description" : "Makes every day a link: `{date}` is replaced by the day's ISO date (`/agenda/{date}`, `?date={date}`), and the result is a Thymeleaf link, so a path starting with `/` gets the context path. The `day` slot is then inside the link: put nothing interactive in it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "today",
+          "description" : "Today, as `2026-10-23` (a `LocalDate`), marked as the current date. By default the server's date; pass it in the user's time zone when that differs.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "show-outside-days",
+          "description" : "Show the days of the previous and next month that fill the first and last week.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "show-week-number",
+          "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "week-starts-on",
+          "description" : "The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "th:month",
+          "description" : "`month` from a Thymeleaf expression, e.g. `th:month=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:month-param",
+          "description" : "`month-param` from a Thymeleaf expression, e.g. `th:month-param=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:day-href",
+          "description" : "`day-href` from a Thymeleaf expression, e.g. `th:day-href=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:today",
+          "description" : "`today` from a Thymeleaf expression, e.g. `th:today=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-outside-days",
+          "description" : "`show-outside-days` from a Thymeleaf expression, e.g. `th:show-outside-days=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-week-number",
+          "description" : "`show-week-number` from a Thymeleaf expression, e.g. `th:show-week-number=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:week-starts-on",
+          "description" : "`week-starts-on` from a Thymeleaf expression, e.g. `th:week-starts-on=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:native-select",
         "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
         "attributes" : [ {
