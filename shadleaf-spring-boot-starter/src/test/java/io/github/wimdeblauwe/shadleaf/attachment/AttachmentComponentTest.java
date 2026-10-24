@@ -143,7 +143,24 @@ class AttachmentComponentTest {
   void groupIsAPlainRowWithoutALabel() {
     assertThat(tester.render("<sl:attachment-group>x</sl:attachment-group>")).root()
         .hasClassName("attachment-group")
-        .hasNoAttribute("role", "tabindex", "aria-label");
+        .hasNoAttribute("role", "tabindex", "aria-label", "data-layout");
+  }
+
+  @Test
+  void groupIsARowByDefault() {
+    assertThat(tester.render("<sl:attachment-group layout=\"row\" label=\"Photos\">x</sl:attachment-group>")).root()
+        .hasNoAttribute("data-layout")
+        .hasAttribute("tabindex", "0");
+  }
+
+  @Test
+  void gridGroupWithALabelIsANamedGroupThatTakesNoFocus() {
+    // A grid does not scroll: there is nothing for the keyboard to do on the group itself.
+    assertThat(tester.render("<sl:attachment-group layout=\"grid\" label=\"Photos\">x</sl:attachment-group>")).root()
+        .hasAttribute("data-layout", "grid")
+        .hasAttribute("role", "group")
+        .hasAttribute("aria-label", "Photos")
+        .hasNoAttribute("tabindex");
   }
 
   @Test

@@ -13,7 +13,7 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 An attachment is `<sl:attachment>` plus the parts you need, as in shadcn/ui: `<sl:attachment-media>` (an icon or an
 image), `<sl:attachment-content>` (holding `<sl:attachment-title>` and `<sl:attachment-description>`),
 `<sl:attachment-actions>` with one or more `<sl:attachment-action>`s, and an optional `<sl:attachment-trigger>` that
-makes the whole card clickable. `<sl:attachment-group>` lays several out in a row.
+makes the whole card clickable. `<sl:attachment-group>` lays several out in a row or a grid.
 
 The attachment only shows a file; it uploads nothing. Use it for files that are already on the server, such as the
 documents on a customer's page, and for the list of a file upload, where your page or your script sets each one's
@@ -76,6 +76,18 @@ has nothing to tab to: give the group a `label`. It is then a named group (`role
 the arrow keys scroll it.
 
 <ComponentPreview id="attachment--group-label" />
+
+## Grid
+
+`layout="grid"` wraps the attachments instead, in as many columns as fit the width, for a gallery of photos. It does
+not scroll, so nothing is hidden off screen and the edges do not fade. Give each attachment `orientation="vertical"`
+and `full-width`, so it fills its cell: the image is cropped to a square and the actions sit in its corner. The width
+of a cell and the gap between them come from the skin.
+
+<ComponentPreview id="attachment--group-grid" />
+
+A grid's `label` still makes it a named group, but the group takes no focus: there is nothing to scroll. Tab goes
+from one attachment's actions and trigger to the next.
 
 ## Trigger
 

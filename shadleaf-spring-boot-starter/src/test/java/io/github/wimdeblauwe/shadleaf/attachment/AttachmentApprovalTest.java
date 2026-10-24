@@ -40,6 +40,9 @@ class AttachmentApprovalTest {
         "<sl:attachment-trigger as=\"a\" href=\"/files/1\" aria-label=\"Open report.pdf\"/>",
         "<sl:attachment-group>Attachments</sl:attachment-group>",
         "<sl:attachment-group label=\"Photos\">Attachments</sl:attachment-group>",
+        "<sl:attachment-group layout=\"row\">Attachments</sl:attachment-group>",
+        "<sl:attachment-group layout=\"grid\">Attachments</sl:attachment-group>",
+        "<sl:attachment-group layout=\"grid\" label=\"Photos\">Attachments</sl:attachment-group>",
         """
             <sl:attachment state="error" id="upload-1">
               <sl:attachment-media><sl:icon name="file-warning"/></sl:attachment-media>
