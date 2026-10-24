@@ -222,11 +222,12 @@ test('link tabs switch in place and replace the address; a modifier click is lef
 
   await page.locator('#l-b-trigger').click();
   expect(await state(page, 'l')).toMatchObject({active: ['l-b-trigger'], shown: ['l-b-content']});
-  expect(new URL(page.url()).search).toBe('?tab=b');
+  // toHaveURL, not page.url(): Playwright learns of a replaceState a moment after it happened.
+  await expect(page).toHaveURL(/\/\?tab=b$/);
   expect(await page.evaluate(() => history.length), 'no history entry').toBe(entries);
 
   await page.keyboard.press('ArrowLeft');
-  expect(new URL(page.url()).search, 'the keyboard too').toBe('?tab=a');
+  await expect(page, 'the keyboard too').toHaveURL(/\/\?tab=a$/);
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press(' ');
   expect(await activeTab(page, 'l'), 'Space on a link').toBe('l-b-trigger');
