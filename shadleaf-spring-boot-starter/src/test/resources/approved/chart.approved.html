@@ -1,0 +1,180 @@
+<!-- <sl:chart th:data="${ {} }" label="Visitors, January to June" margin="12" time-zone="Europe/Brussels" id="visitors"
+          class="mt-4">
+  <sl:chart-grid vertical/>
+  <sl:chart-x-axis key="month" tick-margin="10" min-tick-gap="32"/>
+  <sl:chart-y-axis tick-margin="4" tick-count="3"/>
+  <sl:chart-tooltip/>
+  <sl:chart-legend/>
+  <sl:chart-bar key="desktop" label="Desktop" color="var(--chart-1)" color-dark="var(--chart-3)" radius="4"/>
+  <sl:chart-line key="mobile" label="Mobile" curve="linear" dots stroke-width="3"/>
+  <sl:chart-area key="tablet" label="Tablet" stack="a" fill-opacity="0.8"/>
+</sl:chart> -->
+<sl-chart class="chart mt-4" label="Visitors, January to June" margin="12" time-zone="Europe/Brussels" id="visitors">
+  <script type="application/json">
+  </script>
+  <sl-chart-grid class="chart-grid" vertical="true"></sl-chart-grid>
+  <sl-chart-x-axis class="chart-x-axis" key="month" tick-margin="10" min-tick-gap="32"></sl-chart-x-axis>
+  <sl-chart-y-axis class="chart-y-axis" tick-margin="4" tick-count="3"></sl-chart-y-axis>
+  <sl-chart-tooltip class="chart-tooltip" value-format="number"></sl-chart-tooltip>
+  <sl-chart-legend class="chart-legend"></sl-chart-legend>
+  <sl-chart-bar class="chart-bar" key="desktop" label="Desktop" color="var(--chart-1)" color-dark="var(--chart-3)" radius="4"></sl-chart-bar>
+  <sl-chart-line class="chart-line" key="mobile" label="Mobile" curve="linear" dots="true" stroke-width="3"></sl-chart-line>
+  <sl-chart-area class="chart-area" key="tablet" label="Tablet" stack="a" fill-opacity="0.8"></sl-chart-area>
+  <div class="chart-skeleton"></div>
+</sl-chart>
+
+<!-- <sl:chart-x-axis key="day" format="number" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="number" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="integer" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="integer" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="compact" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="compact" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="percent" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="percent" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="currency" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="currency" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="day" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="day" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="month-short" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="month-short" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="month" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="month" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="month-year" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="month-year" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="date" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="date" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-x-axis key="day" format="time" currency="EUR"/> -->
+<sl-chart-x-axis class="chart-x-axis" key="day" format="time" currency="EUR"></sl-chart-x-axis>
+
+<!-- <sl:chart-y-axis format="number" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="number" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="integer" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="integer" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="compact" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="compact" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="percent" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="percent" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="currency" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="currency" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="day" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="day" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="month-short" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="month-short" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="month" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="month" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="month-year" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="month-year" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="date" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="date" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-y-axis format="time" currency="USD"/> -->
+<sl-chart-y-axis class="chart-y-axis" format="time" currency="USD"></sl-chart-y-axis>
+
+<!-- <sl:chart-tooltip indicator="dot"/> -->
+<sl-chart-tooltip class="chart-tooltip" value-format="number"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip indicator="line"/> -->
+<sl-chart-tooltip class="chart-tooltip" indicator="line" value-format="number"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip indicator="dashed"/> -->
+<sl-chart-tooltip class="chart-tooltip" indicator="dashed" value-format="number"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="number" value-format="number" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="number" value-format="number" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="integer" value-format="integer" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="integer" value-format="integer" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="compact" value-format="compact" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="compact" value-format="compact" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="percent" value-format="percent" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="percent" value-format="percent" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="currency" value-format="currency" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="currency" value-format="currency" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="day" value-format="day" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="day" value-format="day" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="month-short" value-format="month-short" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="month-short" value-format="month-short" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="month" value-format="month" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="month" value-format="month" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="month-year" value-format="month-year" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="month-year" value-format="month-year" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="date" value-format="date" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="date" value-format="date" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip label-format="time" value-format="time" currency="EUR"/> -->
+<sl-chart-tooltip class="chart-tooltip" label-format="time" value-format="time" currency="EUR"></sl-chart-tooltip>
+
+<!-- <sl:chart-tooltip cursor="false" hide-label hide-indicator label-key="monthLabel"/> -->
+<sl-chart-tooltip class="chart-tooltip" cursor="false" hide-label="true" hide-indicator="true" label-key="monthLabel" value-format="number"></sl-chart-tooltip>
+
+<!-- <sl:chart-legend vertical-align="bottom"/> -->
+<sl-chart-legend class="chart-legend"></sl-chart-legend>
+
+<!-- <sl:chart-legend vertical-align="top"/> -->
+<sl-chart-legend class="chart-legend" vertical-align="top"></sl-chart-legend>
+
+<!-- <sl:chart-bar key="desktop" stack="a" radius="0,0,4,4"/> -->
+<sl-chart-bar class="chart-bar" key="desktop" radius="0,0,4,4" stack="a"></sl-chart-bar>
+
+<!-- <sl:chart-line key="desktop" curve="monotone"/> -->
+<sl-chart-line class="chart-line" key="desktop"></sl-chart-line>
+
+<!-- <sl:chart-line key="desktop" curve="natural"/> -->
+<sl-chart-line class="chart-line" key="desktop" curve="natural"></sl-chart-line>
+
+<!-- <sl:chart-line key="desktop" curve="linear"/> -->
+<sl-chart-line class="chart-line" key="desktop" curve="linear"></sl-chart-line>
+
+<!-- <sl:chart-line key="desktop" curve="step"/> -->
+<sl-chart-line class="chart-line" key="desktop" curve="step"></sl-chart-line>
+
+<!-- <sl:chart-line key="desktop" curve="step-before"/> -->
+<sl-chart-line class="chart-line" key="desktop" curve="step-before"></sl-chart-line>
+
+<!-- <sl:chart-line key="desktop" curve="step-after"/> -->
+<sl-chart-line class="chart-line" key="desktop" curve="step-after"></sl-chart-line>
+
+<!-- <sl:chart-area key="desktop" curve="natural"/> -->
+<sl-chart-area class="chart-area" key="desktop"></sl-chart-area>
+
+<!-- <sl:chart-area key="desktop" curve="monotone"/> -->
+<sl-chart-area class="chart-area" key="desktop" curve="monotone"></sl-chart-area>
+
+<!-- <sl:chart-area key="desktop" curve="linear"/> -->
+<sl-chart-area class="chart-area" key="desktop" curve="linear"></sl-chart-area>
+
+<!-- <sl:chart-area key="desktop" curve="step"/> -->
+<sl-chart-area class="chart-area" key="desktop" curve="step"></sl-chart-area>
+
+<!-- <sl:chart-area key="desktop" curve="step-before"/> -->
+<sl-chart-area class="chart-area" key="desktop" curve="step-before"></sl-chart-area>
+
+<!-- <sl:chart-area key="desktop" curve="step-after"/> -->
+<sl-chart-area class="chart-area" key="desktop" curve="step-after"></sl-chart-area>

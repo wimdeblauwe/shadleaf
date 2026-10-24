@@ -427,6 +427,303 @@
       "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline."
     } ]
   }, {
+    "name" : "chart",
+    "tag" : "sl:chart",
+    "description" : "A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "data",
+      "type" : "object",
+      "values" : [ ],
+      "description" : "The rows: a list (or a Spring Data `Page`) of objects, records or maps, one per category or point in time. Each row holds the category (`month`) and a number per series (`desktop`, `mobile`). Serialised with Jackson: dates as ISO strings, which the named date formats read by their Java type.",
+      "required" : true
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The chart's accessible name, such as its title: what a screen reader announces when the chart takes the focus.",
+      "required" : true
+    }, {
+      "name" : "margin",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "Space in pixels left and right of the plot, so the first and last tick labels fit (shadcn's line and area charts use 12)."
+    }, {
+      "name" : "time-zone",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The time zone (an IANA id such as `Europe/Brussels`) instants in the data are shown in: `Instant`, `OffsetDateTime` and `ZonedDateTime`. Defaults to the request's (Spring's `LocaleContextHolder`). A `LocalDate` or `LocalDateTime` is shown as written, in any zone."
+    } ]
+  }, {
+    "name" : "chart-area",
+    "tag" : "sl:chart-area",
+    "description" : "One series of a `sl:chart`, drawn as a filled area under a line through the rows. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+      "required" : true
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key."
+    }, {
+      "name" : "color",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first)."
+    }, {
+      "name" : "color-dark",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`)."
+    }, {
+      "name" : "curve",
+      "type" : "enum",
+      "defaultValue" : "natural",
+      "values" : [ "natural", "monotone", "linear", "step", "step-before", "step-after" ],
+      "description" : "How the line runs between the points: smooth (`natural`, `monotone`), straight (`linear`) or in steps."
+    }, {
+      "name" : "stack",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`)."
+    }, {
+      "name" : "fill-opacity",
+      "type" : "number",
+      "defaultValue" : "0.4",
+      "values" : [ ],
+      "description" : "The opacity of the fill, from 0 to 1."
+    } ]
+  }, {
+    "name" : "chart-bar",
+    "tag" : "sl:chart-bar",
+    "description" : "One series of a `sl:chart`, drawn as bars: one per row. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+      "required" : true
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key."
+    }, {
+      "name" : "color",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first)."
+    }, {
+      "name" : "color-dark",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`)."
+    }, {
+      "name" : "radius",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The bars' corner radius in pixels: `4` for every corner, or four numbers (top-left, top-right, bottom-right, bottom-left), as `4,4,0,0` for the top bar of a stack."
+    }, {
+      "name" : "stack",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`) instead of drawing them side by side."
+    } ]
+  }, {
+    "name" : "chart-grid",
+    "tag" : "sl:chart-grid",
+    "description" : "The grid lines behind a `sl:chart`'s plot. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "vertical",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Vertical lines too, one per category."
+    }, {
+      "name" : "horizontal",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "Horizontal lines, one per value tick."
+    } ]
+  }, {
+    "name" : "chart-legend",
+    "tag" : "sl:chart-legend",
+    "description" : "The legend of a `sl:chart`: every series' label with its colour. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "vertical-align",
+      "type" : "enum",
+      "defaultValue" : "bottom",
+      "values" : [ "bottom", "top" ],
+      "description" : "Below the plot, or above it."
+    } ]
+  }, {
+    "name" : "chart-line",
+    "tag" : "sl:chart-line",
+    "description" : "One series of a `sl:chart`, drawn as a line through the rows. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+      "required" : true
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key."
+    }, {
+      "name" : "color",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first)."
+    }, {
+      "name" : "color-dark",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`)."
+    }, {
+      "name" : "curve",
+      "type" : "enum",
+      "defaultValue" : "monotone",
+      "values" : [ "monotone", "natural", "linear", "step", "step-before", "step-after" ],
+      "description" : "How the line runs between the points: smooth (`monotone`, `natural`), straight (`linear`) or in steps."
+    }, {
+      "name" : "dots",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "A dot on every point."
+    }, {
+      "name" : "stroke-width",
+      "type" : "number",
+      "defaultValue" : "2",
+      "values" : [ ],
+      "description" : "The line's width in pixels."
+    } ]
+  }, {
+    "name" : "chart-tooltip",
+    "tag" : "sl:chart-tooltip",
+    "description" : "The tooltip of a `sl:chart`: on hover, or with the arrow keys once the chart has the focus, it shows the category and every series' label and value. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "indicator",
+      "type" : "enum",
+      "defaultValue" : "dot",
+      "values" : [ "dot", "line", "dashed" ],
+      "description" : "The mark before each series' label, in its colour."
+    }, {
+      "name" : "cursor",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "Highlight the hovered category (a band behind bars, a line over lines and areas)."
+    }, {
+      "name" : "hide-label",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Leave out the label at the top (the category)."
+    }, {
+      "name" : "hide-indicator",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Leave out the marks before the series' labels."
+    }, {
+      "name" : "label-key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows to take the label from instead of the axis category: a series key gives that series' label, any other property its value in the hovered row, such as a date the server formatted."
+    }, {
+      "name" : "label-format",
+      "type" : "enum",
+      "values" : [ "number", "integer", "compact", "percent", "currency", "day", "month-short", "month", "month-year", "date", "time" ],
+      "description" : "How the label is written, as the ticks of `sl:chart-x-axis` (`month`, `date`, ...). Without one, as it is."
+    }, {
+      "name" : "value-format",
+      "type" : "enum",
+      "defaultValue" : "number",
+      "values" : [ "number", "integer", "compact", "percent", "currency", "day", "month-short", "month", "month-year", "date", "time" ],
+      "description" : "How the values are written: `number` in the page's language, or `currency`, `percent`, ..."
+    }, {
+      "name" : "currency",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The ISO 4217 code (`EUR`) for a `currency` format."
+    } ]
+  }, {
+    "name" : "chart-x-axis",
+    "tag" : "sl:chart-x-axis",
+    "description" : "The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines (as shadcn's). Under `dir=\"rtl\"` it runs from right to left. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows that holds the category (`month`) or the date.",
+      "required" : true
+    }, {
+      "name" : "format",
+      "type" : "enum",
+      "values" : [ "number", "integer", "compact", "percent", "currency", "day", "month-short", "month", "month-year", "date", "time" ],
+      "description" : "How the ticks are written, with `Intl` in the page's language. Numbers: `number`, `integer`, `compact` (1.2K), `percent` (0.25 is 25%), `currency` (with `currency`). Dates: `day` (Apr 1), `month-short` (Apr), `month` (April), `month-year` (Apr 2024), `date`, `time`. Without one, the values as they are."
+    }, {
+      "name" : "currency",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The ISO 4217 code (`EUR`) for `format=\"currency\"`."
+    }, {
+      "name" : "tick-margin",
+      "type" : "number",
+      "defaultValue" : "8",
+      "values" : [ ],
+      "description" : "Space in pixels between the ticks and the plot."
+    }, {
+      "name" : "min-tick-gap",
+      "type" : "number",
+      "defaultValue" : "5",
+      "values" : [ ],
+      "description" : "The least space in pixels between two ticks; Recharts leaves out ticks that would come closer, as on a long time axis."
+    } ]
+  }, {
+    "name" : "chart-y-axis",
+    "tag" : "sl:chart-y-axis",
+    "description" : "The value axis of a `sl:chart`, at the start side (the left, or the right under `dir=\"rtl\"`), without tick or axis lines. shadcn's charts often leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "format",
+      "type" : "enum",
+      "values" : [ "number", "integer", "compact", "percent", "currency", "day", "month-short", "month", "month-year", "date", "time" ],
+      "description" : "How the ticks are written, as on `sl:chart-x-axis`: `compact` (1.2K) and `currency` suit a value axis."
+    }, {
+      "name" : "currency",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The ISO 4217 code (`EUR`) for `format=\"currency\"`."
+    }, {
+      "name" : "tick-margin",
+      "type" : "number",
+      "defaultValue" : "8",
+      "values" : [ ],
+      "description" : "Space in pixels between the ticks and the plot."
+    }, {
+      "name" : "tick-count",
+      "type" : "number",
+      "defaultValue" : "5",
+      "values" : [ ],
+      "description" : "How many ticks Recharts aims for."
+    } ]
+  }, {
     "name" : "checkbox",
     "tag" : "sl:checkbox",
     "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors. A checkbox in the indeterminate state (neither checked nor unchecked: some of a group selected) shows a minus.",

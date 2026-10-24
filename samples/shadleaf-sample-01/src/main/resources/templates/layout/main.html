@@ -116,6 +116,13 @@
                 Team agenda
               </sl:sidebar-menu-button>
             </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/charts}" th:active="${#slNav.current('/charts')}"
+                                      tooltip="Charts">
+                <sl:slot name="icon-start"><sl:icon name="chart-column"/></sl:slot>
+                Charts
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
           </sl:sidebar-menu>
         </sl:sidebar-group-content>
       </sl:sidebar-group>

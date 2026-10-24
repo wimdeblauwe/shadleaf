@@ -1,0 +1,210 @@
+---
+title: Chart
+description: shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="chart--bar-multiple" />
+
+## Built from parts
+
+A chart is shadcn's: [Recharts](https://recharts.github.io/) draws it in the browser, with shadcn's look. The template
+says what to draw, the controller gives the rows:
+
+```html
+<sl:chart th:data="${visitors}" th:label="#{visitors.title}">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip/>
+  <sl:chart-bar key="desktop" th:label="#{visitors.desktop}"/>
+  <sl:chart-bar key="mobile" th:label="#{visitors.mobile}"/>
+</sl:chart>
+```
+
+```java
+record MonthlyVisitors(YearMonth month, long desktop, long mobile) {}
+
+@GetMapping("/visitors")
+String visitors(Model model) {
+  model.addAttribute("visitors", repository.visitorsPerMonth()); // List<MonthlyVisitors>
+  return "visitors";
+}
+```
+
+- **`th:data`** takes a list of rows: records, objects or maps, or a Spring Data `Page`. They go into the page as
+  JSON, written by Jackson.
+- **The series parts** (`sl:chart-bar`, `sl:chart-line`, `sl:chart-area`) name the property they draw in `key`, and
+  carry the series' `label` and `color`: what shadcn's `ChartConfig` holds. The chart draws bars for bars only, lines
+  for lines only, areas for areas only, and a composed chart for a mix.
+- **The other parts** add a grid, the axes, a tooltip and a legend. Every part is optional; their order is the order
+  Recharts draws them in.
+- **`label`** names the chart for a screen reader. The chart takes the focus, and the arrow keys move the tooltip from
+  one category to the next.
+
+## Colours
+
+A series without a `color` takes the chart tokens in turn: the first `var(--chart-1)`, the second `var(--chart-2)`,
+up to `--chart-5`, then again from the first. A theme that redefines them recolours every chart. `color` takes any
+CSS colour, and `color-dark` a different one for the dark theme:
+
+```html
+<sl:chart-line key="revenue" color="oklch(0.55 0.2 260)" color-dark="oklch(0.75 0.15 260)"/>
+```
+
+The colour becomes the CSS property `--color-<key>` on the chart, which is why a key is checked to be a CSS
+identifier: letters, digits, `_` and `-`, not starting with a digit or `-`. A key that is not fails the render.
+
+## Stacked bars and a legend
+
+<ComponentPreview id="chart--bar-stacked" />
+
+The legend lists the series by label, in alphabetical order, as Recharts sorts it (shadcn's does the same).
+
+## Line chart
+
+<ComponentPreview id="chart--line-multiple" />
+
+`margin` leaves room left and right of the plot, so the first and last tick labels fit. `curve` sets how a line runs
+between the points (`monotone`, `natural`, `linear`, `step`), `dots` puts a dot on each.
+
+## Area chart
+
+<ComponentPreview id="chart--area-default" />
+
+<ComponentPreview id="chart--area-stacked" />
+
+## Tooltip
+
+The tooltip shows the hovered category and every series' label and value. `indicator` is the mark before each label:
+`dot` (the default), `line` or `dashed`. `hide-label` leaves out the category, `hide-indicator` the marks, and
+`cursor="false"` the highlight of the hovered category.
+
+## Formats
+
+Instead of shadcn's `tickFormatter`, `formatter` and `labelFormatter` functions, the parts take a named format,
+written with `Intl` in the page's language (`<html lang>`, from Spring's locale):
+
+| Format | Writes | For |
+| --- | --- | --- |
+| `number` | 1,234.5 | numbers; the tooltip's values by default |
+| `integer` | 1,235 | |
+| `compact` | 1.2K | a value axis |
+| `percent` | 25% for 0.25 | |
+| `currency` | €1,234.50, with `currency="EUR"` | |
+| `day` | Apr 1 | dates |
+| `month-short` | Apr | |
+| `month` | April | |
+| `month-year` | Apr 2024 | |
+| `date` | Apr 1, 2024 | |
+| `time` | 10:00 AM | |
+
+`format` on an axis writes its ticks, `label-format` and `value-format` on the tooltip its label and values. A format
+is an enum: a typo fails the render. A value of another kind (a date format on a name) is shown as it is.
+
+<ComponentPreview id="chart--formats" />
+
+For a label no format writes, format it in Java and give the tooltip that property in `label-key`: it then shows that
+property of the hovered row as its label.
+
+### Dates and time zones
+
+The dates are read by their Java type, as Jackson writes them, never by the browser's date parser (which reads
+`2024-04-01` as midnight UTC, the evening before in America):
+
+- **`LocalDate`** (`2024-04-01`) and **`YearMonth`** (`2024-04`) are calendar dates: shown as they are, in every time
+  zone.
+- **`LocalDateTime`** (`2024-04-01T10:00:00`) is a time on the clock: shown as written.
+- **`Instant`**, **`OffsetDateTime`** and **`ZonedDateTime`** (`2024-04-01T08:00:00Z`) are moments: shown in the
+  chart's time zone. That is the request's (Spring's `LocaleContextHolder`, which a `LocaleResolver` that knows the
+  user's zone sets; the server's otherwise), or the one `time-zone` names.
+
+<ComponentPreview id="chart--time-zone" />
+
+## Series from the model
+
+For series known only at run time, put `th:each` on a series part:
+
+<ComponentPreview id="chart--dynamic-series" />
+
+## Size
+
+A chart is as wide as its container and 16:9, as shadcn's. For a fixed height, give it one in your CSS, with
+`aspect-ratio: auto` (shadcn's `aspect-auto h-[250px]`):
+
+```css
+.visitors-chart { aspect-ratio: auto; height: 250px; }
+```
+
+## Right to left
+
+On a `dir="rtl"` page the category axis runs from right to left and the value axis stands on the right; the arrow
+keys follow what you see.
+
+## With htmx
+
+- A chart that htmx swaps in draws itself; one it swaps out is cleaned up.
+- Before htmx saves a page for Back, the charts are put back to their skeletons, so the saved page holds none of the
+  inline styles Recharts sets (a strict Content-Security-Policy would report them when the page comes back). Back
+  draws them again.
+
+## Left out
+
+These shadcn and Recharts features have no counterpart yet: pie, radar and radial charts (pie charts are planned),
+horizontal bars, gradients, custom tooltip and legend content, icons in the config, reference lines and brushes.
+For anything else, `sl-chart` is a custom element: an application can write its own.
+
+## Attributes
+
+### sl:chart
+
+<ComponentAttributes component="chart" />
+
+### sl:chart-grid
+
+<ComponentAttributes component="chart-grid" />
+
+### sl:chart-x-axis
+
+<ComponentAttributes component="chart-x-axis" />
+
+### sl:chart-y-axis
+
+<ComponentAttributes component="chart-y-axis" />
+
+### sl:chart-tooltip
+
+<ComponentAttributes component="chart-tooltip" />
+
+### sl:chart-legend
+
+<ComponentAttributes component="chart-legend" />
+
+### sl:chart-bar
+
+<ComponentAttributes component="chart-bar" />
+
+### sl:chart-line
+
+<ComponentAttributes component="chart-line" />
+
+### sl:chart-area
+
+<ComponentAttributes component="chart-area" />
+
+## JavaScript
+
+The chart is the one component that is no Alpine component: Recharts is a React library, and Shadleaf runs it on
+[Preact](https://preactjs.com/) (`preact/compat`), which makes the chart's script some 50 KB (gzip) smaller.
+
+- **JavaScript is required.** Without it, the chart's skeleton stays where the chart would be.
+- **It loads when it is needed.** Every Shadleaf script (`shadleaf.assets.alpine` `bundled`, `csp` or `external`)
+  holds a loader of about 1 KB. It loads the chart's script (about 125 KB gzip) when the first chart comes near the
+  viewport, so a page without charts never loads it. It needs no Alpine.
+- **It works under a strict Content-Security-Policy**, without `'unsafe-inline'` or `'unsafe-eval'`: the rows are a
+  JSON data block (`<script type="application/json">`), which never runs, and the colours are set through CSSOM rather
+  than a `<style>` element.
+- **The server renders** `<sl-chart class="chart">` holding the data block, one element per part
+  (`<sl-chart-bar key="desktop" label="Desktop">`) and the skeleton. The script mounts the chart beside them and marks
+  the chart `data-ready` once it has drawn.

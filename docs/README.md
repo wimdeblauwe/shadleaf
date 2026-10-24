@@ -26,7 +26,9 @@ one that would get in the way of the other components' tests there (a toast show
 `toaster.yaml`). `request` (`/people?sort=name,asc`) renders the scenario in a request for that path and query, for
 links built from the request, such as a table's sort links (see `table.yaml`). `pages` puts Spring Data pages in the
 model by name (`people: {number: 4, size: 10, total: 270}`, `number` zero-based; `slice: true` for a `Slice`), for a
-pagination (see `pagination.yaml`). `width` (`390`) makes the frame that many pixels wide, for a scenario shown as on
+pagination (see `pagination.yaml`). `data` puts other model variables in by name, as YAML writes them, with dates as
+`java.time` (`2024-04-01` a `LocalDate`, a timestamp with `Z` an `Instant`), for a chart's rows (see `chart.yaml`).
+`width` (`390`) makes the frame that many pixels wide, for a scenario shown as on
 a phone (the header layout's panel in `sidebar.yaml`).
 
 ## Commands

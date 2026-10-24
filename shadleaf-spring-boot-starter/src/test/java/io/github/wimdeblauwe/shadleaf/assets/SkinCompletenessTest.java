@@ -164,7 +164,8 @@ class SkinCompletenessTest {
   /** The rendered root element, or {@code null} for a component that renders none of its own. */
   private static @Nullable Element renderRoot(String component, @Nullable String prop, @Nullable String value) {
     // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>; every other required prop gets "x" (a
-    // number "1"); an object prop gets the page of SAMPLE_PAGE (the only object props are th:page).
+    // number "1"); an object prop gets the page of SAMPLE_PAGE (th:page, and a chart's th:data takes its rows); a
+    // currency prop gets "EUR", which the chart parts' currency formats need.
     // Inside a form object, for the components that read one (sl:form-errors).
     StringBuilder propAttribute = new StringBuilder(prop == null ? "" : "%s=\"%s\" ".formatted(prop, value));
     REGISTRY.get(component).props().values().stream()
@@ -172,6 +173,9 @@ class SkinCompletenessTest {
         .filter(required -> !required.name().equals(prop) && !required.name().equals("name"))
         .forEach(required -> propAttribute.append("%s=\"%s\" ".formatted(required.name(),
             required.type() == PropType.NUMBER ? "1" : "x")));
+    if (REGISTRY.get(component).props().containsKey("currency")) {
+      propAttribute.append("currency=\"EUR\" ");
+    }
     REGISTRY.get(component).props().values().stream()
         .filter(object -> object.type() == PropType.OBJECT && !object.name().equals(prop))
         .forEach(object -> propAttribute.append("th:%s=\"${samplePage}\" ".formatted(object.name())));

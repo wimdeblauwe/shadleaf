@@ -70,7 +70,8 @@ class CspNonceTest {
   void pageNeedsNoInlineAllowance(String path) throws Exception {
     Document page = Jsoup.parse(perform(get(path)).getContentAsString());
 
-    assertThat(page.select("script:not([src])")).as("inline scripts").hasSize(1);
+    // A JSON data block (a chart's rows) never runs, so the policy does not apply to it.
+    assertThat(page.select("script:not([src], [type=application/json])")).as("inline scripts").hasSize(1);
     assertThat(page.select("script[src]")).allSatisfy(script -> assertThat(script.attr("src")).startsWith("/"));
     assertThat(page.select("style")).as("<style> elements").isEmpty();
     assertThat(page.select("[style]")).as("style attributes").isEmpty();

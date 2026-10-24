@@ -2,6 +2,7 @@ import {defineConfig} from 'vite';
 import tailwindcss from '@tailwindcss/vite';
 import fs from 'fs';
 import path from 'path';
+import {fileURLToPath} from 'url';
 import {generateCssEntries} from './scripts/css-entries.js';
 
 const projectDir = import.meta.dirname;
@@ -12,6 +13,20 @@ const manifestTarget = path.join(projectDir, 'target/classes/shadleaf/vite-manif
 // One per shadleaf.assets.alpine value (AlpineVariant); written by hand, as they do not vary per skin.
 const jsEntries = Object.fromEntries(['shadleaf', 'shadleaf.alpine', 'shadleaf.alpine-csp']
     .map(name => [name, path.join(staticDir, 'js/entries', `${name}.js`)]));
+
+/*
+  sl:chart runs Recharts, a React library, on Preact (preact/compat): the chart chunk is some 50 KB (gzip) smaller than
+  with React. Aliased to absolute paths, because under pnpm Recharts cannot resolve preact from its own directory.
+  react-is stays itself (Recharts' isFragment).
+*/
+const resolveModule = specifier => fileURLToPath(import.meta.resolve(specifier));
+const preactAliases = [
+  {find: /^react-dom\/client$/, replacement: resolveModule('preact/compat/client')},
+  {find: /^react-dom$/, replacement: resolveModule('preact/compat')},
+  {find: /^react\/jsx-runtime$/, replacement: resolveModule('preact/jsx-runtime')},
+  {find: /^react\/jsx-dev-runtime$/, replacement: resolveModule('preact/jsx-dev-runtime')},
+  {find: /^react$/, replacement: resolveModule('preact/compat')}
+];
 
 /** Moves the manifest Vite writes into the served output directory to manifestTarget. */
 function moveManifest() {
@@ -30,6 +45,7 @@ function moveManifest() {
 export default defineConfig({
   plugins: [tailwindcss(), moveManifest()],
   root: staticDir,
+  resolve: {alias: preactAliases},
   server: {
     port: 5174,
     strictPort: true,
@@ -38,6 +54,9 @@ export default defineConfig({
   },
   build: {
     manifest: true,
+    // The chart chunk is a dynamic import. Vite's preload helper would prefix it with / rather than the entry's own
+    // location (/shadleaf/assets/), and the entries need no preloading: they import their shared chunk statically.
+    modulePreload: false,
     rolldownOptions: {
       // One CSS entry per skin x asset variant, e.g. css/entries/shadleaf-vega.embedded.css, plus the JS entries
       input: {...generateCssEntries(path.join(staticDir, 'css')), ...jsEntries},

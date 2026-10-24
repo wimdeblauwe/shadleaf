@@ -103,7 +103,7 @@ public class ComponentElementProcessor implements IElementModelProcessor {
       IElementModelStructureHandler structureHandler) {
 
     String name = componentName(openTag);
-    if (RESERVED_ELEMENTS.contains(name)) {
+    if (name == null || RESERVED_ELEMENTS.contains(name)) {
       return;
     }
 
@@ -219,11 +219,14 @@ public class ComponentElementProcessor implements IElementModelProcessor {
     return attrs;
   }
 
-  /** Derives the component name from the tag, e.g. {@code sl:button -> button}. */
-  private String componentName(IProcessableElementTag openTag) {
+  /**
+   * Derives the component name from the tag, e.g. {@code sl:button -> button}. {@code null} for the other spelling
+   * Thymeleaf matches in HTML, {@code sl-button}: that is a custom element's name ({@code <sl-chart>}), left as it is.
+   */
+  private @Nullable String componentName(IProcessableElementTag openTag) {
     String complete = openTag.getElementCompleteName().toLowerCase(Locale.ROOT);
     String prefix = dialectPrefix + ":";
-    return complete.startsWith(prefix) ? complete.substring(prefix.length()) : complete;
+    return complete.startsWith(prefix) ? complete.substring(prefix.length()) : null;
   }
 
   @Override

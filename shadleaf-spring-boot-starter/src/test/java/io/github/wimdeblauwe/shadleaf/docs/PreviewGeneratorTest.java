@@ -22,9 +22,14 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -63,7 +68,10 @@ import tools.jackson.databind.json.JsonMapper;
  * A scenario's {@code renderSource} can show a photo from {@code previews/photos/} as {@code ${photos.<name>}}, a data:
  * URI, so the previews and the showcase checks never fetch an image. A scenario's {@code pages} are Spring Data
  * pages by variable name ({@code people: {number: 4, size: 10, total: 270}}, {@code number} zero-based, {@code slice:
- * true} for a {@code Slice}), so a pagination renders from a real {@code Page}. A scenario's {@code user} is the
+ * true} for a {@code Slice}), so a pagination renders from a real {@code Page}. A scenario's {@code data} are model
+ * variables by name, as YAML writes them (lists, maps, text, numbers), with dates as {@code java.time}: a date
+ * ({@code 2024-04-01}) a {@code LocalDate}, a timestamp with an offset or Z an {@code Instant}; a chart's rows, so it
+ * renders from the data block an application's would. A scenario's {@code user} is the
  * signed-in user {@code #slUser} gives ({@code name}, {@code username}, {@code email}, and {@code photo}, the name of
  * a photo, or {@code picture}, a URL); without one the visitor is anonymous.
  * {@code docs/scripts/sync.mjs} copies them into the docs project. Adding examples for a component means adding a
@@ -147,6 +155,7 @@ class PreviewGeneratorTest {
     }
     try {
       Map<String, Object> variables = new LinkedHashMap<>(scenario.pages());
+      variables.putAll(scenario.data());
       variables.put("photos", photos);
       if (scenario.layout() != null) {
         variables.put("pageTitle", scenario.layout().pageTitle());
@@ -211,21 +220,32 @@ class PreviewGeneratorTest {
     return skins;
   }
 
-  /** The script of every Alpine variant, keyed by its property value, and the chunks the scripts import. */
+  /**
+   * The script of every Alpine variant, keyed by its property value, and the chunks the scripts import, statically or
+   * on demand (the chart's).
+   */
   private Map<String, String> copyScripts(ViteManifest manifest) throws IOException {
     Map<String, String> scripts = new LinkedHashMap<>();
+    Set<String> copied = new HashSet<>();
     for (AlpineVariant alpine : AlpineVariant.values()) {
-      ViteManifestParser.ViteManifestEntry entry = manifest.getEntry(alpine.jsEntry());
-      copyAsset(entry.file());
-      for (String chunk : entry.imports()) {
-        String chunkFile = manifest.getEntry(chunk).file();
-        if (!Files.exists(OUTPUT_DIRECTORY.resolve("shadleaf").resolve(chunkFile))) {
-          copyAsset(chunkFile);
-        }
-      }
-      scripts.put(alpine.name().toLowerCase(Locale.ROOT), "shadleaf/" + entry.file());
+      copyChunk(manifest, alpine.jsEntry(), copied);
+      scripts.put(alpine.name().toLowerCase(Locale.ROOT), "shadleaf/" + manifest.getEntry(alpine.jsEntry()).file());
     }
     return scripts;
+  }
+
+  private static void copyChunk(ViteManifest manifest, String key, Set<String> copied) throws IOException {
+    if (!copied.add(key)) {
+      return;
+    }
+    ViteManifestParser.ViteManifestEntry entry = manifest.getEntry(key);
+    copyAsset(entry.file());
+    for (String chunk : entry.imports()) {
+      copyChunk(manifest, chunk, copied);
+    }
+    for (String chunk : entry.dynamicImports()) {
+      copyChunk(manifest, chunk, copied);
+    }
   }
 
   private static void copyAsset(String file) throws IOException {
@@ -266,7 +286,7 @@ class PreviewGeneratorTest {
             source.strip(), renderSource, formModel((Map<String, Object>) entry.get("form")),
             (Boolean) entry.getOrDefault("showcase", true), (String) entry.get("request"),
             pages((Map<String, Map<String, Object>>) entry.getOrDefault("pages", Map.of())),
-            (Integer) entry.get("width"), (Map<String, String>) entry.get("user"), null));
+            (Map<String, Object>) javaTime(entry.getOrDefault("data", Map.of())), (Integer) entry.get("width"), (Map<String, String>) entry.get("user"), null));
       }
     }
     assertThat(components).as("components with previews in %s", PREVIEWS_DIRECTORY)
@@ -301,7 +321,7 @@ class PreviewGeneratorTest {
       String css = ((String) document.get("css")).strip();
       boolean htmx = Boolean.TRUE.equals(document.get("htmx"));
       scenarios.add(new Scenario(id, "layout", (String) document.get("title"), (String) document.get("description"),
-          source, renderSource, null, false, (String) document.get("request"), Map.of(), null,
+          source, renderSource, null, false, (String) document.get("request"), Map.of(), Map.of(), null,
           (Map<String, String>) document.get("user"),
           new Layout(page.get("title"), css, layoutTemplate(source, breadcrumb != null, htmx),
               pageTemplate(page.get("title"), breadcrumb))));
@@ -418,6 +438,27 @@ class PreviewGeneratorTest {
     return variables;
   }
 
+  /**
+   * A scenario's {@code data} with SnakeYAML's dates as {@code java.time}: it reads {@code 2024-04-01} as a
+   * {@code java.util.Date} at midnight UTC, which Jackson would write as an instant.
+   */
+  private static Object javaTime(Object value) {
+    if (value instanceof Date date) {
+      Instant instant = date.toInstant();
+      return instant.equals(instant.truncatedTo(ChronoUnit.DAYS)) ? LocalDate.ofInstant(instant, ZoneOffset.UTC)
+          : instant;
+    }
+    if (value instanceof Map<?, ?> map) {
+      Map<Object, Object> converted = new LinkedHashMap<>();
+      map.forEach((key, item) -> converted.put(key, javaTime(item)));
+      return converted;
+    }
+    if (value instanceof List<?> list) {
+      return list.stream().map(PreviewGeneratorTest::javaTime).toList();
+    }
+    return value;
+  }
+
   private void write(String name, Object value) throws IOException {
     Files.writeString(OUTPUT_DIRECTORY.resolve(name),
         jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value) + "\n", StandardCharsets.UTF_8);
@@ -433,13 +474,15 @@ class PreviewGeneratorTest {
    * @param request      the path and query of the request it renders in ({@code /people?sort=name,desc}), for links
    *                     built from the request such as a table's sort links; {@code /} when absent
    * @param pages        Spring Data pages by variable name, for a pagination
+   * @param data         other model variables by name, such as a chart's rows
    * @param user         the signed-in user, as written in the YAML; anonymous when absent
    * @param layout       what a layout of the Layouts section has besides its source; {@code null} for a component's
    *                     scenario
    */
   private record Scenario(String id, String component, @Nullable String title, @Nullable String description,
                           String source, String renderSource, @Nullable FormModel form, boolean showcase,
-                          @Nullable String request, Map<String, Object> pages, @Nullable Integer width,
+                          @Nullable String request, Map<String, Object> pages, Map<String, Object> data,
+                          @Nullable Integer width,
                           @Nullable Map<String, String> user, @Nullable Layout layout) {
 
   }

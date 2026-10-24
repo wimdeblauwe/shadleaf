@@ -1,0 +1,31 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The category or time axis of a <code>sl:chart</code>, along the bottom: its ticks are the values
+      of <code>key</code> in the rows, without tick or axis lines (as shadcn's). Under <code>dir="rtl"</code> it runs
+      from right to left. Draws no element of its own on the page: the chart reads it.</sl:description>
+    <sl:prop name="key" required>The property of the rows that holds the category (<code>month</code>) or the date.
+      </sl:prop>
+    <sl:prop name="format" values="number integer compact percent currency day month-short month month-year date time">How the ticks are written, with <code>Intl</code> in the page's language.
+      Numbers: <code>number</code>, <code>integer</code>, <code>compact</code> (1.2K), <code>percent</code> (0.25 is
+      25%), <code>currency</code> (with <code>currency</code>). Dates: <code>day</code> (Apr 1),
+      <code>month-short</code> (Apr), <code>month</code> (April), <code>month-year</code> (Apr 2024),
+      <code>date</code>, <code>time</code>. Without one, the values as they are.</sl:prop>
+    <sl:prop name="currency">The ISO 4217 code (<code>EUR</code>) for <code>format="currency"</code>.</sl:prop>
+    <sl:prop name="tick-margin" type="number" default="8">Space in pixels between the ticks and the plot.</sl:prop>
+    <sl:prop name="min-tick-gap" type="number" default="5">The least space in pixels between two ticks; Recharts
+      leaves out ticks that would come closer, as on a long time axis.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<sl-chart-x-axis th:fragment="chart-x-axis"
+                 class="chart-x-axis"
+                 th:attr="key=${#slCharts.key('chart-x-axis', props.key)},
+                          format=${props.format},
+                          currency=${#slCharts.currency('chart-x-axis', props.format, props.currency)},
+                          tick-margin=${props.unlessDefault('tick-margin')},
+                          min-tick-gap=${props.unlessDefault('min-tick-gap')}"
+                 sl:attrs></sl-chart-x-axis>
+</body>
+</html>

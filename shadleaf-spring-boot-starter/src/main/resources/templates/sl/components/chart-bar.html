@@ -1,0 +1,35 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One series of a <code>sl:chart</code>, drawn as bars: one per row. Draws no element of its own
+      on the page: the chart reads it.</sl:description>
+    <sl:prop name="key" required>The property of the rows that holds this series' numbers (<code>desktop</code>):
+      letters, digits, <code>_</code> and <code>-</code>, as it also names the colour property
+      <code>--color-&lt;key&gt;</code>.</sl:prop>
+    <sl:prop name="label">The series' name in the tooltip and the legend, typically a message
+      (<code>th:label="#{visitors.desktop}"</code>). Defaults to the key.</sl:prop>
+    <sl:prop name="color">Its colour, any CSS colour (<code>var(--chart-3)</code>, <code>#2563eb</code>). Defaults to
+      the chart tokens in turn: the first series <code>var(--chart-1)</code>, the second
+      <code>var(--chart-2)</code>, and so on (after the fifth, again from the first).</sl:prop>
+    <sl:prop name="color-dark">A different colour in the dark theme; <code>color</code> is then the light one (the
+      two go into <code>light-dark()</code>).</sl:prop>
+    <sl:prop name="radius">The bars' corner radius in pixels: <code>4</code> for every corner, or four numbers
+      (top-left, top-right, bottom-right, bottom-left), as <code>4,4,0,0</code> for the top bar of a
+      stack.</sl:prop>
+    <sl:prop name="stack">Stack this series on the others with the same <code>stack</code> id (any name, such as
+      <code>a</code>) instead of drawing them side by side.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<sl-chart-bar th:fragment="chart-bar"
+              class="chart-bar"
+              th:attr="key=${#slCharts.key('chart-bar', props.key)},
+                       label=${props.label},
+                       color=${props.color},
+                       color-dark=${props['color-dark']},
+                       radius=${#slCharts.radius(props.radius)},
+                       stack=${props.stack}"
+              sl:attrs></sl-chart-bar>
+</body>
+</html>

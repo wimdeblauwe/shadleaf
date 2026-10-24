@@ -106,7 +106,7 @@ there instead of fetching from the web.
   their field binding, id, `aria-describedby` and `aria-invalid` from `#slFields` (see `field.html` and
   `input.html`); new form controls follow the same pattern.
 - **Expression objects** (dialect, so they work without Spring beans): `#slIcons`, `#slFields`, `#slPaging`, `#slNav`,
-  `#slUser`, `#slSidebar`, `#slCalendar`. Templates cannot use `@bean` or `#ctx` inside `th:attr`/`th:src`; read them
+  `#slUser`, `#slSidebar`, `#slCalendar`, `#slCharts`. Templates cannot use `@bean` or `#ctx` inside `th:attr`/`th:src`; read them
   with `th:with`.
 - **Optional dependencies** (Spring Data, Spring Security, OAuth2 client): a single class touches each, guarded by
   a `PRESENT` check, and the starter must work without them (`WithoutSpringSecurityTest` runs in its own surefire
@@ -127,7 +127,8 @@ there instead of fetching from the web.
   `~{sl/components/<name> :: <name>-content}`, spelled out (`~{::x}` looks in the calling template). A component that
   renders no element of its own has a `th:block` root.
 - Markup: a class named after the component (not shadcn's `data-slot`), `data-variant` / `data-size` only for
-  non-default values. `th:attr` drops an attribute whose value is `''`, so a presence-style data attribute needs a
+  non-default values. Only `sl:x` is a component: Thymeleaf's HTML mode also matches `sl-x`, which the component
+  processor leaves alone, so a custom element can be called `<sl-chart>`. `th:attr` drops an attribute whose value is `''`, so a presence-style data attribute needs a
   real value (`data-border="bottom"`).
 - Comments inside a fragment must be parser-level (`<!--/* */-->`), or they reach every page. Never name a fragment
   after an HTML element: it also matches that element.
@@ -155,6 +156,10 @@ there instead of fetching from the web.
 
 ### JavaScript
 
+- The chart is the exception: Recharts (a React library) on Preact (`preact/compat`, aliased in `vite.config.js`), in
+  a `<sl-chart>` custom element (`static/js/chart/`), because shadcn's chart is Recharts and Shadleaf writes no chart
+  geometry; Preact keeps the chunk ~50 KB (gzip) smaller than React. A loader in every entry imports the chunk when
+  the first chart nears the viewport. `JsBundleHygieneTest` checks the chunk.
 - Alpine.js, under five rules: only expressions Alpine's CSP build accepts (logic in `Alpine.data`), never a second
   Alpine on the page, `sl`-prefixed names, native elements first, test htmx swaps.
 - `static/js/components/<name>.js` default-exports one `Alpine.data` function, registered as `sl<Name>`. Behaviour

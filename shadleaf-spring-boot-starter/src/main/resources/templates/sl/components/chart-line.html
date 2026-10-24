@@ -1,0 +1,36 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One series of a <code>sl:chart</code>, drawn as a line through the rows. Draws no element of its
+      own on the page: the chart reads it.</sl:description>
+    <sl:prop name="key" required>The property of the rows that holds this series' numbers (<code>desktop</code>):
+      letters, digits, <code>_</code> and <code>-</code>, as it also names the colour property
+      <code>--color-&lt;key&gt;</code>.</sl:prop>
+    <sl:prop name="label">The series' name in the tooltip and the legend, typically a message
+      (<code>th:label="#{visitors.desktop}"</code>). Defaults to the key.</sl:prop>
+    <sl:prop name="color">Its colour, any CSS colour (<code>var(--chart-3)</code>, <code>#2563eb</code>). Defaults to
+      the chart tokens in turn: the first series <code>var(--chart-1)</code>, the second
+      <code>var(--chart-2)</code>, and so on (after the fifth, again from the first).</sl:prop>
+    <sl:prop name="color-dark">A different colour in the dark theme; <code>color</code> is then the light one (the
+      two go into <code>light-dark()</code>).</sl:prop>
+    <sl:prop name="curve" default="monotone" values="monotone natural linear step step-before step-after">How the
+      line runs between the points: smooth (<code>monotone</code>, <code>natural</code>), straight
+      (<code>linear</code>) or in steps.</sl:prop>
+    <sl:prop name="dots" type="boolean">A dot on every point.</sl:prop>
+    <sl:prop name="stroke-width" type="number" default="2">The line's width in pixels.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<sl-chart-line th:fragment="chart-line"
+               class="chart-line"
+               th:attr="key=${#slCharts.key('chart-line', props.key)},
+                        label=${props.label},
+                        color=${props.color},
+                        color-dark=${props['color-dark']},
+                        curve=${props.unlessDefault('curve')},
+                        dots=${props.dots ? 'true' : null},
+                        stroke-width=${props.unlessDefault('stroke-width')}"
+               sl:attrs></sl-chart-line>
+</body>
+</html>

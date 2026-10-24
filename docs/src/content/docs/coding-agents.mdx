@@ -36,6 +36,9 @@ your `pom.xml`, so the agent reads the docs of the version you use.
   `<sl:dropdown-menu-trigger>` / `<sl:popover-trigger>` or `popovertarget`.
 - Icons: `<sl:icon name="...">` with Lucide names. An icon-only button (`size="icon"`, `icon-sm`, ...)
   needs an `aria-label`; rendering fails without one.
+- Charts: `<sl:chart th:data="${rows}" label="...">` with parts (`sl:chart-x-axis key="month"`,
+  `sl:chart-bar key="desktop" th:label="#{...}"`). No `ChartConfig` and no formatter functions: labels and
+  colours go on the series parts, number and date formats are names (`format="month-short"`).
 - Rendering fails with a message on a wrong prop value, a missing required prop or a missing accessible
   name: render every page you change (run the tests or load the page) and fix what it reports.
 - With `hx-boost` on `<body>`, every boosted page load sends `HX-Request`: return a fragment only when the

@@ -108,3 +108,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 @keyframes htmx-indicator-in {
   from { display: none; opacity: 0; }
 }
+
+/* The charts page: two cards a row on a wide screen. */
+.charts-grid { display: grid; gap: 1rem; margin-block-start: 1.5rem; }
+@media (width >= 64rem) { .charts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

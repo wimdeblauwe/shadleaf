@@ -1,0 +1,176 @@
+/*
+  Chart: structure only. The tooltip's box (radius, border or ring, background, shadow), the skeleton's colour and
+  the focus ring are identity and live in the skins.
+
+  sl:chart renders <sl-chart class="chart"> with its data block, a marker element per part (sl-chart.jsx reads them;
+  they draw nothing) and a skeleton. The script mounts the chart into .chart-root, over the skeleton, and marks the
+  chart data-ready once it has drawn: the skeleton then goes. Both fill the chart's own box, 16:9 unless the
+  application gives it another height (with aspect-ratio: auto, as shadcn's aspect-auto h-[250px]).
+
+  The rules on .chart-container are shadcn's ChartContainer classes: Recharts' grey defaults (#ccc, #fff) become
+  tokens. The series colours are --color-<key>, which the script sets on .chart-root.
+
+  In forced-colors mode the tooltip gets an outline (a ring is a box-shadow, which is gone), and the indicators keep
+  their series' colours, as the chart's own marks do.
+*/
+@layer components {
+  .chart {
+    @apply relative block aspect-video;
+  }
+
+  /* The markers the parts render, and the data block. */
+  .chart > :not(.chart-root, .chart-skeleton) {
+    @apply hidden;
+  }
+
+  .chart > .chart-skeleton {
+    @apply absolute inset-0;
+  }
+
+  .chart[data-ready] > .chart-skeleton {
+    @apply hidden;
+  }
+
+  .chart > .chart-root {
+    @apply absolute inset-0;
+  }
+
+  /* Laid out (ResponsiveContainer measures it), but not shown until the first frame is drawn. */
+  .chart:not([data-ready]) > .chart-root {
+    @apply invisible;
+  }
+
+  .chart-container {
+    @apply flex size-full justify-center text-xs;
+
+    /* Recharts 3.9 moved the tick labels out of .recharts-cartesian-axis-tick, which shadcn's rule names. */
+    & :is(.recharts-cartesian-axis-tick, .recharts-cartesian-axis-tick-label) text {
+      @apply fill-muted-foreground;
+    }
+
+    & .recharts-cartesian-grid line[stroke='#ccc'] {
+      @apply stroke-border/50;
+    }
+
+    & .recharts-curve.recharts-tooltip-cursor {
+      @apply stroke-border;
+    }
+
+    & .recharts-dot[stroke='#fff'] {
+      @apply stroke-transparent;
+    }
+
+    & .recharts-layer {
+      @apply outline-none;
+    }
+
+    & .recharts-polar-grid [stroke='#ccc'] {
+      @apply stroke-border;
+    }
+
+    & .recharts-radial-bar-background-sector {
+      @apply fill-muted;
+    }
+
+    & .recharts-rectangle.recharts-tooltip-cursor {
+      @apply fill-muted;
+    }
+
+    & .recharts-reference-line [stroke='#ccc'] {
+      @apply stroke-border;
+    }
+
+    & .recharts-sector {
+      @apply outline-none;
+    }
+
+    & .recharts-sector[stroke='#fff'] {
+      @apply stroke-transparent;
+    }
+
+    /* The skins draw the focus ring (shadcn hides it); the chart takes the focus for its arrow keys. */
+    & .recharts-surface {
+      @apply outline-none;
+    }
+  }
+
+  .chart-tooltip-content {
+    @apply grid min-w-32 items-start
+      forced-colors:outline-1 forced-colors:outline-solid;
+  }
+
+  .chart-tooltip-label {
+    @apply font-medium;
+  }
+
+  .chart-tooltip-items {
+    @apply grid gap-1.5;
+  }
+
+  .chart-tooltip-item {
+    @apply flex w-full flex-wrap items-stretch gap-2;
+  }
+
+  .chart-tooltip-item[data-indicator='dot'] {
+    @apply items-center;
+  }
+
+  .chart-tooltip-indicator {
+    @apply shrink-0 rounded-[2px] border-(--indicator-color) bg-(--indicator-color)
+      forced-colors:forced-color-adjust-none;
+  }
+
+  .chart-tooltip-indicator[data-indicator='dot'] {
+    @apply size-2.5;
+  }
+
+  .chart-tooltip-indicator[data-indicator='line'] {
+    @apply w-1;
+  }
+
+  .chart-tooltip-indicator[data-indicator='dashed'] {
+    @apply w-0 border-[1.5px] border-dashed bg-transparent;
+  }
+
+  .chart-tooltip-indicator[data-indicator='dashed'][data-nested] {
+    @apply my-0.5;
+  }
+
+  /* gap-4: shadcn has none, so a long value touches its name once the tooltip is wider than its minimum. */
+  .chart-tooltip-body {
+    @apply flex flex-1 items-center justify-between gap-4 leading-none;
+  }
+
+  .chart-tooltip-body[data-nested] {
+    @apply items-end;
+  }
+
+  .chart-tooltip-name {
+    @apply grid gap-1.5;
+  }
+
+  .chart-tooltip-name > span {
+    @apply text-muted-foreground;
+  }
+
+  .chart-tooltip-value {
+    @apply font-mono font-medium text-foreground tabular-nums;
+  }
+
+  .chart-legend-content {
+    @apply flex items-center justify-center gap-4 pt-3;
+  }
+
+  .chart-legend-content[data-align='top'] {
+    @apply pt-0 pb-3;
+  }
+
+  .chart-legend-item {
+    @apply flex items-center gap-1.5;
+  }
+
+  .chart-legend-indicator {
+    @apply size-2 shrink-0 rounded-[2px]
+      forced-colors:forced-color-adjust-none;
+  }
+}

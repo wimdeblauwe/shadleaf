@@ -1,0 +1,166 @@
+# Scenarios for the chart's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# A scenario's data are the model variables its th:data reads, as a controller would put them in the model: shadcn's
+# sample data, with the months as YearMonth writes them ("2024-01") and the days as LocalDate does (unquoted dates).
+component: chart
+parts: [chart-grid, chart-x-axis, chart-y-axis, chart-tooltip, chart-legend, chart-bar, chart-line, chart-area]
+visitors: &visitors
+  - {month: '2024-01', desktop: 186, mobile: 80}
+  - {month: '2024-02', desktop: 305, mobile: 200}
+  - {month: '2024-03', desktop: 237, mobile: 120}
+  - {month: '2024-04', desktop: 73, mobile: 190}
+  - {month: '2024-05', desktop: 209, mobile: 130}
+  - {month: '2024-06', desktop: 214, mobile: 140}
+scenarios:
+  - id: bar-multiple
+    title: Bar chart
+    description: >-
+      Two series side by side, in a card as shadcn shows it. The months are YearMonths: month-short writes the ticks
+      (Jan), month the tooltip's label (January).
+    source: |-
+      <sl:card>
+        <sl:card-header>
+          <sl:card-title level="3">Bar Chart - Multiple</sl:card-title>
+          <sl:card-description>January - June 2024</sl:card-description>
+        </sl:card-header>
+        <sl:card-content>
+          <sl:chart th:data="${visitors}" label="Visitors, January to June 2024">
+            <sl:chart-grid/>
+            <sl:chart-x-axis key="month" format="month-short" tick-margin="10"/>
+            <sl:chart-tooltip indicator="dashed" cursor="false" label-format="month"/>
+            <sl:chart-bar key="desktop" label="Desktop" radius="4"/>
+            <sl:chart-bar key="mobile" label="Mobile" radius="4"/>
+          </sl:chart>
+        </sl:card-content>
+        <sl:card-footer>
+          <p>Showing total visitors for the last 6 months</p>
+        </sl:card-footer>
+      </sl:card>
+    data:
+      visitors: *visitors
+
+  - id: bar-stacked
+    title: Stacked bars and a legend
+    description: >-
+      The same stack id stacks the series; the radius rounds the bottom of the first and the top of the last.
+    source: |-
+      <sl:chart th:data="${visitors}" label="Visitors, January to June 2024">
+        <sl:chart-grid/>
+        <sl:chart-x-axis key="month" format="month-short" tick-margin="10"/>
+        <sl:chart-tooltip hide-label/>
+        <sl:chart-legend/>
+        <sl:chart-bar key="desktop" label="Desktop" stack="a" radius="0,0,4,4"/>
+        <sl:chart-bar key="mobile" label="Mobile" stack="a" radius="4,4,0,0"/>
+      </sl:chart>
+    data:
+      visitors: *visitors
+
+  - id: line-multiple
+    title: Line chart
+    source: |-
+      <sl:chart th:data="${visitors}" label="Visitors, January to June 2024" margin="12">
+        <sl:chart-grid/>
+        <sl:chart-x-axis key="month" format="month-short"/>
+        <sl:chart-tooltip cursor="false" label-format="month"/>
+        <sl:chart-line key="desktop" label="Desktop"/>
+        <sl:chart-line key="mobile" label="Mobile"/>
+      </sl:chart>
+    data:
+      visitors: *visitors
+
+  - id: area-stacked
+    title: Stacked areas
+    source: |-
+      <sl:chart th:data="${visitors}" label="Visitors, January to June 2024" margin="12">
+        <sl:chart-grid/>
+        <sl:chart-x-axis key="month" format="month-short"/>
+        <sl:chart-tooltip cursor="false" label-format="month"/>
+        <sl:chart-area key="mobile" label="Mobile" stack="a" color="var(--chart-2)"/>
+        <sl:chart-area key="desktop" label="Desktop" stack="a" color="var(--chart-1)"/>
+      </sl:chart>
+    data:
+      visitors: *visitors
+
+  - id: area-default
+    title: Area chart
+    description: The tooltip's line indicator, nested beside the label when there is one series.
+    source: |-
+      <sl:chart th:data="${visitors}" label="Desktop visitors, January to June 2024" margin="12">
+        <sl:chart-grid/>
+        <sl:chart-x-axis key="month" format="month-short"/>
+        <sl:chart-tooltip indicator="line" cursor="false" label-format="month"/>
+        <sl:chart-area key="desktop" label="Desktop"/>
+      </sl:chart>
+    data:
+      visitors: *visitors
+
+  - id: formats
+    title: Formats
+    description: >-
+      Days as LocalDates (day on the axis, date in the tooltip), a value axis in compact numbers and the values in
+      euros, all in the page's language.
+    source: |-
+      <sl:chart th:data="${revenue}" label="Revenue per day, 1 to 10 April 2024">
+        <sl:chart-grid/>
+        <sl:chart-x-axis key="day" format="day"/>
+        <sl:chart-y-axis format="compact"/>
+        <sl:chart-tooltip label-format="date" value-format="currency" currency="EUR"/>
+        <sl:chart-bar key="revenue" label="Revenue" radius="4"/>
+      </sl:chart>
+    data:
+      revenue:
+        - {day: 2024-04-01, revenue: 12400}
+        - {day: 2024-04-02, revenue: 9800}
+        - {day: 2024-04-03, revenue: 15250.5}
+        - {day: 2024-04-04, revenue: 11020}
+        - {day: 2024-04-05, revenue: 18990}
+        - {day: 2024-04-06, revenue: 6400}
+        - {day: 2024-04-07, revenue: 5100}
+        - {day: 2024-04-08, revenue: 13700}
+        - {day: 2024-04-09, revenue: 14880}
+        - {day: 2024-04-10, revenue: 16420}
+
+  - id: time-zone
+    title: Instants in a time zone
+    description: >-
+      Instants (written with Z) are shown in the chart's time zone: the request's, or time-zone. The first point is
+      06:00 UTC, so 08:00 in Brussels.
+    source: |-
+      <sl:chart th:data="${requests}" label="Requests per hour, 1 April 2024" time-zone="Europe/Brussels" margin="12">
+        <sl:chart-grid/>
+        <sl:chart-x-axis key="hour" format="time"/>
+        <sl:chart-tooltip label-format="time" value-format="integer"/>
+        <sl:chart-line key="requests" label="Requests" dots/>
+      </sl:chart>
+    data:
+      requests:
+        - {hour: 2024-04-01T06:00:00Z, requests: 120}
+        - {hour: 2024-04-01T07:00:00Z, requests: 340}
+        - {hour: 2024-04-01T08:00:00Z, requests: 610}
+        - {hour: 2024-04-01T09:00:00Z, requests: 580}
+        - {hour: 2024-04-01T10:00:00Z, requests: 720}
+        - {hour: 2024-04-01T11:00:00Z, requests: 690}
+
+  - id: dynamic-series
+    title: Series from the model
+    description: >-
+      th:each on a series part, for series known at run time. Each takes the next chart colour.
+    source: |-
+      <sl:chart th:data="${browsers}" label="Visitors per browser, January to June 2024">
+        <sl:chart-grid/>
+        <sl:chart-x-axis key="month" format="month-short"/>
+        <sl:chart-tooltip label-format="month"/>
+        <sl:chart-legend/>
+        <sl:chart-line th:each="browser : ${series}" th:key="${browser.key}" th:label="${browser.label}"/>
+      </sl:chart>
+    data:
+      series:
+        - {key: chrome, label: Chrome}
+        - {key: safari, label: Safari}
+        - {key: firefox, label: Firefox}
+      browsers:
+        - {month: '2024-01', chrome: 275, safari: 200, firefox: 187}
+        - {month: '2024-02', chrome: 305, safari: 190, firefox: 173}
+        - {month: '2024-03', chrome: 237, safari: 210, firefox: 160}
+        - {month: '2024-04', chrome: 273, safari: 230, firefox: 140}
+        - {month: '2024-05', chrome: 209, safari: 240, firefox: 132}
+        - {month: '2024-06', chrome: 254, safari: 245, firefox: 125}

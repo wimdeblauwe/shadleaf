@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import io.github.wimdeblauwe.shadleaf.assets.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
@@ -31,6 +33,8 @@ class AssetsBehindSecurityTest {
 
   // How Vite's output imports a shared chunk: from"./register-BrzqsZGo.js"
   private static final Pattern RELATIVE_IMPORT = Pattern.compile("from\\s*\"\\./([^\"]+\\.js)\"");
+  // And loads one on demand, as the chart loader does: import(`./sl-chart-C9x2kR1a.js`)
+  private static final Pattern DYNAMIC_IMPORT = Pattern.compile("import\\(`\\./([^`]+\\.js)`");
 
   @Autowired
   private MockMvc mockMvc;
@@ -70,6 +74,29 @@ class AssetsBehindSecurityTest {
       String chunkUrl = jsUrl.substring(0, jsUrl.lastIndexOf('/') + 1) + imports.group(1);
       mockMvc.perform(get(chunkUrl)).andExpect(status().isOk());
     }
+  }
+
+  @ParameterizedTest
+  @EnumSource(AlpineVariant.class)
+  void theChartChunkEveryScriptLoadsOnDemandIsServedAnonymously(AlpineVariant alpine) throws Exception {
+    String jsUrl = new ShadleafAssets(Skin.VEGA, AssetVariant.STANDALONE, alpine, null, manifestParser).getJsUrl();
+    String base = jsUrl.substring(0, jsUrl.lastIndexOf('/') + 1);
+    List<String> chunks = new ArrayList<>();
+    Matcher imports = RELATIVE_IMPORT.matcher(mockMvc.perform(get(jsUrl)).andReturn().getResponse()
+        .getContentAsString());
+    while (imports.find()) {
+      Matcher dynamicImports = DYNAMIC_IMPORT.matcher(mockMvc.perform(get(base + imports.group(1))).andReturn()
+          .getResponse().getContentAsString());
+      while (dynamicImports.find()) {
+        chunks.add(dynamicImports.group(1));
+      }
+    }
+
+    assertThat(chunks).singleElement().asString().startsWith("sl-chart-");
+    mockMvc.perform(get(base + chunks.get(0)))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("text/javascript")))
+        .andExpect(content().string(org.hamcrest.Matchers.containsString("sl-chart")));
   }
 
   @Test

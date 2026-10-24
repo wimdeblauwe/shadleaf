@@ -1,0 +1,42 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or
+      time axis, with a grid, axes, a tooltip and a legend. Pass the rows in <code>th:data</code> and put the parts
+      inside, in the order Recharts draws them: <code>sl:chart-grid</code>, <code>sl:chart-x-axis</code>,
+      <code>sl:chart-y-axis</code>, <code>sl:chart-tooltip</code>, <code>sl:chart-legend</code>, then one
+      <code>sl:chart-bar</code>, <code>sl:chart-line</code> or <code>sl:chart-area</code> per series (only bars give
+      a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is
+      16:9; for a fixed height, give it one in your CSS with <code>aspect-ratio: auto</code>. Every
+      attribute that is not a prop passes through to the element.</sl:description>
+    <sl:prop name="data" type="object" required>The rows: a list (or a Spring Data <code>Page</code>) of objects,
+      records or maps, one per category or point in time. Each row holds the category (<code>month</code>) and a
+      number per series (<code>desktop</code>, <code>mobile</code>). Serialised with Jackson: dates as ISO strings,
+      which the named date formats read by their Java type.</sl:prop>
+    <sl:prop name="label" required>The chart's accessible name, such as its title: what a screen reader announces
+      when the chart takes the focus.</sl:prop>
+    <sl:prop name="margin" type="number">Space in pixels left and right of the plot, so the first and last tick
+      labels fit (shadcn's line and area charts use 12).</sl:prop>
+    <sl:prop name="time-zone">The time zone (an IANA id such as <code>Europe/Brussels</code>) instants in the data
+      are shown in: <code>Instant</code>, <code>OffsetDateTime</code> and <code>ZonedDateTime</code>. Defaults to the
+      request's (Spring's <code>LocaleContextHolder</code>). A <code>LocalDate</code> or
+      <code>LocalDateTime</code> is shown as written, in any zone.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The data block is JSON (th:inline="javascript" serialises with Jackson, and escapes </script>), which a strict
+  Content-Security-Policy allows: it never runs. The parts render markers that sl-chart.jsx reads; the skeleton holds
+  the chart's place until it has drawn. */-->
+<sl-chart th:fragment="chart"
+          th:attr="label=${props.label},
+                   margin=${props.margin},
+                   time-zone=${#slCharts.timeZone(props['time-zone'])}"
+          class="chart"
+          sl:attrs>
+  <script type="application/json" th:inline="javascript">[[${#slCharts.rows(props.data)}]]</script>
+  <sl:slot/>
+  <div class="chart-skeleton"></div>
+</sl-chart>
+</body>
+</html>

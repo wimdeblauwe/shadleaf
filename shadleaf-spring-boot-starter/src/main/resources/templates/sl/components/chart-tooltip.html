@@ -1,0 +1,37 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The tooltip of a <code>sl:chart</code>: on hover, or with the arrow keys once the chart has the
+      focus, it shows the category and every series' label and value. Draws no element of its own on the page: the
+      chart reads it.</sl:description>
+    <sl:prop name="indicator" default="dot" values="dot line dashed">The mark before each series' label, in its
+      colour.</sl:prop>
+    <sl:prop name="cursor" type="boolean" default="true">Highlight the hovered category (a band behind bars, a line
+      over lines and areas).</sl:prop>
+    <sl:prop name="hide-label" type="boolean">Leave out the label at the top (the category).</sl:prop>
+    <sl:prop name="hide-indicator" type="boolean">Leave out the marks before the series' labels.</sl:prop>
+    <sl:prop name="label-key">The property of the rows to take the label from instead of the axis category: a series
+      key gives that series' label, any other property its value in the hovered row, such as a date the server
+      formatted.</sl:prop>
+    <sl:prop name="label-format" values="number integer compact percent currency day month-short month month-year date time">How the label is written, as the ticks of
+      <code>sl:chart-x-axis</code> (<code>month</code>, <code>date</code>, ...). Without one, as it is.</sl:prop>
+    <sl:prop name="value-format" default="number" values="number integer compact percent currency day month-short month month-year date time">How the values are written:
+      <code>number</code> in the page's language, or <code>currency</code>, <code>percent</code>, ...</sl:prop>
+    <sl:prop name="currency">The ISO 4217 code (<code>EUR</code>) for a <code>currency</code> format.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<sl-chart-tooltip th:fragment="chart-tooltip"
+                  class="chart-tooltip"
+                  th:attr="indicator=${props.unlessDefault('indicator')},
+                           cursor=${props.cursor ? null : 'false'},
+                           hide-label=${props['hide-label'] ? 'true' : null},
+                           hide-indicator=${props['hide-indicator'] ? 'true' : null},
+                           label-key=${props['label-key'] == null ? null : #slCharts.key('chart-tooltip', 'label-key', props['label-key'])},
+                           label-format=${props['label-format']},
+                           value-format=${props['value-format']},
+                           currency=${#slCharts.currency('chart-tooltip', props['label-format'] == 'currency' ? 'currency' : props['value-format'], props.currency)}"
+                  sl:attrs></sl-chart-tooltip>
+</body>
+</html>
