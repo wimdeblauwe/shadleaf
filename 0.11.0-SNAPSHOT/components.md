@@ -22,10 +22,12 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Textarea](https://shadleaf.dev/0.11.0-SNAPSHOT/components/textarea.md): A multi-line text input, bound to a form field with th:field.
 - [Select](https://shadleaf.dev/0.11.0-SNAPSHOT/components/select.md): shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
 - [Select (Native)](https://shadleaf.dev/0.11.0-SNAPSHOT/components/select-native.md): The browser's own select, styled, bound to a form field with th:field.
+- [Combobox](https://shadleaf.dev/0.11.0-SNAPSHOT/components/combobox.md): shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
 - [Checkbox](https://shadleaf.dev/0.11.0-SNAPSHOT/components/checkbox.md): The browser's own checkbox, styled, bound to a form field with th:field.
 - [Radio Group](https://shadleaf.dev/0.11.0-SNAPSHOT/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field.
 - [Switch](https://shadleaf.dev/0.11.0-SNAPSHOT/components/switch.md): An on/off control, bound to a boolean form field with th:field.
 - [Calendar](https://shadleaf.dev/0.11.0-SNAPSHOT/components/calendar.md): shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+- [Date Picker](https://shadleaf.dev/0.11.0-SNAPSHOT/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
 
 ## Overlays
 

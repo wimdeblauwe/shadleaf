@@ -158,6 +158,36 @@ select.
 - The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
   item at once, as on any select, where Radix opens the list. See [Select](https://shadleaf.dev/0.11.0-SNAPSHOT/components/select.md#left-out).
 
+### Combobox is a real select too
+
+`<sl:combobox>` renders a `<select>` (a `<select multiple>` with `multiple`) holding its items, so `th:field` binds
+one value or a collection and the form submits them without a hidden input. A small Alpine component puts the input,
+the chips and the list box in its place; without Alpine it is a select drawn like the native select.
+
+```html
+<!-- shadcn: <Combobox items={frameworks}><ComboboxInput placeholder="Select a framework" showClear/>
+             <ComboboxContent><ComboboxEmpty>No items found.</ComboboxEmpty><ComboboxList>
+             {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}</ComboboxList>
+             </ComboboxContent></Combobox> -->
+<sl:combobox th:field="*{framework}" placeholder="Select a framework" show-clear>
+  <sl:combobox-item th:each="framework : ${frameworks}" th:value="${framework.id}">[[${framework.name}]]</sl:combobox-item>
+</sl:combobox>
+
+<!-- shadcn: <Combobox multiple ...><ComboboxChips><ComboboxValue>{...<ComboboxChip/>}</ComboboxValue>
+             <ComboboxChipsInput/></ComboboxChips>... -->
+<sl:combobox th:field="*{frameworks}" multiple placeholder="Add a framework">...</sl:combobox>
+```
+
+- `ComboboxInput`, `ComboboxContent`, `ComboboxList`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipsInput`,
+  `ComboboxValue` and `ComboboxTrigger` are all `<sl:combobox>`: `showClear`, `showTrigger` and `autoHighlight` are
+  its `show-clear`, `show-trigger` and `auto-highlight`, and `ComboboxEmpty` is its `empty` attribute.
+- No `items` array or render function: the items are `<sl:combobox-item>`s, whose `value` and text replace
+  `itemToStringValue`. A group's heading is `<sl:combobox-group label>`; there is no `ComboboxLabel` or
+  `ComboboxCollection`.
+- An addition: `search-url` loads the options from the server as you type, as an HTML fragment of items.
+- No popup layout (a button trigger with the input in the list), no input addons, no `showRemove` on a chip, no
+  `side`/`align`. See [Combobox](https://shadleaf.dev/0.11.0-SNAPSHOT/components/combobox.md#left-out).
+
 ### Calendar is drawn over date inputs
 
 `<sl:calendar>` holds its value in `<input type="date">` elements, so `th:field` binds it and the form submits ISO
@@ -181,7 +211,31 @@ dates. A small Alpine component draws the month over them; without Alpine the da
 - The page's locale sets the first day of the week and the week numbering; `week-starts-on` overrides the first day.
 - No `timeZone`, `buttonVariant`, `classNames`, `components` or `formatters`. See
   [Calendar](https://shadleaf.dev/0.11.0-SNAPSHOT/components/calendar.md#left-out).
-- There is no date picker (a calendar in a popover) yet.
+
+### Date picker is a component
+
+shadcn has no date picker component: its docs compose a `Popover`, a `Button` and a `Calendar`, and the app's own
+state updates the button and closes the popover. `<sl:date-picker>` is that composition as one component; its
+attributes go to the calendar inside.
+
+```html
+<!-- shadcn: <Popover><PopoverTrigger asChild><Button variant="outline">{date ? format(date, "PPP") : "Pick a date"}
+     </Button></PopoverTrigger><PopoverContent className="w-auto p-0" align="start">
+     <Calendar mode="single" selected={date} onSelect={setDate}/></PopoverContent></Popover> -->
+<sl:date-picker th:field="*{dueDate}"/>
+
+<!-- shadcn: the same with <Calendar mode="range" numberOfMonths={2} .../> -->
+<sl:date-picker aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:date-picker>
+```
+
+- The button's text is formatted in the page's locale, by `format` (`Intl`'s `dateStyle`: `long` is close to
+  date-fns' `PPP`), not by a date-fns pattern. A range shows both ends with ` – ` between them.
+- A pick closes the popover: for a range, the second pick.
+- It needs JavaScript; without it the popover holds the bare date inputs.
+- The typed-input, time, natural language and presets demos have no counterpart yet.
 
 ### Accordion and collapsible are details elements
 

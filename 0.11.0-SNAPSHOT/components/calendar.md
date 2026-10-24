@@ -185,7 +185,7 @@ These react-day-picker props, which shadcn's Calendar passes on, have no counter
 - **`timeZone`.** A date input holds a date without a time, so there is no time zone to get wrong.
 - **`buttonVariant`, `classNames`, `components` and `formatters`.** The skins draw the calendar; the locale formats it.
 
-A date picker (a button that opens the calendar in a popover) is not here yet.
+For a button that opens the calendar in a popover, see the [date picker](https://shadleaf.dev/0.11.0-SNAPSHOT/components/date-picker.md).
 
 ## Attributes
 
