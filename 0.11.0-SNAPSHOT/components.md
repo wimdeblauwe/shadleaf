@@ -19,6 +19,7 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Form errors](https://shadleaf.dev/0.11.0-SNAPSHOT/components/form-errors.md): The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
 - [Label](https://shadleaf.dev/0.11.0-SNAPSHOT/components/label.md): A label for a form control.
 - [Input](https://shadleaf.dev/0.11.0-SNAPSHOT/components/input.md): A text input, bound to a form field with th:field.
+- [Input Group](https://shadleaf.dev/0.11.0-SNAPSHOT/components/input-group.md): Text, icons and buttons inside the border of an input or textarea.
 - [Textarea](https://shadleaf.dev/0.11.0-SNAPSHOT/components/textarea.md): A multi-line text input, bound to a form field with th:field.
 - [Select](https://shadleaf.dev/0.11.0-SNAPSHOT/components/select.md): shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
 - [Select (Native)](https://shadleaf.dev/0.11.0-SNAPSHOT/components/select-native.md): The browser's own select, styled, bound to a form field with th:field.

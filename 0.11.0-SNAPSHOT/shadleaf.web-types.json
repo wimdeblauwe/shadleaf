@@ -2131,6 +2131,164 @@
           }
         } ]
       }, {
+        "name" : "sl:input-group",
+        "description" : "An input with text, icons or buttons inside its border: one `sl:input-group-input` or `sl:input-group-textarea`, and `sl:input-group-addon`s around it. Put the addons after the control in the markup, so the control comes first in the tab order and is read first; `align` on the addon places it. The group draws the control's focus ring, error and disabled look. In a `sl:field`, the control takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:input-group-addon",
+        "description" : "Text, an icon, a `sl:kbd` or `sl:input-group-button`s beside or around the control of a `sl:input-group`. Clicking it, outside a button or link, focuses the control. Write it after the control: `align` places it.",
+        "attributes" : [ {
+          "name" : "align",
+          "description" : "Where the addon goes: before or after the control on its line, or above or below it across the whole group.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "inline-start"
+          }, {
+            "name" : "inline-end"
+          }, {
+            "name" : "block-start"
+          }, {
+            "name" : "block-end"
+          } ],
+          "default" : "inline-start"
+        }, {
+          "name" : "border",
+          "description" : "With `align` `block-start` or `block-end`, a dividing line between the addon and the control, with matching spacing.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:input-group-button",
+        "description" : "A button in a `sl:input-group-addon`: a `sl:button`, ghost and extra small by default, sized to fit inside the group. Any other attribute passes through to the `sl:button` (`type`, `loading`, `disabled`, `hx-*`). Requires `aria-label` or `aria-labelledby` when `size` is `icon-xs` or `icon-sm`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "ghost"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          } ],
+          "default" : "xs"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:input-group-input",
+        "description" : "The input of a `sl:input-group`: a `sl:input` without a border of its own, as the group draws it. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "Type of the input.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "text"
+          }, {
+            "name" : "email"
+          }, {
+            "name" : "password"
+          }, {
+            "name" : "number"
+          }, {
+            "name" : "search"
+          }, {
+            "name" : "tel"
+          }, {
+            "name" : "url"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "datetime-local"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "week"
+          }, {
+            "name" : "time"
+          } ],
+          "default" : "text"
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:input-group-text",
+        "description" : "Muted text in a `sl:input-group-addon`: a currency symbol, a unit, a domain. It may hold an `sl:icon`. In an addon above or below the control, it takes the free space, so what follows it sits at the end.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:input-group-textarea",
+        "description" : "The textarea of a `sl:input-group`: a `sl:textarea` without a border of its own, as the group draws it, that grows with its content where the browser supports it. Addons go above or below it (`align` `block-start` or `block-end`). The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:kbd",
         "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
         "attributes" : [ ]

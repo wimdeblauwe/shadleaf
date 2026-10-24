@@ -521,6 +521,11 @@ takes keyboard focus, when it is a link (`as="a"`).
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
   on any radio button or checkbox. The indeterminate state is the input's own (`indeterminate` prop, or the DOM
   property) and shows a minus; shadcn's checkbox shows its check mark for `checked="indeterminate"`.
+- Input group: `className="border-b"` (or `border-t`) on a block addon is its `border` prop, and the `ml-auto` of
+  shadcn's examples is not needed: in an addon above or below the control, `<sl:input-group-text>` takes the free
+  space. A disabled control fades the whole group by itself, where shadcn's needs `data-disabled` on the group. Only
+  `<sl:input-group-input>` and `<sl:input-group-textarea>` are controls: there is no `data-slot="input-group-control"`
+  for a control of your own. A click on an addon focuses the control only with JavaScript.
 - A disabled checkbox fades as a whole, check mark included. In the lyra and nova skins a disabled native select and
   select get the same grey background as a disabled input (shadcn's lyra and nova only give it to input and textarea).
 
