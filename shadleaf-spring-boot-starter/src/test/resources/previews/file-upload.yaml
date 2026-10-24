@@ -47,6 +47,20 @@ scenarios:
     form:
       values: {uploadPhotos: []}
 
+  - id: grid
+    title: Grid
+    description: With layout grid, the picked files show as cards in columns that fill the width, images with a large thumbnail, other files with their icon, rejected ones as errors.
+    source: |-
+      <sl:field th:field="*{uploadInspectionPhotos}">
+        <sl:field-label>Photos of defects</sl:field-label>
+        <sl:file-upload multiple accept="image/*,.pdf" max-size="10MB" layout="grid" previews>
+          <sl:slot name="media"><sl:icon name="images"/></sl:slot>
+          <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+        </sl:file-upload>
+      </sl:field>
+    form:
+      values: {uploadInspectionPhotos: []}
+
   - id: single
     title: One file
     description: Without multiple, a new file replaces the one picked before. The slots and browse-label change the icon, title and button.

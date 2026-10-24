@@ -492,8 +492,12 @@
     @apply gap-3;
   }
 
-  .file-upload-list {
+  .file-upload:not([data-layout]) > .file-upload-list {
     @apply gap-2;
+  }
+
+  .file-upload[data-layout='grid'] > .file-upload-list {
+    @apply grid-cols-[repeat(auto-fill,minmax(--spacing(32),1fr))] gap-3;
   }
 
   .file-upload:has(> .file-upload-input:focus-visible) > .file-upload-dropzone > .empty-content > .file-upload-browse {

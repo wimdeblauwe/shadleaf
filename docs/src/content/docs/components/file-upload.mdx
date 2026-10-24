@@ -107,6 +107,29 @@ img-src 'self' blob:
 Without it the files keep their icons and the upload works as before. The browser reports the blocked image in the
 console; after that, the page makes no more previews. See [Content-Security-Policy](../../guides/csp/).
 
+## Grid
+
+With `layout="grid"`, the picked files show as cards in columns that fill the width, instead of small attachments one
+below the other. With `previews`, a photo then shows as a large square thumbnail: big enough to judge, say, the
+photos of an inspection before they are sent with the rest of the form.
+
+<ComponentPreview id="file-upload--grid" />
+
+```html
+<sl:file-upload th:field="*{photos}" multiple accept="image/*,.pdf" max-size="10MB" layout="grid" previews>
+  <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+</sl:file-upload>
+```
+
+- **The cards.** Each file is a vertical [`<sl:attachment>`](../attachment/#image) at the default size, filling
+  its cell; the grid is the one of [`<sl:attachment-group layout="grid">`](../attachment/#grid), so both look
+  alike. Other files show their icon in the same square, and a rejected file shows as an error card with the reason.
+- **The buttons.** The remove or dismiss button sits in the card's corner, and is hidden while the files are sent.
+- **The order.** The cards are in the order of the files in the input, as in the list, so the focus order, the focus
+  after a remove and the announcements are the same.
+
+Without JavaScript nothing changes: there is no list.
+
 ## Errors
 
 A second submit renders the form again with the binding's errors, as for any field. The input is marked

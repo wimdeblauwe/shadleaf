@@ -3165,6 +3165,20 @@
             "required" : false
           }
         }, {
+          "name" : "layout",
+          "description" : "`list` shows the picked files one below the other, as small attachments; `grid` as cards in columns that fill the width, the grid of `sl:attachment-group layout=\"grid\"`: with `previews`, for photos one wants to see before sending them.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "list"
+          }, {
+            "name" : "grid"
+          } ],
+          "default" : "list"
+        }, {
           "name" : "browse-label",
           "description" : "The text of the Browse button. Defaults to \"Browse files\", or \"Browse\" without `multiple`.",
           "value" : {
@@ -3202,6 +3216,13 @@
         }, {
           "name" : "th:previews",
           "description" : "`previews` from a Thymeleaf expression, e.g. `th:previews=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:layout",
+          "description" : "`layout` from a Thymeleaf expression, e.g. `th:layout=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

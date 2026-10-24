@@ -1428,6 +1428,12 @@
       "values" : [ ],
       "description" : "Show a thumbnail of each picked image (up to 20 MB, no SVG) instead of the file icon. The thumbnail is a `blob:` URL: a Content-Security-Policy must allow it in `img-src`, or the icon stays."
     }, {
+      "name" : "layout",
+      "type" : "enum",
+      "defaultValue" : "list",
+      "values" : [ "list", "grid" ],
+      "description" : "`list` shows the picked files one below the other, as small attachments; `grid` as cards in columns that fill the width, the grid of `sl:attachment-group layout=\"grid\"`: with `previews`, for photos one wants to see before sending them."
+    }, {
       "name" : "browse-label",
       "type" : "string",
       "values" : [ ],
