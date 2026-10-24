@@ -5,11 +5,13 @@ import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.shadleaf.toast.Toast;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
@@ -71,7 +73,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * larger than 5 MB, only images, PDF, text and CSV. Without htmx a valid upload redirects back to the page with a toast
  * (post/redirect/get); with htmx ({@code hx-post}) the answer is the files card alone, with the toast in
  * {@code HX-Trigger}, and the first new file's download button takes the focus. With errors, both get the form again
- * with them.
+ * with them. With htmx the files show their upload progress; {@code sample.upload-processing-delay} (2 seconds in the
+ * local profile) holds the answer back, so that "Processing" shows too, as it would on a server that does more with
+ * the files than keep them in memory.
  */
 @Controller
 public class PeopleController {
@@ -86,10 +90,13 @@ public class PeopleController {
 
   private final PersonRepository repository;
   private final PersonFileStore files;
+  private final Duration uploadProcessingDelay;
 
-  public PeopleController(PersonRepository repository, PersonFileStore files) {
+  public PeopleController(PersonRepository repository, PersonFileStore files,
+      @Value("${sample.upload-processing-delay:0s}") Duration uploadProcessingDelay) {
     this.repository = repository;
     this.files = files;
+    this.uploadProcessingDelay = uploadProcessingDelay;
   }
 
   @GetMapping("/people")
@@ -188,7 +195,8 @@ public class PeopleController {
   @PostMapping("/people/{id}/files")
   public String upload(@PathVariable long id, @ModelAttribute("upload") UploadForm upload,
       BindingResult bindingResult, HtmxRequest htmxRequest, HtmxResponse htmxResponse, Model model,
-      RedirectAttributes redirectAttributes) throws IOException {
+      RedirectAttributes redirectAttributes) throws IOException, InterruptedException {
+    Thread.sleep(uploadProcessingDelay.toMillis());
     Person person = person(id);
     List<MultipartFile> picked = upload.getFiles().stream().filter(file -> !file.isEmpty()).toList();
     List<PersonFile> uploaded = new ArrayList<>();

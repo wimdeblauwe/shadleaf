@@ -11,8 +11,10 @@
       appended to the component. In a <code>sl:field</code>, the input takes the field's <code>th:field</code>, id
       and <code>aria-describedby</code>. With JavaScript, files can be dropped too, each picked file shows as an
       <code>sl:attachment</code> with a remove button, and a file that does not match <code>accept</code> or is
-      larger than <code>max-size</code> shows as an error. Without it, the Browse button still picks files. The
-      server checks the files anyway.</sl:description>
+      larger than <code>max-size</code> shows as an error. When the form is sent with htmx (2 or 4), each file shows its
+      upload progress, then that the server is processing it, and an error if the request fails; a Cancel button
+      stops the upload. Without it, the Browse button still picks files. The server checks the files
+      anyway.</sl:description>
     <sl:prop name="multiple" type="boolean">Take more than one file. Picking or dropping files adds them to the
       ones already there.</sl:prop>
     <sl:prop name="accept">The file types to take, as the input's <code>accept</code>: extensions
@@ -35,7 +37,10 @@
   field's label and the Browse label, its description the drop zone's description and the field's ids.
 
   slFileUpload makes the list from the input's files, cloning the templates, and fills in the {0} the messages were
-  rendered with. Without JavaScript the list stays hidden. */-->
+  rendered with. Without JavaScript the list stays hidden.
+
+  While an htmx request sends the files, slFileUpload sets data-uploading on the root: the Cancel button takes the
+  Browse label's place (the CSS shows one of them), and the attachments show their progress. */-->
 <div th:fragment="file-upload"
      th:with="slFileUploadAttrs=${#slFields.control(attrs.without('class', 'classappend'), slField)},
               slFileUploadId=${#slFields.controlId(slFileUploadAttrs, 'sl-file-upload-')},
@@ -72,6 +77,7 @@
                  class="file-upload-browse"
                  th:for="${slFileUploadId}">[[${props['browse-label'] ?: (props.multiple
                      ? #messages.msg('sl.file-upload.browse') : #messages.msg('sl.file-upload.browse.one'))}]]</sl:button>
+      <sl:button type="button" variant="outline" class="file-upload-cancel">[[#{sl.file-upload.cancel}]]</sl:button>
     </div>
   </div>
   <ul class="file-upload-list" hidden></ul>
@@ -79,8 +85,20 @@
        role="status"
        th:attr="data-message-added=#{sl.file-upload.announce.added('{0}')},
                 data-message-removed=#{sl.file-upload.announce.removed('{0}')},
-                data-message-rejected=#{sl.file-upload.announce.rejected('{0}', '{1}')}"></div>
-  <template class="file-upload-template" data-kind="file"><li class="file-upload-item"><sl:attachment
+                data-message-rejected=#{sl.file-upload.announce.rejected('{0}', '{1}')},
+                data-message-uploading=#{sl.file-upload.announce.uploading('{0}')},
+                data-message-uploading-one=#{sl.file-upload.announce.uploading.one('{0}')},
+                data-message-uploaded=#{sl.file-upload.announce.uploaded('{0}')},
+                data-message-uploaded-one=#{sl.file-upload.announce.uploaded.one('{0}')},
+                data-message-failed=#{sl.file-upload.announce.failed},
+                data-message-cancelled=#{sl.file-upload.announce.cancelled}"></div>
+  <template class="file-upload-template"
+            data-kind="file"
+            th:attr="data-message-uploading=#{sl.file-upload.uploading('{0}')},
+                     data-message-uploading-indeterminate=#{sl.file-upload.uploading.indeterminate},
+                     data-message-processing=#{sl.file-upload.processing},
+                     data-message-failed=#{sl.file-upload.failed},
+                     data-message-done=#{sl.file-upload.done}"><li class="file-upload-item"><sl:attachment
       state="idle" size="sm" full-width>
     <sl:attachment-media><sl:icon name="file"/></sl:attachment-media>
     <sl:attachment-content>

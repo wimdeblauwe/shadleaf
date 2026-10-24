@@ -8,7 +8,10 @@ import {combinations, openShowcase} from './showcase';
 // Content-Security-Policy with the csp Alpine build, the markup the docs previews': picking and dropping files (through
 // a DataTransfer, as a real drop hands them over), adding more, removing one, accept and max-size, one file without
 // multiple, the announcements, the keyboard, the submitted form, htmx (swapped in, out, history restore) and the page
-// without Alpine. Runs in Chromium and Firefox.
+// without Alpine. The upload progress with htmx 2 and htmx 4: each file's share, processing, the outcomes, Cancel, a
+// request without the files, and htmx 2's history snapshot taken while uploading (htmx 4 keeps no snapshot: it asks
+// the server for the page again). file-upload-network.spec.ts has the browser's own upload events. Runs in Chromium
+// and Firefox.
 
 type Scenario = { id: string, html: string };
 const preview = (id: string) => (previews.scenarios as Scenario[])
@@ -350,4 +353,252 @@ test.describe('behaviour', () => {
         await expect(upload.status).toHaveText('Added d.pdf.');
         expect(messages).toEqual([]);
       });
+});
+
+// Upload progress, with htmx 2 and htmx 4. The browser's own upload events would come all at once (the fixture answers
+// from memory), so the init script keeps the listeners added to xhr.upload, and the test fires progress and load on
+// them by hand. The answer waits until the test lets it go.
+type Uploads = { fire(type: string, loaded?: number, total?: number): void, count(): number };
+
+async function holdUploads(page: Page) {
+  await page.addInitScript(() => {
+    const uploads: { target: EventTarget, listeners: Record<string, EventListener[]> }[] = [];
+    XMLHttpRequestUpload.prototype.addEventListener = function (type: string, listener: EventListener) {
+      let entry = uploads.find(upload => upload.target === this);
+      if (!entry) {
+        entry = {target: this, listeners: {}};
+        uploads.push(entry);
+      }
+      (entry.listeners[type] ??= []).push(listener);
+    };
+    (window as unknown as { uploads: Uploads }).uploads = {
+      fire(type, loaded = 0, total = 0) {
+        const event = new ProgressEvent(type, {lengthComputable: total > 0, loaded, total});
+        uploads.at(-1)?.listeners[type]?.forEach(listener => listener(event));
+      },
+      count: () => uploads.length,
+    };
+  });
+}
+
+const fire = (page: Page, type: string, loaded?: number, total?: number) =>
+    page.evaluate(([type, loaded, total]) => (window as unknown as { uploads: Uploads }).uploads
+        .fire(type as string, loaded as number, total as number), [type, loaded, total]);
+
+/** Holds the answers to POST /upload until release() is called; each request's body is kept. */
+async function holdAnswers(page: Page, answer: () => { status?: number, body: string } | 'fail'
+    = () => ({body: '<p id="saved">Saved</p>'})) {
+  const bodies: string[] = [];
+  let release = () => {};
+  let held = new Promise<void>(resolve => (release = resolve));
+  await page.route('**/upload', async route => {
+    bodies.push(route.request().postData() ?? '');
+    await held;
+    held = new Promise<void>(resolve => (release = resolve));
+    const response = answer();
+    if (response === 'fail') {
+      return route.abort('failed');
+    }
+    return route.fulfill({status: response.status ?? 200, contentType: 'text/html', body: response.body});
+  });
+  return {bodies, release: () => release()};
+}
+
+/** A form that posts with htmx: its answer goes into #area (around the form) or #result (beside it). */
+const form = (target: 'area' | 'result', swap = 'innerHTML') => '<div id="area"><form id="form" hx-post="/upload" '
+    + `hx-target="#${target}" hx-swap="${swap}" enctype="multipart/form-data">${preview('default')}`
+    + '<button type="submit">Save</button></form></div><div id="result"></div>';
+
+const a = pdf('a.pdf');
+const b = {...pdf('b.pdf'), size: 3000};
+const states = (upload: Upload) => upload.list.locator('.attachment').evaluateAll(elements => elements
+    .map(element => [element.getAttribute('data-state'), element.getAttribute('aria-busy'),
+      element.querySelector('.attachment-description')!.textContent]));
+
+for (const version of [2, 4] as const) {
+  test.describe(`upload progress, htmx ${version}`, () => {
+    test('each file shows its share sent, then processing, and the answer replaces the component', async ({page}) => {
+      await holdUploads(page);
+      const messages = await openFixture(page, form('area'), {htmx: version});
+      const answers = await holdAnswers(page);
+      const upload = new Upload(page, 'uploadAttachments');
+      await upload.input.setInputFiles(picked(a, b));
+      const cancel = upload.root.getByRole('button', {name: 'Cancel upload'});
+      await expect(cancel).toBeHidden();
+
+      await page.getByRole('button', {name: 'Save'}).click();
+      await expect(upload.root).toHaveAttribute('data-uploading', 'true');
+      await expect(upload.status).toHaveText('Uploading 2 files.');
+      await expect(upload.input).toBeDisabled();
+      await expect(cancel).toBeVisible();
+      await expect(upload.root.locator('.file-upload-browse')).toBeHidden();
+      await expect(upload.list.getByRole('button')).toHaveCount(0);
+      expect(await states(upload)).toEqual([['uploading', 'true', 'Uploading'], ['uploading', 'true', 'Uploading']]);
+
+      // 4400 bytes in all, 4200 of them the files' (1200 and 3000): 2200 sent are 2100 of the files' bytes, all of a
+      // and 900 of b's.
+      await fire(page, 'progress', 2200, 4400);
+      expect(await states(upload)).toEqual([['uploading', 'true', 'Uploading · 100%'],
+        ['uploading', 'true', 'Uploading · 30%']]);
+      await fire(page, 'progress', 4400, 4400);
+      await fire(page, 'load', 4400, 4400);
+      expect(await states(upload)).toEqual([['processing', 'true', 'Processing'], ['processing', 'true', 'Processing']]);
+      // No announcement per percent.
+      await expect(upload.status).toHaveText('Uploading 2 files.');
+
+      answers.release();
+      await expect(page.locator('#saved')).toBeVisible();
+      await expect(upload.root).toHaveCount(0);
+      expect(answers.bodies[0]).toContain('filename="a.pdf"');
+      expect(answers.bodies[0]).toContain('filename="b.pdf"');
+      expect(messages).toEqual([]);
+    });
+
+    test('a size the browser does not know shows no percentage', async ({page}) => {
+      await holdUploads(page);
+      await openFixture(page, form('area'), {htmx: version});
+      const answers = await holdAnswers(page);
+      const upload = new Upload(page, 'uploadAttachments');
+      await upload.input.setInputFiles(picked(a));
+      await page.getByRole('button', {name: 'Save'}).click();
+      await expect(upload.status).toHaveText('Uploading a.pdf.');
+      await fire(page, 'progress', 500, 0);
+      expect(await states(upload)).toEqual([['uploading', 'true', 'Uploading']]);
+      answers.release();
+      await expect(page.locator('#saved')).toBeVisible();
+    });
+
+    test('when the component stays, the files show as uploaded and leave the input', async ({page}) => {
+      await holdUploads(page);
+      const messages = await openFixture(page, form('result'), {htmx: version});
+      const answers = await holdAnswers(page);
+      const upload = new Upload(page, 'uploadAttachments');
+      await upload.input.setInputFiles(picked(a, b));
+      await page.getByRole('button', {name: 'Save'}).click();
+      await fire(page, 'load', 4400, 4400);
+      answers.release();
+
+      await expect(page.locator('#saved')).toBeVisible();
+      await expect(upload.status).toHaveText('Uploaded 2 files.');
+      expect(await states(upload)).toEqual([[null, null, 'Uploaded'], [null, null, 'Uploaded']]);
+      expect(await upload.files()).toEqual([]);
+      await expect(upload.input).toBeEnabled();
+      await expect(upload.root).not.toHaveAttribute('data-uploading');
+      await expect(upload.list.getByRole('button')).toHaveCount(0);
+
+      // The next pick clears them.
+      await upload.input.setInputFiles(picked(pdf('c.pdf')));
+      expect(await upload.titles()).toEqual(['c.pdf']);
+      expect(await states(upload)).toEqual([['idle', null, 'PDF · 1.2 kB']]);
+      expect(messages).toEqual([]);
+    });
+
+    test('a failed answer marks the files as errors and keeps them, to be sent again', async ({page}) => {
+      await holdUploads(page);
+      let status = 500;
+      const messages = await openFixture(page, form('result'), {htmx: version});
+      const answers = await holdAnswers(page, () => ({status, body: status === 500 ? '' : '<p id="saved">Saved</p>'}));
+      const upload = new Upload(page, 'uploadAttachments');
+      await upload.input.setInputFiles(picked(a, b));
+      await page.getByRole('button', {name: 'Save'}).click();
+      await fire(page, 'load', 4400, 4400);
+      answers.release();
+
+      await expect(upload.status).toHaveText('The files could not be uploaded. Try again.');
+      expect(await states(upload)).toEqual([['error', null, 'Upload failed'], ['error', null, 'Upload failed']]);
+      expect(await upload.files()).toEqual(['a.pdf', 'b.pdf']);
+      await expect(upload.input).toBeEnabled();
+      await expect(upload.remove('b.pdf')).toBeVisible();
+
+      status = 200;
+      await page.getByRole('button', {name: 'Save'}).click();
+      await expect(upload.status).toHaveText('Uploading 2 files.');
+      answers.release();
+      await expect(page.locator('#saved')).toBeVisible();
+      expect(answers.bodies[1]).toContain('filename="b.pdf"');
+      // htmx reports the error status itself.
+      expect(messages.filter(message => !/500|Internal Server Error|htmx:response:error/i.test(message)))
+          .toEqual([]);
+    });
+
+    test('no connection marks the files as errors', async ({page}) => {
+      await holdUploads(page);
+      await openFixture(page, form('result'), {htmx: version});
+      const answers = await holdAnswers(page, () => 'fail');
+      const upload = new Upload(page, 'uploadAttachments');
+      await upload.input.setInputFiles(picked(a));
+      await page.getByRole('button', {name: 'Save'}).click();
+      answers.release();
+      await expect(upload.status).toHaveText('The files could not be uploaded. Try again.');
+      expect(await states(upload)).toEqual([['error', null, 'Upload failed']]);
+      expect(await upload.files()).toEqual(['a.pdf']);
+    });
+
+    test('Cancel aborts the request, and the files are back as they were', async ({page}) => {
+      await holdUploads(page);
+      const messages = await openFixture(page, form('area'), {htmx: version});
+      const answers = await holdAnswers(page);
+      const upload = new Upload(page, 'uploadAttachments');
+      await upload.input.setInputFiles(picked(a, b));
+      await page.getByRole('button', {name: 'Save'}).click();
+      await fire(page, 'progress', 1000, 4400);
+
+      await upload.root.getByRole('button', {name: 'Cancel upload'}).click();
+      await expect(upload.status).toHaveText('Upload cancelled.');
+      await expect(upload.input).toBeFocused();
+      expect(await states(upload)).toEqual([['idle', null, 'PDF · 1.2 kB'], ['idle', null, 'PDF · 2.9 kB']]);
+      expect(await upload.files()).toEqual(['a.pdf', 'b.pdf']);
+      await expect(upload.root.locator('.file-upload-browse')).toBeVisible();
+      await expect(upload.remove('a.pdf')).toBeVisible();
+      answers.release();
+      await expect(page.locator('#saved')).toHaveCount(0);
+      // htmx logs an aborted request as an error, of its own: htmx 2 its afterRequest and sendAbort, htmx 4 its
+      // htmx:error (the fetch rejected with an AbortError).
+      expect(messages.length).toBeGreaterThan(0);
+      expect(messages.filter(message => !/^htmx(:afterRequest|:sendAbort|: htmx:error: .*abort)/is.test(message)))
+          .toEqual([]);
+    });
+
+    test('a request that does not carry the files is left alone', async ({page}) => {
+      await holdUploads(page);
+      const messages = await openFixture(page, form('result')
+          + '<button type="button" id="other" hx-post="/upload" hx-target="#result">Other</button>', {htmx: version});
+      const answers = await holdAnswers(page);
+      const upload = new Upload(page, 'uploadAttachments');
+      await upload.input.setInputFiles(picked(a));
+      await page.locator('#other').click();
+      await expect.poll(() => answers.bodies.length).toBe(1);
+      await expect(upload.root).not.toHaveAttribute('data-uploading');
+      answers.release();
+      await expect(page.locator('#saved')).toBeVisible();
+      expect(await states(upload)).toEqual([['idle', null, 'PDF · 1.2 kB']]);
+      expect(messages).toEqual([]);
+    });
+  });
+}
+
+test('upload progress: a page saved in htmx\'s history while uploading comes back idle', async ({page}) => {
+  await holdUploads(page);
+  const messages = await openFixture(page, form('area')
+      + '<a id="next" href="/next" hx-get="/next" hx-target="main" hx-push-url="true">Next</a>', {
+    htmx: true,
+    routes: {'/next': () => ({body: '<p id="next-page">Next page</p>'})},
+  });
+  await holdAnswers(page);
+  const upload = new Upload(page, 'uploadAttachments');
+  await upload.input.setInputFiles(picked(a));
+  await page.getByRole('button', {name: 'Save'}).click();
+  await expect(upload.root).toHaveAttribute('data-uploading', 'true');
+
+  await page.locator('#next').click();
+  await expect(page.locator('#next-page')).toBeVisible();
+  await page.goBack();
+  await expect(upload.input).toBeAttached();
+  await expect(upload.root).not.toHaveAttribute('data-uploading');
+  await expect(upload.input).toBeEnabled();
+  await expect(upload.root.locator('.file-upload-browse')).toBeVisible();
+  await expect(upload.list).toBeHidden();
+  await upload.input.setInputFiles(picked(pdf('d.pdf')));
+  expect(await states(upload)).toEqual([['idle', null, 'PDF · 1.2 kB']]);
+  expect(messages).toEqual([]);
 });

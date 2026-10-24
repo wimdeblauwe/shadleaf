@@ -16,11 +16,12 @@
       </div>
       <div class="empty-content">
         <label class="button file-upload-browse" for="files">Browse files</label>
+        <button class="button file-upload-cancel" type="button" data-variant="outline">Cancel upload</button>
       </div>
     </div>
     <ul class="file-upload-list" hidden></ul>
-    <div class="file-upload-status sl-sr-only" role="status" data-message-added="Added {0}." data-message-removed="Removed {0}." data-message-rejected="Could not add {0}: {1}."></div>
-    <template class="file-upload-template" data-kind="file">
+    <div class="file-upload-status sl-sr-only" role="status" data-message-added="Added {0}." data-message-removed="Removed {0}." data-message-rejected="Could not add {0}: {1}." data-message-uploading="Uploading {0} files." data-message-uploading-one="Uploading {0}." data-message-uploaded="Uploaded {0} files." data-message-uploaded-one="Uploaded {0}." data-message-failed="The files could not be uploaded. Try again." data-message-cancelled="Upload cancelled."></div>
+    <template class="file-upload-template" data-kind="file" data-message-uploading="Uploading · {0}" data-message-uploading-indeterminate="Uploading" data-message-processing="Processing" data-message-failed="Upload failed" data-message-done="Uploaded">
       <li class="file-upload-item">
         <div class="attachment" data-state="idle" data-size="sm" data-width="full">
           <div class="attachment-media">

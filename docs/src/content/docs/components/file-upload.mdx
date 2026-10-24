@@ -102,6 +102,9 @@ A disabled input fades the Browse button, and the component takes no files.
 - Each remove button is named after its file: "Remove report.pdf". After a remove, the focus moves to the next
   file's button, or back to the input.
 - Dropping is a pointer gesture; the keyboard path is the input.
+- An upload is announced once when it starts ("Uploading 3 files."), and again when it fails, is cancelled, or ends
+  while the component is still there. The percentages are not announced; each uploading or processing attachment is
+  `aria-busy`. After a Cancel, the focus goes back to the input.
 
 ## Without JavaScript
 
@@ -112,14 +115,51 @@ shows nothing of the picked files but what the hidden input would.
 
 The component can be swapped in and out. The browser never restores a file input's files, and htmx's history restore
 renders the page's markup again: the list is drawn from the input's files whenever the component starts, so going back
-shows an empty upload, never files that would not be sent.
+shows an empty upload, never files that would not be sent. A page saved in the history while uploading comes back
+as an upload that is not sending anything.
+
+## Upload progress
+
+When the form is sent with htmx (`hx-post` on the form, or a boosted form), the component shows how far the upload
+is, with no attribute of its own. It takes part in every htmx request whose body carries its files, so the form needs
+`enctype="multipart/form-data"` or `hx-encoding="multipart/form-data"`. The files go through the
+[attachment's states](../attachment/#states):
+
+1. **Uploading.** Each file shows the share of its bytes sent: "Uploading · 64%".
+2. **Processing**, once the whole request is sent and the server is still working on it.
+3. **The outcome.** On success the server's answer is swapped in, as for any htmx request. It usually replaces the
+   component, with an empty form and what was uploaded, so the answer is what tells the user it worked. A
+   [toast](../toast/) or the focus on the new files does that well. If the component stays, its files show as
+   "Uploaded" and leave the input, so a second submit does not send them again. On a failed request (an error status,
+   no connection, a timeout), the files show "Upload failed" and stay in the input, so the user can submit again.
+
+<ComponentPreview id="attachment--states" />
+
+The browser reports the progress of the whole request, not of each file. The files go into the request one after the
+other, in the list's order, so each one's share is worked out from where its bytes are in the request. The figure is
+off by the few bytes of the form's other fields, which hardly shows.
+
+While the files are sent, they cannot be added or removed: the input is disabled and the remove buttons are hidden. A
+**Cancel upload** button takes the Browse button's place. It aborts the request (`htmx:abort`), and the files are back
+as they were, ready to send again. All files go in one request, so cancelling stops them all.
+
+- **htmx 2** sends with an `XMLHttpRequest`, and the component follows its upload.
+- **htmx 4** sends with `fetch()`, which reports no upload progress. For a request that carries the files, the
+  component gives htmx a `fetch` of its own (`ctx.fetch`), which sends with an `XMLHttpRequest`. Everything else
+  (swapping, `HX-*` headers, history, `htmx:abort`) is still htmx's. htmx 4 aborts a request after 60 seconds by
+  default; for large uploads, raise its `defaultTimeout` or set `hx-config` on the form. htmx 4 also swaps an error
+  answer in, where htmx 2 leaves the page alone: if that answer replaces the component, it shows what went wrong
+  instead of the failed files.
+
+Without htmx, a plain POST, nothing of this happens: the browser shows its own progress, if any.
+
+Spring Boot answers a request larger than `spring.servlet.multipart.max-request-size` with an error, which shows as a
+failed upload: set the limits to what the form may send.
 
 ## Not yet
 
 - **Image previews.** A preview of a picked image needs a `blob:` URL, which a strict Content Security Policy blocks
   unless its `img-src` allows `blob:`. They will come as an option.
-- **Upload progress.** Sending the form with htmx and showing each file as `uploading` from `htmx:xhr:progress` is a
-  later step.
 
 ## Attributes
 

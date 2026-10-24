@@ -144,4 +144,30 @@ class FileUploadComponentTest {
     assertThat(status.attr("data-message-removed")).isEqualTo("Removed {0}.");
     assertThat(status.attr("data-message-rejected")).isEqualTo("Could not add {0}: {1}.");
   }
+
+  @Test
+  void theUploadProgressHasACancelButtonAndMessagePatterns() {
+    Rendered rendered = tester.render("<sl:file-upload name=\"files\" multiple/>");
+
+    Element cancel = rendered.select(".empty-content > button.file-upload-cancel").first();
+    assertThat(cancel.classNames()).containsExactly("button", "file-upload-cancel");
+    assertThat(cancel.attr("type")).isEqualTo("button");
+    assertThat(cancel.attr("data-variant")).isEqualTo("outline");
+    assertThat(cancel.text()).isEqualTo("Cancel upload");
+
+    Element file = rendered.select("template[data-kind=file]").first();
+    assertThat(file.attr("data-message-uploading")).isEqualTo("Uploading · {0}");
+    assertThat(file.attr("data-message-uploading-indeterminate")).isEqualTo("Uploading");
+    assertThat(file.attr("data-message-processing")).isEqualTo("Processing");
+    assertThat(file.attr("data-message-failed")).isEqualTo("Upload failed");
+    assertThat(file.attr("data-message-done")).isEqualTo("Uploaded");
+
+    Element status = rendered.select(".file-upload-status").first();
+    assertThat(status.attr("data-message-uploading")).isEqualTo("Uploading {0} files.");
+    assertThat(status.attr("data-message-uploading-one")).isEqualTo("Uploading {0}.");
+    assertThat(status.attr("data-message-uploaded")).isEqualTo("Uploaded {0} files.");
+    assertThat(status.attr("data-message-uploaded-one")).isEqualTo("Uploaded {0}.");
+    assertThat(status.attr("data-message-failed")).isEqualTo("The files could not be uploaded. Try again.");
+    assertThat(status.attr("data-message-cancelled")).isEqualTo("Upload cancelled.");
+  }
 }

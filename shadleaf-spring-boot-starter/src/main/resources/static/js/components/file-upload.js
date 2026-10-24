@@ -15,9 +15,20 @@
   - added, removed and rejected files are announced once per change, in the status region (polite).
   - the list is drawn again from input.files on init (htmx's history restore renders the markup without the files) and
     on pageshow (the back/forward cache, a browser that restored the form's files).
+  - progress, when an htmx request (htmx 2 or 4, see htmx-uploads.js) sends the files: each file is uploading, with
+    the share of its bytes sent ("Uploading · 64%"), then processing once the body is out, then the outcome. The
+    progress is for the whole request; the files go into the body one after the other, in the list's order, so each
+    file's share is read from where its bytes lie in it (the boundaries and other fields scaled away). Meanwhile the
+    input is disabled (no adding or removing; htmx has the files already), the remove buttons are hidden and a Cancel
+    button takes the Browse label's place: it aborts the request (htmx:abort) and the files are idle again. A failed
+    request (an error status, no connection, a timeout) marks them as errors; they stay in the input, to be sent
+    again. After a success the swap replaces the component, as a rule; if it is still there, the files show as
+    uploaded and leave the input, so they are not sent twice. The start, a failure, a cancel and a success the
+    component sees are announced, never the percentages. Without htmx none of this happens: a plain POST shows nothing.
   The messages arrive with a plain {0} (and {1}) in them, which this fills in.
 */
 import {listener} from '../popup.js';
+import {abortRequest, watchUploads} from '../htmx-uploads.js';
 
 const ANNOUNCE_DELAY_MS = 100;
 const UNITS = ['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte'];
@@ -36,6 +47,7 @@ export default function fileUpload() {
       const status = root.querySelector(':scope > .file-upload-status');
       const fileTemplate = root.querySelector(':scope > template[data-kind="file"]');
       const rejectedTemplate = root.querySelector(':scope > template[data-kind="rejected"]');
+      const cancel = root.querySelector(':scope > .file-upload-dropzone > .empty-content > .file-upload-cancel');
       const cleanups = [];
       const listen = listener(cleanups);
       const language = () => root.closest('[lang]')?.lang || undefined;
@@ -45,6 +57,16 @@ export default function fileUpload() {
       // whole, so this keeps the earlier ones for the next pick.
       let files = Array.from(input.files);
       let rejected = [];
+      // The upload in progress or last done: its state (uploading, processing, error, done) and each file's share
+      // sent. Cleared by the next change. uploaded holds the files of a success the component saw, out of the input.
+      let upload;
+      let uploaded = [];
+
+      // A history snapshot taken while uploading kept the disabled input and the marker: neither holds any more.
+      if (root.dataset.uploading) {
+        delete root.dataset.uploading;
+        input.disabled = false;
+      }
 
       const announce = parts => {
         const text = parts.filter(Boolean).join(' ');
@@ -73,11 +95,53 @@ export default function fileUpload() {
         return element;
       };
 
+      const percent = share => new Intl.NumberFormat(language(), {style: 'percent', maximumFractionDigits: 0})
+          .format(Math.floor(share * 100) / 100);
+
+      // Sets the files' attachments to the upload's state, as attachment.html renders it: done is the default (no
+      // data-state), uploading and processing are busy.
+      const paint = () => {
+        const messages = fileTemplate.dataset;
+        list.querySelectorAll(':scope > .file-upload-item[data-kind="file"]').forEach(element => {
+          const index = Number(element.dataset.index);
+          const state = element.dataset.uploaded ? 'done' : upload?.state;
+          if (!state) {
+            return;
+          }
+          const attachment = element.querySelector('.attachment');
+          if (state === 'done') {
+            attachment.removeAttribute('data-state');
+          } else {
+            attachment.dataset.state = state;
+          }
+          if (state === 'uploading' || state === 'processing') {
+            attachment.setAttribute('aria-busy', 'true');
+          } else {
+            attachment.removeAttribute('aria-busy');
+          }
+          const share = upload?.shares?.[index];
+          element.querySelector('.attachment-description').textContent = {
+            uploading: share === undefined ? messages.messageUploadingIndeterminate
+                : format(messages.messageUploading, percent(share)),
+            processing: messages.messageProcessing,
+            error: messages.messageFailed,
+            done: messages.messageDone,
+          }[state];
+        });
+      };
+
       const render = () => {
         list.replaceChildren(
             ...files.map((file, index) => item(fileTemplate, file, index)),
+            ...uploaded.map((file, index) => {
+              const element = item(fileTemplate, file, index);
+              element.dataset.uploaded = 'true';
+              element.querySelector('.attachment-actions').remove();
+              return element;
+            }),
             ...rejected.map(({file, reason}, index) => item(rejectedTemplate, file, index, reason)));
         list.hidden = list.children.length === 0;
+        paint();
       };
 
       const write = () => {
@@ -104,6 +168,8 @@ export default function fileUpload() {
       const add = (previous, incoming) => {
         const accepted = [];
         rejected = [];
+        uploaded = [];
+        upload = undefined;
         for (const file of incoming) {
           const reason = reasonFor(file);
           if (reason) {
@@ -209,6 +275,7 @@ export default function fileUpload() {
           rejected.splice(index, 1);
           render();
         } else {
+          upload = undefined;
           const [removed] = files.splice(index, 1);
           writing = true;
           try {
@@ -227,8 +294,96 @@ export default function fileUpload() {
       listen(window, 'pageshow', () => {
         files = Array.from(input.files);
         rejected = [];
+        uploaded = [];
+        if (!root.dataset.uploading) {
+          upload = undefined;
+        }
         render();
       });
+
+      // A request body carries the files when it holds a file of the input's under its name.
+      const carries = body => body instanceof FormData && input.name !== '' && files.length > 0
+          && body.getAll(input.name).some(value => value instanceof File && files.some(file => same(file, value)));
+
+      watchUploads(listen, carries, elt => {
+        const sending = files.slice();
+        const sizes = sending.reduce((sum, file) => sum + file.size, 0);
+        upload = {state: 'uploading', shares: undefined, elt};
+        rejected = [];
+        uploaded = [];
+        root.dataset.uploading = 'true';
+        input.disabled = true;
+        render();
+        announce([sending.length === 1
+          ? format(status.dataset.messageUploadingOne, sending[0].name)
+          : format(status.dataset.messageUploading, new Intl.NumberFormat(language()).format(sending.length))]);
+
+        const finish = () => {
+          delete root.dataset.uploading;
+          input.disabled = false;
+          // The Cancel button is hidden again: a focus on it goes back to the input.
+          if (document.activeElement === cancel) {
+            input.focus();
+          }
+        };
+        return {
+          // The bytes sent, mapped onto the files in their order: the share of the body that is files' bytes is
+          // taken as spread evenly, which is near enough, as the boundaries and the other fields are small.
+          progress(loaded, total) {
+            if (!total || sizes === 0) {
+              upload.shares = undefined;
+            } else {
+              let offset = 0;
+              const sent = loaded * sizes / total;
+              upload.shares = sending.map(file => {
+                const share = file.size === 0 ? (sent >= offset ? 1 : 0)
+                    : Math.min(1, Math.max(0, (sent - offset) / file.size));
+                offset += file.size;
+                return share;
+              });
+            }
+            paint();
+          },
+          sent() {
+            upload.state = 'processing';
+            paint();
+          },
+          end(how) {
+            finish();
+            if (!root.isConnected) {
+              return;
+            }
+            if (how === 'done') {
+              // Out of the input without input or change: hx-trigger="change" would send the empty input.
+              uploaded = sending;
+              files = [];
+              input.value = '';
+              upload = undefined;
+              render();
+              announce([sending.length === 1
+                ? format(status.dataset.messageUploadedOne, sending[0].name)
+                : format(status.dataset.messageUploaded, new Intl.NumberFormat(language()).format(sending.length))]);
+            } else if (how === 'error') {
+              upload = {state: 'error'};
+              render();
+              announce([status.dataset.messageFailed]);
+            } else {
+              upload = undefined;
+              render();
+              announce([status.dataset.messageCancelled]);
+            }
+          },
+        };
+      });
+
+      // An application's copy of the template from before the Cancel button has none.
+      if (cancel) {
+        listen(cancel, 'click', () => {
+          if (upload?.elt) {
+            abortRequest(upload.elt);
+          }
+        });
+      }
 
       render();
       this.cleanups = cleanups;

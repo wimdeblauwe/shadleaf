@@ -36,6 +36,9 @@ importers:
       htmx.org:
         specifier: 2.0.11
         version: 2.0.11
+      htmx4:
+        specifier: npm:htmx.org@4.0.0
+        version: htmx.org@4.0.0
       opentype.js:
         specifier: ^1.3.4
         version: 1.3.4
@@ -1135,6 +1138,10 @@ packages:
 
   htmx.org@2.0.11:
     resolution: {integrity: sha512-Thx/WtpeOQqSrqBCw/A1cwGJGg4UrVa3+sW0GmrM3p4gJgO89ecH4qtbnyzDDWFvBTqjnIMCgELTNt636dtamA==}
+
+  htmx.org@4.0.0:
+    resolution: {integrity: sha512-T/171FUY93Kdfp8t+DnHdk45QvKRiBhVhhrwSzrXgUi4pHKvhp77dUA/qg8FAjsFWPIHNbmUuIdCrcVHuiZWng==}
+    hasBin: true
 
   http-cache-semantics@4.2.0:
     resolution: {integrity: sha512-dTxcvPXqPvXBQpq5dUr6mEMJX4oIEFv6bwom3FDwKRDsuIjjJGANqhBuoAn9c1RQJIdAKav33ED65E2ys+87QQ==}
@@ -2845,6 +2852,8 @@ snapshots:
   html-whitespace-sensitive-tag-names@3.0.1: {}
 
   htmx.org@2.0.11: {}
+
+  htmx.org@4.0.0: {}
 
   http-cache-semantics@4.2.0: {}
 
