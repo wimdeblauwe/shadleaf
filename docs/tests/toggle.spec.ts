@@ -6,8 +6,9 @@ import {openFixture} from './fixture';
 // sl:toggle and sl:toggle-group: a checkbox (or a group item's radio button) covering a label, which draws its state
 // through :has(): a click or Space anywhere on it checks it, and the label turns pressed and draws the focus ring. A
 // single group's arrow keys select the next item; a joined group (spacing="0") rounds only its ends. On the showcase,
-// in every skin and theme; in fixture pages, a form submits the toggles without any script, and in forced-colors mode
-// a pressed toggle takes the highlight colours.
+// in every skin and theme; in fixture pages, a form submits the toggles without any script, a tooltip on a toggle
+// shows on keyboard focus and describes its input, and in forced-colors mode a pressed toggle takes the highlight
+// colours.
 
 type Scenario = { id: string, html: string };
 const scenarios = previews.scenarios as Scenario[];
@@ -126,6 +127,56 @@ test('without any script, a form submits the toggle and the group items', async 
   expect(body.get('italicLabel')).toBe('on');
   expect(body.get('callFilter')).toBe('missed');
   expect(body.getAll('textStyle')).toEqual(['bold', 'underline']);
+});
+
+test('a tooltip on a group item shows on keyboard focus and on hover, and the group still joins its items', async ({page}) => {
+  const messages = await openFixture(page, `<p><button type="button" id="before">Before</button></p>
+      ${html('toggle-group--tooltip')}`);
+  const items = page.locator('.toggle-group-item');
+  const contents = page.locator('.tooltip-content');
+  const isOpen = (content: Locator) => content.evaluate(element => element.matches(':popover-open'));
+
+  await page.locator('#before').focus();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('radio', {name: 'Align left'})).toBeFocused();
+  await expect.poll(() => isOpen(contents.nth(0))).toBe(true);
+  // mode="label": the tooltip repeats the item's aria-label, so it describes nothing.
+  await expect(items.nth(0).locator('input')).not.toHaveAttribute('aria-describedby');
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('radio', {name: 'Align center'})).toBeFocused();
+  await expect.poll(() => isOpen(contents.nth(1))).toBe(true);
+  expect(await isOpen(contents.nth(0))).toBe(false);
+
+  await page.locator('#before').focus();
+  await expect.poll(() => isOpen(contents.nth(1))).toBe(false);
+  await items.nth(2).hover();
+  await expect.poll(() => isOpen(contents.nth(2))).toBe(true);
+
+  const radii = await items.evaluateAll(elements => elements.map(element => {
+    const style = getComputedStyle(element);
+    return [style.borderStartStartRadius, style.borderStartEndRadius];
+  }));
+  expect(radii[0][0]).not.toBe('0px');
+  expect(radii[1]).toEqual(['0px', '0px']);
+  expect(radii[2][1]).not.toBe('0px');
+  expect(messages).toEqual([]);
+});
+
+test('a tooltip on a toggle describes its checkbox, not the label around it', async ({page}) => {
+  const messages = await openFixture(page, `<p><button type="button" id="before">Before</button></p>
+      <span class="tooltip" x-data="slTooltip"><label class="toggle"><input type="checkbox" class="toggle-input"
+      aria-label="Bold"></label><span class="tooltip-content" role="tooltip" popover="manual">Make the text
+      bold<span class="tooltip-arrow" aria-hidden="true"></span></span></span>`);
+  const checkbox = page.getByRole('checkbox', {name: 'Bold'});
+
+  await expect(checkbox).toHaveAccessibleDescription('Make the text bold');
+  await expect(page.locator('label.toggle')).not.toHaveAttribute('aria-describedby');
+  await page.locator('#before').focus();
+  await page.keyboard.press('Tab');
+  await expect(checkbox).toBeFocused();
+  await expect.poll(() => page.locator('.tooltip-content').evaluate(element => element.matches(':popover-open')))
+      .toBe(true);
+  expect(messages).toEqual([]);
 });
 
 for (const skin of skins) {

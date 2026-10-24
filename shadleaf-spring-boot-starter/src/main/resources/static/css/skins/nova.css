@@ -908,7 +908,7 @@
     @apply bg-muted;
   }
 
-  .toggle:has(> .toggle-input:indeterminate) {
+  .toggle:has(> .toggle-input:indeterminate:not([type='radio'])) {
     @apply bg-muted/50;
   }
 
@@ -920,26 +920,35 @@
     @apply border-destructive ring-destructive/20 dark:ring-destructive/40;
   }
 
-  /* Toggle group: spacing="0" joins the items, rounding only the ends. */
-  .toggle-group[data-spacing='0'] > .toggle-group-item {
+  /* Toggle group: spacing="0" joins the items, rounding only the ends. An item may sit in a sl:tooltip. */
+  .toggle-group[data-spacing='0'] > .toggle-group-item,
+  .toggle-group[data-spacing='0'] > .tooltip > .toggle-group-item {
     @apply rounded-none px-2 shadow-none
       has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5;
   }
 
-  .toggle-group[data-spacing='0']:not([data-orientation]) > .toggle-group-item:first-child {
+  .toggle-group[data-spacing='0']:not([data-orientation]) > .toggle-group-item:first-child,
+  .toggle-group[data-spacing='0']:not([data-orientation]) > .tooltip:first-child > .toggle-group-item {
     @apply rounded-s-lg;
   }
 
-  .toggle-group[data-spacing='0']:not([data-orientation]) > .toggle-group-item:last-child {
+  .toggle-group[data-spacing='0']:not([data-orientation]) > .toggle-group-item:last-child,
+  .toggle-group[data-spacing='0']:not([data-orientation]) > .tooltip:last-child > .toggle-group-item {
     @apply rounded-e-lg;
   }
 
-  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .toggle-group-item:first-child {
+  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .toggle-group-item:first-child,
+  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .tooltip:first-child > .toggle-group-item {
     @apply rounded-t-lg;
   }
 
-  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .toggle-group-item:last-child {
+  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .toggle-group-item:last-child,
+  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .tooltip:last-child > .toggle-group-item {
     @apply rounded-b-lg;
+  }
+
+  .toggle-group {
+    @apply rounded-lg;
   }
 
   /*

@@ -115,3 +115,24 @@ scenarios:
         <sl:toggle-group-item value="monthly" checked>Monthly</sl:toggle-group-item>
         <sl:toggle-group-item value="yearly" disabled>Yearly</sl:toggle-group-item>
       </sl:toggle-group>
+
+  - id: tooltip
+    title: With tooltips
+    description: >-
+      A sl:tooltip around an item. The tooltip shows next to the item, on hover and on keyboard focus; mode="label"
+      because it repeats the item's aria-label.
+    source: |-
+      <sl:toggle-group variant="outline" spacing="0" name="tooltipAlign" aria-label="Alignment with tooltips">
+        <sl:tooltip mode="label">
+          <sl:toggle-group-item value="left" checked aria-label="Align left"><sl:icon name="align-left"/></sl:toggle-group-item>
+          <sl:tooltip-content>Align left</sl:tooltip-content>
+        </sl:tooltip>
+        <sl:tooltip mode="label">
+          <sl:toggle-group-item value="center" aria-label="Align center"><sl:icon name="align-center"/></sl:toggle-group-item>
+          <sl:tooltip-content>Align center</sl:tooltip-content>
+        </sl:tooltip>
+        <sl:tooltip mode="label">
+          <sl:toggle-group-item value="right" aria-label="Align right"><sl:icon name="align-right"/></sl:toggle-group-item>
+          <sl:tooltip-content>Align right</sl:tooltip-content>
+        </sl:tooltip>
+      </sl:toggle-group>

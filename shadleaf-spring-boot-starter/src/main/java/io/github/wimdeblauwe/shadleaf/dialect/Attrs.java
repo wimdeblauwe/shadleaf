@@ -62,6 +62,21 @@ public final class Attrs extends AbstractMap<String, @Nullable String> {
   }
 
   /**
+   * Returns these attributes with the given one added, unless it is there already in either spelling.
+   * <p>
+   * For a template that adds an attribute its parent decides on, before handing the attributes to
+   * {@code #slFields.control}: {@code ${slDisabled ? attrs.with('disabled', 'disabled') : attrs}}.
+   */
+  public Attrs with(String name, @Nullable String value) {
+    if (has(name)) {
+      return this;
+    }
+    Map<String, @Nullable String> added = new LinkedHashMap<>(values);
+    added.put(name, value);
+    return new Attrs(added);
+  }
+
+  /**
    * Returns only the given attributes, each in both spellings: {@code only('class')} keeps {@code class} and
    * {@code th:class}.
    * <p>

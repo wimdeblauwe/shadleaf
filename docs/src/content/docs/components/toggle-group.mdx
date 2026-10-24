@@ -24,7 +24,8 @@ that holds only an icon needs an `aria-label`.
 
 Write `th:field` on the group, once. The items share it: Spring gives them the field's `name`, numbers their ids
 (`layout1`, `layout2`, ...) and checks the one whose value matches the field. Without a form object, `name` on the
-group gives the items their name.
+group gives the items their name. A `single` group with neither gets a generated name, so its items still exclude
+each other; give it a `name` when the form should submit it.
 
 <ComponentPreview id="toggle-group--form" />
 
@@ -62,6 +63,14 @@ A field with errors marks every item `aria-invalid="true"`.
 ## Disabled
 
 <ComponentPreview id="toggle-group--disabled" />
+
+## With tooltips
+
+Put an item in a [tooltip](../tooltip/). The group still joins the items, the tooltip shows on hover and when the
+keyboard focuses the item, and its text describes the item's input. An icon-only item already has its
+`aria-label`: give the `sl:tooltip` `mode="label"`, so a screen reader does not say it twice.
+
+<ComponentPreview id="toggle-group--tooltip" />
 
 ## Attributes
 

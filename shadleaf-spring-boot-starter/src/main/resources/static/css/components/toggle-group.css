@@ -3,7 +3,9 @@
   group and draw its shadow.
 
   spacing sets the gap between the items, in Tailwind's spacing steps; 0 joins them, and an outline item then drops the
-  border it shares with the item before it. A focused item is raised, so its ring is drawn over its neighbours.
+  border it shares with the item before it. A focused item is raised, so its ring is drawn over its neighbours. An item
+  may sit in a sl:tooltip, whose wrapper has no box (display: contents): every rule here and in the skins names that
+  case too, with the wrapper as the group's child.
 */
 @layer components {
   .toggle-group {
@@ -38,15 +40,18 @@
     @apply gap-4;
   }
 
-  .toggle-group > .toggle-group-item:has(> .toggle-input:focus-visible) {
+  .toggle-group > .toggle-group-item:has(> .toggle-input:focus-visible),
+  .toggle-group > .tooltip > .toggle-group-item:has(> .toggle-input:focus-visible) {
     @apply z-10;
   }
 
-  .toggle-group[data-spacing='0']:not([data-orientation]) > .toggle-group-item[data-variant='outline']:not(:first-child) {
+  .toggle-group[data-spacing='0']:not([data-orientation]) > .toggle-group-item[data-variant='outline']:not(:first-child),
+  .toggle-group[data-spacing='0']:not([data-orientation]) > .tooltip:not(:first-child) > .toggle-group-item[data-variant='outline'] {
     @apply border-s-0;
   }
 
-  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .toggle-group-item[data-variant='outline']:not(:first-child) {
+  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .toggle-group-item[data-variant='outline']:not(:first-child),
+  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .tooltip:not(:first-child) > .toggle-group-item[data-variant='outline'] {
     @apply border-t-0;
   }
 }

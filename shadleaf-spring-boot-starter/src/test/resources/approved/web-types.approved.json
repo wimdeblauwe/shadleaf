@@ -4819,7 +4819,7 @@
           "default" : "horizontal"
         }, {
           "name" : "name",
-          "description" : "The `name` every item submits under, for a group without `th:field`.",
+          "description" : "The `name` every item submits under, for a group without `th:field`. A `single` group without either gets a generated one, so its items still exclude each other.",
           "value" : {
             "kind" : "plain",
             "required" : false

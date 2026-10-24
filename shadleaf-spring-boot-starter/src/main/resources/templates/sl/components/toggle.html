@@ -16,16 +16,30 @@
 <body>
 <!--/* The input covers the label, invisible (appearance: none, no border or background), so a click anywhere toggles
   it and a screen reader finds it where the toggle is drawn. The label draws the pressed look, the focus ring and the
-  error from the input through :has(). th:field adds a hidden marker input after the checkbox, inside the label. */-->
-<label th:fragment="toggle"
-       th:with="slAttrs=${#slFields.control(attrs, slField)}"
-       class="toggle"
-       th:attr="data-variant=${props.unlessDefault('variant')},
-                data-size=${props.unlessDefault('size')}"
-       sl:attrs="${attrs.only('class', 'classappend')}"><input
-    type="checkbox"
+  error from the input through :has(). th:field adds a hidden marker input after the checkbox, inside the label. The
+  markup is the toggle-label fragment, which sl:toggle-group-item shares. */-->
+<th:block th:fragment="toggle"
+          th:with="slToggleClass='toggle',
+                   slToggleVariant=${props.unlessDefault('variant')},
+                   slToggleSize=${props.unlessDefault('size')},
+                   slToggleType='checkbox',
+                   slToggleName=${null},
+                   slToggleAttrs=${attrs}"
+          th:insert="~{sl/components/toggle :: toggle-label}"></th:block>
+
+<!--/* Reads slToggleClass, slToggleVariant, slToggleSize, slToggleType (the input's type, set before th:field runs,
+  which picks Spring's checkbox or radio button processor by it), slToggleName and slToggleAttrs: the attributes for
+  the input, except class, which goes to the label. */-->
+<label th:fragment="toggle-label"
+       th:with="slAttrs=${#slFields.control(slToggleAttrs, slField)}"
+       th:attr="class=${slToggleClass},
+                data-variant=${slToggleVariant},
+                data-size=${slToggleSize}"
+       sl:attrs="${slToggleAttrs.only('class', 'classappend')}"><input
     class="toggle-input"
-    th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+    th:attr="type=${slToggleType},
+             name=${slToggleName},
+             aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
     sl:attrs="${slAttrs.without('class', 'classappend')}"><sl:slot/></label>
 </body>
 </html>

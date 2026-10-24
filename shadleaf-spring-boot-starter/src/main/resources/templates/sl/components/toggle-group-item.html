@@ -12,19 +12,15 @@
   </sl:props>
 </head>
 <body>
-<!--/* The markup of sl:toggle, with the input's type from the group. th:attr sets the type before th:field runs, which
-  picks Spring's checkbox or radio button processor by it. */-->
-<label th:fragment="toggle-group-item"
-       th:with="slAttrs=${#slFields.control(attrs, slField)}"
-       class="toggle toggle-group-item"
-       th:attr="data-variant=${slToggleGroupVariant},
-                data-size=${slToggleGroupSize}"
-       sl:attrs="${attrs.only('class', 'classappend')}"><input
-    class="toggle-input"
-    th:attr="type=${slToggleGroupType == 'multiple' ? 'checkbox' : 'radio'},
-             name=${slToggleGroupName},
-             disabled=${slToggleGroupDisabled == true ? 'disabled' : null},
-             aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
-    sl:attrs="${slAttrs.without('class', 'classappend')}"><sl:slot/></label>
+<!--/* The markup of sl:toggle, with the input's type from the group. The group's disabled goes into the attributes
+  before #slFields.control sees them, so a disabled item never takes the autofocus of sl:form-errors. */-->
+<th:block th:fragment="toggle-group-item"
+          th:with="slToggleClass='toggle toggle-group-item',
+                   slToggleVariant=${slToggleGroupVariant},
+                   slToggleSize=${slToggleGroupSize},
+                   slToggleType=${slToggleGroupType == 'multiple' ? 'checkbox' : 'radio'},
+                   slToggleName=${slToggleGroupName},
+                   slToggleAttrs=${slToggleGroupDisabled == true ? attrs.with('disabled', 'disabled') : attrs}"
+          th:insert="~{sl/components/toggle :: toggle-label}"></th:block>
 </body>
 </html>

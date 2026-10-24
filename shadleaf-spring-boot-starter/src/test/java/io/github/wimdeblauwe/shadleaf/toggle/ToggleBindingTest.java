@@ -143,6 +143,37 @@ class ToggleBindingTest {
         .containsExactly(tuple("view", true), tuple("other", true));
   }
 
+  @Test
+  void aDisabledGroupsItemsNeverTakeTheFormSummarysAutofocus() {
+    Rendered rendered = render(new Settings(false, "gold", List.of()), true, """
+        <sl:form-errors autofocus/>
+        <sl:toggle-group th:field="*{layout}" disabled aria-label="Layout">
+          <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+          <sl:toggle-group-item value="grid">Grid</sl:toggle-group-item>
+        </sl:toggle-group>
+        <sl:toggle th:field="*{starred}">Starred</sl:toggle>""");
+
+    assertThat(rendered.select("[autofocus]")).extracting(Element::id).containsExactly("starred1");
+  }
+
+  @Test
+  void singleGroupWithoutANameOrFieldGetsAGeneratedNameForItsItems() {
+    Rendered rendered = render(new Settings(false, "grid", List.of()), false, """
+        <sl:toggle-group aria-label="Align">
+          <sl:toggle-group-item value="left">Left</sl:toggle-group-item>
+          <sl:toggle-group-item value="right">Right</sl:toggle-group-item>
+        </sl:toggle-group>
+        <sl:toggle-group aria-label="Align again">
+          <sl:toggle-group-item value="left">Left</sl:toggle-group-item>
+        </sl:toggle-group>
+        <sl:toggle-group type="multiple" aria-label="Style">
+          <sl:toggle-group-item value="bold">Bold</sl:toggle-group-item>
+        </sl:toggle-group>""");
+
+    assertThat(rendered.select("input.toggle-input")).extracting(input -> input.attr("name"))
+        .containsExactly("sl-toggle-group-1", "sl-toggle-group-1", "sl-toggle-group-2", "");
+  }
+
   /** With {@code invalid}, every field of the settings has an error. */
   private Rendered render(Settings settings, boolean invalid, String fields) {
     BindingResult bindingResult = new BeanPropertyBindingResult(settings, "settings");

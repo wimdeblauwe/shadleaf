@@ -18,22 +18,25 @@
     <sl:prop name="orientation" default="horizontal" values="horizontal vertical">Put the items on a row, or in a
       column.</sl:prop>
     <sl:prop name="name">The <code>name</code> every item submits under, for a group without
-      <code>th:field</code>.</sl:prop>
+      <code>th:field</code>. A <code>single</code> group without either gets a generated one, so its items still
+      exclude each other.</sl:prop>
     <sl:prop name="disabled" type="boolean">Disable every item.</sl:prop>
   </sl:props>
 </head>
 <body>
 <!--/* The items read slToggleGroupType, slToggleGroupVariant, slToggleGroupSize, slToggleGroupName and
   slToggleGroupDisabled, and slField for the th:field: slot content sees this template's local variables. A group
-  without th:field keeps the slField of a sl:field-set around it. The variant and size are drawn on the items, so the
-  group renders neither. */-->
+  without th:field keeps the slField of a sl:field-set around it. A single group without a name or a field gets a name
+  of its own, or its radio buttons would not exclude each other (nor the arrow keys move between them). The variant
+  and size are drawn on the items, so the group renders neither. */-->
 <div th:fragment="toggle-group"
      class="toggle-group"
      th:with="slField=${attrs.has('field') ? #slFields.fieldSet(attrs, false, false) : slField},
               slToggleGroupType=${props.type},
               slToggleGroupVariant=${props.unlessDefault('variant')},
               slToggleGroupSize=${props.unlessDefault('size')},
-              slToggleGroupName=${props.name},
+              slToggleGroupName=${props.name != null or props.type == 'multiple' or slField?.field != null
+                ? props.name : #ids.seq('sl-toggle-group-')},
               slToggleGroupDisabled=${props.disabled}"
      th:attr="role=${props.type == 'multiple' ? 'group' : 'radiogroup'},
               data-spacing=${props.unlessDefault('spacing')},
