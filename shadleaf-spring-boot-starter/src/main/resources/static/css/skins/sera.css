@@ -315,6 +315,128 @@
       md:text-sm;
   }
 
+  /*
+    Input group, as shadcn's: the group is drawn like the input, with the focus ring, error and read-only look
+    of its control, which has no border of its own; the addons are muted, its buttons small and ghost.
+    Sera draws only the line under it, as its input; read-only dashes it, which keeps the addons on the page's
+    background.
+  */
+
+  .input-group {
+    @apply h-10 rounded-none border border-transparent border-b-input bg-transparent motion-safe:transition-[color,border-color];
+  }
+
+  .input-group:has(> .input-group-input[aria-invalid='true']),
+  .input-group:has(> .input-group-textarea[aria-invalid='true']) {
+    @apply border-b-destructive dark:border-b-destructive/50;
+  }
+
+  .input-group:has(> .input-group-input:focus-visible),
+  .input-group:has(> .input-group-textarea:focus-visible) {
+    @apply border-b-ring shadow-[0_1px_0_var(--ring)];
+  }
+
+  .input-group:has(> .input-group-input[readonly]),
+  .input-group:has(> .input-group-textarea[readonly]) {
+    @apply border-dashed;
+  }
+
+  .input-group-input {
+    @apply px-0 py-1 text-base placeholder:text-muted-foreground md:text-sm;
+  }
+
+  .input-group-textarea {
+    @apply px-0 py-2.5 text-base placeholder:text-muted-foreground md:text-sm;
+  }
+
+  .input-group:has(> .input-group-addon:is(:not([data-align]), [data-align='inline-start'])) > .input-group-input {
+    @apply ps-2;
+  }
+
+  .input-group:has(> .input-group-addon[data-align='inline-end']) > .input-group-input {
+    @apply pe-2;
+  }
+
+  .input-group:has(> .input-group-addon[data-align='block-start']) > .input-group-input {
+    @apply pb-3;
+  }
+
+  .input-group:has(> .input-group-addon[data-align='block-end']) > .input-group-input {
+    @apply pt-3;
+  }
+
+  .input-group-addon {
+    @apply gap-2 py-2 text-sm font-medium text-muted-foreground;
+  }
+
+  .input-group-addon > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .input-group-addon > .kbd {
+    @apply rounded-none px-1.5;
+  }
+
+  .input-group-addon:is(:not([data-align]), [data-align='inline-start']) {
+    @apply ps-0;
+  }
+
+  .input-group-addon[data-align='inline-end'] {
+    @apply pe-0;
+  }
+
+  .input-group-addon[data-align='block-start'] {
+    @apply pt-3;
+  }
+
+  .input-group-addon[data-align='block-end'] {
+    @apply pb-3;
+  }
+
+  .input-group:has(> .input-group-input) > .input-group-addon[data-align='block-start'] {
+    @apply pt-3.5;
+  }
+
+  .input-group:has(> .input-group-input) > .input-group-addon[data-align='block-end'] {
+    @apply pb-3.5;
+  }
+
+  .input-group-addon[data-border='bottom'] {
+    @apply pb-3.5;
+  }
+
+  .input-group-addon[data-border='top'] {
+    @apply pt-3.5;
+  }
+
+  .input-group-text {
+    @apply gap-2 text-sm text-muted-foreground;
+  }
+
+  .input-group-text svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .button.input-group-button {
+    @apply gap-2 rounded-none text-sm shadow-none;
+  }
+
+  .button.input-group-button[data-size='xs'] {
+    @apply h-6 gap-1 rounded-none px-1.5 text-xs;
+  }
+
+  .button.input-group-button[data-size='xs'] svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .button.input-group-button[data-size='icon-xs'] {
+    @apply size-6 p-0 text-xs;
+  }
+
+  .button.input-group-button[data-size='icon-sm'] {
+    @apply size-8 p-0;
+  }
+
   /* Native select. The end padding leaves room for the chevron. */
   .native-select {
     @apply rounded-none border border-transparent border-b-input bg-transparent py-2 ps-0 pe-8 text-sm

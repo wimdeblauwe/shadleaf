@@ -1,0 +1,174 @@
+# Scenarios for the input group's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# A scenario's form is the form object th:field binds to: its values and the binding's errors, by field name. Field
+# names are unique across the showcase, as th:field turns them into ids.
+component: input-group
+parts: [input-group-addon, input-group-text, input-group-button, input-group-input, input-group-textarea]
+scenarios:
+  - id: default
+    title: Input group
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input type="search" name="q" placeholder="Search..." aria-label="Search"/>
+        <sl:input-group-addon><sl:icon name="search"/></sl:input-group-addon>
+        <sl:input-group-addon align="inline-end">12 results</sl:input-group-addon>
+      </sl:input-group>
+
+  - id: inline-start
+    title: Inline start
+    description: The default align. The addon is written after the input, so the input comes first in the tab order.
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input name="query" placeholder="Search..." aria-label="Search"/>
+        <sl:input-group-addon><sl:icon name="search"/></sl:input-group-addon>
+      </sl:input-group>
+
+  - id: inline-end
+    title: Inline end
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input type="password" name="apiKey" placeholder="Enter password" aria-label="Password"/>
+        <sl:input-group-addon align="inline-end"><sl:icon name="eye-off"/></sl:input-group-addon>
+      </sl:input-group>
+
+  - id: block-start
+    title: Block start
+    description: Above the input, across the whole group. border draws a line between the addon and the control.
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input id="input-group-full-name" name="fullName" placeholder="Jane Doe"/>
+        <sl:input-group-addon align="block-start">
+          <sl:label for="input-group-full-name">Full name</sl:label>
+        </sl:input-group-addon>
+      </sl:input-group>
+      <sl:input-group>
+        <sl:input-group-textarea name="script" rows="3" aria-label="Script">console.log('Hello, world!');</sl:input-group-textarea>
+        <sl:input-group-addon align="block-start" border>
+          <sl:input-group-text><sl:icon name="file-code"/> script.js</sl:input-group-text>
+          <sl:input-group-button size="icon-xs" aria-label="Copy"><sl:icon name="copy"/></sl:input-group-button>
+        </sl:input-group-addon>
+      </sl:input-group>
+
+  - id: block-end
+    title: Block end
+    description: Below the input, across the whole group.
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input name="price" placeholder="Enter amount" aria-label="Amount"/>
+        <sl:input-group-addon align="block-end">
+          <sl:input-group-text>USD</sl:input-group-text>
+        </sl:input-group-addon>
+      </sl:input-group>
+      <sl:input-group>
+        <sl:input-group-textarea name="comment" rows="3" placeholder="Write a comment..." aria-label="Comment"/>
+        <sl:input-group-addon align="block-end" border>
+          <sl:input-group-text>0/280 characters</sl:input-group-text>
+          <sl:input-group-button variant="default" size="sm" type="submit">Post</sl:input-group-button>
+        </sl:input-group-addon>
+      </sl:input-group>
+
+  - id: text
+    title: Text
+    description: A currency, a unit or a domain before or after the input.
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input type="number" name="amount" placeholder="0.00" aria-label="Amount in US dollars"/>
+        <sl:input-group-addon><sl:input-group-text>$</sl:input-group-text></sl:input-group-addon>
+        <sl:input-group-addon align="inline-end"><sl:input-group-text>USD</sl:input-group-text></sl:input-group-addon>
+      </sl:input-group>
+      <sl:input-group>
+        <sl:input-group-input name="website" placeholder="example" aria-label="Website"/>
+        <sl:input-group-addon><sl:input-group-text>https://</sl:input-group-text></sl:input-group-addon>
+        <sl:input-group-addon align="inline-end"><sl:input-group-text>.com</sl:input-group-text></sl:input-group-addon>
+      </sl:input-group>
+      <sl:input-group>
+        <sl:input-group-input type="number" name="weight" aria-label="Weight in kilograms"/>
+        <sl:input-group-addon align="inline-end"><sl:input-group-text>kg</sl:input-group-text></sl:input-group-addon>
+      </sl:input-group>
+
+  - id: button
+    title: Button
+    description: An icon button needs an aria-label.
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input name="shareUrl" value="https://shadleaf.dev" readonly aria-label="Link"/>
+        <sl:input-group-addon align="inline-end">
+          <sl:input-group-button size="icon-xs" aria-label="Copy"><sl:icon name="copy"/></sl:input-group-button>
+        </sl:input-group-addon>
+      </sl:input-group>
+      <sl:input-group>
+        <sl:input-group-input type="search" name="docsSearch" placeholder="Type to search..." aria-label="Search the docs"/>
+        <sl:input-group-addon align="inline-end">
+          <sl:input-group-button variant="secondary" type="submit">Search</sl:input-group-button>
+        </sl:input-group-addon>
+      </sl:input-group>
+
+  - id: kbd
+    title: Kbd
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input type="search" name="commandSearch" placeholder="Search..." aria-label="Search"
+                              aria-keyshortcuts="Control+K"/>
+        <sl:input-group-addon><sl:icon name="search"/></sl:input-group-addon>
+        <sl:input-group-addon align="inline-end" aria-hidden="true"><sl:kbd>⌘K</sl:kbd></sl:input-group-addon>
+      </sl:input-group>
+
+  - id: loading
+    title: Loading
+    description: A loading button shows a spinner, announces the busy state and is disabled.
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input name="username" value="wim" aria-label="Username"/>
+        <sl:input-group-addon align="inline-end">
+          <sl:input-group-button loading>Check</sl:input-group-button>
+        </sl:input-group-addon>
+      </sl:input-group>
+
+  - id: field
+    title: In a field
+    description: Put th:field on the field. The input in the group takes it, and the label, description and error point at the input.
+    source: |-
+      <sl:field th:field="*{budget}">
+        <sl:field-label>Budget</sl:field-label>
+        <sl:input-group>
+          <sl:input-group-input type="number" placeholder="0.00"/>
+          <sl:input-group-addon><sl:input-group-text>€</sl:input-group-text></sl:input-group-addon>
+          <sl:input-group-addon align="inline-end"><sl:input-group-text>EUR</sl:input-group-text></sl:input-group-addon>
+        </sl:input-group>
+        <sl:field-description>Excluding VAT.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {budget: ''}
+
+  - id: invalid
+    title: Invalid
+    description: With th:field, a field that has errors marks the input aria-invalid, and the group draws the error.
+    source: |-
+      <sl:field th:field="*{packageWeight}">
+        <sl:field-label>Weight</sl:field-label>
+        <sl:input-group>
+          <sl:input-group-input type="number"/>
+          <sl:input-group-addon align="inline-end"><sl:input-group-text>kg</sl:input-group-text></sl:input-group-addon>
+        </sl:input-group>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {packageWeight: '-2'}
+      errors: {packageWeight: must be greater than 0}
+
+  - id: disabled
+    title: Disabled
+    description: A disabled input fades the whole group.
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input name="discount" value="10" disabled aria-label="Discount"/>
+        <sl:input-group-addon align="inline-end"><sl:input-group-text>%</sl:input-group-text></sl:input-group-addon>
+      </sl:input-group>
+
+  - id: read-only
+    title: Read-only
+    source: |-
+      <sl:input-group>
+        <sl:input-group-input name="volume" value="1.5" readonly aria-label="Volume"/>
+        <sl:input-group-addon align="inline-end"><sl:input-group-text>l</sl:input-group-text></sl:input-group-addon>
+      </sl:input-group>

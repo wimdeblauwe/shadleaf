@@ -20,8 +20,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * The trip page: a combobox whose options come from the server as the user types (search-url), and a multiple combobox
- * bound to a list.
+ * The trip page: a combobox whose options come from the server as the user types (search-url), a multiple combobox
+ * bound to a list, and an input group in a field.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -50,6 +50,35 @@ class TripPageTest {
         .contains("nl", "fr", "en");
     assertThat(page.select("input[type=hidden][name=_languages]")).hasSize(1);
     assertThat(page.select(".form-errors, [aria-invalid]")).isEmpty();
+  }
+
+  @Test
+  void theDailyBudgetIsAnInputGroupWiredToItsField() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(get("/trip")).andExpect(status().isOk()).andReturn().getResponse()
+        .getContentAsString());
+
+    Element budget = page.getElementById("dailyBudget");
+    assertThat(budget.classNames()).containsExactly("input-group-input");
+    assertThat(budget.parent().hasClass("input-group")).isTrue();
+    assertThat(budget.attr("name")).isEqualTo("dailyBudget");
+    assertThat(budget.attr("aria-describedby")).isEqualTo("dailyBudget-description");
+    assertThat(page.select("label[for=dailyBudget]")).hasSize(1);
+    assertThat(budget.parent().select(".input-group-text")).extracting(Element::text).containsExactly("€", "EUR");
+  }
+
+  @Test
+  void aBudgetOfZeroIsRejectedAndKept() throws Exception {
+    Document page = Jsoup.parse(mockMvc.perform(post("/trip")
+            .param("destination", "BE")
+            .param("languages", "nl")
+            .param("dailyBudget", "0"))
+        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+
+    Element budget = page.getElementById("dailyBudget");
+    assertThat(budget.val()).isEqualTo("0");
+    assertThat(budget.attr("aria-invalid")).isEqualTo("true");
+    assertThat(budget.attr("aria-describedby")).isEqualTo("dailyBudget-description dailyBudget-error");
+    assertThat(page.getElementById("dailyBudget-error").text()).contains("Enter an amount above zero");
   }
 
   @Test

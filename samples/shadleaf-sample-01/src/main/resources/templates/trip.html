@@ -17,7 +17,8 @@
     this page). The page itself only holds the chosen country, so the combobox can show it. The languages are a
     <code>multiple</code> combobox with its options in the page: the chosen ones are chips, and
     <code>th:field</code> binds them to a list. Without JavaScript both are selects, the destination with only the
-    chosen country.</p>
+    chosen country. The daily budget is an <code>sl:input-group</code> in a field: the currency sits inside the
+    input's border, and the field's label, description and error point at the input.</p>
 
   <form class="form" th:object="${tripForm}" th:action="@{/trip}" method="post" novalidate>
     <sl:form-errors autofocus/>
@@ -40,6 +41,17 @@
           <sl:combobox-item th:each="language : ${languages}"
                             th:value="${language.key}">[[${language.value}]]</sl:combobox-item>
         </sl:combobox>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field th:field="*{dailyBudget}">
+        <sl:field-label>Daily budget</sl:field-label>
+        <sl:input-group>
+          <sl:input-group-input type="number" min="0" step="0.01" placeholder="0.00"/>
+          <sl:input-group-addon><sl:input-group-text>€</sl:input-group-text></sl:input-group-addon>
+          <sl:input-group-addon align="inline-end"><sl:input-group-text>EUR</sl:input-group-text></sl:input-group-addon>
+        </sl:input-group>
+        <sl:field-description>Optional. Lodging and food, per person.</sl:field-description>
         <sl:field-error/>
       </sl:field>
     </sl:field-group>

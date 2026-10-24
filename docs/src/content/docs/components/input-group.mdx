@@ -1,0 +1,143 @@
+---
+title: Input Group
+description: Text, icons and buttons inside the border of an input or textarea.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="input-group--default" />
+
+## Composition
+
+```text
+sl:input-group
+├── sl:input-group-input or sl:input-group-textarea
+└── sl:input-group-addon
+    ├── sl:input-group-text
+    ├── sl:input-group-button
+    ├── sl:icon
+    └── sl:kbd
+```
+
+The group draws the border, and its control has none of its own: the group shows the control's focus ring, its error
+and its read-only look. A disabled control fades the whole group. A click on an addon, outside a button or link in it,
+focuses the control.
+
+## Align
+
+Write the addons **after** the control, so the control comes first in the tab order and is read before them; `align`
+on the addon places it. `inline-start`, the default, puts it before the control on its line:
+
+<ComponentPreview id="input-group--inline-start" />
+
+### inline-end
+
+<ComponentPreview id="input-group--inline-end" />
+
+### block-start
+
+`block-start` puts the addon above the control, across the whole group. `border` draws a line between the addon and
+the control. In such a row an `sl:input-group-text` takes the free space, so what follows it sits at the end.
+
+<ComponentPreview id="input-group--block-start" />
+
+### block-end
+
+<ComponentPreview id="input-group--block-end" />
+
+## Text
+
+`sl:input-group-text` holds muted text: a currency, a unit, a domain. The input still needs a name of its own, as the
+text is not its label: `aria-label="Amount in US dollars"`.
+
+<ComponentPreview id="input-group--text" />
+
+## Button
+
+`sl:input-group-button` is an `sl:button`, ghost and `xs` by default, with sizes that fit inside the group: `xs`,
+`sm`, `icon-xs` and `icon-sm`. An icon button needs an `aria-label`. As every `sl:button`, it does not submit unless
+you write `type="submit"`.
+
+<ComponentPreview id="input-group--button" />
+
+## Kbd
+
+The key is decoration: say the shortcut with `aria-keyshortcuts` on the input, and hide the addon from screen readers.
+
+<ComponentPreview id="input-group--kbd" />
+
+## Loading
+
+`loading` on the button shows a spinner, disables it and announces the busy state.
+
+<ComponentPreview id="input-group--loading" />
+
+## In a field
+
+Put `th:field` on the [field](../field/), as for an [input](../input/). The `sl:input-group-input` (or
+`sl:input-group-textarea`) inside the group takes it: Spring sets its `id`, `name` and value, the label points at it,
+and it is described by the field's description and error.
+
+```html
+<form th:object="${order}" th:action="@{/orders}" method="post">
+  <sl:field th:field="*{budget}">
+    <sl:field-label>Budget</sl:field-label>
+    <sl:input-group>
+      <sl:input-group-input type="number" placeholder="0.00"/>
+      <sl:input-group-addon><sl:input-group-text>€</sl:input-group-text></sl:input-group-addon>
+      <sl:input-group-addon align="inline-end"><sl:input-group-text>EUR</sl:input-group-text></sl:input-group-addon>
+    </sl:input-group>
+    <sl:field-description>Excluding VAT.</sl:field-description>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+<ComponentPreview id="input-group--field" />
+
+Outside a field, write `th:field` on the `sl:input-group-input` itself.
+
+## Invalid
+
+When the field has errors, the input marks itself `aria-invalid="true"`, and the group draws the destructive border
+and ring.
+
+<ComponentPreview id="input-group--invalid" />
+
+## Disabled
+
+<ComponentPreview id="input-group--disabled" />
+
+## Read-only
+
+As a read-only [input](../input/#read-only): the group gets a muted background, and the value can still be focused,
+selected and copied.
+
+<ComponentPreview id="input-group--read-only" />
+
+## Attributes
+
+### sl:input-group
+
+<ComponentAttributes component="input-group" />
+
+### sl:input-group-addon
+
+<ComponentAttributes component="input-group-addon" />
+
+### sl:input-group-text
+
+<ComponentAttributes component="input-group-text" />
+
+### sl:input-group-button
+
+<ComponentAttributes component="input-group-button" />
+
+### sl:input-group-input
+
+<ComponentAttributes component="input-group-input" />
+
+### sl:input-group-textarea
+
+<ComponentAttributes component="input-group-textarea" />

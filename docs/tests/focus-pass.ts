@@ -8,10 +8,10 @@ import {expect, type Page} from '@playwright/test';
 type Indicator = { outline: string; boxShadow: string };
 
 /**
- * Boxes that draw the focus of the control inside them, as shadcn's input group does: the combobox's control around
- * its input (and chips). The indicator is read from the box.
+ * Boxes that draw the focus of the control inside them, as shadcn's input group does: the input group around its
+ * input or textarea, and the combobox's control around its input (and chips). The indicator is read from the box.
  */
-const FOCUS_BOXES = '.combobox-control';
+const FOCUS_BOXES = '.input-group, .combobox-control';
 
 /**
  * Tabs from the focus's current place through every control in `scope` (a selector), in document order, and expects
@@ -41,7 +41,7 @@ export async function expectVisibleFocus(page: Page, scope: string, {allowNone =
         .filter(element => !(element instanceof HTMLInputElement && element.type === 'radio') || radioTabStop(element))
         .map((element, index) => {
           element.dataset.focusIndex = String(index);
-          const style = getComputedStyle(element.matches(`:is(${focusBoxes}) > input`)
+          const style = getComputedStyle(element.matches(`:is(${focusBoxes}) > :is(input, textarea)`)
               ? element.closest(focusBoxes)! : element);
           return {
             label: element.outerHTML.slice(0, 120),
@@ -57,7 +57,7 @@ export async function expectVisibleFocus(page: Page, scope: string, {allowNone =
   const invisible: string[] = [];
   const readFocused = () => page.evaluate(focusBoxes => {
     const element = document.activeElement as HTMLElement;
-    const style = getComputedStyle(element.matches(`:is(${focusBoxes}) > input`) ? element.closest(focusBoxes)! : element);
+    const style = getComputedStyle(element.matches(`:is(${focusBoxes}) > :is(input, textarea)`) ? element.closest(focusBoxes)! : element);
     return {
       index: element.dataset.focusIndex,
       label: element.outerHTML.slice(0, 120),

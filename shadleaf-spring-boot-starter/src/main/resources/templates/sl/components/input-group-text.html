@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Muted text in a <code>sl:input-group-addon</code>: a currency symbol, a unit, a domain. It may
+      hold an <code>sl:icon</code>. In an addon above or below the control, it takes the free space, so what
+      follows it sits at the end.</sl:description>
+  </sl:props>
+</head>
+<body>
+<span th:fragment="input-group-text" class="input-group-text" sl:attrs><sl:slot/></span>
+</body>
+</html>
