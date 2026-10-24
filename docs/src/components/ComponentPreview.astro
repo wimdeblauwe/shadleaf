@@ -99,9 +99,10 @@ const srcdoc = scenario?.layout ? layoutSrcdoc : scenario && skins.length > 0
     body:has(dialog:modal) { min-block-size: 32rem; }
     /* So is an open menu or popover, below its trigger. A tooltip shows above its trigger: leave room for it. */
     body:has(:is(.dropdown-menu-content, .popover-content):popover-open) { min-block-size: 28rem; }
-    /* And an open select's list: the customizable select's picker, or slSelect's list box where the browser has none.
-       Two rules: a browser that does not know :open would drop a rule that names it. */
-    body:has(.select-content:popover-open) { min-block-size: 28rem; }
+    /* And an open select's or combobox's list: the customizable select's picker, or the list box of slSelect (where
+       the browser has none) or slCombobox. Two rules: a browser that does not know :open would drop a rule that names
+       it. */
+    body:has(:is(.select-content, .combobox-content):popover-open) { min-block-size: 28rem; }
     body:has(select:open) { min-block-size: 28rem; }
     /* Toasts are fixed to a corner of the frame: make room for a stack of them while there are any. */
     body:has(.toaster-list > .toast) { min-block-size: 16rem; }

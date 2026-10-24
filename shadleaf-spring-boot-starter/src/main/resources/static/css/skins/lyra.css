@@ -380,7 +380,8 @@
     @apply text-muted-foreground;
   }
 
-  .select-content {
+  .select-content,
+  .combobox-content {
     @apply rounded-none bg-popover text-popover-foreground shadow-md ring-1 ring-foreground/10 duration-100;
   }
 
@@ -390,18 +391,21 @@
   }
 
   .select-content,
+  .combobox-content,
   .select {
     --popup-offset: --spacing(1);
     --popup-slide: --spacing(2);
   }
 
-  .select-item {
+  .select-item,
+  .combobox-item {
     @apply gap-2 rounded-none py-2 ps-2 pe-8 text-xs
       hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground
       data-active:bg-accent data-active:text-accent-foreground;
   }
 
-  .select-item svg:not([class*='size-'], [data-icon-size]) {
+  .select-item svg:not([class*='size-'], [data-icon-size]),
+  .combobox-item svg:not([class*='size-'], [data-icon-size]) {
     @apply size-4;
   }
 
@@ -410,16 +414,19 @@
     @apply ring-1 ring-ring ring-inset;
   }
 
-  .select-item-indicator {
+  .select-item-indicator,
+  .combobox-item-indicator {
     @apply end-2;
   }
 
   .select-group,
-  .select-label {
+  .select-label,
+  .combobox-label {
     @apply text-xs text-muted-foreground;
   }
 
-  .select-label {
+  .select-label,
+  .combobox-label {
     @apply px-2 py-2;
   }
 
@@ -427,8 +434,100 @@
     @apply text-xs text-popover-foreground;
   }
 
-  .select-separator {
+  .select-separator,
+  .combobox-separator {
     @apply bg-border;
+  }
+
+  /*
+    Combobox. Before slCombobox runs, the select looks like the native select. The control that takes its place looks
+    like the input, with the focus ring and the error of its input; the chips are shadcn's. The list is the select's
+    (above), and so are its items, headings and separators.
+  */
+  .combobox-select {
+    @apply rounded-none border border-input bg-transparent py-1 ps-2.5 pe-8 text-xs motion-safe:transition-colors
+      focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50 aria-invalid:border-destructive
+      aria-invalid:ring-1 aria-invalid:ring-destructive/20 disabled:bg-input/50 dark:bg-input/30
+      dark:hover:bg-input/50 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50
+      dark:aria-invalid:ring-destructive/40;
+  }
+
+  .combobox-select[multiple] {
+    @apply pe-2.5;
+  }
+
+  .combobox-select:not([multiple]) {
+    @apply h-8;
+  }
+
+  .combobox-icon {
+    @apply text-muted-foreground;
+  }
+
+  .combobox-control {
+    @apply min-h-8 rounded-none border border-input bg-transparent px-2.5 py-1 text-xs motion-safe:transition-colors
+      dark:bg-input/30;
+  }
+
+  .combobox-control:has(> .combobox-input[aria-invalid='true']) {
+    @apply border-destructive ring-1 ring-destructive/20 dark:border-destructive/50 dark:ring-destructive/40;
+  }
+
+  .combobox-control:has(> .combobox-input:focus-visible) {
+    @apply border-ring ring-1 ring-ring/50;
+  }
+
+  .combobox-control:has(> .combobox-input:disabled) {
+    @apply bg-input/50 dark:bg-input/80 cursor-not-allowed;
+  }
+
+  .combobox-control:has(> .combobox-input[readonly]) {
+    @apply bg-muted;
+  }
+
+  .combobox-input {
+    @apply placeholder:text-muted-foreground;
+  }
+
+  .combobox[data-multiple] > .combobox-control {
+    @apply gap-1 py-1;
+  }
+
+  .combobox[data-multiple] > .combobox-control:has(> .combobox-chip) {
+    @apply ps-1;
+  }
+
+  .combobox-clear,
+  .combobox-trigger {
+    @apply rounded-none -me-1.5 text-muted-foreground hover:bg-muted hover:text-foreground;
+  }
+
+  .combobox-clear:focus-visible,
+  .combobox-trigger:focus-visible {
+    @apply ring-3 ring-ring/50;
+  }
+
+  .combobox-clear svg:not([class*='size-'], [data-icon-size]),
+  .combobox-trigger svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .combobox-chip {
+    @apply h-5.25 gap-1 rounded-none bg-muted px-1.5 text-xs font-medium text-foreground
+      has-[>.combobox-chip-remove]:pe-0;
+  }
+
+  .combobox-chip-remove {
+    @apply -ms-1 rounded-none size-5 opacity-50 hover:opacity-100 focus-visible:opacity-100 focus-visible:ring-2
+      focus-visible:ring-ring/50;
+  }
+
+  .combobox-chip-remove svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .combobox-empty {
+    @apply py-2 text-xs text-muted-foreground;
   }
 
   /*

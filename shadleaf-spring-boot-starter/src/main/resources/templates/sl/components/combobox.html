@@ -1,0 +1,91 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A text input that filters a list of options as you type: shadcn/ui's combobox. Like
+      <code>sl:select</code>, it is a real <code>select</code> with <code>sl:combobox-item</code>,
+      <code>sl:combobox-group</code> and <code>sl:combobox-separator</code> as content, so <code>th:field</code> binds
+      it (a collection with <code>multiple</code>) and the form submits it. Once Alpine runs, <code>slCombobox</code>
+      hides the select and puts an input and a list box in its place; without it, the select is drawn like
+      <code>sl:native-select</code>. Every attribute that is not a prop passes through to the <code>select</code>,
+      except <code>class</code>, which goes to the wrapper around it. In a <code>sl:field</code>, it takes the field's
+      <code>th:field</code>, id and <code>aria-describedby</code>.</sl:description>
+    <sl:prop name="placeholder">The input's text while nothing is chosen. For a single value also the text of a first
+      option with an empty value, hidden from the list: a required combobox with it chosen is invalid.</sl:prop>
+    <sl:prop name="multiple" type="boolean">Choose any number of options, shown as chips before the input. The
+      select is a <code>select multiple</code>, so <code>th:field</code> binds a collection.</sl:prop>
+    <sl:prop name="show-clear" type="boolean">A button that clears the choice, in place of the chevron while there is
+      one.</sl:prop>
+    <sl:prop name="show-trigger" type="boolean" default="true">The chevron button that opens and closes the list. A
+      multiple combobox has none.</sl:prop>
+    <sl:prop name="auto-highlight" type="boolean">Highlight the first match while typing, so Enter chooses it.</sl:prop>
+    <sl:prop name="empty">The text shown when no option matches. By default "No items found."</sl:prop>
+    <sl:prop name="search-url">Ask the server for the options as you type: a <code>GET</code> to this URL with the
+      text as <code>q</code>, answered with the HTML of <code>sl:combobox-item</code>s (and groups and separators),
+      which replace the options that are not chosen. Needs JavaScript; without it, only the options in the page can be
+      chosen.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The select holds the value, before Alpine runs and without it. The template holds what slCombobox puts in its
+  place: the input (with the clear and chevron buttons), the list box in a popover, a live region for the number of
+  results, a chip to copy for each chosen option, and the check mark it gives each option in the list. The messages
+  the browser fills in ({0}) are data attributes, as for sl:date-picker. The chevron outside the template belongs to
+  the select, as in sl:native-select; a multiple select is a list box and has none. */-->
+<div th:fragment="combobox"
+     th:with="slAttrs=${#slFields.control(attrs, slField)},
+              slComboboxMultiple=${props.multiple},
+              slComboboxPlaceholder=${props.placeholder}"
+     class="combobox"
+     x-data="slCombobox"
+     th:attr="data-multiple=${slComboboxMultiple ? 'true' : null},
+              data-auto-highlight=${props['auto-highlight'] ? 'true' : null},
+              data-search-url=${props['search-url']},
+              data-searching=${props['search-url'] == null ? null : #messages.msg('sl.combobox.searching')},
+              data-search-error=${props['search-url'] == null ? null : #messages.msg('sl.combobox.search-error')},
+              data-result=${#messages.msg('sl.combobox.results.one')},
+              data-results=${#messages.msg('sl.combobox.results', '{0}')},
+              data-remove-label=${slComboboxMultiple ? #messages.msg('sl.combobox.remove', '{0}') : null}"
+     sl:attrs="${attrs.only('class', 'classappend')}">
+  <select class="combobox-select"
+          th:attr="multiple=${slComboboxMultiple ? 'multiple' : null},
+                   aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+          sl:attrs="${slAttrs.without('class', 'classappend')}"><option th:unless="${slComboboxMultiple}" value=""
+      hidden data-placeholder="true" th:text="${slComboboxPlaceholder}"></option><sl:slot/></select>
+  <sl:icon th:unless="${slComboboxMultiple}" name="chevron-down" class="combobox-icon"/>
+  <template class="combobox-template">
+    <div class="combobox-control">
+      <input class="combobox-input"
+             type="text"
+             role="combobox"
+             autocomplete="off"
+             autocapitalize="off"
+             spellcheck="false"
+             aria-autocomplete="list"
+             aria-expanded="false"
+             th:placeholder="${slComboboxPlaceholder}">
+      <button th:if="${props['show-clear']}"
+              type="button"
+              class="combobox-clear"
+              tabindex="-1"
+              hidden
+              th:aria-label="#{sl.combobox.clear}"><sl:icon name="x"/></button>
+      <button th:if="${props['show-trigger'] and !slComboboxMultiple}"
+              type="button"
+              class="combobox-trigger"
+              tabindex="-1"
+              aria-expanded="false"
+              th:aria-label="#{sl.combobox.toggle}"><sl:icon name="chevron-down"/></button>
+    </div>
+    <div class="combobox-content" popover="manual">
+      <div class="combobox-list" role="listbox"></div>
+      <div class="combobox-empty" th:text="${props.empty ?: #messages.msg('sl.combobox.empty')}"></div>
+    </div>
+    <div class="combobox-status" role="status"></div>
+    <span th:if="${slComboboxMultiple}" class="combobox-chip"><span class="combobox-chip-label"></span><button
+        type="button" class="combobox-chip-remove" tabindex="-1"><sl:icon name="x"/></button></span>
+    <sl:icon name="check" class="combobox-item-indicator"/>
+  </template>
+</div>
+</body>
+</html>

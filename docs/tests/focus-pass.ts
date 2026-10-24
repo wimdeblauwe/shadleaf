@@ -8,11 +8,17 @@ import {expect, type Page} from '@playwright/test';
 type Indicator = { outline: string; boxShadow: string };
 
 /**
+ * Boxes that draw the focus of the control inside them, as shadcn's input group does: the combobox's control around
+ * its input (and chips). The indicator is read from the box.
+ */
+const FOCUS_BOXES = '.combobox-control';
+
+/**
  * Tabs from the focus's current place through every control in `scope` (a selector), in document order, and expects
  * each one to get a visible focus indicator. `allowNone` for a scope that may have no controls at all (a badge's).
  */
 export async function expectVisibleFocus(page: Page, scope: string, {allowNone = false} = {}) {
-  const tabbable = await page.evaluate(scope => {
+  const tabbable = await page.evaluate(({scope, focusBoxes}) => {
     const candidates = document.querySelectorAll<HTMLElement>(
         `${scope} :is(a[href], button, input:not([type=hidden]), select, textarea, summary, [tabindex])`);
     // :disabled, not the disabled property: a control in a disabled fieldset is disabled without the attribute.
@@ -35,22 +41,23 @@ export async function expectVisibleFocus(page: Page, scope: string, {allowNone =
         .filter(element => !(element instanceof HTMLInputElement && element.type === 'radio') || radioTabStop(element))
         .map((element, index) => {
           element.dataset.focusIndex = String(index);
-          const style = getComputedStyle(element);
+          const style = getComputedStyle(element.matches(`:is(${focusBoxes}) > input`)
+              ? element.closest(focusBoxes)! : element);
           return {
             label: element.outerHTML.slice(0, 120),
             unfocused: {outline: `${style.outlineStyle} ${style.outlineWidth} ${style.outlineColor}`,
               boxShadow: style.boxShadow},
           };
         });
-  }, scope);
+  }, {scope, focusBoxes: FOCUS_BOXES});
   if (!allowNone) {
     expect(tabbable.length).toBeGreaterThan(0);
   }
 
   const invisible: string[] = [];
-  const readFocused = () => page.evaluate(() => {
+  const readFocused = () => page.evaluate(focusBoxes => {
     const element = document.activeElement as HTMLElement;
-    const style = getComputedStyle(element);
+    const style = getComputedStyle(element.matches(`:is(${focusBoxes}) > input`) ? element.closest(focusBoxes)! : element);
     return {
       index: element.dataset.focusIndex,
       label: element.outerHTML.slice(0, 120),
@@ -60,7 +67,7 @@ export async function expectVisibleFocus(page: Page, scope: string, {allowNone =
       indicator: {outline: `${style.outlineStyle} ${style.outlineWidth} ${style.outlineColor}`,
         boxShadow: style.boxShadow} as Indicator,
     };
-  });
+  }, FOCUS_BOXES);
 
   for (let i = 0; i < tabbable.length; i++) {
     await page.keyboard.press('Tab');

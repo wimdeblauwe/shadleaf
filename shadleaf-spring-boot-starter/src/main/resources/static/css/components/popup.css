@@ -1,7 +1,7 @@
 /*
-  What the dropdown menu, the popover, the tooltip and the select's list box share: a popover (the Popover API) placed next to its trigger with
-  CSS anchor positioning. Structure only; the skins set the gap to the trigger (--popup-offset), the slide distance
-  (--popup-slide) and the speed.
+  What the dropdown menu, the popover, the tooltip and the list boxes of the select and the combobox share: a popover
+  (the Popover API) placed next to its trigger with CSS anchor positioning. Structure only; the skins set the gap to
+  the trigger (--popup-offset), the slide distance (--popup-slide) and the speed.
 
   The trigger is the popover's implicit anchor: the button whose popovertarget opened it, or the element slTooltip
   passes as the source to showPopover(). position-area puts it on one side of the anchor (--popup-side) and lines it up
@@ -19,6 +19,7 @@
   .dropdown-menu-content,
   .popover-content,
   .select-content,
+  .combobox-content,
   .tooltip-content {
     @apply max-h-none max-w-none opacity-0
       transition-[opacity,scale,translate,overlay,display] transition-discrete
@@ -37,6 +38,7 @@
   .dropdown-menu-content:not([data-side]),
   .popover-content:not([data-side]),
   .select-content,
+  .combobox-content,
   .dropdown-menu-content[data-side='bottom'],
   .popover-content[data-side='bottom'],
   .tooltip-content[data-side='bottom'] {
@@ -99,6 +101,7 @@
   */
   .dropdown-menu-content:not([data-align]),
   .select-content,
+  .combobox-content,
   .dropdown-menu-content[data-align='start'],
   .popover-content[data-align='start'],
   .tooltip-content[data-align='start'] {
@@ -126,16 +129,17 @@
     .dropdown-menu-content,
     .popover-content,
     .select-content,
+    .combobox-content,
     .tooltip-content {
       translate: var(--popup-from);
     }
 
-    :is(.dropdown-menu-content, .popover-content, .select-content, .tooltip-content):popover-open {
+    :is(.dropdown-menu-content, .popover-content, .select-content, .combobox-content, .tooltip-content):popover-open {
       translate: 0 0;
     }
 
     @starting-style {
-      :is(.dropdown-menu-content, .popover-content, .select-content, .tooltip-content):popover-open {
+      :is(.dropdown-menu-content, .popover-content, .select-content, .combobox-content, .tooltip-content):popover-open {
         translate: var(--popup-from);
       }
     }

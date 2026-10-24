@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Trip', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Forms</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page>Trip</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  <p>Two <code>sl:combobox</code>es. The destination is one of some 250 countries, too many for the page: its
+    <code>search-url</code> makes the combobox ask the server for the countries that match as you type, and the
+    controller answers with the HTML of their <code>sl:combobox-item</code>s (the <code>countries</code> fragment of
+    this page). The page itself only holds the chosen country, so the combobox can show it. The languages are a
+    <code>multiple</code> combobox with its options in the page: the chosen ones are chips, and
+    <code>th:field</code> binds them to a list. Without JavaScript both are selects, the destination with only the
+    chosen country.</p>
+
+  <form class="form" th:object="${tripForm}" th:action="@{/trip}" method="post" novalidate>
+    <sl:form-errors autofocus/>
+
+    <sl:field-group>
+      <sl:field th:field="*{destination}">
+        <sl:field-label>Destination</sl:field-label>
+        <sl:combobox placeholder="Search a country" th:search-url="@{/trip/countries}" show-clear auto-highlight>
+          <th:block th:with="chosen=${@countries.byCode(tripForm.destination)}">
+            <sl:combobox-item th:if="${chosen != null}" th:value="${chosen.code}">[[${chosen.name}]]</sl:combobox-item>
+          </th:block>
+        </sl:combobox>
+        <sl:field-description>Type a few letters of its name.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field th:field="*{languages}">
+        <sl:field-label>Languages you speak</sl:field-label>
+        <sl:combobox multiple placeholder="Add a language" auto-highlight>
+          <sl:combobox-item th:each="language : ${languages}"
+                            th:value="${language.key}">[[${language.value}]]</sl:combobox-item>
+        </sl:combobox>
+        <sl:field-error/>
+      </sl:field>
+    </sl:field-group>
+
+    <div class="row">
+      <sl:button type="submit">Plan the trip</sl:button>
+      <sl:button as="a" variant="outline" th:href="@{/trip}">Reset</sl:button>
+    </div>
+  </form>
+</div>
+
+<!--/* The answer to the destination's search (TripController.searchCountries): the options alone, no page. */-->
+<th:block th:fragment="countries">
+  <sl:combobox-item th:each="country : ${countries}"
+                    th:value="${country.code}">[[${country.name}]]</sl:combobox-item>
+</th:block>
+</body>
+</html>

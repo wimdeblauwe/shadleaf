@@ -3,7 +3,7 @@ import {component, covers, keepComponentOnly, openShowcase, skins} from './showc
 
 // In forced-colors mode (Windows' high contrast) a disabled control should use the system's GrayText, not half
 // opacity: fading turns the colours the user chose into ones they did not. The text-like controls, the selects'
-// chevron, the labels and legends that fade with a control, and disabled accordion, collapsible and tab triggers turn
+// chevron, a combobox's chips, the labels and legends that fade with a control, and disabled accordion, collapsible and tab triggers turn
 // GrayText; the checkbox, radio button and switch are
 // drawn by the browser (appearance: auto), which draws its own disabled state, so they only must not be faded.
 // SHADLEAF_TEST_COMPONENT limits this to one component's controls, and skips the checks below of other components.
@@ -44,10 +44,12 @@ for (const skin of skins) {
         }
       };
 
-      // Not a calendar's inputs and selects, which it hides on purpose (it draws the month, and the selects' values).
+      // Not a calendar's inputs and selects, which it hides on purpose (it draws the month, and the selects' values), nor
+      // the select a combobox hides behind its input (which is checked).
       const controls = [...document.querySelectorAll('.showcase :is(input:not([type=hidden]), select, textarea)')]
           .filter(control => control.matches(':disabled'))
-          .filter(control => !control.matches('.calendar[data-enhanced] > input, .calendar-select'));
+          .filter(control => !control.matches('.calendar[data-enhanced] > input, .calendar-select, '
+              + '.combobox[data-enhanced] > select'));
       for (const control of controls) {
         check(control, !control.matches('[type=checkbox], [type=radio]'));
       }
@@ -61,6 +63,10 @@ for (const skin of skins) {
       }
       for (const icon of document.querySelectorAll('.showcase :is(.native-select-wrapper, .select-wrapper):has(> select:disabled) > svg')) {
         check(icon, true);
+      }
+      // A disabled combobox's chips.
+      for (const chip of document.querySelectorAll('.showcase .combobox:has(> select:disabled) .combobox-chip-label')) {
+        check(chip, true);
       }
       // A disabled calendar's days and navigation, and the days a calendar cannot pick.
       for (const button of document.querySelectorAll('.showcase :is(.calendar-day-button, .calendar-nav-button)'

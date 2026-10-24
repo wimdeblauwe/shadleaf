@@ -483,6 +483,75 @@
       "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
     }
   }, {
+    "name" : "combobox",
+    "tag" : "sl:combobox",
+    "description" : "A text input that filters a list of options as you type: shadcn/ui's combobox. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "placeholder",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The input's text while nothing is chosen. For a single value also the text of a first option with an empty value, hidden from the list: a required combobox with it chosen is invalid."
+    }, {
+      "name" : "multiple",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Choose any number of options, shown as chips before the input. The select is a `select multiple`, so `th:field` binds a collection."
+    }, {
+      "name" : "show-clear",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "A button that clears the choice, in place of the chevron while there is one."
+    }, {
+      "name" : "show-trigger",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "The chevron button that opens and closes the list. A multiple combobox has none."
+    }, {
+      "name" : "auto-highlight",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Highlight the first match while typing, so Enter chooses it."
+    }, {
+      "name" : "empty",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The text shown when no option matches. By default \"No items found.\""
+    }, {
+      "name" : "search-url",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Ask the server for the options as you type: a `GET` to this URL with the text as `q`, answered with the HTML of `sl:combobox-item`s (and groups and separators), which replace the options that are not chosen. Needs JavaScript; without it, only the options in the page can be chosen."
+    } ]
+  }, {
+    "name" : "combobox-group",
+    "tag" : "sl:combobox-group",
+    "description" : "A group of `sl:combobox-item`s under a heading: an `optgroup`. The list hides the heading while none of its items match.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The group's heading, shadcn/ui's `ComboboxLabel`.",
+      "required" : true
+    } ]
+  }, {
+    "name" : "combobox-item",
+    "tag" : "sl:combobox-item",
+    "description" : "An option in a `sl:combobox`: an `option`. `value` (or `th:value`) and `disabled` pass through; `th:field` on the combobox marks the bound one. The list shows its content, which may start with an icon, with a check mark while it is chosen; the input, the chips and the filter use its text, which is all an older browser keeps of it.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "combobox-separator",
+    "tag" : "sl:combobox-separator",
+    "description" : "A line between items or groups of a `sl:combobox`: an `hr`. The list hides it while you type.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "date-picker",
     "tag" : "sl:date-picker",
     "description" : "A button showing the chosen date that opens a `sl:calendar` in a popover: shadcn/ui's date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).",

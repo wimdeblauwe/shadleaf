@@ -155,7 +155,7 @@ class ShellPageTest {
             (a, b) -> a, LinkedHashMap::new));
     assertThat(groups).containsExactly(
         Map.entry("Basics", List.of("Buttons")),
-        Map.entry("Forms", List.of("Form", "Form with htmx", "Leave request")),
+        Map.entry("Forms", List.of("Form", "Form with htmx", "Leave request", "Trip")),
         Map.entry("Interactive", List.of("Dialog & Sheet", "Settings")),
         Map.entry("Tables", List.of("People", "All people", "With multiselect", "Load more")));
     // People is a collapsible group: its button is the summary, the three pages its sub-menu.
