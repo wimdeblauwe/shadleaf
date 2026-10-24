@@ -75,6 +75,12 @@ Alpine's standard build needs `'unsafe-eval'`. Under a policy without it, set `s
 Alpine's CSP build instead; see [Alpine.js](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/alpine.md#csp) for what that means for your own Alpine markup. Shadleaf's
 script is served from your application, so `script-src 'self'` allows it.
 
+## Image previews
+
+A [file upload](https://shadleaf.dev/0.11.0-SNAPSHOT/components/file-upload.md#image-previews) with `previews` shows a picked image from a `blob:` URL.
+`img-src 'self'` blocks those, and the files keep their icons. To have the thumbnails, allow `blob:` too:
+`img-src 'self' blob:`. Nothing else in Shadleaf needs it.
+
 ## A working example
 
 `samples/shadleaf-sample-02` in the repository runs behind Spring Security with exactly this policy, switchable between

@@ -31,6 +31,7 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Toggle Group](https://shadleaf.dev/0.11.0-SNAPSHOT/components/toggle-group.md): A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
 - [Calendar](https://shadleaf.dev/0.11.0-SNAPSHOT/components/calendar.md): shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
 - [Date Picker](https://shadleaf.dev/0.11.0-SNAPSHOT/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
+- [File Upload](https://shadleaf.dev/0.11.0-SNAPSHOT/components/file-upload.md): A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
 
 ## Overlays
 
