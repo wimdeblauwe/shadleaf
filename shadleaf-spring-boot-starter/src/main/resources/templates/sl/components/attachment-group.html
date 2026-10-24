@@ -1,0 +1,21 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A row of <code>sl:attachment</code>s that scrolls sideways when they do not fit, snapping to
+      each attachment, its edges fading out. Keyboard users reach attachments off screen by tabbing to their
+      actions or triggers; for attachments without any, give the group a <code>label</code>.</sl:description>
+    <sl:prop name="label">Accessible name of the group. With it the group is a named group
+      (<code>role="group"</code>) that takes keyboard focus, so the arrow keys scroll it: for a row of attachments
+      that have no actions or trigger.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="attachment-group"
+     class="attachment-group"
+     th:attr="role=${props.label != null ? 'group' : null},
+              tabindex=${props.label != null ? '0' : null},
+              aria-label=${props.label}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

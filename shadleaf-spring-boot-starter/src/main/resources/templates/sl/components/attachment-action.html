@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A button in <code>sl:attachment-actions</code>, to remove, retry or download the file: a
+      <code>sl:button</code>, ghost and an extra small icon by default. Give it an <code>aria-label</code> that names
+      the file ("Remove report.pdf"). Any other attribute passes through to the <code>sl:button</code>
+      (<code>href</code>, <code>type</code>, <code>disabled</code>, <code>hx-*</code>).</sl:description>
+    <sl:prop name="variant" default="ghost" values="default outline ghost destructive secondary link">Visual style of
+      the button, as on <code>sl:button</code>.</sl:prop>
+    <sl:prop name="size" default="icon-xs" values="xs sm default lg icon icon-xs icon-sm icon-lg">Size of the button,
+      as on <code>sl:button</code>. The <code>icon</code> sizes are square, for a button that holds only an icon, and
+      need an <code>aria-label</code>.</sl:prop>
+    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
+      (<code>a</code>) to download or open the file.</sl:prop>
+    <sl:accessible-name required-when="size=icon icon-xs icon-sm icon-lg"/>
+  </sl:props>
+</head>
+<body>
+<!--/* A sl:button: sl:attrs puts this part's other attributes on it before it is rendered, so they reach the
+  button's props (a caller's class is appended). */-->
+<sl:button th:fragment="attachment-action"
+           class="attachment-action"
+           th:variant="${props.variant}"
+           th:size="${props.size}"
+           th:as="${props.as}"
+           sl:attrs><sl:slot/></sl:button>
+</body>
+</html>

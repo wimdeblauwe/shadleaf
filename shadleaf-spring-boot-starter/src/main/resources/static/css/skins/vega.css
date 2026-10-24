@@ -246,6 +246,162 @@
     @apply gap-4 text-sm;
   }
 
+  /*
+    Attachment. The trigger covers the card, so its focus ring is the card's, with the border in the ring colour as
+    shadcn's focus-within. A card with a trigger tints on hover; its description turns text-muted-legible there.
+  */
+  .attachment {
+    @apply rounded-xl border border-border bg-card text-card-foreground;
+  }
+
+  .attachment:not([data-width]) {
+    @apply w-fit;
+  }
+
+  .attachment:not([data-state]),
+  .attachment[data-state='uploading'],
+  .attachment[data-state='processing'] {
+    @apply border-solid;
+  }
+
+  .attachment[data-state='idle'] {
+    @apply border-dashed;
+  }
+
+  .attachment[data-state='error'] {
+    @apply border-destructive/30;
+  }
+
+  .attachment:has(> .attachment-trigger):hover {
+    @apply bg-muted/50;
+  }
+
+  .attachment:has(> .attachment-trigger:focus-visible) {
+    @apply border-ring;
+  }
+
+  .attachment-trigger:focus-visible {
+    @apply ring-[3px] ring-ring/50;
+  }
+
+  .attachment:not([data-orientation]) {
+    @apply min-w-40;
+  }
+
+  .attachment[data-orientation='vertical']:not([data-width]) {
+    @apply w-24;
+  }
+
+  .attachment[data-orientation='vertical']:not([data-width]):has(> .attachment-content) {
+    @apply w-30;
+  }
+
+  .attachment:not([data-size]) {
+    @apply gap-2 text-sm;
+  }
+
+  .attachment:not([data-size]):has(> .attachment-media) {
+    @apply p-2;
+  }
+
+  .attachment:not([data-size]):has(> .attachment-content) {
+    @apply px-2.5 py-2;
+  }
+
+  .attachment[data-size='sm'] {
+    @apply gap-2.5 text-xs;
+  }
+
+  .attachment[data-size='sm']:has(> .attachment-media) {
+    @apply p-1.5;
+  }
+
+  .attachment[data-size='sm']:has(> .attachment-content) {
+    @apply px-2 py-1.5;
+  }
+
+  .attachment[data-size='xs'] {
+    @apply gap-1.5 rounded-lg text-xs;
+  }
+
+  .attachment[data-size='xs']:has(> .attachment-media) {
+    @apply p-1;
+  }
+
+  .attachment[data-size='xs']:has(> .attachment-content) {
+    @apply px-1.5 py-1;
+  }
+
+  .attachment-media {
+    @apply w-10 rounded-lg bg-muted text-foreground;
+  }
+
+  .attachment-media:not([data-variant]) svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .attachment[data-size='sm'] > .attachment-media {
+    @apply w-8;
+  }
+
+  .attachment[data-size='xs'] > .attachment-media {
+    @apply w-7 rounded-md;
+  }
+
+  .attachment[data-size='xs'] > .attachment-media:not([data-variant]) svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .attachment[data-orientation='vertical'] > .attachment-media {
+    @apply w-full;
+  }
+
+  .attachment[data-orientation='vertical'] > .attachment-media:not([data-variant]) svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-6;
+  }
+
+  .attachment[data-state='error'] > .attachment-media {
+    @apply bg-destructive/10 text-destructive-legible;
+  }
+
+  .attachment[data-state='uploading'] > .attachment-media[data-variant='image'],
+  .attachment[data-state='processing'] > .attachment-media[data-variant='image'],
+  .attachment[data-state='error'] > .attachment-media[data-variant='image'] {
+    @apply opacity-60;
+  }
+
+  .attachment-content {
+    @apply leading-tight;
+  }
+
+  .attachment[data-orientation='vertical'] > .attachment-content {
+    @apply px-1;
+  }
+
+  .attachment-title {
+    @apply font-medium;
+  }
+
+  .attachment-description {
+    @apply mt-0.5 text-xs text-muted-foreground;
+  }
+
+  .attachment:has(> .attachment-trigger):hover > .attachment-content > .attachment-description {
+    @apply text-muted-legible;
+  }
+
+  .attachment[data-state='error'] > .attachment-content > .attachment-description {
+    @apply text-destructive-legible;
+  }
+
+  .attachment-group {
+    @apply gap-3 scroll-px-1 py-1 rounded-lg;
+  }
+
+  .attachment-group:focus-visible {
+    @apply ring-[3px] ring-ring/50;
+  }
+
   /* Form errors: the focus ring for when autofocus, a link or a script moves focus to it (tabindex="-1"). */
   .form-errors {
     @apply focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50;

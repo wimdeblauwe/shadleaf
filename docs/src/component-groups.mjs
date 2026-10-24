@@ -22,7 +22,7 @@ export const componentGroups = [
     pages: ['sidebar', 'site-header', 'user-menu', 'breadcrumb', 'skip-link'],
   },
   {label: 'Disclosure', pages: ['tabs', 'accordion', 'collapsible']},
-  {label: 'Display', pages: ['card', 'badge', 'avatar', 'icon', 'kbd', 'separator']},
+  {label: 'Display', pages: ['card', 'attachment', 'badge', 'avatar', 'icon', 'kbd', 'separator']},
 ];
 
 /**

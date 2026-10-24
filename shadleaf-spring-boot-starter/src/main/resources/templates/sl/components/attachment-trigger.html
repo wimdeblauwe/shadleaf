@@ -1,0 +1,26 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Makes a whole <code>sl:attachment</code> clickable: a button (to open an
+      <code>sl:dialog</code> with <code>commandfor</code> and <code>command="show-modal"</code>) or, with
+      <code>as="a"</code>, a link that covers the card behind its actions. It has no text of its own, so it needs an
+      <code>aria-label</code> that says what it does ("Open report.pdf"). Put it last in the
+      attachment.</sl:description>
+    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
+      (<code>a</code>) to open the file.</sl:prop>
+    <sl:accessible-name/>
+  </sl:props>
+</head>
+<body>
+<th:block th:fragment="attachment-trigger">
+  <button th:if="${props.as == 'button'}"
+          class="attachment-trigger"
+          type="button"
+          sl:attrs><sl:slot/></button>
+  <a th:unless="${props.as == 'button'}"
+     class="attachment-trigger"
+     sl:attrs><sl:slot/></a>
+</th:block>
+</body>
+</html>

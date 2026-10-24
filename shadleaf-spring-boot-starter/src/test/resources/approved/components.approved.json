@@ -167,6 +167,126 @@
       "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui."
     } ]
   }, {
+    "name" : "attachment",
+    "tag" : "sl:attachment",
+    "description" : "A file or an image attached to something: a message, a form, a record. Holds an `sl:attachment-media`, an `sl:attachment-content` (title and description), optional `sl:attachment-actions` and an optional `sl:attachment-trigger` that makes the whole card open a link or a dialog. Purely presentational: the server renders its state. Say the state in the description too (\"Uploading · 64%\", \"Upload failed\"), so it is not told by colour alone.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "state",
+      "type" : "enum",
+      "defaultValue" : "done",
+      "values" : [ "idle", "uploading", "processing", "error", "done" ],
+      "description" : "Where the file is in its upload: `idle` (picked, not sent yet) draws a dashed border, `uploading` and `processing` shimmer the title and mark the attachment busy (`aria-busy`), `error` turns it destructive. `done` is a file that is there."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "sm", "xs" ],
+      "description" : "Size of the attachment."
+    }, {
+      "name" : "orientation",
+      "type" : "enum",
+      "defaultValue" : "horizontal",
+      "values" : [ "horizontal", "vertical" ],
+      "description" : "`vertical` puts the media above the content, for an image."
+    }, {
+      "name" : "full-width",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Fill the width of the container, for a list of attachments (shadcn's `w-full` class). Without it the attachment is as wide as its content."
+    } ]
+  }, {
+    "name" : "attachment-action",
+    "tag" : "sl:attachment-action",
+    "description" : "A button in `sl:attachment-actions`, to remove, retry or download the file: a `sl:button`, ghost and an extra small icon by default. Give it an `aria-label` that names the file (\"Remove report.pdf\"). Any other attribute passes through to the `sl:button` (`href`, `type`, `disabled`, `hx-*`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "ghost",
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
+      "description" : "Visual style of the button, as on `sl:button`."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "icon-xs",
+      "values" : [ "xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm", "icon-lg" ],
+      "description" : "Size of the button, as on `sl:button`. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`."
+    }, {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`) to download or open the file."
+    } ],
+    "accessibleName" : {
+      "prop" : "size",
+      "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
+    }
+  }, {
+    "name" : "attachment-actions",
+    "tag" : "sl:attachment-actions",
+    "description" : "The `sl:attachment-action`s of an attachment, at its end; in a vertical attachment, over the top corner of the media. They sit above an `sl:attachment-trigger`, so they stay clickable.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "attachment-content",
+    "tag" : "sl:attachment-content",
+    "description" : "The text of an `sl:attachment`: its `sl:attachment-title` and `sl:attachment-description`. Takes the space the media and the actions leave.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "attachment-description",
+    "tag" : "sl:attachment-description",
+    "description" : "What else to know about an attachment, below its title: the file type and size, or its state (\"Uploading · 64%\", \"Upload failed. Try again.\"). Cut off with an ellipsis when it does not fit.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "attachment-group",
+    "tag" : "sl:attachment-group",
+    "description" : "A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for attachments without any, give the group a `label`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Accessible name of the group. With it the group is a named group (`role=\"group\"`) that takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger."
+    } ]
+  }, {
+    "name" : "attachment-media",
+    "tag" : "sl:attachment-media",
+    "description" : "The icon or image of an `sl:attachment`: an icon (or an `sl:spinner` while it uploads) on a muted square, or an `&lt;img&gt;` that fills it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "icon",
+      "values" : [ "icon", "image" ],
+      "description" : "`icon` centres an icon on a muted square; `image` crops an `&lt;img&gt;` to fill the square, dimmed while the attachment uploads, is processed or failed."
+    } ]
+  }, {
+    "name" : "attachment-title",
+    "tag" : "sl:attachment-title",
+    "description" : "The name of an attachment, usually its file name, in `sl:attachment-content`. Cut off with an ellipsis when it does not fit; shimmers while the attachment uploads or is processed, unless the user asks for reduced motion.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "attachment-trigger",
+    "tag" : "sl:attachment-trigger",
+    "description" : "Makes a whole `sl:attachment` clickable: a button (to open an `sl:dialog` with `commandfor` and `command=\"show-modal\"`) or, with `as=\"a\"`, a link that covers the card behind its actions. It has no text of its own, so it needs an `aria-label` that says what it does (\"Open report.pdf\"). Put it last in the attachment.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`) to open the file."
+    } ],
+    "accessibleName" : {
+      "values" : [ ]
+    }
+  }, {
     "name" : "avatar",
     "tag" : "sl:avatar",
     "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead while the image has no `src`, is loading or fails to load. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",

@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The icon or image of an <code>sl:attachment</code>: an icon (or an <code>sl:spinner</code>
+      while it uploads) on a muted square, or an <code>&lt;img&gt;</code> that fills it.</sl:description>
+    <sl:prop name="variant" default="icon" values="icon image"><code>icon</code> centres an icon on a muted
+      square; <code>image</code> crops an <code>&lt;img&gt;</code> to fill the square, dimmed while the attachment
+      uploads, is processed or failed.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="attachment-media"
+     class="attachment-media"
+     th:attr="data-variant=${props.unlessDefault('variant')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

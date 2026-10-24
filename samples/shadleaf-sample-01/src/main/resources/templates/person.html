@@ -37,6 +37,50 @@
     </sl:card-footer>
   </sl:card>
 
+  <!--/* The person's files, which are already on the server: sl:attachment in its plain done state. The trigger
+    covers each card: an image opens in a dialog, any other file in the browser. The download action sits above it,
+    out of the body's boost (hx-boost="false"): htmx boosts a local link without a target, download or not, and would
+    swap the file into the page. The trigger link opens a new tab (target), which htmx leaves alone. */-->
+  <sl:card th:unless="${confirm}" class="person-card">
+    <sl:card-header>
+      <sl:card-title level="2">Files</sl:card-title>
+      <sl:card-description>Open a file, or download it.</sl:card-description>
+    </sl:card-header>
+    <sl:card-content>
+      <ul class="person-files">
+        <li th:each="file, status : ${files}"
+            th:with="fileUrl=@{/people/{id}/files/{name}(id=${person.id},name=${file.name})},
+                     previewId=|file-preview-${status.index}|">
+          <sl:attachment full-width>
+            <sl:attachment-media th:if="${file.image}" variant="image">
+              <img th:src="${fileUrl}" alt="" loading="lazy">
+            </sl:attachment-media>
+            <sl:attachment-media th:unless="${file.image}"><sl:icon th:name="${file.icon}"/></sl:attachment-media>
+            <sl:attachment-content>
+              <sl:attachment-title>[[${file.name}]]</sl:attachment-title>
+              <sl:attachment-description>[[|${file.type} · ${file.size}|]]</sl:attachment-description>
+            </sl:attachment-content>
+            <sl:attachment-actions>
+              <sl:attachment-action as="a" th:href="${fileUrl}" download hx-boost="false"
+                                    th:aria-label="|Download ${file.name}|"><sl:icon name="download"/></sl:attachment-action>
+            </sl:attachment-actions>
+            <sl:attachment-trigger th:if="${file.image}" th:commandfor="${previewId}" command="show-modal"
+                                   th:aria-label="|Preview ${file.name}|"/>
+            <sl:attachment-trigger th:unless="${file.image}" as="a" th:href="${fileUrl}" target="_blank"
+                                   th:aria-label="|Open ${file.name}|"/>
+          </sl:attachment>
+          <sl:dialog th:if="${file.image}" th:id="${previewId}">
+            <sl:dialog-header>
+              <sl:dialog-title>[[${file.name}]]</sl:dialog-title>
+              <sl:dialog-description>[[|${file.type} · ${file.size}|]]</sl:dialog-description>
+            </sl:dialog-header>
+            <img class="person-file-preview" th:src="${fileUrl}" alt="" loading="lazy">
+          </sl:dialog>
+        </li>
+      </ul>
+    </sl:card-content>
+  </sl:card>
+
   <!--/* Delete in a row menu, without JavaScript: the same question as the alert dialog, as a page. The form posts to
     the people page's URL (pageUrl: its search, order and page), which redirects back there with a toast. */-->
   <sl:card th:if="${confirm}" class="person-card">

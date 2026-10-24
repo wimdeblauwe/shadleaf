@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The text of an <code>sl:attachment</code>: its <code>sl:attachment-title</code> and
+      <code>sl:attachment-description</code>. Takes the space the media and the actions leave.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="attachment-content"
+     class="attachment-content"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

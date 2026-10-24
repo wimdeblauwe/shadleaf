@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>What else to know about an attachment, below its title: the file type and size, or its state
+      ("Uploading · 64%", "Upload failed. Try again."). Cut off with an ellipsis when it does not fit.</sl:description>
+  </sl:props>
+</head>
+<body>
+<span th:fragment="attachment-description"
+      class="attachment-description"
+      sl:attrs><sl:slot/></span>
+</body>
+</html>
