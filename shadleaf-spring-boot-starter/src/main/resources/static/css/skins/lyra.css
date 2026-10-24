@@ -320,6 +320,138 @@
       dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40;
   }
 
+  /*
+    Input group, as shadcn's: the group is drawn like the input, with the focus ring, error and read-only look
+    of its control, which has no border of its own; the addons are muted, its buttons small and ghost.
+    Read-only, the addons are on --muted, so they take text-muted-legible.
+  */
+
+  .input-group {
+    @apply h-8 rounded-none border border-input bg-transparent motion-safe:transition-colors dark:bg-input/30;
+  }
+
+  .input-group:has(> .input-group-input[aria-invalid='true']),
+  .input-group:has(> .input-group-textarea[aria-invalid='true']) {
+    @apply border-destructive ring-1 ring-destructive/20 dark:border-destructive/50 dark:ring-destructive/40;
+  }
+
+  .input-group:has(> .input-group-input:focus-visible),
+  .input-group:has(> .input-group-textarea:focus-visible) {
+    @apply border-ring ring-1 ring-ring/50;
+  }
+
+  .input-group:has(> .input-group-input:disabled),
+  .input-group:has(> .input-group-textarea:disabled) {
+    @apply bg-input/50 dark:bg-input/80;
+  }
+
+  .input-group:has(> .input-group-input[readonly]),
+  .input-group:has(> .input-group-textarea[readonly]) {
+    @apply bg-muted;
+  }
+
+  .input-group:has(> .input-group-input[readonly]) :is(.input-group-addon, .input-group-text),
+  .input-group:has(> .input-group-textarea[readonly]) :is(.input-group-addon, .input-group-text) {
+    @apply text-muted-legible;
+  }
+
+  .input-group-input[readonly],
+  .input-group-textarea[readonly] {
+    @apply placeholder:text-muted-legible;
+  }
+
+  .input-group-input {
+    @apply px-2.5 py-1 text-xs placeholder:text-muted-foreground;
+  }
+
+  .input-group-textarea {
+    @apply px-2.5 py-2 text-xs placeholder:text-muted-foreground;
+  }
+
+  .input-group:has(> .input-group-addon:is(:not([data-align]), [data-align='inline-start'])) > .input-group-input {
+    @apply ps-1.5;
+  }
+
+  .input-group:has(> .input-group-addon[data-align='inline-end']) > .input-group-input {
+    @apply pe-1.5;
+  }
+
+  .input-group:has(> .input-group-addon[data-align='block-start']) > .input-group-input {
+    @apply pb-3;
+  }
+
+  .input-group:has(> .input-group-addon[data-align='block-end']) > .input-group-input {
+    @apply pt-3;
+  }
+
+  .input-group-addon {
+    @apply gap-2 py-1.5 text-xs font-medium text-muted-foreground;
+  }
+
+  .input-group-addon > svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .input-group-addon > .kbd {
+    @apply rounded-none;
+  }
+
+  .input-group-addon:is(:not([data-align]), [data-align='inline-start']) {
+    @apply ps-2 has-[>.button]:-ms-[0.3rem] has-[>.kbd]:-ms-[0.15rem];
+  }
+
+  .input-group-addon[data-align='inline-end'] {
+    @apply pe-2 has-[>.button]:-me-[0.3rem] has-[>.kbd]:-me-[0.15rem];
+  }
+
+  .input-group-addon[data-align='block-start'] {
+    @apply px-2.5 pt-2;
+  }
+
+  .input-group-addon[data-align='block-end'] {
+    @apply px-2.5 pb-2;
+  }
+
+  .input-group-addon[data-border='bottom'] {
+    @apply pb-2;
+  }
+
+  .input-group-addon[data-border='top'] {
+    @apply pt-2;
+  }
+
+  .input-group-text {
+    @apply gap-2 text-xs text-muted-foreground;
+  }
+
+  .input-group-text svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .button.input-group-button {
+    @apply gap-2 text-xs shadow-none;
+  }
+
+  .button.input-group-button[data-size='xs'] {
+    @apply h-6 gap-1 rounded-none px-1.5;
+  }
+
+  .button.input-group-button[data-size='xs'] svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-3.5;
+  }
+
+  .button.input-group-button[data-size='sm'] {
+    @apply gap-1;
+  }
+
+  .button.input-group-button[data-size='icon-xs'] {
+    @apply size-6 rounded-none p-0;
+  }
+
+  .button.input-group-button[data-size='icon-sm'] {
+    @apply size-7 p-0;
+  }
+
   /* Native select. The end padding leaves room for the chevron. */
   .native-select {
     @apply rounded-none border border-input bg-transparent py-1 ps-2.5 pe-8 text-xs

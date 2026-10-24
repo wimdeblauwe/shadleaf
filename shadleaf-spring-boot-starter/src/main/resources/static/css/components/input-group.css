@@ -1,0 +1,87 @@
+/*
+  Input group: structure only. Height, radius, border, background, padding, type size, the focus ring and the error
+  are identity and live in the skins.
+
+  The group is the box an input draws: its control (.input-group-input or .input-group-textarea) has no border or
+  background, and the group takes the control's focus ring, error and read-only look through :has(). The addons are
+  written after the control, so it comes first in the tab order; order puts them where align says. An addon above or
+  below the control (block-start, block-end) turns the group into a column of full-width rows, and a textarea lets it
+  grow. In such a row, a .input-group-text takes the free space, so the buttons after it sit at the end.
+
+  A disabled control fades the whole group, addons included, as in shadcn's nova and lyra styles; in forced-colors
+  mode it turns GrayText instead.
+*/
+@layer components {
+  .input-group {
+    @apply relative flex w-full min-w-0 items-center outline-none
+      has-[>.input-group-input:disabled,>.input-group-textarea:disabled]:opacity-50
+      forced-colors:has-[>.input-group-input:disabled,>.input-group-textarea:disabled]:opacity-100;
+  }
+
+  .input-group:has(> .input-group-textarea),
+  .input-group:has(> .input-group-addon:is([data-align='block-start'], [data-align='block-end'])) {
+    @apply h-auto;
+  }
+
+  .input-group:has(> .input-group-addon:is([data-align='block-start'], [data-align='block-end'])) {
+    @apply flex-col;
+  }
+
+  .input-group:has(> :is(.input-group-input, .input-group-textarea):disabled),
+  .input-group:has(> :is(.input-group-input, .input-group-textarea):disabled) :is(.input-group-addon, .input-group-input,
+  .input-group-textarea) {
+    @apply forced-colors:border-[GrayText] forced-colors:text-[GrayText];
+  }
+
+  .input-group-input,
+  .input-group-textarea {
+    @apply w-full min-w-0 flex-1 rounded-none border-0 bg-transparent shadow-none outline-none
+      disabled:cursor-not-allowed;
+    color: inherit;
+  }
+
+  .input-group-input {
+    @apply self-stretch;
+  }
+
+  .input-group-textarea {
+    @apply field-sizing-content min-h-16 resize-none;
+  }
+
+  .input-group-addon {
+    @apply flex h-auto cursor-text items-center justify-center select-none
+      [&_svg]:pointer-events-none [&_svg]:shrink-0;
+  }
+
+  .input-group-addon:not([data-align]),
+  .input-group-addon[data-align='inline-start'],
+  .input-group-addon[data-align='block-start'] {
+    @apply order-first;
+  }
+
+  .input-group-addon[data-align='inline-end'],
+  .input-group-addon[data-align='block-end'] {
+    @apply order-last;
+  }
+
+  .input-group-addon:is([data-align='block-start'], [data-align='block-end']) {
+    @apply w-full justify-start;
+  }
+
+  /* Where shadcn's examples write ml-auto: the text takes the free space, so what follows it sits at the end. */
+  .input-group-addon:is([data-align='block-start'], [data-align='block-end']) > .input-group-text {
+    @apply flex-1;
+  }
+
+  .input-group-addon[data-border='bottom'] {
+    @apply border-b;
+  }
+
+  .input-group-addon[data-border='top'] {
+    @apply border-t;
+  }
+
+  .input-group-text {
+    @apply flex items-center [&_svg]:pointer-events-none [&_svg]:shrink-0;
+  }
+}

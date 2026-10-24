@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>Text, an icon, a <code>sl:kbd</code> or <code>sl:input-group-button</code>s beside or around the
+      control of a <code>sl:input-group</code>. Clicking it, outside a button or link, focuses the control. Write it
+      after the control: <code>align</code> places it.</sl:description>
+    <sl:prop name="align" default="inline-start" values="inline-start inline-end block-start block-end">Where the
+      addon goes: before or after the control on its line, or above or below it across the whole
+      group.</sl:prop>
+    <sl:prop name="border" type="boolean">With <code>align</code> <code>block-start</code> or <code>block-end</code>,
+      a dividing line between the addon and the control, with matching spacing.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* role="group" as in shadcn. The line goes on the side that faces the control. */-->
+<div th:fragment="input-group-addon"
+     th:with="slAddonBorder=${!props.border ? null
+                              : props.align == 'block-start' ? 'bottom'
+                              : props.align == 'block-end' ? 'top' : null}"
+     class="input-group-addon"
+     th:attr="role='group',
+              data-align=${props.unlessDefault('align')},
+              data-border=${slAddonBorder}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>
