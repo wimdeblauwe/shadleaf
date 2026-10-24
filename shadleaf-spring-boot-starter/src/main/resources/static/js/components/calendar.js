@@ -17,7 +17,9 @@
   - the calendar takes the single input's label (its labels, aria-labelledby or aria-label) as its group's name, and
     focus that reaches a hidden input (a click on its label, autofocus, the browser's validation) moves on to the day
     that takes the focus;
-  - a value set by a script (followed by a change event) or a form reset shows its month.
+  - a value set by a script (followed by a change event) or a form reset shows its month;
+  - the sl-calendar-show-start event, which sl:date-picker sends as it opens, shows the months and focuses the day it
+    started with (the value's, else today's).
   The locale (data-locale), the first day of the week and the week numbering come from the server; the names of the
   months and days from Intl. htmx's history cache saves the drawn calendar; a restored one draws itself again.
 */
@@ -588,9 +590,23 @@ function setUp(root, listen, cleanups) {
   }
   cleanups.push(() => observer.disconnect());
 
-  const initial = anchor();
-  state.focus = initial;
-  showMonth(parseMonth(config.defaultMonth) ?? firstOfMonth(initial ? parseIso(initial) : today()), {announce: false});
+  /** The months and the day that takes the focus as the calendar starts with: those of its value, else today's. */
+  const showStart = () => {
+    state.hover = null;
+    const value = anchor();
+    state.focus = value;
+    showMonth(parseMonth(config.defaultMonth) ?? firstOfMonth(value ? parseIso(value) : today()), {announce: false});
+    render();
+  };
+
+  // sl:date-picker sends this when it opens the calendar again, after the focus may have wandered off.
+  listen(root, 'sl-calendar-show-start', event => {
+    if (event.target === root) {
+      showStart();
+    }
+  });
+
+  showStart();
   if (inputs.includes(document.activeElement)) {
     body.querySelector('.calendar-day-button[tabindex="0"]')?.focus();
   }

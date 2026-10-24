@@ -1,0 +1,324 @@
+<!-- <sl:date-picker popover-id="due-picker" name="due" aria-label="Due"/> -->
+<div class="date-picker" x-data="slDatePicker" data-placeholder="Pick a date" data-range-format="{0} – {1}">
+  <button class="button popover-trigger date-picker-trigger" type="button" data-variant="outline" popovertarget="due-picker" aria-haspopup="dialog" data-empty="true">
+    <span class="button-icon" data-icon="inline-start">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+    <span class="date-picker-value">Pick a date</span>
+  </button>
+  <div class="popover-content date-picker-content" id="due-picker" role="dialog" popover tabindex="-1" x-data="slPopover" data-align="start" aria-label="Choose a date">
+    <div class="calendar" x-data="slCalendar" role="group" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+      <input type="date" class="input calendar-input" name="due" aria-label="Due">
+      <template class="calendar-template">
+        <div class="calendar-nav">
+          <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+          <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+        <label class="calendar-dropdown" data-unit="month">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Month"></select>
+        </label>
+        <label class="calendar-dropdown" data-unit="year">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Year"></select>
+        </label>
+        <span class="calendar-week-number-label">Week</span>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!-- <sl:date-picker popover-id="due-picker" format="short" name="due" value="2026-10-23" aria-label="Due"/> -->
+<div class="date-picker" x-data="slDatePicker" data-date-style="short" data-placeholder="Pick a date" data-range-format="{0} – {1}">
+  <button class="button popover-trigger date-picker-trigger" type="button" data-variant="outline" popovertarget="due-picker" aria-haspopup="dialog">
+    <span class="button-icon" data-icon="inline-start">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+    <span class="date-picker-value">10/23/26</span>
+  </button>
+  <div class="popover-content date-picker-content" id="due-picker" role="dialog" popover tabindex="-1" x-data="slPopover" data-align="start" aria-label="Choose a date">
+    <div class="calendar" x-data="slCalendar" role="group" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+      <input type="date" class="input calendar-input" name="due" value="2026-10-23" aria-label="Due">
+      <template class="calendar-template">
+        <div class="calendar-nav">
+          <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+          <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+        <label class="calendar-dropdown" data-unit="month">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Month"></select>
+        </label>
+        <label class="calendar-dropdown" data-unit="year">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Year"></select>
+        </label>
+        <span class="calendar-week-number-label">Week</span>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!-- <sl:date-picker popover-id="due-picker" format="medium" name="due" value="2026-10-23" aria-label="Due"/> -->
+<div class="date-picker" x-data="slDatePicker" data-date-style="medium" data-placeholder="Pick a date" data-range-format="{0} – {1}">
+  <button class="button popover-trigger date-picker-trigger" type="button" data-variant="outline" popovertarget="due-picker" aria-haspopup="dialog">
+    <span class="button-icon" data-icon="inline-start">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+    <span class="date-picker-value">Oct 23, 2026</span>
+  </button>
+  <div class="popover-content date-picker-content" id="due-picker" role="dialog" popover tabindex="-1" x-data="slPopover" data-align="start" aria-label="Choose a date">
+    <div class="calendar" x-data="slCalendar" role="group" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+      <input type="date" class="input calendar-input" name="due" value="2026-10-23" aria-label="Due">
+      <template class="calendar-template">
+        <div class="calendar-nav">
+          <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+          <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+        <label class="calendar-dropdown" data-unit="month">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Month"></select>
+        </label>
+        <label class="calendar-dropdown" data-unit="year">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Year"></select>
+        </label>
+        <span class="calendar-week-number-label">Week</span>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!-- <sl:date-picker popover-id="due-picker" format="long" name="due" value="2026-10-23" aria-label="Due"/> -->
+<div class="date-picker" x-data="slDatePicker" data-placeholder="Pick a date" data-range-format="{0} – {1}">
+  <button class="button popover-trigger date-picker-trigger" type="button" data-variant="outline" popovertarget="due-picker" aria-haspopup="dialog">
+    <span class="button-icon" data-icon="inline-start">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+    <span class="date-picker-value">October 23, 2026</span>
+  </button>
+  <div class="popover-content date-picker-content" id="due-picker" role="dialog" popover tabindex="-1" x-data="slPopover" data-align="start" aria-label="Choose a date">
+    <div class="calendar" x-data="slCalendar" role="group" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+      <input type="date" class="input calendar-input" name="due" value="2026-10-23" aria-label="Due">
+      <template class="calendar-template">
+        <div class="calendar-nav">
+          <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+          <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+        <label class="calendar-dropdown" data-unit="month">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Month"></select>
+        </label>
+        <label class="calendar-dropdown" data-unit="year">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Year"></select>
+        </label>
+        <span class="calendar-week-number-label">Week</span>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!-- <sl:date-picker popover-id="due-picker" format="full" name="due" value="2026-10-23" aria-label="Due"/> -->
+<div class="date-picker" x-data="slDatePicker" data-date-style="full" data-placeholder="Pick a date" data-range-format="{0} – {1}">
+  <button class="button popover-trigger date-picker-trigger" type="button" data-variant="outline" popovertarget="due-picker" aria-haspopup="dialog">
+    <span class="button-icon" data-icon="inline-start">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+    <span class="date-picker-value">Friday, October 23, 2026</span>
+  </button>
+  <div class="popover-content date-picker-content" id="due-picker" role="dialog" popover tabindex="-1" x-data="slPopover" data-align="start" aria-label="Choose a date">
+    <div class="calendar" x-data="slCalendar" role="group" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+      <input type="date" class="input calendar-input" name="due" value="2026-10-23" aria-label="Due">
+      <template class="calendar-template">
+        <div class="calendar-nav">
+          <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+          <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+        <label class="calendar-dropdown" data-unit="month">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Month"></select>
+        </label>
+        <label class="calendar-dropdown" data-unit="year">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Year"></select>
+        </label>
+        <span class="calendar-week-number-label">Week</span>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!-- <sl:date-picker popover-id="due-picker" placeholder="Choose the due date" name="due" aria-label="Due"
+                required min="2026-01-01" class="w-full" caption-layout="dropdown" disabled-dates="sat,sun"/> -->
+<div class="date-picker w-full" x-data="slDatePicker" data-placeholder="Choose the due date" data-range-format="{0} – {1}">
+  <button class="button popover-trigger date-picker-trigger" type="button" data-variant="outline" popovertarget="due-picker" aria-haspopup="dialog" data-empty="true">
+    <span class="button-icon" data-icon="inline-start">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+    <span class="date-picker-value">Choose the due date</span>
+  </button>
+  <div class="popover-content date-picker-content" id="due-picker" role="dialog" popover tabindex="-1" x-data="slPopover" data-align="start" aria-label="Choose a date">
+    <div class="calendar" x-data="slCalendar" role="group" data-caption="dropdown" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1" data-disabled-dates="sat,sun">
+      <input type="date" class="input calendar-input" name="due" aria-label="Due" required min="2026-01-01">
+      <template class="calendar-template">
+        <div class="calendar-nav">
+          <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+          <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+        <label class="calendar-dropdown" data-unit="month">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Month"></select>
+        </label>
+        <label class="calendar-dropdown" data-unit="year">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Year"></select>
+        </label>
+        <span class="calendar-week-number-label">Week</span>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!-- <sl:date-picker popover-id="closed-picker" name="closed" value="2026-10-23" aria-label="Closed on" disabled/> -->
+<div class="date-picker" x-data="slDatePicker" data-placeholder="Pick a date" data-range-format="{0} – {1}">
+  <button class="button popover-trigger date-picker-trigger" type="button" data-variant="outline" popovertarget="closed-picker" aria-haspopup="dialog" disabled>
+    <span class="button-icon" data-icon="inline-start">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+    <span class="date-picker-value">October 23, 2026</span>
+  </button>
+  <div class="popover-content date-picker-content" id="closed-picker" role="dialog" popover tabindex="-1" x-data="slPopover" data-align="start" aria-label="Choose a date">
+    <div class="calendar" x-data="slCalendar" role="group" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1">
+      <input type="date" class="input calendar-input" name="closed" value="2026-10-23" aria-label="Closed on" disabled>
+      <template class="calendar-template">
+        <div class="calendar-nav">
+          <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+          <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+        <label class="calendar-dropdown" data-unit="month">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Month"></select>
+        </label>
+        <label class="calendar-dropdown" data-unit="year">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Year"></select>
+        </label>
+        <span class="calendar-week-number-label">Week</span>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!-- <sl:date-picker popover-id="stay-picker" aria-label="Stay" number-of-months="2">
+  <sl:input type="date" name="from" value="2026-10-12" aria-label="Check-in"/>
+  <sl:input type="date" name="to" value="2026-10-16" aria-label="Check-out"/>
+</sl:date-picker> -->
+<div class="date-picker" x-data="slDatePicker" data-placeholder="Pick a date" data-range-format="{0} – {1}">
+  <button class="button popover-trigger date-picker-trigger" type="button" data-variant="outline" popovertarget="stay-picker" aria-haspopup="dialog">
+    <span class="button-icon" data-icon="inline-start">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </span>
+    <span class="date-picker-value">October 12, 2026 – October 16, 2026</span>
+  </button>
+  <div class="popover-content date-picker-content" id="stay-picker" role="dialog" popover tabindex="-1" x-data="slPopover" data-align="start" aria-label="Choose a date">
+    <div class="calendar" x-data="slCalendar" role="group" data-number-of-months="2" data-locale="en" data-week-starts-on="0" data-first-week-min-days="1" aria-label="Stay">
+      <input class="input" type="date" name="from" value="2026-10-12" aria-label="Check-in">
+      <input class="input" type="date" name="to" value="2026-10-16" aria-label="Check-out">
+      <template class="calendar-template">
+        <div class="calendar-nav">
+          <button type="button" class="calendar-nav-button calendar-previous" aria-label="Go to the previous month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+          <button type="button" class="calendar-nav-button calendar-next" aria-label="Go to the next month">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+        <label class="calendar-dropdown" data-unit="month">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Month"></select>
+        </label>
+        <label class="calendar-dropdown" data-unit="year">
+          <span class="calendar-dropdown-label">
+            <span></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </span>
+          <select class="calendar-select" aria-label="Year"></select>
+        </label>
+        <span class="calendar-week-number-label">Week</span>
+      </template>
+    </div>
+  </div>
+</div>

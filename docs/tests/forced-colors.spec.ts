@@ -32,6 +32,10 @@ for (const skin of skins) {
       const describe = (element: Element) => element.outerHTML.slice(0, 120);
       const problems: string[] = [];
       const check = (element: Element, gray: boolean) => {
+        // A closed popover (a date picker's calendar) is not drawn: its controls are checked where they show open.
+        if (element.closest('[popover]:not(:popover-open)')) {
+          return;
+        }
         if (opacity(element) !== 1) {
           problems.push(`faded (${opacity(element)}): ${describe(element)}`);
         }

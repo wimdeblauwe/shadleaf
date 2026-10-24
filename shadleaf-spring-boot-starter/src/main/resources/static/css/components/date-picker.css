@@ -1,0 +1,22 @@
+/*
+  Date picker: structure only. The button is a sl:button (outline) and the panel a sl:popover-content holding a
+  sl:calendar; the skins set the button's weight, its muted text while no date is chosen (data-empty) and the panel's
+  width and padding, which the calendar takes over.
+
+    .date-picker               inline, or as wide as a field; class goes here
+      .date-picker-trigger     the button: .button.popover-trigger, the calendar icon, then .date-picker-value
+      .date-picker-content     the popover, with the .calendar
+*/
+@layer components {
+  .date-picker {
+    @apply inline-flex max-w-full align-middle;
+  }
+
+  .button.date-picker-trigger {
+    @apply min-w-0 flex-1 justify-start text-start;
+  }
+
+  .date-picker-value {
+    @apply truncate;
+  }
+}

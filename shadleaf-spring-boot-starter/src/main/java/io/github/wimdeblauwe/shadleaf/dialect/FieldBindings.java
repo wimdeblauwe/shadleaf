@@ -6,15 +6,20 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.model.IModel;
+import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.spring6.context.IThymeleafBindStatus;
 import org.thymeleaf.spring6.naming.SpringContextVariableNames;
 import org.thymeleaf.spring6.util.DetailedError;
 import org.thymeleaf.spring6.util.FieldUtils;
+import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.standard.expression.VariableExpression;
 import org.thymeleaf.util.StringUtils;
 
@@ -46,6 +51,7 @@ public final class FieldBindings {
   private static final String DESCRIBED_BY_ATTRIBUTE = "aria-describedby";
   private static final String AUTOFOCUS_ATTRIBUTE = "autofocus";
   private static final String DISABLED_ATTRIBUTE = "disabled";
+  private static final String VALUE_ATTRIBUTE = "value";
   private static final String EXPRESSION_PREFIX = "th:";
 
   private final IExpressionContext context;
@@ -170,6 +176,51 @@ public final class FieldBindings {
       focusFirstInvalid.add(form);
     }
     return new FormErrors(id, messages);
+  }
+
+  /**
+   * The values the inputs of a control will render with, read before they render: for {@code sl:date-picker}, which
+   * shows them on its button. Without content, the control's own input: its {@code th:field} (or, inside a
+   * {@code sl:field}, the field's), {@code th:value} or {@code value}. With content, the same for each {@code sl:input}
+   * and {@code input} in it, in order. The value of a {@code th:field} is the one Spring writes into the input; an input
+   * without any of the three has {@code ""}.
+   *
+   * @param binding the {@code slField} variable, {@code null} outside a field
+   */
+  public List<String> values(Attrs attrs, @Nullable Object binding, Slots slots) {
+    if (!slots.hasDefault()) {
+      String field = attrs.get(FIELD_ATTRIBUTE);
+      if (StringUtils.isEmptyOrWhitespace(field) && binding instanceof FieldBinding enclosing && !enclosing.isGroup()) {
+        field = enclosing.getField();
+      }
+      return List.of(value(field, attrs.get(EXPRESSION_PREFIX + VALUE_ATTRIBUTE), attrs.get(VALUE_ATTRIBUTE)));
+    }
+    List<String> values = new ArrayList<>();
+    IModel content = slots.defaultSlot();
+    for (int i = 0; i < content.size(); i++) {
+      if (content.get(i) instanceof IProcessableElementTag tag && isInput(tag)) {
+        values.add(value(tag.getAttributeValue(FIELD_ATTRIBUTE), tag.getAttributeValue(EXPRESSION_PREFIX + VALUE_ATTRIBUTE),
+            tag.getAttributeValue(VALUE_ATTRIBUTE)));
+      }
+    }
+    return values;
+  }
+
+  private String value(@Nullable String field, @Nullable String valueExpression, @Nullable String value) {
+    if (!StringUtils.isEmptyOrWhitespace(field)) {
+      return Objects.toString(FieldUtils.getBindStatus(context, field).getDisplayValue(), "");
+    }
+    if (!StringUtils.isEmptyOrWhitespace(valueExpression)) {
+      Object evaluated = StandardExpressions.getExpressionParser(context.getConfiguration())
+          .parseExpression(context, valueExpression).execute(context);
+      return Objects.toString(evaluated, "");
+    }
+    return Objects.toString(value, "");
+  }
+
+  private boolean isInput(IProcessableElementTag tag) {
+    String name = tag.getElementCompleteName().toLowerCase(Locale.ROOT);
+    return name.equals("input") || name.endsWith(":input");
   }
 
   /** Whether a control's {@code th:field} (as {@link #control} left it) has errors: its {@code aria-invalid}. */
