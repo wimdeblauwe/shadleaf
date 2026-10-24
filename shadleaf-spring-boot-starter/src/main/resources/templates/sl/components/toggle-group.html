@@ -1,0 +1,43 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A row of <code>sl:toggle-group-item</code>s, of which one (<code>type="single"</code>, radio
+      buttons) or several (<code>type="multiple"</code>, checkboxes) can be on. The items submit, bind and work as
+      those inputs, without JavaScript. Name the group with <code>aria-label</code> or <code>aria-labelledby</code>.
+      Give it the <code>th:field</code> (or the <code>name</code>) its items share, or put it in a
+      <code>sl:field-set</code> with <code>th:field</code>; each item then only needs a <code>value</code>. Every
+      other attribute that is not a prop passes through to the group.</sl:description>
+    <sl:prop name="type" default="single" values="single multiple"><code>single</code>: one item is on at a time,
+      as radio buttons (the arrow keys move between them). <code>multiple</code>: any number, as
+      checkboxes.</sl:prop>
+    <sl:prop name="variant" default="default" values="default outline">Visual style of the items.</sl:prop>
+    <sl:prop name="size" default="default" values="sm default lg">Size of the items.</sl:prop>
+    <sl:prop name="spacing" default="2" values="0 1 2 3 4">The gap between the items, in Tailwind's spacing steps
+      (<code>2</code> is <code>0.5rem</code>). <code>0</code> joins them into one control.</sl:prop>
+    <sl:prop name="orientation" default="horizontal" values="horizontal vertical">Put the items on a row, or in a
+      column.</sl:prop>
+    <sl:prop name="name">The <code>name</code> every item submits under, for a group without
+      <code>th:field</code>.</sl:prop>
+    <sl:prop name="disabled" type="boolean">Disable every item.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The items read slToggleGroupType, slToggleGroupVariant, slToggleGroupSize, slToggleGroupName and
+  slToggleGroupDisabled, and slField for the th:field: slot content sees this template's local variables. A group
+  without th:field keeps the slField of a sl:field-set around it. The variant and size are drawn on the items, so the
+  group renders neither. */-->
+<div th:fragment="toggle-group"
+     class="toggle-group"
+     th:with="slField=${attrs.has('field') ? #slFields.fieldSet(attrs, false, false) : slField},
+              slToggleGroupType=${props.type},
+              slToggleGroupVariant=${props.unlessDefault('variant')},
+              slToggleGroupSize=${props.unlessDefault('size')},
+              slToggleGroupName=${props.name},
+              slToggleGroupDisabled=${props.disabled}"
+     th:attr="role=${props.type == 'multiple' ? 'group' : 'radiogroup'},
+              data-spacing=${props.unlessDefault('spacing')},
+              data-orientation=${props.unlessDefault('orientation')}"
+     sl:attrs="${attrs.without('field')}"><sl:slot/></div>
+</body>
+</html>

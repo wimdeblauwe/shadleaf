@@ -2179,6 +2179,77 @@
       "description" : "How many toasts show at once, the newest ones. Older ones wait, with their time stopped, and show again when a newer one closes."
     } ]
   }, {
+    "name" : "toggle",
+    "tag" : "sl:toggle",
+    "description" : "A button that is on or off: a checkbox drawn as a button, so it submits, binds and works as one without JavaScript, and a screen reader announces it as checked or not. The content (text, icons) is its label; give a toggle that holds only an icon an `aria-label`. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `disabled`, `aria-label`, `x-*`) passes through to the `input`, except `class`, which goes to the `label` around it. `th:field` on a boolean works as on a checkbox; the toggle is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "outline" ],
+      "description" : "Visual style of the toggle."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "sm", "default", "lg" ],
+      "description" : "Size of the toggle."
+    } ]
+  }, {
+    "name" : "toggle-group",
+    "tag" : "sl:toggle-group",
+    "description" : "A row of `sl:toggle-group-item`s, of which one (`type=\"single\"`, radio buttons) or several (`type=\"multiple\"`, checkboxes) can be on. The items submit, bind and work as those inputs, without JavaScript. Name the group with `aria-label` or `aria-labelledby`. Give it the `th:field` (or the `name`) its items share, or put it in a `sl:field-set` with `th:field`; each item then only needs a `value`. Every other attribute that is not a prop passes through to the group.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "single",
+      "values" : [ "single", "multiple" ],
+      "description" : "`single`: one item is on at a time, as radio buttons (the arrow keys move between them). `multiple`: any number, as checkboxes."
+    }, {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "outline" ],
+      "description" : "Visual style of the items."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "sm", "default", "lg" ],
+      "description" : "Size of the items."
+    }, {
+      "name" : "spacing",
+      "type" : "enum",
+      "defaultValue" : "2",
+      "values" : [ "0", "1", "2", "3", "4" ],
+      "description" : "The gap between the items, in Tailwind's spacing steps (`2` is `0.5rem`). `0` joins them into one control."
+    }, {
+      "name" : "orientation",
+      "type" : "enum",
+      "defaultValue" : "horizontal",
+      "values" : [ "horizontal", "vertical" ],
+      "description" : "Put the items on a row, or in a column."
+    }, {
+      "name" : "name",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `name` every item submits under, for a group without `th:field`."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Disable every item."
+    } ]
+  }, {
+    "name" : "toggle-group-item",
+    "tag" : "sl:toggle-group-item",
+    "description" : "One item of a `sl:toggle-group`, drawn as a `sl:toggle`: a radio button in a `single` group, a checkbox in a `multiple` one. Give it a `value`; it takes the group's `th:field` or `name`, variant, size and `disabled`. The content is its label; give an item that holds only an icon an `aria-label`. Every attribute that is not a prop (`value`, `checked`, `disabled`, `aria-label`) passes through to the `input`, except `class`, which goes to the `label` around it. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "tooltip",
     "tag" : "sl:tooltip",
     "description" : "A short text that shows while the pointer rests on an element or the keyboard focuses it, on the browser's Popover API. The first element inside is the trigger, any focusable element (a `sl:button`, a link); the `sl:tooltip-content` after it describes it (`aria-describedby`). Escape hides it. Needs Alpine.",

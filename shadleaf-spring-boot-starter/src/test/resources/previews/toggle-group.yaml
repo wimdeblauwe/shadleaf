@@ -1,0 +1,117 @@
+# Scenarios for the toggle group's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# A scenario's form is the form object th:field binds to. Field names are unique across the showcase, as th:field turns
+# them into ids.
+component: toggle-group
+parts: [toggle-group-item]
+scenarios:
+  - id: default
+    title: Toggle group
+    source: |-
+      <sl:toggle-group type="multiple" name="textStyle" aria-label="Text style">
+        <sl:toggle-group-item value="bold" aria-label="Bold"><sl:icon name="bold"/></sl:toggle-group-item>
+        <sl:toggle-group-item value="italic" aria-label="Italic"><sl:icon name="italic"/></sl:toggle-group-item>
+        <sl:toggle-group-item value="underline" aria-label="Underline"><sl:icon name="underline"/></sl:toggle-group-item>
+      </sl:toggle-group>
+
+  - id: outline
+    title: Outline
+    source: |-
+      <sl:toggle-group variant="outline" name="callFilter" aria-label="Calls">
+        <sl:toggle-group-item value="all" checked>All</sl:toggle-group-item>
+        <sl:toggle-group-item value="missed">Missed</sl:toggle-group-item>
+      </sl:toggle-group>
+
+  - id: form
+    title: In a form
+    description: >-
+      th:field on the group: the items are radio buttons that share it, and the one with the field's value is on.
+    source: |-
+      <p id="layout-label">Layout</p>
+      <sl:toggle-group th:field="*{layout}" variant="outline" aria-labelledby="layout-label">
+        <sl:toggle-group-item value="list"><sl:icon name="list"/> List</sl:toggle-group-item>
+        <sl:toggle-group-item value="grid"><sl:icon name="layout-grid"/> Grid</sl:toggle-group-item>
+        <sl:toggle-group-item value="table"><sl:icon name="table-2"/> Table</sl:toggle-group-item>
+      </sl:toggle-group>
+    form:
+      values: {layout: grid}
+
+  - id: multiple
+    title: Multiple
+    description: >-
+      type="multiple" makes the items checkboxes: th:field binds a collection, and Spring's hidden marker input lets
+      the form clear it.
+    source: |-
+      <sl:toggle-group type="multiple" th:field="*{workdays}" variant="outline" aria-label="Workdays">
+        <sl:toggle-group-item value="MONDAY">Mon</sl:toggle-group-item>
+        <sl:toggle-group-item value="TUESDAY">Tue</sl:toggle-group-item>
+        <sl:toggle-group-item value="WEDNESDAY">Wed</sl:toggle-group-item>
+        <sl:toggle-group-item value="THURSDAY">Thu</sl:toggle-group-item>
+        <sl:toggle-group-item value="FRIDAY">Fri</sl:toggle-group-item>
+      </sl:toggle-group>
+    form:
+      values: {workdays: [MONDAY, TUESDAY, THURSDAY]}
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:toggle-group size="sm" variant="outline" spacing="0" name="positionSm" aria-label="Position, small">
+        <sl:toggle-group-item value="top" checked>Top</sl:toggle-group-item>
+        <sl:toggle-group-item value="bottom">Bottom</sl:toggle-group-item>
+      </sl:toggle-group>
+      <sl:toggle-group variant="outline" spacing="0" name="positionDefault" aria-label="Position">
+        <sl:toggle-group-item value="top" checked>Top</sl:toggle-group-item>
+        <sl:toggle-group-item value="bottom">Bottom</sl:toggle-group-item>
+      </sl:toggle-group>
+      <sl:toggle-group size="lg" variant="outline" spacing="0" name="positionLg" aria-label="Position, large">
+        <sl:toggle-group-item value="top" checked>Top</sl:toggle-group-item>
+        <sl:toggle-group-item value="bottom">Bottom</sl:toggle-group-item>
+      </sl:toggle-group>
+
+  - id: spacing
+    title: Spacing
+    description: spacing="0" joins the items into one control; the default is 2.
+    source: |-
+      <sl:toggle-group variant="outline" spacing="0" name="alignment" aria-label="Alignment">
+        <sl:toggle-group-item value="left" checked aria-label="Align left"><sl:icon name="align-left"/></sl:toggle-group-item>
+        <sl:toggle-group-item value="center" aria-label="Align center"><sl:icon name="align-center"/></sl:toggle-group-item>
+        <sl:toggle-group-item value="right" aria-label="Align right"><sl:icon name="align-right"/></sl:toggle-group-item>
+      </sl:toggle-group>
+      <sl:toggle-group variant="outline" spacing="4" name="alignmentSpaced" aria-label="Alignment, spaced">
+        <sl:toggle-group-item value="left" checked aria-label="Align left"><sl:icon name="align-left"/></sl:toggle-group-item>
+        <sl:toggle-group-item value="center" aria-label="Align center"><sl:icon name="align-center"/></sl:toggle-group-item>
+        <sl:toggle-group-item value="right" aria-label="Align right"><sl:icon name="align-right"/></sl:toggle-group-item>
+      </sl:toggle-group>
+
+  - id: vertical
+    title: Vertical
+    source: |-
+      <sl:toggle-group orientation="vertical" variant="outline" spacing="0" name="rowDensity" aria-label="Density">
+        <sl:toggle-group-item value="compact">Compact</sl:toggle-group-item>
+        <sl:toggle-group-item value="comfortable" checked>Comfortable</sl:toggle-group-item>
+        <sl:toggle-group-item value="spacious">Spacious</sl:toggle-group-item>
+      </sl:toggle-group>
+
+  - id: invalid
+    title: Invalid
+    description: With th:field, a field that has errors marks every item aria-invalid by itself.
+    source: |-
+      <sl:toggle-group th:field="*{shippingSpeed}" variant="outline" aria-label="Shipping">
+        <sl:toggle-group-item value="standard">Standard</sl:toggle-group-item>
+        <sl:toggle-group-item value="express">Express</sl:toggle-group-item>
+      </sl:toggle-group>
+    form:
+      values: {shippingSpeed: ''}
+      errors: {shippingSpeed: Choose how to ship the order}
+
+  - id: disabled
+    title: Disabled
+    description: disabled on the group disables every item; on an item, only that one.
+    source: |-
+      <sl:toggle-group type="multiple" disabled name="textStyleLocked" aria-label="Text style (locked)">
+        <sl:toggle-group-item value="bold" checked aria-label="Bold"><sl:icon name="bold"/></sl:toggle-group-item>
+        <sl:toggle-group-item value="italic" aria-label="Italic"><sl:icon name="italic"/></sl:toggle-group-item>
+      </sl:toggle-group>
+      <sl:toggle-group variant="outline" name="billingPeriod" aria-label="Plan">
+        <sl:toggle-group-item value="monthly" checked>Monthly</sl:toggle-group-item>
+        <sl:toggle-group-item value="yearly" disabled>Yearly</sl:toggle-group-item>
+      </sl:toggle-group>

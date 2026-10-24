@@ -1,0 +1,31 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A button that is on or off: a checkbox drawn as a button, so it submits, binds and works as one
+      without JavaScript, and a screen reader announces it as checked or not. The content (text, icons) is its label;
+      give a toggle that holds only an icon an <code>aria-label</code>. Every attribute that is not a prop
+      (<code>th:field</code>, <code>name</code>, <code>value</code>, <code>checked</code>, <code>disabled</code>,
+      <code>aria-label</code>, <code>x-*</code>) passes through to the <code>input</code>, except
+      <code>class</code>, which goes to the <code>label</code> around it. <code>th:field</code> on a boolean works as
+      on a checkbox; the toggle is marked <code>aria-invalid</code> when its field has errors.</sl:description>
+    <sl:prop name="variant" default="default" values="default outline">Visual style of the toggle.</sl:prop>
+    <sl:prop name="size" default="default" values="sm default lg">Size of the toggle.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The input covers the label, invisible (appearance: none, no border or background), so a click anywhere toggles
+  it and a screen reader finds it where the toggle is drawn. The label draws the pressed look, the focus ring and the
+  error from the input through :has(). th:field adds a hidden marker input after the checkbox, inside the label. */-->
+<label th:fragment="toggle"
+       th:with="slAttrs=${#slFields.control(attrs, slField)}"
+       class="toggle"
+       th:attr="data-variant=${props.unlessDefault('variant')},
+                data-size=${props.unlessDefault('size')}"
+       sl:attrs="${attrs.only('class', 'classappend')}"><input
+    type="checkbox"
+    class="toggle-input"
+    th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+    sl:attrs="${slAttrs.without('class', 'classappend')}"><sl:slot/></label>
+</body>
+</html>

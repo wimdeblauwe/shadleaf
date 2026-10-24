@@ -922,6 +922,83 @@
   }
 
   /*
+    Toggle, and the items of a toggle group (components/toggle.css). The label draws its input's state: pressed
+    (checked) on the muted background, as shadcn's, the focus ring and the error. An indeterminate checkbox (a script
+    set it) is half pressed. Icons without an explicit size (<sl:icon size>, or a size-* class) take the toggle's.
+  */
+  .toggle {
+    @apply gap-1 sketch-shape-sm border-2 border-transparent text-sm font-normal hover:text-foreground
+      motion-safe:transition-[color,box-shadow]
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-4;
+  }
+
+  .toggle:not([data-variant]) {
+    @apply bg-transparent hover:bg-muted;
+  }
+
+  .toggle[data-variant='outline'] {
+    @apply border-foreground/80 bg-background sketch-shadow hover:bg-muted;
+  }
+
+  .toggle:not([data-size]),
+  .toggle[data-size='default'] {
+    @apply h-9 min-w-9 px-2.5
+      has-[[data-icon='inline-end']]:pe-2 has-[[data-icon='inline-start']]:ps-2;
+  }
+
+  .toggle[data-size='sm'] {
+    @apply h-8 min-w-8 px-2.5
+      has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5;
+  }
+
+  .toggle[data-size='lg'] {
+    @apply h-10 min-w-10 px-2.5
+      has-[[data-icon='inline-end']]:pe-2 has-[[data-icon='inline-start']]:ps-2;
+  }
+
+  .toggle:has(> .toggle-input:checked) {
+    @apply bg-muted;
+  }
+
+  .toggle:has(> .toggle-input:indeterminate) {
+    @apply bg-muted/50;
+  }
+
+  .toggle:has(> .toggle-input:focus-visible) {
+    @apply border-ring ring-[3px] ring-ring/50;
+  }
+
+  .toggle:has(> .toggle-input[aria-invalid='true']) {
+    @apply border-destructive ring-destructive/20 dark:ring-destructive/40;
+  }
+
+  /* Toggle group: spacing="0" joins the items, rounding only the ends. */
+  .toggle-group[data-spacing='0'] > .toggle-group-item {
+    @apply rounded-none px-2 shadow-none
+      has-[[data-icon='inline-end']]:pe-1.5 has-[[data-icon='inline-start']]:ps-1.5;
+  }
+
+  .toggle-group[data-spacing='0']:not([data-orientation]) > .toggle-group-item:first-child {
+    @apply rounded-s-md;
+  }
+
+  .toggle-group[data-spacing='0']:not([data-orientation]) > .toggle-group-item:last-child {
+    @apply rounded-e-md;
+  }
+
+  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .toggle-group-item:first-child {
+    @apply rounded-t-md;
+  }
+
+  .toggle-group[data-spacing='0'][data-orientation='vertical'] > .toggle-group-item:last-child {
+    @apply rounded-b-md;
+  }
+
+  .toggle-group[data-spacing='0']:has(> .toggle-group-item[data-variant='outline']) {
+    @apply rounded-md sketch-shadow;
+  }
+
+  /*
     Field. An invalid field's label (or fieldset's legend) and the error use text-destructive-legible
     (components/base.css), as the destructive alert does; the control keeps its own text colour.
   */

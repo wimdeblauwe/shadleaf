@@ -22,6 +22,12 @@ public class TripForm {
   @Positive(message = "Enter an amount above zero, or leave it empty.")
   private BigDecimal dailyBudget;
 
+  /** train, plane or car: an sl:toggle-group whose items are radio buttons. */
+  private String travelBy = "train";
+
+  /** An sl:toggle: a checkbox drawn as a button. */
+  private boolean flexibleDates;
+
   public String getDestination() {
     return destination;
   }
@@ -44,5 +50,21 @@ public class TripForm {
 
   public void setDailyBudget(BigDecimal dailyBudget) {
     this.dailyBudget = dailyBudget;
+  }
+
+  public String getTravelBy() {
+    return travelBy;
+  }
+
+  public void setTravelBy(String travelBy) {
+    this.travelBy = travelBy;
+  }
+
+  public boolean isFlexibleDates() {
+    return flexibleDates;
+  }
+
+  public void setFlexibleDates(boolean flexibleDates) {
+    this.flexibleDates = flexibleDates;
   }
 }

@@ -4689,6 +4689,203 @@
           }
         } ]
       }, {
+        "name" : "sl:toggle",
+        "description" : "A button that is on or off: a checkbox drawn as a button, so it submits, binds and works as one without JavaScript, and a screen reader announces it as checked or not. The content (text, icons) is its label; give a toggle that holds only an icon an `aria-label`. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `disabled`, `aria-label`, `x-*`) passes through to the `input`, except `class`, which goes to the `label` around it. `th:field` on a boolean works as on a checkbox; the toggle is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the toggle.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Size of the toggle.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:toggle-group",
+        "description" : "A row of `sl:toggle-group-item`s, of which one (`type=\"single\"`, radio buttons) or several (`type=\"multiple\"`, checkboxes) can be on. The items submit, bind and work as those inputs, without JavaScript. Name the group with `aria-label` or `aria-labelledby`. Give it the `th:field` (or the `name`) its items share, or put it in a `sl:field-set` with `th:field`; each item then only needs a `value`. Every other attribute that is not a prop passes through to the group.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "`single`: one item is on at a time, as radio buttons (the arrow keys move between them). `multiple`: any number, as checkboxes.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "single"
+          }, {
+            "name" : "multiple"
+          } ],
+          "default" : "single"
+        }, {
+          "name" : "variant",
+          "description" : "Visual style of the items.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Size of the items.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "spacing",
+          "description" : "The gap between the items, in Tailwind's spacing steps (`2` is `0.5rem`). `0` joins them into one control.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "0"
+          }, {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          } ],
+          "default" : "2"
+        }, {
+          "name" : "orientation",
+          "description" : "Put the items on a row, or in a column.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "name",
+          "description" : "The `name` every item submits under, for a group without `th:field`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "Disable every item.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:spacing",
+          "description" : "`spacing` from a Thymeleaf expression, e.g. `th:spacing=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:name",
+          "description" : "`name` from a Thymeleaf expression, e.g. `th:name=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:toggle-group-item",
+        "description" : "One item of a `sl:toggle-group`, drawn as a `sl:toggle`: a radio button in a `single` group, a checkbox in a `multiple` one. Give it a `value`; it takes the group's `th:field` or `name`, variant, size and `disabled`. The content is its label; give an item that holds only an icon an `aria-label`. Every attribute that is not a prop (`value`, `checked`, `disabled`, `aria-label`) passes through to the `input`, except `class`, which goes to the `label` around it. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:tooltip",
         "description" : "A short text that shows while the pointer rests on an element or the keyboard focuses it, on the browser's Popover API. The first element inside is the trigger, any focusable element (a `sl:button`, a link); the `sl:tooltip-content` after it describes it (`aria-describedby`). Escape hides it. Needs Alpine.",
         "attributes" : [ {

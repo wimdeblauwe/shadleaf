@@ -11,7 +11,7 @@ export const componentGroups = [
   {
     label: 'Forms',
     pages: ['field', 'form-errors', 'label', 'input', 'input-group', 'textarea', 'select', 'select-native', 'combobox',
-      'checkbox', 'radio-group', 'switch', 'calendar', 'date-picker'],
+      'checkbox', 'radio-group', 'switch', 'toggle', 'toggle-group', 'calendar', 'date-picker'],
   },
   {label: 'Overlays', pages: ['dialog', 'alert-dialog', 'sheet', 'popover', 'dropdown-menu', 'tooltip']},
   {label: 'Feedback', pages: ['alert', 'toast', 'skeleton']},

@@ -18,7 +18,10 @@
     <code>multiple</code> combobox with its options in the page: the chosen ones are chips, and
     <code>th:field</code> binds them to a list. Without JavaScript both are selects, the destination with only the
     chosen country. The daily budget is an <code>sl:input-group</code> in a field: the currency sits inside the
-    input's border, and the field's label, description and error point at the input.</p>
+    input's border, and the field's label, description and error point at the input. How you travel is an
+    <code>sl:toggle-group</code> in a field set: radio buttons drawn as joined buttons, which take the field set's
+    <code>th:field</code>. Flexible dates is an <code>sl:toggle</code> bound to a boolean. Both work without
+    JavaScript.</p>
 
   <form class="form" th:object="${tripForm}" th:action="@{/trip}" method="post" novalidate>
     <sl:form-errors autofocus/>
@@ -53,6 +56,20 @@
         </sl:input-group>
         <sl:field-description>Optional. Lodging and food, per person.</sl:field-description>
         <sl:field-error/>
+      </sl:field>
+
+      <sl:field-set th:field="*{travelBy}">
+        <sl:field-legend variant="label">Travel by</sl:field-legend>
+        <sl:toggle-group variant="outline" spacing="0" aria-label="Travel by">
+          <sl:toggle-group-item value="train"><sl:icon name="train-front"/> Train</sl:toggle-group-item>
+          <sl:toggle-group-item value="plane"><sl:icon name="plane"/> Plane</sl:toggle-group-item>
+          <sl:toggle-group-item value="car"><sl:icon name="car"/> Car</sl:toggle-group-item>
+        </sl:toggle-group>
+      </sl:field-set>
+
+      <sl:field th:field="*{flexibleDates}">
+        <sl:toggle variant="outline"><sl:icon name="calendar-range"/> Flexible dates</sl:toggle>
+        <sl:field-description>A few days earlier or later is fine.</sl:field-description>
       </sl:field>
     </sl:field-group>
 

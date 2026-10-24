@@ -1,0 +1,53 @@
+# Scenarios for the toggle's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# A scenario's form is the form object th:field binds to. Field names are unique across the showcase, as th:field turns
+# them into ids.
+component: toggle
+scenarios:
+  - id: default
+    title: Toggle
+    source: |-
+      <sl:toggle name="bookmarked" size="sm" variant="outline">
+        <sl:icon name="bookmark"/> Bookmark
+      </sl:toggle>
+
+  - id: outline
+    title: Outline
+    source: |-
+      <sl:toggle variant="outline" name="italicText" aria-label="Italic"><sl:icon name="italic"/></sl:toggle>
+      <sl:toggle variant="outline" name="underlineText" aria-label="Underline"><sl:icon name="underline"/></sl:toggle>
+
+  - id: text
+    title: With text
+    source: |-
+      <sl:toggle name="italicLabel"><sl:icon name="italic"/> Italic</sl:toggle>
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:toggle size="sm" variant="outline" name="sizeSm">Small</sl:toggle>
+      <sl:toggle variant="outline" name="sizeDefault">Default</sl:toggle>
+      <sl:toggle size="lg" variant="outline" name="sizeLg">Large</sl:toggle>
+
+  - id: form
+    title: In a form
+    description: th:field on a boolean checks the toggle from the form object, as on a checkbox.
+    source: |-
+      <sl:toggle th:field="*{starred}" variant="outline"><sl:icon name="star"/> Starred</sl:toggle>
+    form:
+      values: {starred: true}
+
+  - id: invalid
+    title: Invalid
+    description: With th:field, a field that has errors marks the toggle aria-invalid by itself.
+    source: |-
+      <sl:toggle th:field="*{pinned}" variant="outline"><sl:icon name="bookmark"/> Pin to the top</sl:toggle>
+    form:
+      values: {pinned: false}
+      errors: {pinned: Only three posts can be pinned}
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:toggle name="boldLocked" disabled aria-label="Bold"><sl:icon name="bold"/></sl:toggle>
+      <sl:toggle name="underlineLocked" variant="outline" checked disabled aria-label="Underline"><sl:icon
+          name="underline"/></sl:toggle>

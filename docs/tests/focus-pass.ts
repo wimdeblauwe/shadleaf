@@ -11,7 +11,7 @@ type Indicator = { outline: string; boxShadow: string };
  * Boxes that draw the focus of the control inside them, as shadcn's input group does: the input group around its
  * input or textarea, and the combobox's control around its input (and chips). The indicator is read from the box.
  */
-const FOCUS_BOXES = '.input-group, .combobox-control';
+const FOCUS_BOXES = '.input-group, .combobox-control, .toggle';
 
 /**
  * Tabs from the focus's current place through every control in `scope` (a selector), in document order, and expects

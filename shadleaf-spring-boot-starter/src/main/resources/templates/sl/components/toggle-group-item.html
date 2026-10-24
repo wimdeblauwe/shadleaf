@@ -1,0 +1,30 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>One item of a <code>sl:toggle-group</code>, drawn as a <code>sl:toggle</code>: a radio button in a
+      <code>single</code> group, a checkbox in a <code>multiple</code> one. Give it a <code>value</code>; it takes the
+      group's <code>th:field</code> or <code>name</code>, variant, size and <code>disabled</code>. The content is its
+      label; give an item that holds only an icon an <code>aria-label</code>. Every attribute that is not a prop
+      (<code>value</code>, <code>checked</code>, <code>disabled</code>, <code>aria-label</code>) passes through to the
+      <code>input</code>, except <code>class</code>, which goes to the <code>label</code> around it. With
+      <code>th:field</code>, the item is marked <code>aria-invalid</code> when its field has errors.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* The markup of sl:toggle, with the input's type from the group. th:attr sets the type before th:field runs, which
+  picks Spring's checkbox or radio button processor by it. */-->
+<label th:fragment="toggle-group-item"
+       th:with="slAttrs=${#slFields.control(attrs, slField)}"
+       class="toggle toggle-group-item"
+       th:attr="data-variant=${slToggleGroupVariant},
+                data-size=${slToggleGroupSize}"
+       sl:attrs="${attrs.only('class', 'classappend')}"><input
+    class="toggle-input"
+    th:attr="type=${slToggleGroupType == 'multiple' ? 'checkbox' : 'radio'},
+             name=${slToggleGroupName},
+             disabled=${slToggleGroupDisabled == true ? 'disabled' : null},
+             aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+    sl:attrs="${slAttrs.without('class', 'classappend')}"><sl:slot/></label>
+</body>
+</html>

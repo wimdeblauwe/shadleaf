@@ -1,0 +1,53 @@
+---
+title: Toggle
+description: A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="toggle--default" />
+
+A toggle is a checkbox drawn as a button: a `<label>` with the checkbox inside it, covering it. A click anywhere on the
+toggle checks or unchecks it, the form submits it as a checkbox, and it works without JavaScript. A screen reader
+announces it as a checkbox, checked or not.
+
+The content is the toggle's label. A toggle that holds only an icon needs an `aria-label`. Every attribute that is not
+a prop goes to the checkbox (`name`, `value`, `checked`, `disabled`, `aria-label`, `x-on:change`), except `class`,
+which goes to the label.
+
+For several toggles that belong together, one of which (or any of which) can be on, use a
+[toggle group](../toggle-group/).
+
+## Outline
+
+<ComponentPreview id="toggle--outline" />
+
+## With text
+
+<ComponentPreview id="toggle--text" />
+
+## Sizes
+
+<ComponentPreview id="toggle--sizes" />
+
+## In a form
+
+`th:field` on a boolean field checks the toggle when the field is `true`, as on a [checkbox](../checkbox/): Spring
+numbers the `id` (`starred1`) and adds a hidden marker input, so unchecking it submits `false`. In a
+[field](../field/), the toggle takes the field's name as its `id` and is described by the field's description and
+error.
+
+<ComponentPreview id="toggle--form" />
+
+## Invalid
+
+<ComponentPreview id="toggle--invalid" />
+
+## Disabled
+
+<ComponentPreview id="toggle--disabled" />
+
+## Attributes
+
+<ComponentAttributes component="toggle" />

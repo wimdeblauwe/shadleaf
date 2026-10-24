@@ -1,0 +1,121 @@
+<!-- <sl:toggle-group type="single" name="style" aria-label="Style">
+  <sl:toggle-group-item value="bold" checked>Bold</sl:toggle-group-item>
+  <sl:toggle-group-item value="italic">Italic</sl:toggle-group-item>
+</sl:toggle-group> -->
+<div class="toggle-group" role="radiogroup" aria-label="Style">
+  <label class="toggle toggle-group-item">
+    <input class="toggle-input" type="radio" name="style" value="bold" checked>
+    Bold
+  </label>
+  <label class="toggle toggle-group-item">
+    <input class="toggle-input" type="radio" name="style" value="italic">
+    Italic
+  </label>
+</div>
+
+<!-- <sl:toggle-group type="multiple" name="style" aria-label="Style">
+  <sl:toggle-group-item value="bold" checked>Bold</sl:toggle-group-item>
+  <sl:toggle-group-item value="italic">Italic</sl:toggle-group-item>
+</sl:toggle-group> -->
+<div class="toggle-group" role="group" aria-label="Style">
+  <label class="toggle toggle-group-item">
+    <input class="toggle-input" type="checkbox" name="style" value="bold" checked>
+    Bold
+  </label>
+  <label class="toggle toggle-group-item">
+    <input class="toggle-input" type="checkbox" name="style" value="italic">
+    Italic
+  </label>
+</div>
+
+<!-- <sl:toggle-group variant="default" name="view" aria-label="View">
+  <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+</sl:toggle-group> -->
+<div class="toggle-group" role="radiogroup" aria-label="View">
+  <label class="toggle toggle-group-item">
+    <input class="toggle-input" type="radio" name="view" value="list">
+    List
+  </label>
+</div>
+
+<!-- <sl:toggle-group variant="outline" name="view" aria-label="View">
+  <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+</sl:toggle-group> -->
+<div class="toggle-group" role="radiogroup" aria-label="View">
+  <label class="toggle toggle-group-item" data-variant="outline">
+    <input class="toggle-input" type="radio" name="view" value="list">
+    List
+  </label>
+</div>
+
+<!-- <sl:toggle-group size="sm" name="view" aria-label="View">
+  <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+</sl:toggle-group> -->
+<div class="toggle-group" role="radiogroup" aria-label="View">
+  <label class="toggle toggle-group-item" data-size="sm">
+    <input class="toggle-input" type="radio" name="view" value="list">
+    List
+  </label>
+</div>
+
+<!-- <sl:toggle-group size="default" name="view" aria-label="View">
+  <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+</sl:toggle-group> -->
+<div class="toggle-group" role="radiogroup" aria-label="View">
+  <label class="toggle toggle-group-item">
+    <input class="toggle-input" type="radio" name="view" value="list">
+    List
+  </label>
+</div>
+
+<!-- <sl:toggle-group size="lg" name="view" aria-label="View">
+  <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+</sl:toggle-group> -->
+<div class="toggle-group" role="radiogroup" aria-label="View">
+  <label class="toggle toggle-group-item" data-size="lg">
+    <input class="toggle-input" type="radio" name="view" value="list">
+    List
+  </label>
+</div>
+
+<!-- <sl:toggle-group spacing="0" name="view" aria-label="View"/> -->
+<div class="toggle-group" role="radiogroup" data-spacing="0" aria-label="View"></div>
+
+<!-- <sl:toggle-group spacing="1" name="view" aria-label="View"/> -->
+<div class="toggle-group" role="radiogroup" data-spacing="1" aria-label="View"></div>
+
+<!-- <sl:toggle-group spacing="2" name="view" aria-label="View"/> -->
+<div class="toggle-group" role="radiogroup" aria-label="View"></div>
+
+<!-- <sl:toggle-group spacing="3" name="view" aria-label="View"/> -->
+<div class="toggle-group" role="radiogroup" data-spacing="3" aria-label="View"></div>
+
+<!-- <sl:toggle-group spacing="4" name="view" aria-label="View"/> -->
+<div class="toggle-group" role="radiogroup" data-spacing="4" aria-label="View"></div>
+
+<!-- <sl:toggle-group orientation="horizontal" name="view" aria-label="View"/> -->
+<div class="toggle-group" role="radiogroup" aria-label="View"></div>
+
+<!-- <sl:toggle-group orientation="vertical" name="view" aria-label="View"/> -->
+<div class="toggle-group" role="radiogroup" data-orientation="vertical" aria-label="View"></div>
+
+<!-- <sl:toggle-group disabled name="view" aria-labelledby="view-label" class="mt-2" id="view">
+  <sl:toggle-group-item value="list" aria-label="List" class="ms-1"><sl:icon name="list"/></sl:toggle-group-item>
+  <sl:toggle-group-item value="grid" name="other" disabled>Grid</sl:toggle-group-item>
+</sl:toggle-group> -->
+<div class="toggle-group mt-2" role="radiogroup" aria-labelledby="view-label" id="view">
+  <label class="toggle toggle-group-item ms-1">
+    <input class="toggle-input" type="radio" name="view" disabled value="list" aria-label="List">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </label>
+  <label class="toggle toggle-group-item">
+    <input class="toggle-input" type="radio" name="other" disabled value="grid">
+    Grid
+  </label>
+</div>
+
+<!-- <sl:toggle-group-item value="list" aria-invalid="true">Outside a group</sl:toggle-group-item> -->
+<label class="toggle toggle-group-item">
+  <input class="toggle-input" type="radio" value="list" aria-invalid="true">
+  Outside a group
+</label>
