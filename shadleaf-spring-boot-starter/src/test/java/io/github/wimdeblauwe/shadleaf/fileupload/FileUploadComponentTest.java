@@ -146,6 +146,24 @@ class FileUploadComponentTest {
   }
 
   @Test
+  void previewsAddATemplateForTheMediaOfAnImage() {
+    assertThat(tester.render("<sl:file-upload name=\"files\"/>").select("template[data-kind=image]")).isEmpty();
+
+    Rendered rendered = tester.render("<sl:file-upload name=\"files\" multiple previews/>");
+
+    assertThat(rendered).hasNoLeakedMarkup();
+    assertThat(rendered).root().hasNoAttribute("previews", "data-previews");
+    Element image = rendered.select(".file-upload > template[data-kind=image]").first();
+    assertThat(image.classNames()).containsExactly("file-upload-template");
+    Element media = image.select("> .attachment-media").first();
+    assertThat(media.attr("data-variant")).isEqualTo("image");
+    Element img = media.select("> img").first();
+    assertThat(img.attr("alt")).isEmpty();
+    assertThat(img.hasAttr("alt")).isTrue();
+    assertThat(img.hasAttr("src")).isFalse();
+  }
+
+  @Test
   void theUploadProgressHasACancelButtonAndMessagePatterns() {
     Rendered rendered = tester.render("<sl:file-upload name=\"files\" multiple/>");
 

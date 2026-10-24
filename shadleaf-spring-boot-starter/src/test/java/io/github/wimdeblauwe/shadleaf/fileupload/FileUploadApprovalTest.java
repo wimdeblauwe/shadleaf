@@ -18,7 +18,7 @@ class FileUploadApprovalTest {
         "<sl:file-upload id=\"avatar\" name=\"avatar\"/>",
         """
             <sl:file-upload id="files" name="files" multiple accept="image/png,image/jpeg,application/pdf"
-                            max-size="10MB" level="3" class="max-w-md">
+                            max-size="10MB" level="3" class="max-w-md" previews>
               <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
             </sl:file-upload>""",
         """

@@ -69,6 +69,8 @@ export type FixtureOptions = {
   routes?: Routes,
   /** Where to go first, e.g. '/#refunds' or '/?tab=b'. */
   path?: string,
+  /** An img-src for the policy, e.g. "'self' blob:" (default: none, so default-src 'self' applies). */
+  imgSrc?: string,
   /** Put the theme script (sl/layout :: theme-script) first in the head, allowed by its hash. */
   theme?: boolean,
   /** Put the content in a <main> (true, the default), or straight into the body: an application shell has its own. */
@@ -85,7 +87,7 @@ export type FixtureOptions = {
 /** Serves `main` at /, and `routes` for other paths; returns what the console said (errors, warnings, CSP). */
 export async function openFixture(page: Page, main: string | ((url: URL, request: Request) => string),
     {alpine = true, htmx = false, routes = {}, path = '/', theme = false, scriptDelay = 0, wrap = true,
-      skin, stylesheet, htmlAttributes = '', bodyAttributes = ''}: FixtureOptions = {})
+      skin, stylesheet, imgSrc, htmlAttributes = '', bodyAttributes = ''}: FixtureOptions = {})
     : Promise<string[]> {
   const messages: string[] = [];
   page.on('console', message => {
@@ -123,8 +125,9 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
       }
       return route.fulfill({path: join(PUBLIC_DIR, url.pathname)});
     }
-    const headers = {'Content-Security-Policy': theme
-        ? STRICT_CSP.replace("script-src 'self'", `script-src 'self' ${themeScript.cspHash}`) : STRICT_CSP};
+    const policy = (theme ? STRICT_CSP.replace("script-src 'self'", `script-src 'self' ${themeScript.cspHash}`)
+        : STRICT_CSP) + (imgSrc ? `; img-src ${imgSrc}` : '');
+    const headers = {'Content-Security-Policy': policy};
     if (url.pathname === '/') {
       const content = typeof main === 'string' ? main
           : main(url, {url, body: request.postData() ?? '', headers: request.headers()});

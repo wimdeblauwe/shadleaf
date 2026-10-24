@@ -10,7 +10,8 @@ import {combinations, openShowcase} from './showcase';
 // multiple, the announcements, the keyboard, the submitted form, htmx (swapped in, out, history restore) and the page
 // without Alpine. The upload progress with htmx 2 and htmx 4: each file's share, processing, the outcomes, Cancel, a
 // request without the files, and htmx 2's history snapshot taken while uploading (htmx 4 keeps no snapshot: it asks
-// the server for the page again). file-upload-network.spec.ts has the browser's own upload events. Runs in Chromium
+// the server for the page again). Image previews: the blob: URLs made and revoked, the strict CSP's fallback, the
+// states and the history snapshot. file-upload-network.spec.ts has the browser's own upload events. Runs in Chromium
 // and Firefox.
 
 type Scenario = { id: string, html: string };
@@ -601,4 +602,266 @@ test('upload progress: a page saved in htmx\'s history while uploading comes bac
   await upload.input.setInputFiles(picked(pdf('d.pdf')));
   expect(await states(upload)).toEqual([['idle', null, 'PDF · 1.2 kB']]);
   expect(messages).toEqual([]);
+});
+
+// Image previews: a picked image's blob: URL, made and revoked through URL.createObjectURL and revokeObjectURL, which
+// the init script records. A real PNG (1×1), as a picked file and as a dropped one; the fixture's strict CSP blocks
+// blob: images unless imgSrc allows them.
+const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+type Blobs = { created: string[], revoked: string[] };
+
+async function recordBlobs(page: Page) {
+  await page.addInitScript(() => {
+    const blobs: Blobs = {created: [], revoked: []};
+    (window as unknown as { blobs: Blobs }).blobs = blobs;
+    const create = URL.createObjectURL;
+    const revoke = URL.revokeObjectURL;
+    URL.createObjectURL = object => {
+      const url = create(object);
+      blobs.created.push(url);
+      return url;
+    };
+    URL.revokeObjectURL = url => {
+      blobs.revoked.push(url);
+      revoke(url);
+    };
+  });
+}
+
+const blobs = (page: Page) => page.evaluate(() => (window as unknown as { blobs: Blobs }).blobs);
+
+const photo = (name: string) => ({name, mimeType: 'image/png', buffer: Buffer.from(PNG, 'base64')});
+
+/** Drops files with real bytes (base64), as a drop hands them over. */
+async function dropBytes(page: Page, target: Locator, files: { name: string, type: string, base64: string }[]) {
+  const dataTransfer = await page.evaluateHandle(files => {
+    const transfer = new DataTransfer();
+    for (const file of files) {
+      transfer.items.add(new File([Uint8Array.from(atob(file.base64), c => c.charCodeAt(0))], file.name,
+          {type: file.type}));
+    }
+    return transfer;
+  }, files);
+  for (const type of ['dragenter', 'dragover', 'drop']) {
+    await target.dispatchEvent(type, {dataTransfer});
+  }
+}
+
+/** Each attachment's media: the img's src for a thumbnail, 'icon' for an icon. */
+const media = (upload: Upload) => upload.list.locator('.attachment-media').evaluateAll(elements => elements
+    .map(element => element.getAttribute('data-variant') === 'image'
+      ? element.querySelector('img')!.getAttribute('src') : 'icon'));
+
+const ALLOW_BLOB = "'self' blob:";
+
+test.describe('image previews', () => {
+  test('a picked or dropped image shows a thumbnail from a blob: URL; other files keep their icons', async ({page}) => {
+    await recordBlobs(page);
+    const messages = await openFixture(page, preview('previews'), {imgSrc: ALLOW_BLOB});
+    const upload = new Upload(page, 'uploadPhotos');
+
+    await upload.input.setInputFiles([photo('photo.png'), ...picked(pdf('report.pdf'))]);
+    await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/), 'icon']);
+    const [url] = (await blobs(page)).created;
+    expect(await media(upload)).toEqual([url, 'icon']);
+    const img = upload.list.locator('.attachment-media img');
+    await expect(img).toHaveAttribute('alt', '');
+    expect(await img.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth)).toBe(1);
+
+    // Dropped: a PNG gets one too; bytes that are no image keep the icon, and their URL is revoked at once; an SVG
+    // gets no URL at all.
+    const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>').toString('base64');
+    await dropBytes(page, upload.dropzone(), [{name: 'second.png', type: 'image/png', base64: PNG},
+      {name: 'broken.png', type: 'image/png', base64: Buffer.alloc(40, 7).toString('base64')},
+      {name: 'drawing.svg', type: 'image/svg+xml', base64: svg}]);
+    expect(await upload.titles()).toEqual(['photo.png', 'report.pdf', 'second.png', 'broken.png', 'drawing.svg']);
+    await expect.poll(async () => (await blobs(page)).revoked.length).toBe(1);
+    const {created, revoked} = await blobs(page);
+    expect(created).toHaveLength(3);
+    expect(revoked).toEqual([created[2]]);
+    await expect.poll(() => media(upload)).toEqual([url, 'icon', created[1], 'icon', 'icon']);
+    // A change that keeps them makes no new URL, and the thumbnail is there at once.
+    await upload.remove('report.pdf').click();
+    expect(await media(upload)).toEqual([url, created[1], 'icon', 'icon']);
+    expect((await blobs(page)).created).toHaveLength(3);
+    expect(messages).toEqual([]);
+  });
+
+  test('an image larger than 20 MB keeps its icon', async ({page}) => {
+    await recordBlobs(page);
+    await openFixture(page, preview('previews').replace(/ data-max-size="\d+"/, ''), {imgSrc: ALLOW_BLOB});
+    const upload = new Upload(page, 'uploadPhotos');
+    const dataTransfer = await page.evaluateHandle(() => {
+      const transfer = new DataTransfer();
+      transfer.items.add(new File([new Uint8Array(20 * 1024 * 1024 + 1)], 'huge.png', {type: 'image/png'}));
+      transfer.items.add(new File([new Uint8Array(20 * 1024 * 1024)], 'large.png', {type: 'image/png'}));
+      return transfer;
+    });
+    for (const type of ['dragenter', 'dragover', 'drop']) {
+      await upload.dropzone().dispatchEvent(type, {dataTransfer});
+    }
+    expect(await upload.titles()).toEqual(['huge.png', 'large.png']);
+    // Only the one of 20 MB is tried (its bytes are no image: the icon stays).
+    expect((await blobs(page)).created).toHaveLength(1);
+    expect(await media(upload)).toEqual(['icon', 'icon']);
+  });
+
+  test('each URL is revoked when its file is removed, replaced, or the component is swapped out', async ({page}) => {
+    await recordBlobs(page);
+    const single = preview('previews').replace(' multiple=""', '').replace(' multiple', '');
+    const messages = await openFixture(page, '<div id="area"></div>'
+        + '<button type="button" id="load" hx-get="/upload" hx-target="#area">Load</button>'
+        + '<button type="button" id="single" hx-get="/single" hx-target="#area">Single</button>'
+        + '<button type="button" id="clear" hx-get="/empty" hx-target="#area">Clear</button>', {
+      htmx: true,
+      imgSrc: ALLOW_BLOB,
+      routes: {
+        '/upload': () => ({body: preview('previews')}),
+        '/single': () => ({body: single}),
+        '/empty': () => ({body: '<p id="empty">Nothing</p>'}),
+      },
+    });
+    const upload = new Upload(page, 'uploadPhotos');
+
+    await page.locator('#load').click();
+    await upload.input.setInputFiles([photo('a.png'), photo('b.png'), photo('c.png')]);
+    await expect.poll(() => media(upload)).toEqual(Array(3).fill(expect.stringMatching(/^blob:/)));
+    const [a, b, c] = (await blobs(page)).created;
+    await upload.remove('b.png').click();
+    expect((await blobs(page)).revoked).toEqual([b]);
+    expect(await media(upload)).toEqual([a, c]);
+
+    // Swapped out: the rest go.
+    await page.locator('#clear').click();
+    await expect(page.locator('#empty')).toBeVisible();
+    await expect.poll(async () => (await blobs(page)).revoked.toSorted()).toEqual([a, b, c].toSorted());
+
+    // Without multiple, a new image replaces the old one, and so does its URL.
+    await page.locator('#single').click();
+    await upload.input.setInputFiles([photo('d.png')]);
+    await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/)]);
+    await upload.input.setInputFiles([photo('e.png')]);
+    await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/)]);
+    const {created, revoked} = await blobs(page);
+    expect(created).toHaveLength(5);
+    expect(revoked).toContain(created[3]);
+    expect(await media(upload)).toEqual([created[4]]);
+    expect(messages).toEqual([]);
+  });
+
+  test('under the strict CSP the icon stays, and after the first block no more URLs are made', async ({page}) => {
+    await recordBlobs(page);
+    const messages = await openFixture(page, preview('previews'));
+    const upload = new Upload(page, 'uploadPhotos');
+
+    await upload.input.setInputFiles([photo('photo.png')]);
+    await expect.poll(() => messages.some(message => message === 'CSP violation: img-src')).toBe(true);
+    await expect.poll(async () => (await blobs(page)).revoked).toEqual((await blobs(page)).created);
+    expect(await media(upload)).toEqual(['icon']);
+    await expect(upload.list.locator('img')).toHaveCount(0);
+
+    await dropBytes(page, upload.dropzone(), [{name: 'second.png', type: 'image/png', base64: PNG}]);
+    expect(await upload.titles()).toEqual(['photo.png', 'second.png']);
+    expect((await blobs(page)).created).toHaveLength(1);
+    expect(await media(upload)).toEqual(['icon', 'icon']);
+    // The browser's report of the one blocked image, and nothing of ours.
+    expect(messages.filter(message => !/^CSP violation: img-src$|Refused to load the image|Content[- ]Security[- ]Policy/i
+        .test(message))).toEqual([]);
+    expect(messages.filter(message => message === 'CSP violation: img-src')).toHaveLength(1);
+  });
+
+  const previewForm = (target: 'area' | 'result') => '<div id="area"><form id="form" hx-post="/upload" '
+      + `hx-target="#${target}" enctype="multipart/form-data">${preview('previews')}`
+      + '<button type="submit">Save</button></form></div><div id="result"></div>';
+
+  for (const version of [2, 4] as const) {
+    test(`htmx ${version}: the thumbnail stays, dimmed, through the upload's states`, async ({page}) => {
+      await recordBlobs(page);
+      await holdUploads(page);
+      let status = 500;
+      const messages = await openFixture(page, previewForm('result'), {htmx: version, imgSrc: ALLOW_BLOB});
+      const answers = await holdAnswers(page, () => ({status, body: status === 500 ? '' : '<p id="saved">Saved</p>'}));
+      const upload = new Upload(page, 'uploadPhotos');
+      await upload.input.setInputFiles([photo('photo.png')]);
+      await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/)]);
+      const [url] = (await blobs(page)).created;
+      const opacity = () => upload.list.locator('.attachment-media')
+          .evaluate(element => Number(getComputedStyle(element).opacity));
+      expect(await opacity()).toBe(1);
+
+      await page.getByRole('button', {name: 'Save'}).click();
+      await expect(upload.root).toHaveAttribute('data-uploading', 'true');
+      await fire(page, 'progress', 100, 400);
+      expect(await states(upload)).toEqual([['uploading', 'true', expect.stringMatching(/^Uploading · \d+%$/)]]);
+      expect(await media(upload)).toEqual([url]);
+      expect(await opacity()).toBeLessThan(1);
+      await fire(page, 'load', 400, 400);
+      expect(await states(upload)).toEqual([['processing', 'true', 'Processing']]);
+      expect(await media(upload)).toEqual([url]);
+
+      answers.release();
+      await expect(upload.status).toHaveText('The files could not be uploaded. Try again.');
+      expect(await states(upload)).toEqual([['error', null, 'Upload failed']]);
+      expect(await media(upload)).toEqual([url]);
+      expect(await opacity()).toBeLessThan(1);
+
+      status = 200;
+      await page.getByRole('button', {name: 'Save'}).click();
+      await expect(upload.root).toHaveAttribute('data-uploading', 'true');
+      await fire(page, 'load', 400, 400);
+      answers.release();
+      await expect(page.locator('#saved')).toBeVisible();
+      expect(await states(upload)).toEqual([[null, null, 'Uploaded']]);
+      expect(await media(upload)).toEqual([url]);
+      expect(await opacity()).toBe(1);
+      expect((await blobs(page)).revoked).toEqual([]);
+
+      // The next change takes the uploaded files away, and their URLs.
+      await upload.input.setInputFiles(picked(pdf('c.pdf')));
+      expect((await blobs(page)).revoked).toEqual([url]);
+      expect(await media(upload)).toEqual(['icon']);
+      expect(messages.filter(message => !/500|Internal Server Error|htmx:response:error/i.test(message)))
+          .toEqual([]);
+    });
+  }
+
+  test('htmx 2: the history snapshot holds no blob: URL, and back shows no dead image', async ({page}) => {
+    await recordBlobs(page);
+    const messages = await openFixture(page, '<div id="area">' + preview('previews') + '</div>'
+        + '<a id="other" href="/other" hx-get="/other" hx-target="#result" hx-push-url="true">Other</a>'
+        + '<div id="result"></div>'
+        + '<a id="next" href="/next" hx-get="/next" hx-target="#area" hx-push-url="true">Next</a>', {
+      htmx: true,
+      imgSrc: ALLOW_BLOB,
+      routes: {
+        '/other': () => ({body: '<p id="other-page">Other</p>'}),
+        '/next': () => ({body: '<p id="next-page">Next page</p>'}),
+      },
+    });
+    const upload = new Upload(page, 'uploadPhotos');
+    const history = () => page.evaluate(() => sessionStorage.getItem('htmx-history-cache') ?? '');
+
+    await upload.input.setInputFiles([photo('photo.png')]);
+    await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/)]);
+    const [url] = (await blobs(page)).created;
+
+    // A push that leaves the component there: the snapshot has the icon, the page gets the thumbnail back.
+    await page.locator('#other').click();
+    await expect(page.locator('#other-page')).toBeVisible();
+    expect(await history()).toContain('photo.png');
+    expect(await history()).not.toContain('blob:');
+    await expect.poll(() => media(upload)).toEqual([url]);
+
+    await page.locator('#next').click();
+    await expect(page.locator('#next-page')).toBeVisible();
+    expect(await history()).not.toContain('blob:');
+    await expect.poll(async () => (await blobs(page)).revoked).toEqual([url]);
+    await page.goBack();
+    await expect(upload.input).toBeAttached();
+    await expect(upload.list).toBeHidden();
+    await expect(page.locator('img')).toHaveCount(0);
+    await upload.input.setInputFiles([photo('again.png')]);
+    await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/)]);
+    expect(messages).toEqual([]);
+  });
 });

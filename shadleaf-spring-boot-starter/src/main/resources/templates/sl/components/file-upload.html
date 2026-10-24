@@ -13,8 +13,8 @@
       <code>sl:attachment</code> with a remove button, and a file that does not match <code>accept</code> or is
       larger than <code>max-size</code> shows as an error. When the form is sent with htmx (2 or 4), each file shows its
       upload progress, then that the server is processing it, and an error if the request fails; a Cancel button
-      stops the upload. Without it, the Browse button still picks files. The server checks the files
-      anyway.</sl:description>
+      stops the upload. With <code>previews</code>, a picked image shows a thumbnail. Without JavaScript, the Browse
+      button still picks files. The server checks the files anyway.</sl:description>
     <sl:prop name="multiple" type="boolean">Take more than one file. Picking or dropping files adds them to the
       ones already there.</sl:prop>
     <sl:prop name="accept">The file types to take, as the input's <code>accept</code>: extensions
@@ -24,6 +24,9 @@
       <code>500KB</code>. A larger file is not added.</sl:prop>
     <sl:prop name="level" type="number">Makes the title a heading of this level (<code>role="heading"</code>).
       </sl:prop>
+    <sl:prop name="previews" type="boolean">Show a thumbnail of each picked image (up to 20 MB, no SVG) instead of
+      the file icon. The thumbnail is a <code>blob:</code> URL: a Content-Security-Policy must allow it in
+      <code>img-src</code>, or the icon stays.</sl:prop>
     <sl:prop name="browse-label">The text of the Browse button. Defaults to "Browse files", or "Browse" without
       <code>multiple</code>.</sl:prop>
   </sl:props>
@@ -40,7 +43,10 @@
   rendered with. Without JavaScript the list stays hidden.
 
   While an htmx request sends the files, slFileUpload sets data-uploading on the root: the Cancel button takes the
-  Browse label's place (the CSS shows one of them), and the attachments show their progress. */-->
+  Browse label's place (the CSS shows one of them), and the attachments show their progress.
+
+  With previews, a third template holds the media of an image: slFileUpload puts a clone of it, with the image's blob:
+  URL, in place of a picked image's icon once the URL has loaded. Without it there are no previews. */-->
 <div th:fragment="file-upload"
      th:with="slFileUploadAttrs=${#slFields.control(attrs.without('class', 'classappend'), slField)},
               slFileUploadId=${#slFields.controlId(slFileUploadAttrs, 'sl-file-upload-')},
@@ -124,6 +130,9 @@
       <sl:attachment-action th:aria-label="#{sl.file-upload.dismiss('{0}')}"><sl:icon name="x"/></sl:attachment-action>
     </sl:attachment-actions>
   </sl:attachment></li></template>
+  <template th:if="${props.previews}"
+            class="file-upload-template"
+            data-kind="image"><sl:attachment-media variant="image"><img alt=""></sl:attachment-media></template>
 </div>
 </body>
 </html>

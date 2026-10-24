@@ -36,6 +36,17 @@ scenarios:
     form:
       values: {uploadCardFiles: []}
 
+  - id: previews
+    title: Image previews
+    description: With previews, a picked image shows a thumbnail instead of the file icon, from a blob URL; other files keep theirs. A Content-Security-Policy must allow blob in img-src.
+    source: |-
+      <sl:file-upload th:field="*{uploadPhotos}" multiple accept="image/*,.pdf" max-size="10MB" previews>
+        <sl:slot name="media"><sl:icon name="images"/></sl:slot>
+        <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+      </sl:file-upload>
+    form:
+      values: {uploadPhotos: []}
+
   - id: single
     title: One file
     description: Without multiple, a new file replaces the one picked before. The slots and browse-label change the icon, title and button.

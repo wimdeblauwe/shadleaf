@@ -54,7 +54,7 @@
 </div>
 
 <!-- <sl:file-upload id="files" name="files" multiple accept="image/png,image/jpeg,application/pdf"
-                max-size="10MB" level="3" class="max-w-md">
+                max-size="10MB" level="3" class="max-w-md" previews>
   <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
 </sl:file-upload> -->
 <div class="file-upload max-w-md" x-data="slFileUpload" data-max-size="10485760">
@@ -109,6 +109,11 @@
         </div>
       </div>
     </li>
+  </template>
+  <template class="file-upload-template" data-kind="image">
+    <div class="attachment-media" data-variant="image">
+      <img alt="">
+    </div>
   </template>
 </div>
 

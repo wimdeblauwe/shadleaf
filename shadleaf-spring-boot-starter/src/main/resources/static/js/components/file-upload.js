@@ -25,6 +25,13 @@
     again. After a success the swap replaces the component, as a rule; if it is still there, the files show as
     uploaded and leave the input, so they are not sent twice. The start, a failure, a cancel and a success the
     component sees are announced, never the percentages. Without htmx none of this happens: a plain POST shows nothing.
+  - previews, when the server rendered the image template (the previews prop): a picked image (image/*, not SVG, up to
+    PREVIEW_MAX_SIZE) gets a blob: URL, loaded first in an Image of its own; once it has loaded, the image media takes
+    the icon's place, in every state. One that does not load (a type the browser cannot decode, a CSP whose img-src
+    does not allow blob:) keeps its icon, and after a CSP has blocked one no other URL is made on the page. Each URL is
+    revoked when its file leaves the list (removed, replaced, the next change after an upload) and when the component
+    is destroyed. SVG gets none: a blob: URL has the page's origin, and an SVG opened from it ("Open image in new
+    tab") would run its script there. htmx's history snapshot gets the icons back: it would hold dead URLs.
   The messages arrive with a plain {0} (and {1}) in them, which this fills in.
 */
 import {listener} from '../popup.js';
@@ -32,6 +39,11 @@ import {abortRequest, watchUploads} from '../htmx-uploads.js';
 
 const ANNOUNCE_DELAY_MS = 100;
 const UNITS = ['byte', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte'];
+// Larger images keep their icon: decoding a big photo takes a lot of memory and time.
+const PREVIEW_MAX_SIZE = 20 * 1024 * 1024;
+
+// Set once a Content-Security-Policy blocked a blob: image: it blocks every other one on the page.
+let blobImagesBlocked = false;
 
 export default function fileUpload() {
   return {
@@ -47,6 +59,7 @@ export default function fileUpload() {
       const status = root.querySelector(':scope > .file-upload-status');
       const fileTemplate = root.querySelector(':scope > template[data-kind="file"]');
       const rejectedTemplate = root.querySelector(':scope > template[data-kind="rejected"]');
+      const imageTemplate = root.querySelector(':scope > template[data-kind="image"]');
       const cancel = root.querySelector(':scope > .file-upload-dropzone > .empty-content > .file-upload-cancel');
       const cleanups = [];
       const listen = listener(cleanups);
@@ -83,6 +96,75 @@ export default function fileUpload() {
 
       const names = items => new Intl.ListFormat(language(), {type: 'conjunction'})
           .format(items.map(item => item.name));
+
+      // The previews by file (keyed as same() compares them: the input may hand out other File objects for the same
+      // files): the blob: URL, and whether it has loaded. A failed one keeps its entry without a URL, so it is not
+      // tried again.
+      const previews = new Map();
+      const previewKey = file => `${file.name}\u0000${file.size}\u0000${file.lastModified}`;
+      const previewed = new WeakMap(); // a file's list item → its key
+
+      const showPreview = (element, url) => {
+        const media = imageTemplate.content.firstElementChild.cloneNode(true);
+        media.querySelector('img').src = url;
+        element.querySelector('.attachment-media').replaceWith(media);
+      };
+
+      const preview = (element, file) => {
+        if (!imageTemplate) {
+          return;
+        }
+        const key = previewKey(file);
+        let entry = previews.get(key);
+        if (!entry) {
+          const type = (file.type ?? '').toLowerCase();
+          if (blobImagesBlocked || !type.startsWith('image/') || type === 'image/svg+xml'
+              || file.size > PREVIEW_MAX_SIZE) {
+            return;
+          }
+          entry = {url: URL.createObjectURL(file), loaded: false};
+          previews.set(key, entry);
+          const probe = new Image();
+          probe.decoding = 'async';
+          probe.addEventListener('load', () => {
+            if (previews.get(key) !== entry) {
+              return;
+            }
+            entry.loaded = true;
+            list.querySelectorAll(':scope > .file-upload-item[data-kind="file"]').forEach(other => {
+              if (previewed.get(other) === key) {
+                showPreview(other, entry.url);
+              }
+            });
+          }, {once: true});
+          probe.addEventListener('error', () => {
+            if (previews.get(key) !== entry) {
+              return;
+            }
+            URL.revokeObjectURL(entry.url);
+            entry.url = undefined;
+          }, {once: true});
+          probe.src = entry.url;
+        }
+        previewed.set(element, key);
+        if (entry.loaded) {
+          showPreview(element, entry.url);
+        }
+      };
+
+      // Revokes the URLs of the files no longer listed (all of them, with none listed).
+      const prunePreviews = (listed = []) => {
+        const keys = new Set(listed.map(previewKey));
+        for (const [key, entry] of previews) {
+          if (!keys.has(key)) {
+            if (entry.url) {
+              URL.revokeObjectURL(entry.url);
+            }
+            previews.delete(key);
+          }
+        }
+      };
+      cleanups.push(() => prunePreviews());
 
       const item = (template, file, index, reason) => {
         const element = template.content.firstElementChild.cloneNode(true);
@@ -132,15 +214,21 @@ export default function fileUpload() {
 
       const render = () => {
         list.replaceChildren(
-            ...files.map((file, index) => item(fileTemplate, file, index)),
+            ...files.map((file, index) => {
+              const element = item(fileTemplate, file, index);
+              preview(element, file);
+              return element;
+            }),
             ...uploaded.map((file, index) => {
               const element = item(fileTemplate, file, index);
               element.dataset.uploaded = 'true';
               element.querySelector('.attachment-actions').remove();
+              preview(element, file);
               return element;
             }),
             ...rejected.map(({file, reason}, index) => item(rejectedTemplate, file, index, reason)));
         list.hidden = list.children.length === 0;
+        prunePreviews([...files, ...uploaded]);
         paint();
       };
 
@@ -300,6 +388,26 @@ export default function fileUpload() {
         }
         render();
       });
+
+      if (imageTemplate) {
+        listen(document, 'securitypolicyviolation', event => {
+          if (event.blockedURI.startsWith('blob') && event.effectiveDirective.startsWith('img-src')) {
+            blobImagesBlocked = true;
+          }
+        });
+        // The snapshot is taken right after this event, as markup: it gets the icons, which the page gets back after
+        // it, when the swap that follows has left the component there.
+        listen(document, 'htmx:beforeHistorySave', () => {
+          const icon = fileTemplate.content.querySelector('.attachment-media');
+          list.querySelectorAll(':scope > .file-upload-item > .attachment > .attachment-media[data-variant="image"]')
+              .forEach(media => media.replaceWith(icon.cloneNode(true)));
+          setTimeout(() => {
+            if (root.isConnected) {
+              render();
+            }
+          });
+        });
+      }
 
       // A request body carries the files when it holds a file of the input's under its name.
       const carries = body => body instanceof FormData && input.name !== '' && files.length > 0

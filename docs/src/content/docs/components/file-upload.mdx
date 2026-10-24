@@ -79,6 +79,34 @@ Without `multiple`, the title and button say so ("Upload a file", "Browse"). The
 
 <ComponentPreview id="file-upload--single" />
 
+## Image previews
+
+With `previews`, a picked or dropped image shows a thumbnail in place of the file icon. It stays through the upload,
+dimmed while the file is sent, processed, or failed, as an [attachment's image](../attachment/#states) is.
+
+<ComponentPreview id="file-upload--previews" />
+
+- **Which files.** Images the browser can show (`image/*`), up to 20 MB: decoding a larger photo takes much memory and
+  time. A file the browser cannot decode (HEIC, outside Safari) keeps its icon, and no broken image shows: the
+  thumbnail takes the icon's place only once it has loaded. SVG keeps its icon too. Shown in an `<img>` an SVG runs
+  no script, but its `blob:` URL has the page's origin, and opened from it ("Open image in new tab") it would.
+- **The image.** Its `alt` is empty: the file's name is right beside it.
+- **The URLs.** Each thumbnail is a `blob:` URL (`URL.createObjectURL`), made in the browser: the file is not sent
+  for it. It is revoked when the file leaves the list (removed, replaced, the next change after an upload), and when
+  the component is swapped out. A page htmx saves in its history gets the icons back, so it holds no URL that no
+  longer works.
+
+### Content-Security-Policy
+
+A policy without `img-src`, or with `img-src 'self'`, blocks `blob:` images, so add it:
+
+```text
+img-src 'self' blob:
+```
+
+Without it the files keep their icons and the upload works as before. The browser reports the blocked image in the
+console; after that, the page makes no more previews. See [Content-Security-Policy](../../guides/csp/).
+
 ## Errors
 
 A second submit renders the form again with the binding's errors, as for any field. The input is marked
@@ -155,11 +183,6 @@ Without htmx, a plain POST, nothing of this happens: the browser shows its own p
 
 Spring Boot answers a request larger than `spring.servlet.multipart.max-request-size` with an error, which shows as a
 failed upload: set the limits to what the form may send.
-
-## Not yet
-
-- **Image previews.** A preview of a picked image needs a `blob:` URL, which a strict Content Security Policy blocks
-  unless its `img-src` allows `blob:`. They will come as an option.
 
 ## Attributes
 
