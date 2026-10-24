@@ -158,6 +158,55 @@ select.
 - The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
   item at once, as on any select, where Radix opens the list. See [Select](https://shadleaf.dev/0.11.0-SNAPSHOT/components/select.md#left-out).
 
+### Calendar is drawn over date inputs
+
+`<sl:calendar>` holds its value in `<input type="date">` elements, so `th:field` binds it and the form submits ISO
+dates. A small Alpine component draws the month over them; without Alpine the date inputs show.
+
+```html
+<!-- shadcn: <Calendar mode="single" selected={date} onSelect={setDate}/> -->
+<sl:calendar th:field="*{dueDate}"/>
+
+<!-- shadcn: <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2}/> -->
+<sl:calendar aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:calendar>
+```
+
+- No `mode`: one date input is a single date, two (start and end) are a range. No `mode="multiple"` yet.
+- No `selected`/`onSelect`: `th:field` renders the value, and the input fires `change`.
+- `disabled` disables the whole calendar, as on an input; the days that cannot be picked are `disabled-dates`
+  (`sat,sun,2026-12-24..2026-12-31`), plus the inputs' `min` and `max`.
+- The page's locale sets the first day of the week and the week numbering; `week-starts-on` overrides the first day.
+- No `timeZone`, `buttonVariant`, `classNames`, `components` or `formatters`. See
+  [Calendar](https://shadleaf.dev/0.11.0-SNAPSHOT/components/calendar.md#left-out).
+
+### Date picker is a component
+
+shadcn has no date picker component: its docs compose a `Popover`, a `Button` and a `Calendar`, and the app's own
+state updates the button and closes the popover. `<sl:date-picker>` is that composition as one component; its
+attributes go to the calendar inside.
+
+```html
+<!-- shadcn: <Popover><PopoverTrigger asChild><Button variant="outline">{date ? format(date, "PPP") : "Pick a date"}
+     </Button></PopoverTrigger><PopoverContent className="w-auto p-0" align="start">
+     <Calendar mode="single" selected={date} onSelect={setDate}/></PopoverContent></Popover> -->
+<sl:date-picker th:field="*{dueDate}"/>
+
+<!-- shadcn: the same with <Calendar mode="range" numberOfMonths={2} .../> -->
+<sl:date-picker aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:date-picker>
+```
+
+- The button's text is formatted in the page's locale, by `format` (`Intl`'s `dateStyle`: `long` is close to
+  date-fns' `PPP`), not by a date-fns pattern. A range shows both ends with ` – ` between them.
+- A pick closes the popover: for a range, the second pick.
+- It needs JavaScript; without it the popover holds the bare date inputs.
+- The typed-input, time, natural language and presets demos have no counterpart yet.
+
 ### Accordion and collapsible are details elements
 
 Each accordion item and each collapsible is a `<details>` element with the trigger as its `<summary>`, so they need
