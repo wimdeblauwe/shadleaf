@@ -38,7 +38,6 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 - [Radio Group](https://shadleaf.dev/0.11.0-SNAPSHOT/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field.
 - [Switch](https://shadleaf.dev/0.11.0-SNAPSHOT/components/switch.md): An on/off control, bound to a boolean form field with th:field.
 - [Calendar](https://shadleaf.dev/0.11.0-SNAPSHOT/components/calendar.md): shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
-- [Date Picker](https://shadleaf.dev/0.11.0-SNAPSHOT/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
 
 ### Overlays
 

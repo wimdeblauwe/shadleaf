@@ -1024,63 +1024,6 @@
           }
         } ]
       }, {
-        "name" : "sl:date-picker",
-        "description" : "A button showing the chosen date that opens a `sl:calendar` in a popover: shadcn/ui's date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).",
-        "attributes" : [ {
-          "name" : "placeholder",
-          "description" : "The button's text while no date is chosen. By default \"Pick a date\".",
-          "value" : {
-            "kind" : "plain",
-            "required" : false
-          }
-        }, {
-          "name" : "format",
-          "description" : "How the button shows the date, in the page's locale: as `Intl.DateTimeFormat`'s `dateStyle` and Java's `FormatStyle` (`10/23/26`, `Oct 23, 2026`, `October 23, 2026`, `Friday, October 23, 2026`).",
-          "value" : {
-            "kind" : "plain",
-            "type" : "enum",
-            "required" : false
-          },
-          "values" : [ {
-            "name" : "short"
-          }, {
-            "name" : "medium"
-          }, {
-            "name" : "long"
-          }, {
-            "name" : "full"
-          } ],
-          "default" : "long"
-        }, {
-          "name" : "popover-id",
-          "description" : "The popover's id, which the button points at with `popovertarget`. By default a generated one (`sl-date-picker-` and eight random characters).",
-          "value" : {
-            "kind" : "plain",
-            "required" : false
-          }
-        }, {
-          "name" : "th:placeholder",
-          "description" : "`placeholder` from a Thymeleaf expression, e.g. `th:placeholder=\"${...}\"`.",
-          "value" : {
-            "kind" : "expression",
-            "required" : false
-          }
-        }, {
-          "name" : "th:format",
-          "description" : "`format` from a Thymeleaf expression, e.g. `th:format=\"${...}\"`.",
-          "value" : {
-            "kind" : "expression",
-            "required" : false
-          }
-        }, {
-          "name" : "th:popover-id",
-          "description" : "`popover-id` from a Thymeleaf expression, e.g. `th:popover-id=\"${...}\"`.",
-          "value" : {
-            "kind" : "expression",
-            "required" : false
-          }
-        } ]
-      }, {
         "name" : "sl:dialog",
         "description" : "A modal dialog on the native `dialog` element: the page behind it is inert, Escape and a click outside close it, and focus returns to where it came from. Build it from `sl:dialog-header` (holding `sl:dialog-title` and `sl:dialog-description`), your content and `sl:dialog-footer`. A button opens it with `commandfor` set to the dialog's `id` and `command=\"show-modal\"`, and closes it with `command=\"close\"`; an htmx response closes it with the `sl-dialog-close` event.",
         "attributes" : [ {

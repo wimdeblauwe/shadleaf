@@ -306,31 +306,7 @@ dates. A small Alpine component draws the month over them; without Alpine the da
 - The page's locale sets the first day of the week and the week numbering; `week-starts-on` overrides the first day.
 - No `timeZone`, `buttonVariant`, `classNames`, `components` or `formatters`. See
   [Calendar](https://shadleaf.dev/0.11.0-SNAPSHOT/components/calendar.md#left-out).
-
-#### Date picker is a component
-
-shadcn has no date picker component: its docs compose a `Popover`, a `Button` and a `Calendar`, and the app's own
-state updates the button and closes the popover. `<sl:date-picker>` is that composition as one component; its
-attributes go to the calendar inside.
-
-```html
-<!-- shadcn: <Popover><PopoverTrigger asChild><Button variant="outline">{date ? format(date, "PPP") : "Pick a date"}
-     </Button></PopoverTrigger><PopoverContent className="w-auto p-0" align="start">
-     <Calendar mode="single" selected={date} onSelect={setDate}/></PopoverContent></Popover> -->
-<sl:date-picker th:field="*{dueDate}"/>
-
-<!-- shadcn: the same with <Calendar mode="range" numberOfMonths={2} .../> -->
-<sl:date-picker aria-label="Stay" number-of-months="2">
-  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
-  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
-</sl:date-picker>
-```
-
-- The button's text is formatted in the page's locale, by `format` (`Intl`'s `dateStyle`: `long` is close to
-  date-fns' `PPP`), not by a date-fns pattern. A range shows both ends with ` – ` between them.
-- A pick closes the popover: for a range, the second pick.
-- It needs JavaScript; without it the popover holds the bare date inputs.
-- The typed-input, time, natural language and presets demos have no counterpart yet.
+- There is no date picker (a calendar in a popover) yet.
 
 #### Accordion and collapsible are details elements
 
