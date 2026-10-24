@@ -36,6 +36,8 @@ example relies on a utility class to change a component, Shadleaf has a prop ins
 | shadcn/ui | Shadleaf |
 | --- | --- |
 | `<CardHeader className="border-b">` | `<sl:card-header border>` |
+| `<Empty className="border border-dashed">` | `<sl:empty border>` |
+| `<Spinner className="size-8" />` | `<sl:spinner size="32"/>` |
 | `<Skeleton className="h-4 w-full" />` | `<sl:skeleton/>` (a line is the default), `shape="circle"` for an avatar |
 
 Your own classes still work: `class` is appended to the component's own, so `class="w-64"` sizes a skeleton when your
@@ -371,6 +373,36 @@ hidden screen-reader text is never read. The labels are messages (`sl.pagination
 Previous's `text`. The data table's footer pieces are components: `sl:pagination-summary` ("11–20 of 270") and
 `sl:pagination-size` (a menu of links rather than a select). See [Pagination](https://shadleaf.dev/0.11.0-SNAPSHOT/components/pagination.md).
 
+### Chart: parts with props instead of Recharts JSX
+
+`<sl:chart th:data="${rows}">` is `ChartContainer` with the chart inside it, and its parts are Recharts' components
+with shadcn's settings: `sl:chart-grid` (`CartesianGrid vertical={false}`), `sl:chart-x-axis` and `sl:chart-y-axis`
+(no tick or axis lines), `sl:chart-tooltip` (`ChartTooltip` with `ChartTooltipContent`), `sl:chart-legend` and the
+series, `sl:chart-bar`, `sl:chart-line` and `sl:chart-area`. Their props are Recharts' and shadcn's in kebab case
+(`indicator`, `hide-label`, `label-key`, `tick-margin`, `radius`; `stackId` is `stack`, `type` is `curve`, `dot` is
+`dots`). The chart type follows the series: there is no `BarChart` to pick. What differs:
+
+- **No `ChartConfig`.** A series' `label` and `color` sit on its part, and `color-dark` replaces the config's
+  `theme`, written as `light-dark()`. A series without a colour takes the next `--chart-N`; shadcn's examples name
+  them in the config.
+- **No `ChartStyle`.** shadcn writes the `--color-<key>` properties into a `<style>` element, which a strict
+  Content-Security-Policy blocks: its chart loses its colours. Shadleaf sets them through CSSOM. A key is therefore
+  checked to be a CSS identifier.
+- **Named formats instead of functions.** `tickFormatter`, `formatter` and `labelFormatter` are `format`,
+  `value-format` and `label-format` with a name (`month-short`, `compact`, `currency`), written with `Intl` in the
+  page's language. Dates are read by their Java type, not by `new Date()`, so a `LocalDate` never shifts a day.
+- **The chart's name is an `aria-label`**, not Recharts' `title`: a browser shows an svg's `<title>` as a native
+  tooltip over the styled one. And the tooltip keeps a gap between a series' name and its value, which shadcn's lets
+  touch once the tooltip is wider than its minimum.
+- **A visible focus ring.** shadcn hides the chart's (`outline-hidden` on `.recharts-surface`); the chart takes the
+  focus for its arrow keys, so each skin draws one.
+- **Recharts 3.10 on Preact**, not React, and not the 3.8 shadcn pins: the script is smaller, and 3.10 fixes a line
+  drawn only partway with reduced motion.
+- **Not there yet:** pie, radar and radial charts, horizontal bars, gradients, icons in the tooltip and legend, and
+  custom tooltip or legend content.
+
+See [Chart](https://shadleaf.dev/0.11.0-SNAPSHOT/components/chart.md).
+
 ### Sidebar: one element instead of a Sheet on a phone
 
 shadcn's `Sidebar` renders a `Sheet` on a phone and a separate sidebar on a desktop, chosen in the browser by
@@ -493,7 +525,7 @@ takes keyboard focus, when it is a link (`as="a"`).
 ### Accessibility additions
 
 - `<sl:card-title level="3">` is announced as a heading, so screen reader users can jump between cards. Without a
-  `level` it is plain text, as in shadcn.
+  `level` it is plain text, as in shadcn. The same goes for `<sl:empty-title>`.
 - The avatar is hidden from assistive technology unless it has a `label`, as it usually sits next to the person's
   name. With one, it is announced as a single image with that name.
 - The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
@@ -599,5 +631,7 @@ takes keyboard focus, when it is a link (`as="a"`).
 - A read-only input or textarea gets a muted background and no shadow; shadcn draws it as an editable one.
 - In Windows' high-contrast mode a disabled control turns the system's grey text colour (`GrayText`) instead of
   fading.
-- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
-  `Spinner` for this.
+- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. In shadcn you put a
+  `Spinner` in the button and disable it yourself.
+- `<sl:spinner>` turns slower, not still, when the user asks for reduced motion; shadcn's keeps spinning at full
+  speed. Its name, "Loading", is a message (`sl.spinner.label`) you can translate.

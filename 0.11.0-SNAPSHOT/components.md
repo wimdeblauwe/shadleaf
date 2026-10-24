@@ -46,6 +46,8 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Alert](https://shadleaf.dev/0.11.0-SNAPSHOT/components/alert.md): A callout for a message the user should notice.
 - [Toast](https://shadleaf.dev/0.11.0-SNAPSHOT/components/toast.md): A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
 - [Skeleton](https://shadleaf.dev/0.11.0-SNAPSHOT/components/skeleton.md): A placeholder that pulses while content loads.
+- [Spinner](https://shadleaf.dev/0.11.0-SNAPSHOT/components/spinner.md): A spinning icon that says something is loading.
+- [Empty](https://shadleaf.dev/0.11.0-SNAPSHOT/components/empty.md): What a list, a table, a search or a page shows when there is nothing to show yet.
 
 ## Data
 
@@ -53,6 +55,7 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Pagination](https://shadleaf.dev/0.11.0-SNAPSHOT/components/pagination.md): Links to the other pages of a list, built from the Spring Data Page the controller returns.
 - [Query params](https://shadleaf.dev/0.11.0-SNAPSHOT/components/query-params.md): Hidden inputs that keep a table's order, page size and filters when a search form is sent.
 - [Month view](https://shadleaf.dev/0.11.0-SNAPSHOT/components/month-view.md): A month rendered on the server, with content of your own per day and a link per day; no picking.
+- [Chart](https://shadleaf.dev/0.11.0-SNAPSHOT/components/chart.md): shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
 
 ## Application shell
 
