@@ -1,0 +1,49 @@
+/*
+  File upload: structure only. The drop zone is drawn by the empty state's skin rules; the gap, the focus ring on the
+  Browse label, the error and the dragging look are identity and live in the skins.
+
+  The input is visually hidden (sl-sr-only) but takes the focus: the root is its containing block, so scrolling it
+  into view scrolls to the component. The list is hidden until slFileUpload puts files in it; its display must not
+  override hidden. A disabled input fades its Browse label, which stops opening the picker; the title and description
+  keep their contrast, as a field's description does. In forced-colors mode the label and input turn GrayText instead
+  of fading, and as a ring (a box-shadow) is gone there, a focused input's label gets an outline.
+
+  The Cancel button shows only while slFileUpload sends the files (data-uploading), in the Browse label's place:
+  without JavaScript it never does. The files' remove buttons are hidden meanwhile.
+*/
+@layer components {
+  .file-upload {
+    @apply relative flex w-full min-w-0 flex-col;
+  }
+
+  .file-upload-list {
+    @apply m-0 min-w-0 list-none p-0;
+  }
+
+  .file-upload-list:not([hidden]) {
+    @apply flex flex-col;
+  }
+
+  .file-upload-item {
+    @apply flex min-w-0;
+  }
+
+  .file-upload-input:disabled {
+    @apply forced-colors:text-[GrayText];
+  }
+
+  .file-upload:has(> .file-upload-input:disabled) > .file-upload-dropzone > .empty-content > .file-upload-browse {
+    @apply pointer-events-none opacity-50
+      forced-colors:border-[GrayText] forced-colors:text-[GrayText] forced-colors:opacity-100;
+  }
+
+  .file-upload:has(> .file-upload-input:focus-visible) > .file-upload-dropzone > .empty-content > .file-upload-browse {
+    @apply forced-colors:outline-2 forced-colors:outline-offset-2 forced-colors:outline-solid;
+  }
+
+  .file-upload:not([data-uploading]) > .file-upload-dropzone > .empty-content > .file-upload-cancel,
+  .file-upload[data-uploading] > .file-upload-dropzone > .empty-content > .file-upload-browse,
+  .file-upload[data-uploading] > .file-upload-list > .file-upload-item > .attachment > .attachment-actions {
+    @apply hidden;
+  }
+}

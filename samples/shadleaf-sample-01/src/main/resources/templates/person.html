@@ -40,11 +40,19 @@
   <!--/* The person's files, which are already on the server: sl:attachment in its plain done state. The trigger
     covers each card: an image opens in a dialog, any other file in the browser. The download action sits above it,
     out of the body's boost (hx-boost="false"): htmx boosts a local link without a target, download or not, and would
-    swap the file into the page. The trigger link opens a new tab (target), which htmx leaves alone. */-->
-  <sl:card th:unless="${confirm}" class="person-card">
+    swap the file into the page. The trigger link opens a new tab (target), which htmx leaves alone.
+
+    Below them, a form to upload more (sl:file-upload). It posts with htmx (hx-post), and the answer is this card alone
+    ("person :: files"), with the form empty again and the first new file's download button focused, or with the
+    errors (sl:form-errors autofocus puts the focus on the file input). While it posts, each file shows how much of it
+    is sent, then "Processing" (the local profile holds the answer back for that), and a Cancel button stops it; the
+    toast and the new list say it worked. A picked image shows a thumbnail (previews): this sample sends no
+    Content-Security-Policy, so its blob: URL is allowed. Without JavaScript it is a plain multipart POST, which
+    redirects back here. */-->
+  <sl:card th:unless="${confirm}" th:fragment="files" id="person-files" class="person-card">
     <sl:card-header>
       <sl:card-title level="2">Files</sl:card-title>
-      <sl:card-description>Open a file, or download it.</sl:card-description>
+      <sl:card-description>Open a file, download it, or upload more.</sl:card-description>
     </sl:card-header>
     <sl:card-content>
       <ul class="person-files">
@@ -62,6 +70,7 @@
             </sl:attachment-content>
             <sl:attachment-actions>
               <sl:attachment-action as="a" th:href="${fileUrl}" download hx-boost="false"
+                                    th:autofocus="${file.name == focusFile}"
                                     th:aria-label="|Download ${file.name}|"><sl:icon name="download"/></sl:attachment-action>
             </sl:attachment-actions>
             <sl:attachment-trigger th:if="${file.image}" th:commandfor="${previewId}" command="show-modal"
@@ -78,6 +87,23 @@
           </sl:dialog>
         </li>
       </ul>
+
+      <form class="form" th:object="${upload}" th:action="@{/people/{id}/files(id=${person.id})}" method="post"
+            enctype="multipart/form-data" hx:post="@{/people/{id}/files(id=${person.id})}" hx-target="#person-files"
+            hx-swap="outerHTML">
+        <sl:form-errors autofocus/>
+        <sl:field th:field="*{files}">
+          <sl:field-label>Upload files</sl:field-label>
+          <sl:file-upload multiple accept="image/*,.pdf,.txt,.csv" max-size="5MB" previews>
+            <sl:slot name="title">Drop files here</sl:slot>
+            <sl:slot name="description">Images, PDF, text or CSV, up to 5 MB each</sl:slot>
+          </sl:file-upload>
+          <sl:field-error/>
+        </sl:field>
+        <div class="row">
+          <sl:button type="submit">Upload</sl:button>
+        </div>
+      </form>
     </sl:card-content>
   </sl:card>
 

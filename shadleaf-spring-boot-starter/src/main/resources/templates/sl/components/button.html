@@ -10,8 +10,10 @@
     <sl:prop name="size" default="default" values="xs sm default lg icon icon-xs icon-sm icon-lg">
       Size of the button. The <code>icon</code> sizes are square, for a button that holds only an icon, and need an
       <code>aria-label</code>.</sl:prop>
-    <sl:prop name="as" default="button" values="button a">Element to render: a <code>button</code>, or an anchor
-      (<code>a</code>) for navigation.</sl:prop>
+    <sl:prop name="as" default="button" values="button a label">Element to render: a <code>button</code>, an anchor
+      (<code>a</code>) for navigation, or a <code>label</code> for a visually hidden control (<code>for</code>), as
+      <code>sl:file-upload</code>'s Browse button for its file input. A label takes no focus and no
+      <code>disabled</code>: the control does.</sl:prop>
     <sl:prop name="type" default="button" values="button submit reset">Submit behaviour. Defaults to
       <code>button</code>, unlike HTML, so a button in a form never submits by accident.</sl:prop>
     <sl:prop name="disabled" type="boolean">Disable the button. A disabled anchor loses its <code>href</code> and
@@ -22,7 +24,7 @@
 </head>
 <body>
 <!--
-  Two branches for `as`, sharing their content through the button-content fragment: Thymeleaf cannot choose an
+  A branch per `as`, sharing their content through the button-content fragment: Thymeleaf cannot choose an
   element name. The call is spelled out in full, because ~{::button-content} would look in the calling template.
 -->
 <th:block th:fragment="button">
@@ -39,7 +41,7 @@
     A disabled anchor has no href, so it cannot be followed, and leaves the tab order. role="link" keeps it announced
     as a (disabled) link: without an href it would be a generic element, which aria-disabled does not apply to.
   */-->
-  <a th:unless="${props.as == 'button'}"
+  <a th:if="${props.as == 'a'}"
      th:with="slInactive=${props.disabled or props.loading}"
      class="button"
      th:attr="data-variant=${props.unlessDefault('variant')},
@@ -50,6 +52,13 @@
               tabindex=${slInactive ? '-1' : null}"
      sl:attrs="${slInactive ? attrs.without('href') : attrs}"
      th:insert="~{sl/components/button :: button-content}"></a>
+  <label th:if="${props.as == 'label'}"
+         class="button"
+         th:attr="data-variant=${props.unlessDefault('variant')},
+                  data-size=${props.unlessDefault('size')},
+                  aria-busy=${props.loading ? 'true' : null}"
+         sl:attrs
+         th:insert="~{sl/components/button :: button-content}"></label>
 </th:block>
 
 <!--

@@ -1,0 +1,85 @@
+# Scenarios for the file upload's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# The look follows shadcn/ui's file-upload card (blocks/preview/cards/file-upload.tsx): an outlined empty state with a
+# Browse button. The list of files is drawn in the browser, so the previews show it only after picking or dropping.
+# Field names are unique across the showcase, as th:field turns them into ids.
+component: file-upload
+scenarios:
+  - id: default
+    title: File upload
+    description: Drop files on it or browse. Each file shows as an attachment with a remove button; a file of another type or larger than max-size shows as an error.
+    source: |-
+      <sl:field th:field="*{uploadAttachments}">
+        <sl:field-label>Attachments</sl:field-label>
+        <sl:file-upload multiple accept="image/png,image/jpeg,application/pdf" max-size="10MB">
+          <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
+        </sl:file-upload>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {uploadAttachments: []}
+
+  - id: card
+    title: In a card
+    description: As shadcn's file upload card.
+    source: |-
+      <sl:card>
+        <sl:card-header>
+          <sl:card-title>File Upload</sl:card-title>
+          <sl:card-description>Drag and drop or browse</sl:card-description>
+        </sl:card-header>
+        <sl:card-content>
+          <sl:file-upload th:field="*{uploadCardFiles}" multiple max-size="10MB">
+            <sl:slot name="description">PNG, JPG, PDF up to 10MB</sl:slot>
+          </sl:file-upload>
+        </sl:card-content>
+      </sl:card>
+    form:
+      values: {uploadCardFiles: []}
+
+  - id: previews
+    title: Image previews
+    description: With previews, a picked image shows a thumbnail instead of the file icon, from a blob URL; other files keep theirs. A Content-Security-Policy must allow blob in img-src.
+    source: |-
+      <sl:file-upload th:field="*{uploadPhotos}" multiple accept="image/*,.pdf" max-size="10MB" previews>
+        <sl:slot name="media"><sl:icon name="images"/></sl:slot>
+        <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+      </sl:file-upload>
+    form:
+      values: {uploadPhotos: []}
+
+  - id: single
+    title: One file
+    description: Without multiple, a new file replaces the one picked before. The slots and browse-label change the icon, title and button.
+    source: |-
+      <sl:file-upload th:field="*{uploadAvatar}" accept="image/*" max-size="2MB" browse-label="Choose a photo">
+        <sl:slot name="media"><sl:icon name="image"/></sl:slot>
+        <sl:slot name="title">Profile photo</sl:slot>
+        <sl:slot name="description">An image of up to 2 MB</sl:slot>
+      </sl:file-upload>
+    form:
+      values: {uploadAvatar: null}
+
+  - id: invalid
+    title: With errors
+    description: The server checks the files anyway. A field error marks the input aria-invalid and the drop zone's border destructive.
+    source: |-
+      <sl:field th:field="*{uploadContract}">
+        <sl:field-label>Signed contract</sl:field-label>
+        <sl:file-upload accept=".pdf">
+          <sl:slot name="description">A PDF</sl:slot>
+        </sl:file-upload>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {uploadContract: null}
+      errors: {uploadContract: must not be empty}
+
+  - id: disabled
+    title: Disabled
+    description: A disabled input fades the Browse button, and the component takes no files.
+    source: |-
+      <sl:file-upload th:field="*{uploadArchive}" disabled>
+        <sl:slot name="description">Uploads are closed for this project.</sl:slot>
+      </sl:file-upload>
+    form:
+      values: {uploadArchive: null}

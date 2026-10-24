@@ -1,0 +1,176 @@
+<!-- <sl:file-upload id="avatar" name="avatar"/> -->
+<div class="file-upload" x-data="slFileUpload">
+  <input type="file" class="file-upload-input sl-sr-only" id="avatar" name="avatar">
+  <div class="empty file-upload-dropzone" data-border="dashed">
+    <div class="empty-header">
+      <div class="empty-media" data-variant="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </div>
+      <div class="empty-title">Upload a file</div>
+    </div>
+    <div class="empty-content">
+      <label class="button file-upload-browse" for="avatar">Browse</label>
+      <button class="button file-upload-cancel" type="button" data-variant="outline">Cancel upload</button>
+    </div>
+  </div>
+  <ul class="file-upload-list" hidden></ul>
+  <div class="file-upload-status sl-sr-only" role="status" data-message-added="Added {0}." data-message-removed="Removed {0}." data-message-rejected="Could not add {0}: {1}." data-message-uploading="Uploading {0} files." data-message-uploading-one="Uploading {0}." data-message-uploaded="Uploaded {0} files." data-message-uploaded-one="Uploaded {0}." data-message-failed="The files could not be uploaded. Try again." data-message-cancelled="Upload cancelled."></div>
+  <template class="file-upload-template" data-kind="file" data-message-uploading="Uploading · {0}" data-message-uploading-indeterminate="Uploading" data-message-processing="Processing" data-message-failed="Upload failed" data-message-done="Uploaded">
+    <li class="file-upload-item">
+      <div class="attachment" data-state="idle" data-size="sm" data-width="full">
+        <div class="attachment-media">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <div class="attachment-content">
+          <span class="attachment-title"></span>
+          <span class="attachment-description"></span>
+        </div>
+        <div class="attachment-actions">
+          <button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Remove {0}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+      </div>
+    </li>
+  </template>
+  <template class="file-upload-template" data-kind="rejected" data-message-type="File type not accepted" data-message-size="Larger than {0}" data-message-count="Only one file can be added">
+    <li class="file-upload-item">
+      <div class="attachment" data-state="error" data-size="sm" data-width="full">
+        <div class="attachment-media">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <div class="attachment-content">
+          <span class="attachment-title"></span>
+          <span class="attachment-description"></span>
+        </div>
+        <div class="attachment-actions">
+          <button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Dismiss {0}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+      </div>
+    </li>
+  </template>
+</div>
+
+<!-- <sl:file-upload id="files" name="files" multiple accept="image/png,image/jpeg,application/pdf"
+                max-size="10MB" level="3" class="max-w-md" previews>
+  <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
+</sl:file-upload> -->
+<div class="file-upload max-w-md" x-data="slFileUpload" data-max-size="10485760">
+  <input type="file" class="file-upload-input sl-sr-only" multiple accept="image/png,image/jpeg,application/pdf" aria-describedby="files-upload-description" id="files" name="files">
+  <div class="empty file-upload-dropzone" data-border="dashed">
+    <div class="empty-header">
+      <div class="empty-media" data-variant="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </div>
+      <div class="empty-title" role="heading" aria-level="3">Upload files</div>
+      <div class="empty-description" id="files-upload-description">PNG, JPG, PDF up to 10 MB</div>
+    </div>
+    <div class="empty-content">
+      <label class="button file-upload-browse" for="files">Browse files</label>
+      <button class="button file-upload-cancel" type="button" data-variant="outline">Cancel upload</button>
+    </div>
+  </div>
+  <ul class="file-upload-list" hidden></ul>
+  <div class="file-upload-status sl-sr-only" role="status" data-message-added="Added {0}." data-message-removed="Removed {0}." data-message-rejected="Could not add {0}: {1}." data-message-uploading="Uploading {0} files." data-message-uploading-one="Uploading {0}." data-message-uploaded="Uploaded {0} files." data-message-uploaded-one="Uploaded {0}." data-message-failed="The files could not be uploaded. Try again." data-message-cancelled="Upload cancelled."></div>
+  <template class="file-upload-template" data-kind="file" data-message-uploading="Uploading · {0}" data-message-uploading-indeterminate="Uploading" data-message-processing="Processing" data-message-failed="Upload failed" data-message-done="Uploaded">
+    <li class="file-upload-item">
+      <div class="attachment" data-state="idle" data-size="sm" data-width="full">
+        <div class="attachment-media">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <div class="attachment-content">
+          <span class="attachment-title"></span>
+          <span class="attachment-description"></span>
+        </div>
+        <div class="attachment-actions">
+          <button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Remove {0}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+      </div>
+    </li>
+  </template>
+  <template class="file-upload-template" data-kind="rejected" data-message-type="File type not accepted" data-message-size="Larger than {0}" data-message-count="Only one file can be added">
+    <li class="file-upload-item">
+      <div class="attachment" data-state="error" data-size="sm" data-width="full">
+        <div class="attachment-media">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <div class="attachment-content">
+          <span class="attachment-title"></span>
+          <span class="attachment-description"></span>
+        </div>
+        <div class="attachment-actions">
+          <button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Dismiss {0}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+      </div>
+    </li>
+  </template>
+  <template class="file-upload-template" data-kind="image">
+    <div class="attachment-media" data-variant="image">
+      <img alt="">
+    </div>
+  </template>
+</div>
+
+<!-- <sl:file-upload id="photo" name="photo" accept="image/*" browse-label="Choose a photo" disabled>
+  <sl:slot name="media"><sl:icon name="image"/></sl:slot>
+  <sl:slot name="title">Profile photo</sl:slot>
+</sl:file-upload> -->
+<div class="file-upload" x-data="slFileUpload">
+  <input type="file" class="file-upload-input sl-sr-only" accept="image/*" id="photo" name="photo" disabled>
+  <div class="empty file-upload-dropzone" data-border="dashed">
+    <div class="empty-header">
+      <div class="empty-media" data-variant="icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+      </div>
+      <div class="empty-title">Profile photo</div>
+    </div>
+    <div class="empty-content">
+      <label class="button file-upload-browse" for="photo">Choose a photo</label>
+      <button class="button file-upload-cancel" type="button" data-variant="outline">Cancel upload</button>
+    </div>
+  </div>
+  <ul class="file-upload-list" hidden></ul>
+  <div class="file-upload-status sl-sr-only" role="status" data-message-added="Added {0}." data-message-removed="Removed {0}." data-message-rejected="Could not add {0}: {1}." data-message-uploading="Uploading {0} files." data-message-uploading-one="Uploading {0}." data-message-uploaded="Uploaded {0} files." data-message-uploaded-one="Uploaded {0}." data-message-failed="The files could not be uploaded. Try again." data-message-cancelled="Upload cancelled."></div>
+  <template class="file-upload-template" data-kind="file" data-message-uploading="Uploading · {0}" data-message-uploading-indeterminate="Uploading" data-message-processing="Processing" data-message-failed="Upload failed" data-message-done="Uploaded">
+    <li class="file-upload-item">
+      <div class="attachment" data-state="idle" data-size="sm" data-width="full">
+        <div class="attachment-media">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <div class="attachment-content">
+          <span class="attachment-title"></span>
+          <span class="attachment-description"></span>
+        </div>
+        <div class="attachment-actions">
+          <button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Remove {0}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+      </div>
+    </li>
+  </template>
+  <template class="file-upload-template" data-kind="rejected" data-message-type="File type not accepted" data-message-size="Larger than {0}" data-message-count="Only one file can be added">
+    <li class="file-upload-item">
+      <div class="attachment" data-state="error" data-size="sm" data-width="full">
+        <div class="attachment-media">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+        </div>
+        <div class="attachment-content">
+          <span class="attachment-title"></span>
+          <span class="attachment-description"></span>
+        </div>
+        <div class="attachment-actions">
+          <button class="button attachment-action" type="button" data-variant="ghost" data-size="icon-xs" aria-label="Dismiss {0}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+          </button>
+        </div>
+      </div>
+    </li>
+  </template>
+</div>

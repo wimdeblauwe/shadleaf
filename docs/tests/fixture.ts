@@ -6,7 +6,7 @@ import themeScript from '../src/generated/theme-script.json' with {type: 'json'}
 // Fixture pages for disclosure.spec.ts, tabs.spec.ts, theme-toggle.spec.ts, avatar.spec.ts, table-htmx.spec.ts and
 // sidebar.spec.ts and layouts.spec.ts,
 // served from a made-up origin under a strict Content-Security-Policy, with the csp Alpine build (or shadleaf.js
-// without any Alpine, or no script of Shadleaf's at all) and optionally htmx. The page at / and every route get the
+// without any Alpine, or no script of Shadleaf's at all) and optionally htmx (2, or 4 for what works with both). The page at / and every route get the
 // request (URL and headers, cookies included), so a fixture can render what a server would for ?tab=... or a cookie. The
 // content goes in a <main>, unless it brings its own (wrap: false). A route can also answer with something other
 // than a page (an image), a status and after a delay. An htmx request to a route gets the route's markup alone, as a
@@ -15,8 +15,10 @@ import themeScript from '../src/generated/theme-script.json' with {type: 'json'}
 export const ORIGIN = 'http://app.test';
 const PUBLIC_DIR = join(import.meta.dirname, '..', 'public');
 const HTMX = join(import.meta.dirname, '..', 'node_modules', 'htmx.org', 'dist', 'htmx.min.js');
+const HTMX_4 = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'htmx.min.js');
 const STRICT_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'";
 const HTMX_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>`;
+const HTMX_4_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorCSS": false}'>`;
 
 type Scripts = { bundled: string, csp: string, external: string };
 const scripts = (previews as unknown as { scripts: Scripts }).scripts;
@@ -62,10 +64,13 @@ export type FixtureOptions = {
   alpine?: boolean | 'external',
   /** Milliseconds before Shadleaf's scripts are sent, so the page is parsed and painted before they run. */
   scriptDelay?: number,
-  htmx?: boolean,
+  /** Load htmx 2 (true) or htmx 4 (4). */
+  htmx?: boolean | 4,
   routes?: Routes,
   /** Where to go first, e.g. '/#refunds' or '/?tab=b'. */
   path?: string,
+  /** An img-src for the policy, e.g. "'self' blob:" (default: none, so default-src 'self' applies). */
+  imgSrc?: string,
   /** Put the theme script (sl/layout :: theme-script) first in the head, allowed by its hash. */
   theme?: boolean,
   /** Put the content in a <main> (true, the default), or straight into the body: an application shell has its own. */
@@ -82,7 +87,7 @@ export type FixtureOptions = {
 /** Serves `main` at /, and `routes` for other paths; returns what the console said (errors, warnings, CSP). */
 export async function openFixture(page: Page, main: string | ((url: URL, request: Request) => string),
     {alpine = true, htmx = false, routes = {}, path = '/', theme = false, scriptDelay = 0, wrap = true,
-      skin, stylesheet, htmlAttributes = '', bodyAttributes = ''}: FixtureOptions = {})
+      skin, stylesheet, imgSrc, htmlAttributes = '', bodyAttributes = ''}: FixtureOptions = {})
     : Promise<string[]> {
   const messages: string[] = [];
   page.on('console', message => {
@@ -98,14 +103,14 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
       + (theme ? `<script>${themeScript.script}</script>` : '')
       + `<link rel="stylesheet" href="/${skin ? previews.skins.find(s => s.name === skin)!.css : css}">`
       + (stylesheet !== undefined ? '<link rel="stylesheet" href="/application.css">' : '')
-      + (htmx ? `${HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
+      + (htmx ? `${htmx === 4 ? HTMX_4_CONFIG : HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
       + (alpine ? `<script type="module" src="/${alpine === 'external' ? scripts.external : scripts.csp}"></script>` : '')
       + `</head><body ${bodyAttributes}>${wrap ? `<main>${content}</main>` : content}</body></html>`;
   await page.route(`${ORIGIN}/**`, async route => {
     const request = route.request();
     const url = new URL(request.url());
     if (url.pathname === '/webjars/htmx.min.js') {
-      return route.fulfill({contentType: 'text/javascript', path: HTMX});
+      return route.fulfill({contentType: 'text/javascript', path: htmx === 4 ? HTMX_4 : HTMX});
     }
     if (url.pathname === '/application.css' && stylesheet !== undefined) {
       return route.fulfill({contentType: 'text/css', body: stylesheet});
@@ -120,8 +125,9 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
       }
       return route.fulfill({path: join(PUBLIC_DIR, url.pathname)});
     }
-    const headers = {'Content-Security-Policy': theme
-        ? STRICT_CSP.replace("script-src 'self'", `script-src 'self' ${themeScript.cspHash}`) : STRICT_CSP};
+    const policy = (theme ? STRICT_CSP.replace("script-src 'self'", `script-src 'self' ${themeScript.cspHash}`)
+        : STRICT_CSP) + (imgSrc ? `; img-src ${imgSrc}` : '');
+    const headers = {'Content-Security-Policy': policy};
     if (url.pathname === '/') {
       const content = typeof main === 'string' ? main
           : main(url, {url, body: request.postData() ?? '', headers: request.headers()});
