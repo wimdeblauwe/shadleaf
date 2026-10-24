@@ -513,6 +513,78 @@
     @apply -mx-1 my-1 bg-foreground/30;
   }
 
+  /*
+    Calendar, as vega's with the pencil: the navigation, the days and the month and year selects are hand-drawn
+    shapes. The picked day and the ends of a range are filled with --primary; the days between them, today and the
+    band of a range are --muted. Outside days are muted, disabled ones fade.
+  */
+  .calendar {
+    @apply bg-background p-3;
+    --cell-size: --spacing(8);
+    --cell-radius: --theme(--radius-md);
+  }
+
+  .calendar-nav-button {
+    @apply rounded-(--cell-radius) sketch-shape-sm hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  .calendar-caption,
+  .calendar-dropdowns {
+    @apply text-sm font-bold;
+  }
+
+  .calendar-dropdown {
+    @apply sketch-shape-sm border-2 border-foreground/80;
+  }
+
+  .calendar-dropdown:has(> .calendar-select:focus-visible) {
+    @apply border-ring ring-[3px] ring-ring/50;
+  }
+
+  .calendar-dropdown-label {
+    @apply h-8 pe-1 ps-2 sketch-shape-sm;
+  }
+
+  .calendar-dropdown-label > svg {
+    @apply text-muted-foreground;
+  }
+
+  .calendar-weekday,
+  .calendar-week-number {
+    @apply text-[0.8rem] font-normal text-muted-foreground;
+  }
+
+  .calendar-day-button {
+    @apply text-sm font-normal sketch-shape-sm hover:bg-muted hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  .calendar-day[data-today]:not([data-selected], [data-range-start], [data-range-end]),
+  .calendar-day[data-range-start],
+  .calendar-day[data-range-end] {
+    @apply bg-muted text-foreground after:bg-muted;
+  }
+
+  .calendar-day-button[data-outside] {
+    @apply text-muted-foreground;
+  }
+
+  .calendar-day-button[data-outside]:is([data-today], [data-range-middle], :hover) {
+    @apply text-muted-legible;
+  }
+
+  .calendar-day-button[data-range-middle] {
+    @apply bg-muted text-foreground;
+  }
+
+  .calendar-day-button[data-selected]:not([data-range-middle]) {
+    @apply bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground;
+  }
+
+  .calendar-day-button[data-disabled],
+  .calendar-day-button:disabled {
+    @apply opacity-50 forced-colors:text-[GrayText] forced-colors:opacity-100;
+  }
+
   /* Checkbox: a box with a tick drawn in it, in the pencil's colour, checked or not. */
   .checkbox {
     @apply size-4 sketch-shape-sm border-2 border-foreground/80 bg-transparent

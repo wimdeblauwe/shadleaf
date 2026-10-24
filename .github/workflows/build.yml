@@ -1,7 +1,9 @@
 name: Build
 
 on:
+  # main only: a branch with a pull request is built by the pull_request event, which would otherwise run it twice.
   push:
+    branches: [main]
   pull_request:
   # The release workflow runs it on main after setting the next development version.
   workflow_dispatch:

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Leave request', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Forms</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page>Leave request</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  <p>A range of dates in a <code>sl:calendar</code>: its two date inputs, the first and the last day, each bind a field
+    with <code>th:field</code>. The first click picks the first day, the second the last. Weekends, public holidays
+    and the days before today cannot be picked (<code>disabled-dates</code> and the inputs' <code>min</code>), and
+    the controller checks the same on the server. Without JavaScript the two date inputs show instead.</p>
+
+  <form class="form" th:object="${leaveRequest}" th:action="@{/leave}" method="post" novalidate>
+    <sl:form-errors show="all" autofocus/>
+
+    <sl:field-set>
+      <sl:field-legend variant="label">Leave period</sl:field-legend>
+      <sl:calendar aria-label="Leave period" number-of-months="2" th:disabled-dates="${closedDays}">
+        <sl:input type="date" th:field="*{firstDay}" th:min="${today}" aria-label="First day"/>
+        <sl:input type="date" th:field="*{lastDay}" th:min="${today}" aria-label="Last day"/>
+      </sl:calendar>
+      <sl:field-description>Public holidays:
+        <th:block th:each="holiday, status : ${publicHolidays}">[[${#temporals.format(holiday, 'd MMM yyyy')}]][[${
+            status.last ? '.' : ', '}]]</th:block>
+      </sl:field-description>
+    </sl:field-set>
+
+    <div class="row">
+      <sl:button type="submit">Request leave</sl:button>
+      <sl:button as="a" variant="outline" th:href="@{/leave}">Reset</sl:button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

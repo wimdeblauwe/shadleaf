@@ -1,0 +1,76 @@
+# Scenarios for the calendar's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# Ids are unique across the showcase: th:field gives the input the field's name as its id.
+component: calendar
+scenarios:
+  - id: default
+    title: Calendar
+    description: A date in a field; th:field binds the date input the calendar draws over.
+    source: |-
+      <sl:field th:field="*{dueDate}">
+        <sl:field-label>Due date</sl:field-label>
+        <sl:calendar/>
+      </sl:field>
+    form:
+      values: {dueDate: '2026-10-23'}
+
+  - id: range
+    title: Range
+    description: Two date inputs, the start and the end, make a range. Two months show side by side.
+    source: |-
+      <sl:calendar aria-label="Stay" number-of-months="2">
+        <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+        <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+      </sl:calendar>
+    form:
+      values: {checkIn: '2026-10-12', checkOut: '2026-10-21'}
+
+  - id: dropdown
+    title: Month and year selects
+    description: caption-layout="dropdown" for dates far from today, such as a date of birth.
+    source: |-
+      <sl:field th:field="*{birthDate}">
+        <sl:field-label>Date of birth</sl:field-label>
+        <sl:calendar caption-layout="dropdown" start-month="1926-01" end-month="2026-12"/>
+      </sl:field>
+    form:
+      values: {birthDate: '1990-06-15'}
+
+  - id: disabled-dates
+    title: Disabled dates
+    description: Weekends and the booked days cannot be picked; neither can the days outside min and max.
+    source: |-
+      <sl:field th:field="*{meetingDate}">
+        <sl:field-label>Meeting</sl:field-label>
+        <sl:calendar min="2026-10-05" max="2026-11-27" disabled-dates="sat,sun,2026-10-14..2026-10-16,2026-10-28"/>
+      </sl:field>
+    form:
+      values: {meetingDate: '2026-10-21'}
+
+  - id: week-numbers
+    title: Week numbers
+    description: The week numbers, and Monday as the first day of the week, as the locale counts them unless week-starts-on says otherwise.
+    source: |-
+      <sl:field th:field="*{sprintStart}">
+        <sl:field-label>Sprint start</sl:field-label>
+        <sl:calendar show-week-number week-starts-on="1"/>
+      </sl:field>
+    form:
+      values: {sprintStart: '2026-10-19'}
+
+  - id: invalid
+    title: With errors
+    description: In a field with errors, the input is aria-invalid and the calendar is described by the message.
+    source: |-
+      <sl:field th:field="*{deliveryDate}">
+        <sl:field-label>Delivery</sl:field-label>
+        <sl:calendar default-month="2026-10"/>
+        <sl:field-error/>
+      </sl:field>
+    form:
+      values: {deliveryDate: ''}
+      errors: {deliveryDate: must not be empty}
+
+  - id: disabled
+    title: Disabled
+    source: |-
+      <sl:calendar name="closedDate" aria-label="Closed on" value="2026-10-23" disabled/>

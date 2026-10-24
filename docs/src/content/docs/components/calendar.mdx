@@ -1,0 +1,159 @@
+---
+title: Calendar
+description: shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="calendar--default" />
+
+## Drawn over date inputs
+
+A calendar's value lives in real `<input type="date">` elements. The server renders them, and the `slCalendar` Alpine
+component hides them and draws the month in their place. So `th:field` binds a calendar as it binds any input, and
+the form submits ISO dates (`2026-10-23`). Without JavaScript, the date inputs show as they are and still work.
+
+```html
+<form th:object="${task}" th:action="@{/tasks}" method="post">
+  <sl:field th:field="*{dueDate}">
+    <sl:field-label>Due date</sl:field-label>
+    <sl:calendar/>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+Without content, `<sl:calendar>` renders one date input itself. That input takes every attribute that is not a prop:
+`th:field`, `name`, `required`, `min`, `max`, `disabled`, `hx-*`. `class` is the exception: it stays on the calendar.
+
+### LocalDate fields
+
+A date input only takes ISO dates, so the field has to be formatted as one. Do one of these:
+
+- Annotate the field with `@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)`.
+- Set `spring.mvc.format.date=iso` for the whole application.
+
+Without either, Spring formats a `LocalDate` for the locale (`10/23/26`), which a date input shows as empty.
+
+## Range
+
+For a range, give the calendar two date inputs as content: the start, then the end. Each input binds its own field.
+The calendar's own attributes then stay on the calendar, so give it an `aria-label` that names the range, and give
+each input a name of its own.
+
+<ComponentPreview id="calendar--range" />
+
+The first pick sets the start. The second sets the end; if it comes before the start, the two swap. While only the
+start is picked, the band follows the pointer. A pick on a complete range starts a new one.
+
+`number-of-months` shows several months side by side; on a narrow screen they stack.
+
+## Month and year selects
+
+`caption-layout="dropdown"` replaces the month's name with a select for the month and one for the year. This helps
+for dates far from today, such as a date of birth. `dropdown-months` and `dropdown-years` show only one of the two.
+
+The years run from `start-month` to `end-month`. By default those are the months of the inputs' `min` and `max`, or
+else 100 years back and 10 years ahead. Both also stop the previous and next buttons.
+
+<ComponentPreview id="calendar--dropdown" />
+
+## Disabled dates
+
+The inputs' `min` and `max` disable the days outside them. `disabled-dates` disables more, comma-separated:
+
+- a date: `2026-12-25`;
+- a range: `2026-12-24..2026-12-31`;
+- a day of the week: `sat`, `sun`.
+
+From a list in the model, join it: `th:disabled-dates="${#strings.listJoin(booked, ',')}"`. A `LocalDate` prints as
+an ISO date.
+
+<ComponentPreview id="calendar--disabled-dates" />
+
+A disabled day still takes the focus, so the arrow keys move across it, but it cannot be picked. Only the calendar
+knows about `disabled-dates`; a date input does not. So check the date on the server too, as you would any input.
+
+## Week numbers and the first day of the week
+
+The page's locale (Spring's `LocaleResolver`) decides the first day of the week and how weeks are numbered. In most
+of Europe weeks start on Monday and are ISO weeks; in the United States they start on Sunday, and the week of
+1 January is week 1. `week-starts-on` overrides the first day: 0 is Sunday, 1 Monday, up to 6. `show-week-number`
+adds a column with the week numbers.
+
+The names of the months and days come from the browser (`Intl`), in the page's language.
+
+<ComponentPreview id="calendar--week-numbers" />
+
+## In a form
+
+- **`th:field`**, on the calendar or on its [field](../field/), binds the input. In a field, the input also takes the
+  field's `id` (the label points at it) and `aria-describedby`. The calendar takes the label of its input as its own
+  name.
+- **Errors.** A field with errors marks the input `aria-invalid="true"`, and the field's error describes the calendar.
+- **Events.** A pick fires `input` and `change` on the input, so `hx-trigger="change"` and your own listeners work as
+  on a date input. The month and year selects fire nothing outside the calendar.
+- **A value set by a script** shows once the script fires `change` on the input, as it should for any input.
+- **Form reset** puts the inputs back to their rendered values, and the calendar shows them.
+- **A click on the label**, `autofocus` or the browser's validation focus the input; the calendar passes the focus on
+  to the day that takes it.
+
+<ComponentPreview id="calendar--invalid" />
+
+## Disabled and read-only
+
+`disabled` on the input, or on a `<sl:field-set>` around it, disables the calendar: no day takes the focus.
+`readonly` keeps the navigation but stops the picking.
+
+<ComponentPreview id="calendar--disabled" />
+
+## Keyboard
+
+The previous and next buttons are tab stops, and the month is one more. Within the month:
+
+| Key | Moves the focus to |
+| --- | --- |
+| Arrow left, arrow right | The previous, next day (swapped on a right-to-left page) |
+| Arrow up, arrow down | The same day a week earlier, later |
+| Home, End | The first, last day of the week |
+| Page Up, Page Down | The same day a month earlier, later (or the month's last day when it is shorter) |
+| Shift + Page Up, Shift + Page Down | The same day a year earlier, later |
+| Enter, Space | Picks the day |
+
+When the focus moves past the months that show, the calendar shows the next ones. A change of month is announced.
+
+## With htmx
+
+- Back restores the calendar as htmx saved it, and `slCalendar` draws it again.
+- `hx-trigger="change"` on the calendar's input (or on the form) sends the picked date.
+
+## Left out
+
+These react-day-picker props, which shadcn's Calendar passes on, have no counterpart, on purpose:
+
+- **`mode`.** The inputs decide: one is a date, two are a range. `mode="multiple"` has no counterpart yet.
+- **`selected` and `onSelect`.** The inputs are the value: `th:field` renders it, and the input's `change` event
+  reports a new one.
+- **`disabled` with matchers.** `disabled` disables the whole calendar, as on any input; the days go in
+  `disabled-dates`.
+- **`timeZone`.** A date input holds a date without a time, so there is no time zone to get wrong.
+- **`buttonVariant`, `classNames`, `components` and `formatters`.** The skins draw the calendar; the locale formats it.
+
+A date picker (a button that opens the calendar in a popover) is not here yet.
+
+## Attributes
+
+<ComponentAttributes component="calendar" />
+
+## JavaScript
+
+`slCalendar` sits on the calendar: `<div class="calendar" x-data="slCalendar">`.
+
+- **Without Alpine the date inputs show**, and the form works with them.
+- **With it**, the inputs stay in the form, hidden, and still submit, reset and validate. `slCalendar` adds a
+  `.calendar-months` element with the navigation and a `<table role="grid">` per month after them.
+- **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
+  enough.
+- **Keep your own `x-data` off `<sl:calendar>`**: an element has one `x-data`. Listen for `change` on the input
+  instead.

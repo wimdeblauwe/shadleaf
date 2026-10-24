@@ -1,0 +1,82 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A month calendar to pick a date or a range of dates, drawn over native date inputs: the inputs are
+      its value, so <code>th:field</code> binds it and the form submits ISO dates (<code>2026-10-23</code>). Without
+      content, it renders one date input itself, which takes every attribute that is not a prop except
+      <code>class</code> (<code>th:field</code>, <code>name</code>, <code>required</code>, <code>min</code>,
+      <code>max</code>), and in a <code>sl:field</code> the field's <code>th:field</code>, id and
+      <code>aria-describedby</code>. For a range, give it two <code>sl:input type="date"</code>s as content, the start
+      and the end; its attributes then go to the calendar. <code>slCalendar</code> hides the inputs and draws the
+      month; without JavaScript the inputs show as they are.</sl:description>
+    <sl:prop name="caption-layout" default="label" values="label dropdown dropdown-months dropdown-years">The month's
+      caption: its name, or selects for the month and year, the month, or the year.</sl:prop>
+    <sl:prop name="number-of-months" type="number" default="1">How many months show side by side (stacked on a narrow
+      screen).</sl:prop>
+    <sl:prop name="show-outside-days" type="boolean" default="true">Show the days of the previous and next month that
+      fill the first and last week.</sl:prop>
+    <sl:prop name="show-week-number" type="boolean" default="false">Show the week numbers, counted as the page's
+      locale counts them (ISO weeks in most of Europe).</sl:prop>
+    <sl:prop name="week-starts-on" type="number">The first day of the week: 0 is Sunday, 1 Monday, up to 6. By
+      default the page's locale decides.</sl:prop>
+    <sl:prop name="default-month">The month shown first, as <code>2026-10</code>. By default the month of the chosen
+      date (or of the start of the range), or else the current month.</sl:prop>
+    <sl:prop name="start-month">The first month the calendar navigates to, as <code>2026-01</code>; also the first
+      year of the year select. By default the month of the inputs' <code>min</code>, or else 100 years ago.</sl:prop>
+    <sl:prop name="end-month">The last month the calendar navigates to, as <code>2026-12</code>; also the last year of
+      the year select. By default the month of the inputs' <code>max</code>, or else 10 years from now.</sl:prop>
+    <sl:prop name="disabled-dates">Days that cannot be picked, comma-separated: a date (<code>2026-12-25</code>), a
+      range (<code>2026-12-24..2026-12-31</code>) or a day of the week (<code>sat</code>, <code>sun</code>). The
+      inputs' <code>min</code> and <code>max</code> disable the days outside them too. Only the calendar knows: check
+      the date on the server as well.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The inputs are the state: slCalendar reads and writes their values and fires input and change on them. Without
+  content the calendar renders its own input, which takes the attributes (but class, which stays on the calendar) and
+  the field's binding, as sl:input does; with content (the inputs of a range) the attributes stay on the calendar.
+  The calendar is a group, which a range names with aria-label (slCalendar names a single date's after its input).
+  data-caption, not data-caption-layout: it is read by slCalendar, not styled. The locale, the first day of the week and the week numbering come from the server's locale (#slCalendar); the month
+  and day names from the browser's Intl for that locale. The template holds what slCalendar clones: the navigation
+  with its names and icons from the server, and a caption's selects. */-->
+<div th:fragment="calendar"
+     th:with="slOwnInput=${!slots.hasDefault()},
+              slAttrs=${slOwnInput ? #slFields.control(attrs.without('class', 'classappend'), slField) : null}"
+     class="calendar"
+     x-data="slCalendar"
+     th:attr="role='group',
+              data-caption=${props.unlessDefault('caption-layout')},
+              data-number-of-months=${props.unlessDefault('number-of-months')},
+              data-show-outside-days=${props['show-outside-days'] ? null : 'false'},
+              data-show-week-number=${props['show-week-number'] ? 'true' : null},
+              data-locale=${#slCalendar.languageTag()},
+              data-week-starts-on=${props['week-starts-on'] ?: #slCalendar.weekStartsOn()},
+              data-first-week-min-days=${#slCalendar.firstWeekMinDays()},
+              data-default-month=${props['default-month']},
+              data-start-month=${props['start-month']},
+              data-end-month=${props['end-month']},
+              data-disabled-dates=${props['disabled-dates']}"
+     sl:attrs="${slOwnInput ? attrs.only('class', 'classappend') : attrs}">
+  <input th:if="${slOwnInput}"
+         type="date"
+         class="input calendar-input"
+         th:attr="aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
+         sl:attrs="${slAttrs}">
+  <sl:slot/>
+  <template class="calendar-template">
+    <div class="calendar-nav">
+      <button type="button" class="calendar-nav-button calendar-previous" th:aria-label="#{sl.calendar.previous}"><sl:icon
+          name="chevron-left"/></button>
+      <button type="button" class="calendar-nav-button calendar-next" th:aria-label="#{sl.calendar.next}"><sl:icon
+          name="chevron-right"/></button>
+    </div>
+    <label class="calendar-dropdown" data-unit="month"><span class="calendar-dropdown-label"><span></span><sl:icon
+        name="chevron-down"/></span><select class="calendar-select" th:aria-label="#{sl.calendar.month}"></select></label>
+    <label class="calendar-dropdown" data-unit="year"><span class="calendar-dropdown-label"><span></span><sl:icon
+        name="chevron-down"/></span><select class="calendar-select" th:aria-label="#{sl.calendar.year}"></select></label>
+    <span class="calendar-week-number-label" th:text="#{sl.calendar.week-number}"></span>
+  </template>
+</div>
+</body>
+</html>
