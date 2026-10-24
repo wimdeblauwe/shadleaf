@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Charts', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Interactive</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page>Charts</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  <p>Four <code>sl:chart</code>s over the people of the tables, counted by the database (H2, with JPA queries). The
+    series are the roles, one part per role with <code>th:each</code>; the months are <code>YearMonth</code>s, which the
+    named formats write in the page's language. The sidebar's links load this page with htmx, and the charts draw
+    themselves when they arrive.</p>
+
+  <div class="charts-grid">
+    <sl:card>
+      <sl:card-header>
+        <sl:card-title level="2">Joined per month</sl:card-title>
+        <sl:card-description>The last twelve months, by role</sl:card-description>
+      </sl:card-header>
+      <sl:card-content>
+        <sl:chart id="joined-chart" th:data="${joinedRecently}" label="People who joined per month, by role">
+          <sl:chart-grid/>
+          <sl:chart-x-axis key="month" format="month-short" tick-margin="10"/>
+          <sl:chart-tooltip label-format="month-year"/>
+          <sl:chart-legend/>
+          <sl:chart-bar th:each="role : ${series}" th:key="${role.key}" th:label="${role.label}" stack="roles"/>
+        </sl:chart>
+      </sl:card-content>
+    </sl:card>
+
+    <sl:card>
+      <sl:card-header>
+        <sl:card-title level="2">Members over time</sl:card-title>
+        <sl:card-description>Everyone who had joined by the end of each month</sl:card-description>
+      </sl:card-header>
+      <sl:card-content>
+        <sl:chart id="members-chart" th:data="${membersOverTime}" label="People by role over time" margin="12">
+          <sl:chart-grid/>
+          <sl:chart-x-axis key="month" format="month-year" min-tick-gap="32"/>
+          <sl:chart-y-axis format="compact"/>
+          <sl:chart-tooltip label-format="month-year" cursor="false"/>
+          <sl:chart-area th:each="role : ${series}" th:key="${role.key}" th:label="${role.label}" stack="roles"/>
+        </sl:chart>
+      </sl:card-content>
+    </sl:card>
+
+    <sl:card>
+      <sl:card-header>
+        <sl:card-title level="2">New people per month</sl:card-title>
+        <sl:card-description>Every month, by role</sl:card-description>
+      </sl:card-header>
+      <sl:card-content>
+        <sl:chart id="new-chart" th:data="${joinedRecently}" label="New people per month, by role" margin="12">
+          <sl:chart-grid/>
+          <sl:chart-x-axis key="month" format="month-short"/>
+          <sl:chart-tooltip label-format="month-year" indicator="line"/>
+          <sl:chart-line th:each="role : ${series}" th:key="${role.key}" th:label="${role.label}" dots/>
+        </sl:chart>
+      </sl:card-content>
+    </sl:card>
+
+    <sl:card>
+      <sl:card-header>
+        <sl:card-title level="2">Orders per role</sl:card-title>
+        <sl:card-description>All orders of each role's people</sl:card-description>
+      </sl:card-header>
+      <sl:card-content>
+        <sl:chart id="orders-chart" th:data="${ordersPerRole}" label="Orders per role">
+          <sl:chart-grid/>
+          <sl:chart-x-axis key="label"/>
+          <sl:chart-y-axis format="compact"/>
+          <sl:chart-tooltip indicator="dashed" value-format="integer"/>
+          <sl:chart-bar key="orders" label="Orders" radius="4"/>
+        </sl:chart>
+      </sl:card-content>
+    </sl:card>
+  </div>
+</div>
+</body>
+</html>

@@ -16,6 +16,16 @@ class ComponentElementProcessorTest {
 
   private final ComponentRenderTester renderer = ComponentRenderTester.create();
 
+  @Test
+  void aCustomElementNamedSlDashIsNoComponent() {
+    // Thymeleaf's HTML mode matches sl-test-chip as the prefixed name too; only sl:test-chip is the component.
+    Element element = render("<sl-test-chip variant=\"danger\" th:attr=\"size=${'lg'}\">x</sl-test-chip>");
+
+    assertThat(element.tagName()).isEqualTo("sl-test-chip");
+    assertThat(element.attr("variant")).isEqualTo("danger");
+    assertThat(element.attr("size")).isEqualTo("lg");
+  }
+
   // --- props -----------------------------------------------------------------------------------
 
   @Test

@@ -243,7 +243,9 @@ class HeaderLayoutPageTest {
   }
 
   private static void assertNoInlineAllowanceNeeded(Document page) {
-    assertThat(page.select("script:not([src])")).as("inline scripts: only the theme script").hasSize(1);
+    // A JSON data block (a chart's rows) never runs, so the policy does not apply to it.
+    assertThat(page.select("script:not([src], [type=application/json])")).as("inline scripts: only the theme script")
+        .hasSize(1);
     assertThat(page.select("style")).as("<style> elements").isEmpty();
     assertThat(page.select("[style]")).as("style attributes").isEmpty();
     assertThat(page.getAllElements()).allSatisfy(element -> assertThat(element.attributes().asList())

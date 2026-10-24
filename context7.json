@@ -13,6 +13,7 @@
     "A link styled as a button is <sl:button as=\"a\" th:href=\"@{/x}\">; sl:button renders type=\"button\", so the submit button needs type=\"submit\".",
     "In a form with th:object, put th:field on sl:field: its label, control and errors share it. Place sl:form-errors before the fields.",
     "Dialogs and sheets need an id and open from any button with commandfor=\"<id>\" command=\"show-modal\"; there are no trigger or close parts.",
-    "Icons are <sl:icon name=\"...\"> with Lucide names; an icon-only button (size icon, icon-sm, ...) needs an aria-label or rendering fails."
+    "Icons are <sl:icon name=\"...\"> with Lucide names; an icon-only button (size icon, icon-sm, ...) needs an aria-label or rendering fails.",
+    "A chart is <sl:chart th:data=\"${rows}\" label=\"...\"> with parts such as sl:chart-x-axis key=\"month\" and sl:chart-bar key=\"desktop\"; there is no ChartConfig or formatter function: labels and colours go on the series parts, formats are names (format=\"month-short\")."
   ]
 }

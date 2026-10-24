@@ -1,0 +1,24 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The value axis of a <code>sl:chart</code>, at the start side (the left, or the right under
+      <code>dir="rtl"</code>), without tick or axis lines. shadcn's charts often leave it out and show the values in
+      the tooltip. Draws no element of its own on the page: the chart reads it.</sl:description>
+    <sl:prop name="format" values="number integer compact percent currency day month-short month month-year date time">How the ticks are written, as on <code>sl:chart-x-axis</code>:
+      <code>compact</code> (1.2K) and <code>currency</code> suit a value axis.</sl:prop>
+    <sl:prop name="currency">The ISO 4217 code (<code>EUR</code>) for <code>format="currency"</code>.</sl:prop>
+    <sl:prop name="tick-margin" type="number" default="8">Space in pixels between the ticks and the plot.</sl:prop>
+    <sl:prop name="tick-count" type="number" default="5">How many ticks Recharts aims for.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<sl-chart-y-axis th:fragment="chart-y-axis"
+                 class="chart-y-axis"
+                 th:attr="format=${props.format},
+                          currency=${#slCharts.currency('chart-y-axis', props.format, props.currency)},
+                          tick-margin=${props.unlessDefault('tick-margin')},
+                          tick-count=${props.unlessDefault('tick-count')}"
+                 sl:attrs></sl-chart-y-axis>
+</body>
+</html>

@@ -24,9 +24,10 @@ export default defineConfig({
     // runs on the form's submit when Enter is pressed. Row selection relies on :indeterminate, change events and the
     // scripting media feature. Firefox makes a scrolling table container a tab stop of its own. Skip links and the
     // breadcrumb's menu depend on how each browser moves the focus. htmx's HX-Redirect after an expired session is a
-    // navigation each browser makes itself. The layouts are sidebars too.
+    // navigation each browser makes itself. The layouts are sidebars too. A restored chart's inline styles were
+    // reported in Firefox only.
     ...(full ? [{name: 'firefox', use: {...devices['Desktop Firefox']},
-      testMatch: /(select|combobox|calendar|date-picker|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|dialog-body|table-scroll|sidebar|sidebar-header|breadcrumb|user-menu|session-expiry|layouts|toggle)\.spec\.ts/}] : []),
+      testMatch: /(select|combobox|calendar|date-picker|disclosure|tabs|toast|theme-toggle|avatar|table-htmx|table-selection|dialog-body|table-scroll|sidebar|sidebar-header|breadcrumb|user-menu|session-expiry|layouts|toggle|chart)\.spec\.ts/}] : []),
   ],
   webServer: {
     // --ignore-lock keeps it in the foreground: Astro moves preview to the background when it detects an AI agent.

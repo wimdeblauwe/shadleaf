@@ -1,0 +1,16 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The legend of a <code>sl:chart</code>: every series' label with its colour. Draws no element of
+      its own on the page: the chart reads it.</sl:description>
+    <sl:prop name="vertical-align" default="bottom" values="bottom top">Below the plot, or above it.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<sl-chart-legend th:fragment="chart-legend"
+                 class="chart-legend"
+                 th:attr="vertical-align=${props.unlessDefault('vertical-align')}"
+                 sl:attrs></sl-chart-legend>
+</body>
+</html>

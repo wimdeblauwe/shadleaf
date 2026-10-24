@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The grid lines behind a <code>sl:chart</code>'s plot. Draws no element of its own on the page:
+      the chart reads it.</sl:description>
+    <sl:prop name="vertical" type="boolean">Vertical lines too, one per category.</sl:prop>
+    <sl:prop name="horizontal" type="boolean" default="true">Horizontal lines, one per value tick.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<sl-chart-grid th:fragment="chart-grid"
+               class="chart-grid"
+               th:attr="vertical=${props.vertical ? 'true' : null},
+                        horizontal=${props.horizontal ? null : 'false'}"
+               sl:attrs></sl-chart-grid>
+</body>
+</html>

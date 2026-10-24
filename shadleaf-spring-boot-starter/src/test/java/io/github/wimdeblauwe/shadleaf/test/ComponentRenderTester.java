@@ -11,14 +11,18 @@ import io.github.wimdeblauwe.shadleaf.paging.PagingParameters;
 import io.github.wimdeblauwe.shadleaf.security.UserSource;
 import jakarta.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.context.i18n.SimpleTimeZoneAwareLocaleContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -52,8 +56,10 @@ import tools.jackson.databind.json.JsonMapper;
  * {@code builder().with(oidcLogin())}, {@code with(user("ada"))}; without one the visitor is anonymous.
  * <p>
  * Every render runs in a mock servlet web exchange, so {@code @{/orders}} resolves against the context path and
- * request attributes (such as a CSP nonce) are context variables, as in a request. It also carries Spring MVC's
- * {@code RequestContext}, as {@code ThymeleafView} sets it up, so {@code th:field}, {@code th:errors} and
+ * request attributes (such as a CSP nonce) are context variables, as in a request. The request's locale and time zone
+ * are in {@link LocaleContextHolder}, as {@code DispatcherServlet} puts them there; the zone is UTC unless
+ * {@link Builder#timeZone(ZoneId)} says otherwise, so a render never depends on the machine's. It also carries Spring
+ * MVC's {@code RequestContext}, as {@code ThymeleafView} sets it up, so {@code th:field}, {@code th:errors} and
  * {@code #fields} find a {@code BindingResult} passed in the variables under
  * {@code BindingResult.MODEL_KEY_PREFIX + name}.
  * <p>
@@ -66,6 +72,7 @@ public final class ComponentRenderTester {
   private final JakartaServletWebApplication webApplication;
   private final MockServletContext servletContext;
   private final Locale locale;
+  private final ZoneId timeZone;
   private final String contextPath;
   private final String requestUri;
   private final Map<String, Object> requestAttributes;
@@ -107,6 +114,7 @@ public final class ComponentRenderTester {
     servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
     webApplication = JakartaServletWebApplication.buildApplication(servletContext);
     locale = builder.locale;
+    timeZone = builder.timeZone;
     contextPath = builder.contextPath;
     requestUri = builder.requestUri;
     requestAttributes = Map.copyOf(builder.requestAttributes);
@@ -152,8 +160,10 @@ public final class ComponentRenderTester {
     }
     try {
       TesterSecurity.loadContext(processed);
+      LocaleContextHolder.setLocaleContext(new SimpleTimeZoneAwareLocaleContext(locale, TimeZone.getTimeZone(timeZone)));
       return render(snippet, variables, processed);
     } finally {
+      LocaleContextHolder.resetLocaleContext();
       TesterSecurity.clearContext();
     }
   }
@@ -194,6 +204,7 @@ public final class ComponentRenderTester {
     private @Nullable UserSource userSource;
     private @Nullable MessageSource messageSource;
     private Locale locale = Locale.ENGLISH;
+    private ZoneId timeZone = ZoneId.of("UTC");
     private String contextPath = "";
     private String requestUri = "/";
     private PagingParameters pagingParameters = PagingParameters.defaults();
@@ -225,6 +236,12 @@ public final class ComponentRenderTester {
 
     public Builder locale(Locale locale) {
       this.locale = locale;
+      return this;
+    }
+
+    /** The request's time zone, as a {@code LocaleResolver} that knows one gives it; defaults to UTC. */
+    public Builder timeZone(ZoneId timeZone) {
+      this.timeZone = timeZone;
       return this;
     }
 

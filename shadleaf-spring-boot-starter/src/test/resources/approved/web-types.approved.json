@@ -906,6 +906,821 @@
           }
         } ]
       }, {
+        "name" : "sl:chart",
+        "description" : "A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.",
+        "attributes" : [ {
+          "name" : "label",
+          "description" : "The chart's accessible name, such as its title: what a screen reader announces when the chart takes the focus.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "margin",
+          "description" : "Space in pixels left and right of the plot, so the first and last tick labels fit (shadcn's line and area charts use 12).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "time-zone",
+          "description" : "The time zone (an IANA id such as `Europe/Brussels`) instants in the data are shown in: `Instant`, `OffsetDateTime` and `ZonedDateTime`. Defaults to the request's (Spring's `LocaleContextHolder`). A `LocalDate` or `LocalDateTime` is shown as written, in any zone.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:data",
+          "description" : "The rows: a list (or a Spring Data `Page`) of objects, records or maps, one per category or point in time. Each row holds the category (`month`) and a number per series (`desktop`, `mobile`). Serialised with Jackson: dates as ISO strings, which the named date formats read by their Java type.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:margin",
+          "description" : "`margin` from a Thymeleaf expression, e.g. `th:margin=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:time-zone",
+          "description" : "`time-zone` from a Thymeleaf expression, e.g. `th:time-zone=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-area",
+        "description" : "One series of a `sl:chart`, drawn as a filled area under a line through the rows. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "key",
+          "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "label",
+          "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color",
+          "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color-dark",
+          "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "curve",
+          "description" : "How the line runs between the points: smooth (`natural`, `monotone`), straight (`linear`) or in steps.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "natural"
+          }, {
+            "name" : "monotone"
+          }, {
+            "name" : "linear"
+          }, {
+            "name" : "step"
+          }, {
+            "name" : "step-before"
+          }, {
+            "name" : "step-after"
+          } ],
+          "default" : "natural"
+        }, {
+          "name" : "stack",
+          "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "fill-opacity",
+          "description" : "The opacity of the fill, from 0 to 1.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "0.4"
+        }, {
+          "name" : "th:key",
+          "description" : "`key` from a Thymeleaf expression, e.g. `th:key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color",
+          "description" : "`color` from a Thymeleaf expression, e.g. `th:color=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color-dark",
+          "description" : "`color-dark` from a Thymeleaf expression, e.g. `th:color-dark=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:curve",
+          "description" : "`curve` from a Thymeleaf expression, e.g. `th:curve=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:stack",
+          "description" : "`stack` from a Thymeleaf expression, e.g. `th:stack=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:fill-opacity",
+          "description" : "`fill-opacity` from a Thymeleaf expression, e.g. `th:fill-opacity=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-bar",
+        "description" : "One series of a `sl:chart`, drawn as bars: one per row. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "key",
+          "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "label",
+          "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color",
+          "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color-dark",
+          "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "radius",
+          "description" : "The bars' corner radius in pixels: `4` for every corner, or four numbers (top-left, top-right, bottom-right, bottom-left), as `4,4,0,0` for the top bar of a stack.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "stack",
+          "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`) instead of drawing them side by side.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:key",
+          "description" : "`key` from a Thymeleaf expression, e.g. `th:key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color",
+          "description" : "`color` from a Thymeleaf expression, e.g. `th:color=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color-dark",
+          "description" : "`color-dark` from a Thymeleaf expression, e.g. `th:color-dark=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:radius",
+          "description" : "`radius` from a Thymeleaf expression, e.g. `th:radius=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:stack",
+          "description" : "`stack` from a Thymeleaf expression, e.g. `th:stack=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-grid",
+        "description" : "The grid lines behind a `sl:chart`'s plot. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "vertical",
+          "description" : "Vertical lines too, one per category.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "horizontal",
+          "description" : "Horizontal lines, one per value tick.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:vertical",
+          "description" : "`vertical` from a Thymeleaf expression, e.g. `th:vertical=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:horizontal",
+          "description" : "`horizontal` from a Thymeleaf expression, e.g. `th:horizontal=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-legend",
+        "description" : "The legend of a `sl:chart`: every series' label with its colour. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "vertical-align",
+          "description" : "Below the plot, or above it.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "bottom"
+          }, {
+            "name" : "top"
+          } ],
+          "default" : "bottom"
+        }, {
+          "name" : "th:vertical-align",
+          "description" : "`vertical-align` from a Thymeleaf expression, e.g. `th:vertical-align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-line",
+        "description" : "One series of a `sl:chart`, drawn as a line through the rows. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "key",
+          "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "label",
+          "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color",
+          "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color-dark",
+          "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "curve",
+          "description" : "How the line runs between the points: smooth (`monotone`, `natural`), straight (`linear`) or in steps.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "monotone"
+          }, {
+            "name" : "natural"
+          }, {
+            "name" : "linear"
+          }, {
+            "name" : "step"
+          }, {
+            "name" : "step-before"
+          }, {
+            "name" : "step-after"
+          } ],
+          "default" : "monotone"
+        }, {
+          "name" : "dots",
+          "description" : "A dot on every point.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "stroke-width",
+          "description" : "The line's width in pixels.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "2"
+        }, {
+          "name" : "th:key",
+          "description" : "`key` from a Thymeleaf expression, e.g. `th:key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color",
+          "description" : "`color` from a Thymeleaf expression, e.g. `th:color=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color-dark",
+          "description" : "`color-dark` from a Thymeleaf expression, e.g. `th:color-dark=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:curve",
+          "description" : "`curve` from a Thymeleaf expression, e.g. `th:curve=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:dots",
+          "description" : "`dots` from a Thymeleaf expression, e.g. `th:dots=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:stroke-width",
+          "description" : "`stroke-width` from a Thymeleaf expression, e.g. `th:stroke-width=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-tooltip",
+        "description" : "The tooltip of a `sl:chart`: on hover, or with the arrow keys once the chart has the focus, it shows the category and every series' label and value. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "indicator",
+          "description" : "The mark before each series' label, in its colour.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "dot"
+          }, {
+            "name" : "line"
+          }, {
+            "name" : "dashed"
+          } ],
+          "default" : "dot"
+        }, {
+          "name" : "cursor",
+          "description" : "Highlight the hovered category (a band behind bars, a line over lines and areas).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "hide-label",
+          "description" : "Leave out the label at the top (the category).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "hide-indicator",
+          "description" : "Leave out the marks before the series' labels.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "label-key",
+          "description" : "The property of the rows to take the label from instead of the axis category: a series key gives that series' label, any other property its value in the hovered row, such as a date the server formatted.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "label-format",
+          "description" : "How the label is written, as the ticks of `sl:chart-x-axis` (`month`, `date`, ...). Without one, as it is.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "number"
+          }, {
+            "name" : "integer"
+          }, {
+            "name" : "compact"
+          }, {
+            "name" : "percent"
+          }, {
+            "name" : "currency"
+          }, {
+            "name" : "day"
+          }, {
+            "name" : "month-short"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "month-year"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "time"
+          } ]
+        }, {
+          "name" : "value-format",
+          "description" : "How the values are written: `number` in the page's language, or `currency`, `percent`, ...",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "number"
+          }, {
+            "name" : "integer"
+          }, {
+            "name" : "compact"
+          }, {
+            "name" : "percent"
+          }, {
+            "name" : "currency"
+          }, {
+            "name" : "day"
+          }, {
+            "name" : "month-short"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "month-year"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "time"
+          } ],
+          "default" : "number"
+        }, {
+          "name" : "currency",
+          "description" : "The ISO 4217 code (`EUR`) for a `currency` format.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:indicator",
+          "description" : "`indicator` from a Thymeleaf expression, e.g. `th:indicator=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:cursor",
+          "description" : "`cursor` from a Thymeleaf expression, e.g. `th:cursor=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:hide-label",
+          "description" : "`hide-label` from a Thymeleaf expression, e.g. `th:hide-label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:hide-indicator",
+          "description" : "`hide-indicator` from a Thymeleaf expression, e.g. `th:hide-indicator=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label-key",
+          "description" : "`label-key` from a Thymeleaf expression, e.g. `th:label-key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label-format",
+          "description" : "`label-format` from a Thymeleaf expression, e.g. `th:label-format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:value-format",
+          "description" : "`value-format` from a Thymeleaf expression, e.g. `th:value-format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:currency",
+          "description" : "`currency` from a Thymeleaf expression, e.g. `th:currency=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-x-axis",
+        "description" : "The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines (as shadcn's). Under `dir=\"rtl\"` it runs from right to left. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "key",
+          "description" : "The property of the rows that holds the category (`month`) or the date.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "format",
+          "description" : "How the ticks are written, with `Intl` in the page's language. Numbers: `number`, `integer`, `compact` (1.2K), `percent` (0.25 is 25%), `currency` (with `currency`). Dates: `day` (Apr 1), `month-short` (Apr), `month` (April), `month-year` (Apr 2024), `date`, `time`. Without one, the values as they are.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "number"
+          }, {
+            "name" : "integer"
+          }, {
+            "name" : "compact"
+          }, {
+            "name" : "percent"
+          }, {
+            "name" : "currency"
+          }, {
+            "name" : "day"
+          }, {
+            "name" : "month-short"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "month-year"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "time"
+          } ]
+        }, {
+          "name" : "currency",
+          "description" : "The ISO 4217 code (`EUR`) for `format=\"currency\"`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "tick-margin",
+          "description" : "Space in pixels between the ticks and the plot.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "8"
+        }, {
+          "name" : "min-tick-gap",
+          "description" : "The least space in pixels between two ticks; Recharts leaves out ticks that would come closer, as on a long time axis.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "5"
+        }, {
+          "name" : "th:key",
+          "description" : "`key` from a Thymeleaf expression, e.g. `th:key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:format",
+          "description" : "`format` from a Thymeleaf expression, e.g. `th:format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:currency",
+          "description" : "`currency` from a Thymeleaf expression, e.g. `th:currency=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tick-margin",
+          "description" : "`tick-margin` from a Thymeleaf expression, e.g. `th:tick-margin=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:min-tick-gap",
+          "description" : "`min-tick-gap` from a Thymeleaf expression, e.g. `th:min-tick-gap=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-y-axis",
+        "description" : "The value axis of a `sl:chart`, at the start side (the left, or the right under `dir=\"rtl\"`), without tick or axis lines. shadcn's charts often leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "format",
+          "description" : "How the ticks are written, as on `sl:chart-x-axis`: `compact` (1.2K) and `currency` suit a value axis.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "number"
+          }, {
+            "name" : "integer"
+          }, {
+            "name" : "compact"
+          }, {
+            "name" : "percent"
+          }, {
+            "name" : "currency"
+          }, {
+            "name" : "day"
+          }, {
+            "name" : "month-short"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "month-year"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "time"
+          } ]
+        }, {
+          "name" : "currency",
+          "description" : "The ISO 4217 code (`EUR`) for `format=\"currency\"`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "tick-margin",
+          "description" : "Space in pixels between the ticks and the plot.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "8"
+        }, {
+          "name" : "tick-count",
+          "description" : "How many ticks Recharts aims for.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "5"
+        }, {
+          "name" : "th:format",
+          "description" : "`format` from a Thymeleaf expression, e.g. `th:format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:currency",
+          "description" : "`currency` from a Thymeleaf expression, e.g. `th:currency=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tick-margin",
+          "description" : "`tick-margin` from a Thymeleaf expression, e.g. `th:tick-margin=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tick-count",
+          "description" : "`tick-count` from a Thymeleaf expression, e.g. `th:tick-count=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:checkbox",
         "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors. A checkbox in the indeterminate state (neither checked nor unchecked: some of a group selected) shows a minus.",
         "attributes" : [ {

@@ -42,19 +42,21 @@ public class ViteManifestParser {
   }
 
   /**
-   * @param assets the files the entry links, such as the fonts of a stylesheet
+   * @param assets         the files the entry links, such as the fonts of a stylesheet
+   * @param dynamicImports the chunks it loads on demand, such as the chart's
    */
   public record ViteManifestEntry(String file, String src, boolean isEntry, List<String> css, List<String> imports,
-                                  List<String> assets) {
+                                  List<String> assets, List<String> dynamicImports) {
 
     public ViteManifestEntry(String file, String src, boolean isEntry, List<String> css, List<String> imports,
-                             List<String> assets) {
+                             List<String> assets, List<String> dynamicImports) {
       this.file = file;
       this.src = src;
       this.isEntry = isEntry;
       this.css = css != null ? css : Collections.emptyList();
       this.imports = imports != null ? imports : Collections.emptyList();
       this.assets = assets != null ? assets : Collections.emptyList();
+      this.dynamicImports = dynamicImports != null ? dynamicImports : Collections.emptyList();
     }
   }
 }

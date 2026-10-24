@@ -18,6 +18,19 @@
     <sl:button size="icon" variant="outline" aria-label="Delete"><sl:icon name="trash"/></sl:button>
     <sl:button as="a" variant="link" th:href="@{/}">Reload</sl:button>
   </div>
+
+  <h2>Sign-ins</h2>
+  <p>A <code>sl:chart</code> under the same policy: its rows are a JSON data block, which never runs, and its colours
+    are set through CSSOM, so it needs no <code>'unsafe-inline'</code> either. Its script loads when the chart comes
+    into view.</p>
+  <sl:chart id="sign-ins-chart" th:data="${signIns}" label="Sign-ins per month, on the web and in the app">
+    <sl:chart-grid/>
+    <sl:chart-x-axis key="month" format="month-short"/>
+    <sl:chart-tooltip indicator="dashed" label-format="month-year"/>
+    <sl:chart-legend/>
+    <sl:chart-bar key="web" label="Web" radius="4"/>
+    <sl:chart-bar key="app" label="App" radius="4"/>
+  </sl:chart>
 </div>
 </body>
 </html>

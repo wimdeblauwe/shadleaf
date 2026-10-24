@@ -1240,6 +1240,23 @@
   }
 
   /*
+    Chart. The tooltip's box (shadcn's cn-chart-tooltip), the skeleton until the chart has drawn (as sl:skeleton), and
+    the focus ring of the chart, which takes the focus for its arrow keys (shadcn hides it). An outline: the chart is
+    an svg.
+  */
+  .chart-tooltip-content {
+    @apply gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs/relaxed shadow-xl;
+  }
+
+  .chart-skeleton {
+    @apply bg-accent motion-safe:animate-pulse rounded-md;
+  }
+
+  .chart .recharts-surface:focus-visible {
+    @apply outline-[3px] outline-offset-2 outline-solid outline-ring/50;
+  }
+
+  /*
     Accordion: a rounded box with a border. The height animation's speed (components/accordion.css) is
     --accordion-duration. The focus ring lies inside the trigger, as the box clips what sticks out (shadcn's mira has
     none).

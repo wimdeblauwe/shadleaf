@@ -47,6 +47,8 @@ const components = [...new Set(scenarios.map(s => s.component))];
     /* An accordion fills its container, tabs and a collapsible fit their content: give them a width too. */
     .stage > :global(.accordion) { max-inline-size: 32rem; }
     .stage > :global(:is(.tabs, .collapsible)) { inline-size: 24rem; max-inline-size: 100%; }
+    /* A chart is as wide as its container, which a flex item is not: give it a width, as a page's layout would. */
+    .stage > :global(.chart) { inline-size: 36rem; max-inline-size: 100%; }
     /* An application shell is as tall as the screen; on the showcase, as tall as a few links need. */
     .stage > :global(.sidebar-provider) { min-block-size: 24rem; }
     .stage > :global(.sidebar-provider > .sidebar) { block-size: auto; align-self: stretch; }

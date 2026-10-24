@@ -23,6 +23,12 @@ body {
   margin-bottom: 1rem;
 }
 
+.page h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-block: 1.5rem 0.5rem;
+}
+
 /* The application's logo in the panel's large menu button. */
 .app-logo {
   display: grid;
