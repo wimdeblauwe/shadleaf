@@ -17,7 +17,8 @@ import org.thymeleaf.web.IWebRequest;
 /**
  * The expression object {@code #slPaging}: the links of {@code sl:table-head}, {@code sl:pagination} and
  * {@code sl:pagination-size}, built from the request that renders the page, the numbers of
- * {@code sl:pagination-summary}, and the parameters {@code sl:query-params} keeps in a search form.
+ * {@code sl:pagination-summary}, the parameters {@code sl:query-params} keeps in a search form, and the month
+ * {@code sl:month-view} shows and links to.
  * <p>
  * A link replaces only its own parameters and keeps every other one, so a filter in the query string survives
  * sorting and paging. Parameter names are Spring Data's, as the application configured them
@@ -200,6 +201,23 @@ public final class Paging {
       }
     }
     return query.without(dropped).decoded();
+  }
+
+  /**
+   * The first value of a parameter of the request, decoded; {@code null} when the request has none, or outside a web
+   * request. {@code sl:month-view} reads the month it shows from it.
+   */
+  public @Nullable String param(String name) {
+    List<String> values = query.values(name);
+    return values.isEmpty() ? null : values.get(0);
+  }
+
+  /**
+   * A link to the same page with one parameter set to a value (replacing every value it had) and every other
+   * parameter kept, as {@code sl:month-view}'s links to the previous and next month.
+   */
+  public String link(String name, String value) {
+    return urlTransformer.apply(query.without(name).with(name, value).href());
   }
 
   private PageState state(@Nullable Object page, @Nullable Number current, @Nullable Number total) {

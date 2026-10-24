@@ -1074,6 +1074,50 @@
     "declared" : true,
     "props" : [ ]
   }, {
+    "name" : "month-view",
+    "tag" : "sl:month-view",
+    "description" : "A month to look at, rendered on the server: each day shows content of its own (a badge, a short text, a count) from the `day` slot, which is rendered once per day and sees the day as `${slDay}` (`date`, a `LocalDate`, `iso`, `number`, `label`, `outside`, `today`), and can link to a page for that day. Nothing is picked: for a date in a form, use `sl:calendar`. The previous and next month are links to the same page with `?month=2026-09`, every other parameter kept, so it needs no JavaScript and works with htmx.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "month",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The month shown, as `2026-10` (a `YearMonth`) or a date in it. By default the month the request asks for in `month-param`, or else the current month."
+    }, {
+      "name" : "month-param",
+      "type" : "string",
+      "defaultValue" : "month",
+      "values" : [ ],
+      "description" : "The request parameter the links to the previous and next month set, and that gives the month when `month` is not set."
+    }, {
+      "name" : "day-href",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Makes every day a link: `{date}` is replaced by the day's ISO date (`/agenda/{date}`, `?date={date}`), and the result is a Thymeleaf link, so a path starting with `/` gets the context path. The `day` slot is then inside the link: put nothing interactive in it."
+    }, {
+      "name" : "today",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Today, as `2026-10-23` (a `LocalDate`), marked as the current date. By default the server's date; pass it in the user's time zone when that differs."
+    }, {
+      "name" : "show-outside-days",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "Show the days of the previous and next month that fill the first and last week."
+    }, {
+      "name" : "show-week-number",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe)."
+    }, {
+      "name" : "week-starts-on",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides."
+    } ]
+  }, {
     "name" : "native-select",
     "tag" : "sl:native-select",
     "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",

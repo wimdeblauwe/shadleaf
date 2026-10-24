@@ -67,6 +67,9 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 .sessions { margin: 0; padding-inline-start: 1.25rem; list-style: disc; }
 .muted { color: var(--muted-foreground); }
 
+/* Team agenda: the chosen day's events under the month. */
+.agenda-day { margin-block-start: 1.5rem; }
+
 /* The people page: the table footer, as shadcn/ui's data table lays it out. */
 .table-footer {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem;

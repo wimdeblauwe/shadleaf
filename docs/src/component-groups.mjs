@@ -15,7 +15,7 @@ export const componentGroups = [
   },
   {label: 'Overlays', pages: ['dialog', 'alert-dialog', 'sheet', 'popover', 'dropdown-menu', 'tooltip']},
   {label: 'Feedback', pages: ['alert', 'toast', 'skeleton']},
-  {label: 'Data', pages: ['table', 'pagination', 'query-params']},
+  {label: 'Data', pages: ['table', 'pagination', 'query-params', 'month-view']},
   {
     label: 'Application shell',
     overview: 'application-shell',

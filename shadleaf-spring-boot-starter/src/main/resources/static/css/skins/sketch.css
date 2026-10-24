@@ -819,6 +819,58 @@
     @apply w-auto p-0;
   }
 
+  /*
+    Month view: the days are tiles of --day-height, a linked day's --muted on hover (an outside day's number
+    text-muted-legible there, where text-muted-foreground is under 4.5:1 on --muted); today's number on --primary, as
+    the calendar's picked day. The navigation, the caption and the headers are the calendar's.
+  */
+  .month-view {
+    --cell-size: --spacing(7);
+    --cell-radius: --theme(--radius-md);
+    --day-height: --spacing(16);
+    --day-radius: --theme(--radius-md);
+  }
+
+  @media (width >= 48rem) {
+    .month-view {
+      --day-height: --spacing(24);
+    }
+  }
+
+  .month-view-nav-button {
+    @apply rounded-(--cell-radius) sketch-shape-sm hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  .month-view-caption {
+    @apply text-sm font-bold;
+  }
+
+  .month-view-weekday,
+  .month-view-week-number {
+    @apply text-[0.8rem] font-normal text-muted-foreground;
+  }
+
+  .month-view-day-link,
+  .month-view-day-body {
+    @apply sketch-shape-sm border-2 border-foreground/40 text-sm font-normal text-foreground;
+  }
+
+  .month-view-day-link {
+    @apply hover:bg-muted dark:hover:bg-muted/50 focus-visible:ring-[3px] focus-visible:ring-ring/50;
+  }
+
+  .month-view-day[data-outside] .month-view-day-number {
+    @apply text-muted-foreground;
+  }
+
+  .month-view-day[data-outside] > .month-view-day-link:hover .month-view-day-number {
+    @apply text-muted-legible;
+  }
+
+  .month-view-day[data-today] .month-view-day-number {
+    @apply bg-primary font-medium text-primary-foreground;
+  }
+
   /* Checkbox: a box with a tick drawn in it, in the pencil's colour, checked or not. */
   .checkbox {
     @apply size-4 sketch-shape-sm border-2 border-foreground/80 bg-transparent

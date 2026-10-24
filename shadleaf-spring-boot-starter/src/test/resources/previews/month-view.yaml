@@ -1,0 +1,52 @@
+# Scenarios for the month view's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# renderSource fixes the month and today, so the previews do not change with the date, and writes the model out: a
+# map literal's keys are strings, so it looks the days up by slDay.iso where the source has a LocalDate.
+component: month-view
+scenarios:
+  - id: default
+    title: Month view
+    description: Each day shows its events from the model and links to the day's agenda.
+    source: |-
+      <sl:month-view day-href="/agenda/{date}">
+        <sl:slot name="day">
+          <sl:badge th:each="event : ${events[slDay.date]}" variant="secondary">[[${event}]]</sl:badge>
+        </sl:slot>
+      </sl:month-view>
+    renderSource: |-
+      <th:block th:with="events=${ {'2026-10-05': {'Standup'}, '2026-10-12': {'Release', 'Retro'},
+                                    '2026-10-21': {'Offsite'}, '2026-10-23': {'Demo'}, '2026-10-30': {'Planning'}} }">
+      <sl:month-view month="2026-10" today="2026-10-23" day-href="/agenda/{date}">
+        <sl:slot name="day">
+          <sl:badge th:each="event : ${events[slDay.iso]}" variant="secondary">[[${event}]]</sl:badge>
+        </sl:slot>
+      </sl:month-view>
+      </th:block>
+
+  - id: counts
+    title: Counts and week numbers
+    description: A count per day, no links. Monday first, with the week numbers; the days of the other months left out.
+    source: |-
+      <sl:month-view show-outside-days="false" show-week-number week-starts-on="1">
+        <sl:slot name="day">
+          <span th:if="${orders[slDay.date]}">[[${orders[slDay.date]}]] orders</span>
+        </sl:slot>
+      </sl:month-view>
+    renderSource: |-
+      <th:block th:with="orders=${ {'2026-10-01': 4, '2026-10-02': 7, '2026-10-06': 3, '2026-10-08': 12,
+                                    '2026-10-13': 5, '2026-10-15': 9, '2026-10-20': 2, '2026-10-22': 8,
+                                    '2026-10-23': 6, '2026-10-27': 11, '2026-10-29': 1} }">
+      <sl:month-view month="2026-10" today="2026-10-23" show-outside-days="false" show-week-number
+                     week-starts-on="1">
+        <sl:slot name="day">
+          <span th:if="${orders[slDay.iso]}">[[${orders[slDay.iso]}]] orders</span>
+        </sl:slot>
+      </sl:month-view>
+      </th:block>
+
+  - id: plain
+    title: Without content
+    description: Without a day slot or day-href, the month only shows its dates.
+    source: |-
+      <sl:month-view/>
+    renderSource: |-
+      <sl:month-view month="2026-10" today="2026-10-23"/>
