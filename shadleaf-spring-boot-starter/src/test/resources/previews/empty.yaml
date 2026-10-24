@@ -1,0 +1,200 @@
+# Scenarios for the empty state's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# After shadcn/ui's examples (empty-demo, -outline, -card, -input-group, -avatar and spinner-empty). The avatar's
+# renderSource takes the photo from previews/photos/, as avatar.yaml does.
+component: empty
+parts: [empty-header, empty-media, empty-title, empty-description, empty-content]
+scenarios:
+  - id: default
+    title: Empty
+    source: |-
+      <sl:empty>
+        <sl:empty-header>
+          <sl:empty-media variant="icon"><sl:icon name="folder-code"/></sl:empty-media>
+          <sl:empty-title level="3">No projects yet</sl:empty-title>
+          <sl:empty-description>You haven't created any projects yet. Get started by creating your first
+            project.</sl:empty-description>
+        </sl:empty-header>
+        <sl:empty-content>
+          <sl:button as="a" href="/projects/new">Create project</sl:button>
+        </sl:empty-content>
+        <sl:button as="a" href="/docs/projects" variant="link" size="sm">
+          Learn more
+          <sl:slot name="icon-end"><sl:icon name="arrow-up-right"/></sl:slot>
+        </sl:button>
+      </sl:empty>
+
+  - id: border
+    title: Outline
+    description: border draws a dashed line around the empty state.
+    source: |-
+      <sl:empty border>
+        <sl:empty-header>
+          <sl:empty-media variant="icon"><sl:icon name="cloud"/></sl:empty-media>
+          <sl:empty-title level="3">Cloud storage is empty</sl:empty-title>
+          <sl:empty-description>Upload files to your cloud storage to access them anywhere.</sl:empty-description>
+        </sl:empty-header>
+        <sl:empty-content>
+          <sl:button variant="outline" size="sm">Upload files</sl:button>
+        </sl:empty-content>
+      </sl:empty>
+
+  - id: card
+    title: In a card
+    source: |-
+      <sl:card>
+        <sl:card-header>
+          <sl:card-title level="3">Projects</sl:card-title>
+          <sl:card-description>Everything your team is working on</sl:card-description>
+        </sl:card-header>
+        <sl:card-content>
+          <sl:empty>
+            <sl:empty-header>
+              <sl:empty-media variant="icon"><sl:icon name="folder"/></sl:empty-media>
+              <sl:empty-title level="4">No projects yet</sl:empty-title>
+              <sl:empty-description>Create a project to start working with your team.</sl:empty-description>
+            </sl:empty-header>
+            <sl:empty-content>
+              <sl:button as="a" href="/projects/new">Create project</sl:button>
+            </sl:empty-content>
+          </sl:empty>
+        </sl:card-content>
+      </sl:card>
+
+  - id: search
+    title: With a search field
+    description: Links in the description are underlined.
+    source: |-
+      <sl:empty>
+        <sl:empty-header>
+          <sl:empty-title level="3">404 - Not found</sl:empty-title>
+          <sl:empty-description>The page you're looking for doesn't exist. Try searching for what you need
+            below.</sl:empty-description>
+        </sl:empty-header>
+        <sl:empty-content>
+          <form action="/search" role="search" aria-label="Pages">
+            <sl:input-group>
+              <sl:input-group-input type="search" name="pageQuery" placeholder="Try searching for pages..."
+                                    aria-label="Search pages"/>
+              <sl:input-group-addon><sl:icon name="search"/></sl:input-group-addon>
+            </sl:input-group>
+          </form>
+          <sl:empty-description>Need help? <a href="/support">Contact support</a></sl:empty-description>
+        </sl:empty-content>
+      </sl:empty>
+
+  - id: spinner
+    title: With a spinner
+    description: While something loads, an sl:spinner takes the icon's place.
+    source: |-
+      <sl:empty>
+        <sl:empty-header>
+          <sl:empty-media variant="icon"><sl:spinner/></sl:empty-media>
+          <sl:empty-title level="3">Processing your request</sl:empty-title>
+          <sl:empty-description>Please wait while we process your request. Do not refresh the
+            page.</sl:empty-description>
+        </sl:empty-header>
+        <sl:empty-content>
+          <sl:button variant="outline" size="sm">Cancel</sl:button>
+        </sl:empty-content>
+      </sl:empty>
+
+  - id: avatar
+    title: With an avatar
+    description: The default media shows its content as it is.
+    source: |-
+      <sl:empty>
+        <sl:empty-header>
+          <sl:empty-media>
+            <sl:avatar size="lg" label="Ada Lovelace">
+              <sl:avatar-image th:src="@{/users/{id}/photo(id=${user.id})}"/>
+              <sl:avatar-fallback>AL</sl:avatar-fallback>
+            </sl:avatar>
+          </sl:empty-media>
+          <sl:empty-title level="3">User offline</sl:empty-title>
+          <sl:empty-description>This user is currently offline. You can leave a message to notify them or try
+            again later.</sl:empty-description>
+        </sl:empty-header>
+        <sl:empty-content>
+          <sl:button size="sm">Leave message</sl:button>
+        </sl:empty-content>
+      </sl:empty>
+    renderSource: |-
+      <sl:empty>
+        <sl:empty-header>
+          <sl:empty-media>
+            <sl:avatar size="lg" label="Ada Lovelace">
+              <sl:avatar-image th:src="${photos.shadcn}"/>
+              <sl:avatar-fallback>AL</sl:avatar-fallback>
+            </sl:avatar>
+          </sl:empty-media>
+          <sl:empty-title level="3">User offline</sl:empty-title>
+          <sl:empty-description>This user is currently offline. You can leave a message to notify them or try
+            again later.</sl:empty-description>
+        </sl:empty-header>
+        <sl:empty-content>
+          <sl:button size="sm">Leave message</sl:button>
+        </sl:empty-content>
+      </sl:empty>
+
+  - id: table
+    title: In an empty table
+    description: An sl:empty as the content of sl:table-empty replaces its "No results." text.
+    source: |-
+      <sl:table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="person : ${people}">
+            <td th:text="${person.name}">Ada Lovelace</td>
+            <td th:text="${person.email}">ada@example.com</td>
+            <td th:text="${person.role}">Owner</td>
+          </tr>
+          <sl:table-empty colspan="3" th:if="${people.empty}">
+            <sl:empty>
+              <sl:empty-header>
+                <sl:empty-media variant="icon"><sl:icon name="users"/></sl:empty-media>
+                <sl:empty-title level="3">No people yet</sl:empty-title>
+                <sl:empty-description>Invite your team to collaborate on this project.</sl:empty-description>
+              </sl:empty-header>
+              <sl:empty-content>
+                <sl:button as="a" href="/people/invite" size="sm">
+                  <sl:slot name="icon-start"><sl:icon name="plus"/></sl:slot>
+                  Invite people
+                </sl:button>
+              </sl:empty-content>
+            </sl:empty>
+          </sl:table-empty>
+        </tbody>
+      </sl:table>
+    renderSource: |-
+      <sl:table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sl:table-empty colspan="3">
+            <sl:empty>
+              <sl:empty-header>
+                <sl:empty-media variant="icon"><sl:icon name="users"/></sl:empty-media>
+                <sl:empty-title level="3">No people yet</sl:empty-title>
+                <sl:empty-description>Invite your team to collaborate on this project.</sl:empty-description>
+              </sl:empty-header>
+              <sl:empty-content>
+                <sl:button as="a" href="/people/invite" size="sm">
+                  <sl:slot name="icon-start"><sl:icon name="plus"/></sl:slot>
+                  Invite people
+                </sl:button>
+              </sl:empty-content>
+            </sl:empty>
+          </sl:table-empty>
+        </tbody>
+      </sl:table>

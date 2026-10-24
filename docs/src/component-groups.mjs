@@ -14,7 +14,7 @@ export const componentGroups = [
       'checkbox', 'radio-group', 'switch', 'toggle', 'toggle-group', 'calendar', 'date-picker'],
   },
   {label: 'Overlays', pages: ['dialog', 'alert-dialog', 'sheet', 'popover', 'dropdown-menu', 'tooltip']},
-  {label: 'Feedback', pages: ['alert', 'toast', 'skeleton']},
+  {label: 'Feedback', pages: ['alert', 'toast', 'skeleton', 'spinner', 'empty']},
   {label: 'Data', pages: ['table', 'pagination', 'query-params', 'month-view', 'chart']},
   {
     label: 'Application shell',

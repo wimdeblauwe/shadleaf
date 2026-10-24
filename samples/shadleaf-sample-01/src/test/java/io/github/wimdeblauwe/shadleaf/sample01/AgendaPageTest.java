@@ -51,6 +51,14 @@ class AgendaPageTest {
   }
 
   @Test
+  void aDayWithoutEventsShowsAnEmptyState() throws Exception {
+    Element day = page("/agenda?date=2026-11-26").getElementById("agenda-day");
+
+    assertThat(day.select("li")).isEmpty();
+    assertThat(day.select(".empty .empty-title[role=heading][aria-level=3]").text()).isEqualTo("Nothing planned");
+  }
+
+  @Test
   void theMonthParameterWinsOverTheChosenDay() throws Exception {
     Document page = page("/agenda?date=2026-11-27&month=2026-12");
 

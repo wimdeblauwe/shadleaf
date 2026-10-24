@@ -1,0 +1,13 @@
+/*
+  Spinner: 16 pixels unless sized (the size prop) or sized by the component around it. Slower rather than still under
+  reduced motion, as the button's spinner: a frozen arc reads as a broken icon, and the role and name say it is busy.
+*/
+@layer components {
+  .spinner {
+    @apply animate-spin motion-reduce:[animation-duration:2.5s];
+  }
+
+  .spinner:not([data-icon-size]) {
+    @apply size-4;
+  }
+}

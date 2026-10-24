@@ -1,0 +1,20 @@
+# Scenarios for the spinner's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+component: spinner
+scenarios:
+  - id: default
+    title: Spinner
+    source: |-
+      <sl:spinner/>
+
+  - id: sizes
+    title: Sizes
+    source: |-
+      <sl:spinner/>
+      <sl:spinner size="24"/>
+      <sl:spinner size="32"/>
+
+  - id: label
+    title: Saying what loads
+    description: An aria-label replaces the default name, "Loading".
+    source: |-
+      <sl:spinner aria-label="Loading invoices"/>

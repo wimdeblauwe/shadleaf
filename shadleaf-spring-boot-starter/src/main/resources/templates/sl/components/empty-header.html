@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The top of an <code>sl:empty</code>: an optional <code>sl:empty-media</code>, an
+      <code>sl:empty-title</code> and an <code>sl:empty-description</code>, stacked and centred.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="empty-header"
+     class="empty-header"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

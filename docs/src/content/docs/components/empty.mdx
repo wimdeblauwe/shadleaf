@@ -1,0 +1,82 @@
+---
+title: Empty
+description: What a list, a table, a search or a page shows when there is nothing to show yet.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="empty--default" />
+
+## Built from parts
+
+An empty state is `<sl:empty>` plus the parts you need, as in shadcn/ui: `<sl:empty-header>` (holding
+`<sl:empty-media>`, `<sl:empty-title>` and `<sl:empty-description>`) and `<sl:empty-content>` for what to do next, such
+as a button, a search field or a link. Everything is centred, and the empty state grows to fill a flex container, so
+it sits in the middle of the space it is given.
+
+`<sl:empty-media variant="icon">` puts an icon on a muted square. The default media shows its content as it is, for an
+avatar or an image.
+
+<ComponentPreview id="empty--avatar" />
+
+## A title that is a heading
+
+`<sl:empty-title>` is plain text unless you give it a `level`. With one, it is announced as a heading of that level.
+Pick the level that fits the page: an empty state under an `<h2>` gets `level="3"`.
+
+## Outline
+
+`border` draws a dashed line around the empty state, to mark out the area. It works without utility classes, so also
+with the standalone stylesheet.
+
+<ComponentPreview id="empty--border" />
+
+## In a card
+
+<ComponentPreview id="empty--card" />
+
+## In an empty table
+
+Put the empty state in [`<sl:table-empty>`](../table/), which spans every column: it replaces the row's
+"No results." text.
+
+<ComponentPreview id="empty--table" />
+
+## With a search field
+
+A link in a description is underlined. An `<sl:empty-description>` can also go in the content, below the field.
+
+<ComponentPreview id="empty--search" />
+
+## While it loads
+
+An [`<sl:spinner>`](../spinner/) takes the icon's place in the media while something loads.
+
+<ComponentPreview id="empty--spinner" />
+
+## Attributes
+
+### sl:empty
+
+<ComponentAttributes component="empty" />
+
+### sl:empty-header
+
+<ComponentAttributes component="empty-header" />
+
+### sl:empty-media
+
+<ComponentAttributes component="empty-media" />
+
+### sl:empty-title
+
+<ComponentAttributes component="empty-title" />
+
+### sl:empty-description
+
+<ComponentAttributes component="empty-description" />
+
+### sl:empty-content
+
+<ComponentAttributes component="empty-content" />

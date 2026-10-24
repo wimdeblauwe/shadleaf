@@ -1,0 +1,58 @@
+<!-- <sl:empty>Content</sl:empty> -->
+<div class="empty">Content</div>
+
+<!-- <sl:empty border>Content</sl:empty> -->
+<div class="empty" data-border="dashed">Content</div>
+
+<!-- <sl:empty-header>Header</sl:empty-header> -->
+<div class="empty-header">Header</div>
+
+<!-- <sl:empty-media><sl:icon name="folder"/></sl:empty-media> -->
+<div class="empty-media">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</div>
+
+<!-- <sl:empty-media variant="icon"><sl:icon name="folder"/></sl:empty-media> -->
+<div class="empty-media" data-variant="icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</div>
+
+<!-- <sl:empty-title>No projects yet</sl:empty-title> -->
+<div class="empty-title">No projects yet</div>
+
+<!-- <sl:empty-title level="2">No projects yet</sl:empty-title> -->
+<div class="empty-title" role="heading" aria-level="2">No projects yet</div>
+
+<!-- <sl:empty-description>Create your first project.</sl:empty-description> -->
+<div class="empty-description">Create your first project.</div>
+
+<!-- <sl:empty-content>Content</sl:empty-content> -->
+<div class="empty-content">Content</div>
+
+<!-- <sl:empty border id="projects-empty">
+  <sl:empty-header>
+    <sl:empty-media variant="icon"><sl:icon name="folder-code"/></sl:empty-media>
+    <sl:empty-title level="2">No projects yet</sl:empty-title>
+    <sl:empty-description>Get started by creating your first project.</sl:empty-description>
+  </sl:empty-header>
+  <sl:empty-content><sl:button>Create project</sl:button></sl:empty-content>
+</sl:empty> -->
+<div class="empty" data-border="dashed" id="projects-empty">
+  <div class="empty-header">
+    <div class="empty-media" data-variant="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+    </div>
+    <div class="empty-title" role="heading" aria-level="2">No projects yet</div>
+    <div class="empty-description">Get started by creating your first project.</div>
+  </div>
+  <div class="empty-content">
+    <button class="button" type="button">Create project</button>
+  </div>
+</div>
+
+<!-- <sl:empty th:border="${true}">
+  <sl:empty-title th:level="${3}">[[${'No results'}]]</sl:empty-title>
+</sl:empty> -->
+<div class="empty" data-border="dashed">
+  <div class="empty-title" role="heading" aria-level="3">No results</div>
+</div>

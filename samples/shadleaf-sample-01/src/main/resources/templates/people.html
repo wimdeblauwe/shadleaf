@@ -72,8 +72,21 @@
           <td data-align="end" th:insert="~{people :: row-menu}"></td>
         </tr>
         <sl:table-empty colspan="6" th:if="${people.empty and search.isEmpty()}"/>
-        <sl:table-empty colspan="6" th:if="${people.empty and !search.isEmpty()}">No one matches
-          “[[${search}]]”.</sl:table-empty>
+        <!--/* The search field stays outside what htmx swaps, so the link to clear it loads the whole page. */-->
+        <sl:table-empty colspan="6" th:if="${people.empty and !search.isEmpty()}">
+          <sl:empty>
+            <sl:empty-header>
+              <sl:empty-media variant="icon"><sl:icon name="search-x"/></sl:empty-media>
+              <sl:empty-title level="2">No people found</sl:empty-title>
+              <sl:empty-description>No one matches “[[${search}]]”. Try another name or email
+                address.</sl:empty-description>
+            </sl:empty-header>
+            <sl:empty-content>
+              <sl:button as="a" th:href="@{/people}" variant="outline" size="sm" hx-boost="false">Clear the
+                search</sl:button>
+            </sl:empty-content>
+          </sl:empty>
+        </sl:table-empty>
       </tbody>
     </sl:table>
     <!--/* Laid out as shadcn/ui's data table footer: the summary at the start, rows per page and the pages at the end. */-->
