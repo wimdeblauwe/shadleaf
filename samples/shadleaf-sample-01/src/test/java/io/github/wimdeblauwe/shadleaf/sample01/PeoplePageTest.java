@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.shadleaf.sample01;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -23,6 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.test.web.servlet.MockMvc;
@@ -366,6 +368,94 @@ class PeoplePageTest {
         .andExpect(header().string("Content-Type", "image/jpeg"));
     mockMvc.perform(get(base + "missing.pdf")).andExpect(status().isNotFound());
     mockMvc.perform(get("/people/999999/files/orders.csv")).andExpect(status().isNotFound());
+  }
+
+  @Test
+  void viewHasAnUploadFormForMoreFiles() throws Exception {
+    Person person = repository.findAll().get(0);
+    Document page = page("/people/" + person.getId());
+
+    Element form = page.selectFirst("#person-files form");
+    assertThat(form.attr("enctype")).isEqualTo("multipart/form-data");
+    assertThat(form.attr("action")).isEqualTo("/people/" + person.getId() + "/files");
+    assertThat(form.attr("hx-post")).isEqualTo("/people/" + person.getId() + "/files");
+    Element input = form.selectFirst(".file-upload > input[type=file]");
+    assertThat(input.attr("name")).isEqualTo("files");
+    assertThat(input.hasAttr("multiple")).isTrue();
+    assertThat(input.attr("accept")).isEqualTo("image/*,.pdf,.txt,.csv");
+    assertThat(form.selectFirst(".file-upload").attr("data-max-size")).isEqualTo(String.valueOf(5 * 1024 * 1024));
+    assertThat(form.selectFirst("label.field-label").attr("for")).isEqualTo(input.id());
+    assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
+  }
+
+  @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+  void uploadWithoutHtmxAddsTheFilesAndComesBackWithAToast() throws Exception {
+    Person person = repository.findAll().get(0);
+    String base = "/people/" + person.getId();
+
+    MvcResult result = mockMvc.perform(multipart(base + "/files")
+            .file(new MockMultipartFile("files", "contract.pdf", "application/pdf", "%PDF-1.7".getBytes()))
+            .file(new MockMultipartFile("files", "notes.txt", "text/plain", "Hello".getBytes())))
+        .andExpect(redirectedUrl(base))
+        .andReturn();
+    @SuppressWarnings("unchecked")
+    List<Toast> toasts = (List<Toast>) result.getFlashMap().get("toasts");
+    assertThat(toasts).extracting(Toast::title).containsExactly("2 files uploaded");
+
+    Document page = page(base);
+    assertThat(page.select(".person-files .attachment-title").eachText()).containsExactly("onboarding-notes.txt",
+        "orders.csv", "team-offsite.jpg", "contract.pdf", "notes.txt");
+    assertThat(mockMvc.perform(get(base + "/files/notes.txt")).andExpect(status().isOk())
+        .andReturn().getResponse().getContentAsString()).isEqualTo("Hello");
+  }
+
+  @Test
+  @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+  void uploadWithHtmxAnswersWithTheFilesCardAndAToast() throws Exception {
+    Person person = repository.findAll().get(0);
+
+    String html = mockMvc.perform(multipart("/people/" + person.getId() + "/files").header("HX-Request", "true")
+            .file(new MockMultipartFile("files", "plan.png", "image/png", new byte[] {1, 2, 3})))
+        .andExpect(status().isOk())
+        .andExpect(header().string("HX-Trigger", org.hamcrest.Matchers.allOf(
+            org.hamcrest.Matchers.containsString("sl-toast"), org.hamcrest.Matchers.containsString("1 file uploaded"))))
+        .andReturn().getResponse().getContentAsString();
+    Document fragment = Jsoup.parseBodyFragment(html);
+
+    assertThat(fragment.body().child(0).id()).isEqualTo("person-files");
+    assertThat(fragment.select("h1")).isEmpty();
+    assertThat(fragment.select(".person-files .attachment-title").eachText()).contains("plan.png");
+    // The new file's download button takes the focus, as the form's button that had it is swapped away.
+    assertThat(fragment.select("[autofocus]")).hasSize(1);
+    assertThat(fragment.selectFirst("[autofocus]").attr("aria-label")).isEqualTo("Download plan.png");
+    assertThat(fragment.select(".field[data-invalid]")).isEmpty();
+  }
+
+  @Test
+  void theServerChecksTheFilesAgain() throws Exception {
+    Person person = repository.findAll().get(0);
+    String url = "/people/" + person.getId() + "/files";
+
+    // An empty file input still sends one empty part.
+    Document empty = Jsoup.parse(mockMvc.perform(multipart(url)
+            .file(new MockMultipartFile("files", "", "application/octet-stream", new byte[0])))
+        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+    assertThat(empty.select("#person-files .field-error").text()).isEqualTo("Choose at least one file to upload.");
+    assertThat(empty.selectFirst("#person-files input[type=file]").attr("aria-invalid")).isEqualTo("true");
+    assertThat(empty.selectFirst("#person-files input[type=file]").hasAttr("autofocus")).isTrue();
+
+    String html = mockMvc.perform(multipart(url).header("HX-Request", "true")
+            .file(new MockMultipartFile("files", "setup.exe", "application/octet-stream", new byte[] {1}))
+            .file(new MockMultipartFile("files", "scan.pdf", "application/pdf", new byte[5 * 1024 * 1024 + 1])))
+        .andExpect(status().isOk())
+        .andExpect(header().doesNotExist("HX-Trigger"))
+        .andReturn().getResponse().getContentAsString();
+    Document fragment = Jsoup.parseBodyFragment(html);
+    assertThat(fragment.body().child(0).id()).isEqualTo("person-files");
+    assertThat(fragment.select(".field-error").text())
+        .contains("setup.exe is not an image, PDF, text or CSV file.", "scan.pdf is larger than 5 MB.");
+    assertThat(fragment.select(".person-files .attachment-title").eachText()).doesNotContain("setup.exe", "scan.pdf");
   }
 
   @Test

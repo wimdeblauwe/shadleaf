@@ -49,7 +49,8 @@ class ButtonApprovalTest {
         "<sl:button as=\"a\" href=\"/orders\">Orders</sl:button>",
         "<sl:button as=\"a\" variant=\"outline\" size=\"sm\" href=\"/orders\">Orders</sl:button>",
         "<sl:button as=\"a\" disabled href=\"/orders\">Orders</sl:button>",
-        "<sl:button as=\"a\" loading href=\"/orders\">Orders</sl:button>"));
+        "<sl:button as=\"a\" loading href=\"/orders\">Orders</sl:button>",
+        "<sl:button as=\"label\" for=\"files\">Browse files</sl:button>"));
 
     HtmlApproval.verifyRenders("button", tester, snippets);
   }

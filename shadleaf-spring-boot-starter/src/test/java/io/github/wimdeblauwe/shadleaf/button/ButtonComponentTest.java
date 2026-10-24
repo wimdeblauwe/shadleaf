@@ -171,6 +171,20 @@ class ButtonComponentTest {
         .element(".button-spinner");
   }
 
+  // --- as="label" -------------------------------------------------------------------------------
+
+  @Test
+  void labelLooksTheSameAndPointsAtItsControl() {
+    assertThat(tester.render("<sl:button as=\"label\" variant=\"outline\" for=\"files\">Browse</sl:button>"))
+        .root()
+        .hasTag("label")
+        .hasClassName("button")
+        .hasAttribute("data-variant", "outline")
+        .hasAttribute("for", "files")
+        .hasNoAttribute("type", "disabled", "tabindex", "role")
+        .hasText("Browse");
+  }
+
   // --- loading ----------------------------------------------------------------------------------
 
   @Test

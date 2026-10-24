@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Locale;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * A file kept for a person, as an application would keep uploads: here three per person, made up from their details
@@ -32,6 +35,22 @@ public record PersonFile(String name, String type, MediaType mediaType, String i
             JOINED.format(person.getJoined())).getBytes(StandardCharsets.UTF_8)),
         new PersonFile("orders.csv", "CSV", MediaType.parseMediaType("text/csv"), "table", orders(person)),
         new PersonFile("team-offsite.jpg", "JPG", MediaType.IMAGE_JPEG, "image", photo()));
+  }
+
+  /**
+   * An uploaded file. Its type comes from its name, as the browser's is only what the browser guessed; its name loses
+   * any path an old browser sent along.
+   */
+  public static PersonFile of(MultipartFile upload) throws IOException {
+    String name = StringUtils.getFilename(upload.getOriginalFilename());
+    String extension = StringUtils.getFilenameExtension(name);
+    MediaType mediaType = MediaTypeFactory.getMediaType(name).orElse(MediaType.APPLICATION_OCTET_STREAM);
+    String icon = mediaType.getType().equals("image") ? "image"
+        : "csv".equalsIgnoreCase(extension) ? "table"
+        : mediaType.getType().equals("text") || mediaType.getSubtype().equals("pdf") ? "file-text"
+        : "file";
+    return new PersonFile(name, extension == null ? "File" : extension.toUpperCase(Locale.ROOT), mediaType, icon,
+        upload.getBytes());
   }
 
   /** Whether the person page shows a thumbnail of the file, and opens it in a dialog. */

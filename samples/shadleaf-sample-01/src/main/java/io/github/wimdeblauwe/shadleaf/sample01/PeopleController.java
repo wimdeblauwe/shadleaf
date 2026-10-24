@@ -4,6 +4,8 @@ import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
 import io.github.wimdeblauwe.shadleaf.toast.Toast;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -21,10 +23,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.unit.DataSize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -59,6 +65,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * there with a toast (post/redirect/get); with htmx the answer is the results fragment of that same page, with the
  * toast and the close of the confirm dialog in {@code HX-Trigger}. The selection is per page: a sort, page or search
  * starts with nothing selected.
+ * <p>
+ * A person's page lists their files and has a form to upload more ({@code sl:file-upload}), posting to
+ * {@code /people/<id>/files}. The server checks the files again, whatever the browser let through: at least one, none
+ * larger than 5 MB, only images, PDF, text and CSV. Without htmx a valid upload redirects back to the page with a toast
+ * (post/redirect/get); with htmx ({@code hx-post}) the answer is the files card alone, with the toast in
+ * {@code HX-Trigger}, and the first new file's download button takes the focus. With errors, both get the form again
+ * with them.
  */
 @Controller
 public class PeopleController {
@@ -68,10 +81,15 @@ public class PeopleController {
   /** The properties of the table's sortable columns. Anything else in ?sort= falls back to the default order. */
   private static final Set<String> SORTABLE = Set.of("name", "email", "role", "orders", "joined");
 
-  private final PersonRepository repository;
+  /** The largest file the person page takes; spring.servlet.multipart.max-file-size lets larger ones reach the check. */
+  static final DataSize MAX_UPLOAD_SIZE = DataSize.ofMegabytes(5);
 
-  public PeopleController(PersonRepository repository) {
+  private final PersonRepository repository;
+  private final PersonFileStore files;
+
+  public PeopleController(PersonRepository repository, PersonFileStore files) {
     this.repository = repository;
+    this.files = files;
   }
 
   @GetMapping("/people")
@@ -162,10 +180,62 @@ public class PeopleController {
   @GetMapping("/people/{id}")
   public String person(@PathVariable long id, Model model) {
     Person person = person(id);
+    model.addAttribute("upload", new UploadForm());
+    return personPage(person, model);
+  }
+
+  /** Uploads files to the person's page, from its upload form. */
+  @PostMapping("/people/{id}/files")
+  public String upload(@PathVariable long id, @ModelAttribute("upload") UploadForm upload,
+      BindingResult bindingResult, HtmxRequest htmxRequest, HtmxResponse htmxResponse, Model model,
+      RedirectAttributes redirectAttributes) throws IOException {
+    Person person = person(id);
+    List<MultipartFile> picked = upload.getFiles().stream().filter(file -> !file.isEmpty()).toList();
+    List<PersonFile> uploaded = new ArrayList<>();
+    if (picked.isEmpty()) {
+      bindingResult.rejectValue("files", "NotEmpty", "Choose at least one file to upload.");
+    }
+    for (MultipartFile file : picked) {
+      PersonFile personFile = PersonFile.of(file);
+      if (file.getSize() > MAX_UPLOAD_SIZE.toBytes()) {
+        bindingResult.rejectValue("files", "Size", personFile.name() + " is larger than 5 MB.");
+      } else if (!accepted(personFile)) {
+        bindingResult.rejectValue("files", "Type", personFile.name() + " is not an image, PDF, text or CSV file.");
+      }
+      uploaded.add(personFile);
+    }
+    boolean fragment = HtmxRequests.wantsFragment(htmxRequest);
+    if (bindingResult.hasErrors()) {
+      personPage(person, model);
+      return fragment ? "person :: files" : "person";
+    }
+    files.add(person, uploaded);
+    Toast toast = Toast.success(uploaded.size() == 1 ? "1 file uploaded" : uploaded.size() + " files uploaded")
+        .withDescription(String.join(", ", uploaded.stream().map(PersonFile::name).toList()));
+    if (!fragment) {
+      redirectAttributes.addFlashAttribute("toasts", List.of(toast));
+      return "redirect:/people/" + id;
+    }
+    htmxResponse.addTrigger("sl-toast", toast);
+    model.addAttribute("upload", new UploadForm());
+    model.addAttribute("focusFile", uploaded.get(0).name());
+    personPage(person, model);
+    return "person :: files";
+  }
+
+  private String personPage(Person person, Model model) {
     model.addAttribute("person", person);
-    model.addAttribute("files", PersonFile.of(person));
+    model.addAttribute("files", files.of(person));
     model.addAttribute("confirm", false);
     return "person";
+  }
+
+  /** The types the upload form accepts (accept="image/*,.pdf,.txt,.csv"), from the file's name. */
+  private static boolean accepted(PersonFile file) {
+    return file.mediaType().getType().equals("image")
+        || file.mediaType().getSubtype().equals("pdf")
+        || file.name().toLowerCase(Locale.ROOT).endsWith(".txt")
+        || file.name().toLowerCase(Locale.ROOT).endsWith(".csv");
   }
 
   /**
@@ -174,7 +244,7 @@ public class PeopleController {
    */
   @GetMapping("/people/{id}/files/{name}")
   public ResponseEntity<byte[]> file(@PathVariable long id, @PathVariable String name) {
-    PersonFile file = PersonFile.of(person(id)).stream()
+    PersonFile file = files.of(person(id)).stream()
         .filter(candidate -> candidate.name().equals(name))
         .findFirst()
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

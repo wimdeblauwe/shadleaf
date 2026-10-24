@@ -1,0 +1,126 @@
+---
+title: File Upload
+description: A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="file-upload--default" />
+
+## A file input with a drop zone
+
+shadcn/ui has no file upload component, so this one is Shadleaf's own. It looks like shadcn's file upload card: an
+outlined [empty state](../empty/) with an icon, a title, a description and a Browse button.
+
+Underneath is a plain `<input type="file">`, visually hidden. It holds the files and the form submits it, so it binds
+with `th:field` as any other input does, to a `MultipartFile`, or with `multiple` to a `List<MultipartFile>`. The form
+needs `enctype="multipart/form-data"`:
+
+```html
+<form th:object="${upload}" th:action="@{/people/{id}/files(id=${person.id})}" method="post"
+      enctype="multipart/form-data">
+  <sl:field th:field="*{files}">
+    <sl:field-label>Attachments</sl:field-label>
+    <sl:file-upload multiple accept="image/png,image/jpeg,application/pdf" max-size="10MB">
+      <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
+    </sl:file-upload>
+    <sl:field-error/>
+  </sl:field>
+  <sl:button type="submit">Upload</sl:button>
+</form>
+```
+
+```java
+public class UploadForm {
+  @NotEmpty
+  private List<MultipartFile> files = new ArrayList<>();
+  // getter and setter
+}
+```
+
+Every attribute that is not a prop goes to the input: `th:field`, `name`, `id`, `required`, `disabled`, `aria-*`,
+`hx-*`. `class` stays on the component. In an [`<sl:field>`](../field/) the input takes the field's binding, its id
+(which the field's label points at), `aria-describedby` and `aria-invalid`, and a field error colours the drop zone's
+border.
+
+Spring Boot limits uploads to 1 MB a file and 10 MB a request by default. Raise
+`spring.servlet.multipart.max-file-size` and `max-request-size` to match `max-size`.
+
+## What the script adds
+
+With JavaScript (the `slFileUpload` Alpine component), the component does more:
+
+- **Drop.** Files dropped anywhere on the component are added. The drop zone takes the ring colour while files are
+  dragged over it.
+- **A list.** Each file shows below the drop zone as an [`<sl:attachment>`](../attachment/) in its `idle` state, with
+  its name, type and size and a button that removes it. The list is in the order the files were added.
+- **Adding more.** With `multiple`, picking or dropping files again adds them to the ones there; the browser would
+  replace them. A file that is there already is not added twice. Without `multiple`, a new file replaces the old one.
+- **Checks.** A file that does not match `accept`, or is larger than `max-size`, is not added. It shows as an
+  attachment in its `error` state, with the reason, until it is dismissed or files are added again. The browser's
+  picker applies `accept` by itself, but a drop does not, and the picker lets one choose any file.
+- **Announcements.** Added, removed and rejected files are announced once per change, in one polite live region: "Added
+  report.pdf and photo.png."
+
+Everything still goes through the input: the script puts the files back with a `DataTransfer` (`input.files =
+dt.files`), so the form submits exactly what the list shows, and a drop dispatches `change` as a pick does, so
+`hx-trigger="change"` on the component works for both.
+
+<ComponentPreview id="file-upload--card" />
+
+The server checks the files anyway: `accept` and `max-size` only spare the user a round trip. A browser without
+JavaScript, or a request not made through the page, can send anything.
+
+## One file
+
+Without `multiple`, the title and button say so ("Upload a file", "Browse"). The slots `media`, `title` and
+`description` replace the icon and the texts, and `browse-label` the button's text.
+
+<ComponentPreview id="file-upload--single" />
+
+## Errors
+
+A second submit renders the form again with the binding's errors, as for any field. The input is marked
+`aria-invalid` and described by the error. A browser never keeps the files of a file input across a page load, so the
+user picks them again.
+
+<ComponentPreview id="file-upload--invalid" />
+
+## Disabled
+
+A disabled input fades the Browse button, and the component takes no files.
+
+<ComponentPreview id="file-upload--disabled" />
+
+## Accessibility
+
+- The input is the only tab stop. Space or Enter opens the file picker, as on any file input; the Browse button is
+  its `<label>` (`<sl:button as="label">`), so a click opens it too, and the input's focus ring is drawn on the button.
+- The input's name is the field's label and the Browse button's text; it is described by the drop zone's description
+  and the field's description and error.
+- Each remove button is named after its file: "Remove report.pdf". After a remove, the focus moves to the next
+  file's button, or back to the input.
+- Dropping is a pointer gesture; the keyboard path is the input.
+
+## Without JavaScript
+
+The Browse button still opens the picker and the form submits the files. There is no drop and no list: the browser
+shows nothing of the picked files but what the hidden input would.
+
+## htmx
+
+The component can be swapped in and out. The browser never restores a file input's files, and htmx's history restore
+renders the page's markup again: the list is drawn from the input's files whenever the component starts, so going back
+shows an empty upload, never files that would not be sent.
+
+## Not yet
+
+- **Image previews.** A preview of a picked image needs a `blob:` URL, which a strict Content Security Policy blocks
+  unless its `img-src` allows `blob:`. They will come as an option.
+- **Upload progress.** Sending the form with htmx and showing each file as `uploading` from `htmx:xhr:progress` is a
+  later step.
+
+## Attributes
+
+<ComponentAttributes component="file-upload" />

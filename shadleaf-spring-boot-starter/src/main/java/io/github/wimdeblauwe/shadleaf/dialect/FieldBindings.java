@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
+import org.springframework.util.unit.DataSize;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.IModel;
@@ -204,6 +205,47 @@ public final class FieldBindings {
       }
     }
     return values;
+  }
+
+  /**
+   * The id of the control a template renders for {@code attrs}, which a {@code <label for>} next to it points at: its
+   * {@code id} (or {@code th:id}, evaluated), the id {@code th:field} gives it ({@code files}), or else a new one with
+   * the given prefix ({@code sl-file-upload-1}). Pass the attributes {@link #control(Attrs, Object)} returned, so the
+   * id of an enclosing {@code sl:field} counts.
+   */
+  public String controlId(Attrs attrs, String prefix) {
+    String id = attrs.get(ID_ATTRIBUTE);
+    if (!StringUtils.isEmptyOrWhitespace(id)) {
+      return id;
+    }
+    String idExpression = attrs.get(EXPRESSION_PREFIX + ID_ATTRIBUTE);
+    if (!StringUtils.isEmptyOrWhitespace(idExpression)) {
+      return Objects.toString(StandardExpressions.getExpressionParser(context.getConfiguration())
+          .parseExpression(context, idExpression).execute(context), "");
+    }
+    String field = attrs.get(FIELD_ATTRIBUTE);
+    if (!StringUtils.isEmptyOrWhitespace(field)) {
+      return idFromField(field);
+    }
+    return prefix + nextSequence(prefix);
+  }
+
+  /**
+   * The number of bytes of a size written as Spring Boot writes {@code spring.servlet.multipart.max-file-size}
+   * ({@code 10MB}, {@code 500KB}, {@code 1024}), for {@code sl:file-upload}'s {@code max-size}; {@code null} for none.
+   *
+   * @throws ShadleafComponentException when the size cannot be read
+   */
+  public @Nullable Long maxSize(@Nullable String size) {
+    if (StringUtils.isEmptyOrWhitespace(size)) {
+      return null;
+    }
+    try {
+      return DataSize.parse(size.trim()).toBytes();
+    } catch (IllegalArgumentException e) {
+      throw new ShadleafComponentException(
+          "max-size=\"" + size + "\" is no size: write it as Spring Boot does, such as 10MB or 500KB", e);
+    }
   }
 
   private String value(@Nullable String field, @Nullable String valueExpression, @Nullable String value) {

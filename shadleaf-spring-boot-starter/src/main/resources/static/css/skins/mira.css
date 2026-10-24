@@ -404,6 +404,30 @@
     @apply ring-2 ring-ring/30;
   }
 
+  /*
+    File upload. The drop zone is the empty state's; the hidden input's focus ring is drawn on the Browse label, as
+    the button's, and its error on the drop zone's border. Files dragged over the drop zone tint it.
+  */
+  .file-upload {
+    @apply gap-2;
+  }
+
+  .file-upload-list {
+    @apply gap-2;
+  }
+
+  .file-upload:has(> .file-upload-input:focus-visible) > .file-upload-dropzone > .empty-content > .file-upload-browse {
+    @apply border-ring ring-2 ring-ring/30;
+  }
+
+  .file-upload:has(> .file-upload-input[aria-invalid='true']) > .file-upload-dropzone {
+    @apply border-destructive dark:border-destructive/50;
+  }
+
+  .file-upload[data-dragging] > .file-upload-dropzone {
+    @apply border-ring bg-muted/50;
+  }
+
   /* Form errors: the focus ring for when autofocus, a link or a script moves focus to it (tabindex="-1"). */
   .form-errors {
     @apply focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30;

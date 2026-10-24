@@ -26,6 +26,9 @@ There is no `asChild`. A component that can render as a link takes `as="a"`:
 <sl:button as="a" th:href="@{/orders}">Orders</sl:button>
 ```
 
+`<sl:button as="label">` is a label that looks like a button, for a control that is visually hidden, such as a file
+input (`for` points at it).
+
 ### No utility classes in the library's CSS
 
 shadcn styles its components with Tailwind classes compiled into your application. Shadleaf ships its own stylesheet,
@@ -487,6 +490,24 @@ inside a `DialogTrigger` it is a trigger with `commandfor` and `command="show-mo
 takes `as="a"` too, for a download link. Where shadcn tells you to add `tabIndex`, `role="group"` and an `aria-label`
 to a group of attachments without actions, `<sl:attachment-group label="...">` adds all three. shadcn's `shimmer` and
 `scroll-fade-x` utilities are part of the attachment's stylesheet. See [Attachment](../components/attachment/).
+
+### File upload is a component
+
+shadcn/ui has no file upload; its file upload card is an outlined `Empty` with a "Browse Files" button that does
+nothing yet. `<sl:file-upload>` is Shadleaf's own, built from that look: a visually hidden file input that the form
+submits, bound with `th:field` to a `MultipartFile` or `List<MultipartFile>`, a Browse button (`<sl:button as="label">`
+for the input), and with JavaScript a drop zone and a list of `<sl:attachment>`s, one per file, with a remove button.
+
+```html
+<!-- shadcn: <Empty className="border"><EmptyHeader>...<EmptyTitle>Upload files</EmptyTitle>
+     <EmptyDescription>PNG, JPG, PDF up to 10MB</EmptyDescription></EmptyHeader>
+     <EmptyContent><Button>Browse Files</Button></EmptyContent></Empty> -->
+<sl:file-upload th:field="*{attachments}" multiple accept="image/png,image/jpeg,application/pdf" max-size="10MB">
+  <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
+</sl:file-upload>
+```
+
+See [File Upload](../components/file-upload/).
 
 ### Skip link and main
 

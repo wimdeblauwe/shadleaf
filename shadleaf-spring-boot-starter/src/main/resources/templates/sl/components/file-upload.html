@@ -1,0 +1,111 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has
+      none. A visually hidden <code>&lt;input type="file"&gt;</code> holds the files and is submitted with the form,
+      so put <code>th:field</code> on the component (a <code>MultipartFile</code>, or with <code>multiple</code> a
+      <code>List&lt;MultipartFile&gt;</code>) and give the form <code>enctype="multipart/form-data"</code>. Every
+      attribute that is not a prop goes to the input (<code>th:field</code>, <code>name</code>, <code>id</code>,
+      <code>required</code>, <code>disabled</code>, <code>aria-*</code>, <code>hx-*</code>); <code>class</code> is
+      appended to the component. In a <code>sl:field</code>, the input takes the field's <code>th:field</code>, id
+      and <code>aria-describedby</code>. With JavaScript, files can be dropped too, each picked file shows as an
+      <code>sl:attachment</code> with a remove button, and a file that does not match <code>accept</code> or is
+      larger than <code>max-size</code> shows as an error. Without it, the Browse button still picks files. The
+      server checks the files anyway.</sl:description>
+    <sl:prop name="multiple" type="boolean">Take more than one file. Picking or dropping files adds them to the
+      ones already there.</sl:prop>
+    <sl:prop name="accept">The file types to take, as the input's <code>accept</code>: extensions
+      (<code>.pdf</code>), MIME types (<code>application/pdf</code>) or <code>image/*</code>, separated by commas.
+      A dropped file of another type is not added.</sl:prop>
+    <sl:prop name="max-size">The largest file to take, as Spring Boot writes sizes: <code>10MB</code>,
+      <code>500KB</code>. A larger file is not added.</sl:prop>
+    <sl:prop name="level" type="number">Makes the title a heading of this level (<code>role="heading"</code>).
+      </sl:prop>
+    <sl:prop name="browse-label">The text of the Browse button. Defaults to "Browse files", or "Browse" without
+      <code>multiple</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* Named slots: media (the icon), title and description. They sit in plain markup with the classes of sl:empty's
+  parts, not in sl:empty components: a sl:slot in a nested component's content would be that component's slot.
+
+  The input is the only tab stop and opens the file picker with Space or Enter, as it does natively; the Browse label
+  points at it, so a click opens it too, and the skins draw the input's focus ring on the label. Its name is the
+  field's label and the Browse label, its description the drop zone's description and the field's ids.
+
+  slFileUpload makes the list from the input's files, cloning the templates, and fills in the {0} the messages were
+  rendered with. Without JavaScript the list stays hidden. */-->
+<div th:fragment="file-upload"
+     th:with="slFileUploadAttrs=${#slFields.control(attrs.without('class', 'classappend'), slField)},
+              slFileUploadId=${#slFields.controlId(slFileUploadAttrs, 'sl-file-upload-')},
+              slFileUploadDescriptionId=${slots.has('description') ? slFileUploadId + '-upload-description' : null},
+              slFileUploadOwnDescribedBy=${slFileUploadAttrs['th:aria-describedby'] == null},
+              slFileUploadDescribedBy=${slFileUploadOwnDescribedBy
+                  ? #strings.trim((slFileUploadDescriptionId ?: '') + ' ' + (slFileUploadAttrs['aria-describedby'] ?: ''))
+                  : null}"
+     class="file-upload"
+     x-data="slFileUpload"
+     th:attr="data-max-size=${#slFields.maxSize(props['max-size'])}"
+     sl:attrs="${attrs.only('class', 'classappend')}">
+  <input type="file"
+         class="file-upload-input sl-sr-only"
+         th:attr="multiple=${props.multiple ? 'multiple' : null},
+                  accept=${props.accept},
+                  aria-describedby=${slFileUploadOwnDescribedBy ? slFileUploadDescribedBy : null},
+                  aria-invalid=${#slFields.invalid(slFileUploadAttrs) ? 'true' : null}"
+         sl:attrs="${(slFileUploadOwnDescribedBy ? slFileUploadAttrs.without('aria-describedby') : slFileUploadAttrs)
+                        .with('id', slFileUploadId)}">
+  <div class="empty file-upload-dropzone" data-border="dashed">
+    <div class="empty-header">
+      <div class="empty-media" data-variant="icon"><sl:slot name="media"><sl:icon name="cloud-upload"/></sl:slot></div>
+      <div class="empty-title"
+           th:attr="role=${props.level != null ? 'heading' : null},
+                    aria-level=${props.level}"><sl:slot
+          name="title">[[${props.multiple ? #messages.msg('sl.file-upload.title') : #messages.msg('sl.file-upload.title.one')}]]</sl:slot></div>
+      <div th:if="${slots.has('description')}"
+           class="empty-description"
+           th:id="${slFileUploadDescriptionId}"><sl:slot name="description"/></div>
+    </div>
+    <div class="empty-content">
+      <sl:button as="label"
+                 class="file-upload-browse"
+                 th:for="${slFileUploadId}">[[${props['browse-label'] ?: (props.multiple
+                     ? #messages.msg('sl.file-upload.browse') : #messages.msg('sl.file-upload.browse.one'))}]]</sl:button>
+    </div>
+  </div>
+  <ul class="file-upload-list" hidden></ul>
+  <div class="file-upload-status sl-sr-only"
+       role="status"
+       th:attr="data-message-added=#{sl.file-upload.announce.added('{0}')},
+                data-message-removed=#{sl.file-upload.announce.removed('{0}')},
+                data-message-rejected=#{sl.file-upload.announce.rejected('{0}', '{1}')}"></div>
+  <template class="file-upload-template" data-kind="file"><li class="file-upload-item"><sl:attachment
+      state="idle" size="sm" full-width>
+    <sl:attachment-media><sl:icon name="file"/></sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title></sl:attachment-title>
+      <sl:attachment-description></sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action th:aria-label="#{sl.file-upload.remove('{0}')}"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+  </sl:attachment></li></template>
+  <template class="file-upload-template"
+            data-kind="rejected"
+            th:attr="data-message-type=#{sl.file-upload.rejected.type},
+                     data-message-size=#{sl.file-upload.rejected.size('{0}')},
+                     data-message-count=#{sl.file-upload.rejected.count}"><li class="file-upload-item"><sl:attachment
+      state="error" size="sm" full-width>
+    <sl:attachment-media><sl:icon name="file-x"/></sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title></sl:attachment-title>
+      <sl:attachment-description></sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action th:aria-label="#{sl.file-upload.dismiss('{0}')}"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+  </sl:attachment></li></template>
+</div>
+</body>
+</html>

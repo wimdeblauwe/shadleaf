@@ -824,7 +824,7 @@
           "default" : "default"
         }, {
           "name" : "as",
-          "description" : "Element to render: a `button`, or an anchor (`a`) for navigation.",
+          "description" : "Element to render: a `button`, an anchor (`a`) for navigation, or a `label` for a visually hidden control (`for`), as `sl:file-upload`'s Browse button for its file input. A label takes no focus and no `disabled`: the control does.",
           "value" : {
             "kind" : "plain",
             "type" : "enum",
@@ -834,6 +834,8 @@
             "name" : "button"
           }, {
             "name" : "a"
+          }, {
+            "name" : "label"
           } ],
           "default" : "button"
         }, {
@@ -3102,6 +3104,81 @@
         "name" : "sl:field-set",
         "description" : "A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.",
         "attributes" : [ ]
+      }, {
+        "name" : "sl:file-upload",
+        "description" : "A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has none. A visually hidden `&lt;input type=\"file\"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype=\"multipart/form-data\"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. Without it, the Browse button still picks files. The server checks the files anyway.",
+        "attributes" : [ {
+          "name" : "multiple",
+          "description" : "Take more than one file. Picking or dropping files adds them to the ones already there.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "accept",
+          "description" : "The file types to take, as the input's `accept`: extensions (`.pdf`), MIME types (`application/pdf`) or `image/*`, separated by commas. A dropped file of another type is not added.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "max-size",
+          "description" : "The largest file to take, as Spring Boot writes sizes: `10MB`, `500KB`. A larger file is not added.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "level",
+          "description" : "Makes the title a heading of this level (`role=\"heading\"`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "browse-label",
+          "description" : "The text of the Browse button. Defaults to \"Browse files\", or \"Browse\" without `multiple`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:multiple",
+          "description" : "`multiple` from a Thymeleaf expression, e.g. `th:multiple=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:accept",
+          "description" : "`accept` from a Thymeleaf expression, e.g. `th:accept=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:max-size",
+          "description" : "`max-size` from a Thymeleaf expression, e.g. `th:max-size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:browse-label",
+          "description" : "`browse-label` from a Thymeleaf expression, e.g. `th:browse-label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:form-errors",
         "description" : "The errors of the form object the enclosing `th:object` selects, shown as a destructive alert: by default the errors that belong to the whole form rather than one field (global errors, from `bindingResult.reject(...)` or a class-level constraint); with `show=\"all\"` the field errors too. One message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. Not announced, and not focused unless it has `autofocus`; it has an id (`signup-errors` for `th:object=\"${signup}\"`) and `tabindex=\"-1\"`, so a link or a script can move focus to it too.",

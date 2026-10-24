@@ -40,6 +40,18 @@ Put an [`<sl:icon>`](../icon/) in the `icon-start` or `icon-end` slot. It takes 
 
 <ComponentPreview id="button--link" />
 
+## As a label
+
+`as="label"` renders a `<label>` that looks the same, for a control that is visually hidden: `for` points at it, and
+a click on the label activates the control. [`<sl:file-upload>`](../file-upload/)'s Browse button is one, for its file
+input. The label takes no focus and no `disabled`; the control does, so draw the focus ring and the disabled look from
+the control's state (`:has()`), as the file upload does.
+
+```html
+<input type="file" id="photo" name="photo" class="sl-sr-only">
+<sl:button as="label" for="photo" variant="outline">Choose a photo</sl:button>
+```
+
 ## Disabled and loading
 
 A disabled button gets the native `disabled` attribute. A disabled link loses its `href`, leaves the tab order and is
