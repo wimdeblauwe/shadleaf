@@ -1,9 +1,10 @@
 import {expect, test, type Page} from '@playwright/test';
-import {combinations, openShowcase} from './showcase';
+import {combinations, openShowcase, widths} from './showcase';
 
 // sl:attachment: no script, so this checks what the stylesheet does. On the showcase, in every skin and theme: the
 // trigger covers the card behind the actions, Tab reaches the actions and then the trigger, whose focus ring is drawn
-// around the card, and a labelled group takes the focus with a ring its edge fade does not hide. Once: the group
+// around the card, a labelled group takes the focus with a ring its edge fade does not hide, and a grid group wraps
+// at a narrow and a wide width without scrolling, its attachments filling their cells, and takes no focus. Once: the group
 // scrolls and snaps to an attachment, Tab brings an attachment off screen into view, the arrow keys scroll a labelled group, the trigger opens its dialog while the
 // actions do not, and the title shimmers while uploading, but not for users who ask for reduced motion.
 
@@ -67,6 +68,45 @@ for (const {skin, theme} of combinations) {
       expect(await group.evaluate(element => element.matches(':focus-visible'))).toBe(true);
       expect(focused.boxShadow).not.toBe('none');
       expect(focused.mask).toBe('none');
+    });
+
+    test('a grid group wraps at a narrow and a wide width, and takes no focus', async ({page}) => {
+      const group = scenario(page, 'attachment--group-grid').locator('.attachment-group');
+      await expect(group).toHaveAttribute('role', 'group');
+      await expect(group).toHaveAccessibleName('Inspection photos');
+      await expect(group).not.toHaveAttribute('tabindex', /.*/);
+      await group.focus();
+      await expect(group).not.toBeFocused();
+
+      // Columns and rows from the attachments' positions; the group neither scrolls nor masks its edges.
+      const layout = () => group.evaluate(element => {
+        const boxes = [...element.children].map(child => child.getBoundingClientRect());
+        const group = element.getBoundingClientRect();
+        return {
+          columns: new Set(boxes.map(box => Math.round(box.left))).size,
+          rows: new Set(boxes.map(box => Math.round(box.top))).size,
+          scrolls: element.scrollWidth > element.clientWidth,
+          mask: getComputedStyle(element).maskImage,
+          inside: boxes.every(box => box.left >= group.left - 0.5 && box.right <= group.right + 0.5),
+          // Each attachment fills its cell: all are as wide as one another.
+          widths: new Set(boxes.map(box => Math.round(box.width))).size,
+        };
+      });
+
+      const columns: Record<string, number> = {};
+      for (const {name, viewport} of widths) {
+        await page.setViewportSize(viewport);
+        await group.scrollIntoViewIfNeeded();
+        const result = await layout();
+        expect(result.columns, `columns at ${name} width`).toBeGreaterThan(1);
+        expect(result.rows, `rows at ${name} width`).toBeGreaterThan(1);
+        expect(result.scrolls).toBe(false);
+        expect(result.mask).toBe('none');
+        expect(result.inside).toBe(true);
+        expect(result.widths).toBe(1);
+        columns[name] = result.columns;
+      }
+      expect(columns.desktop).toBeGreaterThan(columns.phone);
     });
   });
 }

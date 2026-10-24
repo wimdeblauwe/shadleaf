@@ -395,7 +395,15 @@
   }
 
   .attachment-group {
-    @apply gap-3 scroll-px-1 py-1 rounded-lg;
+    @apply rounded-lg;
+  }
+
+  .attachment-group:not([data-layout]) {
+    @apply gap-3 scroll-px-1 py-1;
+  }
+
+  .attachment-group[data-layout='grid'] {
+    @apply grid-cols-[repeat(auto-fill,minmax(--spacing(32),1fr))] gap-3;
   }
 
   .attachment-group:focus-visible {
