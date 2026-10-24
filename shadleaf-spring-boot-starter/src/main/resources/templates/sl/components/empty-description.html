@@ -1,0 +1,13 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The text below the title of an <code>sl:empty</code>. Links in it are underlined.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="empty-description"
+     class="empty-description"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

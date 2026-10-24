@@ -1,0 +1,27 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A spinning icon that says something is loading: a status (<code>role="status"</code>) named
+      "Loading" (the message <code>sl.spinner.label</code>; an <code>aria-label</code> of its own replaces it). It
+      turns slower, not still, when the user asks for reduced motion. For a button that is busy, use
+      <code>sl:button loading</code> instead.</sl:description>
+    <sl:prop name="size" type="number">Width and height in pixels. Without it the spinner is 16 pixels, or sized by
+      the surrounding component (as an icon in <code>sl:empty-media</code>).</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* The icon's label gives it an accessible name, and the role turns the icon's img into a status. The name is a
+  message, or the caller's aria-label (see theme-toggle.html): attributes on a nested component are evaluated in its
+  template, so the values come from local variables. */-->
+<th:block th:fragment="spinner"
+          th:with="slLabel=${attrs['aria-label'] ?: #messages.msg('sl.spinner.label')},
+                   slAttrs=${attrs.containsKey('th:aria-label') ? attrs : attrs.without('aria-label')},
+                   slSize=${props.size}"><sl:icon name="loader-circle"
+                                                  class="spinner"
+                                                  th:size="${slSize}"
+                                                  th:label="${slLabel}"
+                                                  role="status"
+                                                  sl:attrs="${slAttrs}"/></th:block>
+</body>
+</html>

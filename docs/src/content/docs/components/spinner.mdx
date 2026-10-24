@@ -1,0 +1,35 @@
+---
+title: Spinner
+description: A spinning icon that says something is loading.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="spinner--default" />
+
+## What it says
+
+A spinner is a status (`role="status"`) named "Loading". Give it an `aria-label` of its own to say what is loading;
+the default is the message `sl.spinner.label`, which you can reword or translate in your `messages.properties`.
+
+<ComponentPreview id="spinner--label" />
+
+For a button that is busy, use [`<sl:button loading>`](../button/) instead: it shows the spinner, disables the button
+and announces the busy state. To show a skeleton of the content to come, use [`<sl:skeleton>`](../skeleton/).
+
+## Sizes
+
+A spinner is 16 pixels, or the size of an icon in the component around it, such as
+[`<sl:empty-media variant="icon">`](../empty/#while-it-loads). `size` sets the width and height in pixels.
+
+<ComponentPreview id="spinner--sizes" />
+
+## Reduced motion
+
+For users who ask for reduced motion the spinner turns slower instead of standing still: a frozen arc reads as a
+broken icon.
+
+## Attributes
+
+<ComponentAttributes component="spinner" />

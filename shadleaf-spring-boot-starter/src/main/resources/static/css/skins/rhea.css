@@ -209,6 +209,41 @@
     @apply text-destructive-legible;
   }
 
+  /* Empty. border draws the dashed line; the media's icon variant puts the icon on a muted square. */
+  .empty {
+    @apply gap-4 rounded-3xl p-12 border-dashed data-border:border;
+  }
+
+  .empty-header {
+    @apply gap-2;
+  }
+
+  .empty-media {
+    @apply mb-2;
+  }
+
+  .empty-media:not([data-variant]) {
+    @apply bg-transparent;
+  }
+
+  .empty-media[data-variant='icon'] {
+    @apply size-10 rounded-xl bg-muted text-foreground
+      [&_svg:not([class*='size-'],[data-icon-size])]:size-5;
+  }
+
+  .empty-title {
+    @apply text-lg font-medium tracking-tight;
+  }
+
+  .empty-description {
+    @apply text-sm/relaxed text-muted-foreground
+      [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary;
+  }
+
+  .empty-content {
+    @apply gap-4 text-sm;
+  }
+
   /* Form errors: the focus ring for when autofocus, a link or a script moves focus to it (tabindex="-1"). */
   .form-errors {
     @apply focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30;

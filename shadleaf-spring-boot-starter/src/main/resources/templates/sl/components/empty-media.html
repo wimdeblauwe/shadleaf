@@ -1,0 +1,17 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>An icon, an avatar or an image above the title of an <code>sl:empty</code>, inside
+      <code>sl:empty-header</code>.</sl:description>
+    <sl:prop name="variant" default="default" values="default icon"><code>icon</code> puts an icon on a muted
+      square; <code>default</code> shows the content as it is, e.g. an avatar.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="empty-media"
+     class="empty-media"
+     th:attr="data-variant=${props.unlessDefault('variant')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

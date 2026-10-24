@@ -35,6 +35,8 @@ example relies on a utility class to change a component, Shadleaf has a prop ins
 | shadcn/ui | Shadleaf |
 | --- | --- |
 | `<CardHeader className="border-b">` | `<sl:card-header border>` |
+| `<Empty className="border border-dashed">` | `<sl:empty border>` |
+| `<Spinner className="size-8" />` | `<sl:spinner size="32"/>` |
 | `<Skeleton className="h-4 w-full" />` | `<sl:skeleton/>` (a line is the default), `shape="circle"` for an avatar |
 
 Your own classes still work: `class` is appended to the component's own, so `class="w-64"` sizes a skeleton when your
@@ -522,7 +524,7 @@ takes keyboard focus, when it is a link (`as="a"`).
 ### Accessibility additions
 
 - `<sl:card-title level="3">` is announced as a heading, so screen reader users can jump between cards. Without a
-  `level` it is plain text, as in shadcn.
+  `level` it is plain text, as in shadcn. The same goes for `<sl:empty-title>`.
 - The avatar is hidden from assistive technology unless it has a `label`, as it usually sits next to the person's
   name. With one, it is announced as a single image with that name.
 - The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
@@ -628,6 +630,8 @@ takes keyboard focus, when it is a link (`as="a"`).
 - A read-only input or textarea gets a muted background and no shadow; shadcn draws it as an editable one.
 - In Windows' high-contrast mode a disabled control turns the system's grey text colour (`GrayText`) instead of
   fading.
-- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
-  `Spinner` for this.
+- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. In shadcn you put a
+  `Spinner` in the button and disable it yourself.
+- `<sl:spinner>` turns slower, not still, when the user asks for reduced motion; shadcn's keeps spinning at full
+  speed. Its name, "Loading", is a message (`sl.spinner.label`) you can translate.
 

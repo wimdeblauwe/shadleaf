@@ -2666,6 +2666,93 @@
           }
         } ]
       }, {
+        "name" : "sl:empty",
+        "description" : "An empty state: what a list, a table, a search or a page shows when there is nothing to show yet. Holds an `sl:empty-header` (media, title and description) and an optional `sl:empty-content` with what to do next, centred in the space it is given.",
+        "attributes" : [ {
+          "name" : "border",
+          "description" : "A dashed line around the empty state, to mark out the area (shadcn's `border border-dashed` classes).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:empty-content",
+        "description" : "What to do next in an `sl:empty`, below its header: a button, a search field, a link.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:empty-description",
+        "description" : "The text below the title of an `sl:empty`. Links in it are underlined.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:empty-header",
+        "description" : "The top of an `sl:empty`: an optional `sl:empty-media`, an `sl:empty-title` and an `sl:empty-description`, stacked and centred.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:empty-media",
+        "description" : "An icon, an avatar or an image above the title of an `sl:empty`, inside `sl:empty-header`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "`icon` puts an icon on a muted square; `default` shows the content as it is, e.g. an avatar.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "icon"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:empty-title",
+        "description" : "The title of an `sl:empty`, inside `sl:empty-header`.",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:field",
         "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
         "attributes" : [ {
@@ -4903,6 +4990,25 @@
         }, {
           "name" : "th:for",
           "description" : "`for` from a Thymeleaf expression, e.g. `th:for=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:spinner",
+        "description" : "A spinning icon that says something is loading: a status (`role=\"status\"`) named \"Loading\" (the message `sl.spinner.label`; an `aria-label` of its own replaces it). It turns slower, not still, when the user asks for reduced motion. For a button that is busy, use `sl:button loading` instead.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Width and height in pixels. Without it the spinner is 16 pixels, or sized by the surrounding component (as an icon in `sl:empty-media`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

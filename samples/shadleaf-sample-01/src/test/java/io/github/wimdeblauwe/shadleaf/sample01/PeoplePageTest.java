@@ -203,8 +203,13 @@ class PeoplePageTest {
     Document page = page("/people?q=zzz%3Cb%3E");
 
     assertThat(page.select(".table > tbody > tr")).hasSize(1);
-    assertThat(page.select(".table-empty").text()).isEqualTo("No one matches “zzz<b>”.");
+    assertThat(page.select(".table-empty .empty-title[role=heading]").text()).isEqualTo("No people found");
+    assertThat(page.select(".table-empty .empty-description").text())
+        .isEqualTo("No one matches “zzz<b>”. Try another name or email address.");
     assertThat(page.select(".table-empty b")).isEmpty();
+    Element clear = page.selectFirst(".table-empty .empty-content > a.button");
+    assertThat(clear.attr("href")).isEqualTo("/people");
+    assertThat(clear.attr("hx-boost")).isEqualTo("false");
     assertThat(page.select(".pagination-summary").text()).isEqualTo("0 of 0");
     assertThat(page.getElementById("people-status").text()).isEqualTo("0 people found");
   }

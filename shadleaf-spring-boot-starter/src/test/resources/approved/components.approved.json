@@ -1152,6 +1152,59 @@
       "description" : "With `as=\"sidebar-menu-action\"`: from 768&nbsp;px, show it only while the pointer is over its item, the focus is in it, or the menu is open."
     } ]
   }, {
+    "name" : "empty",
+    "tag" : "sl:empty",
+    "description" : "An empty state: what a list, a table, a search or a page shows when there is nothing to show yet. Holds an `sl:empty-header` (media, title and description) and an optional `sl:empty-content` with what to do next, centred in the space it is given.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "border",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "A dashed line around the empty state, to mark out the area (shadcn's `border border-dashed` classes)."
+    } ]
+  }, {
+    "name" : "empty-content",
+    "tag" : "sl:empty-content",
+    "description" : "What to do next in an `sl:empty`, below its header: a button, a search field, a link.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "empty-description",
+    "tag" : "sl:empty-description",
+    "description" : "The text below the title of an `sl:empty`. Links in it are underlined.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "empty-header",
+    "tag" : "sl:empty-header",
+    "description" : "The top of an `sl:empty`: an optional `sl:empty-media`, an `sl:empty-title` and an `sl:empty-description`, stacked and centred.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "empty-media",
+    "tag" : "sl:empty-media",
+    "description" : "An icon, an avatar or an image above the title of an `sl:empty`, inside `sl:empty-header`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "icon" ],
+      "description" : "`icon` puts an icon on a muted square; `default` shows the content as it is, e.g. an avatar."
+    } ]
+  }, {
+    "name" : "empty-title",
+    "tag" : "sl:empty-title",
+    "description" : "The title of an `sl:empty`, inside `sl:empty-header`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline."
+    } ]
+  }, {
     "name" : "field",
     "tag" : "sl:field",
     "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
@@ -2216,6 +2269,17 @@
       "defaultValue" : "main",
       "values" : [ ],
       "description" : "The `id` of the element it skips to, usually the `main`."
+    } ]
+  }, {
+    "name" : "spinner",
+    "tag" : "sl:spinner",
+    "description" : "A spinning icon that says something is loading: a status (`role=\"status\"`) named \"Loading\" (the message `sl.spinner.label`; an `aria-label` of its own replaces it). It turns slower, not still, when the user asks for reduced motion. For a button that is busy, use `sl:button loading` instead.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "size",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "Width and height in pixels. Without it the spinner is 16 pixels, or sized by the surrounding component (as an icon in `sl:empty-media`)."
     } ]
   }, {
     "name" : "switch",

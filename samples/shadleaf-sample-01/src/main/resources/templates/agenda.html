@@ -31,7 +31,13 @@
       <ul th:unless="${chosenEvents.isEmpty()}">
         <li th:each="event : ${chosenEvents}" th:text="${event}">Demo</li>
       </ul>
-      <p th:if="${chosenEvents.isEmpty()}">Nothing planned.</p>
+      <sl:empty th:if="${chosenEvents.isEmpty()}">
+        <sl:empty-header>
+          <sl:empty-media variant="icon"><sl:icon name="calendar-x"/></sl:empty-media>
+          <sl:empty-title level="3">Nothing planned</sl:empty-title>
+          <sl:empty-description>This day has no events.</sl:empty-description>
+        </sl:empty-header>
+      </sl:empty>
     </sl:card-content>
   </sl:card>
 </div>
