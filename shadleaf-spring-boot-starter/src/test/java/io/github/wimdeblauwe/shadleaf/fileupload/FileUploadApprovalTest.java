@@ -21,6 +21,8 @@ class FileUploadApprovalTest {
                             max-size="10MB" level="3" class="max-w-md" previews>
               <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
             </sl:file-upload>""",
+        "<sl:file-upload id=\"list\" name=\"list\" multiple layout=\"list\"/>",
+        "<sl:file-upload id=\"photos\" name=\"photos\" multiple accept=\"image/*\" layout=\"grid\" previews/>",
         """
             <sl:file-upload id="photo" name="photo" accept="image/*" browse-label="Choose a photo" disabled>
               <sl:slot name="media"><sl:icon name="image"/></sl:slot>
