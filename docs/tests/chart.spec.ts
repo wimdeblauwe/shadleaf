@@ -160,15 +160,14 @@ test('hovering shows the tooltip with the series\' labels and values', async ({p
   await expect(tooltip(area).locator('.chart-tooltip-name > .chart-tooltip-label')).toHaveText('January');
 });
 
-test('the legend shows every series with its colour, by name as Recharts sorts it', async ({page}) => {
+test('the legend shows every series with its colour, in the order of the series', async ({page}) => {
   await openShowcase(page, 'vega', 'light');
   const chart = page.locator('[data-scenario="chart--dynamic-series"] sl-chart');
   await drawn(chart);
-  await expect(chart.locator('.chart-legend-item')).toHaveText(['Chrome', 'Firefox', 'Safari']);
+  await expect(chart.locator('.chart-legend-item')).toHaveText(['Chrome', 'Safari', 'Firefox']);
   const colours = await chart.locator('.chart-legend-indicator').evaluateAll(indicators =>
       indicators.map(indicator => getComputedStyle(indicator).backgroundColor));
-  // In the order of the series: chrome, safari, firefox.
-  const tokens = await page.evaluate(() => ['--chart-1', '--chart-3', '--chart-2'].map(token => {
+  const tokens = await page.evaluate(() => ['--chart-1', '--chart-2', '--chart-3'].map(token => {
     const probe = document.createElement('div');
     probe.style.backgroundColor = `var(${token})`;
     document.body.append(probe);
