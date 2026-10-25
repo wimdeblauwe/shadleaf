@@ -1,7 +1,9 @@
 /*
   A port of shadcn/ui's ui/chart.tsx: ChartContainer, ChartTooltipContent and ChartLegendContent with the same
   structure, with classes (components/chart.css and the skins) instead of Tailwind utilities. What differs:
-  - the config is built from the series parts (sl:chart-bar, -line, -area): their key, label and colour;
+  - the config is built from the series parts (sl:chart-bar, -line, -area): their key, label, colour and whether
+    they are dashed (the tooltip's indicator and the legend's marker then are as well) and the row where a dashed line
+    joins the series it continues, which the tooltip leaves it out of;
   - shadcn's ChartStyle, a <style> element a strict Content-Security-Policy blocks, is gone: sl-chart.jsx sets the
     --color-<key> properties through CSSOM;
   - shadcn's formatter and labelFormatter functions are named formats (formats.js), as attributes of the parts;
@@ -78,7 +80,7 @@ export function ChartTooltipContent({
       {!nestLabel ? tooltipLabel : null}
       <div className="chart-tooltip-items">
         {payload
-          .filter(item => item.type !== 'none')
+          .filter(item => item.type !== 'none' && !isJoin(config, item))
           .map((item, index) => {
             const key = `${item.name ?? item.dataKey ?? 'value'}`;
             const itemConfig = getPayloadConfigFromPayload(config, item, key);
@@ -90,6 +92,7 @@ export function ChartTooltipContent({
                     className="chart-tooltip-indicator"
                     data-indicator={indicator}
                     data-nested={nestLabel ? 'true' : undefined}
+                    data-dashed={itemConfig?.dashed ? 'true' : undefined}
                     style={{'--indicator-color': indicatorColor}}
                   />
                 )}
@@ -124,13 +127,19 @@ export function ChartLegendContent({payload, verticalAlign = 'bottom'}) {
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
           return (
             <div key={index} className="chart-legend-item">
-              <div className="chart-legend-indicator" style={{backgroundColor: item.color}}/>
+              <div className="chart-legend-indicator" data-dashed={itemConfig?.dashed ? 'true' : undefined}
+                   style={itemConfig?.dashed ? {'--indicator-color': item.color} : {backgroundColor: item.color}}/>
               {itemConfig?.label}
             </div>
           );
         })}
     </div>
   );
+}
+
+// The value a dashed line borrows from the series it continues (join) is no number of its own to list.
+function isJoin(config, item) {
+  return config[item.dataKey]?.joinRow === item.payload;
 }
 
 // Helper to extract item config from a payload.

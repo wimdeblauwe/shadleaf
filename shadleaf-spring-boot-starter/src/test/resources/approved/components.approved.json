@@ -618,6 +618,17 @@
       "values" : [ ],
       "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`)."
     }, {
+      "name" : "dashed",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Draw the line on top of the area dashed (the fill stays as it is). The legend and the tooltip show the series dashed as well."
+    }, {
+      "name" : "join",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `key` of the series this dashed area continues (`actual`), as on `sl:chart-line`: it starts at that series' last number, and the tooltip does not list this series at that last row. Needs `dashed`."
+    }, {
       "name" : "fill-opacity",
       "type" : "number",
       "defaultValue" : "0.4",
@@ -729,6 +740,17 @@
       "defaultValue" : "false",
       "values" : [ ],
       "description" : "A dot on every point."
+    }, {
+      "name" : "dashed",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over (see `join`)."
+    }, {
+      "name" : "join",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `key` of the series this dashed line continues (`actual`). The chart draws the dashed line from that series' last number to its own first one, so the rows need no duplicated value, and the tooltip does not list this series at that last row. Needs `dashed`."
     }, {
       "name" : "stroke-width",
       "type" : "number",
