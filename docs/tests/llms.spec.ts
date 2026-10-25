@@ -64,6 +64,17 @@ test('every page has a Markdown copy without MDX left in it, linked from its hea
   await expect(alternate).toHaveAttribute('href', /\/index\.md$/);
 });
 
+test('an aside is a block quote, with its code blocks inside it', async ({request}) => {
+  const markdown = await (await request.get('/components/application-shell.md')).text();
+  const start = markdown.indexOf('> **Tip: Leaving out more on paper**');
+  expect(start).toBeGreaterThan(-1);
+  const aside = markdown.slice(start, markdown.indexOf('\n\n', markdown.indexOf('print:hidden', start)));
+
+  expect(aside).toContain('> ```css\n> @media print {');
+  expect(aside).toContain('> ```html\n> <div class="screen-only">');
+  expect(aside.split('\n').filter(line => !line.startsWith('>'))).toEqual([]);
+});
+
 test('the component set holds every component with every prop', async ({request}) => {
   const text = await (await request.get('/llms-components.txt')).text();
   for (const component of components.components) {

@@ -111,7 +111,8 @@ export function bodyMarkdown(entry: DocsEntry): string {
   for (const line of lines) {
     const fenceMatch = line.match(/^\s*(`{3,}|~{3,})/);
     if (fence) {
-      out.push(line);
+      // A code block in an aside stays inside its block quote, to its closing fence.
+      out.push(aside ? (line ? '> ' + line : '>') : line);
       if (fenceMatch && fenceMatch[1].startsWith(fence)) {
         fence = null;
       }

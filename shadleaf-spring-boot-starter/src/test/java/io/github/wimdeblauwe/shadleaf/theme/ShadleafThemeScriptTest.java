@@ -46,6 +46,13 @@ class ShadleafThemeScriptTest {
   }
 
   @Test
+  void scriptPrintsInTheLightTheme() {
+    contextRunner.run(context -> assertThat(renderThemeScript(context, Map.of()).data())
+        .contains("addEventListener('beforeprint'")
+        .contains("addEventListener('afterprint'"));
+  }
+
+  @Test
   void rendersTheNonceWhenTheRequestCarriesOne() {
     contextRunner.run(context -> assertThat(renderThemeScript(context, Map.of("cspNonce", "r4nd0m")).attr("nonce"))
         .isEqualTo("r4nd0m"));

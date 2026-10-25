@@ -172,4 +172,11 @@
       @apply transition-opacity;
     }
   }
+
+  /* Print: a toast is about something that just happened on the screen. */
+  @media print {
+    .toaster-viewport {
+      display: none !important;
+    }
+  }
 }

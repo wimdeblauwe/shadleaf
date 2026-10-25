@@ -28,7 +28,8 @@ toggle wherever it belongs, usually the page header:
 The toggle is an icon button that opens a menu with **Light**, **Dark** and **System**. Light and Dark are stored in
 the browser (`localStorage`, key `shadleaf-theme`); System removes the key, and the page follows the operating system
 again. The theme script reads that key before the first paint, so every page after the choice starts in the right
-theme, with no flash of the other one.
+theme, with no flash of the other one. A dark page prints in the light theme: the script takes the `dark` class off
+while the browser prints and puts it back afterwards.
 
 The button shows a sun in the light theme and a moon in the dark one. A screen reader hears something like "Theme, menu
 button"; in the menu, "Light, checked, menu item radio, 1 of 3" (the wording differs between screen readers).

@@ -589,4 +589,27 @@
       @apply outline-2 -outline-offset-2 outline-solid;
     }
   }
+
+  /*
+    Print: the page alone, across the paper. The sidebar and its trigger stay on the screen, and the inset loses the
+    card the inset variant draws (margin, corners, shadow, the sidebar's ground around it). !important, because the
+    rules for the screen select the sidebar and the card more specifically, in the skins too.
+  */
+  @media print {
+    .sidebar,
+    .sidebar-trigger {
+      display: none !important;
+    }
+
+    .sidebar-provider {
+      @apply block min-h-0;
+      background: none !important;
+    }
+
+    .sidebar-inset {
+      margin: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+  }
 }
