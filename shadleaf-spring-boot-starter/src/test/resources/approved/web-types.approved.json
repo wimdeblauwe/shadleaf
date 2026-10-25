@@ -6004,7 +6004,7 @@
         } ]
       }, {
         "name" : "sl:toggle",
-        "description" : "A button that is on or off: a checkbox drawn as a button, so it submits, binds and works as one without JavaScript, and a screen reader announces it as checked or not. The content (text, icons) is its label; give a toggle that holds only an icon an `aria-label`. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `disabled`, `aria-label`, `x-*`) passes through to the `input`, except `class`, which goes to the `label` around it. `th:field` on a boolean works as on a checkbox; the toggle is marked `aria-invalid` when its field has errors.",
+        "description" : "A button that is on or off: a checkbox drawn as a button, so it submits, binds and works as one without JavaScript, and a screen reader announces it as checked or not. The content (text, icons) is its label; give a toggle that holds only an icon an `aria-label`. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `disabled`, `aria-label`, `x-*`) passes through to the `input`, except `class`, which goes to the `label` around it, and `th:text` and `th:utext`, which set the label. `th:field` on a boolean works as on a checkbox; the toggle is marked `aria-invalid` when its field has errors.",
         "attributes" : [ {
           "name" : "variant",
           "description" : "Visual style of the toggle.",
@@ -6197,7 +6197,7 @@
         } ]
       }, {
         "name" : "sl:toggle-group-item",
-        "description" : "One item of a `sl:toggle-group`, drawn as a `sl:toggle`: a radio button in a `single` group, a checkbox in a `multiple` one. Give it a `value`; it takes the group's `th:field` or `name`, variant, size and `disabled`. The content is its label; give an item that holds only an icon an `aria-label`. Every attribute that is not a prop (`value`, `checked`, `disabled`, `aria-label`) passes through to the `input`, except `class`, which goes to the `label` around it. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+        "description" : "One item of a `sl:toggle-group`, drawn as a `sl:toggle`: a radio button in a `single` group, a checkbox in a `multiple` one. Give it a `value`; it takes the group's `th:field` or `name`, variant, size and `disabled`. The content is its label; give an item that holds only an icon an `aria-label`. Every attribute that is not a prop (`value`, `checked`, `disabled`, `aria-label`) passes through to the `input`, except `class`, which goes to the `label` around it, and `th:text` and `th:utext`, which set the label. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
         "attributes" : [ ]
       }, {
         "name" : "sl:tooltip",
