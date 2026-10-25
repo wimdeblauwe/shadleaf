@@ -609,13 +609,16 @@ shadcn's example wraps the ellipsis in a `DropdownMenuTrigger` by hand; here `<s
 "More levels", not "More", and the separator turns around on a right-to-left page. See
 [Breadcrumb](https://shadleaf.dev/0.11.0-SNAPSHOT/components/breadcrumb.md).
 
-#### Attachment: a trigger with `as`, and a label for the group
+#### Attachment: a trigger with `as`, a label and a grid for the group
 
 The parts and props are shadcn's. `<AttachmentTrigger asChild>` around a link is `<sl:attachment-trigger as="a">`, and
 inside a `DialogTrigger` it is a trigger with `commandfor` and `command="show-modal"`. `<sl:attachment-action>`
 takes `as="a"` too, for a download link. Where shadcn tells you to add `tabIndex`, `role="group"` and an `aria-label`
 to a group of attachments without actions, `<sl:attachment-group label="...">` adds all three. shadcn's `shimmer` and
-`scroll-fade-x` utilities are part of the attachment's stylesheet. See [Attachment](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md).
+`scroll-fade-x` utilities are part of the attachment's stylesheet. shadcn's group is only a row; for a gallery you
+write your own grid around the attachments. `<sl:attachment-group layout="grid">` is that grid, its columns and gap
+from the skin, as the standalone bundle has no utility classes to build one. See
+[Attachment](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md).
 
 #### File upload is a component
 

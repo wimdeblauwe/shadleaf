@@ -609,13 +609,16 @@ shadcn's example wraps the ellipsis in a `DropdownMenuTrigger` by hand; here `<s
 "More levels", not "More", and the separator turns around on a right-to-left page. See
 [Breadcrumb](https://shadleaf.dev/0.11.0-SNAPSHOT/components/breadcrumb.md).
 
-#### Attachment: a trigger with `as`, and a label for the group
+#### Attachment: a trigger with `as`, a label and a grid for the group
 
 The parts and props are shadcn's. `<AttachmentTrigger asChild>` around a link is `<sl:attachment-trigger as="a">`, and
 inside a `DialogTrigger` it is a trigger with `commandfor` and `command="show-modal"`. `<sl:attachment-action>`
 takes `as="a"` too, for a download link. Where shadcn tells you to add `tabIndex`, `role="group"` and an `aria-label`
 to a group of attachments without actions, `<sl:attachment-group label="...">` adds all three. shadcn's `shimmer` and
-`scroll-fade-x` utilities are part of the attachment's stylesheet. See [Attachment](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md).
+`scroll-fade-x` utilities are part of the attachment's stylesheet. shadcn's group is only a row; for a gallery you
+write your own grid around the attachments. `<sl:attachment-group layout="grid">` is that grid, its columns and gap
+from the skin, as the standalone bundle has no utility classes to build one. See
+[Attachment](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md).
 
 #### File upload is a component
 
@@ -4585,6 +4588,39 @@ img-src 'self' blob:
 Without it the files keep their icons and the upload works as before. The browser reports the blocked image in the
 console; after that, the page makes no more previews. See [Content-Security-Policy](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/csp.md).
 
+### Grid
+
+With `layout="grid"`, the picked files show as cards in columns that fill the width, instead of small attachments one
+below the other. With `previews`, a photo then shows as a large square thumbnail: big enough to judge, say, the
+photos of an inspection before they are sent with the rest of the form.
+
+**Example: Grid.** With layout grid, the picked files show as cards in columns that fill the width, images with a large thumbnail, other files with their icon, rejected ones as errors.
+
+```html
+<sl:field th:field="*{uploadInspectionPhotos}">
+  <sl:field-label>Photos of defects</sl:field-label>
+  <sl:file-upload multiple accept="image/*,.pdf" max-size="10MB" layout="grid" previews>
+    <sl:slot name="media"><sl:icon name="images"/></sl:slot>
+    <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+  </sl:file-upload>
+</sl:field>
+```
+
+```html
+<sl:file-upload th:field="*{photos}" multiple accept="image/*,.pdf" max-size="10MB" layout="grid" previews>
+  <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+</sl:file-upload>
+```
+
+- **The cards.** Each file is a vertical [`<sl:attachment>`](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md#image) at the default size, filling
+  its cell; the grid is the one of [`<sl:attachment-group layout="grid">`](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md#grid), so both look
+  alike. Other files show their icon in the same square, and a rejected file shows as an error card with the reason.
+- **The buttons.** The remove or dismiss button sits in the card's corner, and is hidden while the files are sent.
+- **The order.** The cards are in the order of the files in the input, as in the list, so the focus order, the focus
+  after a remove and the announcements are the same.
+
+Without JavaScript nothing changes: there is no list.
+
 ### Errors
 
 A second submit renders the form again with the binding's errors, as for any field. The input is marked
@@ -4743,6 +4779,7 @@ Attributes of `<sl:file-upload>`: A drop zone to pick files with, and the list o
 | `max-size` | *string* | — | The largest file to take, as Spring Boot writes sizes: `10MB`, `500KB`. A larger file is not added. |
 | `level` | *number* | — | Makes the title a heading of this level (`role="heading"`). |
 | `previews` | *boolean* | — | Show a thumbnail of each picked image (up to 20 MB, no SVG) instead of the file icon. The thumbnail is a `blob:` URL: a Content-Security-Policy must allow it in `img-src`, or the icon stays. |
+| `layout` | `list`, `grid` | `list` | `list` shows the picked files one below the other, as small attachments; `grid` as cards in columns that fill the width, the grid of `sl:attachment-group layout="grid"`: with `previews`, for photos one wants to see before sending them. |
 | `browse-label` | *string* | — | The text of the Browse button. Defaults to "Browse files", or "Browse" without `multiple`. |
 
 Every prop can also be set from an expression: `th:multiple="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
@@ -12120,7 +12157,7 @@ Source: https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment/
 An attachment is `<sl:attachment>` plus the parts you need, as in shadcn/ui: `<sl:attachment-media>` (an icon or an
 image), `<sl:attachment-content>` (holding `<sl:attachment-title>` and `<sl:attachment-description>`),
 `<sl:attachment-actions>` with one or more `<sl:attachment-action>`s, and an optional `<sl:attachment-trigger>` that
-makes the whole card clickable. `<sl:attachment-group>` lays several out in a row.
+makes the whole card clickable. `<sl:attachment-group>` lays several out in a row or a grid.
 
 The attachment only shows a file; it uploads nothing. Use it for files that are already on the server, such as the
 documents on a customer's page, and for the list of a file upload, where your page or your script sets each one's
@@ -12337,6 +12374,37 @@ the arrow keys scroll it.
 </sl:attachment-group>
 ```
 
+### Grid
+
+`layout="grid"` wraps the attachments instead, in as many columns as fit the width, for a gallery of photos. It does
+not scroll, so nothing is hidden off screen and the edges do not fade. Give each attachment `orientation="vertical"`
+and `full-width`, so it fills its cell: the image is cropped to a square and the actions sit in its corner. The width
+of a cell and the gap between them come from the skin.
+
+**Example: Grid.** layout="grid" wraps the attachments in columns that fill the width, for a gallery of photos. Each vertical attachment with full-width fills its cell.
+
+```html
+<sl:attachment-group layout="grid" label="Inspection photos">
+  <sl:attachment orientation="vertical" full-width th:each="photo : ${photos}">
+    <sl:attachment-media variant="image">
+      <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+    </sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title>[[${photo.name}]]</sl:attachment-title>
+      <sl:attachment-description>[[${photo.meta}]]</sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action th:aria-label="|Remove ${photo.name}|"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+    <sl:attachment-trigger as="a" th:href="@{/files/{id}(id=${photo.id})}" target="_blank"
+                           th:aria-label="|Open ${photo.name}|"/>
+  </sl:attachment>
+</sl:attachment-group>
+```
+
+A grid's `label` still makes it a named group, but the group takes no focus: there is nothing to scroll. Tab goes
+from one attachment's actions and trigger to the next.
+
 ### Trigger
 
 `<sl:attachment-trigger>` covers the whole card, behind its actions, so a click anywhere but on an action activates
@@ -12481,13 +12549,14 @@ Every prop can also be set from an expression: `th:as="${...}"`. Any other attri
 
 #### sl:attachment-group
 
-Attributes of `<sl:attachment-group>`: A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for attachments without any, give the group a `label`.
+Attributes of `<sl:attachment-group>`: A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out, or a grid that wraps them. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for a row of attachments without any, give the group a `label`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `label` | *string* | — | Accessible name of the group. With it the group is a named group (`role="group"`) that takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger. |
+| `layout` | `row`, `grid` | `row` | `row` scrolls sideways; `grid` wraps the attachments in columns that fill the width, for a gallery of photos: vertical attachments with `full-width`, each filling its cell. |
+| `label` | *string* | — | Accessible name of the group. With it the group is a named group (`role="group"`). A row then takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger. A grid does not scroll, so it takes no focus. |
 
-Every prop can also be set from an expression: `th:label="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:layout="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ---
 

@@ -144,6 +144,39 @@ img-src 'self' blob:
 Without it the files keep their icons and the upload works as before. The browser reports the blocked image in the
 console; after that, the page makes no more previews. See [Content-Security-Policy](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/csp.md).
 
+## Grid
+
+With `layout="grid"`, the picked files show as cards in columns that fill the width, instead of small attachments one
+below the other. With `previews`, a photo then shows as a large square thumbnail: big enough to judge, say, the
+photos of an inspection before they are sent with the rest of the form.
+
+**Example: Grid.** With layout grid, the picked files show as cards in columns that fill the width, images with a large thumbnail, other files with their icon, rejected ones as errors.
+
+```html
+<sl:field th:field="*{uploadInspectionPhotos}">
+  <sl:field-label>Photos of defects</sl:field-label>
+  <sl:file-upload multiple accept="image/*,.pdf" max-size="10MB" layout="grid" previews>
+    <sl:slot name="media"><sl:icon name="images"/></sl:slot>
+    <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+  </sl:file-upload>
+</sl:field>
+```
+
+```html
+<sl:file-upload th:field="*{photos}" multiple accept="image/*,.pdf" max-size="10MB" layout="grid" previews>
+  <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+</sl:file-upload>
+```
+
+- **The cards.** Each file is a vertical [`<sl:attachment>`](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md#image) at the default size, filling
+  its cell; the grid is the one of [`<sl:attachment-group layout="grid">`](https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment.md#grid), so both look
+  alike. Other files show their icon in the same square, and a rejected file shows as an error card with the reason.
+- **The buttons.** The remove or dismiss button sits in the card's corner, and is hidden while the files are sent.
+- **The order.** The cards are in the order of the files in the input, as in the list, so the focus order, the focus
+  after a remove and the announcements are the same.
+
+Without JavaScript nothing changes: there is no list.
+
 ## Errors
 
 A second submit renders the form again with the binding's errors, as for any field. The input is marked
@@ -302,6 +335,7 @@ Attributes of `<sl:file-upload>`: A drop zone to pick files with, and the list o
 | `max-size` | *string* | — | The largest file to take, as Spring Boot writes sizes: `10MB`, `500KB`. A larger file is not added. |
 | `level` | *number* | — | Makes the title a heading of this level (`role="heading"`). |
 | `previews` | *boolean* | — | Show a thumbnail of each picked image (up to 20 MB, no SVG) instead of the file icon. The thumbnail is a `blob:` URL: a Content-Security-Policy must allow it in `img-src`, or the icon stays. |
+| `layout` | `list`, `grid` | `list` | `list` shows the picked files one below the other, as small attachments; `grid` as cards in columns that fill the width, the grid of `sl:attachment-group layout="grid"`: with `previews`, for photos one wants to see before sending them. |
 | `browse-label` | *string* | — | The text of the Browse button. Defaults to "Browse files", or "Browse" without `multiple`. |
 
 Every prop can also be set from an expression: `th:multiple="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
