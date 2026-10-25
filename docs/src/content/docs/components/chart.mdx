@@ -71,9 +71,9 @@ between the points (`monotone`, `natural`, `linear`, `step`), `dots` puts a dot 
 
 <ComponentPreview id="chart--line-forecast" />
 
-`dashed` draws a series dashed (on `sl:chart-area` its line), for a forecast or a target next to actual figures. The
+`dashed` draws a series dashed (on `sl:chart-area` only its line, the fill stays), for a forecast or a target next to actual figures. The
 legend and the tooltip show it dashed as well. A row without a number (`null`) leaves a gap, so an actual line stops
-at the last month with figures while the dashed one carries on. `join` names the series a dashed line continues
+at the last month with figures while the dashed one carries on. `join` (on `sl:chart-line` and `sl:chart-area`) names the series a dashed line continues
 (`join="actual"`): the line starts at that series' last number, without a duplicate in your rows, and the tooltip does
 not list the forecast for that month.
 

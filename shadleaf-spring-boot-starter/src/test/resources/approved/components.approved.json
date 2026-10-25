@@ -622,7 +622,12 @@
       "type" : "boolean",
       "defaultValue" : "false",
       "values" : [ ],
-      "description" : "Draw the line on top of the area dashed. The legend and the tooltip show the series dashed as well."
+      "description" : "Draw the line on top of the area dashed (the fill stays as it is). The legend and the tooltip show the series dashed as well."
+    }, {
+      "name" : "join",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `key` of the series this dashed area continues (`actual`), as on `sl:chart-line`: it starts at that series' last number, and the tooltip does not list this series at that last row. Needs `dashed`."
     }, {
       "name" : "fill-opacity",
       "type" : "number",

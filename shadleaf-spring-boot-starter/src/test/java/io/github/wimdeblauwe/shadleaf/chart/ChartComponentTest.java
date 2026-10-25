@@ -253,8 +253,9 @@ class ChartComponentTest {
     assertThat(tester.render("<sl:chart-line key=\"a\" curve=\"step-after\" dots dashed join=\"desktop\" stroke-width=\"3\"/>")).root()
         .hasAttribute("curve", "step-after").hasAttribute("dots", "true").hasAttribute("dashed", "true")
         .hasAttribute("join", "desktop").hasAttribute("stroke-width", "3");
-    assertThat(tester.render("<sl:chart-area key=\"a\" stack=\"a\" dashed fill-opacity=\"0.8\"/>")).root()
-        .hasAttribute("stack", "a").hasAttribute("dashed", "true").hasAttribute("fill-opacity", "0.8");
+    assertThat(tester.render("<sl:chart-area key=\"a\" stack=\"a\" dashed join=\"desktop\" fill-opacity=\"0.8\"/>")).root()
+        .hasAttribute("stack", "a").hasAttribute("dashed", "true").hasAttribute("join", "desktop")
+        .hasAttribute("fill-opacity", "0.8");
     assertThat(tester.render("<sl:chart-legend vertical-align=\"top\"/>")).root()
         .hasAttribute("vertical-align", "top");
     assertThat(tester.render("<sl:chart th:data=\"${rows}\" label=\"Visits\" margin=\"12\"/>",
