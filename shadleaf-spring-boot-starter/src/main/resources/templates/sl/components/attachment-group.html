@@ -3,18 +3,23 @@
 <head>
   <sl:props>
     <sl:description>A row of <code>sl:attachment</code>s that scrolls sideways when they do not fit, snapping to
-      each attachment, its edges fading out. Keyboard users reach attachments off screen by tabbing to their
-      actions or triggers; for attachments without any, give the group a <code>label</code>.</sl:description>
+      each attachment, its edges fading out, or a grid that wraps them. Keyboard users reach attachments off screen
+      by tabbing to their actions or triggers; for a row of attachments without any, give the group a
+      <code>label</code>.</sl:description>
+    <sl:prop name="layout" default="row" values="row grid"><code>row</code> scrolls sideways; <code>grid</code>
+      wraps the attachments in columns that fill the width, for a gallery of photos: vertical attachments with
+      <code>full-width</code>, each filling its cell.</sl:prop>
     <sl:prop name="label">Accessible name of the group. With it the group is a named group
-      (<code>role="group"</code>) that takes keyboard focus, so the arrow keys scroll it: for a row of attachments
-      that have no actions or trigger.</sl:prop>
+      (<code>role="group"</code>). A row then takes keyboard focus, so the arrow keys scroll it: for a row of
+      attachments that have no actions or trigger. A grid does not scroll, so it takes no focus.</sl:prop>
   </sl:props>
 </head>
 <body>
 <div th:fragment="attachment-group"
      class="attachment-group"
-     th:attr="role=${props.label != null ? 'group' : null},
-              tabindex=${props.label != null ? '0' : null},
+     th:attr="data-layout=${props.unlessDefault('layout')},
+              role=${props.label != null ? 'group' : null},
+              tabindex=${props.label != null and props.layout == 'row' ? '0' : null},
               aria-label=${props.label}"
      sl:attrs><sl:slot/></div>
 </body>

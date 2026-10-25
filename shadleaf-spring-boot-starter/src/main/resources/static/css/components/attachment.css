@@ -16,6 +16,9 @@
   a scroll-driven animation, or are always there without one (Firefox). The mask would hide a focus ring drawn
   outside the group, so a focused group drops it. Its lengths are written out (2.5rem is --spacing(10), 6rem
   --spacing(24)): outside @apply, --spacing() compiles to var(--spacing), which the embedded bundle must not use.
+
+  A grid group (data-layout="grid") wraps instead: no scrolling, snap or fade. It fills its container, also as a flex
+  item, which would shrink it to its content. Its columns and gap are the skins'.
 */
 @layer components {
   .attachment {
@@ -92,11 +95,15 @@
   }
 
   .attachment-group {
+    @apply min-w-0 outline-none;
+  }
+
+  .attachment-group:not([data-layout]) {
     --sl-scroll-fade-size: min(12%, 2.5rem);
     --sl-scroll-fade: linear-gradient(to right,
       transparent 0, #000 var(--sl-scroll-fade-s, 0px),
       #000 calc(100% - var(--sl-scroll-fade-e, 0px)), transparent 100%);
-    @apply flex min-w-0 snap-x snap-mandatory overflow-x-auto overscroll-x-contain outline-none;
+    @apply flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain;
     scrollbar-width: none;
     mask-image: var(--sl-scroll-fade);
     mask-repeat: no-repeat;
@@ -124,12 +131,16 @@
     }
   }
 
-  .attachment-group:focus-visible {
+  .attachment-group:not([data-layout]):focus-visible {
     mask-image: none;
   }
 
-  .attachment-group > .attachment {
+  .attachment-group:not([data-layout]) > .attachment {
     @apply flex-none snap-start;
+  }
+
+  .attachment-group[data-layout='grid'] {
+    @apply grid w-full;
   }
 }
 

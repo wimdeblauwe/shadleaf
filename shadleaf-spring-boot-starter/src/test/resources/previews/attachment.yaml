@@ -296,6 +296,96 @@ scenarios:
         </sl:attachment>
       </sl:attachment-group>
 
+  - id: group-grid
+    title: Grid
+    description: layout="grid" wraps the attachments in columns that fill the width, for a gallery of photos. Each vertical attachment with full-width fills its cell.
+    source: |-
+      <sl:attachment-group layout="grid" label="Inspection photos">
+        <sl:attachment orientation="vertical" full-width th:each="photo : ${photos}">
+          <sl:attachment-media variant="image">
+            <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+          </sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>[[${photo.name}]]</sl:attachment-title>
+            <sl:attachment-description>[[${photo.meta}]]</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action th:aria-label="|Remove ${photo.name}|"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" th:href="@{/files/{id}(id=${photo.id})}" target="_blank"
+                                 th:aria-label="|Open ${photo.name}|"/>
+        </sl:attachment>
+      </sl:attachment-group>
+    renderSource: |-
+      <sl:attachment-group layout="grid" label="Inspection photos">
+        <sl:attachment orientation="vertical" full-width>
+          <sl:attachment-media variant="image"><img th:src="${photos.dunes}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>inspection-01.jpg</sl:attachment-title>
+            <sl:attachment-description>JPG · 820 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove inspection-01.jpg"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/inspection-01.jpg" target="_blank" aria-label="Open inspection-01.jpg"/>
+        </sl:attachment>
+        <sl:attachment orientation="vertical" full-width>
+          <sl:attachment-media variant="image"><img th:src="${photos.lake}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>inspection-02.jpg</sl:attachment-title>
+            <sl:attachment-description>JPG · 1.1 MB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove inspection-02.jpg"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/inspection-02.jpg" target="_blank" aria-label="Open inspection-02.jpg"/>
+        </sl:attachment>
+        <sl:attachment orientation="vertical" full-width>
+          <sl:attachment-media variant="image"><img th:src="${photos.forest}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>inspection-03.jpg</sl:attachment-title>
+            <sl:attachment-description>JPG · 940 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove inspection-03.jpg"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/inspection-03.jpg" target="_blank" aria-label="Open inspection-03.jpg"/>
+        </sl:attachment>
+        <sl:attachment orientation="vertical" full-width>
+          <sl:attachment-media variant="image"><img th:src="${photos.lake}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>inspection-04.jpg</sl:attachment-title>
+            <sl:attachment-description>JPG · 1.3 MB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove inspection-04.jpg"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/inspection-04.jpg" target="_blank" aria-label="Open inspection-04.jpg"/>
+        </sl:attachment>
+        <sl:attachment orientation="vertical" full-width>
+          <sl:attachment-media variant="image"><img th:src="${photos.forest}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>inspection-05.jpg</sl:attachment-title>
+            <sl:attachment-description>JPG · 760 KB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove inspection-05.jpg"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/inspection-05.jpg" target="_blank" aria-label="Open inspection-05.jpg"/>
+        </sl:attachment>
+        <sl:attachment orientation="vertical" full-width>
+          <sl:attachment-media variant="image"><img th:src="${photos.dunes}" alt=""></sl:attachment-media>
+          <sl:attachment-content>
+            <sl:attachment-title>inspection-06.jpg</sl:attachment-title>
+            <sl:attachment-description>JPG · 1.0 MB</sl:attachment-description>
+          </sl:attachment-content>
+          <sl:attachment-actions>
+            <sl:attachment-action aria-label="Remove inspection-06.jpg"><sl:icon name="x"/></sl:attachment-action>
+          </sl:attachment-actions>
+          <sl:attachment-trigger as="a" href="/files/inspection-06.jpg" target="_blank" aria-label="Open inspection-06.jpg"/>
+        </sl:attachment>
+      </sl:attachment-group>
+
   - id: trigger
     title: Trigger
     description: The trigger covers the card and opens a dialog with commandfor; the actions above it stay clickable.
