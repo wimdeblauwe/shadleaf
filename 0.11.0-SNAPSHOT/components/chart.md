@@ -90,7 +90,7 @@ identifier: letters, digits, `_` and `-`, not starting with a digit or `-`. A ke
 </sl:chart>
 ```
 
-The legend lists the series by label, in alphabetical order, as Recharts sorts it (shadcn's does the same).
+The legend lists the series by label, in the order of the series parts, like the tooltip.
 
 ## Line chart
 
@@ -108,6 +108,25 @@ The legend lists the series by label, in alphabetical order, as Recharts sorts i
 
 `margin` leaves room left and right of the plot, so the first and last tick labels fit. `curve` sets how a line runs
 between the points (`monotone`, `natural`, `linear`, `step`), `dots` puts a dot on each.
+
+**Example: Actual and forecast.** A dashed series for a forecast, target or budget. The rows without a number (null) leave a gap, so the actual line stops at the last month with figures; join names the series the forecast continues, so it starts there without a number of its own, and the tooltip lists only the actual value for that month. The legend and the tooltip show the forecast dashed too.
+
+```html
+<sl:chart th:data="${sales}" label="Cumulative sales, January to December 2024" margin="12">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip cursor="false" label-format="month"/>
+  <sl:chart-legend/>
+  <sl:chart-line key="actual" label="Actual" color="var(--chart-1)"/>
+  <sl:chart-line key="forecast" label="Forecast" color="var(--chart-1)" dashed join="actual"/>
+</sl:chart>
+```
+
+`dashed` draws a series dashed (on `sl:chart-area` only its line, the fill stays), for a forecast or a target next to actual figures. The
+legend and the tooltip show it dashed as well. A row without a number (`null`) leaves a gap, so an actual line stops
+at the last month with figures while the dashed one carries on. `join` (on `sl:chart-line` and `sl:chart-area`) names the series a dashed line continues
+(`join="actual"`): the line starts at that series' last number, without a duplicate in your rows, and the tooltip does
+not list the forecast for that month.
 
 ## Area chart
 
@@ -133,6 +152,21 @@ between the points (`monotone`, `natural`, `linear`, `step`), `dots` puts a dot 
   <sl:chart-area key="desktop" label="Desktop" stack="a" color="var(--chart-1)"/>
 </sl:chart>
 ```
+
+**Example: Area with a forecast.** The same on areas: the forecast's line is dashed, its fill stays, and join starts it at the last actual number.
+
+```html
+<sl:chart th:data="${sales}" label="Cumulative sales, January to December 2024" margin="12">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip indicator="line" cursor="false" label-format="month"/>
+  <sl:chart-legend/>
+  <sl:chart-area key="actual" label="Actual" color="var(--chart-1)"/>
+  <sl:chart-area key="forecast" label="Forecast" color="var(--chart-1)" fill-opacity="0.15" dashed join="actual"/>
+</sl:chart>
+```
+
+On an area, `dashed` dashes the line and the fill stays; a lower `fill-opacity` on the forecast sets it apart.
 
 ## Tooltip
 
@@ -350,6 +384,8 @@ Attributes of `<sl:chart-line>`: One series of a `sl:chart`, drawn as a line thr
 | `color-dark` | *string* | — | A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`). |
 | `curve` | `monotone`, `natural`, `linear`, `step`, `step-before`, `step-after` | `monotone` | How the line runs between the points: smooth (`monotone`, `natural`), straight (`linear`) or in steps. |
 | `dots` | *boolean* | — | A dot on every point. |
+| `dashed` | *boolean* | — | Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over (see `join`). |
+| `join` | *string* | — | The `key` of the series this dashed line continues (`actual`). The chart draws the dashed line from that series' last number to its own first one, so the rows need no duplicated value, and the tooltip does not list this series at that last row. Needs `dashed`. |
 | `stroke-width` | *number* | `2` | The line's width in pixels. |
 
 Every prop can also be set from an expression: `th:key="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
@@ -366,6 +402,8 @@ Attributes of `<sl:chart-area>`: One series of a `sl:chart`, drawn as a filled a
 | `color-dark` | *string* | — | A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`). |
 | `curve` | `natural`, `monotone`, `linear`, `step`, `step-before`, `step-after` | `natural` | How the line runs between the points: smooth (`natural`, `monotone`), straight (`linear`) or in steps. |
 | `stack` | *string* | — | Stack this series on the others with the same `stack` id (any name, such as `a`). |
+| `dashed` | *boolean* | — | Draw the line on top of the area dashed (the fill stays as it is). The legend and the tooltip show the series dashed as well. |
+| `join` | *string* | — | The `key` of the series this dashed area continues (`actual`), as on `sl:chart-line`: it starts at that series' last number, and the tooltip does not list this series at that last row. Needs `dashed`. |
 | `fill-opacity` | *number* | `0.4` | The opacity of the fill, from 0 to 1. |
 
 Every prop can also be set from an expression: `th:key="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.

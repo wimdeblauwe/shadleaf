@@ -1303,6 +1303,20 @@
             "required" : false
           }
         }, {
+          "name" : "dashed",
+          "description" : "Draw the line on top of the area dashed (the fill stays as it is). The legend and the tooltip show the series dashed as well.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "join",
+          "description" : "The `key` of the series this dashed area continues (`actual`), as on `sl:chart-line`: it starts at that series' last number, and the tooltip does not list this series at that last row. Needs `dashed`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
           "name" : "fill-opacity",
           "description" : "The opacity of the fill, from 0 to 1.",
           "value" : {
@@ -1349,6 +1363,20 @@
         }, {
           "name" : "th:stack",
           "description" : "`stack` from a Thymeleaf expression, e.g. `th:stack=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:dashed",
+          "description" : "`dashed` from a Thymeleaf expression, e.g. `th:dashed=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:join",
+          "description" : "`join` from a Thymeleaf expression, e.g. `th:join=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -1574,6 +1602,20 @@
             "required" : false
           }
         }, {
+          "name" : "dashed",
+          "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over (see `join`).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "join",
+          "description" : "The `key` of the series this dashed line continues (`actual`). The chart draws the dashed line from that series' last number to its own first one, so the rows need no duplicated value, and the tooltip does not list this series at that last row. Needs `dashed`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
           "name" : "stroke-width",
           "description" : "The line's width in pixels.",
           "value" : {
@@ -1620,6 +1662,20 @@
         }, {
           "name" : "th:dots",
           "description" : "`dots` from a Thymeleaf expression, e.g. `th:dots=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:dashed",
+          "description" : "`dashed` from a Thymeleaf expression, e.g. `th:dashed=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:join",
+          "description" : "`join` from a Thymeleaf expression, e.g. `th:join=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
