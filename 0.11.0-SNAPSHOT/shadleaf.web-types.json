@@ -556,33 +556,12 @@
         "attributes" : [ ]
       }, {
         "name" : "sl:attachment-group",
-        "description" : "A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out, or a grid that wraps them. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for a row of attachments without any, give the group a `label`.",
+        "description" : "A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for attachments without any, give the group a `label`.",
         "attributes" : [ {
-          "name" : "layout",
-          "description" : "`row` scrolls sideways; `grid` wraps the attachments in columns that fill the width, for a gallery of photos: vertical attachments with `full-width`, each filling its cell.",
-          "value" : {
-            "kind" : "plain",
-            "type" : "enum",
-            "required" : false
-          },
-          "values" : [ {
-            "name" : "row"
-          }, {
-            "name" : "grid"
-          } ],
-          "default" : "row"
-        }, {
           "name" : "label",
-          "description" : "Accessible name of the group. With it the group is a named group (`role=\"group\"`). A row then takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger. A grid does not scroll, so it takes no focus.",
+          "description" : "Accessible name of the group. With it the group is a named group (`role=\"group\"`) that takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger.",
           "value" : {
             "kind" : "plain",
-            "required" : false
-          }
-        }, {
-          "name" : "th:layout",
-          "description" : "`layout` from a Thymeleaf expression, e.g. `th:layout=\"${...}\"`.",
-          "value" : {
-            "kind" : "expression",
             "required" : false
           }
         }, {
