@@ -1,7 +1,7 @@
 import {expect, test, type Locator, type Page} from '@playwright/test';
 import previews from '../src/generated/previews.json' with {type: 'json'};
 import {openFixture} from './fixture';
-import {combinations, openShowcase} from './showcase';
+import {combinations, openShowcase, widths} from './showcase';
 
 // sl:file-upload. On the showcase, in every skin and theme: the hidden input's focus ring shows on the Browse label, a
 // field error colours the drop zone's border, and a disabled one's Browse label fades. Fixture pages under a strict
@@ -11,7 +11,8 @@ import {combinations, openShowcase} from './showcase';
 // without Alpine. The upload progress with htmx 2 and htmx 4: each file's share, processing, the outcomes, Cancel, a
 // request without the files, and htmx 2's history snapshot taken while uploading (htmx 4 keeps no snapshot: it asks
 // the server for the page again). Image previews: the blob: URLs made and revoked, the strict CSP's fallback, the
-// states and the history snapshot. file-upload-network.spec.ts has the browser's own upload events. Runs in Chromium
+// states and the history snapshot. The grid: thumbnails, icon and error cards, remove and the focus, the upload's
+// states. file-upload-network.spec.ts has the browser's own upload events. Runs in Chromium
 // and Firefox.
 
 type Scenario = { id: string, html: string };
@@ -105,6 +106,57 @@ for (const {skin, theme} of combinations) {
       expect(await border('invalid')).not.toBe(await border('card'));
       expect(await scenario(page, 'disabled').locator('.file-upload-browse')
           .evaluate(element => Number(getComputedStyle(element).opacity))).toBeLessThan(1);
+    });
+
+    test('a grid shows the picked files as cards in columns, at a narrow and a wide width', async ({page}) => {
+      const root = scenario(page, 'grid');
+      const input = root.locator('.file-upload-input');
+      await input.setInputFiles([...Array.from({length: 7}, (_, index) => photo(`defect-${index + 1}.png`)),
+        ...picked(pdf('report.pdf'))]);
+      await drop(page, root.locator('.file-upload-dropzone'), [{name: 'notes.txt', type: 'text/plain'}]);
+      const list = root.locator('.file-upload-list');
+      await expect(list.locator('.attachment')).toHaveCount(9);
+      await expect(list.locator('.attachment').last()).toHaveAttribute('data-state', 'error');
+
+      const layout = () => list.evaluate(element => {
+        const box = (target: Element) => target.getBoundingClientRect();
+        const cards = [...element.querySelectorAll(':scope > .file-upload-item > .attachment')];
+        const boxes = cards.map(box);
+        const outer = box(element);
+        return {
+          columns: new Set(boxes.map(card => Math.round(card.left))).size,
+          rows: new Set(boxes.map(card => Math.round(card.top))).size,
+          scrolls: element.scrollWidth > element.clientWidth,
+          inside: boxes.every(card => card.left >= outer.left - 0.5 && card.right <= outer.right + 0.5),
+          widths: new Set(boxes.map(card => Math.round(card.width))).size,
+          // Every card's media is a square that fills the card's width (inside its padding), its button in the
+          // media's top corner.
+          square: cards.every(card => {
+            const media = box(card.querySelector(':scope > .attachment-media')!);
+            const action = box(card.querySelector(':scope > .attachment-actions')!);
+            const style = getComputedStyle(card);
+            const inner = card.clientWidth - parseFloat(style.paddingInlineStart) - parseFloat(style.paddingInlineEnd);
+            return Math.abs(media.width - media.height) < 1 && Math.abs(media.width - inner) < 1
+                && action.top >= media.top && action.bottom <= media.top + media.height / 2
+                && action.right <= media.right && action.left >= media.left + media.width / 2;
+          }),
+        };
+      });
+
+      const columns: Record<string, number> = {};
+      for (const {name, viewport} of widths) {
+        await page.setViewportSize(viewport);
+        await list.scrollIntoViewIfNeeded();
+        const result = await layout();
+        expect(result.columns, `columns at ${name} width`).toBeGreaterThan(1);
+        expect(result.rows, `rows at ${name} width`).toBeGreaterThan(1);
+        expect(result.scrolls).toBe(false);
+        expect(result.inside).toBe(true);
+        expect(result.widths).toBe(1);
+        expect(result.square).toBe(true);
+        columns[name] = result.columns;
+      }
+      expect(columns.desktop).toBeGreaterThan(columns.phone);
     });
   });
 }
@@ -864,4 +916,101 @@ test.describe('image previews', () => {
     await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/)]);
     expect(messages).toEqual([]);
   });
+});
+
+test.describe('grid', () => {
+  test('picked and dropped files show as cards: thumbnails, icons and errors, in the order of the input',
+      async ({page}) => {
+        await recordBlobs(page);
+        const messages = await openFixture(page, `${preview('grid')}<button type="button" id="after">After</button>`,
+            {imgSrc: ALLOW_BLOB});
+        const upload = new Upload(page, 'uploadInspectionPhotos');
+        await expect(upload.root).toHaveAttribute('data-layout', 'grid');
+
+        await upload.input.setInputFiles([photo('crack.png'), ...picked(pdf('report.pdf'))]);
+        await dropBytes(page, upload.dropzone(), [{name: 'leak.png', type: 'image/png', base64: PNG},
+          {name: 'notes.txt', type: 'text/plain', base64: 'eA=='}]);
+        expect(await upload.files()).toEqual(['crack.png', 'report.pdf', 'leak.png']);
+        expect(await upload.titles()).toEqual(['crack.png', 'report.pdf', 'leak.png', 'notes.txt']);
+        await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/), 'icon',
+          expect.stringMatching(/^blob:/), 'icon']);
+        const cards = upload.list.locator('.attachment');
+        for (const card of await cards.all()) {
+          await expect(card).toHaveAttribute('data-orientation', 'vertical');
+          await expect(card).toHaveAttribute('data-width', 'full');
+          await expect(card).not.toHaveAttribute('data-size', /.*/);
+        }
+        await expect(cards.last()).toHaveAttribute('data-state', 'error');
+        await expect(cards.last().locator('.attachment-description')).toHaveText('File type not accepted');
+        await expect(upload.status).toHaveText('Added leak.png. Could not add notes.txt: File type not accepted.');
+        // The thumbnail fills the card's square media.
+        const img = upload.list.locator('.attachment-media img').first();
+        expect(await img.evaluate(element => {
+          const image = element.getBoundingClientRect();
+          const media = element.parentElement!.getBoundingClientRect();
+          return Math.abs(image.width - media.width) < 1 && Math.abs(image.width - image.height) < 1
+              && media.width > 100;
+        })).toBe(true);
+
+        // The focus order is the input's order; a remove moves the focus on, as in the list.
+        await upload.input.focus();
+        await page.keyboard.press('Tab');
+        await expect(upload.remove('crack.png')).toBeFocused();
+        await page.keyboard.press('Tab');
+        await expect(upload.remove('report.pdf')).toBeFocused();
+        await page.keyboard.press('Enter');
+        expect(await upload.files()).toEqual(['crack.png', 'leak.png']);
+        await expect(upload.status).toHaveText('Removed report.pdf.');
+        await expect(upload.remove('leak.png')).toBeFocused();
+        await page.keyboard.press('Tab');
+        await expect(upload.list.getByRole('button', {name: 'Dismiss notes.txt'})).toBeFocused();
+        await page.keyboard.press('Enter');
+        expect(await upload.titles()).toEqual(['crack.png', 'leak.png']);
+        await expect(upload.remove('leak.png')).toBeFocused();
+        await page.keyboard.press('Tab');
+        await expect(page.locator('#after')).toBeFocused();
+        expect(messages).toEqual([]);
+      });
+
+  for (const version of [2, 4] as const) {
+    test(`htmx ${version}: the cards go through the upload's states, their buttons hidden meanwhile`, async ({page}) => {
+      await recordBlobs(page);
+      await holdUploads(page);
+      let status = 500;
+      const messages = await openFixture(page, '<form id="form" hx-post="/upload" hx-target="#result" '
+          + `enctype="multipart/form-data">${preview('grid')}<button type="submit">Save</button></form>`
+          + '<div id="result"></div>', {htmx: version, imgSrc: ALLOW_BLOB});
+      const answers = await holdAnswers(page, () => ({status, body: status === 500 ? '' : '<p id="saved">Saved</p>'}));
+      const upload = new Upload(page, 'uploadInspectionPhotos');
+      await upload.input.setInputFiles([photo('crack.png'), ...picked(pdf('report.pdf'))]);
+      await expect.poll(() => media(upload)).toEqual([expect.stringMatching(/^blob:/), 'icon']);
+      const opacity = () => upload.list.locator('.attachment-media').first()
+          .evaluate(element => Number(getComputedStyle(element).opacity));
+
+      await page.getByRole('button', {name: 'Save'}).click();
+      await expect(upload.root).toHaveAttribute('data-uploading', 'true');
+      await expect(upload.list.getByRole('button')).toHaveCount(0);
+      await fire(page, 'progress', 100, 4000);
+      expect((await states(upload)).map(([state]) => state)).toEqual(['uploading', 'uploading']);
+      expect(await opacity()).toBeLessThan(1);
+      await fire(page, 'load', 4000, 4000);
+      expect(await states(upload)).toEqual([['processing', 'true', 'Processing'], ['processing', 'true', 'Processing']]);
+
+      answers.release();
+      await expect(upload.status).toHaveText('The files could not be uploaded. Try again.');
+      expect(await states(upload)).toEqual([['error', null, 'Upload failed'], ['error', null, 'Upload failed']]);
+      await expect(upload.list.getByRole('button')).toHaveCount(2);
+
+      status = 200;
+      await page.getByRole('button', {name: 'Save'}).click();
+      await expect(upload.root).toHaveAttribute('data-uploading', 'true');
+      await fire(page, 'load', 4000, 4000);
+      answers.release();
+      await expect(page.locator('#saved')).toBeVisible();
+      expect(await states(upload)).toEqual([[null, null, 'Uploaded'], [null, null, 'Uploaded']]);
+      expect(await opacity()).toBe(1);
+      expect(messages.filter(message => !/500|Internal Server Error|htmx:response:error/i.test(message)))
+          .toEqual([]);
+    });
+  }
 });

@@ -27,6 +27,10 @@
     <sl:prop name="previews" type="boolean">Show a thumbnail of each picked image (up to 20 MB, no SVG) instead of
       the file icon. The thumbnail is a <code>blob:</code> URL: a Content-Security-Policy must allow it in
       <code>img-src</code>, or the icon stays.</sl:prop>
+    <sl:prop name="layout" default="list" values="list grid"><code>list</code> shows the picked files one below
+      the other, as small attachments; <code>grid</code> as cards in columns that fill the width, the grid of
+      <code>sl:attachment-group layout="grid"</code>: with <code>previews</code>, for photos one wants to see before
+      sending them.</sl:prop>
     <sl:prop name="browse-label">The text of the Browse button. Defaults to "Browse files", or "Browse" without
       <code>multiple</code>.</sl:prop>
   </sl:props>
@@ -46,18 +50,23 @@
   Browse label's place (the CSS shows one of them), and the attachments show their progress.
 
   With previews, a third template holds the media of an image: slFileUpload puts a clone of it, with the image's blob:
-  URL, in place of a picked image's icon once the URL has loaded. Without it there are no previews. */-->
+  URL, in place of a picked image's icon once the URL has loaded. Without it there are no previews.
+
+  With layout="grid" the templates' attachments are vertical cards at the default size, filling the list's cells; the
+  list is the same, in the same order, so the focus and the announcements do not change. */-->
 <div th:fragment="file-upload"
      th:with="slFileUploadAttrs=${#slFields.control(attrs.without('class', 'classappend'), slField)},
               slFileUploadId=${#slFields.controlId(slFileUploadAttrs, 'sl-file-upload-')},
               slFileUploadDescriptionId=${slots.has('description') ? slFileUploadId + '-upload-description' : null},
+              slFileUploadGrid=${props.layout == 'grid'},
               slFileUploadOwnDescribedBy=${slFileUploadAttrs['th:aria-describedby'] == null},
               slFileUploadDescribedBy=${slFileUploadOwnDescribedBy
                   ? #strings.trim((slFileUploadDescriptionId ?: '') + ' ' + (slFileUploadAttrs['aria-describedby'] ?: ''))
                   : null}"
      class="file-upload"
      x-data="slFileUpload"
-     th:attr="data-max-size=${#slFields.maxSize(props['max-size'])}"
+     th:attr="data-layout=${props.unlessDefault('layout')},
+              data-max-size=${#slFields.maxSize(props['max-size'])}"
      sl:attrs="${attrs.only('class', 'classappend')}">
   <input type="file"
          class="file-upload-input sl-sr-only"
@@ -105,7 +114,10 @@
                      data-message-processing=#{sl.file-upload.processing},
                      data-message-failed=#{sl.file-upload.failed},
                      data-message-done=#{sl.file-upload.done}"><li class="file-upload-item"><sl:attachment
-      state="idle" size="sm" full-width>
+      state="idle"
+      th:size="${slFileUploadGrid ? 'default' : 'sm'}"
+      th:orientation="${slFileUploadGrid ? 'vertical' : 'horizontal'}"
+      full-width>
     <sl:attachment-media><sl:icon name="file"/></sl:attachment-media>
     <sl:attachment-content>
       <sl:attachment-title></sl:attachment-title>
@@ -120,7 +132,10 @@
             th:attr="data-message-type=#{sl.file-upload.rejected.type},
                      data-message-size=#{sl.file-upload.rejected.size('{0}')},
                      data-message-count=#{sl.file-upload.rejected.count}"><li class="file-upload-item"><sl:attachment
-      state="error" size="sm" full-width>
+      state="error"
+      th:size="${slFileUploadGrid ? 'default' : 'sm'}"
+      th:orientation="${slFileUploadGrid ? 'vertical' : 'horizontal'}"
+      full-width>
     <sl:attachment-media><sl:icon name="file-x"/></sl:attachment-media>
     <sl:attachment-content>
       <sl:attachment-title></sl:attachment-title>

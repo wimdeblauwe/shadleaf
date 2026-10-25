@@ -10,6 +10,9 @@
 
   The Cancel button shows only while slFileUpload sends the files (data-uploading), in the Browse label's place:
   without JavaScript it never does. The files' remove buttons are hidden meanwhile.
+
+  A grid (data-layout="grid") lays the list's items out in columns, each attachment filling its cell; the columns and
+  the gap are the skins', the same as a grid attachment group's.
 */
 @layer components {
   .file-upload {
@@ -20,8 +23,12 @@
     @apply m-0 min-w-0 list-none p-0;
   }
 
-  .file-upload-list:not([hidden]) {
+  .file-upload:not([data-layout]) > .file-upload-list:not([hidden]) {
     @apply flex flex-col;
+  }
+
+  .file-upload[data-layout='grid'] > .file-upload-list:not([hidden]) {
+    @apply grid;
   }
 
   .file-upload-item {

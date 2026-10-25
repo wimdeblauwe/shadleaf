@@ -146,6 +146,35 @@ class FileUploadComponentTest {
   }
 
   @Test
+  void aListHasSmallHorizontalAttachments() {
+    Rendered rendered = tester.render("<sl:file-upload name=\"files\" layout=\"list\"/>");
+
+    assertThat(rendered).root().hasNoAttribute("data-layout", "layout");
+    for (Element attachment : rendered.select("template.file-upload-template .attachment")) {
+      assertThat(attachment.attr("data-size")).isEqualTo("sm");
+      assertThat(attachment.hasAttr("data-orientation")).isFalse();
+      assertThat(attachment.attr("data-width")).isEqualTo("full");
+    }
+  }
+
+  @Test
+  void aGridHasVerticalAttachmentsAtTheDefaultSizeThatFillTheirCells() {
+    Rendered rendered = tester.render("<sl:file-upload name=\"files\" multiple layout=\"grid\" previews/>");
+
+    assertThat(rendered).hasNoLeakedMarkup();
+    assertThat(rendered).root().hasAttribute("data-layout", "grid").hasNoAttribute("layout");
+    assertThat(rendered.select(".file-upload > ul.file-upload-list[hidden]")).hasSize(1);
+    for (String kind : new String[] {"file", "rejected"}) {
+      Element attachment = rendered.select("template[data-kind=" + kind + "] .attachment").first();
+      assertThat(attachment.hasAttr("data-size")).as(kind).isFalse();
+      assertThat(attachment.attr("data-orientation")).as(kind).isEqualTo("vertical");
+      assertThat(attachment.attr("data-width")).as(kind).isEqualTo("full");
+      assertThat(attachment.select("> .attachment-actions > .attachment-action")).as(kind).hasSize(1);
+    }
+    assertThat(rendered.select("template[data-kind=image] > .attachment-media[data-variant=image]")).hasSize(1);
+  }
+
+  @Test
   void previewsAddATemplateForTheMediaOfAnImage() {
     assertThat(tester.render("<sl:file-upload name=\"files\"/>").select("template[data-kind=image]")).isEmpty();
 
