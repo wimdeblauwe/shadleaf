@@ -62,6 +62,8 @@
     /* A row of attachments scrolls inside the width a page's layout gives it; a full-width attachment fills that
        width, stacked. */
     .stage > .attachment-group { inline-size: 24rem; max-inline-size: 100%; }
+    /* A grid of attachments is a gallery: wider, so it shows several columns. */
+    .stage > .attachment-group[data-layout='grid'] { inline-size: 40rem; }
     .stage:has(> .attachment[data-width='full']) { flex-direction: column; align-items: flex-start; }
     .stage > .attachment[data-width='full'] { inline-size: 24rem; max-inline-size: 100%; }
     /* A chart is as wide as its container, which a flex item is not: it takes the frame's width. */
@@ -154,6 +156,8 @@
     /* A row of attachments scrolls inside the width a page's layout gives it; a full-width attachment fills that
        width, stacked. */
     .stage > .attachment-group { inline-size: 24rem; max-inline-size: 100%; }
+    /* A grid of attachments is a gallery: wider, so it shows several columns. */
+    .stage > .attachment-group[data-layout='grid'] { inline-size: 40rem; }
     .stage:has(> .attachment[data-width='full']) { flex-direction: column; align-items: flex-start; }
     .stage > .attachment[data-width='full'] { inline-size: 24rem; max-inline-size: 100%; }
     /* A chart is as wide as its container, which a flex item is not: it takes the frame's width. */
@@ -222,6 +226,8 @@
     /* A row of attachments scrolls inside the width a page's layout gives it; a full-width attachment fills that
        width, stacked. */
     .stage > .attachment-group { inline-size: 24rem; max-inline-size: 100%; }
+    /* A grid of attachments is a gallery: wider, so it shows several columns. */
+    .stage > .attachment-group[data-layout='grid'] { inline-size: 40rem; }
     .stage:has(> .attachment[data-width='full']) { flex-direction: column; align-items: flex-start; }
     .stage > .attachment[data-width='full'] { inline-size: 24rem; max-inline-size: 100%; }
     /* A chart is as wide as its container, which a flex item is not: it takes the frame's width. */
@@ -346,6 +352,8 @@
     /* A row of attachments scrolls inside the width a page's layout gives it; a full-width attachment fills that
        width, stacked. */
     .stage > .attachment-group { inline-size: 24rem; max-inline-size: 100%; }
+    /* A grid of attachments is a gallery: wider, so it shows several columns. */
+    .stage > .attachment-group[data-layout='grid'] { inline-size: 40rem; }
     .stage:has(> .attachment[data-width='full']) { flex-direction: column; align-items: flex-start; }
     .stage > .attachment[data-width='full'] { inline-size: 24rem; max-inline-size: 100%; }
     /* A chart is as wide as its container, which a flex item is not: it takes the frame's width. */
