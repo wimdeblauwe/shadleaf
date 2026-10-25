@@ -69,6 +69,13 @@ The legend lists the series by label, in alphabetical order, as Recharts sorts i
 `margin` leaves room left and right of the plot, so the first and last tick labels fit. `curve` sets how a line runs
 between the points (`monotone`, `natural`, `linear`, `step`), `dots` puts a dot on each.
 
+<ComponentPreview id="chart--line-forecast" />
+
+`dashed` draws a series dashed (on `sl:chart-area` its line), for a forecast or a target next to actual figures. The
+legend and the tooltip show it dashed as well. A row without a number (`null`) leaves a gap, so an actual line stops
+at the last month with figures while the dashed one carries on; give the dashed series that last value too, so the
+two join.
+
 ## Area chart
 
 <ComponentPreview id="chart--area-default" />

@@ -6,8 +6,8 @@
   <sl:chart-tooltip/>
   <sl:chart-legend/>
   <sl:chart-bar key="desktop" label="Desktop" color="var(--chart-1)" color-dark="var(--chart-3)" radius="4"/>
-  <sl:chart-line key="mobile" label="Mobile" curve="linear" dots stroke-width="3"/>
-  <sl:chart-area key="tablet" label="Tablet" stack="a" fill-opacity="0.8"/>
+  <sl:chart-line key="mobile" label="Mobile" curve="linear" dots dashed stroke-width="3"/>
+  <sl:chart-area key="tablet" label="Tablet" stack="a" dashed fill-opacity="0.8"/>
 </sl:chart> -->
 <sl-chart class="chart mt-4" label="Visitors, January to June" margin="12" time-zone="Europe/Brussels" id="visitors">
   <script type="application/json">
@@ -18,8 +18,8 @@
   <sl-chart-tooltip class="chart-tooltip" value-format="number"></sl-chart-tooltip>
   <sl-chart-legend class="chart-legend"></sl-chart-legend>
   <sl-chart-bar class="chart-bar" key="desktop" label="Desktop" color="var(--chart-1)" color-dark="var(--chart-3)" radius="4"></sl-chart-bar>
-  <sl-chart-line class="chart-line" key="mobile" label="Mobile" curve="linear" dots="true" stroke-width="3"></sl-chart-line>
-  <sl-chart-area class="chart-area" key="tablet" label="Tablet" stack="a" fill-opacity="0.8"></sl-chart-area>
+  <sl-chart-line class="chart-line" key="mobile" label="Mobile" curve="linear" dots="true" dashed="true" stroke-width="3"></sl-chart-line>
+  <sl-chart-area class="chart-area" key="tablet" label="Tablet" stack="a" dashed="true" fill-opacity="0.8"></sl-chart-area>
   <div class="chart-skeleton"></div>
 </sl-chart>
 

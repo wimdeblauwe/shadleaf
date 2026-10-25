@@ -618,6 +618,12 @@
       "values" : [ ],
       "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`)."
     }, {
+      "name" : "dashed",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Draw the line on top of the area dashed. The legend and the tooltip show the series dashed as well."
+    }, {
       "name" : "fill-opacity",
       "type" : "number",
       "defaultValue" : "0.4",
@@ -729,6 +735,12 @@
       "defaultValue" : "false",
       "values" : [ ],
       "description" : "A dot on every point."
+    }, {
+      "name" : "dashed",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over."
     }, {
       "name" : "stroke-width",
       "type" : "number",

@@ -248,10 +248,11 @@ class ChartComponentTest {
         .hasAttribute("value-format", "percent").hasNoAttribute("data-indicator");
     assertThat(tester.render("<sl:chart-grid vertical horizontal=\"false\"/>")).root()
         .hasAttribute("vertical", "true").hasAttribute("horizontal", "false");
-    assertThat(tester.render("<sl:chart-line key=\"a\" curve=\"step-after\" dots stroke-width=\"3\"/>")).root()
-        .hasAttribute("curve", "step-after").hasAttribute("dots", "true").hasAttribute("stroke-width", "3");
-    assertThat(tester.render("<sl:chart-area key=\"a\" stack=\"a\" fill-opacity=\"0.8\"/>")).root()
-        .hasAttribute("stack", "a").hasAttribute("fill-opacity", "0.8");
+    assertThat(tester.render("<sl:chart-line key=\"a\" curve=\"step-after\" dots dashed stroke-width=\"3\"/>")).root()
+        .hasAttribute("curve", "step-after").hasAttribute("dots", "true").hasAttribute("dashed", "true")
+        .hasAttribute("stroke-width", "3");
+    assertThat(tester.render("<sl:chart-area key=\"a\" stack=\"a\" dashed fill-opacity=\"0.8\"/>")).root()
+        .hasAttribute("stack", "a").hasAttribute("dashed", "true").hasAttribute("fill-opacity", "0.8");
     assertThat(tester.render("<sl:chart-legend vertical-align=\"top\"/>")).root()
         .hasAttribute("vertical-align", "top");
     assertThat(tester.render("<sl:chart th:data=\"${rows}\" label=\"Visits\" margin=\"12\"/>",

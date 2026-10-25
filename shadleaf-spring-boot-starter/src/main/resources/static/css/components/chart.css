@@ -136,6 +136,15 @@
     @apply my-0.5;
   }
 
+  /* A dashed series: its indicator is a dashed outline in the series' colour. */
+  .chart-tooltip-indicator[data-dashed]:not([data-indicator='dashed']) {
+    @apply border-[1.5px] border-dashed bg-transparent;
+  }
+
+  .chart-tooltip-indicator[data-indicator='line'][data-dashed] {
+    @apply w-0;
+  }
+
   /* gap-4: shadcn has none, so a long value touches its name once the tooltip is wider than its minimum. */
   .chart-tooltip-body {
     @apply flex flex-1 items-center justify-between gap-4 leading-none;
@@ -172,5 +181,10 @@
   .chart-legend-indicator {
     @apply size-2 shrink-0 rounded-[2px]
       forced-colors:forced-color-adjust-none;
+  }
+
+  /* A dashed series: a short dashed line in the series' colour. */
+  .chart-legend-indicator[data-dashed] {
+    @apply h-0 w-3 rounded-none border-bs-2 border-dashed border-(--indicator-color);
   }
 }

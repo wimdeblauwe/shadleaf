@@ -35,6 +35,8 @@ import {formatter} from './formats.js';
 const SERIES = {'SL-CHART-BAR': BarChart, 'SL-CHART-LINE': LineChart, 'SL-CHART-AREA': AreaChart};
 // The chart tokens; a series without a color takes the next one, by its position among the series.
 const CHART_COLORS = 5;
+// The dash pattern of a dashed line, in pixels.
+const DASH = '5 5';
 const MEASUREMENT_SPAN = 'recharts_measurement_span';
 
 function bool(marker, name, fallback) {
@@ -99,11 +101,13 @@ function part(marker, index, context) {
     case 'SL-CHART-LINE':
       return <Line key={index} dataKey={key} type={curve(marker, 'monotone')} stroke={color}
                    strokeWidth={num(marker, 'stroke-width', 2)}
+                   strokeDasharray={bool(marker, 'dashed', false) ? DASH : undefined}
                    dot={bool(marker, 'dots', false) && {fill: color}}/>;
     case 'SL-CHART-AREA':
       return <Area key={index} dataKey={key} type={curve(marker, 'natural')}
                    stackId={marker.getAttribute('stack') ?? undefined} fill={color}
-                   fillOpacity={num(marker, 'fill-opacity', 0.4)} stroke={color}/>;
+                   fillOpacity={num(marker, 'fill-opacity', 0.4)} stroke={color}
+                   strokeDasharray={bool(marker, 'dashed', false) ? DASH : undefined}/>;
     default:
       return null;
   }
@@ -151,7 +155,7 @@ class SlChart extends HTMLElement {
       const key = marker.getAttribute('key');
       const light = marker.getAttribute('color') ?? `var(--chart-${index % CHART_COLORS + 1})`;
       const dark = marker.getAttribute('color-dark');
-      config[key] = {label: marker.getAttribute('label') ?? key};
+      config[key] = {label: marker.getAttribute('label') ?? key, dashed: bool(marker, 'dashed', false)};
       this.container.style.setProperty(`--color-${key}`, dark ? `light-dark(${light}, ${dark})` : light);
     });
     this.append(this.container);

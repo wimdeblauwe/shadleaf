@@ -18,6 +18,9 @@
       line runs between the points: smooth (<code>monotone</code>, <code>natural</code>), straight
       (<code>linear</code>) or in steps.</sl:prop>
     <sl:prop name="dots" type="boolean">A dot on every point.</sl:prop>
+    <sl:prop name="dashed" type="boolean">Draw the line dashed, as a forecast or target next to actual figures. The
+      legend and the tooltip show the series dashed as well. A row without a number (<code>null</code>) leaves a gap,
+      so an actual line can stop where a dashed one takes over.</sl:prop>
     <sl:prop name="stroke-width" type="number" default="2">The line's width in pixels.</sl:prop>
   </sl:props>
 </head>
@@ -30,6 +33,7 @@
                         color-dark=${props['color-dark']},
                         curve=${props.unlessDefault('curve')},
                         dots=${props.dots ? 'true' : null},
+                        dashed=${props.dashed ? 'true' : null},
                         stroke-width=${props.unlessDefault('stroke-width')}"
                sl:attrs></sl-chart-line>
 </body>

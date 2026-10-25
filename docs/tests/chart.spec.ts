@@ -118,6 +118,21 @@ test('the chart is named by its label, and the arrow keys move the tooltip', asy
   await expect(tooltip(chart).locator('.chart-tooltip-label')).toHaveText('February');
 });
 
+test('a dashed series is drawn, listed and shown in the tooltip dashed', async ({page}) => {
+  await openShowcase(page, 'vega', 'light');
+  const chart = page.locator('[data-scenario="chart--line-forecast"] sl-chart');
+  await drawn(chart);
+  // The animation ends with the series' own dashes (none for the solid line).
+  await expect.poll(() => chart.locator('.recharts-line-curve').evaluateAll(curves =>
+      curves.map(curve => curve.getAttribute('stroke-dasharray')))).toEqual([null, '5 5']);
+  await expect(chart.locator('.chart-legend-indicator[data-dashed]')).toHaveCount(1);
+  await expect(chart.locator('.chart-legend-indicator[data-dashed]')).toHaveCSS('border-block-start-style', 'dashed');
+  // July: only the forecast has a number.
+  await focusChart(page, chart, 6);
+  await expect(tooltip(chart).locator('.chart-tooltip-label')).toHaveText('July');
+  await expect(tooltip(chart).locator('.chart-tooltip-indicator[data-dashed]')).toHaveCount(1);
+});
+
 test('hovering shows the tooltip with the series\' labels and values', async ({page}) => {
   await openShowcase(page, 'vega', 'light');
   const chart = page.locator('[data-scenario="chart--bar-multiple"] sl-chart');
