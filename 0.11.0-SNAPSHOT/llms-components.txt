@@ -11182,7 +11182,7 @@ Source: https://shadleaf.dev/0.11.0-SNAPSHOT/components/attachment/
 An attachment is `<sl:attachment>` plus the parts you need, as in shadcn/ui: `<sl:attachment-media>` (an icon or an
 image), `<sl:attachment-content>` (holding `<sl:attachment-title>` and `<sl:attachment-description>`),
 `<sl:attachment-actions>` with one or more `<sl:attachment-action>`s, and an optional `<sl:attachment-trigger>` that
-makes the whole card clickable. `<sl:attachment-group>` lays several out in a row.
+makes the whole card clickable. `<sl:attachment-group>` lays several out in a row or a grid.
 
 The attachment only shows a file; it uploads nothing. Use it for files that are already on the server, such as the
 documents on a customer's page, and for the list of a file upload, where your page or your script sets each one's
@@ -11399,6 +11399,37 @@ the arrow keys scroll it.
 </sl:attachment-group>
 ```
 
+### Grid
+
+`layout="grid"` wraps the attachments instead, in as many columns as fit the width, for a gallery of photos. It does
+not scroll, so nothing is hidden off screen and the edges do not fade. Give each attachment `orientation="vertical"`
+and `full-width`, so it fills its cell: the image is cropped to a square and the actions sit in its corner. The width
+of a cell and the gap between them come from the skin.
+
+**Example: Grid.** layout="grid" wraps the attachments in columns that fill the width, for a gallery of photos. Each vertical attachment with full-width fills its cell.
+
+```html
+<sl:attachment-group layout="grid" label="Inspection photos">
+  <sl:attachment orientation="vertical" full-width th:each="photo : ${photos}">
+    <sl:attachment-media variant="image">
+      <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+    </sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title>[[${photo.name}]]</sl:attachment-title>
+      <sl:attachment-description>[[${photo.meta}]]</sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action th:aria-label="|Remove ${photo.name}|"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+    <sl:attachment-trigger as="a" th:href="@{/files/{id}(id=${photo.id})}" target="_blank"
+                           th:aria-label="|Open ${photo.name}|"/>
+  </sl:attachment>
+</sl:attachment-group>
+```
+
+A grid's `label` still makes it a named group, but the group takes no focus: there is nothing to scroll. Tab goes
+from one attachment's actions and trigger to the next.
+
 ### Trigger
 
 `<sl:attachment-trigger>` covers the whole card, behind its actions, so a click anywhere but on an action activates
@@ -11543,13 +11574,14 @@ Every prop can also be set from an expression: `th:as="${...}"`. Any other attri
 
 #### sl:attachment-group
 
-Attributes of `<sl:attachment-group>`: A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for attachments without any, give the group a `label`.
+Attributes of `<sl:attachment-group>`: A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out, or a grid that wraps them. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for a row of attachments without any, give the group a `label`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `label` | *string* | — | Accessible name of the group. With it the group is a named group (`role="group"`) that takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger. |
+| `layout` | `row`, `grid` | `row` | `row` scrolls sideways; `grid` wraps the attachments in columns that fill the width, for a gallery of photos: vertical attachments with `full-width`, each filling its cell. |
+| `label` | *string* | — | Accessible name of the group. With it the group is a named group (`role="group"`). A row then takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger. A grid does not scroll, so it takes no focus. |
 
-Every prop can also be set from an expression: `th:label="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+Every prop can also be set from an expression: `th:layout="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ---
 
