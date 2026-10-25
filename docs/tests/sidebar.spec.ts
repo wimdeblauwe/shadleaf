@@ -8,7 +8,7 @@ import {openShowcase, skins} from './showcase';
 // Fixture pages under a strict Content-Security-Policy with the csp Alpine build, at a desktop width (the sidebar in the
 // page, collapsed and expanded by the trigger, Ctrl/Cmd+B and the sl-sidebar-state cookie the "server" reads) and a
 // phone width (the panel: focus, inert, Escape, a click outside, links, the breakpoint, htmx). The markup is the
-// docs preview's. The showcase checks (a11y.spec.ts, focus.spec.ts) run at both widths too.
+// docs preview's. The showcase checks (a11y.spec.ts, focus.spec.ts) run at both widths too. In print, only the page shows.
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
 const DESKTOP = {width: 1024, height: 700};
@@ -839,6 +839,37 @@ test.describe('motion', () => {
       await page.unrouteAll({behavior: 'ignoreErrors'});
       await page.context().clearCookies();
     }
+  });
+});
+
+test.describe('print', () => {
+  for (const variant of ['sidebar', 'floating', 'inset'] as const) {
+    test(`${variant}: only the page prints, across the paper`, async ({page}) => {
+      await page.setViewportSize(DESKTOP);
+      await openShell(page, {variant});
+      await expect(sidebar(page)).toBeVisible();
+      await expect(page.locator('.site-header')).toBeVisible();
+
+      await page.emulateMedia({media: 'print'});
+      await expect(sidebar(page)).toBeHidden();
+      await expect(trigger(page)).toBeHidden();
+      await expect(page.locator('.site-header')).toBeHidden();
+      await expect(page.getByRole('heading', {name: 'Home'})).toBeVisible();
+      const card = await styleOf(inset(page));
+      expect(card.radius).toBe(0);
+      expect(card.shadow).toBe('none');
+      expect(await rectOf(inset(page))).toMatchObject({left: 0, right: DESKTOP.width, top: 0});
+    });
+  }
+
+  test('the open panel on a phone does not print either', async ({page}) => {
+    await page.setViewportSize(PHONE);
+    await openShell(page);
+    await trigger(page).click();
+    expect(await isOpen(page)).toBe(true);
+
+    await page.emulateMedia({media: 'print'});
+    await expect(sidebar(page)).toBeHidden();
   });
 });
 

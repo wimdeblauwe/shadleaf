@@ -19,4 +19,14 @@
   .site-header > .separator[data-orientation='vertical'] {
     @apply h-4 self-center;
   }
+
+  /*
+    Print: the header is navigation, so the paper starts with the page's own content. !important, as the header
+    placement of the sidebar lays the header out with more specific rules.
+  */
+  @media print {
+    .site-header {
+      display: none !important;
+    }
+  }
 }

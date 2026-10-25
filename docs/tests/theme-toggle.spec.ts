@@ -8,7 +8,7 @@ import {openFixture, type Routes} from './fixture';
 // with the keyboard. In fixture pages under a strict Content-Security-Policy with the csp Alpine build and the theme
 // script: the stored value (a plain string, no key for System), the choice surviving a reload with no flash of the other
 // theme, following the system's theme while on System, several toggles and two tabs in step, forced colours, htmx
-// swaps and history, and what shows without Alpine and without JavaScript.
+// swaps and history, printing in the light theme, and what shows without Alpine and without JavaScript.
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'];
 const KEY = 'shadleaf-theme';
@@ -148,6 +148,26 @@ test('the choice survives a reload, with no flash of the other theme', async ({p
   expect(await page.evaluate(() => (window as any).atFirstFrame), 'dark, with the moon, at the first frame')
       .toEqual({dark: true, shown: ['moon']});
   expect(await checked(page)).toEqual(['dark']);
+});
+
+test('a dark page prints in the light theme, and is dark again afterwards', async ({page}) => {
+  await page.emulateMedia({colorScheme: 'dark'});
+  await openFixture(page, MENU, {theme: true});
+  expect(await isDark(page)).toBe(true);
+
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+  expect(await isDark(page), 'while printing').toBe(false);
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  expect(await isDark(page), 'after printing').toBe(true);
+});
+
+test('a light page stays light after printing', async ({page}) => {
+  await page.emulateMedia({colorScheme: 'light'});
+  await openFixture(page, MENU, {theme: true});
+
+  await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+  expect(await isDark(page)).toBe(false);
 });
 
 test('the icon is right without Alpine, and nothing is checked or pressed', async ({page}) => {
