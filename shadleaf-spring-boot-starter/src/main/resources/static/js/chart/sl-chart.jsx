@@ -94,6 +94,7 @@ function part(marker, index, context) {
                                                     formatValue={format(marker, 'value-format', context)}/>}/>;
     case 'SL-CHART-LEGEND':
       return <Legend key={index} verticalAlign={marker.getAttribute('vertical-align') ?? 'bottom'}
+                     itemSorter={null}
                      content={<ChartLegendContent/>}/>;
     case 'SL-CHART-BAR':
       return <Bar key={index} dataKey={key} stackId={marker.getAttribute('stack') ?? undefined} fill={color}
