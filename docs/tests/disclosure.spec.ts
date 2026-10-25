@@ -169,9 +169,15 @@ for (const reducedMotion of ['no-preference', 'reduce'] as const) {
             shown: element.getBoundingClientRect().height - element.querySelector('summary')!.getBoundingClientRect().height,
             full: element.querySelector('.accordion-content')!.getBoundingClientRect().height,
           }));
-          await item.locator('> summary').click();
-          await page.waitForTimeout(50);
-          const early = await shownAndFull();
+          // Click and measure in one evaluation, two frames apart: a slow runner's round trips outlast the 0.2s.
+          const early = await item.evaluate(async element => {
+            element.querySelector('summary')!.click();
+            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            return {
+              shown: element.getBoundingClientRect().height - element.querySelector('summary')!.getBoundingClientRect().height,
+              full: element.querySelector('.accordion-content')!.getBoundingClientRect().height,
+            };
+          });
           if (animates) {
             expect(early.shown, 'mid-animation').toBeLessThan(early.full);
           } else {
