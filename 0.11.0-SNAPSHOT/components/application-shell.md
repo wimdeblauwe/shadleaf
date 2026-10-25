@@ -80,6 +80,47 @@ name and the theme toggle, and the page in a plain `main` with the skip link's t
 Without `<sl:sidebar-provider>` the site header lies across the top of the page, on the page's colour with a border
 below.
 
+## Printing
+
+A printed page is the page alone. In print, Shadleaf leaves out the sidebar and its trigger, the site header (with
+the breadcrumb, the theme toggle and anything else in it) and the toasts, and the inset loses the card the `inset`
+variant draws, so the page takes the whole width of the paper. Put what the paper needs (a title, the date) in the page
+itself, not in the header.
+
+Paper is light: the theme script takes the dark theme off while the browser prints, and puts it back afterwards. A
+page without the theme script has no dark theme to take off.
+
+Anything else that is only for the screen, such as a row of buttons above a printable sheet, is the application's to
+hide (see the tip below). Set the paper's size and margins with `@page` in the application's stylesheet:
+
+```css
+@page {
+  size: A4;
+  margin: 12mm;
+}
+```
+
+> **Tip: Leaving out more on paper**
+>
+> Hide the application's own screen-only parts in a print media query. In plain CSS, give them a class of your own:
+>
+> ```css
+> @media print {
+>   .screen-only {
+>     display: none;
+>   }
+> }
+> ```
+>
+> ```html
+> <div class="screen-only">
+>   <sl:button as="a" th:href="@{/sheets}" variant="outline">All sheets</sl:button>
+> </div>
+> ```
+>
+> With Tailwind CSS, the `print:` variant does the same: `<div class="print:hidden">`. Either class works on a
+> component too (`class` is appended to its own): Shadleaf's rules sit in a cascade layer, so the application's win.
+
 ## With htmx
 
 `hx-boost` on the body (as [Collapses to icons](https://shadleaf.dev/0.11.0-SNAPSHOT/layouts/collapses-to-icons.md) has it) loads every page with htmx. The server renders the whole page

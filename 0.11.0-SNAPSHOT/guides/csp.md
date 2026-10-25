@@ -64,7 +64,7 @@ String scriptSrc = "script-src 'self' " + themeScript.getCspHash();
 For this version of Shadleaf that is:
 
 ```text
-script-src 'self' 'sha256-ewffi8zKmIW+zI2vwENPE6/RaQgcGL/MObd1E+H3wJo='
+script-src 'self' 'sha256-WdjDZg6r2gzL3axMLK4n9dULYdGVjGjT29YEJxnTa/g='
 ```
 
 A hash pasted into a static configuration goes stale when an upgrade changes the script, so prefer the bean.
