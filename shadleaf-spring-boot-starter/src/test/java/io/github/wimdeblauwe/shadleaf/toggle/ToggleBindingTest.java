@@ -64,6 +64,19 @@ class ToggleBindingTest {
   }
 
   @Test
+  void thTextSetsTheLabelInsteadOfGoingToTheInput() {
+    Rendered rendered = render(new Settings(false, "grid", List.of()), false, """
+        <sl:toggle th:text="'Starred'">Placeholder</sl:toggle>
+        <sl:toggle-group name="layout" aria-label="Layout">
+          <sl:toggle-group-item value="list" th:text="'List'">Total</sl:toggle-group-item>
+          <sl:toggle-group-item value="grid" th:utext="'Grid'">Total</sl:toggle-group-item>
+        </sl:toggle-group>""");
+
+    assertThat(rendered.select("label.toggle").eachText()).containsExactly("Starred", "List", "Grid");
+    assertThat(rendered.select("input.toggle-input").eachAttr("th:text")).isEmpty();
+  }
+
+  @Test
   void singleGroupItemsAreRadioButtonsSharingTheGroupsField() {
     Rendered rendered = render(new Settings(false, "grid", List.of()), false, """
         <sl:toggle-group th:field="*{layout}" variant="outline" size="sm" aria-label="Layout">
