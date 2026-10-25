@@ -7,7 +7,8 @@
       give a toggle that holds only an icon an <code>aria-label</code>. Every attribute that is not a prop
       (<code>th:field</code>, <code>name</code>, <code>value</code>, <code>checked</code>, <code>disabled</code>,
       <code>aria-label</code>, <code>x-*</code>) passes through to the <code>input</code>, except
-      <code>class</code>, which goes to the <code>label</code> around it. <code>th:field</code> on a boolean works as
+      <code>class</code>, which goes to the <code>label</code> around it, and <code>th:text</code> and
+      <code>th:utext</code>, which set the label. <code>th:field</code> on a boolean works as
       on a checkbox; the toggle is marked <code>aria-invalid</code> when its field has errors.</sl:description>
     <sl:prop name="variant" default="default" values="default outline">Visual style of the toggle.</sl:prop>
     <sl:prop name="size" default="default" values="sm default lg">Size of the toggle.</sl:prop>
@@ -29,7 +30,7 @@
 
 <!--/* Reads slToggleClass, slToggleVariant, slToggleSize, slToggleType (the input's type, set before th:field runs,
   which picks Spring's checkbox or radio button processor by it), slToggleName and slToggleAttrs: the attributes for
-  the input, except class, which goes to the label. */-->
+  the input, except class, which goes to the label, and th:text and th:utext, which replace the label's content. */-->
 <label th:fragment="toggle-label"
        th:with="slAttrs=${#slFields.control(slToggleAttrs, slField)}"
        th:attr="class=${slToggleClass},
@@ -40,6 +41,7 @@
     th:attr="type=${slToggleType},
              name=${slToggleName},
              aria-invalid=${#slFields.invalid(slAttrs) ? 'true' : null}"
-    sl:attrs="${slAttrs.without('class', 'classappend')}"><sl:slot/></label>
+    sl:attrs="${slAttrs.without('class', 'classappend', 'text', 'utext')}"><th:block
+    sl:attrs="${slToggleAttrs.only('text', 'utext')}"><sl:slot/></th:block></label>
 </body>
 </html>
