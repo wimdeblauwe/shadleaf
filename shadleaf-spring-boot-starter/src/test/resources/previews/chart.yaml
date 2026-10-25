@@ -124,6 +124,34 @@ scenarios:
     data:
       visitors: *visitors
 
+  - id: area-forecast
+    title: Area with a forecast
+    description: >-
+      The same on areas: the forecast's line is dashed, its fill stays, and join starts it at the last actual number.
+    source: |-
+      <sl:chart th:data="${sales}" label="Cumulative sales, January to December 2024" margin="12">
+        <sl:chart-grid/>
+        <sl:chart-x-axis key="month" format="month-short"/>
+        <sl:chart-tooltip indicator="line" cursor="false" label-format="month"/>
+        <sl:chart-legend/>
+        <sl:chart-area key="actual" label="Actual" color="var(--chart-1)"/>
+        <sl:chart-area key="forecast" label="Forecast" color="var(--chart-1)" fill-opacity="0.15" dashed join="actual"/>
+      </sl:chart>
+    data:
+      sales:
+        - {month: '2024-01', actual: 120, forecast: null}
+        - {month: '2024-02', actual: 260, forecast: null}
+        - {month: '2024-03', actual: 410, forecast: null}
+        - {month: '2024-04', actual: 560, forecast: null}
+        - {month: '2024-05', actual: 700, forecast: null}
+        - {month: '2024-06', actual: 850, forecast: null}
+        - {month: '2024-07', actual: null, forecast: 990}
+        - {month: '2024-08', actual: null, forecast: 1130}
+        - {month: '2024-09', actual: null, forecast: 1280}
+        - {month: '2024-10', actual: null, forecast: 1420}
+        - {month: '2024-11', actual: null, forecast: 1570}
+        - {month: '2024-12', actual: null, forecast: 1710}
+
   - id: formats
     title: Formats
     description: >-
