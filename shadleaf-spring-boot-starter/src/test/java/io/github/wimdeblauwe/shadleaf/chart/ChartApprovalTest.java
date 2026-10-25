@@ -27,7 +27,7 @@ class ChartApprovalTest {
           <sl:chart-tooltip/>
           <sl:chart-legend/>
           <sl:chart-bar key="desktop" label="Desktop" color="var(--chart-1)" color-dark="var(--chart-3)" radius="4"/>
-          <sl:chart-line key="mobile" label="Mobile" curve="linear" dots dashed stroke-width="3"/>
+          <sl:chart-line key="mobile" label="Mobile" curve="linear" dots dashed join="desktop" stroke-width="3"/>
           <sl:chart-area key="tablet" label="Tablet" stack="a" dashed fill-opacity="0.8"/>
         </sl:chart>""");
     for (String format : LibraryComponents.registry().get("chart-x-axis").prop("format").values()) {

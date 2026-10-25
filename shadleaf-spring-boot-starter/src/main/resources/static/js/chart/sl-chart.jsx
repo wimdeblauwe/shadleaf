@@ -113,6 +113,33 @@ function part(marker, index, context) {
   }
 }
 
+/**
+ * A dashed line with join="actual" continues that series: its number at the last row where "actual" has one (before
+ * its own first number) is filled in, so the dashed line starts there. Returns copies of the rows, and for each such
+ * series the row it was filled in, which the tooltip leaves the series out of.
+ */
+function joinRows(rows, series) {
+  const joins = new Map();
+  const markers = series.filter(marker => marker.hasAttribute('join') && bool(marker, 'dashed', false));
+  if (!markers.length) {
+    return {data: rows, joins};
+  }
+  const data = rows.map(row => ({...row}));
+  for (const marker of markers) {
+    const key = marker.getAttribute('key');
+    const from = marker.getAttribute('join');
+    const first = data.findIndex(row => row[key] != null);
+    for (let index = first - 1; first > 0 && index >= 0; index--) {
+      if (data[index][from] != null) {
+        data[index][key] = data[index][from];
+        joins.set(key, data[index]);
+        break;
+      }
+    }
+  }
+  return {data, joins};
+}
+
 /** Calls onReady once the chart has drawn its first frame. */
 function Ready({onReady, children}) {
   useEffect(() => {
@@ -139,7 +166,7 @@ class SlChart extends HTMLElement {
     if (!json || this.root) {
       return;
     }
-    const data = JSON.parse(json.textContent);
+    const rows = JSON.parse(json.textContent);
     const markers = Array.from(this.children).filter(element => element.tagName.startsWith('SL-CHART-'));
     const series = markers.filter(marker => marker.tagName in SERIES);
 
@@ -149,13 +176,16 @@ class SlChart extends HTMLElement {
     this.container = document.createElement('div');
     this.container.className = 'chart-root';
 
+    const {data, joins} = joinRows(rows, series);
+
     // shadcn's ChartConfig, from the series parts. No prototype, so a key such as "constructor" is no entry.
     const config = Object.create(null);
     series.forEach((marker, index) => {
       const key = marker.getAttribute('key');
       const light = marker.getAttribute('color') ?? `var(--chart-${index % CHART_COLORS + 1})`;
       const dark = marker.getAttribute('color-dark');
-      config[key] = {label: marker.getAttribute('label') ?? key, dashed: bool(marker, 'dashed', false)};
+      config[key] = {label: marker.getAttribute('label') ?? key, dashed: bool(marker, 'dashed', false),
+        joinRow: joins.get(key)};
       this.container.style.setProperty(`--color-${key}`, dark ? `light-dark(${light}, ${dark})` : light);
     });
     this.append(this.container);

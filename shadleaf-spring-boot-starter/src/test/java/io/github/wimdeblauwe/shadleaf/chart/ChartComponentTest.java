@@ -145,6 +145,8 @@ class ChartComponentTest {
   void xAxisAndTooltipCheckTheirKeys() {
     assertThatRenderFailure(() -> tester.render("<sl:chart-x-axis key=\"2024\"/>"))
         .hasMessageContaining("<sl:chart-x-axis key=\"2024\">");
+    assertThatRenderFailure(() -> tester.render("<sl:chart-line key=\"a\" dashed join=\"a b\"/>"))
+        .hasMessageContaining("join");
     assertThatRenderFailure(() -> tester.render("<sl:chart-tooltip label-key=\"a b\"/>"))
         .hasMessageContaining("<sl:chart-tooltip label-key=\"a b\">");
   }
@@ -248,9 +250,9 @@ class ChartComponentTest {
         .hasAttribute("value-format", "percent").hasNoAttribute("data-indicator");
     assertThat(tester.render("<sl:chart-grid vertical horizontal=\"false\"/>")).root()
         .hasAttribute("vertical", "true").hasAttribute("horizontal", "false");
-    assertThat(tester.render("<sl:chart-line key=\"a\" curve=\"step-after\" dots dashed stroke-width=\"3\"/>")).root()
+    assertThat(tester.render("<sl:chart-line key=\"a\" curve=\"step-after\" dots dashed join=\"desktop\" stroke-width=\"3\"/>")).root()
         .hasAttribute("curve", "step-after").hasAttribute("dots", "true").hasAttribute("dashed", "true")
-        .hasAttribute("stroke-width", "3");
+        .hasAttribute("join", "desktop").hasAttribute("stroke-width", "3");
     assertThat(tester.render("<sl:chart-area key=\"a\" stack=\"a\" dashed fill-opacity=\"0.8\"/>")).root()
         .hasAttribute("stack", "a").hasAttribute("dashed", "true").hasAttribute("fill-opacity", "0.8");
     assertThat(tester.render("<sl:chart-legend vertical-align=\"top\"/>")).root()

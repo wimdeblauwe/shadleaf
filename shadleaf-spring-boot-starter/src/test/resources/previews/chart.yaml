@@ -84,7 +84,8 @@ scenarios:
     title: Actual and forecast
     description: >-
       A dashed series for a forecast, target or budget. The rows without a number (null) leave a gap, so the actual
-      line stops at the last month with figures; the forecast starts at that month to join it. The legend and the
+      line stops at the last month with figures; join names the series the forecast continues, so it starts there
+      without a number of its own, and the tooltip lists only the actual value for that month. The legend and the
       tooltip show the forecast dashed too.
     source: |-
       <sl:chart th:data="${sales}" label="Cumulative sales, January to December 2024" margin="12">
@@ -93,7 +94,7 @@ scenarios:
         <sl:chart-tooltip cursor="false" label-format="month"/>
         <sl:chart-legend/>
         <sl:chart-line key="actual" label="Actual" color="var(--chart-1)"/>
-        <sl:chart-line key="forecast" label="Forecast" color="var(--chart-1)" dashed/>
+        <sl:chart-line key="forecast" label="Forecast" color="var(--chart-1)" dashed join="actual"/>
       </sl:chart>
     data:
       sales:
@@ -102,7 +103,7 @@ scenarios:
         - {month: '2024-03', actual: 410, forecast: null}
         - {month: '2024-04', actual: 560, forecast: null}
         - {month: '2024-05', actual: 700, forecast: null}
-        - {month: '2024-06', actual: 850, forecast: 850}
+        - {month: '2024-06', actual: 850, forecast: null}
         - {month: '2024-07', actual: null, forecast: 990}
         - {month: '2024-08', actual: null, forecast: 1130}
         - {month: '2024-09', actual: null, forecast: 1280}

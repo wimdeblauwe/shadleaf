@@ -1589,9 +1589,16 @@
           }
         }, {
           "name" : "dashed",
-          "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over.",
+          "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over (see `join`).",
           "value" : {
             "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "join",
+          "description" : "The `key` of the series this dashed line continues (`actual`). The chart draws the dashed line from that series' last number to its own first one, so the rows need no duplicated value, and the tooltip does not list this series at that last row. Needs `dashed`.",
+          "value" : {
+            "kind" : "plain",
             "required" : false
           }
         }, {
@@ -1648,6 +1655,13 @@
         }, {
           "name" : "th:dashed",
           "description" : "`dashed` from a Thymeleaf expression, e.g. `th:dashed=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:join",
+          "description" : "`join` from a Thymeleaf expression, e.g. `th:join=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

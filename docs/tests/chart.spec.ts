@@ -131,6 +131,10 @@ test('a dashed series is drawn, listed and shown in the tooltip dashed', async (
   await focusChart(page, chart, 6);
   await expect(tooltip(chart).locator('.chart-tooltip-label')).toHaveText('July');
   await expect(tooltip(chart).locator('.chart-tooltip-indicator[data-dashed]')).toHaveCount(1);
+  // June is where the forecast joins the actual line: the tooltip lists only Actual is listed.
+  await page.keyboard.press('ArrowLeft');
+  await expect(tooltip(chart).locator('.chart-tooltip-label')).toHaveText('June');
+  await expect(tooltip(chart).locator('.chart-tooltip-name > span')).toHaveText(['Actual']);
 });
 
 test('hovering shows the tooltip with the series\' labels and values', async ({page}) => {

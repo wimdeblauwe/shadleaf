@@ -740,7 +740,12 @@
       "type" : "boolean",
       "defaultValue" : "false",
       "values" : [ ],
-      "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over."
+      "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over (see `join`)."
+    }, {
+      "name" : "join",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `key` of the series this dashed line continues (`actual`). The chart draws the dashed line from that series' last number to its own first one, so the rows need no duplicated value, and the tooltip does not list this series at that last row. Needs `dashed`."
     }, {
       "name" : "stroke-width",
       "type" : "number",
