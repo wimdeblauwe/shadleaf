@@ -218,7 +218,7 @@ busy state with `aria-busy` and a visually hidden "Loading" label, and disables 
 ```
 
 The "Loading" label comes from the message `sl.button.loading`; define it in your own `messages.properties` to
-translate or reword it.
+translate or reword it, as [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) explains.
 
 ### Props from expressions
 
@@ -334,7 +334,8 @@ sunset, say). Each toggle on a page needs its own `id` when it is a menu:
 
 ### Labels
 
-The labels are messages, which your `messages.properties` can reword or translate:
+The labels are messages, which your `messages.properties` can reword or translate (see
+[Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)):
 
 ```properties
 sl.theme-toggle.label=Theme
@@ -877,7 +878,7 @@ A failure the controller catches and does not want in the binding can go in as c
 ### Title
 
 The title defaults to the message `sl.form-errors.title`, "There is a problem". Define that key in your own
-`messages.properties` to reword or translate it for every form, or set `title` (or `th:title="#{...}"`) on one.
+`messages.properties` to reword or [translate](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) it for every form, or set `title` (or `th:title="#{...}"`) on one.
 `level` makes the title a heading that screen reader users can jump to.
 
 **Example: A title of its own.** title replaces the default title (the message sl.form-errors.title); level makes it a heading.
@@ -2436,7 +2437,8 @@ describes.
 | Backspace (multiple, empty input) | Removes the last chip |
 | Arrow left (multiple, at the start of the input) | Moves to the chips' remove buttons: arrow left and right between them, Backspace or Delete removes one |
 
-The number of matches is announced once typing pauses. The clear and chevron buttons stay out of the tab order: each
+The number of matches is announced once typing pauses ("3 results"; the texts are messages, `sl.combobox.*`, see
+[Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). The clear and chevron buttons stay out of the tab order: each
 has a key. The item under the pointer is highlighted.
 
 ### With htmx
@@ -3394,7 +3396,7 @@ The button shows the chosen date, or `placeholder` ("Pick a date") while there i
 
 For a range, give the date picker two date inputs as content, the start and then the end, and an `aria-label` that
 names the range. The popover closes after the second pick. The button shows both ends: `Oct 12, 2026 – Oct 21, 2026`
-with `format="medium"` (the separator is the message `sl.date-picker.range`).
+with `format="medium"` (the separator is the message `sl.date-picker.range`, see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)).
 
 **Example: Range.** Two date inputs, the start and the end, make a range; the popover closes after the second pick.
 
@@ -3723,6 +3725,8 @@ A disabled input fades the Browse button, and the component takes no files.
 - An upload is announced once when it starts ("Uploading 3 files."), and again when it fails, is cancelled, or ends
   while the component is still there. The percentages are not announced; each uploading or processing attachment is
   `aria-busy`. After a Cancel, the focus goes back to the input.
+- Its texts and announcements are messages (`sl.file-upload.*`); your own message files can reword them or add a
+  language, as [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) explains.
 
 ### Without JavaScript
 
@@ -4081,7 +4085,7 @@ error is shown as a [toast](https://shadleaf.dev/0.11.0-SNAPSHOT/components/toas
 stays open and the error is shown in it, above the content. A failed request from inside the dialog, such as a save,
 always shows the error in the dialog, so nothing the user typed is lost; the next request hides it.
 
-The message is "Something went wrong. Please try again." (`sl.dialog.error` in your `messages.properties`). The
+The message is "Something went wrong. Please try again." (`sl.dialog.error` in your `messages.properties`; see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). The
 `error` slot replaces it for one dialog:
 
 ```html
@@ -4240,7 +4244,7 @@ It works like a [dialog](https://shadleaf.dev/0.11.0-SNAPSHOT/components/dialog.
 - It has no close button in the corner.
 - `<sl:alert-dialog-cancel>` takes the focus when it opens, so pressing Enter straight away never confirms by accident.
   It closes the dialog (`commandfor` and `command="close"` are set for you) and says "Cancel" unless you give it text
-  of its own (the default comes from the message `sl.alert-dialog.cancel`). It takes the button's `variant` (default
+  of its own (the default comes from the message `sl.alert-dialog.cancel`, see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). It takes the button's `variant` (default
   `outline`) and `size`, and passes any other attribute on to the button.
 
 The action has no part of its own: what it does depends on the page. A `type="submit"` button in a form, a button
@@ -5952,7 +5956,7 @@ and at least a second is left afterwards, so nobody loses a toast while reading 
 for a toast with a long description.
 
 - **The close button** closes one toast. It needs Alpine, so it only shows once Alpine runs; its label comes from the
-  message `sl.toast.close`.
+  message `sl.toast.close` (see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)).
 - **Alt+T** moves the focus to the newest toast, as in Sonner, from anywhere on the page; the toaster's name,
   "Notifications (Alt+T)" (message `sl.toaster.label`), tells screen reader users so. **Tab** then reaches the close
   buttons.
@@ -6149,7 +6153,7 @@ Source: https://shadleaf.dev/0.11.0-SNAPSHOT/components/spinner/
 ### What it says
 
 A spinner is a status (`role="status"`) named "Loading". Give it an `aria-label` of its own to say what is loading;
-the default is the message `sl.spinner.label`, which you can reword or translate in your `messages.properties`.
+the default is the message `sl.spinner.label`, which you can reword or [translate](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) in your `messages.properties`.
 
 **Example: Saying what loads.** An aria-label replaces the default name, "Loading".
 
@@ -6718,7 +6722,7 @@ starts on the first page; the sort and page links keep `q` by themselves. To sea
 ### Nothing found
 
 `<sl:table-empty>` is the row to show when there are no rows: one cell across the table's `colspan` columns, saying
-"No results." (the message `sl.table.empty`, which your `messages.properties` can reword). Content of its own replaces
+"No results." (the message `sl.table.empty`, which your `messages.properties` can [reword or translate](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). Content of its own replaces
 the text.
 
 **Example: Nothing found.**
@@ -6888,7 +6892,7 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
 
   Select-all is named "Select all rows on this page" (`sl.table.select-all`); an `aria-label` of yours replaces it.
 - **The count** reads "2 of 20 selected" (`sl.table.selection.count`; keep `{0}` and `{1}` as they are, the browser
-  fills them in). Its `table` prop is the table's `id`, which `sl:table` puts on the `table`. It is not a live region:
+  fills them in; see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). Its `table` prop is the table's `id`, which `sl:table` puts on the `table`. It is not a live region:
   a row's checkbox announces its own state, so the count is only announced after a click on select-all, which
   changes rows the user did not touch.
 
@@ -7157,7 +7161,7 @@ and `sl:pagination-next` take `disabled`, and content of their own replaces thei
 ```
 
 A `Slice` has no total, so it reads "11–20" or "Page 2". The words are messages, so your `messages.properties` rewords
-or translates them; the numbers are formatted for the locale ("1,001–1,010 of 12,345").
+or [translates](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) them; the numbers are formatted for the locale ("1,001–1,010 of 12,345").
 
 ### Rows per page
 
@@ -7215,6 +7219,8 @@ link is followed. [Tables with htmx](https://shadleaf.dev/0.11.0-SNAPSHOT/guides
 - The size menu's button reads "Rows per page" followed by the size.
 
 ### Messages
+
+[Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) lists the languages Shadleaf ships them in, and explains how to add one.
 
 | Key | English |
 | --- | --- |
@@ -9447,7 +9453,7 @@ entry that is only needed on a phone.
 ### Trigger
 
 The trigger is a ghost icon button with a panel icon (turned around on a right-to-left page), named "Toggle sidebar"
-(the message `sl.sidebar.trigger`). An `aria-label` replaces the name, and content of its own replaces the icon:
+(the message `sl.sidebar.trigger`, see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). An `aria-label` replaces the name, and content of its own replaces the icon:
 
 ```html
 <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
@@ -10087,6 +10093,9 @@ change it:
 
 ### Labels
 
+The labels are messages, which your `messages.properties` can reword or translate (see
+[Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)):
+
 ```properties
 sl.user-menu.trigger=Account: {0}
 sl.user-menu.sign-in=Sign in
@@ -10312,6 +10321,8 @@ of its own replaces it, such as another icon; that content is not turned around.
 
 ### Messages
 
+[Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) lists the languages Shadleaf ships them in, and explains how to add one.
+
 | Key | English |
 | --- | --- |
 | `sl.breadcrumb.label` | Breadcrumb |
@@ -10428,7 +10439,7 @@ The focused `main` draws no focus ring: it is no control, and the page scrolling
 
 ### Text
 
-The text is "Skip to main content" (the message `sl.skip-link`). Content of its own replaces it:
+The text is "Skip to main content" (the message `sl.skip-link`, see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). Content of its own replaces it:
 
 ```html
 <sl:skip-link for="results">Skip to the results</sl:skip-link>

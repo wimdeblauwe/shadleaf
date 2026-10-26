@@ -119,6 +119,7 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 - [Tailwind CSS](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/tailwind.md): Use Shadleaf without Tailwind, or load the embedded bundle into the Tailwind build your application already has.
 - [Forms with htmx](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/htmx.md): Post a Shadleaf form with htmx, get it back with its errors without a page load, and keep it working as a plain POST.
 - [Tables with htmx](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/tables-htmx.md): Search as you type, sort and page a server-side table with htmx, act on a row from its menu, load more rows, keep the focus and the back button, and keep it working without JavaScript.
+- [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md): The components' built-in texts are messages, which Shadleaf ships in several languages; your own message files add a language or reword them.
 
 ## Optional
 

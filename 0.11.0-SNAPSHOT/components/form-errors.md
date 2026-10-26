@@ -88,7 +88,7 @@ A failure the controller catches and does not want in the binding can go in as c
 ## Title
 
 The title defaults to the message `sl.form-errors.title`, "There is a problem". Define that key in your own
-`messages.properties` to reword or translate it for every form, or set `title` (or `th:title="#{...}"`) on one.
+`messages.properties` to reword or [translate](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) it for every form, or set `title` (or `th:title="#{...}"`) on one.
 `level` makes the title a heading that screen reader users can jump to.
 
 **Example: A title of its own.** title replaces the default title (the message sl.form-errors.title); level makes it a heading.

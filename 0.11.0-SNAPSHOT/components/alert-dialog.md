@@ -52,7 +52,7 @@ It works like a [dialog](https://shadleaf.dev/0.11.0-SNAPSHOT/components/dialog.
 - It has no close button in the corner.
 - `<sl:alert-dialog-cancel>` takes the focus when it opens, so pressing Enter straight away never confirms by accident.
   It closes the dialog (`commandfor` and `command="close"` are set for you) and says "Cancel" unless you give it text
-  of its own (the default comes from the message `sl.alert-dialog.cancel`). It takes the button's `variant` (default
+  of its own (the default comes from the message `sl.alert-dialog.cancel`, see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). It takes the button's `variant` (default
   `outline`) and `size`, and passes any other attribute on to the button.
 
 The action has no part of its own: what it does depends on the page. A `type="submit"` button in a form, a button

@@ -429,7 +429,8 @@ describes.
 | Backspace (multiple, empty input) | Removes the last chip |
 | Arrow left (multiple, at the start of the input) | Moves to the chips' remove buttons: arrow left and right between them, Backspace or Delete removes one |
 
-The number of matches is announced once typing pauses. The clear and chevron buttons stay out of the tab order: each
+The number of matches is announced once typing pauses ("3 results"; the texts are messages, `sl.combobox.*`, see
+[Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). The clear and chevron buttons stay out of the tab order: each
 has a key. The item under the pointer is highlighted.
 
 ## With htmx

@@ -71,7 +71,8 @@ sunset, say). Each toggle on a page needs its own `id` when it is a menu:
 
 ## Labels
 
-The labels are messages, which your `messages.properties` can reword or translate:
+The labels are messages, which your `messages.properties` can reword or translate (see
+[Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)):
 
 ```properties
 sl.theme-toggle.label=Theme

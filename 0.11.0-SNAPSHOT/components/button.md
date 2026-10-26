@@ -124,7 +124,7 @@ busy state with `aria-busy` and a visually hidden "Loading" label, and disables 
 ```
 
 The "Loading" label comes from the message `sl.button.loading`; define it in your own `messages.properties` to
-translate or reword it.
+translate or reword it, as [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) explains.
 
 ## Props from expressions
 

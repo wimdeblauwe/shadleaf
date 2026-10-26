@@ -140,7 +140,7 @@ and `sl:pagination-next` take `disabled`, and content of their own replaces thei
 ```
 
 A `Slice` has no total, so it reads "11–20" or "Page 2". The words are messages, so your `messages.properties` rewords
-or translates them; the numbers are formatted for the locale ("1,001–1,010 of 12,345").
+or [translates](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) them; the numbers are formatted for the locale ("1,001–1,010 of 12,345").
 
 ## Rows per page
 
@@ -198,6 +198,8 @@ link is followed. [Tables with htmx](https://shadleaf.dev/0.11.0-SNAPSHOT/guides
 - The size menu's button reads "Rows per page" followed by the size.
 
 ## Messages
+
+[Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) lists the languages Shadleaf ships them in, and explains how to add one.
 
 | Key | English |
 | --- | --- |

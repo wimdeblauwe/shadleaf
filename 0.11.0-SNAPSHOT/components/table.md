@@ -280,7 +280,7 @@ starts on the first page; the sort and page links keep `q` by themselves. To sea
 ## Nothing found
 
 `<sl:table-empty>` is the row to show when there are no rows: one cell across the table's `colspan` columns, saying
-"No results." (the message `sl.table.empty`, which your `messages.properties` can reword). Content of its own replaces
+"No results." (the message `sl.table.empty`, which your `messages.properties` can [reword or translate](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). Content of its own replaces
 the text.
 
 **Example: Nothing found.**
@@ -450,7 +450,7 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
 
   Select-all is named "Select all rows on this page" (`sl.table.select-all`); an `aria-label` of yours replaces it.
 - **The count** reads "2 of 20 selected" (`sl.table.selection.count`; keep `{0}` and `{1}` as they are, the browser
-  fills them in). Its `table` prop is the table's `id`, which `sl:table` puts on the `table`. It is not a live region:
+  fills them in; see [Translating](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md)). Its `table` prop is the table's `id`, which `sl:table` puts on the `table`. It is not a live region:
   a row's checkbox announces its own state, so the count is only announced after a click on select-all, which
   changes rows the user did not touch.
 

@@ -13,7 +13,7 @@ Source: https://shadleaf.dev/0.11.0-SNAPSHOT/components/spinner/
 ## What it says
 
 A spinner is a status (`role="status"`) named "Loading". Give it an `aria-label` of its own to say what is loading;
-the default is the message `sl.spinner.label`, which you can reword or translate in your `messages.properties`.
+the default is the message `sl.spinner.label`, which you can reword or [translate](https://shadleaf.dev/0.11.0-SNAPSHOT/guides/translating.md) in your `messages.properties`.
 
 **Example: Saying what loads.** An aria-label replaces the default name, "Loading".
 
