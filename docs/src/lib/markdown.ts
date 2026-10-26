@@ -4,6 +4,7 @@
 // table a Markdown table from the same registry export, so an agent gets exactly what a reader sees.
 import {getCollection, type CollectionEntry} from 'astro:content';
 import {components, previews, themeScript} from './generated';
+import {messageGroups, supportedLanguages} from './messages';
 import {componentOverview, layoutOverview} from './component-overview';
 
 export type DocsEntry = CollectionEntry<'docs'>;
@@ -100,7 +101,7 @@ function demoteHeadings(markdown: string): string {
 
 /**
  * The MDX body with everything that is not Markdown replaced: imports dropped, ComponentPreview, LayoutCode,
- * ComponentAttributes, CspHash and DependencySnippet written out, Starlight's asides as block quotes, and links to other pages pointed at
+ * ComponentAttributes, CspHash, SupportedLanguages, MessageKeys and DependencySnippet written out, Starlight's asides as block quotes, and links to other pages pointed at
  * their Markdown copies. Code blocks are left alone (they hold JSX and imports as examples).
  */
 export function bodyMarkdown(entry: DocsEntry): string {
@@ -165,6 +166,15 @@ function convertLine(line: string, entry: DocsEntry): string {
   const attributes = line.match(/^\s*<ComponentAttributes\s+component="([^"]+)"\s*\/>\s*$/);
   if (attributes) {
     return attributesMarkdown(attributes[1]);
+  }
+  if (/^\s*<SupportedLanguages\s*\/>\s*$/.test(line)) {
+    const languages = supportedLanguages();
+    return languages.length === 0 ? '(The supported languages are missing from this build.)'
+        : languages.map(language => `- ${language.flag ? language.flag + ' ' : ''}${language.name} (\`${language.code}\`)`)
+            .join('\n');
+  }
+  if (/^\s*<MessageKeys\s*\/>\s*$/.test(line)) {
+    return messageKeysMarkdown();
   }
   if (/^\s*<CspHash\s*\/>\s*$/.test(line)) {
     return fenced('text', `script-src 'self' ${themeScript.cspHash || '<the hash of your Shadleaf version>'}`);
@@ -240,6 +250,21 @@ export function attributesMarkdown(name: string): string {
   }
   return [heading, '', '| Attribute | Values | Default | Description |', '| --- | --- | --- | --- |', ...rows, '', note]
       .join('\n');
+}
+
+/** The message keys, as MessageKeys.astro shows them: a table per component. */
+function messageKeysMarkdown(): string {
+  const groups = messageGroups();
+  if (groups.length === 0) {
+    return '(The message keys are missing from this build.)';
+  }
+  const cell = (text: string) => text.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+  return groups.map(group => {
+    const title = group.linked ? `[${group.title}](${new URL(`components/${group.page}.md`, siteRoot()).href})` : group.title;
+    const rows = group.messages.map(message => `| \`${message.key}\`${message.comment ? ': ' + cell(message.comment) : ''} `
+        + `| \`${cell(message.text)}\` |`);
+    return [`### ${title}`, '', '| Key | English |', '| --- | --- |', ...rows].join('\n');
+  }).join('\n\n');
 }
 
 /** Relative links to other docs pages, e.g. ](../icon/#sizes), become absolute links to their Markdown copies. */
