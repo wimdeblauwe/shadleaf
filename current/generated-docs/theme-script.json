@@ -1,4 +1,4 @@
 {
-  "cspHash" : "'sha256-ewffi8zKmIW+zI2vwENPE6/RaQgcGL/MObd1E+H3wJo='",
-  "script" : "(function () {\n  try {\n    var theme = localStorage.getItem('shadleaf-theme');\n    var dark = theme === 'dark' || (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);\n    document.documentElement.classList.toggle('dark', dark);\n  } catch (e) {\n  }\n})();"
+  "cspHash" : "'sha256-WdjDZg6r2gzL3axMLK4n9dULYdGVjGjT29YEJxnTa/g='",
+  "script" : "(function () {\n  var root = document.documentElement;\n  try {\n    var theme = localStorage.getItem('shadleaf-theme');\n    var dark = theme === 'dark' || (theme !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);\n    root.classList.toggle('dark', dark);\n  } catch (e) {\n  }\n  // Paper is light: a dark page prints in the light theme, and is dark again afterwards.\n  var darkBeforePrint = false;\n  window.addEventListener('beforeprint', function () {\n    darkBeforePrint = root.classList.contains('dark');\n    root.classList.remove('dark');\n  });\n  window.addEventListener('afterprint', function () {\n    if (darkBeforePrint) {\n      root.classList.add('dark');\n    }\n  });\n})();"
 }

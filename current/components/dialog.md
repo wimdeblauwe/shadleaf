@@ -233,7 +233,7 @@ error is shown as a [toast](https://shadleaf.dev/current/components/toast.md). W
 stays open and the error is shown in it, above the content. A failed request from inside the dialog, such as a save,
 always shows the error in the dialog, so nothing the user typed is lost; the next request hides it.
 
-The message is "Something went wrong. Please try again." (`sl.dialog.error` in your `messages.properties`). The
+The message is "Something went wrong. Please try again." (`sl.dialog.error` in your `messages.properties`; see [Translating](https://shadleaf.dev/current/guides/translating.md)). The
 `error` slot replaces it for one dialog:
 
 ```html

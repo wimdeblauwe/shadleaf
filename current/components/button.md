@@ -88,6 +88,18 @@ Put an [`<sl:icon>`](https://shadleaf.dev/current/components/icon.md) in the `ic
 <sl:button as="a" href="/orders" variant="link">View orders</sl:button>
 ```
 
+## As a label
+
+`as="label"` renders a `<label>` that looks the same, for a control that is visually hidden: `for` points at it, and
+a click on the label activates the control. [`<sl:file-upload>`](https://shadleaf.dev/current/components/file-upload.md)'s Browse button is one, for its file
+input. The label takes no focus and no `disabled`; the control does, so draw the focus ring and the disabled look from
+the control's state (`:has()`), as the file upload does.
+
+```html
+<input type="file" id="photo" name="photo" class="sl-sr-only">
+<sl:button as="label" for="photo" variant="outline">Choose a photo</sl:button>
+```
+
 ## Disabled and loading
 
 A disabled button gets the native `disabled` attribute. A disabled link loses its `href`, leaves the tab order and is
@@ -112,7 +124,7 @@ busy state with `aria-busy` and a visually hidden "Loading" label, and disables 
 ```
 
 The "Loading" label comes from the message `sl.button.loading`; define it in your own `messages.properties` to
-translate or reword it.
+translate or reword it, as [Translating](https://shadleaf.dev/current/guides/translating.md) explains.
 
 ## Props from expressions
 
@@ -146,7 +158,7 @@ Attributes of `<sl:button>`: A button, or with `as="a"` an anchor that looks the
 | --- | --- | --- | --- |
 | `variant` | `default`, `outline`, `ghost`, `destructive`, `secondary`, `link` | `default` | Visual style of the button. |
 | `size` | `xs`, `sm`, `default`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg` | `default` | Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`. |
-| `as` | `button`, `a` | `button` | Element to render: a `button`, or an anchor (`a`) for navigation. |
+| `as` | `button`, `a`, `label` | `button` | Element to render: a `button`, an anchor (`a`) for navigation, or a `label` for a visually hidden control (`for`), as `sl:file-upload`'s Browse button for its file input. A label takes no focus and no `disabled`: the control does. |
 | `type` | `button`, `submit`, `reset` | `button` | Submit behaviour. Defaults to `button`, unlike HTML, so a button in a form never submits by accident. |
 | `disabled` | *boolean* | — | Disable the button. A disabled anchor loses its `href` and leaves the tab order. |
 | `loading` | *boolean* | — | Show a spinner, announce the busy state and disable the button. |

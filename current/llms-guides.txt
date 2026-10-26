@@ -2,7 +2,7 @@
 
 > Getting started with Shadleaf, its conventions, the layouts and the guides.
 
-Shadleaf 0.10.0.
+Shadleaf 1.0.0.
 
 ## Shadleaf
 
@@ -60,7 +60,7 @@ Add the dependency to your `pom.xml` of your Spring Boot with Thymeleaf applicat
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>shadleaf-spring-boot-starter</artifactId>
-  <version>0.10.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -152,6 +152,9 @@ There is no `asChild`. A component that can render as a link takes `as="a"`:
 <sl:button as="a" th:href="@{/orders}">Orders</sl:button>
 ```
 
+`<sl:button as="label">` is a label that looks like a button, for a control that is visually hidden, such as a file
+input (`for` points at it).
+
 #### No utility classes in the library's CSS
 
 shadcn styles its components with Tailwind classes compiled into your application. Shadleaf ships its own stylesheet,
@@ -161,6 +164,9 @@ example relies on a utility class to change a component, Shadleaf has a prop ins
 | shadcn/ui | Shadleaf |
 | --- | --- |
 | `<CardHeader className="border-b">` | `<sl:card-header border>` |
+| `<Empty className="border border-dashed">` | `<sl:empty border>` |
+| `<Spinner className="size-8" />` | `<sl:spinner size="32"/>` |
+| `<Attachment className="w-full">` | `<sl:attachment full-width>` |
 | `<Skeleton className="h-4 w-full" />` | `<sl:skeleton/>` (a line is the default), `shape="circle"` for an avatar |
 
 Your own classes still work: `class` is appended to the component's own, so `class="w-64"` sizes a skeleton when your
@@ -283,6 +289,130 @@ select.
 - The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
   item at once, as on any select, where Radix opens the list. See [Select](https://shadleaf.dev/current/components/select.md#left-out).
 
+#### Combobox is a real select too
+
+`<sl:combobox>` renders a `<select>` (a `<select multiple>` with `multiple`) holding its items, so `th:field` binds
+one value or a collection and the form submits them without a hidden input. A small Alpine component puts the input,
+the chips and the list box in its place; without Alpine it is a select drawn like the native select.
+
+```html
+<!-- shadcn: <Combobox items={frameworks}><ComboboxInput placeholder="Select a framework" showClear/>
+             <ComboboxContent><ComboboxEmpty>No items found.</ComboboxEmpty><ComboboxList>
+             {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}</ComboboxList>
+             </ComboboxContent></Combobox> -->
+<sl:combobox th:field="*{framework}" placeholder="Select a framework" show-clear>
+  <sl:combobox-item th:each="framework : ${frameworks}" th:value="${framework.id}">[[${framework.name}]]</sl:combobox-item>
+</sl:combobox>
+
+<!-- shadcn: <Combobox multiple ...><ComboboxChips><ComboboxValue>{...<ComboboxChip/>}</ComboboxValue>
+             <ComboboxChipsInput/></ComboboxChips>... -->
+<sl:combobox th:field="*{frameworks}" multiple placeholder="Add a framework">...</sl:combobox>
+```
+
+- `ComboboxInput`, `ComboboxContent`, `ComboboxList`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipsInput`,
+  `ComboboxValue` and `ComboboxTrigger` are all `<sl:combobox>`: `showClear`, `showTrigger` and `autoHighlight` are
+  its `show-clear`, `show-trigger` and `auto-highlight`, and `ComboboxEmpty` is its `empty` attribute.
+- No `items` array or render function: the items are `<sl:combobox-item>`s, whose `value` and text replace
+  `itemToStringValue`. A group's heading is `<sl:combobox-group label>`; there is no `ComboboxLabel` or
+  `ComboboxCollection`.
+- An addition: `search-url` loads the options from the server as you type, as an HTML fragment of items.
+- No popup layout (a button trigger with the input in the list), no input addons, no `showRemove` on a chip, no
+  `side`/`align`. See [Combobox](https://shadleaf.dev/current/components/combobox.md#left-out).
+
+#### Toggle and toggle group are checkboxes and radio buttons
+
+`<sl:toggle>` is a checkbox drawn as a button, and the items of `<sl:toggle-group>` are radio buttons
+(`type="single"`) or checkboxes (`type="multiple"`). So `th:field` binds them, the form submits them, and they work
+without JavaScript; a screen reader announces a toggle as a checkbox, checked or not, where Radix's is a toggle button,
+pressed or not.
+
+```html
+<!-- shadcn: <Toggle aria-label="Toggle italic" defaultPressed><Italic/></Toggle> -->
+<sl:toggle name="italic" aria-label="Toggle italic" checked><sl:icon name="italic"/></sl:toggle>
+
+<!-- shadcn: <ToggleGroup type="single" variant="outline" defaultValue="grid">
+             <ToggleGroupItem value="list">List</ToggleGroupItem>... -->
+<sl:toggle-group th:field="*{layout}" variant="outline" aria-label="Layout">
+  <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+  <sl:toggle-group-item value="grid">Grid</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+- No `pressed`/`defaultPressed`/`onPressedChange`, nor `value`/`defaultValue`/`onValueChange` on the group:
+  `checked` (or `th:field`) renders the state, and the inputs fire `change`.
+- The group takes the `th:field` or `name` its items share; Radix's has neither.
+- The keyboard is the browser's: in a `single` group the arrow keys move between the items and select them, and Tab
+  leaves the group; in a `multiple` group every item is a tab stop. Radix's arrow keys only move the focus, in both
+  types. There is no `loop` or `rovingFocus`.
+- A `single` group cannot be cleared by clicking its item again, as a radio button cannot.
+- `spacing` takes `0` to `4`, and `variant` and `size` are set on the group only, not per item.
+
+#### Calendar is drawn over date inputs
+
+`<sl:calendar>` holds its value in `<input type="date">` elements, so `th:field` binds it and the form submits ISO
+dates. A small Alpine component draws the month over them; without Alpine the date inputs show.
+
+```html
+<!-- shadcn: <Calendar mode="single" selected={date} onSelect={setDate}/> -->
+<sl:calendar th:field="*{dueDate}"/>
+
+<!-- shadcn: <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2}/> -->
+<sl:calendar aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:calendar>
+```
+
+- No `mode`: one date input is a single date, two (start and end) are a range. No `mode="multiple"` yet.
+- No `selected`/`onSelect`: `th:field` renders the value, and the input fires `change`.
+- `disabled` disables the whole calendar, as on an input; the days that cannot be picked are `disabled-dates`
+  (`sat,sun,2026-12-24..2026-12-31`), plus the inputs' `min` and `max`.
+- The page's locale sets the first day of the week and the week numbering; `week-starts-on` overrides the first day.
+- No `timeZone`, `buttonVariant`, `classNames`, `components` or `formatters`. See
+  [Calendar](https://shadleaf.dev/current/components/calendar.md#left-out).
+
+#### Month view is a component
+
+shadcn's Calendar shows content per day through react-day-picker's `components={{DayButton}}`, and full-month
+calendars are blocks built on top of it. `<sl:month-view>` is a component of its own for that: rendered on the
+server, no picking, a `day` slot per day and a link per day.
+
+```html
+<!-- shadcn: <Calendar components={{DayButton: ({children, modifiers, day, ...props}) => <CalendarDayButton
+     day={day} modifiers={modifiers} {...props}>{children}<span>{events[day.date]}</span></CalendarDayButton>}}/> -->
+<sl:month-view day-href="/agenda/{date}">
+  <sl:slot name="day"><span th:text="${events[slDay.date]}"></span></sl:slot>
+</sl:month-view>
+```
+
+- The previous and next month are links to the server (`?month=2026-09`), not client state.
+- See [Month view](https://shadleaf.dev/current/components/month-view.md).
+
+#### Date picker is a component
+
+shadcn has no date picker component: its docs compose a `Popover`, a `Button` and a `Calendar`, and the app's own
+state updates the button and closes the popover. `<sl:date-picker>` is that composition as one component; its
+attributes go to the calendar inside.
+
+```html
+<!-- shadcn: <Popover><PopoverTrigger asChild><Button variant="outline">{date ? format(date, "PPP") : "Pick a date"}
+     </Button></PopoverTrigger><PopoverContent className="w-auto p-0" align="start">
+     <Calendar mode="single" selected={date} onSelect={setDate}/></PopoverContent></Popover> -->
+<sl:date-picker th:field="*{dueDate}"/>
+
+<!-- shadcn: the same with <Calendar mode="range" numberOfMonths={2} .../> -->
+<sl:date-picker aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:date-picker>
+```
+
+- The button's text is formatted in the page's locale, by `format` (`Intl`'s `dateStyle`: `long` is close to
+  date-fns' `PPP`), not by a date-fns pattern. A range shows both ends with ` – ` between them.
+- A pick closes the popover: for a range, the second pick.
+- It needs JavaScript; without it the popover holds the bare date inputs.
+- The typed-input, time, natural language and presets demos have no counterpart yet.
+
 #### Accordion and collapsible are details elements
 
 Each accordion item and each collapsible is a `<details>` element with the trigger as its `<summary>`, so they need
@@ -372,6 +502,36 @@ hidden screen-reader text is never read. The labels are messages (`sl.pagination
 Previous's `text`. The data table's footer pieces are components: `sl:pagination-summary` ("11–20 of 270") and
 `sl:pagination-size` (a menu of links rather than a select). See [Pagination](https://shadleaf.dev/current/components/pagination.md).
 
+#### Chart: parts with props instead of Recharts JSX
+
+`<sl:chart th:data="${rows}">` is `ChartContainer` with the chart inside it, and its parts are Recharts' components
+with shadcn's settings: `sl:chart-grid` (`CartesianGrid vertical={false}`), `sl:chart-x-axis` and `sl:chart-y-axis`
+(no tick or axis lines), `sl:chart-tooltip` (`ChartTooltip` with `ChartTooltipContent`), `sl:chart-legend` and the
+series, `sl:chart-bar`, `sl:chart-line` and `sl:chart-area`. Their props are Recharts' and shadcn's in kebab case
+(`indicator`, `hide-label`, `label-key`, `tick-margin`, `radius`; `stackId` is `stack`, `type` is `curve`, `dot` is
+`dots`). The chart type follows the series: there is no `BarChart` to pick. What differs:
+
+- **No `ChartConfig`.** A series' `label` and `color` sit on its part, and `color-dark` replaces the config's
+  `theme`, written as `light-dark()`. A series without a colour takes the next `--chart-N`; shadcn's examples name
+  them in the config.
+- **No `ChartStyle`.** shadcn writes the `--color-<key>` properties into a `<style>` element, which a strict
+  Content-Security-Policy blocks: its chart loses its colours. Shadleaf sets them through CSSOM. A key is therefore
+  checked to be a CSS identifier.
+- **Named formats instead of functions.** `tickFormatter`, `formatter` and `labelFormatter` are `format`,
+  `value-format` and `label-format` with a name (`month-short`, `compact`, `currency`), written with `Intl` in the
+  page's language. Dates are read by their Java type, not by `new Date()`, so a `LocalDate` never shifts a day.
+- **The chart's name is an `aria-label`**, not Recharts' `title`: a browser shows an svg's `<title>` as a native
+  tooltip over the styled one. And the tooltip keeps a gap between a series' name and its value, which shadcn's lets
+  touch once the tooltip is wider than its minimum.
+- **A visible focus ring.** shadcn hides the chart's (`outline-hidden` on `.recharts-surface`); the chart takes the
+  focus for its arrow keys, so each skin draws one.
+- **Recharts 3.10 on Preact**, not React, and not the 3.8 shadcn pins: the script is smaller, and 3.10 fixes a line
+  drawn only partway with reduced motion.
+- **Not there yet:** pie, radar and radial charts, horizontal bars, gradients, icons in the tooltip and legend, and
+  custom tooltip or legend content.
+
+See [Chart](https://shadleaf.dev/current/components/chart.md).
+
 #### Sidebar: one element instead of a Sheet on a phone
 
 shadcn's `Sidebar` renders a `Sheet` on a phone and a separate sidebar on a desktop, chosen in the browser by
@@ -449,6 +609,35 @@ shadcn's example wraps the ellipsis in a `DropdownMenuTrigger` by hand; here `<s
 "More levels", not "More", and the separator turns around on a right-to-left page. See
 [Breadcrumb](https://shadleaf.dev/current/components/breadcrumb.md).
 
+#### Attachment: a trigger with `as`, a label and a grid for the group
+
+The parts and props are shadcn's. `<AttachmentTrigger asChild>` around a link is `<sl:attachment-trigger as="a">`, and
+inside a `DialogTrigger` it is a trigger with `commandfor` and `command="show-modal"`. `<sl:attachment-action>`
+takes `as="a"` too, for a download link. Where shadcn tells you to add `tabIndex`, `role="group"` and an `aria-label`
+to a group of attachments without actions, `<sl:attachment-group label="...">` adds all three. shadcn's `shimmer` and
+`scroll-fade-x` utilities are part of the attachment's stylesheet. shadcn's group is only a row; for a gallery you
+write your own grid around the attachments. `<sl:attachment-group layout="grid">` is that grid, its columns and gap
+from the skin, as the standalone bundle has no utility classes to build one. See
+[Attachment](https://shadleaf.dev/current/components/attachment.md).
+
+#### File upload is a component
+
+shadcn/ui has no file upload; its file upload card is an outlined `Empty` with a "Browse Files" button that does
+nothing yet. `<sl:file-upload>` is Shadleaf's own, built from that look: a visually hidden file input that the form
+submits, bound with `th:field` to a `MultipartFile` or `List<MultipartFile>`, a Browse button (`<sl:button as="label">`
+for the input), and with JavaScript a drop zone and a list of `<sl:attachment>`s, one per file, with a remove button.
+
+```html
+<!-- shadcn: <Empty className="border"><EmptyHeader>...<EmptyTitle>Upload files</EmptyTitle>
+     <EmptyDescription>PNG, JPG, PDF up to 10MB</EmptyDescription></EmptyHeader>
+     <EmptyContent><Button>Browse Files</Button></EmptyContent></Empty> -->
+<sl:file-upload th:field="*{attachments}" multiple accept="image/png,image/jpeg,application/pdf" max-size="10MB">
+  <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
+</sl:file-upload>
+```
+
+See [File Upload](https://shadleaf.dev/current/components/file-upload.md).
+
 #### Skip link and main
 
 shadcn/ui has no skip link; `<sl:skip-link>` goes first in the body and skips to `<sl:sidebar-inset>`, which therefore
@@ -494,12 +683,17 @@ takes keyboard focus, when it is a link (`as="a"`).
 #### Accessibility additions
 
 - `<sl:card-title level="3">` is announced as a heading, so screen reader users can jump between cards. Without a
-  `level` it is plain text, as in shadcn.
+  `level` it is plain text, as in shadcn. The same goes for `<sl:empty-title>`.
 - The avatar is hidden from assistive technology unless it has a `label`, as it usually sits next to the person's
   name. With one, it is announced as a single image with that name.
 - The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
 - A tab panel shows the focus ring when Tab reaches it; shadcn's takes the focus without showing it. In Windows'
   high-contrast mode the active tab is underlined, as its background and shadow are gone there.
+- The attachment trigger draws the skin's focus ring around the card, only for keyboard focus; shadcn's card shows a
+  faint ring whenever anything in it has focus, a click included. An uploading or processing attachment is marked
+  `aria-busy`, and its title does not shimmer for users who ask for reduced motion or in Windows' high-contrast mode.
+  A failed attachment's text uses the legible destructive colour (see Contrast). The edges of an attachment group
+  stop fading while it has keyboard focus, so its focus ring shows.
 - Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
   `aria-label`.
 
@@ -567,6 +761,11 @@ takes keyboard focus, when it is a link (`as="a"`).
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
   on any radio button or checkbox. The indeterminate state is the input's own (`indeterminate` prop, or the DOM
   property) and shows a minus; shadcn's checkbox shows its check mark for `checked="indeterminate"`.
+- Input group: `className="border-b"` (or `border-t`) on a block addon is its `border` prop, and the `ml-auto` of
+  shadcn's examples is not needed: in an addon above or below the control, `<sl:input-group-text>` takes the free
+  space. A disabled control fades the whole group by itself, where shadcn's needs `data-disabled` on the group. Only
+  `<sl:input-group-input>` and `<sl:input-group-textarea>` are controls: there is no `data-slot="input-group-control"`
+  for a control of your own. A click on an addon focuses the control only with JavaScript.
 - A disabled checkbox fades as a whole, check mark included. In the lyra and nova skins a disabled native select and
   select get the same grey background as a disabled input (shadcn's lyra and nova only give it to input and textarea).
 
@@ -595,8 +794,10 @@ takes keyboard focus, when it is a link (`as="a"`).
 - A read-only input or textarea gets a muted background and no shadow; shadcn draws it as an editable one.
 - In Windows' high-contrast mode a disabled control turns the system's grey text colour (`GrayText`) instead of
   fading.
-- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
-  `Spinner` for this.
+- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. In shadcn you put a
+  `Spinner` in the button and disable it yourself.
+- `<sl:spinner>` turns slower, not still, when the user asks for reduced motion; shadcn's keeps spinning at full
+  speed. Its name, "Loading", is a message (`sl.spinner.label`) you can translate.
 
 ---
 
@@ -689,6 +890,9 @@ your `pom.xml`, so the agent reads the docs of the version you use.
   `<sl:dropdown-menu-trigger>` / `<sl:popover-trigger>` or `popovertarget`.
 - Icons: `<sl:icon name="...">` with Lucide names. An icon-only button (`size="icon"`, `icon-sm`, ...)
   needs an `aria-label`; rendering fails without one.
+- Charts: `<sl:chart th:data="${rows}" label="...">` with parts (`sl:chart-x-axis key="month"`,
+  `sl:chart-bar key="desktop" th:label="#{...}"`). No `ChartConfig` and no formatter functions: labels and
+  colours go on the series parts, number and date formats are names (`format="month-short"`).
 - Rendering fails with a message on a wrong prop value, a missing required prop or a missing accessible
   name: render every page you change (run the tests or load the page) and fix what it reports.
 - With `hx-boost` on `<body>`, every boosted page load sends `HX-Request`: return a fragment only when the
@@ -787,6 +991,7 @@ The first sample application uses a shorter [Collapses to icons](https://shadlea
 - [Collapsible sub-menus](https://shadleaf.dev/current/layouts/collapsible-sub-menus.md): A sidebar of sections that open and close, each with its pages in a sub-menu, only the current page's section open.
 - [Collapses to icons](https://shadleaf.dev/current/layouts/collapses-to-icons.md): A team switcher, collapsible sections and projects beside the page, collapsing to a strip of icons on a desktop, with the page as a card and the signed-in user's menu at the bottom.
 - [Inset with secondary navigation](https://shadleaf.dev/current/layouts/inset-secondary-navigation.md): Sections that are pages of their own with a chevron for their sub-menus, projects, a secondary navigation and the user menu, beside the page as a card.
+- [Sidebar and top bar](https://shadleaf.dev/current/layouts/top-bar.md): A sidebar that is always there on a desktop, with the pages, the user's teams and Settings, and a bar across the top with a search field, the notifications and the signed-in user's menu.
 - [On the end](https://shadleaf.dev/current/layouts/sidebar-end.md): A table of contents in a sidebar on the end of the line, the right in a left-to-right page, with the trigger at the end of the page's header.
 - [Navigation in the header](https://shadleaf.dev/current/layouts/header.md): For an application with a handful of pages, the pages as a row of links in the site header and the page as a card below it; on a phone the same navigation is a panel.
 
@@ -2806,6 +3011,263 @@ of the content (the `nav-secondary` class on its group), and the page's padding.
 
 ---
 
+## Sidebar and top bar
+
+> A sidebar that is always there on a desktop, with the pages, the user's teams and Settings, and a bar across the top with a search field, the notifications and the signed-in user's menu.
+
+Source: https://shadleaf.dev/current/layouts/top-bar/
+
+A sidebar for an application that keeps its navigation in view: the pages with their icons, a "Your teams" group with
+each team's initial where a page has its icon, and Settings at the bottom (`<sl:sidebar-footer>`). It never collapses
+on a desktop (`collapsible="none"`), so there is no trigger there. Across the top of the page, a
+[site header](https://shadleaf.dev/current/components/site-header.md) that stays in view while the page scrolls: a search field that takes the
+free room, a notifications button and the [user menu](https://shadleaf.dev/current/components/user-menu.md). On a phone the menu button at the
+start of the bar opens the sidebar as a panel. Switch the preview to Phone to see it.
+
+**Example: Sidebar and top bar.** A sidebar that is always there on a desktop, with the pages, the user's teams and Settings at the bottom, and a bar across the top of the page with a search field, the notifications and the signed-in user's menu. On a phone the menu button in the bar opens the sidebar as a panel.
+
+### The layout
+
+The whole layout file. It has what [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs).
+`#slNav.current` marks the current page from the request.
+
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:fragment="layout(pageTitle, content)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle}">Page</title>
+  <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <link rel="stylesheet" th:href="@{/css/application.css}">
+</head>
+<body>
+<sl:skip-link/>
+<sl:sidebar-provider>
+  <sl:sidebar collapsible="none">
+    <sl:sidebar-header>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/}" size="lg">
+            <sl:slot name="icon-start"><span class="app-logo"><sl:icon name="leaf"/></span></sl:slot>
+            <strong>Acme</strong>
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-header>
+    <sl:sidebar-content>
+      <sl:sidebar-group id="nav-main">
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/}" th:active="${#slNav.current('/')}">
+                <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
+                Dashboard
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/users}" th:active="${#slNav.current('/users')}">
+                <sl:slot name="icon-start"><sl:icon name="user"/></sl:slot>
+                Users
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/teams}" th:active="${#slNav.current('/teams')}">
+                <sl:slot name="icon-start"><sl:icon name="users"/></sl:slot>
+                Teams
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/calendar}" th:active="${#slNav.current('/calendar')}">
+                <sl:slot name="icon-start"><sl:icon name="calendar"/></sl:slot>
+                Calendar
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/documents}" th:active="${#slNav.current('/documents')}">
+                <sl:slot name="icon-start"><sl:icon name="files"/></sl:slot>
+                Documents
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/reports}" th:active="${#slNav.current('/reports')}">
+                <sl:slot name="icon-start"><sl:icon name="chart-pie"/></sl:slot>
+                Reports
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+      <sl:sidebar-group id="nav-teams">
+        <sl:sidebar-group-label>Your teams</sl:sidebar-group-label>
+        <sl:sidebar-group-content>
+          <sl:sidebar-menu>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/teams/engineering}" th:active="${#slNav.current('/teams/engineering')}">
+                <sl:slot name="icon-start"><span class="team-initial" aria-hidden="true">E</span></sl:slot>
+                Engineering
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/teams/marketing}" th:active="${#slNav.current('/teams/marketing')}">
+                <sl:slot name="icon-start"><span class="team-initial" aria-hidden="true">M</span></sl:slot>
+                Marketing
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+            <sl:sidebar-menu-item>
+              <sl:sidebar-menu-button th:href="@{/teams/sales}" th:active="${#slNav.current('/teams/sales')}">
+                <sl:slot name="icon-start"><span class="team-initial" aria-hidden="true">S</span></sl:slot>
+                Sales
+              </sl:sidebar-menu-button>
+            </sl:sidebar-menu-item>
+          </sl:sidebar-menu>
+        </sl:sidebar-group-content>
+      </sl:sidebar-group>
+    </sl:sidebar-content>
+    <sl:sidebar-footer>
+      <sl:sidebar-menu>
+        <sl:sidebar-menu-item>
+          <sl:sidebar-menu-button th:href="@{/settings}" th:active="${#slNav.current('/settings')}">
+            <sl:slot name="icon-start"><sl:icon name="settings"/></sl:slot>
+            Settings
+          </sl:sidebar-menu-button>
+        </sl:sidebar-menu-item>
+      </sl:sidebar-menu>
+    </sl:sidebar-footer>
+  </sl:sidebar>
+  <sl:sidebar-inset>
+    <sl:site-header>
+      <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
+      <sl:separator orientation="vertical"/>
+      <form class="app-search" role="search" th:action="@{/search}">
+        <sl:input type="search" name="q" placeholder="Search" aria-label="Search"/>
+        <sl:icon name="search"/>
+      </form>
+      <sl:slot name="end">
+        <sl:button as="a" th:href="@{/notifications}" variant="ghost" size="icon" aria-label="Notifications">
+          <sl:icon name="bell"/>
+        </sl:button>
+        <sl:separator orientation="vertical"/>
+        <sl:user-menu placement="header">
+          <sl:dropdown-menu-item as="a" th:href="@{/profile}"><sl:icon name="user"/>Your profile</sl:dropdown-menu-item>
+        </sl:user-menu>
+      </sl:slot>
+    </sl:site-header>
+    <div class="page">
+      <h1 th:text="${pageTitle}"></h1>
+      <div th:replace="${content}"></div>
+    </div>
+  </sl:sidebar-inset>
+</sl:sidebar-provider>
+<div id="modal-root"></div>
+<sl:toaster>
+  <sl:toast th:each="toast : ${toasts}" th:title="${toast.title}" th:description="${toast.description}"
+            th:variant="${toast.variant}" th:duration="${toast.duration}"/>
+</sl:toaster>
+</body>
+</html>
+```
+
+The search field is a plain `GET` form; Shadleaf has no search of its own. The notifications button is a link to a
+page here; give it a [badge](https://shadleaf.dev/current/components/badge.md) or open a [popover](https://shadleaf.dev/current/components/popover.md) from it as the
+application needs. The teams are links; an application lists its own with `th:each` and takes the initial with
+`${#strings.substring(team.name, 0, 1)}`.
+
+### A page
+
+A page passes its title and its content:
+
+```html
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Users', ~{::#page-content})}">
+<body>
+<div id="page-content">
+  ...
+</div>
+</body>
+</html>
+```
+
+### The CSS
+
+Shadleaf's CSS styles the components, not the page around them, and has no utility classes. The rest is the
+application's CSS, here without Tailwind: the square behind the logo, the teams' initials, the bar (its height, the
+border below it and staying in view), the search field without a border until it has focus, and the page's padding.
+
+```css
+/* The square behind the logo in the sidebar's header. */
+.app-logo {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: var(--sidebar-primary);
+  color: var(--sidebar-primary-foreground);
+}
+.app-logo > svg { inline-size: 1rem; block-size: 1rem; }
+
+/* A team's initial in a small bordered square, where a page has its icon. */
+.team-initial {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1px solid var(--sidebar-border);
+  border-radius: calc(var(--radius) - 4px);
+  background: var(--background);
+  font-size: 0.625rem;
+  font-weight: 500;
+}
+
+/*
+  The bar: as high as the sidebar's header, so the two line up, and it stays at the top while the page scrolls,
+  with a border below. The separator after the menu button goes with it, from 768 px; the one before the user's menu
+  is a little taller.
+*/
+.sidebar-inset > .site-header {
+  --site-header-height: 4rem;
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 10;
+  gap: 1rem;
+  border-block-end: 1px solid var(--border);
+  background: var(--background);
+}
+.sidebar-inset > .site-header > .site-header-end > .separator { block-size: 1.5rem; }
+@media (width >= 48rem) {
+  .sidebar-inset > .site-header > .separator { display: none; }
+}
+
+/* The search field takes the bar's free room, a magnifier inside it, without a border until it has focus. */
+.app-search { position: relative; flex: 1; }
+.app-search > .input { padding-inline-start: 2rem; }
+.app-search > .input:not(:focus-visible) { border-color: transparent; box-shadow: none; }
+.app-search > svg {
+  position: absolute;
+  inset-inline-start: 0.5rem;
+  inset-block-start: 50%;
+  translate: 0 -50%;
+  inline-size: 1rem;
+  block-size: 1rem;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* The page's padding, more on a wider screen. */
+.page { padding: 2rem 1rem; }
+.page > h1 { margin-block-end: 1.5rem; font-size: 1.5rem; font-weight: 600; }
+@media (width >= 64rem) {
+  .page { padding: 2.5rem 2rem; }
+}
+```
+
+---
+
 ## On the end
 
 > A table of contents in a sidebar on the end of the line, the right in a left-to-right page, with the trigger at the end of the page's header.
@@ -3369,7 +3831,7 @@ String scriptSrc = "script-src 'self' " + themeScript.getCspHash();
 For this version of Shadleaf that is:
 
 ```text
-script-src 'self' 'sha256-ewffi8zKmIW+zI2vwENPE6/RaQgcGL/MObd1E+H3wJo='
+script-src 'self' 'sha256-WdjDZg6r2gzL3axMLK4n9dULYdGVjGjT29YEJxnTa/g='
 ```
 
 A hash pasted into a static configuration goes stale when an upgrade changes the script, so prefer the bean.
@@ -3379,6 +3841,12 @@ A hash pasted into a static configuration goes stale when an upgrade changes the
 Alpine's standard build needs `'unsafe-eval'`. Under a policy without it, set `shadleaf.assets.alpine=csp` to load
 Alpine's CSP build instead; see [Alpine.js](https://shadleaf.dev/current/guides/alpine.md#csp) for what that means for your own Alpine markup. Shadleaf's
 script is served from your application, so `script-src 'self'` allows it.
+
+### Image previews
+
+A [file upload](https://shadleaf.dev/current/components/file-upload.md#image-previews) with `previews` shows a picked image from a `blob:` URL.
+`img-src 'self'` blocks those, and the files keep their icons. To have the thumbnails, allow `blob:` too:
+`img-src 'self' blob:`. Nothing else in Shadleaf needs it.
 
 ### A working example
 
@@ -4700,3 +5168,274 @@ typing, what is typed while a request is out, Enter, the pushed address, the foc
 and forward, the form without htmx, a row menu posting with htmx and keeping the focus, Load more (rows appended, one
 Load more row, the focus on the first new row, the address replaced, select-all and the count, the link without
 htmx) and endless scrolling; `table-selection.spec.ts` the selection through htmx swaps and history.
+
+---
+
+## Translating
+
+> The components' built-in texts are messages, which Shadleaf ships in several languages; your own message files add a language or reword them.
+
+Source: https://shadleaf.dev/current/guides/translating/
+
+Some Shadleaf components have built-in texts, such as the "Cancel" button of an alert dialog.
+Shadleaf ships these texts in the languages [listed below](#supported-languages), and your application can add a language or reword a text if needed.
+
+### How it works
+
+Shadleaf puts its messages behind your application's message source: it becomes the last parent of the `messageSource`
+bean, whether Spring Boot configured it (`spring.messages.basename`) or you declared it. Spring asks your messages first,
+so a key you define wins; the keys you leave out come from Shadleaf. An application without messages of its own gets
+Shadleaf's as its message source.
+
+The request's locale picks the language, as for your own messages. Spring Boot takes it from the `Accept-Language`
+header unless you set `spring.web.locale` and `spring.web.locale-resolver=fixed`, or declare a `LocaleResolver` of your
+own. A language Shadleaf has no messages for gets English, whatever the server's own locale is.
+
+Set the page's language too, on the `<html>` element of your layout. Shadleaf formats numbers, dates and lists in the
+browser (charts, the selection count of a table, the file sizes of a file upload) in that language:
+
+```html
+<html th:lang="${#locale.toLanguageTag()}">
+```
+
+### Your application's messages
+
+Keep your own keys in your `messages.properties` and `messages_<language>.properties`, as you would without Shadleaf.
+Leave Shadleaf's keys out of them: they come from Shadleaf, in the page's language.
+
+Set this in `application.properties`:
+
+```properties
+spring.messages.fallback-to-system-locale=false
+```
+
+Without it, Spring Boot answers a language your application has no file for with the server's language: on a server
+in Dutch, a French page gets the texts of your `messages_nl.properties`, while Shadleaf, which never falls back to the
+server's language, writes English. With it off, such a page gets your `messages.properties` and Shadleaf's English.
+
+### Adding a language
+
+For a language Shadleaf does not ship, add its keys to your file of that language, next to your own keys:
+
+```properties title="src/main/resources/messages_fr.properties"
+app.greeting=Bonjour
+sl.alert-dialog.cancel=Annuler
+sl.pagination.previous=Précédent
+sl.pagination.next=Suivant
+```
+
+The [list below](#the-keys) has every key. A key you leave out shows Shadleaf's English text.
+
+### Rewording a text
+
+To word one of Shadleaf's texts differently, define its key in your file of that language, such as
+`messages_en.properties` for English. Not in `messages.properties`: Spring reads that file for every language, so the
+new wording would replace Shadleaf's other translations too. This needs `fallback-to-system-locale` off, as
+[above](#your-applications-messages); on a server in English, a page in another language Shadleaf ships would read
+your `messages_en.properties` otherwise.
+
+An `aria-label` or the content you give a component replaces its message for that one element, as each component page
+says.
+
+### Arguments and apostrophes
+
+Some messages have arguments: `sl.table.select-row=Select {0}` gets the row's name. A message with arguments is a
+`MessageFormat` pattern, in which an apostrophe starts quoted text, so write an apostrophe twice:
+
+```properties
+sl.file-upload.announce.uploading={0} fichiers en cours d''envoi.
+sl.dialog.error=Une erreur s'est produite. Veuillez réessayer.
+```
+
+A message without arguments is used as it is written, with a single apostrophe, as long as
+`spring.messages.always-use-message-format` stays off (the default). With it on, every message in your own files is a
+pattern and needs the doubled apostrophe.
+
+Some messages are filled in by the browser: the selection count of a table (`sl.table.selection.count`), the number
+of results and the chips' remove buttons of a combobox (`sl.combobox.results`, `sl.combobox.remove`), the range of a
+date picker (`sl.date-picker.range`) and the file upload's messages with arguments (`sl.file-upload.*`). The server
+renders their pattern into the page with `{0}` left in, and the script replaces it. They are the same keys, translated
+the same way, but keep their arguments plain: `{0}`, never `{0,number}` or `{0,choice,...}`.
+
+### Supported languages
+
+These languages are supported by Shadleaf:
+
+- 🇬🇧 English (`en`)
+- 🇩🇪 German (`de`)
+- 🇫🇷 French (`fr`)
+- 🇳🇱 Dutch (`nl`)
+
+### The keys
+
+Every key with its English text, generated from the library's `messages.properties`, with the comment it has there.
+The texts are shown as written in the file.
+
+#### [Button](https://shadleaf.dev/current/components/button.md)
+
+| Key | English |
+| --- | --- |
+| `sl.button.loading` | `Loading` |
+
+#### [Spinner](https://shadleaf.dev/current/components/spinner.md)
+
+| Key | English |
+| --- | --- |
+| `sl.spinner.label` | `Loading` |
+
+#### [Form errors](https://shadleaf.dev/current/components/form-errors.md)
+
+| Key | English |
+| --- | --- |
+| `sl.form-errors.title` | `There is a problem` |
+
+#### [Dialog](https://shadleaf.dev/current/components/dialog.md)
+
+| Key | English |
+| --- | --- |
+| `sl.dialog.close` | `Close` |
+| `sl.dialog.error` | `Something went wrong. Please try again.` |
+
+#### [Alert Dialog](https://shadleaf.dev/current/components/alert-dialog.md)
+
+| Key | English |
+| --- | --- |
+| `sl.alert-dialog.cancel` | `Cancel` |
+
+#### [Toast](https://shadleaf.dev/current/components/toast.md)
+
+| Key | English |
+| --- | --- |
+| `sl.toaster.label` | `Notifications (Alt+T)` |
+| `sl.toast.close` | `Close` |
+
+#### [Theme Toggle](https://shadleaf.dev/current/components/theme-toggle.md)
+
+| Key | English |
+| --- | --- |
+| `sl.theme-toggle.label` | `Theme` |
+| `sl.theme-toggle.dark-mode` | `Dark mode` |
+| `sl.theme-toggle.light` | `Light` |
+| `sl.theme-toggle.dark` | `Dark` |
+| `sl.theme-toggle.system` | `System` |
+
+#### [Table](https://shadleaf.dev/current/components/table.md)
+
+| Key | English |
+| --- | --- |
+| `sl.table.empty` | `No results.` |
+| `sl.table.select-all` | `Select all rows on this page` |
+| `sl.table.select-row`: {0}: what the row is, e.g. a name. For the row checkboxes: th:aria-label="#{sl.table.select-row(${person.name})}". | `Select {0}` |
+| `sl.table.selection.count`: {0}: the selected rows, {1}: the rows on the page. The browser fills them in as the selection changes, so keep them as plain {0} and {1}: no number or choice format. | `{0} of {1} selected` |
+
+#### [Pagination](https://shadleaf.dev/current/components/pagination.md)
+
+| Key | English |
+| --- | --- |
+| `sl.pagination.label` | `Pagination` |
+| `sl.pagination.previous` | `Previous` |
+| `sl.pagination.previous.label` | `Go to previous page` |
+| `sl.pagination.next` | `Next` |
+| `sl.pagination.next.label` | `Go to next page` |
+| `sl.pagination.more` | `More pages` |
+| `sl.pagination.summary`: {0} and {1}: the first and the last row on the page, {2}: all rows. A Slice does not know the total. | `{0}–{1} of {2}` |
+| `sl.pagination.summary.slice` | `{0}–{1}` |
+| `sl.pagination.summary.empty` | `0 of 0` |
+| `sl.pagination.summary.page`: {0}: the page, {1}: the number of pages. | `Page {0} of {1}` |
+| `sl.pagination.summary.page.slice` | `Page {0}` |
+| `sl.pagination-size.label` | `Rows per page` |
+
+#### [Sidebar](https://shadleaf.dev/current/components/sidebar.md)
+
+| Key | English |
+| --- | --- |
+| `sl.sidebar.label` | `Main` |
+| `sl.sidebar.trigger` | `Toggle sidebar` |
+
+#### [Breadcrumb](https://shadleaf.dev/current/components/breadcrumb.md)
+
+| Key | English |
+| --- | --- |
+| `sl.breadcrumb.label` | `Breadcrumb` |
+| `sl.breadcrumb.more` | `More levels` |
+| `sl.breadcrumb.more.trigger` | `Show more levels` |
+
+#### [Skip Link](https://shadleaf.dev/current/components/skip-link.md)
+
+| Key | English |
+| --- | --- |
+| `sl.skip-link` | `Skip to main content` |
+
+#### [Calendar](https://shadleaf.dev/current/components/calendar.md)
+
+| Key | English |
+| --- | --- |
+| `sl.calendar.previous` | `Go to the previous month` |
+| `sl.calendar.next` | `Go to the next month` |
+| `sl.calendar.month` | `Month` |
+| `sl.calendar.year` | `Year` |
+| `sl.calendar.week-number` | `Week` |
+
+#### [Date Picker](https://shadleaf.dev/current/components/date-picker.md)
+
+| Key | English |
+| --- | --- |
+| `sl.date-picker.placeholder` | `Pick a date` |
+| `sl.date-picker.dialog` | `Choose a date` |
+| `sl.date-picker.range`: {0} and {1}: the start and the end of a range, each formatted for the locale. | `{0} – {1}` |
+
+#### [Combobox](https://shadleaf.dev/current/components/combobox.md)
+
+| Key | English |
+| --- | --- |
+| `sl.combobox.empty` | `No items found.` |
+| `sl.combobox.clear` | `Clear` |
+| `sl.combobox.toggle` | `Show options` |
+| `sl.combobox.remove`: {0}: a chosen option's text, on the button of its chip. | `Remove {0}` |
+| `sl.combobox.results.one`: The number of options that match, announced while typing. The browser fills in {0}, so keep it as a plain {0}: no number or choice format. | `1 result` |
+| `sl.combobox.results` | `{0} results` |
+| `sl.combobox.searching` | `Searching…` |
+| `sl.combobox.search-error` | `The options could not be loaded.` |
+
+#### [User Menu](https://shadleaf.dev/current/components/user-menu.md)
+
+| Key | English |
+| --- | --- |
+| `sl.user-menu.trigger`: {0}: the signed-in user's name. The name of sl:user-menu's button in the header, which shows only the picture. | `Account: {0}` |
+| `sl.user-menu.sign-in` | `Sign in` |
+| `sl.user-menu.sign-out` | `Sign out` |
+
+#### [File Upload](https://shadleaf.dev/current/components/file-upload.md)
+
+| Key | English |
+| --- | --- |
+| `sl.file-upload.title`: sl:file-upload. The title and the Browse button, for a multiple and a single (.one) upload. | `Upload files` |
+| `sl.file-upload.title.one` | `Upload a file` |
+| `sl.file-upload.browse` | `Browse files` |
+| `sl.file-upload.browse.one` | `Browse` |
+| `sl.file-upload.remove`: The browser fills in {0} and {1}, so keep them plain: no number or choice format. {0}: a file's name. | `Remove {0}` |
+| `sl.file-upload.dismiss` | `Dismiss {0}` |
+| `sl.file-upload.rejected.type`: Why a dropped or picked file was not added. {0}: the max-size, formatted in the page's language ("10 MB"). | `File type not accepted` |
+| `sl.file-upload.rejected.size` | `Larger than {0}` |
+| `sl.file-upload.rejected.count` | `Only one file can be added` |
+| `sl.file-upload.announce.added`: Announced after a change. {0}: the files' names, as a list in the page's language; {1}: why they were not added. | `Added {0}.` |
+| `sl.file-upload.announce.removed` | `Removed {0}.` |
+| `sl.file-upload.announce.rejected` | `Could not add {0}: {1}.` |
+| `sl.file-upload.cancel`: Sending the files with htmx: the button that stops it, and each file's description while it goes. {0}: the percentage sent, formatted in the page's language ("64%"). | `Cancel upload` |
+| `sl.file-upload.uploading` | `Uploading · {0}` |
+| `sl.file-upload.uploading.indeterminate` | `Uploading` |
+| `sl.file-upload.processing` | `Processing` |
+| `sl.file-upload.failed` | `Upload failed` |
+| `sl.file-upload.done` | `Uploaded` |
+| `sl.file-upload.announce.uploading`: Announced when the upload starts and ends. {0}: the number of files, or for one file (.one) its name. | `Uploading {0} files.` |
+| `sl.file-upload.announce.uploading.one` | `Uploading {0}.` |
+| `sl.file-upload.announce.uploaded` | `Uploaded {0} files.` |
+| `sl.file-upload.announce.uploaded.one` | `Uploaded {0}.` |
+| `sl.file-upload.announce.failed` | `The files could not be uploaded. Try again.` |
+| `sl.file-upload.announce.cancelled` | `Upload cancelled.` |
+
+### Contributing a language
+
+A new language is a `shadleaf/messages_<language>.properties` in the starter (`src/main/resources/shadleaf/`), with
+every key of `messages.properties`. `ShadleafMessageBundlesTest` checks that each translation has exactly the English
+keys, the same arguments, and its apostrophes written for whether the message has arguments. Pull requests are welcome.

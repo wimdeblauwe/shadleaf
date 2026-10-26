@@ -1,7 +1,7 @@
 {
   "$schema" : "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "name" : "shadleaf",
-  "version" : "0.10.0",
+  "version" : "1.0.0",
   "description-markup" : "markdown",
   "contributions" : {
     "html" : {
@@ -367,6 +367,287 @@
           }
         } ]
       }, {
+        "name" : "sl:attachment",
+        "description" : "A file or an image attached to something: a message, a form, a record. Holds an `sl:attachment-media`, an `sl:attachment-content` (title and description), optional `sl:attachment-actions` and an optional `sl:attachment-trigger` that makes the whole card open a link or a dialog. Purely presentational: the server renders its state. Say the state in the description too (\"Uploading · 64%\", \"Upload failed\"), so it is not told by colour alone.",
+        "attributes" : [ {
+          "name" : "state",
+          "description" : "Where the file is in its upload: `idle` (picked, not sent yet) draws a dashed border, `uploading` and `processing` shimmer the title and mark the attachment busy (`aria-busy`), `error` turns it destructive. `done` is a file that is there.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "idle"
+          }, {
+            "name" : "uploading"
+          }, {
+            "name" : "processing"
+          }, {
+            "name" : "error"
+          }, {
+            "name" : "done"
+          } ],
+          "default" : "done"
+        }, {
+          "name" : "size",
+          "description" : "Size of the attachment.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "xs"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "orientation",
+          "description" : "`vertical` puts the media above the content, for an image.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "full-width",
+          "description" : "Fill the width of the container, for a list of attachments (shadcn's `w-full` class). Without it the attachment is as wide as its content.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:state",
+          "description" : "`state` from a Thymeleaf expression, e.g. `th:state=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:full-width",
+          "description" : "`full-width` from a Thymeleaf expression, e.g. `th:full-width=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:attachment-action",
+        "description" : "A button in `sl:attachment-actions`, to remove, retry or download the file: a `sl:button`, ghost and an extra small icon by default. Give it an `aria-label` that names the file (\"Remove report.pdf\"). Any other attribute passes through to the `sl:button` (`href`, `type`, `disabled`, `hx-*`). Requires `aria-label` or `aria-labelledby` when `size` is `icon`, `icon-xs`, `icon-sm` or `icon-lg`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "ghost"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button, as on `sl:button`. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "icon-xs"
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) to download or open the file.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:attachment-actions",
+        "description" : "The `sl:attachment-action`s of an attachment, at its end; in a vertical attachment, over the top corner of the media. They sit above an `sl:attachment-trigger`, so they stay clickable.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:attachment-content",
+        "description" : "The text of an `sl:attachment`: its `sl:attachment-title` and `sl:attachment-description`. Takes the space the media and the actions leave.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:attachment-description",
+        "description" : "What else to know about an attachment, below its title: the file type and size, or its state (\"Uploading · 64%\", \"Upload failed. Try again.\"). Cut off with an ellipsis when it does not fit.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:attachment-group",
+        "description" : "A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out, or a grid that wraps them. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for a row of attachments without any, give the group a `label`.",
+        "attributes" : [ {
+          "name" : "layout",
+          "description" : "`row` scrolls sideways; `grid` wraps the attachments in columns that fill the width, for a gallery of photos: vertical attachments with `full-width`, each filling its cell.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "row"
+          }, {
+            "name" : "grid"
+          } ],
+          "default" : "row"
+        }, {
+          "name" : "label",
+          "description" : "Accessible name of the group. With it the group is a named group (`role=\"group\"`). A row then takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger. A grid does not scroll, so it takes no focus.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:layout",
+          "description" : "`layout` from a Thymeleaf expression, e.g. `th:layout=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:attachment-media",
+        "description" : "The icon or image of an `sl:attachment`: an icon (or an `sl:spinner` while it uploads) on a muted square, or an `&lt;img&gt;` that fills it.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "`icon` centres an icon on a muted square; `image` crops an `&lt;img&gt;` to fill the square, dimmed while the attachment uploads, is processed or failed.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "icon"
+          }, {
+            "name" : "image"
+          } ],
+          "default" : "icon"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:attachment-title",
+        "description" : "The name of an attachment, usually its file name, in `sl:attachment-content`. Cut off with an ellipsis when it does not fit; shimmers while the attachment uploads or is processed, unless the user asks for reduced motion.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:attachment-trigger",
+        "description" : "Makes a whole `sl:attachment` clickable: a button (to open an `sl:dialog` with `commandfor` and `command=\"show-modal\"`) or, with `as=\"a\"`, a link that covers the card behind its actions. It has no text of its own, so it needs an `aria-label` that says what it does (\"Open report.pdf\"). Put it last in the attachment. Requires `aria-label` or `aria-labelledby`.",
+        "attributes" : [ {
+          "name" : "as",
+          "description" : "Element to render: a `button`, or an anchor (`a`) to open the file.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "button"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "button"
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:avatar",
         "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead while the image has no `src`, is loading or fails to load. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
         "attributes" : [ {
@@ -564,7 +845,7 @@
           "default" : "default"
         }, {
           "name" : "as",
-          "description" : "Element to render: a `button`, or an anchor (`a`) for navigation.",
+          "description" : "Element to render: a `button`, an anchor (`a`) for navigation, or a `label` for a visually hidden control (`for`), as `sl:file-upload`'s Browse button for its file input. A label takes no focus and no `disabled`: the control does.",
           "value" : {
             "kind" : "plain",
             "type" : "enum",
@@ -574,6 +855,8 @@
             "name" : "button"
           }, {
             "name" : "a"
+          }, {
+            "name" : "label"
           } ],
           "default" : "button"
         }, {
@@ -644,6 +927,157 @@
         }, {
           "name" : "th:loading",
           "description" : "`loading` from a Thymeleaf expression, e.g. `th:loading=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:calendar",
+        "description" : "A month calendar to pick a date or a range of dates, drawn over native date inputs: the inputs are its value, so `th:field` binds it and the form submits ISO dates (`2026-10-23`). Without content, it renders one date input itself, which takes every attribute that is not a prop except `class` (`th:field`, `name`, `required`, `min`, `max`), and in a `sl:field` the field's `th:field`, id and `aria-describedby`. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end; its attributes then go to the calendar. `slCalendar` hides the inputs and draws the month; without JavaScript the inputs show as they are.",
+        "attributes" : [ {
+          "name" : "caption-layout",
+          "description" : "The month's caption: its name, or selects for the month and year, the month, or the year.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "label"
+          }, {
+            "name" : "dropdown"
+          }, {
+            "name" : "dropdown-months"
+          }, {
+            "name" : "dropdown-years"
+          } ],
+          "default" : "label"
+        }, {
+          "name" : "number-of-months",
+          "description" : "How many months show side by side (stacked on a narrow screen).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "1"
+        }, {
+          "name" : "show-outside-days",
+          "description" : "Show the days of the previous and next month that fill the first and last week.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "show-week-number",
+          "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "week-starts-on",
+          "description" : "The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "default-month",
+          "description" : "The month shown first, as `2026-10`. By default the month of the chosen date (or of the start of the range), or else the current month.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "start-month",
+          "description" : "The first month the calendar navigates to, as `2026-01`; also the first year of the year select. By default the month of the inputs' `min`, or else 100 years ago.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "end-month",
+          "description" : "The last month the calendar navigates to, as `2026-12`; also the last year of the year select. By default the month of the inputs' `max`, or else 10 years from now.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled-dates",
+          "description" : "Days that cannot be picked, comma-separated: a date (`2026-12-25`), a range (`2026-12-24..2026-12-31`) or a day of the week (`sat`, `sun`). The inputs' `min` and `max` disable the days outside them too. Only the calendar knows: check the date on the server as well.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:caption-layout",
+          "description" : "`caption-layout` from a Thymeleaf expression, e.g. `th:caption-layout=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:number-of-months",
+          "description" : "`number-of-months` from a Thymeleaf expression, e.g. `th:number-of-months=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-outside-days",
+          "description" : "`show-outside-days` from a Thymeleaf expression, e.g. `th:show-outside-days=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-week-number",
+          "description" : "`show-week-number` from a Thymeleaf expression, e.g. `th:show-week-number=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:week-starts-on",
+          "description" : "`week-starts-on` from a Thymeleaf expression, e.g. `th:week-starts-on=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:default-month",
+          "description" : "`default-month` from a Thymeleaf expression, e.g. `th:default-month=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:start-month",
+          "description" : "`start-month` from a Thymeleaf expression, e.g. `th:start-month=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:end-month",
+          "description" : "`end-month` from a Thymeleaf expression, e.g. `th:end-month=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled-dates",
+          "description" : "`disabled-dates` from a Thymeleaf expression, e.g. `th:disabled-dates=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -749,6 +1183,877 @@
         }, {
           "name" : "th:level",
           "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart",
+        "description" : "A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.",
+        "attributes" : [ {
+          "name" : "label",
+          "description" : "The chart's accessible name, such as its title: what a screen reader announces when the chart takes the focus.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "margin",
+          "description" : "Space in pixels left and right of the plot, so the first and last tick labels fit (shadcn's line and area charts use 12).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "time-zone",
+          "description" : "The time zone (an IANA id such as `Europe/Brussels`) instants in the data are shown in: `Instant`, `OffsetDateTime` and `ZonedDateTime`. Defaults to the request's (Spring's `LocaleContextHolder`). A `LocalDate` or `LocalDateTime` is shown as written, in any zone.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:data",
+          "description" : "The rows: a list (or a Spring Data `Page`) of objects, records or maps, one per category or point in time. Each row holds the category (`month`) and a number per series (`desktop`, `mobile`). Serialised with Jackson: dates as ISO strings, which the named date formats read by their Java type.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:margin",
+          "description" : "`margin` from a Thymeleaf expression, e.g. `th:margin=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:time-zone",
+          "description" : "`time-zone` from a Thymeleaf expression, e.g. `th:time-zone=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-area",
+        "description" : "One series of a `sl:chart`, drawn as a filled area under a line through the rows. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "key",
+          "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "label",
+          "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color",
+          "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color-dark",
+          "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "curve",
+          "description" : "How the line runs between the points: smooth (`natural`, `monotone`), straight (`linear`) or in steps.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "natural"
+          }, {
+            "name" : "monotone"
+          }, {
+            "name" : "linear"
+          }, {
+            "name" : "step"
+          }, {
+            "name" : "step-before"
+          }, {
+            "name" : "step-after"
+          } ],
+          "default" : "natural"
+        }, {
+          "name" : "stack",
+          "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "dashed",
+          "description" : "Draw the line on top of the area dashed (the fill stays as it is). The legend and the tooltip show the series dashed as well.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "join",
+          "description" : "The `key` of the series this dashed area continues (`actual`), as on `sl:chart-line`: it starts at that series' last number, and the tooltip does not list this series at that last row. Needs `dashed`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "fill-opacity",
+          "description" : "The opacity of the fill, from 0 to 1.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "0.4"
+        }, {
+          "name" : "th:key",
+          "description" : "`key` from a Thymeleaf expression, e.g. `th:key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color",
+          "description" : "`color` from a Thymeleaf expression, e.g. `th:color=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color-dark",
+          "description" : "`color-dark` from a Thymeleaf expression, e.g. `th:color-dark=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:curve",
+          "description" : "`curve` from a Thymeleaf expression, e.g. `th:curve=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:stack",
+          "description" : "`stack` from a Thymeleaf expression, e.g. `th:stack=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:dashed",
+          "description" : "`dashed` from a Thymeleaf expression, e.g. `th:dashed=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:join",
+          "description" : "`join` from a Thymeleaf expression, e.g. `th:join=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:fill-opacity",
+          "description" : "`fill-opacity` from a Thymeleaf expression, e.g. `th:fill-opacity=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-bar",
+        "description" : "One series of a `sl:chart`, drawn as bars: one per row. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "key",
+          "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "label",
+          "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color",
+          "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color-dark",
+          "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "radius",
+          "description" : "The bars' corner radius in pixels: `4` for every corner, or four numbers (top-left, top-right, bottom-right, bottom-left), as `4,4,0,0` for the top bar of a stack.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "stack",
+          "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`) instead of drawing them side by side.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:key",
+          "description" : "`key` from a Thymeleaf expression, e.g. `th:key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color",
+          "description" : "`color` from a Thymeleaf expression, e.g. `th:color=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color-dark",
+          "description" : "`color-dark` from a Thymeleaf expression, e.g. `th:color-dark=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:radius",
+          "description" : "`radius` from a Thymeleaf expression, e.g. `th:radius=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:stack",
+          "description" : "`stack` from a Thymeleaf expression, e.g. `th:stack=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-grid",
+        "description" : "The grid lines behind a `sl:chart`'s plot. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "vertical",
+          "description" : "Vertical lines too, one per category.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "horizontal",
+          "description" : "Horizontal lines, one per value tick.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "th:vertical",
+          "description" : "`vertical` from a Thymeleaf expression, e.g. `th:vertical=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:horizontal",
+          "description" : "`horizontal` from a Thymeleaf expression, e.g. `th:horizontal=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-legend",
+        "description" : "The legend of a `sl:chart`: every series' label with its colour. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "vertical-align",
+          "description" : "Below the plot, or above it.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "bottom"
+          }, {
+            "name" : "top"
+          } ],
+          "default" : "bottom"
+        }, {
+          "name" : "th:vertical-align",
+          "description" : "`vertical-align` from a Thymeleaf expression, e.g. `th:vertical-align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-line",
+        "description" : "One series of a `sl:chart`, drawn as a line through the rows. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "key",
+          "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "label",
+          "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color",
+          "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "color-dark",
+          "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "curve",
+          "description" : "How the line runs between the points: smooth (`monotone`, `natural`), straight (`linear`) or in steps.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "monotone"
+          }, {
+            "name" : "natural"
+          }, {
+            "name" : "linear"
+          }, {
+            "name" : "step"
+          }, {
+            "name" : "step-before"
+          }, {
+            "name" : "step-after"
+          } ],
+          "default" : "monotone"
+        }, {
+          "name" : "dots",
+          "description" : "A dot on every point.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "dashed",
+          "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over (see `join`).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "join",
+          "description" : "The `key` of the series this dashed line continues (`actual`). The chart draws the dashed line from that series' last number to its own first one, so the rows need no duplicated value, and the tooltip does not list this series at that last row. Needs `dashed`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "stroke-width",
+          "description" : "The line's width in pixels.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "2"
+        }, {
+          "name" : "th:key",
+          "description" : "`key` from a Thymeleaf expression, e.g. `th:key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color",
+          "description" : "`color` from a Thymeleaf expression, e.g. `th:color=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:color-dark",
+          "description" : "`color-dark` from a Thymeleaf expression, e.g. `th:color-dark=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:curve",
+          "description" : "`curve` from a Thymeleaf expression, e.g. `th:curve=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:dots",
+          "description" : "`dots` from a Thymeleaf expression, e.g. `th:dots=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:dashed",
+          "description" : "`dashed` from a Thymeleaf expression, e.g. `th:dashed=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:join",
+          "description" : "`join` from a Thymeleaf expression, e.g. `th:join=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:stroke-width",
+          "description" : "`stroke-width` from a Thymeleaf expression, e.g. `th:stroke-width=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-tooltip",
+        "description" : "The tooltip of a `sl:chart`: on hover, or with the arrow keys once the chart has the focus, it shows the category and every series' label and value. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "indicator",
+          "description" : "The mark before each series' label, in its colour.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "dot"
+          }, {
+            "name" : "line"
+          }, {
+            "name" : "dashed"
+          } ],
+          "default" : "dot"
+        }, {
+          "name" : "cursor",
+          "description" : "Highlight the hovered category (a band behind bars, a line over lines and areas).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "hide-label",
+          "description" : "Leave out the label at the top (the category).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "hide-indicator",
+          "description" : "Leave out the marks before the series' labels.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "label-key",
+          "description" : "The property of the rows to take the label from instead of the axis category: a series key gives that series' label, any other property its value in the hovered row, such as a date the server formatted.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "label-format",
+          "description" : "How the label is written, as the ticks of `sl:chart-x-axis` (`month`, `date`, ...). Without one, as it is.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "number"
+          }, {
+            "name" : "integer"
+          }, {
+            "name" : "compact"
+          }, {
+            "name" : "percent"
+          }, {
+            "name" : "currency"
+          }, {
+            "name" : "day"
+          }, {
+            "name" : "month-short"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "month-year"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "time"
+          } ]
+        }, {
+          "name" : "value-format",
+          "description" : "How the values are written: `number` in the page's language, or `currency`, `percent`, ...",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "number"
+          }, {
+            "name" : "integer"
+          }, {
+            "name" : "compact"
+          }, {
+            "name" : "percent"
+          }, {
+            "name" : "currency"
+          }, {
+            "name" : "day"
+          }, {
+            "name" : "month-short"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "month-year"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "time"
+          } ],
+          "default" : "number"
+        }, {
+          "name" : "currency",
+          "description" : "The ISO 4217 code (`EUR`) for a `currency` format.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:indicator",
+          "description" : "`indicator` from a Thymeleaf expression, e.g. `th:indicator=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:cursor",
+          "description" : "`cursor` from a Thymeleaf expression, e.g. `th:cursor=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:hide-label",
+          "description" : "`hide-label` from a Thymeleaf expression, e.g. `th:hide-label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:hide-indicator",
+          "description" : "`hide-indicator` from a Thymeleaf expression, e.g. `th:hide-indicator=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label-key",
+          "description" : "`label-key` from a Thymeleaf expression, e.g. `th:label-key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label-format",
+          "description" : "`label-format` from a Thymeleaf expression, e.g. `th:label-format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:value-format",
+          "description" : "`value-format` from a Thymeleaf expression, e.g. `th:value-format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:currency",
+          "description" : "`currency` from a Thymeleaf expression, e.g. `th:currency=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-x-axis",
+        "description" : "The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines (as shadcn's). Under `dir=\"rtl\"` it runs from right to left. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "key",
+          "description" : "The property of the rows that holds the category (`month`) or the date.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "format",
+          "description" : "How the ticks are written, with `Intl` in the page's language. Numbers: `number`, `integer`, `compact` (1.2K), `percent` (0.25 is 25%), `currency` (with `currency`). Dates: `day` (Apr 1), `month-short` (Apr), `month` (April), `month-year` (Apr 2024), `date`, `time`. Without one, the values as they are.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "number"
+          }, {
+            "name" : "integer"
+          }, {
+            "name" : "compact"
+          }, {
+            "name" : "percent"
+          }, {
+            "name" : "currency"
+          }, {
+            "name" : "day"
+          }, {
+            "name" : "month-short"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "month-year"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "time"
+          } ]
+        }, {
+          "name" : "currency",
+          "description" : "The ISO 4217 code (`EUR`) for `format=\"currency\"`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "tick-margin",
+          "description" : "Space in pixels between the ticks and the plot.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "8"
+        }, {
+          "name" : "min-tick-gap",
+          "description" : "The least space in pixels between two ticks; Recharts leaves out ticks that would come closer, as on a long time axis.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "5"
+        }, {
+          "name" : "th:key",
+          "description" : "`key` from a Thymeleaf expression, e.g. `th:key=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:format",
+          "description" : "`format` from a Thymeleaf expression, e.g. `th:format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:currency",
+          "description" : "`currency` from a Thymeleaf expression, e.g. `th:currency=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tick-margin",
+          "description" : "`tick-margin` from a Thymeleaf expression, e.g. `th:tick-margin=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:min-tick-gap",
+          "description" : "`min-tick-gap` from a Thymeleaf expression, e.g. `th:min-tick-gap=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:chart-y-axis",
+        "description" : "The value axis of a `sl:chart`, at the start side (the left, or the right under `dir=\"rtl\"`), without tick or axis lines. shadcn's charts often leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.",
+        "attributes" : [ {
+          "name" : "format",
+          "description" : "How the ticks are written, as on `sl:chart-x-axis`: `compact` (1.2K) and `currency` suit a value axis.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "number"
+          }, {
+            "name" : "integer"
+          }, {
+            "name" : "compact"
+          }, {
+            "name" : "percent"
+          }, {
+            "name" : "currency"
+          }, {
+            "name" : "day"
+          }, {
+            "name" : "month-short"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "month-year"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "time"
+          } ]
+        }, {
+          "name" : "currency",
+          "description" : "The ISO 4217 code (`EUR`) for `format=\"currency\"`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "tick-margin",
+          "description" : "Space in pixels between the ticks and the plot.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "8"
+        }, {
+          "name" : "tick-count",
+          "description" : "How many ticks Recharts aims for.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          },
+          "default" : "5"
+        }, {
+          "name" : "th:format",
+          "description" : "`format` from a Thymeleaf expression, e.g. `th:format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:currency",
+          "description" : "`currency` from a Thymeleaf expression, e.g. `th:currency=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tick-margin",
+          "description" : "`tick-margin` from a Thymeleaf expression, e.g. `th:tick-margin=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:tick-count",
+          "description" : "`tick-count` from a Thymeleaf expression, e.g. `th:tick-count=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -867,6 +2172,198 @@
         }, {
           "name" : "th:size",
           "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:combobox",
+        "description" : "A text input that filters a list of options as you type: shadcn/ui's combobox. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "placeholder",
+          "description" : "The input's text while nothing is chosen. For a single value also the text of a first option with an empty value, hidden from the list: a required combobox with it chosen is invalid.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "multiple",
+          "description" : "Choose any number of options, shown as chips before the input. The select is a `select multiple`, so `th:field` binds a collection.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "show-clear",
+          "description" : "A button that clears the choice, in place of the chevron while there is one.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "show-trigger",
+          "description" : "The chevron button that opens and closes the list. A multiple combobox has none.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "auto-highlight",
+          "description" : "Highlight the first match while typing, so Enter chooses it.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "empty",
+          "description" : "The text shown when no option matches. By default \"No items found.\"",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "search-url",
+          "description" : "Ask the server for the options as you type: a `GET` to this URL with the text as `q`, answered with the HTML of `sl:combobox-item`s (and groups and separators), which replace the options that are not chosen. Needs JavaScript; without it, only the options in the page can be chosen.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:placeholder",
+          "description" : "`placeholder` from a Thymeleaf expression, e.g. `th:placeholder=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:multiple",
+          "description" : "`multiple` from a Thymeleaf expression, e.g. `th:multiple=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-clear",
+          "description" : "`show-clear` from a Thymeleaf expression, e.g. `th:show-clear=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-trigger",
+          "description" : "`show-trigger` from a Thymeleaf expression, e.g. `th:show-trigger=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:auto-highlight",
+          "description" : "`auto-highlight` from a Thymeleaf expression, e.g. `th:auto-highlight=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:empty",
+          "description" : "`empty` from a Thymeleaf expression, e.g. `th:empty=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:search-url",
+          "description" : "`search-url` from a Thymeleaf expression, e.g. `th:search-url=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:combobox-group",
+        "description" : "A group of `sl:combobox-item`s under a heading: an `optgroup`. The list hides the heading while none of its items match.",
+        "attributes" : [ {
+          "name" : "label",
+          "description" : "The group's heading, shadcn/ui's `ComboboxLabel`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:label",
+          "description" : "`label` from a Thymeleaf expression, e.g. `th:label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:combobox-item",
+        "description" : "An option in a `sl:combobox`: an `option`. `value` (or `th:value`) and `disabled` pass through; `th:field` on the combobox marks the bound one. The list shows its content, which may start with an icon, with a check mark while it is chosen; the input, the chips and the filter use its text, which is all an older browser keeps of it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:combobox-separator",
+        "description" : "A line between items or groups of a `sl:combobox`: an `hr`. The list hides it while you type.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:date-picker",
+        "description" : "A button showing the chosen date that opens a `sl:calendar` in a popover: shadcn/ui's date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).",
+        "attributes" : [ {
+          "name" : "placeholder",
+          "description" : "The button's text while no date is chosen. By default \"Pick a date\".",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "format",
+          "description" : "How the button shows the date, in the page's locale: as `Intl.DateTimeFormat`'s `dateStyle` and Java's `FormatStyle` (`10/23/26`, `Oct 23, 2026`, `October 23, 2026`, `Friday, October 23, 2026`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "short"
+          }, {
+            "name" : "medium"
+          }, {
+            "name" : "long"
+          }, {
+            "name" : "full"
+          } ],
+          "default" : "long"
+        }, {
+          "name" : "popover-id",
+          "description" : "The popover's id, which the button points at with `popovertarget`. By default a generated one (`sl-date-picker-` and eight random characters).",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:placeholder",
+          "description" : "`placeholder` from a Thymeleaf expression, e.g. `th:placeholder=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:format",
+          "description" : "`format` from a Thymeleaf expression, e.g. `th:format=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:popover-id",
+          "description" : "`popover-id` from a Thymeleaf expression, e.g. `th:popover-id=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
@@ -1508,6 +3005,93 @@
           }
         } ]
       }, {
+        "name" : "sl:empty",
+        "description" : "An empty state: what a list, a table, a search or a page shows when there is nothing to show yet. Holds an `sl:empty-header` (media, title and description) and an optional `sl:empty-content` with what to do next, centred in the space it is given.",
+        "attributes" : [ {
+          "name" : "border",
+          "description" : "A dashed line around the empty state, to mark out the area (shadcn's `border border-dashed` classes).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:empty-content",
+        "description" : "What to do next in an `sl:empty`, below its header: a button, a search field, a link.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:empty-description",
+        "description" : "The text below the title of an `sl:empty`. Links in it are underlined.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:empty-header",
+        "description" : "The top of an `sl:empty`: an optional `sl:empty-media`, an `sl:empty-title` and an `sl:empty-description`, stacked and centred.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:empty-media",
+        "description" : "An icon, an avatar or an image above the title of an `sl:empty`, inside `sl:empty-header`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "`icon` puts an icon on a muted square; `default` shows the content as it is, e.g. an avatar.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "icon"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:empty-title",
+        "description" : "The title of an `sl:empty`, inside `sl:empty-header`.",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:field",
         "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
         "attributes" : [ {
@@ -1597,6 +3181,116 @@
         "name" : "sl:field-set",
         "description" : "A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.",
         "attributes" : [ ]
+      }, {
+        "name" : "sl:file-upload",
+        "description" : "A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has none. A visually hidden `&lt;input type=\"file\"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype=\"multipart/form-data\"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.",
+        "attributes" : [ {
+          "name" : "multiple",
+          "description" : "Take more than one file. Picking or dropping files adds them to the ones already there.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "accept",
+          "description" : "The file types to take, as the input's `accept`: extensions (`.pdf`), MIME types (`application/pdf`) or `image/*`, separated by commas. A dropped file of another type is not added.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "max-size",
+          "description" : "The largest file to take, as Spring Boot writes sizes: `10MB`, `500KB`. A larger file is not added.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "level",
+          "description" : "Makes the title a heading of this level (`role=\"heading\"`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "previews",
+          "description" : "Show a thumbnail of each picked image (up to 20 MB, no SVG) instead of the file icon. The thumbnail is a `blob:` URL: a Content-Security-Policy must allow it in `img-src`, or the icon stays.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "layout",
+          "description" : "`list` shows the picked files one below the other, as small attachments; `grid` as cards in columns that fill the width, the grid of `sl:attachment-group layout=\"grid\"`: with `previews`, for photos one wants to see before sending them.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "list"
+          }, {
+            "name" : "grid"
+          } ],
+          "default" : "list"
+        }, {
+          "name" : "browse-label",
+          "description" : "The text of the Browse button. Defaults to \"Browse files\", or \"Browse\" without `multiple`.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "th:multiple",
+          "description" : "`multiple` from a Thymeleaf expression, e.g. `th:multiple=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:accept",
+          "description" : "`accept` from a Thymeleaf expression, e.g. `th:accept=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:max-size",
+          "description" : "`max-size` from a Thymeleaf expression, e.g. `th:max-size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:previews",
+          "description" : "`previews` from a Thymeleaf expression, e.g. `th:previews=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:layout",
+          "description" : "`layout` from a Thymeleaf expression, e.g. `th:layout=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:browse-label",
+          "description" : "`browse-label` from a Thymeleaf expression, e.g. `th:browse-label=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:form-errors",
         "description" : "The errors of the form object the enclosing `th:object` selects, shown as a destructive alert: by default the errors that belong to the whole form rather than one field (global errors, from `bindingResult.reject(...)` or a class-level constraint); with `show=\"all\"` the field errors too. One message as text, several as a list. It renders nothing while there are none. Content of its own replaces the messages, and always shows. Not announced, and not focused unless it has `autofocus`; it has an id (`signup-errors` for `th:object=\"${signup}\"`) and `tabindex=\"-1\"`, so a link or a script can move focus to it too.",
@@ -1788,6 +3482,164 @@
           }
         } ]
       }, {
+        "name" : "sl:input-group",
+        "description" : "An input with text, icons or buttons inside its border: one `sl:input-group-input` or `sl:input-group-textarea`, and `sl:input-group-addon`s around it. Put the addons after the control in the markup, so the control comes first in the tab order and is read first; `align` on the addon places it. The group draws the control's focus ring, error and disabled look. In a `sl:field`, the control takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:input-group-addon",
+        "description" : "Text, an icon, a `sl:kbd` or `sl:input-group-button`s beside or around the control of a `sl:input-group`. Clicking it, outside a button or link, focuses the control. Write it after the control: `align` places it.",
+        "attributes" : [ {
+          "name" : "align",
+          "description" : "Where the addon goes: before or after the control on its line, or above or below it across the whole group.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "inline-start"
+          }, {
+            "name" : "inline-end"
+          }, {
+            "name" : "block-start"
+          }, {
+            "name" : "block-end"
+          } ],
+          "default" : "inline-start"
+        }, {
+          "name" : "border",
+          "description" : "With `align` `block-start` or `block-end`, a dividing line between the addon and the control, with matching spacing.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:align",
+          "description" : "`align` from a Thymeleaf expression, e.g. `th:align=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:border",
+          "description" : "`border` from a Thymeleaf expression, e.g. `th:border=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:input-group-button",
+        "description" : "A button in a `sl:input-group-addon`: a `sl:button`, ghost and extra small by default, sized to fit inside the group. Any other attribute passes through to the `sl:button` (`type`, `loading`, `disabled`, `hx-*`). Requires `aria-label` or `aria-labelledby` when `size` is `icon-xs` or `icon-sm`.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the button, as on `sl:button`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "ghost"
+          }, {
+            "name" : "destructive"
+          }, {
+            "name" : "secondary"
+          }, {
+            "name" : "link"
+          } ],
+          "default" : "ghost"
+        }, {
+          "name" : "size",
+          "description" : "Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "xs"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          } ],
+          "default" : "xs"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:input-group-input",
+        "description" : "The input of a `sl:input-group`: a `sl:input` without a border of its own, as the group draws it. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "Type of the input.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "text"
+          }, {
+            "name" : "email"
+          }, {
+            "name" : "password"
+          }, {
+            "name" : "number"
+          }, {
+            "name" : "search"
+          }, {
+            "name" : "tel"
+          }, {
+            "name" : "url"
+          }, {
+            "name" : "date"
+          }, {
+            "name" : "datetime-local"
+          }, {
+            "name" : "month"
+          }, {
+            "name" : "week"
+          }, {
+            "name" : "time"
+          } ],
+          "default" : "text"
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:input-group-text",
+        "description" : "Muted text in a `sl:input-group-addon`: a currency symbol, a unit, a domain. It may hold an `sl:icon`. In an addon above or below the control, it takes the free space, so what follows it sits at the end.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:input-group-textarea",
+        "description" : "The textarea of a `sl:input-group`: a `sl:textarea` without a border of its own, as the group draws it, that grows with its content where the browser supports it. Addons go above or below it (`align` `block-start` or `block-end`). The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+        "attributes" : [ ]
+      }, {
         "name" : "sl:kbd",
         "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
         "attributes" : [ ]
@@ -1799,6 +3651,117 @@
         "name" : "sl:label",
         "description" : "A label for a form control. Point it at the control with `for` (the control's `id`; `th:field` gives the control an `id` equal to the field name), or put the control inside it.",
         "attributes" : [ ]
+      }, {
+        "name" : "sl:month-view",
+        "description" : "A month to look at, rendered on the server: each day shows content of its own (a badge, a short text, a count) from the `day` slot, which is rendered once per day and sees the day as `${slDay}` (`date`, a `LocalDate`, `iso`, `number`, `label`, `outside`, `today`), and can link to a page for that day. Nothing is picked: for a date in a form, use `sl:calendar`. The previous and next month are links to the same page with `?month=2026-09`, every other parameter kept, so it needs no JavaScript and works with htmx.",
+        "attributes" : [ {
+          "name" : "month",
+          "description" : "The month shown, as `2026-10` (a `YearMonth`) or a date in it. By default the month the request asks for in `month-param`, or else the current month.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "month-param",
+          "description" : "The request parameter the links to the previous and next month set, and that gives the month when `month` is not set.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          },
+          "default" : "month"
+        }, {
+          "name" : "day-href",
+          "description" : "Makes every day a link: `{date}` is replaced by the day's ISO date (`/agenda/{date}`, `?date={date}`), and the result is a Thymeleaf link, so a path starting with `/` gets the context path. The `day` slot is then inside the link: put nothing interactive in it.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "today",
+          "description" : "Today, as `2026-10-23` (a `LocalDate`), marked as the current date. By default the server's date; pass it in the user's time zone when that differs.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "show-outside-days",
+          "description" : "Show the days of the previous and next month that fill the first and last week.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "true"
+          }, {
+            "name" : "false"
+          } ],
+          "default" : "true"
+        }, {
+          "name" : "show-week-number",
+          "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe).",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "week-starts-on",
+          "description" : "The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "th:month",
+          "description" : "`month` from a Thymeleaf expression, e.g. `th:month=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:month-param",
+          "description" : "`month-param` from a Thymeleaf expression, e.g. `th:month-param=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:day-href",
+          "description" : "`day-href` from a Thymeleaf expression, e.g. `th:day-href=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:today",
+          "description" : "`today` from a Thymeleaf expression, e.g. `th:today=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-outside-days",
+          "description" : "`show-outside-days` from a Thymeleaf expression, e.g. `th:show-outside-days=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:show-week-number",
+          "description" : "`show-week-number` from a Thymeleaf expression, e.g. `th:show-week-number=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:week-starts-on",
+          "description" : "`week-starts-on` from a Thymeleaf expression, e.g. `th:week-starts-on=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
       }, {
         "name" : "sl:native-select",
         "description" : "The browser's own `select`, styled, with its `option` and `optgroup` elements as content. `th:field` marks the bound option. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it (for its width). With `th:field`, the select is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
@@ -3482,6 +5445,25 @@
           }
         } ]
       }, {
+        "name" : "sl:spinner",
+        "description" : "A spinning icon that says something is loading: a status (`role=\"status\"`) named \"Loading\" (the message `sl.spinner.label`; an `aria-label` of its own replaces it). It turns slower, not still, when the user asks for reduced motion. For a button that is busy, use `sl:button loading` instead.",
+        "attributes" : [ {
+          "name" : "size",
+          "description" : "Width and height in pixels. Without it the spinner is 16 pixels, or sized by the surrounding component (as an icon in `sl:empty-media`).",
+          "value" : {
+            "kind" : "plain",
+            "type" : "number",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:switch",
         "description" : "A switch: a checkbox with `role=\"switch\"`, announced as on or off. It submits like a checkbox, so `th:field` on a boolean works as it does there (numbered id, hidden marker input; in a `sl:field`, the field's name as id). Every attribute that is not a prop passes through; `class` is appended to `switch`. With `th:field`, the switch is marked `aria-invalid` when its field has errors.",
         "attributes" : [ {
@@ -4076,6 +6058,203 @@
             "required" : false
           }
         } ]
+      }, {
+        "name" : "sl:toggle",
+        "description" : "A button that is on or off: a checkbox drawn as a button, so it submits, binds and works as one without JavaScript, and a screen reader announces it as checked or not. The content (text, icons) is its label; give a toggle that holds only an icon an `aria-label`. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `disabled`, `aria-label`, `x-*`) passes through to the `input`, except `class`, which goes to the `label` around it, and `th:text` and `th:utext`, which set the label. `th:field` on a boolean works as on a checkbox; the toggle is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style of the toggle.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Size of the toggle.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:toggle-group",
+        "description" : "A row of `sl:toggle-group-item`s, of which one (`type=\"single\"`, radio buttons) or several (`type=\"multiple\"`, checkboxes) can be on. The items submit, bind and work as those inputs, without JavaScript. Name the group with `aria-label` or `aria-labelledby`. Give it the `th:field` (or the `name`) its items share, or put it in a `sl:field-set` with `th:field`; each item then only needs a `value`. Every other attribute that is not a prop passes through to the group.",
+        "attributes" : [ {
+          "name" : "type",
+          "description" : "`single`: one item is on at a time, as radio buttons (the arrow keys move between them). `multiple`: any number, as checkboxes.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "single"
+          }, {
+            "name" : "multiple"
+          } ],
+          "default" : "single"
+        }, {
+          "name" : "variant",
+          "description" : "Visual style of the items.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Size of the items.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "sm"
+          }, {
+            "name" : "default"
+          }, {
+            "name" : "lg"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "spacing",
+          "description" : "The gap between the items, in Tailwind's spacing steps (`2` is `0.5rem`). `0` joins them into one control.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "0"
+          }, {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          } ],
+          "default" : "2"
+        }, {
+          "name" : "orientation",
+          "description" : "Put the items on a row, or in a column.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "horizontal"
+          }, {
+            "name" : "vertical"
+          } ],
+          "default" : "horizontal"
+        }, {
+          "name" : "name",
+          "description" : "The `name` every item submits under, for a group without `th:field`. A `single` group without either gets a generated one, so its items still exclude each other.",
+          "value" : {
+            "kind" : "plain",
+            "required" : false
+          }
+        }, {
+          "name" : "disabled",
+          "description" : "Disable every item.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
+          "name" : "th:type",
+          "description" : "`type` from a Thymeleaf expression, e.g. `th:type=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:spacing",
+          "description" : "`spacing` from a Thymeleaf expression, e.g. `th:spacing=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:orientation",
+          "description" : "`orientation` from a Thymeleaf expression, e.g. `th:orientation=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:name",
+          "description" : "`name` from a Thymeleaf expression, e.g. `th:name=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:disabled",
+          "description" : "`disabled` from a Thymeleaf expression, e.g. `th:disabled=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:toggle-group-item",
+        "description" : "One item of a `sl:toggle-group`, drawn as a `sl:toggle`: a radio button in a `single` group, a checkbox in a `multiple` one. Give it a `value`; it takes the group's `th:field` or `name`, variant, size and `disabled`. The content is its label; give an item that holds only an icon an `aria-label`. Every attribute that is not a prop (`value`, `checked`, `disabled`, `aria-label`) passes through to the `input`, except `class`, which goes to the `label` around it, and `th:text` and `th:utext`, which set the label. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+        "attributes" : [ ]
       }, {
         "name" : "sl:tooltip",
         "description" : "A short text that shows while the pointer rests on an element or the keyboard focuses it, on the browser's Popover API. The first element inside is the trigger, any focusable element (a `sl:button`, a link); the `sl:tooltip-content` after it describes it (`aria-describedby`). Escape hides it. Needs Alpine.",

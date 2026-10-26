@@ -19,12 +19,19 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Form errors](https://shadleaf.dev/current/components/form-errors.md): The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
 - [Label](https://shadleaf.dev/current/components/label.md): A label for a form control.
 - [Input](https://shadleaf.dev/current/components/input.md): A text input, bound to a form field with th:field.
+- [Input Group](https://shadleaf.dev/current/components/input-group.md): Text, icons and buttons inside the border of an input or textarea.
 - [Textarea](https://shadleaf.dev/current/components/textarea.md): A multi-line text input, bound to a form field with th:field.
 - [Select](https://shadleaf.dev/current/components/select.md): shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
 - [Select (Native)](https://shadleaf.dev/current/components/select-native.md): The browser's own select, styled, bound to a form field with th:field.
+- [Combobox](https://shadleaf.dev/current/components/combobox.md): shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
 - [Checkbox](https://shadleaf.dev/current/components/checkbox.md): The browser's own checkbox, styled, bound to a form field with th:field.
 - [Radio Group](https://shadleaf.dev/current/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field.
 - [Switch](https://shadleaf.dev/current/components/switch.md): An on/off control, bound to a boolean form field with th:field.
+- [Toggle](https://shadleaf.dev/current/components/toggle.md): A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
+- [Toggle Group](https://shadleaf.dev/current/components/toggle-group.md): A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
+- [Calendar](https://shadleaf.dev/current/components/calendar.md): shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+- [Date Picker](https://shadleaf.dev/current/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
+- [File Upload](https://shadleaf.dev/current/components/file-upload.md): A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
 
 ## Overlays
 
@@ -40,12 +47,16 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Alert](https://shadleaf.dev/current/components/alert.md): A callout for a message the user should notice.
 - [Toast](https://shadleaf.dev/current/components/toast.md): A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
 - [Skeleton](https://shadleaf.dev/current/components/skeleton.md): A placeholder that pulses while content loads.
+- [Spinner](https://shadleaf.dev/current/components/spinner.md): A spinning icon that says something is loading.
+- [Empty](https://shadleaf.dev/current/components/empty.md): What a list, a table, a search or a page shows when there is nothing to show yet.
 
 ## Data
 
 - [Table](https://shadleaf.dev/current/components/table.md): A table in shadcn/ui's look, whose column headers sort it on the server.
 - [Pagination](https://shadleaf.dev/current/components/pagination.md): Links to the other pages of a list, built from the Spring Data Page the controller returns.
 - [Query params](https://shadleaf.dev/current/components/query-params.md): Hidden inputs that keep a table's order, page size and filters when a search form is sent.
+- [Month view](https://shadleaf.dev/current/components/month-view.md): A month rendered on the server, with content of your own per day and a link per day; no picking.
+- [Chart](https://shadleaf.dev/current/components/chart.md): shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
 
 ## Application shell
 
@@ -66,6 +77,7 @@ Start with the [overview](https://shadleaf.dev/current/components/application-sh
 ## Display
 
 - [Card](https://shadleaf.dev/current/components/card.md): A container for related content and actions, built from its parts.
+- [Attachment](https://shadleaf.dev/current/components/attachment.md): A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
 - [Badge](https://shadleaf.dev/current/components/badge.md): A small label for a status, a count or a category.
 - [Avatar](https://shadleaf.dev/current/components/avatar.md): A picture of a person, with initials when there is no picture.
 - [Icon](https://shadleaf.dev/current/components/icon.md): Inline SVG icons from lucide, or your own.

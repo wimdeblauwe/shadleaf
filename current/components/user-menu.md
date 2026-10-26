@@ -165,6 +165,9 @@ change it:
 
 ## Labels
 
+The labels are messages, which your `messages.properties` can reword or translate (see
+[Translating](https://shadleaf.dev/current/guides/translating.md)):
+
 ```properties
 sl.user-menu.trigger=Account: {0}
 sl.user-menu.sign-in=Sign in

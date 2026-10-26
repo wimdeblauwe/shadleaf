@@ -1,0 +1,36 @@
+# Shadleaf
+
+> shadcn/ui for Thymeleaf, as a Spring Boot starter.
+
+Source: https://shadleaf.dev/1.0.0/
+
+Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) design system to Thymeleaf. Add one dependency, include two
+fragments in your layout's `<head>`, and write `<sl:button>`:
+
+**Example: Variants.**
+
+```html
+<sl:button>Default</sl:button>
+<sl:button variant="outline">Outline</sl:button>
+<sl:button variant="ghost">Ghost</sl:button>
+<sl:button variant="destructive">Destructive</sl:button>
+<sl:button variant="secondary">Secondary</sl:button>
+<sl:button variant="link">Link</sl:button>
+```
+
+- **Fits your build.** The jar ships compiled CSS, served under `/shadleaf/**`, so a plain Maven build is enough.
+  Already compiling Tailwind? The [embedded bundle](guides/tailwind/) fits into your own
+  build.
+- **shadcn's token names, verbatim.** `--primary`, `--radius`, `--ring`: any shadcn theme drops in unchanged.
+- **Declared props.** A typo such as `variant="destructve"` fails with the legal values, and an icon-only button
+  without an `aria-label` fails too, instead of shipping.
+- **Adjustable in five steps**, from a prop to owning the template yourself: see
+  [the adjustability ladder](guides/adjustability/).
+- **Works under a strict Content-Security-Policy**, with no `'unsafe-inline'`: see [CSP](guides/csp/).
+
+Every preview on this site is rendered by the library itself, from the build that produced these pages, so it shows
+exactly the markup your application gets.
+
+> **Caution: Pre-release**
+>
+> Before 1.0, the rendered markup, class names and `data-*` attributes can change between versions.

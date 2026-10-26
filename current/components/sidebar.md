@@ -1225,7 +1225,7 @@ entry that is only needed on a phone.
 ## Trigger
 
 The trigger is a ghost icon button with a panel icon (turned around on a right-to-left page), named "Toggle sidebar"
-(the message `sl.sidebar.trigger`). An `aria-label` replaces the name, and content of its own replaces the icon:
+(the message `sl.sidebar.trigger`, see [Translating](https://shadleaf.dev/current/guides/translating.md)). An `aria-label` replaces the name, and content of its own replaces the icon:
 
 ```html
 <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>

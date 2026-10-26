@@ -1,5 +1,5 @@
 {
-  "version" : "0.10.0",
+  "version" : "1.0.0",
   "components" : [ {
     "name" : "accordion",
     "tag" : "sl:accordion",
@@ -167,6 +167,132 @@
       "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui."
     } ]
   }, {
+    "name" : "attachment",
+    "tag" : "sl:attachment",
+    "description" : "A file or an image attached to something: a message, a form, a record. Holds an `sl:attachment-media`, an `sl:attachment-content` (title and description), optional `sl:attachment-actions` and an optional `sl:attachment-trigger` that makes the whole card open a link or a dialog. Purely presentational: the server renders its state. Say the state in the description too (\"Uploading · 64%\", \"Upload failed\"), so it is not told by colour alone.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "state",
+      "type" : "enum",
+      "defaultValue" : "done",
+      "values" : [ "idle", "uploading", "processing", "error", "done" ],
+      "description" : "Where the file is in its upload: `idle` (picked, not sent yet) draws a dashed border, `uploading` and `processing` shimmer the title and mark the attachment busy (`aria-busy`), `error` turns it destructive. `done` is a file that is there."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "sm", "xs" ],
+      "description" : "Size of the attachment."
+    }, {
+      "name" : "orientation",
+      "type" : "enum",
+      "defaultValue" : "horizontal",
+      "values" : [ "horizontal", "vertical" ],
+      "description" : "`vertical` puts the media above the content, for an image."
+    }, {
+      "name" : "full-width",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Fill the width of the container, for a list of attachments (shadcn's `w-full` class). Without it the attachment is as wide as its content."
+    } ]
+  }, {
+    "name" : "attachment-action",
+    "tag" : "sl:attachment-action",
+    "description" : "A button in `sl:attachment-actions`, to remove, retry or download the file: a `sl:button`, ghost and an extra small icon by default. Give it an `aria-label` that names the file (\"Remove report.pdf\"). Any other attribute passes through to the `sl:button` (`href`, `type`, `disabled`, `hx-*`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "ghost",
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
+      "description" : "Visual style of the button, as on `sl:button`."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "icon-xs",
+      "values" : [ "xs", "sm", "default", "lg", "icon", "icon-xs", "icon-sm", "icon-lg" ],
+      "description" : "Size of the button, as on `sl:button`. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`."
+    }, {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`) to download or open the file."
+    } ],
+    "accessibleName" : {
+      "prop" : "size",
+      "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
+    }
+  }, {
+    "name" : "attachment-actions",
+    "tag" : "sl:attachment-actions",
+    "description" : "The `sl:attachment-action`s of an attachment, at its end; in a vertical attachment, over the top corner of the media. They sit above an `sl:attachment-trigger`, so they stay clickable.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "attachment-content",
+    "tag" : "sl:attachment-content",
+    "description" : "The text of an `sl:attachment`: its `sl:attachment-title` and `sl:attachment-description`. Takes the space the media and the actions leave.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "attachment-description",
+    "tag" : "sl:attachment-description",
+    "description" : "What else to know about an attachment, below its title: the file type and size, or its state (\"Uploading · 64%\", \"Upload failed. Try again.\"). Cut off with an ellipsis when it does not fit.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "attachment-group",
+    "tag" : "sl:attachment-group",
+    "description" : "A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out, or a grid that wraps them. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for a row of attachments without any, give the group a `label`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "layout",
+      "type" : "enum",
+      "defaultValue" : "row",
+      "values" : [ "row", "grid" ],
+      "description" : "`row` scrolls sideways; `grid` wraps the attachments in columns that fill the width, for a gallery of photos: vertical attachments with `full-width`, each filling its cell."
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Accessible name of the group. With it the group is a named group (`role=\"group\"`). A row then takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger. A grid does not scroll, so it takes no focus."
+    } ]
+  }, {
+    "name" : "attachment-media",
+    "tag" : "sl:attachment-media",
+    "description" : "The icon or image of an `sl:attachment`: an icon (or an `sl:spinner` while it uploads) on a muted square, or an `&lt;img&gt;` that fills it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "icon",
+      "values" : [ "icon", "image" ],
+      "description" : "`icon` centres an icon on a muted square; `image` crops an `&lt;img&gt;` to fill the square, dimmed while the attachment uploads, is processed or failed."
+    } ]
+  }, {
+    "name" : "attachment-title",
+    "tag" : "sl:attachment-title",
+    "description" : "The name of an attachment, usually its file name, in `sl:attachment-content`. Cut off with an ellipsis when it does not fit; shimmers while the attachment uploads or is processed, unless the user asks for reduced motion.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "attachment-trigger",
+    "tag" : "sl:attachment-trigger",
+    "description" : "Makes a whole `sl:attachment` clickable: a button (to open an `sl:dialog` with `commandfor` and `command=\"show-modal\"`) or, with `as=\"a\"`, a link that covers the card behind its actions. It has no text of its own, so it needs an `aria-label` that says what it does (\"Open report.pdf\"). Put it last in the attachment.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "button",
+      "values" : [ "button", "a" ],
+      "description" : "Element to render: a `button`, or an anchor (`a`) to open the file."
+    } ],
+    "accessibleName" : {
+      "values" : [ ]
+    }
+  }, {
     "name" : "avatar",
     "tag" : "sl:avatar",
     "description" : "A picture of a person: an `sl:avatar-image`, and an `sl:avatar-fallback` (initials) shown instead while the image has no `src`, is loading or fails to load. Decorative unless it has a `label`, as an avatar usually sits next to the person's name.",
@@ -281,8 +407,8 @@
       "name" : "as",
       "type" : "enum",
       "defaultValue" : "button",
-      "values" : [ "button", "a" ],
-      "description" : "Element to render: a `button`, or an anchor (`a`) for navigation."
+      "values" : [ "button", "a", "label" ],
+      "description" : "Element to render: a `button`, an anchor (`a`) for navigation, or a `label` for a visually hidden control (`for`), as `sl:file-upload`'s Browse button for its file input. A label takes no focus and no `disabled`: the control does."
     }, {
       "name" : "type",
       "type" : "enum",
@@ -306,6 +432,61 @@
       "prop" : "size",
       "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
     }
+  }, {
+    "name" : "calendar",
+    "tag" : "sl:calendar",
+    "description" : "A month calendar to pick a date or a range of dates, drawn over native date inputs: the inputs are its value, so `th:field` binds it and the form submits ISO dates (`2026-10-23`). Without content, it renders one date input itself, which takes every attribute that is not a prop except `class` (`th:field`, `name`, `required`, `min`, `max`), and in a `sl:field` the field's `th:field`, id and `aria-describedby`. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end; its attributes then go to the calendar. `slCalendar` hides the inputs and draws the month; without JavaScript the inputs show as they are.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "caption-layout",
+      "type" : "enum",
+      "defaultValue" : "label",
+      "values" : [ "label", "dropdown", "dropdown-months", "dropdown-years" ],
+      "description" : "The month's caption: its name, or selects for the month and year, the month, or the year."
+    }, {
+      "name" : "number-of-months",
+      "type" : "number",
+      "defaultValue" : "1",
+      "values" : [ ],
+      "description" : "How many months show side by side (stacked on a narrow screen)."
+    }, {
+      "name" : "show-outside-days",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "Show the days of the previous and next month that fill the first and last week."
+    }, {
+      "name" : "show-week-number",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe)."
+    }, {
+      "name" : "week-starts-on",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides."
+    }, {
+      "name" : "default-month",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The month shown first, as `2026-10`. By default the month of the chosen date (or of the start of the range), or else the current month."
+    }, {
+      "name" : "start-month",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The first month the calendar navigates to, as `2026-01`; also the first year of the year select. By default the month of the inputs' `min`, or else 100 years ago."
+    }, {
+      "name" : "end-month",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The last month the calendar navigates to, as `2026-12`; also the last year of the year select. By default the month of the inputs' `max`, or else 10 years from now."
+    }, {
+      "name" : "disabled-dates",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Days that cannot be picked, comma-separated: a date (`2026-12-25`), a range (`2026-12-24..2026-12-31`) or a day of the week (`sat`, `sun`). The inputs' `min` and `max` disable the days outside them too. Only the calendar knows: check the date on the server as well."
+    } ]
   }, {
     "name" : "card",
     "tag" : "sl:card",
@@ -372,6 +553,325 @@
       "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline."
     } ]
   }, {
+    "name" : "chart",
+    "tag" : "sl:chart",
+    "description" : "A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "data",
+      "type" : "object",
+      "values" : [ ],
+      "description" : "The rows: a list (or a Spring Data `Page`) of objects, records or maps, one per category or point in time. Each row holds the category (`month`) and a number per series (`desktop`, `mobile`). Serialised with Jackson: dates as ISO strings, which the named date formats read by their Java type.",
+      "required" : true
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The chart's accessible name, such as its title: what a screen reader announces when the chart takes the focus.",
+      "required" : true
+    }, {
+      "name" : "margin",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "Space in pixels left and right of the plot, so the first and last tick labels fit (shadcn's line and area charts use 12)."
+    }, {
+      "name" : "time-zone",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The time zone (an IANA id such as `Europe/Brussels`) instants in the data are shown in: `Instant`, `OffsetDateTime` and `ZonedDateTime`. Defaults to the request's (Spring's `LocaleContextHolder`). A `LocalDate` or `LocalDateTime` is shown as written, in any zone."
+    } ]
+  }, {
+    "name" : "chart-area",
+    "tag" : "sl:chart-area",
+    "description" : "One series of a `sl:chart`, drawn as a filled area under a line through the rows. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+      "required" : true
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key."
+    }, {
+      "name" : "color",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first)."
+    }, {
+      "name" : "color-dark",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`)."
+    }, {
+      "name" : "curve",
+      "type" : "enum",
+      "defaultValue" : "natural",
+      "values" : [ "natural", "monotone", "linear", "step", "step-before", "step-after" ],
+      "description" : "How the line runs between the points: smooth (`natural`, `monotone`), straight (`linear`) or in steps."
+    }, {
+      "name" : "stack",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`)."
+    }, {
+      "name" : "dashed",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Draw the line on top of the area dashed (the fill stays as it is). The legend and the tooltip show the series dashed as well."
+    }, {
+      "name" : "join",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `key` of the series this dashed area continues (`actual`), as on `sl:chart-line`: it starts at that series' last number, and the tooltip does not list this series at that last row. Needs `dashed`."
+    }, {
+      "name" : "fill-opacity",
+      "type" : "number",
+      "defaultValue" : "0.4",
+      "values" : [ ],
+      "description" : "The opacity of the fill, from 0 to 1."
+    } ]
+  }, {
+    "name" : "chart-bar",
+    "tag" : "sl:chart-bar",
+    "description" : "One series of a `sl:chart`, drawn as bars: one per row. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+      "required" : true
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key."
+    }, {
+      "name" : "color",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first)."
+    }, {
+      "name" : "color-dark",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`)."
+    }, {
+      "name" : "radius",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The bars' corner radius in pixels: `4` for every corner, or four numbers (top-left, top-right, bottom-right, bottom-left), as `4,4,0,0` for the top bar of a stack."
+    }, {
+      "name" : "stack",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Stack this series on the others with the same `stack` id (any name, such as `a`) instead of drawing them side by side."
+    } ]
+  }, {
+    "name" : "chart-grid",
+    "tag" : "sl:chart-grid",
+    "description" : "The grid lines behind a `sl:chart`'s plot. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "vertical",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Vertical lines too, one per category."
+    }, {
+      "name" : "horizontal",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "Horizontal lines, one per value tick."
+    } ]
+  }, {
+    "name" : "chart-legend",
+    "tag" : "sl:chart-legend",
+    "description" : "The legend of a `sl:chart`: every series' label with its colour. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "vertical-align",
+      "type" : "enum",
+      "defaultValue" : "bottom",
+      "values" : [ "bottom", "top" ],
+      "description" : "Below the plot, or above it."
+    } ]
+  }, {
+    "name" : "chart-line",
+    "tag" : "sl:chart-line",
+    "description" : "One series of a `sl:chart`, drawn as a line through the rows. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`.",
+      "required" : true
+    }, {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The series' name in the tooltip and the legend, typically a message (`th:label=\"#{visitors.desktop}\"`). Defaults to the key."
+    }, {
+      "name" : "color",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first)."
+    }, {
+      "name" : "color-dark",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`)."
+    }, {
+      "name" : "curve",
+      "type" : "enum",
+      "defaultValue" : "monotone",
+      "values" : [ "monotone", "natural", "linear", "step", "step-before", "step-after" ],
+      "description" : "How the line runs between the points: smooth (`monotone`, `natural`), straight (`linear`) or in steps."
+    }, {
+      "name" : "dots",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "A dot on every point."
+    }, {
+      "name" : "dashed",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over (see `join`)."
+    }, {
+      "name" : "join",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `key` of the series this dashed line continues (`actual`). The chart draws the dashed line from that series' last number to its own first one, so the rows need no duplicated value, and the tooltip does not list this series at that last row. Needs `dashed`."
+    }, {
+      "name" : "stroke-width",
+      "type" : "number",
+      "defaultValue" : "2",
+      "values" : [ ],
+      "description" : "The line's width in pixels."
+    } ]
+  }, {
+    "name" : "chart-tooltip",
+    "tag" : "sl:chart-tooltip",
+    "description" : "The tooltip of a `sl:chart`: on hover, or with the arrow keys once the chart has the focus, it shows the category and every series' label and value. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "indicator",
+      "type" : "enum",
+      "defaultValue" : "dot",
+      "values" : [ "dot", "line", "dashed" ],
+      "description" : "The mark before each series' label, in its colour."
+    }, {
+      "name" : "cursor",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "Highlight the hovered category (a band behind bars, a line over lines and areas)."
+    }, {
+      "name" : "hide-label",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Leave out the label at the top (the category)."
+    }, {
+      "name" : "hide-indicator",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Leave out the marks before the series' labels."
+    }, {
+      "name" : "label-key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows to take the label from instead of the axis category: a series key gives that series' label, any other property its value in the hovered row, such as a date the server formatted."
+    }, {
+      "name" : "label-format",
+      "type" : "enum",
+      "values" : [ "number", "integer", "compact", "percent", "currency", "day", "month-short", "month", "month-year", "date", "time" ],
+      "description" : "How the label is written, as the ticks of `sl:chart-x-axis` (`month`, `date`, ...). Without one, as it is."
+    }, {
+      "name" : "value-format",
+      "type" : "enum",
+      "defaultValue" : "number",
+      "values" : [ "number", "integer", "compact", "percent", "currency", "day", "month-short", "month", "month-year", "date", "time" ],
+      "description" : "How the values are written: `number` in the page's language, or `currency`, `percent`, ..."
+    }, {
+      "name" : "currency",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The ISO 4217 code (`EUR`) for a `currency` format."
+    } ]
+  }, {
+    "name" : "chart-x-axis",
+    "tag" : "sl:chart-x-axis",
+    "description" : "The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines (as shadcn's). Under `dir=\"rtl\"` it runs from right to left. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "key",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The property of the rows that holds the category (`month`) or the date.",
+      "required" : true
+    }, {
+      "name" : "format",
+      "type" : "enum",
+      "values" : [ "number", "integer", "compact", "percent", "currency", "day", "month-short", "month", "month-year", "date", "time" ],
+      "description" : "How the ticks are written, with `Intl` in the page's language. Numbers: `number`, `integer`, `compact` (1.2K), `percent` (0.25 is 25%), `currency` (with `currency`). Dates: `day` (Apr 1), `month-short` (Apr), `month` (April), `month-year` (Apr 2024), `date`, `time`. Without one, the values as they are."
+    }, {
+      "name" : "currency",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The ISO 4217 code (`EUR`) for `format=\"currency\"`."
+    }, {
+      "name" : "tick-margin",
+      "type" : "number",
+      "defaultValue" : "8",
+      "values" : [ ],
+      "description" : "Space in pixels between the ticks and the plot."
+    }, {
+      "name" : "min-tick-gap",
+      "type" : "number",
+      "defaultValue" : "5",
+      "values" : [ ],
+      "description" : "The least space in pixels between two ticks; Recharts leaves out ticks that would come closer, as on a long time axis."
+    } ]
+  }, {
+    "name" : "chart-y-axis",
+    "tag" : "sl:chart-y-axis",
+    "description" : "The value axis of a `sl:chart`, at the start side (the left, or the right under `dir=\"rtl\"`), without tick or axis lines. shadcn's charts often leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "format",
+      "type" : "enum",
+      "values" : [ "number", "integer", "compact", "percent", "currency", "day", "month-short", "month", "month-year", "date", "time" ],
+      "description" : "How the ticks are written, as on `sl:chart-x-axis`: `compact` (1.2K) and `currency` suit a value axis."
+    }, {
+      "name" : "currency",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The ISO 4217 code (`EUR`) for `format=\"currency\"`."
+    }, {
+      "name" : "tick-margin",
+      "type" : "number",
+      "defaultValue" : "8",
+      "values" : [ ],
+      "description" : "Space in pixels between the ticks and the plot."
+    }, {
+      "name" : "tick-count",
+      "type" : "number",
+      "defaultValue" : "5",
+      "values" : [ ],
+      "description" : "How many ticks Recharts aims for."
+    } ]
+  }, {
     "name" : "checkbox",
     "tag" : "sl:checkbox",
     "description" : "A checkbox: the browser's own, styled. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `required`) passes through to the `input`, except `class`, which goes to the wrapper that holds the check mark. With `th:field`, Spring numbers the id (`terms1`), so put the checkbox inside its label, in a `sl:field` (which gives it the field's name as id), or give it an explicit `id`; the checkbox is marked `aria-invalid` when its field has errors. A checkbox in the indeterminate state (neither checked nor unchecked: some of a group selected) shows a minus.",
@@ -427,6 +927,97 @@
       "prop" : "size",
       "values" : [ "icon", "icon-xs", "icon-sm", "icon-lg" ]
     }
+  }, {
+    "name" : "combobox",
+    "tag" : "sl:combobox",
+    "description" : "A text input that filters a list of options as you type: shadcn/ui's combobox. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "placeholder",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The input's text while nothing is chosen. For a single value also the text of a first option with an empty value, hidden from the list: a required combobox with it chosen is invalid."
+    }, {
+      "name" : "multiple",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Choose any number of options, shown as chips before the input. The select is a `select multiple`, so `th:field` binds a collection."
+    }, {
+      "name" : "show-clear",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "A button that clears the choice, in place of the chevron while there is one."
+    }, {
+      "name" : "show-trigger",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "The chevron button that opens and closes the list. A multiple combobox has none."
+    }, {
+      "name" : "auto-highlight",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Highlight the first match while typing, so Enter chooses it."
+    }, {
+      "name" : "empty",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The text shown when no option matches. By default \"No items found.\""
+    }, {
+      "name" : "search-url",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Ask the server for the options as you type: a `GET` to this URL with the text as `q`, answered with the HTML of `sl:combobox-item`s (and groups and separators), which replace the options that are not chosen. Needs JavaScript; without it, only the options in the page can be chosen."
+    } ]
+  }, {
+    "name" : "combobox-group",
+    "tag" : "sl:combobox-group",
+    "description" : "A group of `sl:combobox-item`s under a heading: an `optgroup`. The list hides the heading while none of its items match.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The group's heading, shadcn/ui's `ComboboxLabel`.",
+      "required" : true
+    } ]
+  }, {
+    "name" : "combobox-item",
+    "tag" : "sl:combobox-item",
+    "description" : "An option in a `sl:combobox`: an `option`. `value` (or `th:value`) and `disabled` pass through; `th:field` on the combobox marks the bound one. The list shows its content, which may start with an icon, with a check mark while it is chosen; the input, the chips and the filter use its text, which is all an older browser keeps of it.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "combobox-separator",
+    "tag" : "sl:combobox-separator",
+    "description" : "A line between items or groups of a `sl:combobox`: an `hr`. The list hides it while you type.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "date-picker",
+    "tag" : "sl:date-picker",
+    "description" : "A button showing the chosen date that opens a `sl:calendar` in a popover: shadcn/ui's date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "placeholder",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The button's text while no date is chosen. By default \"Pick a date\"."
+    }, {
+      "name" : "format",
+      "type" : "enum",
+      "defaultValue" : "long",
+      "values" : [ "short", "medium", "long", "full" ],
+      "description" : "How the button shows the date, in the page's locale: as `Intl.DateTimeFormat`'s `dateStyle` and Java's `FormatStyle` (`10/23/26`, `Oct 23, 2026`, `October 23, 2026`, `Friday, October 23, 2026`)."
+    }, {
+      "name" : "popover-id",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The popover's id, which the button points at with `popovertarget`. By default a generated one (`sl-date-picker-` and eight random characters)."
+    } ]
   }, {
     "name" : "dialog",
     "tag" : "sl:dialog",
@@ -709,6 +1300,59 @@
       "description" : "With `as=\"sidebar-menu-action\"`: from 768&nbsp;px, show it only while the pointer is over its item, the focus is in it, or the menu is open."
     } ]
   }, {
+    "name" : "empty",
+    "tag" : "sl:empty",
+    "description" : "An empty state: what a list, a table, a search or a page shows when there is nothing to show yet. Holds an `sl:empty-header` (media, title and description) and an optional `sl:empty-content` with what to do next, centred in the space it is given.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "border",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "A dashed line around the empty state, to mark out the area (shadcn's `border border-dashed` classes)."
+    } ]
+  }, {
+    "name" : "empty-content",
+    "tag" : "sl:empty-content",
+    "description" : "What to do next in an `sl:empty`, below its header: a button, a search field, a link.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "empty-description",
+    "tag" : "sl:empty-description",
+    "description" : "The text below the title of an `sl:empty`. Links in it are underlined.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "empty-header",
+    "tag" : "sl:empty-header",
+    "description" : "The top of an `sl:empty`: an optional `sl:empty-media`, an `sl:empty-title` and an `sl:empty-description`, stacked and centred.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "empty-media",
+    "tag" : "sl:empty-media",
+    "description" : "An icon, an avatar or an image above the title of an `sl:empty`, inside `sl:empty-header`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "icon" ],
+      "description" : "`icon` puts an icon on a muted square; `default` shows the content as it is, e.g. an avatar."
+    } ]
+  }, {
+    "name" : "empty-title",
+    "tag" : "sl:empty-title",
+    "description" : "The title of an `sl:empty`, inside `sl:empty-header`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline."
+    } ]
+  }, {
     "name" : "field",
     "tag" : "sl:field",
     "description" : "A form field: a `sl:field-label`, one control, and optionally a `sl:field-description` and a `sl:field-error`, in any order. Put `th:field` on the field, not on the control: the control takes it, gets the `id` the label points at (the field's name, `email`, also for a checkbox or switch), and an `aria-describedby` listing the description and, when the binding has errors, the error. The error shows the binding's messages. A field with errors gets `data-invalid`. Without `th:field`, set `for` to the control's id.",
@@ -773,6 +1417,50 @@
     "description" : "A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.",
     "declared" : true,
     "props" : [ ]
+  }, {
+    "name" : "file-upload",
+    "tag" : "sl:file-upload",
+    "description" : "A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has none. A visually hidden `&lt;input type=\"file\"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype=\"multipart/form-data\"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "multiple",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Take more than one file. Picking or dropping files adds them to the ones already there."
+    }, {
+      "name" : "accept",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The file types to take, as the input's `accept`: extensions (`.pdf`), MIME types (`application/pdf`) or `image/*`, separated by commas. A dropped file of another type is not added."
+    }, {
+      "name" : "max-size",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The largest file to take, as Spring Boot writes sizes: `10MB`, `500KB`. A larger file is not added."
+    }, {
+      "name" : "level",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "Makes the title a heading of this level (`role=\"heading\"`)."
+    }, {
+      "name" : "previews",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Show a thumbnail of each picked image (up to 20 MB, no SVG) instead of the file icon. The thumbnail is a `blob:` URL: a Content-Security-Policy must allow it in `img-src`, or the icon stays."
+    }, {
+      "name" : "layout",
+      "type" : "enum",
+      "defaultValue" : "list",
+      "values" : [ "list", "grid" ],
+      "description" : "`list` shows the picked files one below the other, as small attachments; `grid` as cards in columns that fill the width, the grid of `sl:attachment-group layout=\"grid\"`: with `previews`, for photos one wants to see before sending them."
+    }, {
+      "name" : "browse-label",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The text of the Browse button. Defaults to \"Browse files\", or \"Browse\" without `multiple`."
+    } ]
   }, {
     "name" : "form-errors",
     "tag" : "sl:form-errors",
@@ -840,6 +1528,76 @@
       "description" : "Type of the input. Checkboxes and radio buttons have components of their own."
     } ]
   }, {
+    "name" : "input-group",
+    "tag" : "sl:input-group",
+    "description" : "An input with text, icons or buttons inside its border: one `sl:input-group-input` or `sl:input-group-textarea`, and `sl:input-group-addon`s around it. Put the addons after the control in the markup, so the control comes first in the tab order and is read first; `align` on the addon places it. The group draws the control's focus ring, error and disabled look. In a `sl:field`, the control takes the field's `th:field`, id and `aria-describedby`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "input-group-addon",
+    "tag" : "sl:input-group-addon",
+    "description" : "Text, an icon, a `sl:kbd` or `sl:input-group-button`s beside or around the control of a `sl:input-group`. Clicking it, outside a button or link, focuses the control. Write it after the control: `align` places it.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "align",
+      "type" : "enum",
+      "defaultValue" : "inline-start",
+      "values" : [ "inline-start", "inline-end", "block-start", "block-end" ],
+      "description" : "Where the addon goes: before or after the control on its line, or above or below it across the whole group."
+    }, {
+      "name" : "border",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "With `align` `block-start` or `block-end`, a dividing line between the addon and the control, with matching spacing."
+    } ]
+  }, {
+    "name" : "input-group-button",
+    "tag" : "sl:input-group-button",
+    "description" : "A button in a `sl:input-group-addon`: a `sl:button`, ghost and extra small by default, sized to fit inside the group. Any other attribute passes through to the `sl:button` (`type`, `loading`, `disabled`, `hx-*`).",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "ghost",
+      "values" : [ "default", "outline", "ghost", "destructive", "secondary", "link" ],
+      "description" : "Visual style of the button, as on `sl:button`."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "xs",
+      "values" : [ "xs", "sm", "icon-xs", "icon-sm" ],
+      "description" : "Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`."
+    } ],
+    "accessibleName" : {
+      "prop" : "size",
+      "values" : [ "icon-xs", "icon-sm" ]
+    }
+  }, {
+    "name" : "input-group-input",
+    "tag" : "sl:input-group-input",
+    "description" : "The input of a `sl:input-group`: a `sl:input` without a border of its own, as the group draws it. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "text",
+      "values" : [ "text", "email", "password", "number", "search", "tel", "url", "date", "datetime-local", "month", "week", "time" ],
+      "description" : "Type of the input."
+    } ]
+  }, {
+    "name" : "input-group-text",
+    "tag" : "sl:input-group-text",
+    "description" : "Muted text in a `sl:input-group-addon`: a currency symbol, a unit, a domain. It may hold an `sl:icon`. In an addon above or below the control, it takes the free space, so what follows it sits at the end.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "input-group-textarea",
+    "tag" : "sl:input-group-textarea",
+    "description" : "The textarea of a `sl:input-group`: a `sl:textarea` without a border of its own, as the group draws it, that grows with its content where the browser supports it. Addons go above or below it (`align` `block-start` or `block-end`). The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
     "name" : "kbd",
     "tag" : "sl:kbd",
     "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
@@ -857,6 +1615,50 @@
     "description" : "A label for a form control. Point it at the control with `for` (the control's `id`; `th:field` gives the control an `id` equal to the field name), or put the control inside it.",
     "declared" : true,
     "props" : [ ]
+  }, {
+    "name" : "month-view",
+    "tag" : "sl:month-view",
+    "description" : "A month to look at, rendered on the server: each day shows content of its own (a badge, a short text, a count) from the `day` slot, which is rendered once per day and sees the day as `${slDay}` (`date`, a `LocalDate`, `iso`, `number`, `label`, `outside`, `today`), and can link to a page for that day. Nothing is picked: for a date in a form, use `sl:calendar`. The previous and next month are links to the same page with `?month=2026-09`, every other parameter kept, so it needs no JavaScript and works with htmx.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "month",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The month shown, as `2026-10` (a `YearMonth`) or a date in it. By default the month the request asks for in `month-param`, or else the current month."
+    }, {
+      "name" : "month-param",
+      "type" : "string",
+      "defaultValue" : "month",
+      "values" : [ ],
+      "description" : "The request parameter the links to the previous and next month set, and that gives the month when `month` is not set."
+    }, {
+      "name" : "day-href",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Makes every day a link: `{date}` is replaced by the day's ISO date (`/agenda/{date}`, `?date={date}`), and the result is a Thymeleaf link, so a path starting with `/` gets the context path. The `day` slot is then inside the link: put nothing interactive in it."
+    }, {
+      "name" : "today",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "Today, as `2026-10-23` (a `LocalDate`), marked as the current date. By default the server's date; pass it in the user's time zone when that differs."
+    }, {
+      "name" : "show-outside-days",
+      "type" : "boolean",
+      "defaultValue" : "true",
+      "values" : [ ],
+      "description" : "Show the days of the previous and next month that fill the first and last week."
+    }, {
+      "name" : "show-week-number",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe)."
+    }, {
+      "name" : "week-starts-on",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides."
+    } ]
   }, {
     "name" : "native-select",
     "tag" : "sl:native-select",
@@ -1661,6 +2463,17 @@
       "description" : "The `id` of the element it skips to, usually the `main`."
     } ]
   }, {
+    "name" : "spinner",
+    "tag" : "sl:spinner",
+    "description" : "A spinning icon that says something is loading: a status (`role=\"status\"`) named \"Loading\" (the message `sl.spinner.label`; an `aria-label` of its own replaces it). It turns slower, not still, when the user asks for reduced motion. For a button that is busy, use `sl:button loading` instead.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "size",
+      "type" : "number",
+      "values" : [ ],
+      "description" : "Width and height in pixels. Without it the spinner is 16 pixels, or sized by the surrounding component (as an icon in `sl:empty-media`)."
+    } ]
+  }, {
     "name" : "switch",
     "tag" : "sl:switch",
     "description" : "A switch: a checkbox with `role=\"switch\"`, announced as on or off. It submits like a checkbox, so `th:field` on a boolean works as it does there (numbered id, hidden marker input; in a `sl:field`, the field's name as id). Every attribute that is not a prop passes through; `class` is appended to `switch`. With `th:field`, the switch is marked `aria-invalid` when its field has errors.",
@@ -1918,6 +2731,77 @@
       "values" : [ ],
       "description" : "How many toasts show at once, the newest ones. Older ones wait, with their time stopped, and show again when a newer one closes."
     } ]
+  }, {
+    "name" : "toggle",
+    "tag" : "sl:toggle",
+    "description" : "A button that is on or off: a checkbox drawn as a button, so it submits, binds and works as one without JavaScript, and a screen reader announces it as checked or not. The content (text, icons) is its label; give a toggle that holds only an icon an `aria-label`. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `disabled`, `aria-label`, `x-*`) passes through to the `input`, except `class`, which goes to the `label` around it, and `th:text` and `th:utext`, which set the label. `th:field` on a boolean works as on a checkbox; the toggle is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "outline" ],
+      "description" : "Visual style of the toggle."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "sm", "default", "lg" ],
+      "description" : "Size of the toggle."
+    } ]
+  }, {
+    "name" : "toggle-group",
+    "tag" : "sl:toggle-group",
+    "description" : "A row of `sl:toggle-group-item`s, of which one (`type=\"single\"`, radio buttons) or several (`type=\"multiple\"`, checkboxes) can be on. The items submit, bind and work as those inputs, without JavaScript. Name the group with `aria-label` or `aria-labelledby`. Give it the `th:field` (or the `name`) its items share, or put it in a `sl:field-set` with `th:field`; each item then only needs a `value`. Every other attribute that is not a prop passes through to the group.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "type",
+      "type" : "enum",
+      "defaultValue" : "single",
+      "values" : [ "single", "multiple" ],
+      "description" : "`single`: one item is on at a time, as radio buttons (the arrow keys move between them). `multiple`: any number, as checkboxes."
+    }, {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "outline" ],
+      "description" : "Visual style of the items."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "sm", "default", "lg" ],
+      "description" : "Size of the items."
+    }, {
+      "name" : "spacing",
+      "type" : "enum",
+      "defaultValue" : "2",
+      "values" : [ "0", "1", "2", "3", "4" ],
+      "description" : "The gap between the items, in Tailwind's spacing steps (`2` is `0.5rem`). `0` joins them into one control."
+    }, {
+      "name" : "orientation",
+      "type" : "enum",
+      "defaultValue" : "horizontal",
+      "values" : [ "horizontal", "vertical" ],
+      "description" : "Put the items on a row, or in a column."
+    }, {
+      "name" : "name",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The `name` every item submits under, for a group without `th:field`. A `single` group without either gets a generated one, so its items still exclude each other."
+    }, {
+      "name" : "disabled",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Disable every item."
+    } ]
+  }, {
+    "name" : "toggle-group-item",
+    "tag" : "sl:toggle-group-item",
+    "description" : "One item of a `sl:toggle-group`, drawn as a `sl:toggle`: a radio button in a `single` group, a checkbox in a `multiple` one. Give it a `value`; it takes the group's `th:field` or `name`, variant, size and `disabled`. The content is its label; give an item that holds only an icon an `aria-label`. Every attribute that is not a prop (`value`, `checked`, `disabled`, `aria-label`) passes through to the `input`, except `class`, which goes to the `label` around it, and `th:text` and `th:utext`, which set the label. With `th:field`, the item is marked `aria-invalid` when its field has errors.",
+    "declared" : true,
+    "props" : [ ]
   }, {
     "name" : "tooltip",
     "tag" : "sl:tooltip",

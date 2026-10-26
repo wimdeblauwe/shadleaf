@@ -27,6 +27,9 @@ There is no `asChild`. A component that can render as a link takes `as="a"`:
 <sl:button as="a" th:href="@{/orders}">Orders</sl:button>
 ```
 
+`<sl:button as="label">` is a label that looks like a button, for a control that is visually hidden, such as a file
+input (`for` points at it).
+
 ### No utility classes in the library's CSS
 
 shadcn styles its components with Tailwind classes compiled into your application. Shadleaf ships its own stylesheet,
@@ -36,6 +39,9 @@ example relies on a utility class to change a component, Shadleaf has a prop ins
 | shadcn/ui | Shadleaf |
 | --- | --- |
 | `<CardHeader className="border-b">` | `<sl:card-header border>` |
+| `<Empty className="border border-dashed">` | `<sl:empty border>` |
+| `<Spinner className="size-8" />` | `<sl:spinner size="32"/>` |
+| `<Attachment className="w-full">` | `<sl:attachment full-width>` |
 | `<Skeleton className="h-4 w-full" />` | `<sl:skeleton/>` (a line is the default), `shape="circle"` for an avatar |
 
 Your own classes still work: `class` is appended to the component's own, so `class="w-64"` sizes a skeleton when your
@@ -158,6 +164,130 @@ select.
 - The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
   item at once, as on any select, where Radix opens the list. See [Select](https://shadleaf.dev/current/components/select.md#left-out).
 
+### Combobox is a real select too
+
+`<sl:combobox>` renders a `<select>` (a `<select multiple>` with `multiple`) holding its items, so `th:field` binds
+one value or a collection and the form submits them without a hidden input. A small Alpine component puts the input,
+the chips and the list box in its place; without Alpine it is a select drawn like the native select.
+
+```html
+<!-- shadcn: <Combobox items={frameworks}><ComboboxInput placeholder="Select a framework" showClear/>
+             <ComboboxContent><ComboboxEmpty>No items found.</ComboboxEmpty><ComboboxList>
+             {(item) => <ComboboxItem key={item} value={item}>{item}</ComboboxItem>}</ComboboxList>
+             </ComboboxContent></Combobox> -->
+<sl:combobox th:field="*{framework}" placeholder="Select a framework" show-clear>
+  <sl:combobox-item th:each="framework : ${frameworks}" th:value="${framework.id}">[[${framework.name}]]</sl:combobox-item>
+</sl:combobox>
+
+<!-- shadcn: <Combobox multiple ...><ComboboxChips><ComboboxValue>{...<ComboboxChip/>}</ComboboxValue>
+             <ComboboxChipsInput/></ComboboxChips>... -->
+<sl:combobox th:field="*{frameworks}" multiple placeholder="Add a framework">...</sl:combobox>
+```
+
+- `ComboboxInput`, `ComboboxContent`, `ComboboxList`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipsInput`,
+  `ComboboxValue` and `ComboboxTrigger` are all `<sl:combobox>`: `showClear`, `showTrigger` and `autoHighlight` are
+  its `show-clear`, `show-trigger` and `auto-highlight`, and `ComboboxEmpty` is its `empty` attribute.
+- No `items` array or render function: the items are `<sl:combobox-item>`s, whose `value` and text replace
+  `itemToStringValue`. A group's heading is `<sl:combobox-group label>`; there is no `ComboboxLabel` or
+  `ComboboxCollection`.
+- An addition: `search-url` loads the options from the server as you type, as an HTML fragment of items.
+- No popup layout (a button trigger with the input in the list), no input addons, no `showRemove` on a chip, no
+  `side`/`align`. See [Combobox](https://shadleaf.dev/current/components/combobox.md#left-out).
+
+### Toggle and toggle group are checkboxes and radio buttons
+
+`<sl:toggle>` is a checkbox drawn as a button, and the items of `<sl:toggle-group>` are radio buttons
+(`type="single"`) or checkboxes (`type="multiple"`). So `th:field` binds them, the form submits them, and they work
+without JavaScript; a screen reader announces a toggle as a checkbox, checked or not, where Radix's is a toggle button,
+pressed or not.
+
+```html
+<!-- shadcn: <Toggle aria-label="Toggle italic" defaultPressed><Italic/></Toggle> -->
+<sl:toggle name="italic" aria-label="Toggle italic" checked><sl:icon name="italic"/></sl:toggle>
+
+<!-- shadcn: <ToggleGroup type="single" variant="outline" defaultValue="grid">
+             <ToggleGroupItem value="list">List</ToggleGroupItem>... -->
+<sl:toggle-group th:field="*{layout}" variant="outline" aria-label="Layout">
+  <sl:toggle-group-item value="list">List</sl:toggle-group-item>
+  <sl:toggle-group-item value="grid">Grid</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+- No `pressed`/`defaultPressed`/`onPressedChange`, nor `value`/`defaultValue`/`onValueChange` on the group:
+  `checked` (or `th:field`) renders the state, and the inputs fire `change`.
+- The group takes the `th:field` or `name` its items share; Radix's has neither.
+- The keyboard is the browser's: in a `single` group the arrow keys move between the items and select them, and Tab
+  leaves the group; in a `multiple` group every item is a tab stop. Radix's arrow keys only move the focus, in both
+  types. There is no `loop` or `rovingFocus`.
+- A `single` group cannot be cleared by clicking its item again, as a radio button cannot.
+- `spacing` takes `0` to `4`, and `variant` and `size` are set on the group only, not per item.
+
+### Calendar is drawn over date inputs
+
+`<sl:calendar>` holds its value in `<input type="date">` elements, so `th:field` binds it and the form submits ISO
+dates. A small Alpine component draws the month over them; without Alpine the date inputs show.
+
+```html
+<!-- shadcn: <Calendar mode="single" selected={date} onSelect={setDate}/> -->
+<sl:calendar th:field="*{dueDate}"/>
+
+<!-- shadcn: <Calendar mode="range" selected={range} onSelect={setRange} numberOfMonths={2}/> -->
+<sl:calendar aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:calendar>
+```
+
+- No `mode`: one date input is a single date, two (start and end) are a range. No `mode="multiple"` yet.
+- No `selected`/`onSelect`: `th:field` renders the value, and the input fires `change`.
+- `disabled` disables the whole calendar, as on an input; the days that cannot be picked are `disabled-dates`
+  (`sat,sun,2026-12-24..2026-12-31`), plus the inputs' `min` and `max`.
+- The page's locale sets the first day of the week and the week numbering; `week-starts-on` overrides the first day.
+- No `timeZone`, `buttonVariant`, `classNames`, `components` or `formatters`. See
+  [Calendar](https://shadleaf.dev/current/components/calendar.md#left-out).
+
+### Month view is a component
+
+shadcn's Calendar shows content per day through react-day-picker's `components={{DayButton}}`, and full-month
+calendars are blocks built on top of it. `<sl:month-view>` is a component of its own for that: rendered on the
+server, no picking, a `day` slot per day and a link per day.
+
+```html
+<!-- shadcn: <Calendar components={{DayButton: ({children, modifiers, day, ...props}) => <CalendarDayButton
+     day={day} modifiers={modifiers} {...props}>{children}<span>{events[day.date]}</span></CalendarDayButton>}}/> -->
+<sl:month-view day-href="/agenda/{date}">
+  <sl:slot name="day"><span th:text="${events[slDay.date]}"></span></sl:slot>
+</sl:month-view>
+```
+
+- The previous and next month are links to the server (`?month=2026-09`), not client state.
+- See [Month view](https://shadleaf.dev/current/components/month-view.md).
+
+### Date picker is a component
+
+shadcn has no date picker component: its docs compose a `Popover`, a `Button` and a `Calendar`, and the app's own
+state updates the button and closes the popover. `<sl:date-picker>` is that composition as one component; its
+attributes go to the calendar inside.
+
+```html
+<!-- shadcn: <Popover><PopoverTrigger asChild><Button variant="outline">{date ? format(date, "PPP") : "Pick a date"}
+     </Button></PopoverTrigger><PopoverContent className="w-auto p-0" align="start">
+     <Calendar mode="single" selected={date} onSelect={setDate}/></PopoverContent></Popover> -->
+<sl:date-picker th:field="*{dueDate}"/>
+
+<!-- shadcn: the same with <Calendar mode="range" numberOfMonths={2} .../> -->
+<sl:date-picker aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:date-picker>
+```
+
+- The button's text is formatted in the page's locale, by `format` (`Intl`'s `dateStyle`: `long` is close to
+  date-fns' `PPP`), not by a date-fns pattern. A range shows both ends with ` – ` between them.
+- A pick closes the popover: for a range, the second pick.
+- It needs JavaScript; without it the popover holds the bare date inputs.
+- The typed-input, time, natural language and presets demos have no counterpart yet.
+
 ### Accordion and collapsible are details elements
 
 Each accordion item and each collapsible is a `<details>` element with the trigger as its `<summary>`, so they need
@@ -247,6 +377,36 @@ hidden screen-reader text is never read. The labels are messages (`sl.pagination
 Previous's `text`. The data table's footer pieces are components: `sl:pagination-summary` ("11–20 of 270") and
 `sl:pagination-size` (a menu of links rather than a select). See [Pagination](https://shadleaf.dev/current/components/pagination.md).
 
+### Chart: parts with props instead of Recharts JSX
+
+`<sl:chart th:data="${rows}">` is `ChartContainer` with the chart inside it, and its parts are Recharts' components
+with shadcn's settings: `sl:chart-grid` (`CartesianGrid vertical={false}`), `sl:chart-x-axis` and `sl:chart-y-axis`
+(no tick or axis lines), `sl:chart-tooltip` (`ChartTooltip` with `ChartTooltipContent`), `sl:chart-legend` and the
+series, `sl:chart-bar`, `sl:chart-line` and `sl:chart-area`. Their props are Recharts' and shadcn's in kebab case
+(`indicator`, `hide-label`, `label-key`, `tick-margin`, `radius`; `stackId` is `stack`, `type` is `curve`, `dot` is
+`dots`). The chart type follows the series: there is no `BarChart` to pick. What differs:
+
+- **No `ChartConfig`.** A series' `label` and `color` sit on its part, and `color-dark` replaces the config's
+  `theme`, written as `light-dark()`. A series without a colour takes the next `--chart-N`; shadcn's examples name
+  them in the config.
+- **No `ChartStyle`.** shadcn writes the `--color-<key>` properties into a `<style>` element, which a strict
+  Content-Security-Policy blocks: its chart loses its colours. Shadleaf sets them through CSSOM. A key is therefore
+  checked to be a CSS identifier.
+- **Named formats instead of functions.** `tickFormatter`, `formatter` and `labelFormatter` are `format`,
+  `value-format` and `label-format` with a name (`month-short`, `compact`, `currency`), written with `Intl` in the
+  page's language. Dates are read by their Java type, not by `new Date()`, so a `LocalDate` never shifts a day.
+- **The chart's name is an `aria-label`**, not Recharts' `title`: a browser shows an svg's `<title>` as a native
+  tooltip over the styled one. And the tooltip keeps a gap between a series' name and its value, which shadcn's lets
+  touch once the tooltip is wider than its minimum.
+- **A visible focus ring.** shadcn hides the chart's (`outline-hidden` on `.recharts-surface`); the chart takes the
+  focus for its arrow keys, so each skin draws one.
+- **Recharts 3.10 on Preact**, not React, and not the 3.8 shadcn pins: the script is smaller, and 3.10 fixes a line
+  drawn only partway with reduced motion.
+- **Not there yet:** pie, radar and radial charts, horizontal bars, gradients, icons in the tooltip and legend, and
+  custom tooltip or legend content.
+
+See [Chart](https://shadleaf.dev/current/components/chart.md).
+
 ### Sidebar: one element instead of a Sheet on a phone
 
 shadcn's `Sidebar` renders a `Sheet` on a phone and a separate sidebar on a desktop, chosen in the browser by
@@ -324,6 +484,35 @@ shadcn's example wraps the ellipsis in a `DropdownMenuTrigger` by hand; here `<s
 "More levels", not "More", and the separator turns around on a right-to-left page. See
 [Breadcrumb](https://shadleaf.dev/current/components/breadcrumb.md).
 
+### Attachment: a trigger with `as`, a label and a grid for the group
+
+The parts and props are shadcn's. `<AttachmentTrigger asChild>` around a link is `<sl:attachment-trigger as="a">`, and
+inside a `DialogTrigger` it is a trigger with `commandfor` and `command="show-modal"`. `<sl:attachment-action>`
+takes `as="a"` too, for a download link. Where shadcn tells you to add `tabIndex`, `role="group"` and an `aria-label`
+to a group of attachments without actions, `<sl:attachment-group label="...">` adds all three. shadcn's `shimmer` and
+`scroll-fade-x` utilities are part of the attachment's stylesheet. shadcn's group is only a row; for a gallery you
+write your own grid around the attachments. `<sl:attachment-group layout="grid">` is that grid, its columns and gap
+from the skin, as the standalone bundle has no utility classes to build one. See
+[Attachment](https://shadleaf.dev/current/components/attachment.md).
+
+### File upload is a component
+
+shadcn/ui has no file upload; its file upload card is an outlined `Empty` with a "Browse Files" button that does
+nothing yet. `<sl:file-upload>` is Shadleaf's own, built from that look: a visually hidden file input that the form
+submits, bound with `th:field` to a `MultipartFile` or `List<MultipartFile>`, a Browse button (`<sl:button as="label">`
+for the input), and with JavaScript a drop zone and a list of `<sl:attachment>`s, one per file, with a remove button.
+
+```html
+<!-- shadcn: <Empty className="border"><EmptyHeader>...<EmptyTitle>Upload files</EmptyTitle>
+     <EmptyDescription>PNG, JPG, PDF up to 10MB</EmptyDescription></EmptyHeader>
+     <EmptyContent><Button>Browse Files</Button></EmptyContent></Empty> -->
+<sl:file-upload th:field="*{attachments}" multiple accept="image/png,image/jpeg,application/pdf" max-size="10MB">
+  <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
+</sl:file-upload>
+```
+
+See [File Upload](https://shadleaf.dev/current/components/file-upload.md).
+
 ### Skip link and main
 
 shadcn/ui has no skip link; `<sl:skip-link>` goes first in the body and skips to `<sl:sidebar-inset>`, which therefore
@@ -369,12 +558,17 @@ takes keyboard focus, when it is a link (`as="a"`).
 ### Accessibility additions
 
 - `<sl:card-title level="3">` is announced as a heading, so screen reader users can jump between cards. Without a
-  `level` it is plain text, as in shadcn.
+  `level` it is plain text, as in shadcn. The same goes for `<sl:empty-title>`.
 - The avatar is hidden from assistive technology unless it has a `label`, as it usually sits next to the person's
   name. With one, it is announced as a single image with that name.
 - The skeleton is hidden from assistive technology; put `aria-busy="true"` on the region that is loading.
 - A tab panel shows the focus ring when Tab reaches it; shadcn's takes the focus without showing it. In Windows'
   high-contrast mode the active tab is underlined, as its background and shadow are gone there.
+- The attachment trigger draws the skin's focus ring around the card, only for keyboard focus; shadcn's card shows a
+  faint ring whenever anything in it has focus, a click included. An uploading or processing attachment is marked
+  `aria-busy`, and its title does not shimmer for users who ask for reduced motion or in Windows' high-contrast mode.
+  A failed attachment's text uses the legible destructive colour (see Contrast). The edges of an attachment group
+  stop fading while it has keyboard focus, so its focus ring shows.
 - Rendering fails when a component that needs an accessible name has none, such as an icon-only button without an
   `aria-label`.
 
@@ -442,6 +636,11 @@ takes keyboard focus, when it is a link (`as="a"`).
   submit with the form without a hidden input of their own, `th:field` binds them, and the keyboard works as it does
   on any radio button or checkbox. The indeterminate state is the input's own (`indeterminate` prop, or the DOM
   property) and shows a minus; shadcn's checkbox shows its check mark for `checked="indeterminate"`.
+- Input group: `className="border-b"` (or `border-t`) on a block addon is its `border` prop, and the `ml-auto` of
+  shadcn's examples is not needed: in an addon above or below the control, `<sl:input-group-text>` takes the free
+  space. A disabled control fades the whole group by itself, where shadcn's needs `data-disabled` on the group. Only
+  `<sl:input-group-input>` and `<sl:input-group-textarea>` are controls: there is no `data-slot="input-group-control"`
+  for a control of your own. A click on an addon focuses the control only with JavaScript.
 - A disabled checkbox fades as a whole, check mark included. In the lyra and nova skins a disabled native select and
   select get the same grey background as a disabled input (shadcn's lyra and nova only give it to input and textarea).
 
@@ -470,5 +669,7 @@ takes keyboard focus, when it is a link (`as="a"`).
 - A read-only input or textarea gets a muted background and no shadow; shadcn draws it as an editable one.
 - In Windows' high-contrast mode a disabled control turns the system's grey text colour (`GrayText`) instead of
   fading.
-- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. shadcn has a separate
-  `Spinner` for this.
+- `<sl:button loading>` shows a spinner, disables the button and announces the busy state. In shadcn you put a
+  `Spinner` in the button and disable it yourself.
+- `<sl:spinner>` turns slower, not still, when the user asks for reduced motion; shadcn's keeps spinning at full
+  speed. Its name, "Loading", is a message (`sl.spinner.label`) you can translate.

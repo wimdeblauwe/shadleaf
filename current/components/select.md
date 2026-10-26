@@ -45,9 +45,9 @@ the chosen value.
 Give an item its text as content (`[[${fruit.name}]]`), not with `th:text`: that attribute passes through to the
 `<option>` and replaces its check mark too. (The select still works; the browser's own check mark shows instead.)
 
-## Select or native select?
+## Select, native select or combobox?
 
-Both are a real `<select>` underneath, bind with `th:field` and submit with the form.
+All three are a real `<select>` underneath, bind with `th:field` and submit with the form.
 
 - **`<sl:select>`** looks like shadcn/ui's Select: its list is drawn in the page's style, with a check mark on the
   chosen item, and items can start with an icon. Use it where the look matters and the list is short enough to scan:
@@ -55,6 +55,8 @@ Both are a real `<select>` underneath, bind with `th:field` and submit with the 
 - **[`<sl:native-select>`](https://shadleaf.dev/current/components/select-native.md)** styles only the closed control and leaves the list to the operating
   system: on a phone that is the system's own picker wheel or sheet, which many people find easier to use. Use it for
   long lists (countries, years), inside dense forms, and for `multiple`, which `<sl:select>` does not support.
+- **[`<sl:combobox>`](https://shadleaf.dev/current/components/combobox.md)** is a select people type into to filter the list, for one value or several
+  (`multiple`), with options from the server if you like.
 
 ## Placeholder
 
@@ -263,8 +265,8 @@ These shadcn/Radix parts and props have no counterpart, on purpose:
   does the same, so both look alike.
 - **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
   value with `th:field`, and the select's `change` event reports a new one.
-- **`multiple`**, which shadcn does not have either: use [`<sl:native-select multiple>`](https://shadleaf.dev/current/components/select-native.md) or a
-  [field set](https://shadleaf.dev/current/components/field.md) of checkboxes.
+- **`multiple`**, which shadcn does not have either: use [`<sl:combobox multiple>`](https://shadleaf.dev/current/components/combobox.md#multiple),
+  [`<sl:native-select multiple>`](https://shadleaf.dev/current/components/select-native.md) or a [field set](https://shadleaf.dev/current/components/field.md) of checkboxes.
 - **`SelectItem`'s `textValue`**: typeahead reads the item's text.
 
 ## How it is drawn

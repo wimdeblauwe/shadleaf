@@ -2,7 +2,7 @@
 
 > Every Shadleaf component: examples as Thymeleaf source, and attribute tables.
 
-Shadleaf 0.10.0.
+Shadleaf 1.0.0.
 
 ## Components
 
@@ -25,12 +25,19 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Form errors](https://shadleaf.dev/current/components/form-errors.md): The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
 - [Label](https://shadleaf.dev/current/components/label.md): A label for a form control.
 - [Input](https://shadleaf.dev/current/components/input.md): A text input, bound to a form field with th:field.
+- [Input Group](https://shadleaf.dev/current/components/input-group.md): Text, icons and buttons inside the border of an input or textarea.
 - [Textarea](https://shadleaf.dev/current/components/textarea.md): A multi-line text input, bound to a form field with th:field.
 - [Select](https://shadleaf.dev/current/components/select.md): shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
 - [Select (Native)](https://shadleaf.dev/current/components/select-native.md): The browser's own select, styled, bound to a form field with th:field.
+- [Combobox](https://shadleaf.dev/current/components/combobox.md): shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
 - [Checkbox](https://shadleaf.dev/current/components/checkbox.md): The browser's own checkbox, styled, bound to a form field with th:field.
 - [Radio Group](https://shadleaf.dev/current/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field.
 - [Switch](https://shadleaf.dev/current/components/switch.md): An on/off control, bound to a boolean form field with th:field.
+- [Toggle](https://shadleaf.dev/current/components/toggle.md): A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
+- [Toggle Group](https://shadleaf.dev/current/components/toggle-group.md): A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
+- [Calendar](https://shadleaf.dev/current/components/calendar.md): shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+- [Date Picker](https://shadleaf.dev/current/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
+- [File Upload](https://shadleaf.dev/current/components/file-upload.md): A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
 
 ### Overlays
 
@@ -46,12 +53,16 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Alert](https://shadleaf.dev/current/components/alert.md): A callout for a message the user should notice.
 - [Toast](https://shadleaf.dev/current/components/toast.md): A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
 - [Skeleton](https://shadleaf.dev/current/components/skeleton.md): A placeholder that pulses while content loads.
+- [Spinner](https://shadleaf.dev/current/components/spinner.md): A spinning icon that says something is loading.
+- [Empty](https://shadleaf.dev/current/components/empty.md): What a list, a table, a search or a page shows when there is nothing to show yet.
 
 ### Data
 
 - [Table](https://shadleaf.dev/current/components/table.md): A table in shadcn/ui's look, whose column headers sort it on the server.
 - [Pagination](https://shadleaf.dev/current/components/pagination.md): Links to the other pages of a list, built from the Spring Data Page the controller returns.
 - [Query params](https://shadleaf.dev/current/components/query-params.md): Hidden inputs that keep a table's order, page size and filters when a search form is sent.
+- [Month view](https://shadleaf.dev/current/components/month-view.md): A month rendered on the server, with content of your own per day and a link per day; no picking.
+- [Chart](https://shadleaf.dev/current/components/chart.md): shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
 
 ### Application shell
 
@@ -72,6 +83,7 @@ Start with the [overview](https://shadleaf.dev/current/components/application-sh
 ### Display
 
 - [Card](https://shadleaf.dev/current/components/card.md): A container for related content and actions, built from its parts.
+- [Attachment](https://shadleaf.dev/current/components/attachment.md): A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
 - [Badge](https://shadleaf.dev/current/components/badge.md): A small label for a status, a count or a category.
 - [Avatar](https://shadleaf.dev/current/components/avatar.md): A picture of a person, with initials when there is no picture.
 - [Icon](https://shadleaf.dev/current/components/icon.md): Inline SVG icons from lucide, or your own.
@@ -170,6 +182,18 @@ Put an [`<sl:icon>`](https://shadleaf.dev/current/components/icon.md) in the `ic
 <sl:button as="a" href="/orders" variant="link">View orders</sl:button>
 ```
 
+### As a label
+
+`as="label"` renders a `<label>` that looks the same, for a control that is visually hidden: `for` points at it, and
+a click on the label activates the control. [`<sl:file-upload>`](https://shadleaf.dev/current/components/file-upload.md)'s Browse button is one, for its file
+input. The label takes no focus and no `disabled`; the control does, so draw the focus ring and the disabled look from
+the control's state (`:has()`), as the file upload does.
+
+```html
+<input type="file" id="photo" name="photo" class="sl-sr-only">
+<sl:button as="label" for="photo" variant="outline">Choose a photo</sl:button>
+```
+
 ### Disabled and loading
 
 A disabled button gets the native `disabled` attribute. A disabled link loses its `href`, leaves the tab order and is
@@ -194,7 +218,7 @@ busy state with `aria-busy` and a visually hidden "Loading" label, and disables 
 ```
 
 The "Loading" label comes from the message `sl.button.loading`; define it in your own `messages.properties` to
-translate or reword it.
+translate or reword it, as [Translating](https://shadleaf.dev/current/guides/translating.md) explains.
 
 ### Props from expressions
 
@@ -228,7 +252,7 @@ Attributes of `<sl:button>`: A button, or with `as="a"` an anchor that looks the
 | --- | --- | --- | --- |
 | `variant` | `default`, `outline`, `ghost`, `destructive`, `secondary`, `link` | `default` | Visual style of the button. |
 | `size` | `xs`, `sm`, `default`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg` | `default` | Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`. |
-| `as` | `button`, `a` | `button` | Element to render: a `button`, or an anchor (`a`) for navigation. |
+| `as` | `button`, `a`, `label` | `button` | Element to render: a `button`, an anchor (`a`) for navigation, or a `label` for a visually hidden control (`for`), as `sl:file-upload`'s Browse button for its file input. A label takes no focus and no `disabled`: the control does. |
 | `type` | `button`, `submit`, `reset` | `button` | Submit behaviour. Defaults to `button`, unlike HTML, so a button in a form never submits by accident. |
 | `disabled` | *boolean* | — | Disable the button. A disabled anchor loses its `href` and leaves the tab order. |
 | `loading` | *boolean* | — | Show a spinner, announce the busy state and disable the button. |
@@ -269,7 +293,8 @@ toggle wherever it belongs, usually the page header:
 The toggle is an icon button that opens a menu with **Light**, **Dark** and **System**. Light and Dark are stored in
 the browser (`localStorage`, key `shadleaf-theme`); System removes the key, and the page follows the operating system
 again. The theme script reads that key before the first paint, so every page after the choice starts in the right
-theme, with no flash of the other one.
+theme, with no flash of the other one. A dark page prints in the light theme: the script takes the `dark` class off
+while the browser prints and puts it back afterwards.
 
 The button shows a sun in the light theme and a moon in the dark one. A screen reader hears something like "Theme, menu
 button"; in the menu, "Light, checked, menu item radio, 1 of 3" (the wording differs between screen readers).
@@ -309,7 +334,8 @@ sunset, say). Each toggle on a page needs its own `id` when it is a menu:
 
 ### Labels
 
-The labels are messages, which your `messages.properties` can reword or translate:
+The labels are messages, which your `messages.properties` can reword or translate (see
+[Translating](https://shadleaf.dev/current/guides/translating.md)):
 
 ```properties
 sl.theme-toggle.label=Theme
@@ -852,7 +878,7 @@ A failure the controller catches and does not want in the binding can go in as c
 ### Title
 
 The title defaults to the message `sl.form-errors.title`, "There is a problem". Define that key in your own
-`messages.properties` to reword or translate it for every form, or set `title` (or `th:title="#{...}"`) on one.
+`messages.properties` to reword or [translate](https://shadleaf.dev/current/guides/translating.md) it for every form, or set `title` (or `th:title="#{...}"`) on one.
 `level` makes the title a heading that screen reader users can jump to.
 
 **Example: A title of its own.** title replaces the default title (the message sl.form-errors.title); level makes it a heading.
@@ -1144,6 +1170,318 @@ Every prop can also be set from an expression: `th:type="${...}"`. Any other att
 
 ---
 
+## Input Group
+
+> Text, icons and buttons inside the border of an input or textarea.
+
+Source: https://shadleaf.dev/current/components/input-group/
+
+**Example: Input group.**
+
+```html
+<sl:input-group>
+  <sl:input-group-input type="search" name="q" placeholder="Search..." aria-label="Search"/>
+  <sl:input-group-addon><sl:icon name="search"/></sl:input-group-addon>
+  <sl:input-group-addon align="inline-end">12 results</sl:input-group-addon>
+</sl:input-group>
+```
+
+### Composition
+
+```text
+sl:input-group
+├── sl:input-group-input or sl:input-group-textarea
+└── sl:input-group-addon
+    ├── sl:input-group-text
+    ├── sl:input-group-button
+    ├── sl:icon
+    └── sl:kbd
+```
+
+The group draws the border, and its control has none of its own: the group shows the control's focus ring, its error
+and its read-only look. A disabled control fades the whole group. A click on an addon, outside a button or link in it,
+focuses the control.
+
+### Align
+
+Write the addons **after** the control, so the control comes first in the tab order and is read before them; `align`
+on the addon places it. `inline-start`, the default, puts it before the control on its line:
+
+**Example: Inline start.** The default align. The addon is written after the input, so the input comes first in the tab order.
+
+```html
+<sl:input-group>
+  <sl:input-group-input name="query" placeholder="Search..." aria-label="Search"/>
+  <sl:input-group-addon><sl:icon name="search"/></sl:input-group-addon>
+</sl:input-group>
+```
+
+#### inline-end
+
+**Example: Inline end.**
+
+```html
+<sl:input-group>
+  <sl:input-group-input type="password" name="apiKey" placeholder="Enter password" aria-label="Password"/>
+  <sl:input-group-addon align="inline-end"><sl:icon name="eye-off"/></sl:input-group-addon>
+</sl:input-group>
+```
+
+#### block-start
+
+`block-start` puts the addon above the control, across the whole group. `border` draws a line between the addon and
+the control. In such a row an `sl:input-group-text` takes the free space, so what follows it sits at the end.
+
+**Example: Block start.** Above the input, across the whole group. border draws a line between the addon and the control.
+
+```html
+<sl:input-group>
+  <sl:input-group-input id="input-group-full-name" name="fullName" placeholder="Jane Doe"/>
+  <sl:input-group-addon align="block-start">
+    <sl:label for="input-group-full-name">Full name</sl:label>
+  </sl:input-group-addon>
+</sl:input-group>
+<sl:input-group>
+  <sl:input-group-textarea name="script" rows="3" aria-label="Script">console.log('Hello, world!');</sl:input-group-textarea>
+  <sl:input-group-addon align="block-start" border>
+    <sl:input-group-text><sl:icon name="file-code"/> script.js</sl:input-group-text>
+    <sl:input-group-button size="icon-xs" aria-label="Copy"><sl:icon name="copy"/></sl:input-group-button>
+  </sl:input-group-addon>
+</sl:input-group>
+```
+
+#### block-end
+
+**Example: Block end.** Below the input, across the whole group.
+
+```html
+<sl:input-group>
+  <sl:input-group-input name="price" placeholder="Enter amount" aria-label="Amount"/>
+  <sl:input-group-addon align="block-end">
+    <sl:input-group-text>USD</sl:input-group-text>
+  </sl:input-group-addon>
+</sl:input-group>
+<sl:input-group>
+  <sl:input-group-textarea name="comment" rows="3" placeholder="Write a comment..." aria-label="Comment"/>
+  <sl:input-group-addon align="block-end" border>
+    <sl:input-group-text>0/280 characters</sl:input-group-text>
+    <sl:input-group-button variant="default" size="sm" type="submit">Post</sl:input-group-button>
+  </sl:input-group-addon>
+</sl:input-group>
+```
+
+### Text
+
+`sl:input-group-text` holds muted text: a currency, a unit, a domain. The input still needs a name of its own, as the
+text is not its label: `aria-label="Amount in US dollars"`.
+
+**Example: Text.** A currency, a unit or a domain before or after the input.
+
+```html
+<sl:input-group>
+  <sl:input-group-input type="number" name="amount" placeholder="0.00" aria-label="Amount in US dollars"/>
+  <sl:input-group-addon><sl:input-group-text>$</sl:input-group-text></sl:input-group-addon>
+  <sl:input-group-addon align="inline-end"><sl:input-group-text>USD</sl:input-group-text></sl:input-group-addon>
+</sl:input-group>
+<sl:input-group>
+  <sl:input-group-input name="website" placeholder="example" aria-label="Website"/>
+  <sl:input-group-addon><sl:input-group-text>https://</sl:input-group-text></sl:input-group-addon>
+  <sl:input-group-addon align="inline-end"><sl:input-group-text>.com</sl:input-group-text></sl:input-group-addon>
+</sl:input-group>
+<sl:input-group>
+  <sl:input-group-input type="number" name="weight" aria-label="Weight in kilograms"/>
+  <sl:input-group-addon align="inline-end"><sl:input-group-text>kg</sl:input-group-text></sl:input-group-addon>
+</sl:input-group>
+```
+
+### Button
+
+`sl:input-group-button` is an `sl:button`, ghost and `xs` by default, with sizes that fit inside the group: `xs`,
+`sm`, `icon-xs` and `icon-sm`. An icon button needs an `aria-label`. As every `sl:button`, it does not submit unless
+you write `type="submit"`.
+
+**Example: Button.** An icon button needs an aria-label.
+
+```html
+<sl:input-group>
+  <sl:input-group-input name="shareUrl" value="https://shadleaf.dev" readonly aria-label="Link"/>
+  <sl:input-group-addon align="inline-end">
+    <sl:input-group-button size="icon-xs" aria-label="Copy"><sl:icon name="copy"/></sl:input-group-button>
+  </sl:input-group-addon>
+</sl:input-group>
+<sl:input-group>
+  <sl:input-group-input type="search" name="docsSearch" placeholder="Type to search..." aria-label="Search the docs"/>
+  <sl:input-group-addon align="inline-end">
+    <sl:input-group-button variant="secondary" type="submit">Search</sl:input-group-button>
+  </sl:input-group-addon>
+</sl:input-group>
+```
+
+### Kbd
+
+The key is decoration: say the shortcut with `aria-keyshortcuts` on the input, and hide the addon from screen readers.
+
+**Example: Kbd.**
+
+```html
+<sl:input-group>
+  <sl:input-group-input type="search" name="commandSearch" placeholder="Search..." aria-label="Search"
+                        aria-keyshortcuts="Control+K"/>
+  <sl:input-group-addon><sl:icon name="search"/></sl:input-group-addon>
+  <sl:input-group-addon align="inline-end" aria-hidden="true"><sl:kbd>⌘K</sl:kbd></sl:input-group-addon>
+</sl:input-group>
+```
+
+### Loading
+
+`loading` on the button shows a spinner, disables it and announces the busy state.
+
+**Example: Loading.** A loading button shows a spinner, announces the busy state and is disabled.
+
+```html
+<sl:input-group>
+  <sl:input-group-input name="username" value="wim" aria-label="Username"/>
+  <sl:input-group-addon align="inline-end">
+    <sl:input-group-button loading>Check</sl:input-group-button>
+  </sl:input-group-addon>
+</sl:input-group>
+```
+
+### In a field
+
+Put `th:field` on the [field](https://shadleaf.dev/current/components/field.md), as for an [input](https://shadleaf.dev/current/components/input.md). The `sl:input-group-input` (or
+`sl:input-group-textarea`) inside the group takes it: Spring sets its `id`, `name` and value, the label points at it,
+and it is described by the field's description and error.
+
+```html
+<form th:object="${order}" th:action="@{/orders}" method="post">
+  <sl:field th:field="*{budget}">
+    <sl:field-label>Budget</sl:field-label>
+    <sl:input-group>
+      <sl:input-group-input type="number" placeholder="0.00"/>
+      <sl:input-group-addon><sl:input-group-text>€</sl:input-group-text></sl:input-group-addon>
+      <sl:input-group-addon align="inline-end"><sl:input-group-text>EUR</sl:input-group-text></sl:input-group-addon>
+    </sl:input-group>
+    <sl:field-description>Excluding VAT.</sl:field-description>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+**Example: In a field.** Put th:field on the field. The input in the group takes it, and the label, description and error point at the input.
+
+```html
+<sl:field th:field="*{budget}">
+  <sl:field-label>Budget</sl:field-label>
+  <sl:input-group>
+    <sl:input-group-input type="number" placeholder="0.00"/>
+    <sl:input-group-addon><sl:input-group-text>€</sl:input-group-text></sl:input-group-addon>
+    <sl:input-group-addon align="inline-end"><sl:input-group-text>EUR</sl:input-group-text></sl:input-group-addon>
+  </sl:input-group>
+  <sl:field-description>Excluding VAT.</sl:field-description>
+  <sl:field-error/>
+</sl:field>
+```
+
+Outside a field, write `th:field` on the `sl:input-group-input` itself.
+
+### Invalid
+
+When the field has errors, the input marks itself `aria-invalid="true"`, and the group draws the destructive border
+and ring.
+
+**Example: Invalid.** With th:field, a field that has errors marks the input aria-invalid, and the group draws the error.
+
+```html
+<sl:field th:field="*{packageWeight}">
+  <sl:field-label>Weight</sl:field-label>
+  <sl:input-group>
+    <sl:input-group-input type="number"/>
+    <sl:input-group-addon align="inline-end"><sl:input-group-text>kg</sl:input-group-text></sl:input-group-addon>
+  </sl:input-group>
+  <sl:field-error/>
+</sl:field>
+```
+
+### Disabled
+
+**Example: Disabled.** A disabled input fades the whole group.
+
+```html
+<sl:input-group>
+  <sl:input-group-input name="discount" value="10" disabled aria-label="Discount"/>
+  <sl:input-group-addon align="inline-end"><sl:input-group-text>%</sl:input-group-text></sl:input-group-addon>
+</sl:input-group>
+```
+
+### Read-only
+
+As a read-only [input](https://shadleaf.dev/current/components/input.md#read-only): the group gets a muted background, and the value can still be focused,
+selected and copied.
+
+**Example: Read-only.**
+
+```html
+<sl:input-group>
+  <sl:input-group-input name="volume" value="1.5" readonly aria-label="Volume"/>
+  <sl:input-group-addon align="inline-end"><sl:input-group-text>l</sl:input-group-text></sl:input-group-addon>
+</sl:input-group>
+```
+
+### Attributes
+
+#### sl:input-group
+
+Attributes of `<sl:input-group>`: An input with text, icons or buttons inside its border: one `sl:input-group-input` or `sl:input-group-textarea`, and `sl:input-group-addon`s around it. Put the addons after the control in the markup, so the control comes first in the tab order and is read first; `align` on the addon places it. The group draws the control's focus ring, error and disabled look. In a `sl:field`, the control takes the field's `th:field`, id and `aria-describedby`.
+
+`sl:input-group` declares no props; every attribute passes through.
+
+#### sl:input-group-addon
+
+Attributes of `<sl:input-group-addon>`: Text, an icon, a `sl:kbd` or `sl:input-group-button`s beside or around the control of a `sl:input-group`. Clicking it, outside a button or link, focuses the control. Write it after the control: `align` places it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `align` | `inline-start`, `inline-end`, `block-start`, `block-end` | `inline-start` | Where the addon goes: before or after the control on its line, or above or below it across the whole group. |
+| `border` | *boolean* | — | With `align` `block-start` or `block-end`, a dividing line between the addon and the control, with matching spacing. |
+
+Every prop can also be set from an expression: `th:align="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:input-group-text
+
+Attributes of `<sl:input-group-text>`: Muted text in a `sl:input-group-addon`: a currency symbol, a unit, a domain. It may hold an `sl:icon`. In an addon above or below the control, it takes the free space, so what follows it sits at the end.
+
+`sl:input-group-text` declares no props; every attribute passes through.
+
+#### sl:input-group-button
+
+Attributes of `<sl:input-group-button>`: A button in a `sl:input-group-addon`: a `sl:button`, ghost and extra small by default, sized to fit inside the group. Any other attribute passes through to the `sl:button` (`type`, `loading`, `disabled`, `hx-*`).
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `default`, `outline`, `ghost`, `destructive`, `secondary`, `link` | `ghost` | Visual style of the button, as on `sl:button`. |
+| `size` | `xs`, `sm`, `icon-xs`, `icon-sm` | `xs` | Size of the button. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`. |
+
+Every prop can also be set from an expression: `th:variant="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended. An `aria-label` or `aria-labelledby` is required when `size` is `icon-xs` or `icon-sm`; rendering fails without one.
+
+#### sl:input-group-input
+
+Attributes of `<sl:input-group-input>`: The input of a `sl:input-group`: a `sl:input` without a border of its own, as the group draws it. Every attribute that is not a prop (`th:field`, `name`, `placeholder`, `required`, `hx-*`) passes through; `class` is appended to `input`. With `th:field`, the input is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `type` | `text`, `email`, `password`, `number`, `search`, `tel`, `url`, `date`, `datetime-local`, `month`, `week`, `time` | `text` | Type of the input. |
+
+Every prop can also be set from an expression: `th:type="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:input-group-textarea
+
+Attributes of `<sl:input-group-textarea>`: The textarea of a `sl:input-group`: a `sl:textarea` without a border of its own, as the group draws it, that grows with its content where the browser supports it. Addons go above or below it (`align` `block-start` or `block-end`). The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
+
+`sl:input-group-textarea` declares no props; every attribute passes through.
+
+---
+
 ## Textarea
 
 > A multi-line text input, bound to a form field with th:field.
@@ -1259,9 +1597,9 @@ the chosen value.
 Give an item its text as content (`[[${fruit.name}]]`), not with `th:text`: that attribute passes through to the
 `<option>` and replaces its check mark too. (The select still works; the browser's own check mark shows instead.)
 
-### Select or native select?
+### Select, native select or combobox?
 
-Both are a real `<select>` underneath, bind with `th:field` and submit with the form.
+All three are a real `<select>` underneath, bind with `th:field` and submit with the form.
 
 - **`<sl:select>`** looks like shadcn/ui's Select: its list is drawn in the page's style, with a check mark on the
   chosen item, and items can start with an icon. Use it where the look matters and the list is short enough to scan:
@@ -1269,6 +1607,8 @@ Both are a real `<select>` underneath, bind with `th:field` and submit with the 
 - **[`<sl:native-select>`](https://shadleaf.dev/current/components/select-native.md)** styles only the closed control and leaves the list to the operating
   system: on a phone that is the system's own picker wheel or sheet, which many people find easier to use. Use it for
   long lists (countries, years), inside dense forms, and for `multiple`, which `<sl:select>` does not support.
+- **[`<sl:combobox>`](https://shadleaf.dev/current/components/combobox.md)** is a select people type into to filter the list, for one value or several
+  (`multiple`), with options from the server if you like.
 
 ### Placeholder
 
@@ -1477,8 +1817,8 @@ These shadcn/Radix parts and props have no counterpart, on purpose:
   does the same, so both look alike.
 - **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
   value with `th:field`, and the select's `change` event reports a new one.
-- **`multiple`**, which shadcn does not have either: use [`<sl:native-select multiple>`](https://shadleaf.dev/current/components/select-native.md) or a
-  [field set](https://shadleaf.dev/current/components/field.md) of checkboxes.
+- **`multiple`**, which shadcn does not have either: use [`<sl:combobox multiple>`](https://shadleaf.dev/current/components/combobox.md#multiple),
+  [`<sl:native-select multiple>`](https://shadleaf.dev/current/components/select-native.md) or a [field set](https://shadleaf.dev/current/components/field.md) of checkboxes.
 - **`SelectItem`'s `textValue`**: typeahead reads the item's text.
 
 ### How it is drawn
@@ -1663,6 +2003,538 @@ Attributes of `<sl:native-select>`: The browser's own `select`, styled, with its
 | `size` | `sm`, `default` | `default` | Height of the select. It replaces HTML's `size` attribute, which turns a select into a list box. |
 
 Every prop can also be set from an expression: `th:size="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+---
+
+## Combobox
+
+> shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+
+Source: https://shadleaf.dev/current/components/combobox/
+
+**Example: Combobox.** Type to filter the list; th:field marks the bound item.
+
+```html
+<sl:field th:field="*{framework}">
+  <sl:field-label>Framework</sl:field-label>
+  <sl:combobox placeholder="Select a framework">
+    <sl:combobox-item value="next">Next.js</sl:combobox-item>
+    <sl:combobox-item value="sveltekit">SvelteKit</sl:combobox-item>
+    <sl:combobox-item value="nuxt">Nuxt.js</sl:combobox-item>
+    <sl:combobox-item value="remix">Remix</sl:combobox-item>
+    <sl:combobox-item value="astro">Astro</sl:combobox-item>
+  </sl:combobox>
+</sl:field>
+```
+
+### Built from parts
+
+A combobox is `<sl:combobox>` holding `<sl:combobox-item>`s, optionally in `<sl:combobox-group>`s with
+`<sl:combobox-separator>`s between them. Like [`<sl:select>`](https://shadleaf.dev/current/components/select.md), it renders a real `<select>` with
+`<option>`, `<optgroup>` and `<hr>` elements, so `th:field` binds it as it binds any select and the form submits the
+chosen value. Once Alpine runs, a text input and a list box take the select's place; typing filters the list.
+
+```html
+<form th:object="${project}" th:action="@{/projects}" method="post">
+  <sl:field th:field="*{framework}">
+    <sl:field-label>Framework</sl:field-label>
+    <sl:combobox placeholder="Select a framework">
+      <sl:combobox-item th:each="framework : ${frameworks}"
+                        th:value="${framework.id}">[[${framework.name}]]</sl:combobox-item>
+    </sl:combobox>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+Give an item its text as content (`[[${framework.name}]]`): the input, the chips and the filter use it.
+
+### Combobox or select?
+
+- **[`<sl:select>`](https://shadleaf.dev/current/components/select.md)** for a short list people scan: a few to a few dozen items.
+- **`<sl:combobox>`** for a list people would rather search: many items, items whose names people know, or several
+  values at once (`multiple`). With `search-url`, the options can come from the server, for lists too long to put in
+  the page.
+- **[`<sl:native-select>`](https://shadleaf.dev/current/components/select-native.md)** to leave the list to the operating system, as phones show it.
+
+### Multiple
+
+`multiple` lets people choose any number of items. The chosen ones are chips before the input, each with a button
+that removes it; the list stays open while choosing, with a check mark on every chosen item. The select is a
+`<select multiple>`, so `th:field` binds a collection (`List<String>`, `Set<Long>`, ...) and the form submits one
+value per chosen item. Spring's hidden marker input comes with it, so choosing none binds an empty collection.
+
+**Example: Multiple.** With multiple, the chosen items are chips before the input and th:field binds a collection.
+
+```html
+<sl:field th:field="*{frameworks}">
+  <sl:field-label>Frameworks</sl:field-label>
+  <sl:combobox multiple auto-highlight placeholder="Add a framework">
+    <sl:combobox-item value="next">Next.js</sl:combobox-item>
+    <sl:combobox-item value="sveltekit">SvelteKit</sl:combobox-item>
+    <sl:combobox-item value="nuxt">Nuxt.js</sl:combobox-item>
+    <sl:combobox-item value="remix">Remix</sl:combobox-item>
+    <sl:combobox-item value="astro">Astro</sl:combobox-item>
+  </sl:combobox>
+</sl:field>
+```
+
+### Placeholder and clearing
+
+`placeholder` is the input's text while nothing is chosen. For a single value it is also a first option with an empty
+value, hidden from the list, which is chosen while the field has no value: a `required` combobox with nothing chosen
+is invalid, as for a select.
+
+Emptying the input and leaving it clears the choice. `show-clear` adds a button that does the same, in place of the
+chevron while there is something to clear; in a multiple combobox it removes every chip.
+
+**Example: Clear button.** show-clear puts a button that clears the choice in place of the chevron while there is one.
+
+```html
+<sl:field th:field="*{stack}">
+  <sl:field-label>Stack</sl:field-label>
+  <sl:combobox placeholder="Select a framework" show-clear>
+    <sl:combobox-item value="next">Next.js</sl:combobox-item>
+    <sl:combobox-item value="sveltekit">SvelteKit</sl:combobox-item>
+    <sl:combobox-item value="nuxt">Nuxt.js</sl:combobox-item>
+  </sl:combobox>
+</sl:field>
+```
+
+### Groups, separators and icons
+
+`<sl:combobox-group label="...">` is an `<optgroup>`: its label shows above its items, and hides while none of them
+match what was typed. `<sl:combobox-separator/>` is an `<hr>`, hidden while typing.
+
+**Example: Groups and separators.** Some 80 time zones, too many to scan, so you type a city instead (bru finds Brussels). A group's heading hides while none of its items match; separators hide while you type.
+
+```html
+<sl:field th:field="*{meetingZone}">
+  <sl:field-label>Timezone</sl:field-label>
+  <sl:combobox placeholder="Select a timezone">
+    <sl:combobox-group label="Americas">
+      <sl:combobox-item value="Pacific/Honolulu">(GMT-10) Honolulu</sl:combobox-item>
+      <sl:combobox-item value="America/Anchorage">(GMT-9) Anchorage</sl:combobox-item>
+      <sl:combobox-item value="America/Los_Angeles">(GMT-8) Los Angeles</sl:combobox-item>
+      <sl:combobox-item value="America/Tijuana">(GMT-8) Tijuana</sl:combobox-item>
+      <sl:combobox-item value="America/Vancouver">(GMT-8) Vancouver</sl:combobox-item>
+      <sl:combobox-item value="America/Denver">(GMT-7) Denver</sl:combobox-item>
+      <sl:combobox-item value="America/Edmonton">(GMT-7) Edmonton</sl:combobox-item>
+      <sl:combobox-item value="America/Phoenix">(GMT-7) Phoenix</sl:combobox-item>
+      <sl:combobox-item value="America/Chicago">(GMT-6) Chicago</sl:combobox-item>
+      <sl:combobox-item value="America/Guatemala">(GMT-6) Guatemala</sl:combobox-item>
+      <sl:combobox-item value="America/Mexico_City">(GMT-6) Mexico City</sl:combobox-item>
+      <sl:combobox-item value="America/Winnipeg">(GMT-6) Winnipeg</sl:combobox-item>
+      <sl:combobox-item value="America/Bogota">(GMT-5) Bogota</sl:combobox-item>
+      <sl:combobox-item value="America/Havana">(GMT-5) Havana</sl:combobox-item>
+      <sl:combobox-item value="America/Lima">(GMT-5) Lima</sl:combobox-item>
+      <sl:combobox-item value="America/New_York">(GMT-5) New York</sl:combobox-item>
+      <sl:combobox-item value="America/Toronto">(GMT-5) Toronto</sl:combobox-item>
+      <sl:combobox-item value="America/Caracas">(GMT-4) Caracas</sl:combobox-item>
+      <sl:combobox-item value="America/Halifax">(GMT-4) Halifax</sl:combobox-item>
+      <sl:combobox-item value="America/La_Paz">(GMT-4) La Paz</sl:combobox-item>
+      <sl:combobox-item value="America/Santiago">(GMT-4) Santiago</sl:combobox-item>
+      <sl:combobox-item value="America/St_Johns">(GMT-3:30) St. John's</sl:combobox-item>
+      <sl:combobox-item value="America/Argentina/Buenos_Aires">(GMT-3) Buenos Aires</sl:combobox-item>
+      <sl:combobox-item value="America/Montevideo">(GMT-3) Montevideo</sl:combobox-item>
+      <sl:combobox-item value="America/Sao_Paulo">(GMT-3) São Paulo</sl:combobox-item>
+    </sl:combobox-group>
+    <sl:combobox-separator/>
+    <sl:combobox-group label="Europe">
+      <sl:combobox-item value="Europe/Dublin">(GMT+0) Dublin</sl:combobox-item>
+      <sl:combobox-item value="Europe/Lisbon">(GMT+0) Lisbon</sl:combobox-item>
+      <sl:combobox-item value="Europe/London">(GMT+0) London</sl:combobox-item>
+      <sl:combobox-item value="Atlantic/Reykjavik">(GMT+0) Reykjavik</sl:combobox-item>
+      <sl:combobox-item value="Europe/Amsterdam">(GMT+1) Amsterdam</sl:combobox-item>
+      <sl:combobox-item value="Europe/Berlin">(GMT+1) Berlin</sl:combobox-item>
+      <sl:combobox-item value="Europe/Brussels">(GMT+1) Brussels</sl:combobox-item>
+      <sl:combobox-item value="Europe/Budapest">(GMT+1) Budapest</sl:combobox-item>
+      <sl:combobox-item value="Europe/Copenhagen">(GMT+1) Copenhagen</sl:combobox-item>
+      <sl:combobox-item value="Europe/Madrid">(GMT+1) Madrid</sl:combobox-item>
+      <sl:combobox-item value="Europe/Oslo">(GMT+1) Oslo</sl:combobox-item>
+      <sl:combobox-item value="Europe/Paris">(GMT+1) Paris</sl:combobox-item>
+      <sl:combobox-item value="Europe/Prague">(GMT+1) Prague</sl:combobox-item>
+      <sl:combobox-item value="Europe/Rome">(GMT+1) Rome</sl:combobox-item>
+      <sl:combobox-item value="Europe/Stockholm">(GMT+1) Stockholm</sl:combobox-item>
+      <sl:combobox-item value="Europe/Vienna">(GMT+1) Vienna</sl:combobox-item>
+      <sl:combobox-item value="Europe/Warsaw">(GMT+1) Warsaw</sl:combobox-item>
+      <sl:combobox-item value="Europe/Zurich">(GMT+1) Zurich</sl:combobox-item>
+      <sl:combobox-item value="Europe/Athens">(GMT+2) Athens</sl:combobox-item>
+      <sl:combobox-item value="Europe/Bucharest">(GMT+2) Bucharest</sl:combobox-item>
+      <sl:combobox-item value="Europe/Helsinki">(GMT+2) Helsinki</sl:combobox-item>
+      <sl:combobox-item value="Europe/Kyiv">(GMT+2) Kyiv</sl:combobox-item>
+      <sl:combobox-item value="Europe/Istanbul">(GMT+3) Istanbul</sl:combobox-item>
+      <sl:combobox-item value="Europe/Moscow">(GMT+3) Moscow</sl:combobox-item>
+    </sl:combobox-group>
+    <sl:combobox-separator/>
+    <sl:combobox-group label="Africa">
+      <sl:combobox-item value="Africa/Accra">(GMT+0) Accra</sl:combobox-item>
+      <sl:combobox-item value="Africa/Casablanca">(GMT+0) Casablanca</sl:combobox-item>
+      <sl:combobox-item value="Africa/Algiers">(GMT+1) Algiers</sl:combobox-item>
+      <sl:combobox-item value="Africa/Kinshasa">(GMT+1) Kinshasa</sl:combobox-item>
+      <sl:combobox-item value="Africa/Lagos">(GMT+1) Lagos</sl:combobox-item>
+      <sl:combobox-item value="Africa/Cairo">(GMT+2) Cairo</sl:combobox-item>
+      <sl:combobox-item value="Africa/Johannesburg">(GMT+2) Johannesburg</sl:combobox-item>
+      <sl:combobox-item value="Africa/Addis_Ababa">(GMT+3) Addis Ababa</sl:combobox-item>
+      <sl:combobox-item value="Africa/Nairobi">(GMT+3) Nairobi</sl:combobox-item>
+    </sl:combobox-group>
+    <sl:combobox-separator/>
+    <sl:combobox-group label="Asia">
+      <sl:combobox-item value="Asia/Jerusalem">(GMT+2) Jerusalem</sl:combobox-item>
+      <sl:combobox-item value="Asia/Riyadh">(GMT+3) Riyadh</sl:combobox-item>
+      <sl:combobox-item value="Asia/Tehran">(GMT+3:30) Tehran</sl:combobox-item>
+      <sl:combobox-item value="Asia/Dubai">(GMT+4) Dubai</sl:combobox-item>
+      <sl:combobox-item value="Asia/Karachi">(GMT+5) Karachi</sl:combobox-item>
+      <sl:combobox-item value="Asia/Kolkata">(GMT+5:30) Kolkata</sl:combobox-item>
+      <sl:combobox-item value="Asia/Kathmandu">(GMT+5:45) Kathmandu</sl:combobox-item>
+      <sl:combobox-item value="Asia/Dhaka">(GMT+6) Dhaka</sl:combobox-item>
+      <sl:combobox-item value="Asia/Bangkok">(GMT+7) Bangkok</sl:combobox-item>
+      <sl:combobox-item value="Asia/Ho_Chi_Minh">(GMT+7) Ho Chi Minh City</sl:combobox-item>
+      <sl:combobox-item value="Asia/Jakarta">(GMT+7) Jakarta</sl:combobox-item>
+      <sl:combobox-item value="Asia/Hong_Kong">(GMT+8) Hong Kong</sl:combobox-item>
+      <sl:combobox-item value="Asia/Manila">(GMT+8) Manila</sl:combobox-item>
+      <sl:combobox-item value="Asia/Shanghai">(GMT+8) Shanghai</sl:combobox-item>
+      <sl:combobox-item value="Asia/Singapore">(GMT+8) Singapore</sl:combobox-item>
+      <sl:combobox-item value="Asia/Taipei">(GMT+8) Taipei</sl:combobox-item>
+      <sl:combobox-item value="Asia/Seoul">(GMT+9) Seoul</sl:combobox-item>
+      <sl:combobox-item value="Asia/Tokyo">(GMT+9) Tokyo</sl:combobox-item>
+    </sl:combobox-group>
+    <sl:combobox-separator/>
+    <sl:combobox-group label="Pacific">
+      <sl:combobox-item value="Australia/Perth">(GMT+8) Perth</sl:combobox-item>
+      <sl:combobox-item value="Australia/Adelaide">(GMT+9:30) Adelaide</sl:combobox-item>
+      <sl:combobox-item value="Australia/Brisbane">(GMT+10) Brisbane</sl:combobox-item>
+      <sl:combobox-item value="Australia/Melbourne">(GMT+10) Melbourne</sl:combobox-item>
+      <sl:combobox-item value="Pacific/Port_Moresby">(GMT+10) Port Moresby</sl:combobox-item>
+      <sl:combobox-item value="Australia/Sydney">(GMT+10) Sydney</sl:combobox-item>
+      <sl:combobox-item value="Pacific/Auckland">(GMT+12) Auckland</sl:combobox-item>
+      <sl:combobox-item value="Pacific/Fiji">(GMT+12) Fiji</sl:combobox-item>
+    </sl:combobox-group>
+  </sl:combobox>
+</sl:field>
+```
+
+An item may start with an [icon](https://shadleaf.dev/current/components/icon.md). The list shows it; the input and the chips show the item's text.
+
+**Example: Custom items.** An item may start with an icon. The input and the chips show its text.
+
+```html
+<sl:field th:field="*{issueStatus}">
+  <sl:field-label>Status</sl:field-label>
+  <sl:combobox placeholder="Set a status">
+    <sl:combobox-item value="backlog"><sl:icon name="circle-dashed"/>Backlog</sl:combobox-item>
+    <sl:combobox-item value="todo"><sl:icon name="circle"/>Todo</sl:combobox-item>
+    <sl:combobox-item value="in-progress"><sl:icon name="circle-dot"/>In progress</sl:combobox-item>
+    <sl:combobox-item value="done"><sl:icon name="circle-check"/>Done</sl:combobox-item>
+  </sl:combobox>
+</sl:field>
+```
+
+### Filtering and auto-highlight
+
+The list shows the items whose text contains what was typed, ignoring case and accents (`turk` finds Türkiye). By
+default nothing is highlighted while typing, so Enter does not choose by accident; `auto-highlight` highlights the
+first match, so typing a few letters and pressing Enter chooses it. Long lists scroll; the list never grows taller
+than the window.
+
+**Example: Long lists.** The list scrolls when it is taller than the window; auto-highlight makes Enter choose the first match.
+
+```html
+<sl:field th:field="*{destination}">
+  <sl:field-label>Country</sl:field-label>
+  <sl:combobox placeholder="Select a country" auto-highlight>
+    <sl:combobox-item value="argentina">Argentina</sl:combobox-item>
+    <sl:combobox-item value="australia">Australia</sl:combobox-item>
+    <sl:combobox-item value="austria">Austria</sl:combobox-item>
+    <sl:combobox-item value="belgium">Belgium</sl:combobox-item>
+    <sl:combobox-item value="brazil">Brazil</sl:combobox-item>
+    <sl:combobox-item value="canada">Canada</sl:combobox-item>
+    <sl:combobox-item value="chile">Chile</sl:combobox-item>
+    <sl:combobox-item value="china">China</sl:combobox-item>
+    <sl:combobox-item value="colombia">Colombia</sl:combobox-item>
+    <sl:combobox-item value="czechia">Czechia</sl:combobox-item>
+    <sl:combobox-item value="denmark">Denmark</sl:combobox-item>
+    <sl:combobox-item value="egypt">Egypt</sl:combobox-item>
+    <sl:combobox-item value="finland">Finland</sl:combobox-item>
+    <sl:combobox-item value="france">France</sl:combobox-item>
+    <sl:combobox-item value="germany">Germany</sl:combobox-item>
+    <sl:combobox-item value="greece">Greece</sl:combobox-item>
+    <sl:combobox-item value="india">India</sl:combobox-item>
+    <sl:combobox-item value="indonesia">Indonesia</sl:combobox-item>
+    <sl:combobox-item value="ireland">Ireland</sl:combobox-item>
+    <sl:combobox-item value="italy">Italy</sl:combobox-item>
+    <sl:combobox-item value="japan">Japan</sl:combobox-item>
+    <sl:combobox-item value="kenya">Kenya</sl:combobox-item>
+    <sl:combobox-item value="mexico">Mexico</sl:combobox-item>
+    <sl:combobox-item value="morocco">Morocco</sl:combobox-item>
+    <sl:combobox-item value="netherlands">Netherlands</sl:combobox-item>
+    <sl:combobox-item value="new-zealand">New Zealand</sl:combobox-item>
+    <sl:combobox-item value="nigeria">Nigeria</sl:combobox-item>
+    <sl:combobox-item value="norway">Norway</sl:combobox-item>
+    <sl:combobox-item value="peru">Peru</sl:combobox-item>
+    <sl:combobox-item value="poland">Poland</sl:combobox-item>
+    <sl:combobox-item value="portugal">Portugal</sl:combobox-item>
+    <sl:combobox-item value="south-africa">South Africa</sl:combobox-item>
+    <sl:combobox-item value="south-korea">South Korea</sl:combobox-item>
+    <sl:combobox-item value="spain">Spain</sl:combobox-item>
+    <sl:combobox-item value="sweden">Sweden</sl:combobox-item>
+    <sl:combobox-item value="switzerland">Switzerland</sl:combobox-item>
+    <sl:combobox-item value="thailand">Thailand</sl:combobox-item>
+    <sl:combobox-item value="turkiye">Türkiye</sl:combobox-item>
+    <sl:combobox-item value="united-kingdom">United Kingdom</sl:combobox-item>
+    <sl:combobox-item value="united-states">United States</sl:combobox-item>
+    <sl:combobox-item value="vietnam">Vietnam</sl:combobox-item>
+  </sl:combobox>
+</sl:field>
+```
+
+### Options from the server
+
+`search-url` makes the combobox ask the server for the options as people type, for lists too long to put in the page.
+300 ms after the last key, it sends a `GET` to that URL with the text as `q`, and expects the HTML of
+`<sl:combobox-item>`s (and groups and separators, if you like) back. A Thymeleaf fragment renders them:
+
+```html
+<sl:combobox th:field="*{country}" placeholder="Search a country" th:search-url="@{/countries/search}">
+  <!-- The chosen country, which the controller looked up: the combobox shows it before anyone types. -->
+  <sl:combobox-item th:if="${chosenCountry != null}"
+                    th:value="${chosenCountry.code}">[[${chosenCountry.name}]]</sl:combobox-item>
+</sl:combobox>
+```
+
+```java
+@GetMapping("/countries/search")
+String searchCountries(@RequestParam String q, Model model) {
+  model.addAttribute("countries", countryService.search(q, 20));
+  return "countries :: options";
+}
+```
+
+```html
+<!-- countries.html -->
+<th:block th:fragment="options">
+  <sl:combobox-item th:each="country : ${countries}"
+                    th:value="${country.code}">[[${country.name}]]</sl:combobox-item>
+</th:block>
+```
+
+- **The answer replaces the options** that are not chosen. A chosen option stays, so the value does not change; when
+  the answer leaves it out, it stays hidden from the list. Render the chosen option(s) in the page, as above, so the
+  combobox can show and submit them before anyone types.
+- **The server filters.** The browser shows what the answer holds, without filtering it again; an empty answer shows
+  "No items found." (or `empty`). Limit the number of results on the server.
+- **An empty input** brings back the options the page came with: render a first few there, or none.
+- **A newer query aborts the request before it**, so a slow answer never replaces a newer one. While waiting, the list
+  says "Searching…"; an answer that is not a 2xx, or that was redirected (a session that expired and sent the request
+  to the login page), shows "The options could not be loaded."
+- **To add parameters**, such as another field's value for options that depend on it, listen for
+  `sl-combobox-search` on the select. It fires before each request, with `detail.query` and `detail.url`, a `URL`
+  whose `searchParams` you can change; `preventDefault()` skips the request.
+
+```js
+document.addEventListener('sl-combobox-search', event => {
+  if (event.target.id === 'city') {
+    event.detail.url.searchParams.set('country', document.getElementById('country').value);
+  }
+});
+```
+
+Searching needs JavaScript. Without it, the combobox is a select with the options in the page, so only those can be
+chosen.
+
+### Width
+
+The combobox sits in a wrapper that also holds the input and the list. `class` goes to that wrapper, so
+`class="w-full"` widens it; every other attribute goes to the `<select>`. The list is at least as wide as the input.
+
+### In a form
+
+- **`th:field`**, on the combobox or on its [field](https://shadleaf.dev/current/components/field.md), binds it. In a field, the select takes the field's `id`
+  (the label points at it) and `aria-describedby`; the input takes them over from the select, so the label names the
+  input and the description and error describe it.
+- **Errors.** A field with errors marks the combobox `aria-invalid="true"`, and
+  [`<sl:form-errors autofocus/>`](https://shadleaf.dev/current/components/form-errors.md) gives it `autofocus` when it is the first control with errors; the
+  focus goes on to the input.
+- **No free text.** Only the options can be chosen: what was typed without choosing is not submitted, and the input
+  shows the choice again when it loses the focus. For a text field with suggestions, use an
+  [input](https://shadleaf.dev/current/components/input.md) with a `<datalist>`.
+- **Events.** Choosing fires `input` and `change` on the `<select>`, so `hx-trigger="change"` and your own listeners
+  work as for any select. A script that changes the select's options or value should fire `change` itself; the input
+  and the chips follow.
+- **Form reset** puts the combobox back to its rendered value.
+
+**Example: With errors.** In a field with errors, the combobox is aria-invalid and described by the message.
+
+```html
+<sl:field th:field="*{language}">
+  <sl:field-label>Language</sl:field-label>
+  <sl:combobox placeholder="Select a language">
+    <sl:combobox-item value="java">Java</sl:combobox-item>
+    <sl:combobox-item value="kotlin">Kotlin</sl:combobox-item>
+    <sl:combobox-item value="groovy">Groovy</sl:combobox-item>
+  </sl:combobox>
+  <sl:field-error/>
+</sl:field>
+<sl:field th:field="*{languages}">
+  <sl:field-label>Other languages</sl:field-label>
+  <sl:combobox multiple placeholder="Add a language">
+    <sl:combobox-item value="java">Java</sl:combobox-item>
+    <sl:combobox-item value="kotlin">Kotlin</sl:combobox-item>
+    <sl:combobox-item value="groovy">Groovy</sl:combobox-item>
+  </sl:combobox>
+  <sl:field-error/>
+</sl:field>
+```
+
+### Disabled
+
+`disabled` on the combobox, or on a `<sl:field-set>` around it, disables it: it fades with its chips. `disabled` on an
+item leaves it in the list, faded; the keyboard and the pointer skip it.
+
+**Example: Disabled.** A disabled combobox, and disabled items that the keyboard and the pointer skip.
+
+```html
+<sl:field th:field="*{runtime}">
+  <sl:field-label>Runtime</sl:field-label>
+  <sl:combobox disabled>
+    <sl:combobox-item value="jvm">JVM</sl:combobox-item>
+  </sl:combobox>
+</sl:field>
+<sl:field th:field="*{plugins}">
+  <sl:field-label>Plugins</sl:field-label>
+  <sl:combobox multiple disabled>
+    <sl:combobox-item value="lombok">Lombok</sl:combobox-item>
+    <sl:combobox-item value="mapstruct">MapStruct</sl:combobox-item>
+  </sl:combobox>
+</sl:field>
+<sl:field th:field="*{build}">
+  <sl:field-label>Build tool</sl:field-label>
+  <sl:combobox placeholder="Select a build tool">
+    <sl:combobox-item value="maven">Maven</sl:combobox-item>
+    <sl:combobox-item value="ant" disabled>Ant</sl:combobox-item>
+    <sl:combobox-item value="gradle">Gradle</sl:combobox-item>
+  </sl:combobox>
+</sl:field>
+```
+
+### Keyboard
+
+The focus stays in the input; the highlighted item is announced through `aria-activedescendant`, as the
+[ARIA combobox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-autocomplete-list/)
+describes.
+
+| Key | Does |
+| --- | --- |
+| Typing | Opens the list and filters it |
+| Arrow down, arrow up | Opens the list on the chosen item; next, previous item |
+| Alt + arrow down | Opens the list without highlighting |
+| Page down, page up | Ten items further, back |
+| Enter | Chooses the highlighted item; in a multiple combobox, adds or removes it and keeps the list open |
+| Alt + arrow up | Chooses the highlighted item and closes the list |
+| Escape | Closes the list, putting back the text of the choice |
+| Tab | Closes the list without choosing and moves on |
+| Home, End | Move the caret, as in any text field |
+| Backspace (multiple, empty input) | Removes the last chip |
+| Arrow left (multiple, at the start of the input) | Moves to the chips' remove buttons: arrow left and right between them, Backspace or Delete removes one |
+
+The number of matches is announced once typing pauses ("3 results"; the texts are messages, `sl.combobox.*`, see
+[Translating](https://shadleaf.dev/current/guides/translating.md)). The clear and chevron buttons stay out of the tab order: each
+has a key. The item under the pointer is highlighted.
+
+### With htmx
+
+- A response that renders the form again with errors keeps the chosen values (`th:field` marks them).
+- A swap that replaces an open combobox leaves nothing open behind.
+- Back restores the combobox as htmx saved it; it builds its input and list again from the restored select.
+- A combobox can trigger a request itself: `hx-get="/cities" hx-trigger="change" hx-target="#city-field"`. Options
+  swapped into the select are picked up by the list.
+
+### Forced colours
+
+The input and the list keep a visible border, the highlighted item an outline and the chips a border, when the
+system's colours replace the page's (Windows High Contrast). A disabled combobox turns `GrayText` instead of fading.
+
+### Left out
+
+These shadcn/Base UI parts and props have no counterpart, on purpose:
+
+- **`ComboboxInput`, `ComboboxContent`, `ComboboxList`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipsInput`,
+  `ComboboxValue` and `ComboboxTrigger`.** `<sl:combobox>` draws them all: `showClear`, `showTrigger` and
+  `autoHighlight` are its `show-clear`, `show-trigger` and `auto-highlight`.
+- **`items` and the render function.** Items are written as `<sl:combobox-item>`s (with `th:each`): `value` and their
+  text take the place of `itemToStringValue`.
+- **`ComboboxEmpty`** is the `empty` attribute; **`ComboboxLabel`** is a group's `label`, and there is no
+  `ComboboxCollection`.
+- **The popup layout**, with a button as the trigger and the input inside the list, and **addons** in the input.
+- **Free text**, which Base UI's Combobox does not allow either (its Autocomplete does).
+- **Removing chips is always possible** (`showRemove`), and a chip shows the item's text.
+- **`side`, `align`**: the list opens below the input, or above it when there is no room.
+- **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
+  value with `th:field`, and the select's `change` event reports a new one.
+
+### Without JavaScript
+
+The server renders a real select, drawn like the [native select](https://shadleaf.dev/current/components/select-native.md): a single combobox is a select
+with a chevron, a multiple one a list box (Ctrl- or Cmd-click chooses several). Both bind, submit and validate as any
+select. With Alpine, `slCombobox` puts its input and list in the select's place.
+
+### Attributes
+
+#### sl:combobox
+
+Attributes of `<sl:combobox>`: A text input that filters a list of options as you type: shadcn/ui's combobox. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | *string* | — | The input's text while nothing is chosen. For a single value also the text of a first option with an empty value, hidden from the list: a required combobox with it chosen is invalid. |
+| `multiple` | *boolean* | — | Choose any number of options, shown as chips before the input. The select is a `select multiple`, so `th:field` binds a collection. |
+| `show-clear` | *boolean* | — | A button that clears the choice, in place of the chevron while there is one. |
+| `show-trigger` | *boolean* | `true` | The chevron button that opens and closes the list. A multiple combobox has none. |
+| `auto-highlight` | *boolean* | — | Highlight the first match while typing, so Enter chooses it. |
+| `empty` | *string* | — | The text shown when no option matches. By default "No items found." |
+| `search-url` | *string* | — | Ask the server for the options as you type: a `GET` to this URL with the text as `q`, answered with the HTML of `sl:combobox-item`s (and groups and separators), which replace the options that are not chosen. Needs JavaScript; without it, only the options in the page can be chosen. |
+
+Every prop can also be set from an expression: `th:placeholder="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:combobox-item
+
+Attributes of `<sl:combobox-item>`: An option in a `sl:combobox`: an `option`. `value` (or `th:value`) and `disabled` pass through; `th:field` on the combobox marks the bound one. The list shows its content, which may start with an icon, with a check mark while it is chosen; the input, the chips and the filter use its text, which is all an older browser keeps of it.
+
+`sl:combobox-item` declares no props; every attribute passes through.
+
+#### sl:combobox-group
+
+Attributes of `<sl:combobox-group>`: A group of `sl:combobox-item`s under a heading: an `optgroup`. The list hides the heading while none of its items match.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `label` | *string* | **required** | The group's heading, shadcn/ui's `ComboboxLabel`. |
+
+Every prop can also be set from an expression: `th:label="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:combobox-separator
+
+Attributes of `<sl:combobox-separator>`: A line between items or groups of a `sl:combobox`: an `hr`. The list hides it while you type.
+
+`sl:combobox-separator` declares no props; every attribute passes through.
+
+### JavaScript
+
+A small Alpine component, `slCombobox`, sits on the wrapper: `<div class="combobox" x-data="slCombobox">`.
+
+- **It hides the `<select>`** (it stays in the form, and still submits, resets and validates) and adds what the
+  wrapper's `<template>` holds after it: a `<div class="combobox-control">` with an
+  `<input role="combobox" class="combobox-input">` (and the chips, the clear and the chevron buttons), and a
+  `<div class="combobox-content" popover="manual">` with the `<div role="listbox" class="combobox-list">`. The input
+  takes the select's label (its `<label>`s, `aria-labelledby` or `aria-label`), `aria-describedby`, `aria-invalid`,
+  `required` and `disabled`, and follows them when they change. Focus that reaches the hidden select moves on to the
+  input.
+- **The list is a popover** in the top layer, so it shows above dialogs and sheets, placed with anchor positioning
+  (with a stand-in for browsers without it). Escape in the input closes the list, not the dialog around it.
+- **It works with Alpine's CSP build** and a strict Content Security Policy: no inline styles, no `eval`. A search
+  request is a `fetch` to the same origin (`connect-src 'self'`).
+- **Keep your own `x-data` off `<sl:combobox>`**: `class` is the only attribute that reaches the wrapper. Listen for
+  `change` on the select instead.
 
 ---
 
@@ -1920,6 +2792,1064 @@ Every prop can also be set from an expression: `th:size="${...}"`. Any other att
 
 ---
 
+## Toggle
+
+> A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
+
+Source: https://shadleaf.dev/current/components/toggle/
+
+**Example: Toggle.**
+
+```html
+<sl:toggle name="bookmarked" size="sm" variant="outline">
+  <sl:icon name="bookmark"/> Bookmark
+</sl:toggle>
+```
+
+A toggle is a checkbox drawn as a button: a `<label>` with the checkbox inside it, covering it. A click anywhere on the
+toggle checks or unchecks it, the form submits it as a checkbox, and it works without JavaScript. A screen reader
+announces it as a checkbox, checked or not.
+
+The content is the toggle's label. A toggle that holds only an icon needs an `aria-label`. Every attribute that is not
+a prop goes to the checkbox (`name`, `value`, `checked`, `disabled`, `aria-label`, `x-on:change`), except `class`,
+which goes to the label.
+
+For several toggles that belong together, one of which (or any of which) can be on, use a
+[toggle group](https://shadleaf.dev/current/components/toggle-group.md).
+
+### Outline
+
+**Example: Outline.**
+
+```html
+<sl:toggle variant="outline" name="italicText" aria-label="Italic"><sl:icon name="italic"/></sl:toggle>
+<sl:toggle variant="outline" name="underlineText" aria-label="Underline"><sl:icon name="underline"/></sl:toggle>
+```
+
+### With text
+
+**Example: With text.**
+
+```html
+<sl:toggle name="italicLabel"><sl:icon name="italic"/> Italic</sl:toggle>
+```
+
+### Sizes
+
+**Example: Sizes.**
+
+```html
+<sl:toggle size="sm" variant="outline" name="sizeSm">Small</sl:toggle>
+<sl:toggle variant="outline" name="sizeDefault">Default</sl:toggle>
+<sl:toggle size="lg" variant="outline" name="sizeLg">Large</sl:toggle>
+```
+
+### In a form
+
+`th:field` on a boolean field checks the toggle when the field is `true`, as on a [checkbox](https://shadleaf.dev/current/components/checkbox.md): Spring
+numbers the `id` (`starred1`) and adds a hidden marker input, so unchecking it submits `false`. In a
+[field](https://shadleaf.dev/current/components/field.md), the toggle takes the field's name as its `id` and is described by the field's description and
+error.
+
+**Example: In a form.** th:field on a boolean checks the toggle from the form object, as on a checkbox.
+
+```html
+<sl:toggle th:field="*{starred}" variant="outline"><sl:icon name="star"/> Starred</sl:toggle>
+```
+
+### Invalid
+
+**Example: Invalid.** With th:field, a field that has errors marks the toggle aria-invalid by itself.
+
+```html
+<sl:toggle th:field="*{pinned}" variant="outline"><sl:icon name="bookmark"/> Pin to the top</sl:toggle>
+```
+
+### Disabled
+
+**Example: Disabled.**
+
+```html
+<sl:toggle name="boldLocked" disabled aria-label="Bold"><sl:icon name="bold"/></sl:toggle>
+<sl:toggle name="underlineLocked" variant="outline" checked disabled aria-label="Underline"><sl:icon
+    name="underline"/></sl:toggle>
+```
+
+### Attributes
+
+Attributes of `<sl:toggle>`: A button that is on or off: a checkbox drawn as a button, so it submits, binds and works as one without JavaScript, and a screen reader announces it as checked or not. The content (text, icons) is its label; give a toggle that holds only an icon an `aria-label`. Every attribute that is not a prop (`th:field`, `name`, `value`, `checked`, `disabled`, `aria-label`, `x-*`) passes through to the `input`, except `class`, which goes to the `label` around it, and `th:text` and `th:utext`, which set the label. `th:field` on a boolean works as on a checkbox; the toggle is marked `aria-invalid` when its field has errors.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `default`, `outline` | `default` | Visual style of the toggle. |
+| `size` | `sm`, `default`, `lg` | `default` | Size of the toggle. |
+
+Every prop can also be set from an expression: `th:variant="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+---
+
+## Toggle Group
+
+> A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
+
+Source: https://shadleaf.dev/current/components/toggle-group/
+
+**Example: Toggle group.**
+
+```html
+<sl:toggle-group type="multiple" name="textStyle" aria-label="Text style">
+  <sl:toggle-group-item value="bold" aria-label="Bold"><sl:icon name="bold"/></sl:toggle-group-item>
+  <sl:toggle-group-item value="italic" aria-label="Italic"><sl:icon name="italic"/></sl:toggle-group-item>
+  <sl:toggle-group-item value="underline" aria-label="Underline"><sl:icon name="underline"/></sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+The items of a toggle group are [toggles](https://shadleaf.dev/current/components/toggle.md) around radio buttons (`type="single"`, the default: one item is
+on at a time) or checkboxes (`type="multiple"`: any number). The form submits them as such inputs, and they work
+without JavaScript. In a `single` group the arrow keys move between the items and Tab leaves the group, as in any
+group of radio buttons; in a `multiple` group every item is a tab stop.
+
+Name the group with `aria-label`, or with `aria-labelledby` pointing at its label. Give each item a `value`; an item
+that holds only an icon needs an `aria-label`.
+
+### Outline
+
+**Example: Outline.**
+
+```html
+<sl:toggle-group variant="outline" name="callFilter" aria-label="Calls">
+  <sl:toggle-group-item value="all" checked>All</sl:toggle-group-item>
+  <sl:toggle-group-item value="missed">Missed</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+### In a form
+
+Write `th:field` on the group, once. The items share it: Spring gives them the field's `name`, numbers their ids
+(`layout1`, `layout2`, ...) and checks the one whose value matches the field. Without a form object, `name` on the
+group gives the items their name. A `single` group with neither gets a generated name, so its items still exclude
+each other; give it a `name` when the form should submit it.
+
+**Example: In a form.** th:field on the group: the items are radio buttons that share it, and the one with the field's value is on.
+
+```html
+<p id="layout-label">Layout</p>
+<sl:toggle-group th:field="*{layout}" variant="outline" aria-labelledby="layout-label">
+  <sl:toggle-group-item value="list"><sl:icon name="list"/> List</sl:toggle-group-item>
+  <sl:toggle-group-item value="grid"><sl:icon name="layout-grid"/> Grid</sl:toggle-group-item>
+  <sl:toggle-group-item value="table"><sl:icon name="table-2"/> Table</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+In a [field set](https://shadleaf.dev/current/components/field.md#radio-buttons-and-checkbox-groups) with `th:field`, the group takes the field set's, and
+the legend labels it.
+
+### Multiple
+
+With `type="multiple"`, bind a collection (a `List`, a `Set`, an array). Spring checks every item whose value is in
+it, and adds a hidden marker input, so a form with no item on clears the collection.
+
+**Example: Multiple.** type="multiple" makes the items checkboxes: th:field binds a collection, and Spring's hidden marker input lets the form clear it.
+
+```html
+<sl:toggle-group type="multiple" th:field="*{workdays}" variant="outline" aria-label="Workdays">
+  <sl:toggle-group-item value="MONDAY">Mon</sl:toggle-group-item>
+  <sl:toggle-group-item value="TUESDAY">Tue</sl:toggle-group-item>
+  <sl:toggle-group-item value="WEDNESDAY">Wed</sl:toggle-group-item>
+  <sl:toggle-group-item value="THURSDAY">Thu</sl:toggle-group-item>
+  <sl:toggle-group-item value="FRIDAY">Fri</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+### Sizes
+
+**Example: Sizes.**
+
+```html
+<sl:toggle-group size="sm" variant="outline" spacing="0" name="positionSm" aria-label="Position, small">
+  <sl:toggle-group-item value="top" checked>Top</sl:toggle-group-item>
+  <sl:toggle-group-item value="bottom">Bottom</sl:toggle-group-item>
+</sl:toggle-group>
+<sl:toggle-group variant="outline" spacing="0" name="positionDefault" aria-label="Position">
+  <sl:toggle-group-item value="top" checked>Top</sl:toggle-group-item>
+  <sl:toggle-group-item value="bottom">Bottom</sl:toggle-group-item>
+</sl:toggle-group>
+<sl:toggle-group size="lg" variant="outline" spacing="0" name="positionLg" aria-label="Position, large">
+  <sl:toggle-group-item value="top" checked>Top</sl:toggle-group-item>
+  <sl:toggle-group-item value="bottom">Bottom</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+### Spacing
+
+`spacing` sets the gap between the items, in Tailwind's spacing steps: `2` (`0.5rem`) by default, `0` to join them
+into one control.
+
+**Example: Spacing.** spacing="0" joins the items into one control; the default is 2.
+
+```html
+<sl:toggle-group variant="outline" spacing="0" name="alignment" aria-label="Alignment">
+  <sl:toggle-group-item value="left" checked aria-label="Align left"><sl:icon name="align-left"/></sl:toggle-group-item>
+  <sl:toggle-group-item value="center" aria-label="Align center"><sl:icon name="align-center"/></sl:toggle-group-item>
+  <sl:toggle-group-item value="right" aria-label="Align right"><sl:icon name="align-right"/></sl:toggle-group-item>
+</sl:toggle-group>
+<sl:toggle-group variant="outline" spacing="4" name="alignmentSpaced" aria-label="Alignment, spaced">
+  <sl:toggle-group-item value="left" checked aria-label="Align left"><sl:icon name="align-left"/></sl:toggle-group-item>
+  <sl:toggle-group-item value="center" aria-label="Align center"><sl:icon name="align-center"/></sl:toggle-group-item>
+  <sl:toggle-group-item value="right" aria-label="Align right"><sl:icon name="align-right"/></sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+### Vertical
+
+**Example: Vertical.**
+
+```html
+<sl:toggle-group orientation="vertical" variant="outline" spacing="0" name="rowDensity" aria-label="Density">
+  <sl:toggle-group-item value="compact">Compact</sl:toggle-group-item>
+  <sl:toggle-group-item value="comfortable" checked>Comfortable</sl:toggle-group-item>
+  <sl:toggle-group-item value="spacious">Spacious</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+### Invalid
+
+A field with errors marks every item `aria-invalid="true"`.
+
+**Example: Invalid.** With th:field, a field that has errors marks every item aria-invalid by itself.
+
+```html
+<sl:toggle-group th:field="*{shippingSpeed}" variant="outline" aria-label="Shipping">
+  <sl:toggle-group-item value="standard">Standard</sl:toggle-group-item>
+  <sl:toggle-group-item value="express">Express</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+### Disabled
+
+**Example: Disabled.** disabled on the group disables every item; on an item, only that one.
+
+```html
+<sl:toggle-group type="multiple" disabled name="textStyleLocked" aria-label="Text style (locked)">
+  <sl:toggle-group-item value="bold" checked aria-label="Bold"><sl:icon name="bold"/></sl:toggle-group-item>
+  <sl:toggle-group-item value="italic" aria-label="Italic"><sl:icon name="italic"/></sl:toggle-group-item>
+</sl:toggle-group>
+<sl:toggle-group variant="outline" name="billingPeriod" aria-label="Plan">
+  <sl:toggle-group-item value="monthly" checked>Monthly</sl:toggle-group-item>
+  <sl:toggle-group-item value="yearly" disabled>Yearly</sl:toggle-group-item>
+</sl:toggle-group>
+```
+
+### With tooltips
+
+Put an item in a [tooltip](https://shadleaf.dev/current/components/tooltip.md). The group still joins the items, the tooltip shows on hover and when the
+keyboard focuses the item, and its text describes the item's input. An icon-only item already has its
+`aria-label`: give the `sl:tooltip` `mode="label"`, so a screen reader does not say it twice.
+
+**Example: With tooltips.** A sl:tooltip around an item. The tooltip shows next to the item, on hover and on keyboard focus; mode="label" because it repeats the item's aria-label.
+
+```html
+<sl:toggle-group variant="outline" spacing="0" name="tooltipAlign" aria-label="Alignment with tooltips">
+  <sl:tooltip mode="label">
+    <sl:toggle-group-item value="left" checked aria-label="Align left"><sl:icon name="align-left"/></sl:toggle-group-item>
+    <sl:tooltip-content>Align left</sl:tooltip-content>
+  </sl:tooltip>
+  <sl:tooltip mode="label">
+    <sl:toggle-group-item value="center" aria-label="Align center"><sl:icon name="align-center"/></sl:toggle-group-item>
+    <sl:tooltip-content>Align center</sl:tooltip-content>
+  </sl:tooltip>
+  <sl:tooltip mode="label">
+    <sl:toggle-group-item value="right" aria-label="Align right"><sl:icon name="align-right"/></sl:toggle-group-item>
+    <sl:tooltip-content>Align right</sl:tooltip-content>
+  </sl:tooltip>
+</sl:toggle-group>
+```
+
+### Attributes
+
+#### sl:toggle-group
+
+Attributes of `<sl:toggle-group>`: A row of `sl:toggle-group-item`s, of which one (`type="single"`, radio buttons) or several (`type="multiple"`, checkboxes) can be on. The items submit, bind and work as those inputs, without JavaScript. Name the group with `aria-label` or `aria-labelledby`. Give it the `th:field` (or the `name`) its items share, or put it in a `sl:field-set` with `th:field`; each item then only needs a `value`. Every other attribute that is not a prop passes through to the group.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `type` | `single`, `multiple` | `single` | `single`: one item is on at a time, as radio buttons (the arrow keys move between them). `multiple`: any number, as checkboxes. |
+| `variant` | `default`, `outline` | `default` | Visual style of the items. |
+| `size` | `sm`, `default`, `lg` | `default` | Size of the items. |
+| `spacing` | `0`, `1`, `2`, `3`, `4` | `2` | The gap between the items, in Tailwind's spacing steps (`2` is `0.5rem`). `0` joins them into one control. |
+| `orientation` | `horizontal`, `vertical` | `horizontal` | Put the items on a row, or in a column. |
+| `name` | *string* | — | The `name` every item submits under, for a group without `th:field`. A `single` group without either gets a generated one, so its items still exclude each other. |
+| `disabled` | *boolean* | — | Disable every item. |
+
+Every prop can also be set from an expression: `th:type="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:toggle-group-item
+
+Attributes of `<sl:toggle-group-item>`: One item of a `sl:toggle-group`, drawn as a `sl:toggle`: a radio button in a `single` group, a checkbox in a `multiple` one. Give it a `value`; it takes the group's `th:field` or `name`, variant, size and `disabled`. The content is its label; give an item that holds only an icon an `aria-label`. Every attribute that is not a prop (`value`, `checked`, `disabled`, `aria-label`) passes through to the `input`, except `class`, which goes to the `label` around it, and `th:text` and `th:utext`, which set the label. With `th:field`, the item is marked `aria-invalid` when its field has errors.
+
+`sl:toggle-group-item` declares no props; every attribute passes through.
+
+---
+
+## Calendar
+
+> shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+
+Source: https://shadleaf.dev/current/components/calendar/
+
+**Example: Calendar.** A date in a field; th:field binds the date input the calendar draws over.
+
+```html
+<sl:field th:field="*{dueDate}">
+  <sl:field-label>Due date</sl:field-label>
+  <sl:calendar/>
+</sl:field>
+```
+
+### Drawn over date inputs
+
+A calendar's value lives in real `<input type="date">` elements. The server renders them, and the `slCalendar` Alpine
+component hides them and draws the month in their place. So `th:field` binds a calendar as it binds any input, and
+the form submits ISO dates (`2026-10-23`). Without JavaScript, the date inputs show as they are and still work.
+
+```html
+<form th:object="${task}" th:action="@{/tasks}" method="post">
+  <sl:field th:field="*{dueDate}">
+    <sl:field-label>Due date</sl:field-label>
+    <sl:calendar/>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+Without content, `<sl:calendar>` renders one date input itself. That input takes every attribute that is not a prop:
+`th:field`, `name`, `required`, `min`, `max`, `disabled`, `hx-*`. `class` is the exception: it stays on the calendar.
+
+#### LocalDate fields
+
+A date input only takes ISO dates, so the field has to be formatted as one. Do one of these:
+
+- Annotate the field with `@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)`.
+- Set `spring.mvc.format.date=iso` for the whole application.
+
+Without either, Spring formats a `LocalDate` for the locale (`10/23/26`), which a date input shows as empty.
+
+### Range
+
+For a range, give the calendar two date inputs as content: the start, then the end. Each input binds its own field.
+The calendar's own attributes then stay on the calendar, so give it an `aria-label` that names the range, and give
+each input a name of its own.
+
+**Example: Range.** Two date inputs, the start and the end, make a range. Two months show side by side.
+
+```html
+<sl:calendar aria-label="Stay" number-of-months="2">
+  <sl:input type="date" th:field="*{checkIn}" aria-label="Check-in"/>
+  <sl:input type="date" th:field="*{checkOut}" aria-label="Check-out"/>
+</sl:calendar>
+```
+
+The first pick sets the start. The second sets the end; if it comes before the start, the two swap. While only the
+start is picked, the band follows the pointer. A pick on a complete range starts a new one.
+
+`number-of-months` shows several months side by side; on a narrow screen they stack.
+
+### Month and year selects
+
+`caption-layout="dropdown"` replaces the month's name with a select for the month and one for the year. This helps
+for dates far from today, such as a date of birth. `dropdown-months` and `dropdown-years` show only one of the two.
+
+The years run from `start-month` to `end-month`. By default those are the months of the inputs' `min` and `max`, or
+else 100 years back and 10 years ahead. Both also stop the previous and next buttons.
+
+**Example: Month and year selects.** caption-layout="dropdown" for dates far from today, such as a date of birth.
+
+```html
+<sl:field th:field="*{birthDate}">
+  <sl:field-label>Date of birth</sl:field-label>
+  <sl:calendar caption-layout="dropdown" start-month="1926-01" end-month="2026-12"/>
+</sl:field>
+```
+
+### Disabled dates
+
+The inputs' `min` and `max` disable the days outside them. `disabled-dates` disables more, comma-separated:
+
+- a date: `2026-12-25`;
+- a range: `2026-12-24..2026-12-31`;
+- a day of the week: `sat`, `sun`.
+
+From a list in the model, join it: `th:disabled-dates="${#strings.listJoin(booked, ',')}"`. A `LocalDate` prints as
+an ISO date.
+
+**Example: Disabled dates.** Weekends and the booked days cannot be picked; neither can the days outside min and max.
+
+```html
+<sl:field th:field="*{meetingDate}">
+  <sl:field-label>Meeting</sl:field-label>
+  <sl:calendar min="2026-10-05" max="2026-11-27" disabled-dates="sat,sun,2026-10-14..2026-10-16,2026-10-28"/>
+</sl:field>
+```
+
+A disabled day still takes the focus, so the arrow keys move across it, but it cannot be picked. Only the calendar
+knows about `disabled-dates`; a date input does not. So check the date on the server too, as you would any input.
+
+### Week numbers and the first day of the week
+
+The page's locale (Spring's `LocaleResolver`) decides the first day of the week and how weeks are numbered. In most
+of Europe weeks start on Monday and are ISO weeks; in the United States they start on Sunday, and the week of
+1 January is week 1. `week-starts-on` overrides the first day: 0 is Sunday, 1 Monday, up to 6. `show-week-number`
+adds a column with the week numbers.
+
+The names of the months and days come from the browser (`Intl`), in the page's language.
+
+**Example: Week numbers.** The week numbers, and Monday as the first day of the week, as the locale counts them unless week-starts-on says otherwise.
+
+```html
+<sl:field th:field="*{sprintStart}">
+  <sl:field-label>Sprint start</sl:field-label>
+  <sl:calendar show-week-number week-starts-on="1"/>
+</sl:field>
+```
+
+### In a form
+
+- **`th:field`**, on the calendar or on its [field](https://shadleaf.dev/current/components/field.md), binds the input. In a field, the input also takes the
+  field's `id` (the label points at it) and `aria-describedby`. The calendar takes the label of its input as its own
+  name.
+- **Errors.** A field with errors marks the input `aria-invalid="true"`, and the field's error describes the calendar.
+- **Events.** A pick fires `input` and `change` on the input, so `hx-trigger="change"` and your own listeners work as
+  on a date input. The month and year selects fire nothing outside the calendar.
+- **A value set by a script** shows once the script fires `change` on the input, as it should for any input.
+- **Form reset** puts the inputs back to their rendered values, and the calendar shows them.
+- **A click on the label**, `autofocus` or the browser's validation focus the input; the calendar passes the focus on
+  to the day that takes it.
+
+**Example: With errors.** In a field with errors, the input is aria-invalid and the calendar is described by the message.
+
+```html
+<sl:field th:field="*{deliveryDate}">
+  <sl:field-label>Delivery</sl:field-label>
+  <sl:calendar default-month="2026-10"/>
+  <sl:field-error/>
+</sl:field>
+```
+
+### Disabled and read-only
+
+`disabled` on the input, or on a `<sl:field-set>` around it, disables the calendar: no day takes the focus.
+`readonly` keeps the navigation but stops the picking.
+
+**Example: Disabled.**
+
+```html
+<sl:calendar name="closedDate" aria-label="Closed on" value="2026-10-23" disabled/>
+```
+
+### Keyboard
+
+The previous and next buttons are tab stops, and the month is one more. Within the month:
+
+| Key | Moves the focus to |
+| --- | --- |
+| Arrow left, arrow right | The previous, next day (swapped on a right-to-left page) |
+| Arrow up, arrow down | The same day a week earlier, later |
+| Home, End | The first, last day of the week |
+| Page Up, Page Down | The same day a month earlier, later (or the month's last day when it is shorter) |
+| Shift + Page Up, Shift + Page Down | The same day a year earlier, later |
+| Enter, Space | Picks the day |
+
+When the focus moves past the months that show, the calendar shows the next ones. A change of month is announced.
+
+### With htmx
+
+- Back restores the calendar as htmx saved it, and `slCalendar` draws it again.
+- `hx-trigger="change"` on the calendar's input (or on the form) sends the picked date.
+
+### Left out
+
+These react-day-picker props, which shadcn's Calendar passes on, have no counterpart, on purpose:
+
+- **`mode`.** The inputs decide: one is a date, two are a range. `mode="multiple"` has no counterpart yet.
+- **`selected` and `onSelect`.** The inputs are the value: `th:field` renders it, and the input's `change` event
+  reports a new one.
+- **`disabled` with matchers.** `disabled` disables the whole calendar, as on any input; the days go in
+  `disabled-dates`.
+- **`timeZone`.** A date input holds a date without a time, so there is no time zone to get wrong.
+- **`buttonVariant`, `classNames`, `components` and `formatters`.** The skins draw the calendar; the locale formats it.
+
+For a button that opens the calendar in a popover, see the [date picker](https://shadleaf.dev/current/components/date-picker.md).
+
+### Attributes
+
+Attributes of `<sl:calendar>`: A month calendar to pick a date or a range of dates, drawn over native date inputs: the inputs are its value, so `th:field` binds it and the form submits ISO dates (`2026-10-23`). Without content, it renders one date input itself, which takes every attribute that is not a prop except `class` (`th:field`, `name`, `required`, `min`, `max`), and in a `sl:field` the field's `th:field`, id and `aria-describedby`. For a range, give it two `sl:input type="date"`s as content, the start and the end; its attributes then go to the calendar. `slCalendar` hides the inputs and draws the month; without JavaScript the inputs show as they are.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `caption-layout` | `label`, `dropdown`, `dropdown-months`, `dropdown-years` | `label` | The month's caption: its name, or selects for the month and year, the month, or the year. |
+| `number-of-months` | *number* | `1` | How many months show side by side (stacked on a narrow screen). |
+| `show-outside-days` | *boolean* | `true` | Show the days of the previous and next month that fill the first and last week. |
+| `show-week-number` | *boolean* | — | Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe). |
+| `week-starts-on` | *number* | — | The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides. |
+| `default-month` | *string* | — | The month shown first, as `2026-10`. By default the month of the chosen date (or of the start of the range), or else the current month. |
+| `start-month` | *string* | — | The first month the calendar navigates to, as `2026-01`; also the first year of the year select. By default the month of the inputs' `min`, or else 100 years ago. |
+| `end-month` | *string* | — | The last month the calendar navigates to, as `2026-12`; also the last year of the year select. By default the month of the inputs' `max`, or else 10 years from now. |
+| `disabled-dates` | *string* | — | Days that cannot be picked, comma-separated: a date (`2026-12-25`), a range (`2026-12-24..2026-12-31`) or a day of the week (`sat`, `sun`). The inputs' `min` and `max` disable the days outside them too. Only the calendar knows: check the date on the server as well. |
+
+Every prop can also be set from an expression: `th:caption-layout="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+### JavaScript
+
+`slCalendar` sits on the calendar: `<div class="calendar" x-data="slCalendar">`.
+
+- **Without Alpine the date inputs show**, and the form works with them.
+- **With it**, the inputs stay in the form, hidden, and still submit, reset and validate. `slCalendar` adds a
+  `.calendar-months` element with the navigation and a `<table role="grid">` per month after them.
+- **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
+  enough.
+- **Keep your own `x-data` off `<sl:calendar>`**: an element has one `x-data`. Listen for `change` on the input
+  instead.
+
+---
+
+## Date Picker
+
+> A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
+
+Source: https://shadleaf.dev/current/components/date-picker/
+
+**Example: Date picker.** A date in a field. The button shows "Pick a date" until a date is chosen; a pick closes the popover.
+
+```html
+<sl:field th:field="*{pickupDate}">
+  <sl:field-label>Pickup date</sl:field-label>
+  <sl:date-picker/>
+</sl:field>
+```
+
+### A popover with a calendar
+
+shadcn/ui has no date picker component. Its docs build one from a [popover](https://shadleaf.dev/current/components/popover.md), a button and a
+[calendar](https://shadleaf.dev/current/components/calendar.md), plus some React state that updates the button's text and closes the popover after a pick.
+`<sl:date-picker>` is that composition as one component, with the glue in the `slDatePicker` Alpine component.
+
+The value lives in the calendar's date inputs, so `th:field` binds a date picker as it binds a calendar, and the form
+submits ISO dates (`2026-10-23`). The [LocalDate fields](https://shadleaf.dev/current/components/calendar.md#localdate-fields) note applies here too.
+
+```html
+<form th:object="${booking}" th:action="@{/bookings}" method="post">
+  <sl:field th:field="*{pickupDate}">
+    <sl:field-label>Pickup date</sl:field-label>
+    <sl:date-picker/>
+    <sl:field-error/>
+  </sl:field>
+</form>
+```
+
+Every attribute that is not a prop goes to the calendar inside. `class` is the exception: it stays on the date picker.
+So the calendar's props work on the date picker (`caption-layout`, `number-of-months`, `disabled-dates`, ...), and so
+do its input's attributes (`th:field`, `name`, `required`, `min`, `max`, `disabled`, `hx-*`).
+
+### The button's text
+
+The button shows the chosen date, or `placeholder` ("Pick a date") while there is none.
+
+- **On the server**, the date is formatted in the page's locale (Spring's `LocaleResolver`). That is what shows before
+  JavaScript runs.
+- **In the browser**, `slDatePicker` formats it again with `Intl`, for the same locale, when it starts and after every
+  change. Java and `Intl` both use the CLDR's patterns, so the two texts agree.
+
+`format` picks the style, as `Intl.DateTimeFormat`'s `dateStyle` and Java's `FormatStyle`:
+
+| `format` | en-US | nl-BE |
+| --- | --- | --- |
+| `short` | 10/23/26 | 23/10/2026 |
+| `medium` | Oct 23, 2026 | 23 okt 2026 |
+| `long` (default) | October 23, 2026 | 23 oktober 2026 |
+| `full` | Friday, October 23, 2026 | vrijdag 23 oktober 2026 |
+
+**Example: Format.** format is Intl's dateStyle (Java's FormatStyle on the server); long is the default.
+
+```html
+<sl:field-group>
+  <sl:field th:field="*{reminderShort}">
+    <sl:field-label>Short</sl:field-label>
+    <sl:date-picker format="short"/>
+  </sl:field>
+  <sl:field th:field="*{reminderFull}">
+    <sl:field-label>Full</sl:field-label>
+    <sl:date-picker format="full"/>
+  </sl:field>
+</sl:field-group>
+```
+
+**Example: With a date.** The server formats the bound date in the page's locale; the browser formats it the same way after a pick.
+
+```html
+<sl:field th:field="*{appointmentDate}">
+  <sl:field-label>Appointment</sl:field-label>
+  <sl:date-picker/>
+</sl:field>
+```
+
+### Range
+
+For a range, give the date picker two date inputs as content, the start and then the end, and an `aria-label` that
+names the range. The popover closes after the second pick. The button shows both ends: `Oct 12, 2026 – Oct 21, 2026`
+with `format="medium"` (the separator is the message `sl.date-picker.range`, see [Translating](https://shadleaf.dev/current/guides/translating.md)).
+
+**Example: Range.** Two date inputs, the start and the end, make a range; the popover closes after the second pick.
+
+```html
+<sl:date-picker aria-label="Trip" format="medium" number-of-months="2">
+  <sl:input type="date" th:field="*{tripStart}" aria-label="Departure"/>
+  <sl:input type="date" th:field="*{tripEnd}" aria-label="Return"/>
+</sl:date-picker>
+```
+
+### Date of birth
+
+The calendar's month and year selects (`caption-layout="dropdown"`) help with dates far from today.
+
+**Example: Date of birth.** The calendar's props pass through, such as caption-layout="dropdown" for a date far from today.
+
+```html
+<sl:field th:field="*{dateOfBirth}">
+  <sl:field-label>Date of birth</sl:field-label>
+  <sl:date-picker format="medium" placeholder="Select date" caption-layout="dropdown" start-month="1926-01"
+                  end-month="2026-12" max="2026-10-23"/>
+</sl:field>
+```
+
+### In a form
+
+- **The label.** In a [field](https://shadleaf.dev/current/components/field.md), the label points at the date input inside the popover, as for a calendar.
+  The button takes the label's text and the date it shows as its name ("Pickup date, October 23, 2026"), and a click
+  on the label focuses the button.
+- **Errors.** A field with errors marks the input and the button `aria-invalid="true"`, and the field's error
+  describes both.
+- **Validation.** The browser can only point at a control it can show. When a `required` date is empty on submit,
+  the popover opens, so the browser's message points at the calendar.
+- **Events.** A pick fires `input` and `change` on the input, as on a [calendar](https://shadleaf.dev/current/components/calendar.md#in-a-form).
+- **A value set by a script** shows on the button once the script fires `change` on the input.
+- **Form reset** puts the button's text back too.
+
+**Example: With errors.** The field's error marks the button aria-invalid and describes it. A required empty date opens the popover on submit.
+
+```html
+<sl:field th:field="*{returnDate}">
+  <sl:field-label>Return date</sl:field-label>
+  <sl:date-picker required default-month="2026-10"/>
+  <sl:field-error/>
+</sl:field>
+```
+
+### Disabled
+
+`disabled` on the input, or on a `<sl:field-set>` around it, disables the button.
+
+**Example: Disabled.**
+
+```html
+<sl:date-picker name="archivedOn" aria-label="Archived on" value="2026-10-23" disabled/>
+```
+
+### Keyboard
+
+| Key | On | Does |
+| --- | --- | --- |
+| Enter, Space | The button | Opens the popover, with the focus on the chosen day, or else today |
+| Arrows, Home, End, Page Up, Page Down | A day | Move the focus, as in the [calendar](https://shadleaf.dev/current/components/calendar.md#keyboard) |
+| Enter, Space | A day | Picks it, and closes the popover once the date (or both ends of the range) is chosen |
+| Escape | The popover | Closes it, and the focus goes back to the button |
+| Tab | The popover's last stop | Closes it, as the focus leaves it |
+
+The popover is a non-modal dialog, as [sl:popover](https://shadleaf.dev/current/components/popover.md) is. The focus is not trapped in it.
+
+### With htmx
+
+- Back restores the date picker as htmx saved it, and `slDatePicker` formats the date again.
+- `hx-trigger="change"` on the date picker's input (`<sl:date-picker hx-post="..." hx-trigger="change">`) or on the
+  form sends the picked date.
+
+### Left out
+
+- **The input you type into** (shadcn's "Input" demo), **the time** and **natural language** variants are not here
+  yet. For a time, put an `<sl:input type="time">` next to the date picker.
+- **Presets** (a select of "Today", "Tomorrow", ...) are not here either.
+
+### Attributes
+
+Attributes of `<sl:date-picker>`: A button showing the chosen date that opens a `sl:calendar` in a popover: shadcn/ui's date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type="date"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `placeholder` | *string* | — | The button's text while no date is chosen. By default "Pick a date". |
+| `format` | `short`, `medium`, `long`, `full` | `long` | How the button shows the date, in the page's locale: as `Intl.DateTimeFormat`'s `dateStyle` and Java's `FormatStyle` (`10/23/26`, `Oct 23, 2026`, `October 23, 2026`, `Friday, October 23, 2026`). |
+| `popover-id` | *string* | — | The popover's id, which the button points at with `popovertarget`. By default a generated one (`sl-date-picker-` and eight random characters). |
+
+Every prop can also be set from an expression: `th:placeholder="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+### JavaScript
+
+`slDatePicker` sits on the date picker: `<div class="date-picker" x-data="slDatePicker">`. Its popover has
+`slPopover` and its calendar `slCalendar`.
+
+- **It needs JavaScript.** Without Alpine, the button still opens the popover (`popovertarget`), but it holds the bare
+  date inputs, and the button's text does not follow them.
+- **It needs no Alpine plugin.** If you load Alpine yourself (`shadleaf.assets.alpine=external`), plain Alpine is
+  enough.
+- **Keep your own `x-data` off `<sl:date-picker>`**: an element has one `x-data`. Listen for `change` on the input
+  instead.
+
+---
+
+## File Upload
+
+> A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
+
+Source: https://shadleaf.dev/current/components/file-upload/
+
+**Example: File upload.** Drop files on it or browse. Each file shows as an attachment with a remove button; a file of another type or larger than max-size shows as an error.
+
+```html
+<sl:field th:field="*{uploadAttachments}">
+  <sl:field-label>Attachments</sl:field-label>
+  <sl:file-upload multiple accept="image/png,image/jpeg,application/pdf" max-size="10MB">
+    <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
+  </sl:file-upload>
+  <sl:field-error/>
+</sl:field>
+```
+
+### A file input with a drop zone
+
+shadcn/ui has no file upload component, so this one is Shadleaf's own. It looks like shadcn's file upload card: an
+outlined [empty state](https://shadleaf.dev/current/components/empty.md) with an icon, a title, a description and a Browse button.
+
+Underneath is a plain `<input type="file">`, visually hidden. It holds the files and the form submits it, so it binds
+with `th:field` as any other input does, to a `MultipartFile`, or with `multiple` to a `List<MultipartFile>`. The form
+needs `enctype="multipart/form-data"`:
+
+```html
+<form th:object="${upload}" th:action="@{/people/{id}/files(id=${person.id})}" method="post"
+      enctype="multipart/form-data">
+  <sl:field th:field="*{files}">
+    <sl:field-label>Attachments</sl:field-label>
+    <sl:file-upload multiple accept="image/png,image/jpeg,application/pdf" max-size="10MB">
+      <sl:slot name="description">PNG, JPG, PDF up to 10 MB</sl:slot>
+    </sl:file-upload>
+    <sl:field-error/>
+  </sl:field>
+  <sl:button type="submit">Upload</sl:button>
+</form>
+```
+
+```java
+public class UploadForm {
+  @NotEmpty
+  private List<MultipartFile> files = new ArrayList<>();
+  // getter and setter
+}
+```
+
+Every attribute that is not a prop goes to the input: `th:field`, `name`, `id`, `required`, `disabled`, `aria-*`,
+`hx-*`. `class` stays on the component. In an [`<sl:field>`](https://shadleaf.dev/current/components/field.md) the input takes the field's binding, its id
+(which the field's label points at), `aria-describedby` and `aria-invalid`, and a field error colours the drop zone's
+border.
+
+Spring Boot limits uploads to 1 MB a file and 10 MB a request by default. Raise
+`spring.servlet.multipart.max-file-size` and `max-request-size` to match `max-size`.
+
+### What the script adds
+
+With JavaScript (the `slFileUpload` Alpine component), the component does more:
+
+- **Drop.** Files dropped anywhere on the component are added. The drop zone takes the ring colour while files are
+  dragged over it.
+- **A list.** Each file shows below the drop zone as an [`<sl:attachment>`](https://shadleaf.dev/current/components/attachment.md) in its `idle` state, with
+  its name, type and size and a button that removes it. The list is in the order the files were added.
+- **Adding more.** With `multiple`, picking or dropping files again adds them to the ones there; the browser would
+  replace them. A file that is there already is not added twice. Without `multiple`, a new file replaces the old one.
+- **Checks.** A file that does not match `accept`, or is larger than `max-size`, is not added. It shows as an
+  attachment in its `error` state, with the reason, until it is dismissed or files are added again. The browser's
+  picker applies `accept` by itself, but a drop does not, and the picker lets one choose any file.
+- **Announcements.** Added, removed and rejected files are announced once per change, in one polite live region: "Added
+  report.pdf and photo.png."
+
+Everything still goes through the input: the script puts the files back with a `DataTransfer` (`input.files =
+dt.files`), so the form submits exactly what the list shows, and a drop dispatches `change` as a pick does, so
+`hx-trigger="change"` on the component works for both.
+
+**Example: In a card.** As shadcn's file upload card.
+
+```html
+<sl:card>
+  <sl:card-header>
+    <sl:card-title>File Upload</sl:card-title>
+    <sl:card-description>Drag and drop or browse</sl:card-description>
+  </sl:card-header>
+  <sl:card-content>
+    <sl:file-upload th:field="*{uploadCardFiles}" multiple max-size="10MB">
+      <sl:slot name="description">PNG, JPG, PDF up to 10MB</sl:slot>
+    </sl:file-upload>
+  </sl:card-content>
+</sl:card>
+```
+
+The server checks the files anyway: `accept` and `max-size` only spare the user a round trip. A browser without
+JavaScript, or a request not made through the page, can send anything.
+
+### One file
+
+Without `multiple`, the title and button say so ("Upload a file", "Browse"). The slots `media`, `title` and
+`description` replace the icon and the texts, and `browse-label` the button's text.
+
+**Example: One file.** Without multiple, a new file replaces the one picked before. The slots and browse-label change the icon, title and button.
+
+```html
+<sl:file-upload th:field="*{uploadAvatar}" accept="image/*" max-size="2MB" browse-label="Choose a photo">
+  <sl:slot name="media"><sl:icon name="image"/></sl:slot>
+  <sl:slot name="title">Profile photo</sl:slot>
+  <sl:slot name="description">An image of up to 2 MB</sl:slot>
+</sl:file-upload>
+```
+
+### Image previews
+
+With `previews`, a picked or dropped image shows a thumbnail in place of the file icon. It stays through the upload,
+dimmed while the file is sent, processed, or failed, as an [attachment's image](https://shadleaf.dev/current/components/attachment.md#states) is.
+
+**Example: Image previews.** With previews, a picked image shows a thumbnail instead of the file icon, from a blob URL; other files keep theirs. A Content-Security-Policy must allow blob in img-src.
+
+```html
+<sl:file-upload th:field="*{uploadPhotos}" multiple accept="image/*,.pdf" max-size="10MB" previews>
+  <sl:slot name="media"><sl:icon name="images"/></sl:slot>
+  <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+</sl:file-upload>
+```
+
+- **Which files.** Images the browser can show (`image/*`), up to 20 MB: decoding a larger photo takes much memory and
+  time. A file the browser cannot decode (HEIC, outside Safari) keeps its icon, and no broken image shows: the
+  thumbnail takes the icon's place only once it has loaded. SVG keeps its icon too. Shown in an `<img>` an SVG runs
+  no script, but its `blob:` URL has the page's origin, and opened from it ("Open image in new tab") it would.
+- **The image.** Its `alt` is empty: the file's name is right beside it.
+- **The URLs.** Each thumbnail is a `blob:` URL (`URL.createObjectURL`), made in the browser: the file is not sent
+  for it. It is revoked when the file leaves the list (removed, replaced, the next change after an upload), and when
+  the component is swapped out. A page htmx saves in its history gets the icons back, so it holds no URL that no
+  longer works.
+
+#### Content-Security-Policy
+
+A policy without `img-src`, or with `img-src 'self'`, blocks `blob:` images, so add it:
+
+```text
+img-src 'self' blob:
+```
+
+Without it the files keep their icons and the upload works as before. The browser reports the blocked image in the
+console; after that, the page makes no more previews. See [Content-Security-Policy](https://shadleaf.dev/current/guides/csp.md).
+
+### Grid
+
+With `layout="grid"`, the picked files show as cards in columns that fill the width, instead of small attachments one
+below the other. With `previews`, a photo then shows as a large square thumbnail: big enough to judge, say, the
+photos of an inspection before they are sent with the rest of the form.
+
+**Example: Grid.** With layout grid, the picked files show as cards in columns that fill the width, images with a large thumbnail, other files with their icon, rejected ones as errors.
+
+```html
+<sl:field th:field="*{uploadInspectionPhotos}">
+  <sl:field-label>Photos of defects</sl:field-label>
+  <sl:file-upload multiple accept="image/*,.pdf" max-size="10MB" layout="grid" previews>
+    <sl:slot name="media"><sl:icon name="images"/></sl:slot>
+    <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+  </sl:file-upload>
+</sl:field>
+```
+
+```html
+<sl:file-upload th:field="*{photos}" multiple accept="image/*,.pdf" max-size="10MB" layout="grid" previews>
+  <sl:slot name="description">Images and PDFs up to 10 MB</sl:slot>
+</sl:file-upload>
+```
+
+- **The cards.** Each file is a vertical [`<sl:attachment>`](https://shadleaf.dev/current/components/attachment.md#image) at the default size, filling
+  its cell; the grid is the one of [`<sl:attachment-group layout="grid">`](https://shadleaf.dev/current/components/attachment.md#grid), so both look
+  alike. Other files show their icon in the same square, and a rejected file shows as an error card with the reason.
+- **The buttons.** The remove or dismiss button sits in the card's corner, and is hidden while the files are sent.
+- **The order.** The cards are in the order of the files in the input, as in the list, so the focus order, the focus
+  after a remove and the announcements are the same.
+
+Without JavaScript nothing changes: there is no list.
+
+### Errors
+
+A second submit renders the form again with the binding's errors, as for any field. The input is marked
+`aria-invalid` and described by the error. A browser never keeps the files of a file input across a page load, so the
+user picks them again.
+
+**Example: With errors.** The server checks the files anyway. A field error marks the input aria-invalid and the drop zone's border destructive.
+
+```html
+<sl:field th:field="*{uploadContract}">
+  <sl:field-label>Signed contract</sl:field-label>
+  <sl:file-upload accept=".pdf">
+    <sl:slot name="description">A PDF</sl:slot>
+  </sl:file-upload>
+  <sl:field-error/>
+</sl:field>
+```
+
+### Disabled
+
+A disabled input fades the Browse button, and the component takes no files.
+
+**Example: Disabled.** A disabled input fades the Browse button, and the component takes no files.
+
+```html
+<sl:file-upload th:field="*{uploadArchive}" disabled>
+  <sl:slot name="description">Uploads are closed for this project.</sl:slot>
+</sl:file-upload>
+```
+
+### Accessibility
+
+- The input is the only tab stop. Space or Enter opens the file picker, as on any file input; the Browse button is
+  its `<label>` (`<sl:button as="label">`), so a click opens it too, and the input's focus ring is drawn on the button.
+- The input's name is the field's label and the Browse button's text; it is described by the drop zone's description
+  and the field's description and error.
+- Each remove button is named after its file: "Remove report.pdf". After a remove, the focus moves to the next
+  file's button, or back to the input.
+- Dropping is a pointer gesture; the keyboard path is the input.
+- An upload is announced once when it starts ("Uploading 3 files."), and again when it fails, is cancelled, or ends
+  while the component is still there. The percentages are not announced; each uploading or processing attachment is
+  `aria-busy`. After a Cancel, the focus goes back to the input.
+- Its texts and announcements are messages (`sl.file-upload.*`); your own message files can reword them or add a
+  language, as [Translating](https://shadleaf.dev/current/guides/translating.md) explains.
+
+### Without JavaScript
+
+The Browse button still opens the picker and the form submits the files. There is no drop and no list: the browser
+shows nothing of the picked files but what the hidden input would.
+
+### htmx
+
+The component can be swapped in and out. The browser never restores a file input's files, and htmx's history restore
+renders the page's markup again: the list is drawn from the input's files whenever the component starts, so going back
+shows an empty upload, never files that would not be sent. A page saved in the history while uploading comes back
+as an upload that is not sending anything.
+
+### Upload progress
+
+When the form is sent with htmx (`hx-post` on the form, or a boosted form), the component shows how far the upload
+is, with no attribute of its own. It takes part in every htmx request whose body carries its files, so the form needs
+`enctype="multipart/form-data"` or `hx-encoding="multipart/form-data"`. The files go through the
+[attachment's states](https://shadleaf.dev/current/components/attachment.md#states):
+
+1. **Uploading.** Each file shows the share of its bytes sent: "Uploading · 64%".
+2. **Processing**, once the whole request is sent and the server is still working on it.
+3. **The outcome.** On success the server's answer is swapped in, as for any htmx request. It usually replaces the
+   component, with an empty form and what was uploaded, so the answer is what tells the user it worked. A
+   [toast](https://shadleaf.dev/current/components/toast.md) or the focus on the new files does that well. If the component stays, its files show as
+   "Uploaded" and leave the input, so a second submit does not send them again. On a failed request (an error status,
+   no connection, a timeout), the files show "Upload failed" and stay in the input, so the user can submit again.
+
+**Example: States.** idle draws a dashed border, uploading and processing shimmer the title, error turns destructive. The description says the state too.
+
+```html
+<sl:attachment state="idle" full-width>
+  <sl:attachment-media><sl:icon name="clock"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>selected-file.pdf</sl:attachment-title>
+    <sl:attachment-description>Ready to upload</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Remove selected-file.pdf"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+<sl:attachment state="uploading" full-width>
+  <sl:attachment-media><sl:spinner aria-hidden="true"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>design-system.zip</sl:attachment-title>
+    <sl:attachment-description>Uploading · 64%</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Cancel upload of design-system.zip"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+<sl:attachment state="processing" full-width>
+  <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>market-research.pdf</sl:attachment-title>
+    <sl:attachment-description>Processing document</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Remove market-research.pdf"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+<sl:attachment state="error" full-width>
+  <sl:attachment-media><sl:icon name="file-warning"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>financial-model.xlsx</sl:attachment-title>
+    <sl:attachment-description>Upload failed. Try again.</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Retry upload of financial-model.xlsx"><sl:icon name="refresh-cw"/></sl:attachment-action>
+    <sl:attachment-action aria-label="Remove financial-model.xlsx"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+<sl:attachment state="done" full-width>
+  <sl:attachment-media><sl:icon name="check"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>uploaded-report.pdf</sl:attachment-title>
+    <sl:attachment-description>Uploaded · 1.8 MB</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Remove uploaded-report.pdf"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+```
+
+The browser reports the progress of the whole request, not of each file. The files go into the request one after the
+other, in the list's order, so each one's share is worked out from where its bytes are in the request. The figure is
+off by the few bytes of the form's other fields, which hardly shows.
+
+While the files are sent, they cannot be added or removed: the input is disabled and the remove buttons are hidden. A
+**Cancel upload** button takes the Browse button's place. It aborts the request (`htmx:abort`), and the files are back
+as they were, ready to send again. All files go in one request, so cancelling stops them all.
+
+- **htmx 2** sends with an `XMLHttpRequest`, and the component follows its upload.
+- **htmx 4** sends with `fetch()`, which reports no upload progress. For a request that carries the files, the
+  component gives htmx a `fetch` of its own (`ctx.fetch`), which sends with an `XMLHttpRequest`. Everything else
+  (swapping, `HX-*` headers, history, `htmx:abort`) is still htmx's. htmx 4 aborts a request after 60 seconds by
+  default; for large uploads, raise its `defaultTimeout` or set `hx-config` on the form. htmx 4 also swaps an error
+  answer in, where htmx 2 leaves the page alone: if that answer replaces the component, it shows what went wrong
+  instead of the failed files.
+
+Without htmx, a plain POST, nothing of this happens: the browser shows its own progress, if any.
+
+Spring Boot answers a request larger than `spring.servlet.multipart.max-request-size` with an error, which shows as a
+failed upload: set the limits to what the form may send.
+
+### Attributes
+
+Attributes of `<sl:file-upload>`: A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has none. A visually hidden `&lt;input type="file"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype="multipart/form-data"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `multiple` | *boolean* | — | Take more than one file. Picking or dropping files adds them to the ones already there. |
+| `accept` | *string* | — | The file types to take, as the input's `accept`: extensions (`.pdf`), MIME types (`application/pdf`) or `image/*`, separated by commas. A dropped file of another type is not added. |
+| `max-size` | *string* | — | The largest file to take, as Spring Boot writes sizes: `10MB`, `500KB`. A larger file is not added. |
+| `level` | *number* | — | Makes the title a heading of this level (`role="heading"`). |
+| `previews` | *boolean* | — | Show a thumbnail of each picked image (up to 20 MB, no SVG) instead of the file icon. The thumbnail is a `blob:` URL: a Content-Security-Policy must allow it in `img-src`, or the icon stays. |
+| `layout` | `list`, `grid` | `list` | `list` shows the picked files one below the other, as small attachments; `grid` as cards in columns that fill the width, the grid of `sl:attachment-group layout="grid"`: with `previews`, for photos one wants to see before sending them. |
+| `browse-label` | *string* | — | The text of the Browse button. Defaults to "Browse files", or "Browse" without `multiple`. |
+
+Every prop can also be set from an expression: `th:multiple="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+---
+
 ## Dialog
 
 > A modal window over the page, on the native dialog element.
@@ -2155,7 +4085,7 @@ error is shown as a [toast](https://shadleaf.dev/current/components/toast.md). W
 stays open and the error is shown in it, above the content. A failed request from inside the dialog, such as a save,
 always shows the error in the dialog, so nothing the user typed is lost; the next request hides it.
 
-The message is "Something went wrong. Please try again." (`sl.dialog.error` in your `messages.properties`). The
+The message is "Something went wrong. Please try again." (`sl.dialog.error` in your `messages.properties`; see [Translating](https://shadleaf.dev/current/guides/translating.md)). The
 `error` slot replaces it for one dialog:
 
 ```html
@@ -2314,7 +4244,7 @@ It works like a [dialog](https://shadleaf.dev/current/components/dialog.md), wit
 - It has no close button in the corner.
 - `<sl:alert-dialog-cancel>` takes the focus when it opens, so pressing Enter straight away never confirms by accident.
   It closes the dialog (`commandfor` and `command="close"` are set for you) and says "Cancel" unless you give it text
-  of its own (the default comes from the message `sl.alert-dialog.cancel`). It takes the button's `variant` (default
+  of its own (the default comes from the message `sl.alert-dialog.cancel`, see [Translating](https://shadleaf.dev/current/guides/translating.md)). It takes the button's `variant` (default
   `outline`) and `size`, and passes any other attribute on to the button.
 
 The action has no part of its own: what it does depends on the page. A `type="submit"` button in a form, a button
@@ -4026,7 +5956,7 @@ and at least a second is left afterwards, so nobody loses a toast while reading 
 for a toast with a long description.
 
 - **The close button** closes one toast. It needs Alpine, so it only shows once Alpine runs; its label comes from the
-  message `sl.toast.close`.
+  message `sl.toast.close` (see [Translating](https://shadleaf.dev/current/guides/translating.md)).
 - **Alt+T** moves the focus to the newest toast, as in Sonner, from anywhere on the page; the toaster's name,
   "Notifications (Alt+T)" (message `sl.toaster.label`), tells screen reader users so. **Tab** then reaches the close
   buttons.
@@ -4205,6 +6135,308 @@ Attributes of `<sl:skeleton>`: A placeholder that pulses while content loads. It
 | `shape` | `line`, `circle` | `line` | A line of text (full width, one line high) or a circle (an avatar). |
 
 Every prop can also be set from an expression: `th:shape="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+---
+
+## Spinner
+
+> A spinning icon that says something is loading.
+
+Source: https://shadleaf.dev/current/components/spinner/
+
+**Example: Spinner.**
+
+```html
+<sl:spinner/>
+```
+
+### What it says
+
+A spinner is a status (`role="status"`) named "Loading". Give it an `aria-label` of its own to say what is loading;
+the default is the message `sl.spinner.label`, which you can reword or [translate](https://shadleaf.dev/current/guides/translating.md) in your `messages.properties`.
+
+**Example: Saying what loads.** An aria-label replaces the default name, "Loading".
+
+```html
+<sl:spinner aria-label="Loading invoices"/>
+```
+
+For a button that is busy, use [`<sl:button loading>`](https://shadleaf.dev/current/components/button.md) instead: it shows the spinner, disables the button
+and announces the busy state. To show a skeleton of the content to come, use [`<sl:skeleton>`](https://shadleaf.dev/current/components/skeleton.md).
+
+### Sizes
+
+A spinner is 16 pixels, or the size of an icon in the component around it, such as
+[`<sl:empty-media variant="icon">`](https://shadleaf.dev/current/components/empty.md#while-it-loads). `size` sets the width and height in pixels.
+
+**Example: Sizes.**
+
+```html
+<sl:spinner/>
+<sl:spinner size="24"/>
+<sl:spinner size="32"/>
+```
+
+### Reduced motion
+
+For users who ask for reduced motion the spinner turns slower instead of standing still: a frozen arc reads as a
+broken icon.
+
+### Attributes
+
+Attributes of `<sl:spinner>`: A spinning icon that says something is loading: a status (`role="status"`) named "Loading" (the message `sl.spinner.label`; an `aria-label` of its own replaces it). It turns slower, not still, when the user asks for reduced motion. For a button that is busy, use `sl:button loading` instead.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `size` | *number* | — | Width and height in pixels. Without it the spinner is 16 pixels, or sized by the surrounding component (as an icon in `sl:empty-media`). |
+
+Every prop can also be set from an expression: `th:size="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+---
+
+## Empty
+
+> What a list, a table, a search or a page shows when there is nothing to show yet.
+
+Source: https://shadleaf.dev/current/components/empty/
+
+**Example: Empty.**
+
+```html
+<sl:empty>
+  <sl:empty-header>
+    <sl:empty-media variant="icon"><sl:icon name="folder-code"/></sl:empty-media>
+    <sl:empty-title level="3">No projects yet</sl:empty-title>
+    <sl:empty-description>You haven't created any projects yet. Get started by creating your first
+      project.</sl:empty-description>
+  </sl:empty-header>
+  <sl:empty-content>
+    <sl:button as="a" href="/projects/new">Create project</sl:button>
+  </sl:empty-content>
+  <sl:button as="a" href="/docs/projects" variant="link" size="sm">
+    Learn more
+    <sl:slot name="icon-end"><sl:icon name="arrow-up-right"/></sl:slot>
+  </sl:button>
+</sl:empty>
+```
+
+### Built from parts
+
+An empty state is `<sl:empty>` plus the parts you need, as in shadcn/ui: `<sl:empty-header>` (holding
+`<sl:empty-media>`, `<sl:empty-title>` and `<sl:empty-description>`) and `<sl:empty-content>` for what to do next, such
+as a button, a search field or a link. Everything is centred, and the empty state grows to fill a flex container, so
+it sits in the middle of the space it is given.
+
+`<sl:empty-media variant="icon">` puts an icon on a muted square. The default media shows its content as it is, for an
+avatar or an image.
+
+**Example: With an avatar.** The default media shows its content as it is.
+
+```html
+<sl:empty>
+  <sl:empty-header>
+    <sl:empty-media>
+      <sl:avatar size="lg" label="Ada Lovelace">
+        <sl:avatar-image th:src="@{/users/{id}/photo(id=${user.id})}"/>
+        <sl:avatar-fallback>AL</sl:avatar-fallback>
+      </sl:avatar>
+    </sl:empty-media>
+    <sl:empty-title level="3">User offline</sl:empty-title>
+    <sl:empty-description>This user is currently offline. You can leave a message to notify them or try
+      again later.</sl:empty-description>
+  </sl:empty-header>
+  <sl:empty-content>
+    <sl:button size="sm">Leave message</sl:button>
+  </sl:empty-content>
+</sl:empty>
+```
+
+### A title that is a heading
+
+`<sl:empty-title>` is plain text unless you give it a `level`. With one, it is announced as a heading of that level.
+Pick the level that fits the page: an empty state under an `<h2>` gets `level="3"`.
+
+### Outline
+
+`border` draws a dashed line around the empty state, to mark out the area. It works without utility classes, so also
+with the standalone stylesheet.
+
+**Example: Outline.** border draws a dashed line around the empty state.
+
+```html
+<sl:empty border>
+  <sl:empty-header>
+    <sl:empty-media variant="icon"><sl:icon name="cloud"/></sl:empty-media>
+    <sl:empty-title level="3">Cloud storage is empty</sl:empty-title>
+    <sl:empty-description>Upload files to your cloud storage to access them anywhere.</sl:empty-description>
+  </sl:empty-header>
+  <sl:empty-content>
+    <sl:button variant="outline" size="sm">Upload files</sl:button>
+  </sl:empty-content>
+</sl:empty>
+```
+
+### In a card
+
+**Example: In a card.**
+
+```html
+<sl:card>
+  <sl:card-header>
+    <sl:card-title level="3">Projects</sl:card-title>
+    <sl:card-description>Everything your team is working on</sl:card-description>
+  </sl:card-header>
+  <sl:card-content>
+    <sl:empty>
+      <sl:empty-header>
+        <sl:empty-media variant="icon"><sl:icon name="folder"/></sl:empty-media>
+        <sl:empty-title level="4">No projects yet</sl:empty-title>
+        <sl:empty-description>Create a project to start working with your team.</sl:empty-description>
+      </sl:empty-header>
+      <sl:empty-content>
+        <sl:button as="a" href="/projects/new">Create project</sl:button>
+      </sl:empty-content>
+    </sl:empty>
+  </sl:card-content>
+</sl:card>
+```
+
+### In an empty table
+
+Put the empty state in [`<sl:table-empty>`](https://shadleaf.dev/current/components/table.md), which spans every column: it replaces the row's
+"No results." text.
+
+**Example: In an empty table.** An sl:empty as the content of sl:table-empty replaces its "No results." text.
+
+```html
+<sl:table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="person : ${people}">
+      <td th:text="${person.name}">Ada Lovelace</td>
+      <td th:text="${person.email}">ada@example.com</td>
+      <td th:text="${person.role}">Owner</td>
+    </tr>
+    <sl:table-empty colspan="3" th:if="${people.empty}">
+      <sl:empty>
+        <sl:empty-header>
+          <sl:empty-media variant="icon"><sl:icon name="users"/></sl:empty-media>
+          <sl:empty-title level="3">No people yet</sl:empty-title>
+          <sl:empty-description>Invite your team to collaborate on this project.</sl:empty-description>
+        </sl:empty-header>
+        <sl:empty-content>
+          <sl:button as="a" href="/people/invite" size="sm">
+            <sl:slot name="icon-start"><sl:icon name="plus"/></sl:slot>
+            Invite people
+          </sl:button>
+        </sl:empty-content>
+      </sl:empty>
+    </sl:table-empty>
+  </tbody>
+</sl:table>
+```
+
+### With a search field
+
+A link in a description is underlined. An `<sl:empty-description>` can also go in the content, below the field.
+
+**Example: With a search field.** Links in the description are underlined.
+
+```html
+<sl:empty>
+  <sl:empty-header>
+    <sl:empty-title level="3">404 - Not found</sl:empty-title>
+    <sl:empty-description>The page you're looking for doesn't exist. Try searching for what you need
+      below.</sl:empty-description>
+  </sl:empty-header>
+  <sl:empty-content>
+    <form action="/search" role="search" aria-label="Pages">
+      <sl:input-group>
+        <sl:input-group-input type="search" name="pageQuery" placeholder="Try searching for pages..."
+                              aria-label="Search pages"/>
+        <sl:input-group-addon><sl:icon name="search"/></sl:input-group-addon>
+      </sl:input-group>
+    </form>
+    <sl:empty-description>Need help? <a href="/support">Contact support</a></sl:empty-description>
+  </sl:empty-content>
+</sl:empty>
+```
+
+### While it loads
+
+An [`<sl:spinner>`](https://shadleaf.dev/current/components/spinner.md) takes the icon's place in the media while something loads.
+
+**Example: With a spinner.** While something loads, an sl:spinner takes the icon's place.
+
+```html
+<sl:empty>
+  <sl:empty-header>
+    <sl:empty-media variant="icon"><sl:spinner/></sl:empty-media>
+    <sl:empty-title level="3">Processing your request</sl:empty-title>
+    <sl:empty-description>Please wait while we process your request. Do not refresh the
+      page.</sl:empty-description>
+  </sl:empty-header>
+  <sl:empty-content>
+    <sl:button variant="outline" size="sm">Cancel</sl:button>
+  </sl:empty-content>
+</sl:empty>
+```
+
+### Attributes
+
+#### sl:empty
+
+Attributes of `<sl:empty>`: An empty state: what a list, a table, a search or a page shows when there is nothing to show yet. Holds an `sl:empty-header` (media, title and description) and an optional `sl:empty-content` with what to do next, centred in the space it is given.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `border` | *boolean* | — | A dashed line around the empty state, to mark out the area (shadcn's `border border-dashed` classes). |
+
+Every prop can also be set from an expression: `th:border="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:empty-header
+
+Attributes of `<sl:empty-header>`: The top of an `sl:empty`: an optional `sl:empty-media`, an `sl:empty-title` and an `sl:empty-description`, stacked and centred.
+
+`sl:empty-header` declares no props; every attribute passes through.
+
+#### sl:empty-media
+
+Attributes of `<sl:empty-media>`: An icon, an avatar or an image above the title of an `sl:empty`, inside `sl:empty-header`.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `default`, `icon` | `default` | `icon` puts an icon on a muted square; `default` shows the content as it is, e.g. an avatar. |
+
+Every prop can also be set from an expression: `th:variant="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:empty-title
+
+Attributes of `<sl:empty-title>`: The title of an `sl:empty`, inside `sl:empty-header`.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline. |
+
+Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:empty-description
+
+Attributes of `<sl:empty-description>`: The text below the title of an `sl:empty`. Links in it are underlined.
+
+`sl:empty-description` declares no props; every attribute passes through.
+
+#### sl:empty-content
+
+Attributes of `<sl:empty-content>`: What to do next in an `sl:empty`, below its header: a button, a search field, a link.
+
+`sl:empty-content` declares no props; every attribute passes through.
 
 ---
 
@@ -4490,7 +6722,7 @@ starts on the first page; the sort and page links keep `q` by themselves. To sea
 ### Nothing found
 
 `<sl:table-empty>` is the row to show when there are no rows: one cell across the table's `colspan` columns, saying
-"No results." (the message `sl.table.empty`, which your `messages.properties` can reword). Content of its own replaces
+"No results." (the message `sl.table.empty`, which your `messages.properties` can [reword or translate](https://shadleaf.dev/current/guides/translating.md)). Content of its own replaces
 the text.
 
 **Example: Nothing found.**
@@ -4660,7 +6892,7 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
 
   Select-all is named "Select all rows on this page" (`sl.table.select-all`); an `aria-label` of yours replaces it.
 - **The count** reads "2 of 20 selected" (`sl.table.selection.count`; keep `{0}` and `{1}` as they are, the browser
-  fills them in). Its `table` prop is the table's `id`, which `sl:table` puts on the `table`. It is not a live region:
+  fills them in; see [Translating](https://shadleaf.dev/current/guides/translating.md)). Its `table` prop is the table's `id`, which `sl:table` puts on the `table`. It is not a live region:
   a row's checkbox announces its own state, so the count is only announced after a click on select-all, which
   changes rows the user did not touch.
 
@@ -4929,7 +7161,7 @@ and `sl:pagination-next` take `disabled`, and content of their own replaces thei
 ```
 
 A `Slice` has no total, so it reads "11–20" or "Page 2". The words are messages, so your `messages.properties` rewords
-or translates them; the numbers are formatted for the locale ("1,001–1,010 of 12,345").
+or [translates](https://shadleaf.dev/current/guides/translating.md) them; the numbers are formatted for the locale ("1,001–1,010 of 12,345").
 
 ### Rows per page
 
@@ -4987,6 +7219,8 @@ link is followed. [Tables with htmx](https://shadleaf.dev/current/guides/tables-
 - The size menu's button reads "Rows per page" followed by the size.
 
 ### Messages
+
+[Translating](https://shadleaf.dev/current/guides/translating.md) lists the languages Shadleaf ships them in, and explains how to add one.
 
 | Key | English |
 | --- | --- |
@@ -5192,6 +7426,584 @@ Every prop can also be set from an expression: `th:except="${...}"`. Any other a
 
 ---
 
+## Month view
+
+> A month rendered on the server, with content of your own per day and a link per day; no picking.
+
+Source: https://shadleaf.dev/current/components/month-view/
+
+**Example: Month view.** Each day shows its events from the model and links to the day's agenda.
+
+```html
+<sl:month-view day-href="/agenda/{date}">
+  <sl:slot name="day">
+    <sl:badge th:each="event : ${events[slDay.date]}" variant="secondary">[[${event}]]</sl:badge>
+  </sl:slot>
+</sl:month-view>
+```
+
+### Content per day
+
+`<sl:month-view>` shows a month to look at, not to pick from: an agenda, a booking overview, orders per day. The server
+renders it whole, so it needs no JavaScript. For a date in a form, use the [calendar](https://shadleaf.dev/current/components/calendar.md) or the
+[date picker](https://shadleaf.dev/current/components/date-picker.md).
+
+The `day` slot is rendered once for every day, and sees that day as `${slDay}`:
+
+| Property | |
+| --- | --- |
+| `date` | The day as a `LocalDate`, to look it up in your model: `${events[slDay.date]}` |
+| `iso` | The same as an ISO string: `2026-10-23` |
+| `number` | The day of the month, which the cell shows |
+| `label` | The whole date in the page's locale (`Friday, October 23, 2026`), which screen readers get |
+| `outside` | Whether the day belongs to the previous or next month |
+| `today` | Whether it is today |
+
+Put the data in the model as a map from `LocalDate` to what a day shows, and look the day up in the slot:
+
+```java
+@GetMapping("/agenda")
+String agenda(Model model) {
+  model.addAttribute("events", agenda.eventsByDay()); // Map<LocalDate, List<String>>
+  return "agenda";
+}
+```
+
+```html
+<sl:month-view day-href="/agenda/{date}">
+  <sl:slot name="day">
+    <sl:badge th:each="event : ${events[slDay.date]}" variant="secondary">[[${event}]]</sl:badge>
+  </sl:slot>
+</sl:month-view>
+```
+
+The seven days share the width. Content wider than its day is cut off, so keep it short: a badge, a count, a word.
+
+### Links to a day
+
+`day-href` makes every day a link. `{date}` in it is replaced by the day's ISO date: `/agenda/{date}` links to
+`/agenda/2026-10-23`, `?date={date}` to the same page with a parameter. The result is a Thymeleaf link, so a path that
+starts with `/` gets the context path.
+
+The link holds the day's number, its whole date for screen readers, and the slot's content. So a screen reader reads
+"Friday, October 23, 2026, Demo". Put nothing interactive in the slot then: a link cannot hold a button or another
+link. Today's day is marked `aria-current="date"`.
+
+Without `day-href`, the days are no links.
+
+### The month shown
+
+The previous and next buttons are links to the same page with `?month=2026-09`; every other parameter of the request
+is kept, so a filter (`?team=ops`) stays. Without a `month` attribute, `<sl:month-view>` reads that parameter itself,
+so the controller needs nothing for it. A value that is no month falls back to the current month.
+
+To read it in the controller, take a `YearMonth` (Spring converts `2026-10`) and pass it on:
+
+```java
+@GetMapping("/agenda")
+String agenda(@RequestParam(required = false) YearMonth month, Model model) {
+  YearMonth shown = month != null ? month : YearMonth.now();
+  model.addAttribute("month", shown);
+  model.addAttribute("events", agenda.eventsByDay(shown));
+  return "agenda";
+}
+```
+
+```html
+<sl:month-view th:month="${month}">...</sl:month-view>
+```
+
+`month` takes a `YearMonth`, a `LocalDate` in the month, or the text `2026-10`. `month-param` renames the parameter,
+for a second month view on the page.
+
+Today is marked; by default that is the server's date. If your users are in another time zone, put their date in the
+model (`LocalDate.now(zone)`) and pass it: `th:today="${today}"`.
+
+### Week numbers and the first day of the week
+
+As for the [calendar](https://shadleaf.dev/current/components/calendar.md#week-numbers-and-the-first-day-of-the-week), the page's locale decides the first day
+of the week and how weeks are numbered, and the names of the month and the days. `week-starts-on` overrides the first
+day: 0 is Sunday, 1 Monday, up to 6. `show-week-number` adds a column with the week numbers.
+`show-outside-days="false"` leaves the days of the previous and next month empty.
+
+**Example: Counts and week numbers.** A count per day, no links. Monday first, with the week numbers; the days of the other months left out.
+
+```html
+<sl:month-view show-outside-days="false" show-week-number week-starts-on="1">
+  <sl:slot name="day">
+    <span th:if="${orders[slDay.date]}">[[${orders[slDay.date]}]] orders</span>
+  </sl:slot>
+</sl:month-view>
+```
+
+### Without content
+
+**Example: Without content.** Without a day slot or day-href, the month only shows its dates.
+
+```html
+<sl:month-view/>
+```
+
+### With htmx
+
+The month links are plain links, so `hx-boost` on the page, or `hx-get` with `hx-target` and `hx-select` on a
+container around the month view, swaps the next month in. The controller renders the same page; nothing in the month
+view needs JavaScript.
+
+### Accessibility
+
+- The month is a `<table>`, named by its caption (`October 2026`). The column headers carry the whole name of the day
+  (`Monday`), the week numbers are row headers.
+- Each day says its whole date, then its content.
+- It is no ARIA grid: the arrow keys do not move between days. Tab goes through the previous and next links, then
+  through the days that are links.
+
+### Attributes
+
+Attributes of `<sl:month-view>`: A month to look at, rendered on the server: each day shows content of its own (a badge, a short text, a count) from the `day` slot, which is rendered once per day and sees the day as `${slDay}` (`date`, a `LocalDate`, `iso`, `number`, `label`, `outside`, `today`), and can link to a page for that day. Nothing is picked: for a date in a form, use `sl:calendar`. The previous and next month are links to the same page with `?month=2026-09`, every other parameter kept, so it needs no JavaScript and works with htmx.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `month` | *string* | — | The month shown, as `2026-10` (a `YearMonth`) or a date in it. By default the month the request asks for in `month-param`, or else the current month. |
+| `month-param` | *string* | `month` | The request parameter the links to the previous and next month set, and that gives the month when `month` is not set. |
+| `day-href` | *string* | — | Makes every day a link: `{date}` is replaced by the day's ISO date (`/agenda/{date}`, `?date={date}`), and the result is a Thymeleaf link, so a path starting with `/` gets the context path. The `day` slot is then inside the link: put nothing interactive in it. |
+| `today` | *string* | — | Today, as `2026-10-23` (a `LocalDate`), marked as the current date. By default the server's date; pass it in the user's time zone when that differs. |
+| `show-outside-days` | *boolean* | `true` | Show the days of the previous and next month that fill the first and last week. |
+| `show-week-number` | *boolean* | — | Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe). |
+| `week-starts-on` | *number* | — | The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides. |
+
+Every prop can also be set from an expression: `th:month="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+---
+
+## Chart
+
+> shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+
+Source: https://shadleaf.dev/current/components/chart/
+
+**Example: Bar chart.** Two series side by side, in a card as shadcn shows it. The months are YearMonths: month-short writes the ticks (Jan), month the tooltip's label (January).
+
+```html
+<sl:card>
+  <sl:card-header>
+    <sl:card-title level="3">Bar Chart - Multiple</sl:card-title>
+    <sl:card-description>January - June 2024</sl:card-description>
+  </sl:card-header>
+  <sl:card-content>
+    <sl:chart th:data="${visitors}" label="Visitors, January to June 2024">
+      <sl:chart-grid/>
+      <sl:chart-x-axis key="month" format="month-short" tick-margin="10"/>
+      <sl:chart-tooltip indicator="dashed" cursor="false" label-format="month"/>
+      <sl:chart-bar key="desktop" label="Desktop" radius="4"/>
+      <sl:chart-bar key="mobile" label="Mobile" radius="4"/>
+    </sl:chart>
+  </sl:card-content>
+  <sl:card-footer>
+    <p>Showing total visitors for the last 6 months</p>
+  </sl:card-footer>
+</sl:card>
+```
+
+### Built from parts
+
+A chart is shadcn's: [Recharts](https://recharts.github.io/) draws it in the browser, with shadcn's look. The template
+says what to draw, the controller gives the rows:
+
+```html
+<sl:chart th:data="${visitors}" th:label="#{visitors.title}">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip/>
+  <sl:chart-bar key="desktop" th:label="#{visitors.desktop}"/>
+  <sl:chart-bar key="mobile" th:label="#{visitors.mobile}"/>
+</sl:chart>
+```
+
+```java
+record MonthlyVisitors(YearMonth month, long desktop, long mobile) {}
+
+@GetMapping("/visitors")
+String visitors(Model model) {
+  model.addAttribute("visitors", repository.visitorsPerMonth()); // List<MonthlyVisitors>
+  return "visitors";
+}
+```
+
+- **`th:data`** takes a list of rows: records, objects or maps, or a Spring Data `Page`. They go into the page as
+  JSON, written by Jackson.
+- **The series parts** (`sl:chart-bar`, `sl:chart-line`, `sl:chart-area`) name the property they draw in `key`, and
+  carry the series' `label` and `color`: what shadcn's `ChartConfig` holds. The chart draws bars for bars only, lines
+  for lines only, areas for areas only, and a composed chart for a mix.
+- **The other parts** add a grid, the axes, a tooltip and a legend. Every part is optional; their order is the order
+  Recharts draws them in.
+- **`label`** names the chart for a screen reader. The chart takes the focus, and the arrow keys move the tooltip from
+  one category to the next.
+
+### Colours
+
+A series without a `color` takes the chart tokens in turn: the first `var(--chart-1)`, the second `var(--chart-2)`,
+up to `--chart-5`, then again from the first. A theme that redefines them recolours every chart. `color` takes any
+CSS colour, and `color-dark` a different one for the dark theme:
+
+```html
+<sl:chart-line key="revenue" color="oklch(0.55 0.2 260)" color-dark="oklch(0.75 0.15 260)"/>
+```
+
+The colour becomes the CSS property `--color-<key>` on the chart, which is why a key is checked to be a CSS
+identifier: letters, digits, `_` and `-`, not starting with a digit or `-`. A key that is not fails the render.
+
+### Stacked bars and a legend
+
+**Example: Stacked bars and a legend.** The same stack id stacks the series; the radius rounds the bottom of the first and the top of the last.
+
+```html
+<sl:chart th:data="${visitors}" label="Visitors, January to June 2024">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short" tick-margin="10"/>
+  <sl:chart-tooltip hide-label/>
+  <sl:chart-legend/>
+  <sl:chart-bar key="desktop" label="Desktop" stack="a" radius="0,0,4,4"/>
+  <sl:chart-bar key="mobile" label="Mobile" stack="a" radius="4,4,0,0"/>
+</sl:chart>
+```
+
+The legend lists the series by label, in the order of the series parts, like the tooltip.
+
+### Line chart
+
+**Example: Line chart.**
+
+```html
+<sl:chart th:data="${visitors}" label="Visitors, January to June 2024" margin="12">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip cursor="false" label-format="month"/>
+  <sl:chart-line key="desktop" label="Desktop"/>
+  <sl:chart-line key="mobile" label="Mobile"/>
+</sl:chart>
+```
+
+`margin` leaves room left and right of the plot, so the first and last tick labels fit. `curve` sets how a line runs
+between the points (`monotone`, `natural`, `linear`, `step`), `dots` puts a dot on each.
+
+**Example: Actual and forecast.** A dashed series for a forecast, target or budget. The rows without a number (null) leave a gap, so the actual line stops at the last month with figures; join names the series the forecast continues, so it starts there without a number of its own, and the tooltip lists only the actual value for that month. The legend and the tooltip show the forecast dashed too.
+
+```html
+<sl:chart th:data="${sales}" label="Cumulative sales, January to December 2024" margin="12">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip cursor="false" label-format="month"/>
+  <sl:chart-legend/>
+  <sl:chart-line key="actual" label="Actual" color="var(--chart-1)"/>
+  <sl:chart-line key="forecast" label="Forecast" color="var(--chart-1)" dashed join="actual"/>
+</sl:chart>
+```
+
+`dashed` draws a series dashed (on `sl:chart-area` only its line, the fill stays), for a forecast or a target next to actual figures. The
+legend and the tooltip show it dashed as well. A row without a number (`null`) leaves a gap, so an actual line stops
+at the last month with figures while the dashed one carries on. `join` (on `sl:chart-line` and `sl:chart-area`) names the series a dashed line continues
+(`join="actual"`): the line starts at that series' last number, without a duplicate in your rows, and the tooltip does
+not list the forecast for that month.
+
+### Area chart
+
+**Example: Area chart.** The tooltip's line indicator, nested beside the label when there is one series.
+
+```html
+<sl:chart th:data="${visitors}" label="Desktop visitors, January to June 2024" margin="12">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip indicator="line" cursor="false" label-format="month"/>
+  <sl:chart-area key="desktop" label="Desktop"/>
+</sl:chart>
+```
+
+**Example: Stacked areas.**
+
+```html
+<sl:chart th:data="${visitors}" label="Visitors, January to June 2024" margin="12">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip cursor="false" label-format="month"/>
+  <sl:chart-area key="mobile" label="Mobile" stack="a" color="var(--chart-2)"/>
+  <sl:chart-area key="desktop" label="Desktop" stack="a" color="var(--chart-1)"/>
+</sl:chart>
+```
+
+**Example: Area with a forecast.** The same on areas: the forecast's line is dashed, its fill stays, and join starts it at the last actual number.
+
+```html
+<sl:chart th:data="${sales}" label="Cumulative sales, January to December 2024" margin="12">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip indicator="line" cursor="false" label-format="month"/>
+  <sl:chart-legend/>
+  <sl:chart-area key="actual" label="Actual" color="var(--chart-1)"/>
+  <sl:chart-area key="forecast" label="Forecast" color="var(--chart-1)" fill-opacity="0.15" dashed join="actual"/>
+</sl:chart>
+```
+
+On an area, `dashed` dashes the line and the fill stays; a lower `fill-opacity` on the forecast sets it apart.
+
+### Tooltip
+
+The tooltip shows the hovered category and every series' label and value. `indicator` is the mark before each label:
+`dot` (the default), `line` or `dashed`. `hide-label` leaves out the category, `hide-indicator` the marks, and
+`cursor="false"` the highlight of the hovered category.
+
+### Formats
+
+Instead of shadcn's `tickFormatter`, `formatter` and `labelFormatter` functions, the parts take a named format,
+written with `Intl` in the page's language (`<html lang>`, from Spring's locale):
+
+| Format | Writes | For |
+| --- | --- | --- |
+| `number` | 1,234.5 | numbers; the tooltip's values by default |
+| `integer` | 1,235 | |
+| `compact` | 1.2K | a value axis |
+| `percent` | 25% for 0.25 | |
+| `currency` | €1,234.50, with `currency="EUR"` | |
+| `day` | Apr 1 | dates |
+| `month-short` | Apr | |
+| `month` | April | |
+| `month-year` | Apr 2024 | |
+| `date` | Apr 1, 2024 | |
+| `time` | 10:00 AM | |
+
+`format` on an axis writes its ticks, `label-format` and `value-format` on the tooltip its label and values. A format
+is an enum: a typo fails the render. A value of another kind (a date format on a name) is shown as it is.
+
+**Example: Formats.** Days as LocalDates (day on the axis, date in the tooltip), a value axis in compact numbers and the values in euros, all in the page's language.
+
+```html
+<sl:chart th:data="${revenue}" label="Revenue per day, 1 to 10 April 2024">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="day" format="day"/>
+  <sl:chart-y-axis format="compact"/>
+  <sl:chart-tooltip label-format="date" value-format="currency" currency="EUR"/>
+  <sl:chart-bar key="revenue" label="Revenue" radius="4"/>
+</sl:chart>
+```
+
+For a label no format writes, format it in Java and give the tooltip that property in `label-key`: it then shows that
+property of the hovered row as its label.
+
+#### Dates and time zones
+
+The dates are read by their Java type, as Jackson writes them, never by the browser's date parser (which reads
+`2024-04-01` as midnight UTC, the evening before in America):
+
+- **`LocalDate`** (`2024-04-01`) and **`YearMonth`** (`2024-04`) are calendar dates: shown as they are, in every time
+  zone.
+- **`LocalDateTime`** (`2024-04-01T10:00:00`) is a time on the clock: shown as written.
+- **`Instant`**, **`OffsetDateTime`** and **`ZonedDateTime`** (`2024-04-01T08:00:00Z`) are moments: shown in the
+  chart's time zone. That is the request's (Spring's `LocaleContextHolder`, which a `LocaleResolver` that knows the
+  user's zone sets; the server's otherwise), or the one `time-zone` names.
+
+**Example: Instants in a time zone.** Instants (written with Z) are shown in the chart's time zone: the request's, or time-zone. The first point is 06:00 UTC, so 08:00 in Brussels.
+
+```html
+<sl:chart th:data="${requests}" label="Requests per hour, 1 April 2024" time-zone="Europe/Brussels" margin="12">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="hour" format="time"/>
+  <sl:chart-tooltip label-format="time" value-format="integer"/>
+  <sl:chart-line key="requests" label="Requests" dots/>
+</sl:chart>
+```
+
+### Series from the model
+
+For series known only at run time, put `th:each` on a series part:
+
+**Example: Series from the model.** th:each on a series part, for series known at run time. Each takes the next chart colour.
+
+```html
+<sl:chart th:data="${browsers}" label="Visitors per browser, January to June 2024">
+  <sl:chart-grid/>
+  <sl:chart-x-axis key="month" format="month-short"/>
+  <sl:chart-tooltip label-format="month"/>
+  <sl:chart-legend/>
+  <sl:chart-line th:each="browser : ${series}" th:key="${browser.key}" th:label="${browser.label}"/>
+</sl:chart>
+```
+
+### Size
+
+A chart is as wide as its container and 16:9, as shadcn's. For a fixed height, give it one in your CSS, with
+`aspect-ratio: auto` (shadcn's `aspect-auto h-[250px]`):
+
+```css
+.visitors-chart { aspect-ratio: auto; height: 250px; }
+```
+
+### Right to left
+
+On a `dir="rtl"` page the category axis runs from right to left and the value axis stands on the right; the arrow
+keys follow what you see.
+
+### With htmx
+
+- A chart that htmx swaps in draws itself; one it swaps out is cleaned up.
+- Before htmx saves a page for Back, the charts are put back to their skeletons, so the saved page holds none of the
+  inline styles Recharts sets (a strict Content-Security-Policy would report them when the page comes back). Back
+  draws them again.
+
+### Left out
+
+These shadcn and Recharts features have no counterpart yet: pie, radar and radial charts (pie charts are planned),
+horizontal bars, gradients, custom tooltip and legend content, icons in the config, reference lines and brushes.
+For anything else, `sl-chart` is a custom element: an application can write its own.
+
+### Attributes
+
+#### sl:chart
+
+Attributes of `<sl:chart>`: A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `th:data` | *object* | **required** | The rows: a list (or a Spring Data `Page`) of objects, records or maps, one per category or point in time. Each row holds the category (`month`) and a number per series (`desktop`, `mobile`). Serialised with Jackson: dates as ISO strings, which the named date formats read by their Java type. |
+| `label` | *string* | **required** | The chart's accessible name, such as its title: what a screen reader announces when the chart takes the focus. |
+| `margin` | *number* | — | Space in pixels left and right of the plot, so the first and last tick labels fit (shadcn's line and area charts use 12). |
+| `time-zone` | *string* | — | The time zone (an IANA id such as `Europe/Brussels`) instants in the data are shown in: `Instant`, `OffsetDateTime` and `ZonedDateTime`. Defaults to the request's (Spring's `LocaleContextHolder`). A `LocalDate` or `LocalDateTime` is shown as written, in any zone. |
+
+Every prop can also be set from an expression: `th:data="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:chart-grid
+
+Attributes of `<sl:chart-grid>`: The grid lines behind a `sl:chart`'s plot. Draws no element of its own on the page: the chart reads it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `vertical` | *boolean* | — | Vertical lines too, one per category. |
+| `horizontal` | *boolean* | `true` | Horizontal lines, one per value tick. |
+
+Every prop can also be set from an expression: `th:vertical="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:chart-x-axis
+
+Attributes of `<sl:chart-x-axis>`: The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines (as shadcn's). Under `dir="rtl"` it runs from right to left. Draws no element of its own on the page: the chart reads it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `key` | *string* | **required** | The property of the rows that holds the category (`month`) or the date. |
+| `format` | `number`, `integer`, `compact`, `percent`, `currency`, `day`, `month-short`, `month`, `month-year`, `date`, `time` | — | How the ticks are written, with `Intl` in the page's language. Numbers: `number`, `integer`, `compact` (1.2K), `percent` (0.25 is 25%), `currency` (with `currency`). Dates: `day` (Apr 1), `month-short` (Apr), `month` (April), `month-year` (Apr 2024), `date`, `time`. Without one, the values as they are. |
+| `currency` | *string* | — | The ISO 4217 code (`EUR`) for `format="currency"`. |
+| `tick-margin` | *number* | `8` | Space in pixels between the ticks and the plot. |
+| `min-tick-gap` | *number* | `5` | The least space in pixels between two ticks; Recharts leaves out ticks that would come closer, as on a long time axis. |
+
+Every prop can also be set from an expression: `th:key="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:chart-y-axis
+
+Attributes of `<sl:chart-y-axis>`: The value axis of a `sl:chart`, at the start side (the left, or the right under `dir="rtl"`), without tick or axis lines. shadcn's charts often leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `format` | `number`, `integer`, `compact`, `percent`, `currency`, `day`, `month-short`, `month`, `month-year`, `date`, `time` | — | How the ticks are written, as on `sl:chart-x-axis`: `compact` (1.2K) and `currency` suit a value axis. |
+| `currency` | *string* | — | The ISO 4217 code (`EUR`) for `format="currency"`. |
+| `tick-margin` | *number* | `8` | Space in pixels between the ticks and the plot. |
+| `tick-count` | *number* | `5` | How many ticks Recharts aims for. |
+
+Every prop can also be set from an expression: `th:format="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:chart-tooltip
+
+Attributes of `<sl:chart-tooltip>`: The tooltip of a `sl:chart`: on hover, or with the arrow keys once the chart has the focus, it shows the category and every series' label and value. Draws no element of its own on the page: the chart reads it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `indicator` | `dot`, `line`, `dashed` | `dot` | The mark before each series' label, in its colour. |
+| `cursor` | *boolean* | `true` | Highlight the hovered category (a band behind bars, a line over lines and areas). |
+| `hide-label` | *boolean* | — | Leave out the label at the top (the category). |
+| `hide-indicator` | *boolean* | — | Leave out the marks before the series' labels. |
+| `label-key` | *string* | — | The property of the rows to take the label from instead of the axis category: a series key gives that series' label, any other property its value in the hovered row, such as a date the server formatted. |
+| `label-format` | `number`, `integer`, `compact`, `percent`, `currency`, `day`, `month-short`, `month`, `month-year`, `date`, `time` | — | How the label is written, as the ticks of `sl:chart-x-axis` (`month`, `date`, ...). Without one, as it is. |
+| `value-format` | `number`, `integer`, `compact`, `percent`, `currency`, `day`, `month-short`, `month`, `month-year`, `date`, `time` | `number` | How the values are written: `number` in the page's language, or `currency`, `percent`, ... |
+| `currency` | *string* | — | The ISO 4217 code (`EUR`) for a `currency` format. |
+
+Every prop can also be set from an expression: `th:indicator="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:chart-legend
+
+Attributes of `<sl:chart-legend>`: The legend of a `sl:chart`: every series' label with its colour. Draws no element of its own on the page: the chart reads it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `vertical-align` | `bottom`, `top` | `bottom` | Below the plot, or above it. |
+
+Every prop can also be set from an expression: `th:vertical-align="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:chart-bar
+
+Attributes of `<sl:chart-bar>`: One series of a `sl:chart`, drawn as bars: one per row. Draws no element of its own on the page: the chart reads it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `key` | *string* | **required** | The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`. |
+| `label` | *string* | — | The series' name in the tooltip and the legend, typically a message (`th:label="#{visitors.desktop}"`). Defaults to the key. |
+| `color` | *string* | — | Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first). |
+| `color-dark` | *string* | — | A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`). |
+| `radius` | *string* | — | The bars' corner radius in pixels: `4` for every corner, or four numbers (top-left, top-right, bottom-right, bottom-left), as `4,4,0,0` for the top bar of a stack. |
+| `stack` | *string* | — | Stack this series on the others with the same `stack` id (any name, such as `a`) instead of drawing them side by side. |
+
+Every prop can also be set from an expression: `th:key="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:chart-line
+
+Attributes of `<sl:chart-line>`: One series of a `sl:chart`, drawn as a line through the rows. Draws no element of its own on the page: the chart reads it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `key` | *string* | **required** | The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`. |
+| `label` | *string* | — | The series' name in the tooltip and the legend, typically a message (`th:label="#{visitors.desktop}"`). Defaults to the key. |
+| `color` | *string* | — | Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first). |
+| `color-dark` | *string* | — | A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`). |
+| `curve` | `monotone`, `natural`, `linear`, `step`, `step-before`, `step-after` | `monotone` | How the line runs between the points: smooth (`monotone`, `natural`), straight (`linear`) or in steps. |
+| `dots` | *boolean* | — | A dot on every point. |
+| `dashed` | *boolean* | — | Draw the line dashed, as a forecast or target next to actual figures. The legend and the tooltip show the series dashed as well. A row without a number (`null`) leaves a gap, so an actual line can stop where a dashed one takes over (see `join`). |
+| `join` | *string* | — | The `key` of the series this dashed line continues (`actual`). The chart draws the dashed line from that series' last number to its own first one, so the rows need no duplicated value, and the tooltip does not list this series at that last row. Needs `dashed`. |
+| `stroke-width` | *number* | `2` | The line's width in pixels. |
+
+Every prop can also be set from an expression: `th:key="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:chart-area
+
+Attributes of `<sl:chart-area>`: One series of a `sl:chart`, drawn as a filled area under a line through the rows. Draws no element of its own on the page: the chart reads it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `key` | *string* | **required** | The property of the rows that holds this series' numbers (`desktop`): letters, digits, `_` and `-`, as it also names the colour property `--color-&lt;key&gt;`. |
+| `label` | *string* | — | The series' name in the tooltip and the legend, typically a message (`th:label="#{visitors.desktop}"`). Defaults to the key. |
+| `color` | *string* | — | Its colour, any CSS colour (`var(--chart-3)`, `#2563eb`). Defaults to the chart tokens in turn: the first series `var(--chart-1)`, the second `var(--chart-2)`, and so on (after the fifth, again from the first). |
+| `color-dark` | *string* | — | A different colour in the dark theme; `color` is then the light one (the two go into `light-dark()`). |
+| `curve` | `natural`, `monotone`, `linear`, `step`, `step-before`, `step-after` | `natural` | How the line runs between the points: smooth (`natural`, `monotone`), straight (`linear`) or in steps. |
+| `stack` | *string* | — | Stack this series on the others with the same `stack` id (any name, such as `a`). |
+| `dashed` | *boolean* | — | Draw the line on top of the area dashed (the fill stays as it is). The legend and the tooltip show the series dashed as well. |
+| `join` | *string* | — | The `key` of the series this dashed area continues (`actual`), as on `sl:chart-line`: it starts at that series' last number, and the tooltip does not list this series at that last row. Needs `dashed`. |
+| `fill-opacity` | *number* | `0.4` | The opacity of the fill, from 0 to 1. |
+
+Every prop can also be set from an expression: `th:key="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+### JavaScript
+
+The chart is the one component that is no Alpine component: Recharts is a React library, and Shadleaf runs it on
+[Preact](https://preactjs.com/) (`preact/compat`), which makes the chart's script some 50 KB (gzip) smaller.
+
+- **JavaScript is required.** Without it, the chart's skeleton stays where the chart would be.
+- **It loads when it is needed.** Every Shadleaf script (`shadleaf.assets.alpine` `bundled`, `csp` or `external`)
+  holds a loader of about 1 KB. It loads the chart's script (about 125 KB gzip) when the first chart comes near the
+  viewport, so a page without charts never loads it. It needs no Alpine.
+- **It works under a strict Content-Security-Policy**, without `'unsafe-inline'` or `'unsafe-eval'`: the rows are a
+  JSON data block (`<script type="application/json">`), which never runs, and the colours are set through CSSOM rather
+  than a `<style>` element.
+- **The server renders** `<sl-chart class="chart">` holding the data block, one element per part
+  (`<sl-chart-bar key="desktop" label="Desktop">`) and the skeleton. The script mounts the chart beside them and marks
+  the chart `data-ready` once it has drawn.
+
+---
+
 ## Application shell
 
 > Choosing between a sidebar and a header for the frame around every page, and what every layout needs whichever you pick.
@@ -5273,6 +8085,47 @@ name and the theme toggle, and the page in a plain `main` with the skip link's t
 
 Without `<sl:sidebar-provider>` the site header lies across the top of the page, on the page's colour with a border
 below.
+
+### Printing
+
+A printed page is the page alone. In print, Shadleaf leaves out the sidebar and its trigger, the site header (with
+the breadcrumb, the theme toggle and anything else in it) and the toasts, and the inset loses the card the `inset`
+variant draws, so the page takes the whole width of the paper. Put what the paper needs (a title, the date) in the page
+itself, not in the header.
+
+Paper is light: the theme script takes the dark theme off while the browser prints, and puts it back afterwards. A
+page without the theme script has no dark theme to take off.
+
+Anything else that is only for the screen, such as a row of buttons above a printable sheet, is the application's to
+hide (see the tip below). Set the paper's size and margins with `@page` in the application's stylesheet:
+
+```css
+@page {
+  size: A4;
+  margin: 12mm;
+}
+```
+
+> **Tip: Leaving out more on paper**
+>
+> Hide the application's own screen-only parts in a print media query. In plain CSS, give them a class of your own:
+>
+> ```css
+> @media print {
+>   .screen-only {
+>     display: none;
+>   }
+> }
+> ```
+>
+> ```html
+> <div class="screen-only">
+>   <sl:button as="a" th:href="@{/sheets}" variant="outline">All sheets</sl:button>
+> </div>
+> ```
+>
+> With Tailwind CSS, the `print:` variant does the same: `<div class="print:hidden">`. Either class works on a
+> component too (`class` is appended to its own): Shadleaf's rules sit in a cascade layer, so the application's win.
 
 ### With htmx
 
@@ -6600,7 +9453,7 @@ entry that is only needed on a phone.
 ### Trigger
 
 The trigger is a ghost icon button with a panel icon (turned around on a right-to-left page), named "Toggle sidebar"
-(the message `sl.sidebar.trigger`). An `aria-label` replaces the name, and content of its own replaces the icon:
+(the message `sl.sidebar.trigger`, see [Translating](https://shadleaf.dev/current/guides/translating.md)). An `aria-label` replaces the name, and content of its own replaces the icon:
 
 ```html
 <sl:sidebar-trigger aria-label="Menu"><sl:icon name="menu"/></sl:sidebar-trigger>
@@ -7240,6 +10093,9 @@ change it:
 
 ### Labels
 
+The labels are messages, which your `messages.properties` can reword or translate (see
+[Translating](https://shadleaf.dev/current/guides/translating.md)):
+
 ```properties
 sl.user-menu.trigger=Account: {0}
 sl.user-menu.sign-in=Sign in
@@ -7465,6 +10321,8 @@ of its own replaces it, such as another icon; that content is not turned around.
 
 ### Messages
 
+[Translating](https://shadleaf.dev/current/guides/translating.md) lists the languages Shadleaf ships them in, and explains how to add one.
+
 | Key | English |
 | --- | --- |
 | `sl.breadcrumb.label` | Breadcrumb |
@@ -7581,7 +10439,7 @@ The focused `main` draws no focus ring: it is no control, and the page scrolling
 
 ### Text
 
-The text is "Skip to main content" (the message `sl.skip-link`). Content of its own replaces it:
+The text is "Skip to main content" (the message `sl.skip-link`, see [Translating](https://shadleaf.dev/current/guides/translating.md)). Content of its own replaces it:
 
 ```html
 <sl:skip-link for="results">Skip to the results</sl:skip-link>
@@ -8420,6 +11278,435 @@ Attributes of `<sl:card-footer>`: The bottom of a card, for actions or a summary
 | `border` | *boolean* | — | A dividing line above the footer, with matching spacing. |
 
 Every prop can also be set from an expression: `th:border="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+---
+
+## Attachment
+
+> A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
+
+Source: https://shadleaf.dev/current/components/attachment/
+
+**Example: Attachment.**
+
+```html
+<sl:attachment>
+  <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>sales-dashboard.pdf</sl:attachment-title>
+    <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Remove sales-dashboard.pdf"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+```
+
+### Built from parts
+
+An attachment is `<sl:attachment>` plus the parts you need, as in shadcn/ui: `<sl:attachment-media>` (an icon or an
+image), `<sl:attachment-content>` (holding `<sl:attachment-title>` and `<sl:attachment-description>`),
+`<sl:attachment-actions>` with one or more `<sl:attachment-action>`s, and an optional `<sl:attachment-trigger>` that
+makes the whole card clickable. `<sl:attachment-group>` lays several out in a row or a grid.
+
+The attachment only shows a file; it uploads nothing. Use it for files that are already on the server, such as the
+documents on a customer's page, and for the list of a file upload, where your page or your script sets each one's
+`state`.
+
+An `<sl:attachment-action>` is an [`<sl:button>`](https://shadleaf.dev/current/components/button.md), ghost and an extra small icon by default. It holds
+only an icon, so give it an `aria-label` that names the file: "Remove report.pdf", not just "Remove", because a page
+can show many.
+
+A title or description that does not fit is cut off with an ellipsis. Without `full-width` an attachment is as wide
+as its content; with it, it fills its container, for a list of attachments.
+
+### Image
+
+`<sl:attachment-media variant="image">` crops an `<img>` to fill the media's square. `orientation="vertical"` puts the
+media above the content. The title already names the file, so the image can have an empty `alt`.
+
+**Example: Image.** variant="image" crops the image to the media's square; orientation="vertical" puts it above the content. The trigger opens the file.
+
+```html
+<sl:attachment-group>
+  <sl:attachment orientation="vertical" th:each="photo : ${photos}">
+    <sl:attachment-media variant="image">
+      <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+    </sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title>[[${photo.name}]]</sl:attachment-title>
+      <sl:attachment-description>[[${photo.meta}]]</sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action th:aria-label="|Remove ${photo.name}|"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+    <sl:attachment-trigger as="a" th:href="@{/files/{id}(id=${photo.id})}" target="_blank"
+                           th:aria-label="|Open ${photo.name}|"/>
+  </sl:attachment>
+</sl:attachment-group>
+```
+
+The image is your own `<img>`, so it works under a strict Content Security Policy as long as it comes from your own
+server: point `th:src` at a thumbnail URL, such as `@{/files/{id}/thumbnail(id=${file.id})}`. A `data:` URL would need
+`data:` in `img-src`, which a strict policy leaves out.
+
+### States
+
+`state` says where a file is in its upload:
+
+- `idle`: picked, not sent yet. A dashed border.
+- `uploading` and `processing`: the title shimmers (not for users who ask for reduced motion) and an image is dimmed.
+  The attachment is marked busy (`aria-busy="true"`).
+- `error`: a destructive border, media and description.
+- `done`, the default: the file is there.
+
+**Example: States.** idle draws a dashed border, uploading and processing shimmer the title, error turns destructive. The description says the state too.
+
+```html
+<sl:attachment state="idle" full-width>
+  <sl:attachment-media><sl:icon name="clock"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>selected-file.pdf</sl:attachment-title>
+    <sl:attachment-description>Ready to upload</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Remove selected-file.pdf"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+<sl:attachment state="uploading" full-width>
+  <sl:attachment-media><sl:spinner aria-hidden="true"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>design-system.zip</sl:attachment-title>
+    <sl:attachment-description>Uploading · 64%</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Cancel upload of design-system.zip"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+<sl:attachment state="processing" full-width>
+  <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>market-research.pdf</sl:attachment-title>
+    <sl:attachment-description>Processing document</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Remove market-research.pdf"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+<sl:attachment state="error" full-width>
+  <sl:attachment-media><sl:icon name="file-warning"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>financial-model.xlsx</sl:attachment-title>
+    <sl:attachment-description>Upload failed. Try again.</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Retry upload of financial-model.xlsx"><sl:icon name="refresh-cw"/></sl:attachment-action>
+    <sl:attachment-action aria-label="Remove financial-model.xlsx"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+<sl:attachment state="done" full-width>
+  <sl:attachment-media><sl:icon name="check"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>uploaded-report.pdf</sl:attachment-title>
+    <sl:attachment-description>Uploaded · 1.8 MB</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Remove uploaded-report.pdf"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+```
+
+The state is not announced by itself. Say it in the description as well ("Uploading · 64%", "Upload failed. Try
+again."), so it is not told by colour alone and a screen reader reads it with the file. The attachment is no live
+region and has no `role="alert"`: a page that renders a failed upload would announce it on every load. When a script
+changes the state, it should announce the change itself, once, in one polite live region for the whole list.
+
+An [`<sl:spinner>`](https://shadleaf.dev/current/components/spinner.md) in the media shows that a file is uploading. The description already says so: give
+the spinner `aria-hidden="true"`, so "Loading" is not read too. There is no progress bar; show the percentage in the
+description.
+
+### Sizes
+
+`size` is `default`, `sm` or `xs`.
+
+**Example: Sizes.**
+
+```html
+<sl:attachment full-width>
+  <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>Default attachment</sl:attachment-title>
+    <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description>
+  </sl:attachment-content>
+</sl:attachment>
+<sl:attachment size="sm" full-width>
+  <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>Small attachment</sl:attachment-title>
+    <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description>
+  </sl:attachment-content>
+</sl:attachment>
+<sl:attachment size="xs" full-width>
+  <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>Extra small attachment</sl:attachment-title>
+  </sl:attachment-content>
+</sl:attachment>
+```
+
+### Group
+
+`<sl:attachment-group>` lays attachments out in a row that scrolls sideways when they do not fit, snapping to each
+attachment, its edges fading out. The scrollbar is hidden, as in shadcn: the fade shows there is more.
+
+**Example: Group.** A row that scrolls sideways when the attachments do not fit, snapping to each one. Tab reaches the ones off screen through their actions.
+
+```html
+<sl:attachment-group>
+  <sl:attachment>
+    <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title>briefing-notes.pdf</sl:attachment-title>
+      <sl:attachment-description>PDF · 1.4 MB</sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action aria-label="Remove briefing-notes.pdf"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+  </sl:attachment>
+  <sl:attachment>
+    <sl:attachment-media variant="image">
+      <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+    </sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title>dunes.png</sl:attachment-title>
+      <sl:attachment-description>PNG · 820 KB</sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action aria-label="Remove dunes.png"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+  </sl:attachment>
+  <sl:attachment>
+    <sl:attachment-media><sl:icon name="table"/></sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title>customers.csv</sl:attachment-title>
+      <sl:attachment-description>CSV · 18 KB</sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action aria-label="Remove customers.csv"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+  </sl:attachment>
+  <sl:attachment>
+    <sl:attachment-media><sl:icon name="file-code"/></sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title>renderer.tsx</sl:attachment-title>
+      <sl:attachment-description>TSX · 12 KB</sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action aria-label="Remove renderer.tsx"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+  </sl:attachment>
+</sl:attachment-group>
+```
+
+Keyboard users reach attachments off screen by tabbing to their actions or triggers. A row of attachments without any
+has nothing to tab to: give the group a `label`. It is then a named group (`role="group"`) that takes the focus, and
+the arrow keys scroll it.
+
+**Example: Group without actions.** Attachments without actions or a trigger give the keyboard nothing to tab to. label makes the group a named group that takes the focus, so the arrow keys scroll it.
+
+```html
+<sl:attachment-group label="Reference photos">
+  <sl:attachment orientation="vertical" th:each="photo : ${photos}">
+    <sl:attachment-media variant="image">
+      <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" th:alt="${photo.description}" loading="lazy">
+    </sl:attachment-media>
+  </sl:attachment>
+</sl:attachment-group>
+```
+
+### Grid
+
+`layout="grid"` wraps the attachments instead, in as many columns as fit the width, for a gallery of photos. It does
+not scroll, so nothing is hidden off screen and the edges do not fade. Give each attachment `orientation="vertical"`
+and `full-width`, so it fills its cell: the image is cropped to a square and the actions sit in its corner. The width
+of a cell and the gap between them come from the skin.
+
+**Example: Grid.** layout="grid" wraps the attachments in columns that fill the width, for a gallery of photos. Each vertical attachment with full-width fills its cell.
+
+```html
+<sl:attachment-group layout="grid" label="Inspection photos">
+  <sl:attachment orientation="vertical" full-width th:each="photo : ${photos}">
+    <sl:attachment-media variant="image">
+      <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+    </sl:attachment-media>
+    <sl:attachment-content>
+      <sl:attachment-title>[[${photo.name}]]</sl:attachment-title>
+      <sl:attachment-description>[[${photo.meta}]]</sl:attachment-description>
+    </sl:attachment-content>
+    <sl:attachment-actions>
+      <sl:attachment-action th:aria-label="|Remove ${photo.name}|"><sl:icon name="x"/></sl:attachment-action>
+    </sl:attachment-actions>
+    <sl:attachment-trigger as="a" th:href="@{/files/{id}(id=${photo.id})}" target="_blank"
+                           th:aria-label="|Open ${photo.name}|"/>
+  </sl:attachment>
+</sl:attachment-group>
+```
+
+A grid's `label` still makes it a named group, but the group takes no focus: there is nothing to scroll. Tab goes
+from one attachment's actions and trigger to the next.
+
+### Trigger
+
+`<sl:attachment-trigger>` covers the whole card, behind its actions, so a click anywhere but on an action activates
+it. It is a button, to open an [`<sl:dialog>`](https://shadleaf.dev/current/components/dialog.md) with `commandfor` and `command="show-modal"`, or with
+`as="a"` a link that opens the file. It has no text of its own: give it an `aria-label` that says what it does. Put
+it last in the attachment, so Tab reaches the actions first; its focus ring is drawn around the whole card.
+
+**Example: Trigger.** The trigger covers the card and opens a dialog with commandfor; the actions above it stay clickable.
+
+```html
+<sl:attachment full-width>
+  <sl:attachment-media><sl:icon name="file-search"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>research-summary.pdf</sl:attachment-title>
+    <sl:attachment-description>Open preview dialog</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action aria-label="Copy link to research-summary.pdf"><sl:icon name="copy"/></sl:attachment-action>
+    <sl:attachment-action aria-label="Remove research-summary.pdf"><sl:icon name="x"/></sl:attachment-action>
+  </sl:attachment-actions>
+  <sl:attachment-trigger commandfor="research-summary-preview" command="show-modal"
+                         aria-label="Preview research-summary.pdf"/>
+</sl:attachment>
+<sl:dialog id="research-summary-preview">
+  <sl:dialog-header>
+    <sl:dialog-title>research-summary.pdf</sl:dialog-title>
+    <sl:dialog-description>The attachment trigger fills the card and opens the dialog, while the actions stay
+      independently clickable above it.</sl:dialog-description>
+  </sl:dialog-header>
+</sl:dialog>
+```
+
+### Download
+
+An action can be a link (`as="a"`) and take any of the button's variants and sizes, such as a download button in a
+message thread.
+
+On a page with `hx-boost`, add `hx-boost="false"` to a download link: htmx boosts every link to your own server
+without a `target`, `download` or not, and would put the file's bytes into the page instead of saving it. A trigger
+that opens the file in a new tab (`target="_blank"`) is left alone.
+
+**Example: Download.** An action can be a link (as="a") in another variant and size, as in a message thread.
+
+```html
+<sl:attachment>
+  <sl:attachment-media><sl:icon name="file-text"/></sl:attachment-media>
+  <sl:attachment-content>
+    <sl:attachment-title>sales-dashboard.pdf</sl:attachment-title>
+    <sl:attachment-description>PDF · 2.4 MB</sl:attachment-description>
+  </sl:attachment-content>
+  <sl:attachment-actions>
+    <sl:attachment-action as="a" href="/files/sales-dashboard.pdf" download variant="secondary" size="icon-sm"
+                          aria-label="Download sales-dashboard.pdf"><sl:icon name="download"/></sl:attachment-action>
+  </sl:attachment-actions>
+</sl:attachment>
+```
+
+### Without content
+
+An attachment can be only its media, as an image in a chat message. Then the image's `alt` names it.
+
+**Example: Without content.** An attachment can be only its media, as an image in a chat message. The image's alt is its name then.
+
+```html
+<sl:attachment orientation="vertical">
+  <sl:attachment-media variant="image">
+    <img th:src="@{/files/{id}/thumbnail(id=${photo.id})}" alt="A mountain lake">
+  </sl:attachment-media>
+</sl:attachment>
+```
+
+### Attributes
+
+#### sl:attachment
+
+Attributes of `<sl:attachment>`: A file or an image attached to something: a message, a form, a record. Holds an `sl:attachment-media`, an `sl:attachment-content` (title and description), optional `sl:attachment-actions` and an optional `sl:attachment-trigger` that makes the whole card open a link or a dialog. Purely presentational: the server renders its state. Say the state in the description too ("Uploading · 64%", "Upload failed"), so it is not told by colour alone.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `state` | `idle`, `uploading`, `processing`, `error`, `done` | `done` | Where the file is in its upload: `idle` (picked, not sent yet) draws a dashed border, `uploading` and `processing` shimmer the title and mark the attachment busy (`aria-busy`), `error` turns it destructive. `done` is a file that is there. |
+| `size` | `default`, `sm`, `xs` | `default` | Size of the attachment. |
+| `orientation` | `horizontal`, `vertical` | `horizontal` | `vertical` puts the media above the content, for an image. |
+| `full-width` | *boolean* | — | Fill the width of the container, for a list of attachments (shadcn's `w-full` class). Without it the attachment is as wide as its content. |
+
+Every prop can also be set from an expression: `th:state="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:attachment-media
+
+Attributes of `<sl:attachment-media>`: The icon or image of an `sl:attachment`: an icon (or an `sl:spinner` while it uploads) on a muted square, or an `&lt;img&gt;` that fills it.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `icon`, `image` | `icon` | `icon` centres an icon on a muted square; `image` crops an `&lt;img&gt;` to fill the square, dimmed while the attachment uploads, is processed or failed. |
+
+Every prop can also be set from an expression: `th:variant="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+#### sl:attachment-content
+
+Attributes of `<sl:attachment-content>`: The text of an `sl:attachment`: its `sl:attachment-title` and `sl:attachment-description`. Takes the space the media and the actions leave.
+
+`sl:attachment-content` declares no props; every attribute passes through.
+
+#### sl:attachment-title
+
+Attributes of `<sl:attachment-title>`: The name of an attachment, usually its file name, in `sl:attachment-content`. Cut off with an ellipsis when it does not fit; shimmers while the attachment uploads or is processed, unless the user asks for reduced motion.
+
+`sl:attachment-title` declares no props; every attribute passes through.
+
+#### sl:attachment-description
+
+Attributes of `<sl:attachment-description>`: What else to know about an attachment, below its title: the file type and size, or its state ("Uploading · 64%", "Upload failed. Try again."). Cut off with an ellipsis when it does not fit.
+
+`sl:attachment-description` declares no props; every attribute passes through.
+
+#### sl:attachment-actions
+
+Attributes of `<sl:attachment-actions>`: The `sl:attachment-action`s of an attachment, at its end; in a vertical attachment, over the top corner of the media. They sit above an `sl:attachment-trigger`, so they stay clickable.
+
+`sl:attachment-actions` declares no props; every attribute passes through.
+
+#### sl:attachment-action
+
+Attributes of `<sl:attachment-action>`: A button in `sl:attachment-actions`, to remove, retry or download the file: a `sl:button`, ghost and an extra small icon by default. Give it an `aria-label` that names the file ("Remove report.pdf"). Any other attribute passes through to the `sl:button` (`href`, `type`, `disabled`, `hx-*`).
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `default`, `outline`, `ghost`, `destructive`, `secondary`, `link` | `ghost` | Visual style of the button, as on `sl:button`. |
+| `size` | `xs`, `sm`, `default`, `lg`, `icon`, `icon-xs`, `icon-sm`, `icon-lg` | `icon-xs` | Size of the button, as on `sl:button`. The `icon` sizes are square, for a button that holds only an icon, and need an `aria-label`. |
+| `as` | `button`, `a` | `button` | Element to render: a `button`, or an anchor (`a`) to download or open the file. |
+
+Every prop can also be set from an expression: `th:variant="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended. An `aria-label` or `aria-labelledby` is required when `size` is `icon` or `icon-xs` or `icon-sm` or `icon-lg`; rendering fails without one.
+
+#### sl:attachment-trigger
+
+Attributes of `<sl:attachment-trigger>`: Makes a whole `sl:attachment` clickable: a button (to open an `sl:dialog` with `commandfor` and `command="show-modal"`) or, with `as="a"`, a link that covers the card behind its actions. It has no text of its own, so it needs an `aria-label` that says what it does ("Open report.pdf"). Put it last in the attachment.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `as` | `button`, `a` | `button` | Element to render: a `button`, or an anchor (`a`) to open the file. |
+
+Every prop can also be set from an expression: `th:as="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended. An `aria-label` or `aria-labelledby` is required; rendering fails without one.
+
+#### sl:attachment-group
+
+Attributes of `<sl:attachment-group>`: A row of `sl:attachment`s that scrolls sideways when they do not fit, snapping to each attachment, its edges fading out, or a grid that wraps them. Keyboard users reach attachments off screen by tabbing to their actions or triggers; for a row of attachments without any, give the group a `label`.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `layout` | `row`, `grid` | `row` | `row` scrolls sideways; `grid` wraps the attachments in columns that fill the width, for a gallery of photos: vertical attachments with `full-width`, each filling its cell. |
+| `label` | *string* | — | Accessible name of the group. With it the group is a named group (`role="group"`). A row then takes keyboard focus, so the arrow keys scroll it: for a row of attachments that have no actions or trigger. A grid does not scroll, so it takes no focus. |
+
+Every prop can also be set from an expression: `th:layout="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ---
 

@@ -48,7 +48,7 @@ The focused `main` draws no focus ring: it is no control, and the page scrolling
 
 ## Text
 
-The text is "Skip to main content" (the message `sl.skip-link`). Content of its own replaces it:
+The text is "Skip to main content" (the message `sl.skip-link`, see [Translating](https://shadleaf.dev/current/guides/translating.md)). Content of its own replaces it:
 
 ```html
 <sl:skip-link for="results">Skip to the results</sl:skip-link>

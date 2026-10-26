@@ -1,0 +1,316 @@
+{
+  "languages" : [ "en", "de", "fr", "nl" ],
+  "messages" : [ {
+    "key" : "sl.button.loading",
+    "comment" : null,
+    "text" : "Loading"
+  }, {
+    "key" : "sl.spinner.label",
+    "comment" : null,
+    "text" : "Loading"
+  }, {
+    "key" : "sl.form-errors.title",
+    "comment" : null,
+    "text" : "There is a problem"
+  }, {
+    "key" : "sl.dialog.close",
+    "comment" : null,
+    "text" : "Close"
+  }, {
+    "key" : "sl.dialog.error",
+    "comment" : null,
+    "text" : "Something went wrong. Please try again."
+  }, {
+    "key" : "sl.alert-dialog.cancel",
+    "comment" : null,
+    "text" : "Cancel"
+  }, {
+    "key" : "sl.toaster.label",
+    "comment" : null,
+    "text" : "Notifications (Alt+T)"
+  }, {
+    "key" : "sl.toast.close",
+    "comment" : null,
+    "text" : "Close"
+  }, {
+    "key" : "sl.theme-toggle.label",
+    "comment" : null,
+    "text" : "Theme"
+  }, {
+    "key" : "sl.theme-toggle.dark-mode",
+    "comment" : null,
+    "text" : "Dark mode"
+  }, {
+    "key" : "sl.theme-toggle.light",
+    "comment" : null,
+    "text" : "Light"
+  }, {
+    "key" : "sl.theme-toggle.dark",
+    "comment" : null,
+    "text" : "Dark"
+  }, {
+    "key" : "sl.theme-toggle.system",
+    "comment" : null,
+    "text" : "System"
+  }, {
+    "key" : "sl.table.empty",
+    "comment" : null,
+    "text" : "No results."
+  }, {
+    "key" : "sl.table.select-all",
+    "comment" : null,
+    "text" : "Select all rows on this page"
+  }, {
+    "key" : "sl.table.select-row",
+    "comment" : "{0}: what the row is, e.g. a name. For the row checkboxes: th:aria-label=\"#{sl.table.select-row(${person.name})}\".",
+    "text" : "Select {0}"
+  }, {
+    "key" : "sl.table.selection.count",
+    "comment" : "{0}: the selected rows, {1}: the rows on the page. The browser fills them in as the selection changes, so keep them as plain {0} and {1}: no number or choice format.",
+    "text" : "{0} of {1} selected"
+  }, {
+    "key" : "sl.pagination.label",
+    "comment" : null,
+    "text" : "Pagination"
+  }, {
+    "key" : "sl.pagination.previous",
+    "comment" : null,
+    "text" : "Previous"
+  }, {
+    "key" : "sl.pagination.previous.label",
+    "comment" : null,
+    "text" : "Go to previous page"
+  }, {
+    "key" : "sl.pagination.next",
+    "comment" : null,
+    "text" : "Next"
+  }, {
+    "key" : "sl.pagination.next.label",
+    "comment" : null,
+    "text" : "Go to next page"
+  }, {
+    "key" : "sl.pagination.more",
+    "comment" : null,
+    "text" : "More pages"
+  }, {
+    "key" : "sl.pagination.summary",
+    "comment" : "{0} and {1}: the first and the last row on the page, {2}: all rows. A Slice does not know the total.",
+    "text" : "{0}–{1} of {2}"
+  }, {
+    "key" : "sl.pagination.summary.slice",
+    "comment" : null,
+    "text" : "{0}–{1}"
+  }, {
+    "key" : "sl.pagination.summary.empty",
+    "comment" : null,
+    "text" : "0 of 0"
+  }, {
+    "key" : "sl.pagination.summary.page",
+    "comment" : "{0}: the page, {1}: the number of pages.",
+    "text" : "Page {0} of {1}"
+  }, {
+    "key" : "sl.pagination.summary.page.slice",
+    "comment" : null,
+    "text" : "Page {0}"
+  }, {
+    "key" : "sl.pagination-size.label",
+    "comment" : null,
+    "text" : "Rows per page"
+  }, {
+    "key" : "sl.sidebar.label",
+    "comment" : null,
+    "text" : "Main"
+  }, {
+    "key" : "sl.sidebar.trigger",
+    "comment" : null,
+    "text" : "Toggle sidebar"
+  }, {
+    "key" : "sl.breadcrumb.label",
+    "comment" : null,
+    "text" : "Breadcrumb"
+  }, {
+    "key" : "sl.breadcrumb.more",
+    "comment" : null,
+    "text" : "More levels"
+  }, {
+    "key" : "sl.breadcrumb.more.trigger",
+    "comment" : null,
+    "text" : "Show more levels"
+  }, {
+    "key" : "sl.skip-link",
+    "comment" : null,
+    "text" : "Skip to main content"
+  }, {
+    "key" : "sl.calendar.previous",
+    "comment" : null,
+    "text" : "Go to the previous month"
+  }, {
+    "key" : "sl.calendar.next",
+    "comment" : null,
+    "text" : "Go to the next month"
+  }, {
+    "key" : "sl.calendar.month",
+    "comment" : null,
+    "text" : "Month"
+  }, {
+    "key" : "sl.calendar.year",
+    "comment" : null,
+    "text" : "Year"
+  }, {
+    "key" : "sl.calendar.week-number",
+    "comment" : null,
+    "text" : "Week"
+  }, {
+    "key" : "sl.date-picker.placeholder",
+    "comment" : null,
+    "text" : "Pick a date"
+  }, {
+    "key" : "sl.date-picker.dialog",
+    "comment" : null,
+    "text" : "Choose a date"
+  }, {
+    "key" : "sl.date-picker.range",
+    "comment" : "{0} and {1}: the start and the end of a range, each formatted for the locale.",
+    "text" : "{0} – {1}"
+  }, {
+    "key" : "sl.combobox.empty",
+    "comment" : null,
+    "text" : "No items found."
+  }, {
+    "key" : "sl.combobox.clear",
+    "comment" : null,
+    "text" : "Clear"
+  }, {
+    "key" : "sl.combobox.toggle",
+    "comment" : null,
+    "text" : "Show options"
+  }, {
+    "key" : "sl.combobox.remove",
+    "comment" : "{0}: a chosen option's text, on the button of its chip.",
+    "text" : "Remove {0}"
+  }, {
+    "key" : "sl.combobox.results.one",
+    "comment" : "The number of options that match, announced while typing. The browser fills in {0}, so keep it as a plain {0}: no number or choice format.",
+    "text" : "1 result"
+  }, {
+    "key" : "sl.combobox.results",
+    "comment" : null,
+    "text" : "{0} results"
+  }, {
+    "key" : "sl.combobox.searching",
+    "comment" : null,
+    "text" : "Searching…"
+  }, {
+    "key" : "sl.combobox.search-error",
+    "comment" : null,
+    "text" : "The options could not be loaded."
+  }, {
+    "key" : "sl.user-menu.trigger",
+    "comment" : "{0}: the signed-in user's name. The name of sl:user-menu's button in the header, which shows only the picture.",
+    "text" : "Account: {0}"
+  }, {
+    "key" : "sl.user-menu.sign-in",
+    "comment" : null,
+    "text" : "Sign in"
+  }, {
+    "key" : "sl.user-menu.sign-out",
+    "comment" : null,
+    "text" : "Sign out"
+  }, {
+    "key" : "sl.file-upload.title",
+    "comment" : "sl:file-upload. The title and the Browse button, for a multiple and a single (.one) upload.",
+    "text" : "Upload files"
+  }, {
+    "key" : "sl.file-upload.title.one",
+    "comment" : null,
+    "text" : "Upload a file"
+  }, {
+    "key" : "sl.file-upload.browse",
+    "comment" : null,
+    "text" : "Browse files"
+  }, {
+    "key" : "sl.file-upload.browse.one",
+    "comment" : null,
+    "text" : "Browse"
+  }, {
+    "key" : "sl.file-upload.remove",
+    "comment" : "The browser fills in {0} and {1}, so keep them plain: no number or choice format. {0}: a file's name.",
+    "text" : "Remove {0}"
+  }, {
+    "key" : "sl.file-upload.dismiss",
+    "comment" : null,
+    "text" : "Dismiss {0}"
+  }, {
+    "key" : "sl.file-upload.rejected.type",
+    "comment" : "Why a dropped or picked file was not added. {0}: the max-size, formatted in the page's language (\"10 MB\").",
+    "text" : "File type not accepted"
+  }, {
+    "key" : "sl.file-upload.rejected.size",
+    "comment" : null,
+    "text" : "Larger than {0}"
+  }, {
+    "key" : "sl.file-upload.rejected.count",
+    "comment" : null,
+    "text" : "Only one file can be added"
+  }, {
+    "key" : "sl.file-upload.announce.added",
+    "comment" : "Announced after a change. {0}: the files' names, as a list in the page's language; {1}: why they were not added.",
+    "text" : "Added {0}."
+  }, {
+    "key" : "sl.file-upload.announce.removed",
+    "comment" : null,
+    "text" : "Removed {0}."
+  }, {
+    "key" : "sl.file-upload.announce.rejected",
+    "comment" : null,
+    "text" : "Could not add {0}: {1}."
+  }, {
+    "key" : "sl.file-upload.cancel",
+    "comment" : "Sending the files with htmx: the button that stops it, and each file's description while it goes. {0}: the percentage sent, formatted in the page's language (\"64%\").",
+    "text" : "Cancel upload"
+  }, {
+    "key" : "sl.file-upload.uploading",
+    "comment" : null,
+    "text" : "Uploading · {0}"
+  }, {
+    "key" : "sl.file-upload.uploading.indeterminate",
+    "comment" : null,
+    "text" : "Uploading"
+  }, {
+    "key" : "sl.file-upload.processing",
+    "comment" : null,
+    "text" : "Processing"
+  }, {
+    "key" : "sl.file-upload.failed",
+    "comment" : null,
+    "text" : "Upload failed"
+  }, {
+    "key" : "sl.file-upload.done",
+    "comment" : null,
+    "text" : "Uploaded"
+  }, {
+    "key" : "sl.file-upload.announce.uploading",
+    "comment" : "Announced when the upload starts and ends. {0}: the number of files, or for one file (.one) its name.",
+    "text" : "Uploading {0} files."
+  }, {
+    "key" : "sl.file-upload.announce.uploading.one",
+    "comment" : null,
+    "text" : "Uploading {0}."
+  }, {
+    "key" : "sl.file-upload.announce.uploaded",
+    "comment" : null,
+    "text" : "Uploaded {0} files."
+  }, {
+    "key" : "sl.file-upload.announce.uploaded.one",
+    "comment" : null,
+    "text" : "Uploaded {0}."
+  }, {
+    "key" : "sl.file-upload.announce.failed",
+    "comment" : null,
+    "text" : "The files could not be uploaded. Try again."
+  }, {
+    "key" : "sl.file-upload.announce.cancelled",
+    "comment" : null,
+    "text" : "Upload cancelled."
+  } ]
+}

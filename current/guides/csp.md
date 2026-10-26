@@ -64,7 +64,7 @@ String scriptSrc = "script-src 'self' " + themeScript.getCspHash();
 For this version of Shadleaf that is:
 
 ```text
-script-src 'self' 'sha256-ewffi8zKmIW+zI2vwENPE6/RaQgcGL/MObd1E+H3wJo='
+script-src 'self' 'sha256-WdjDZg6r2gzL3axMLK4n9dULYdGVjGjT29YEJxnTa/g='
 ```
 
 A hash pasted into a static configuration goes stale when an upgrade changes the script, so prefer the bean.
@@ -74,6 +74,12 @@ A hash pasted into a static configuration goes stale when an upgrade changes the
 Alpine's standard build needs `'unsafe-eval'`. Under a policy without it, set `shadleaf.assets.alpine=csp` to load
 Alpine's CSP build instead; see [Alpine.js](https://shadleaf.dev/current/guides/alpine.md#csp) for what that means for your own Alpine markup. Shadleaf's
 script is served from your application, so `script-src 'self'` allows it.
+
+## Image previews
+
+A [file upload](https://shadleaf.dev/current/components/file-upload.md#image-previews) with `previews` shows a picked image from a `blob:` URL.
+`img-src 'self'` blocks those, and the files keep their icons. To have the thumbnails, allow `blob:` too:
+`img-src 'self' blob:`. Nothing else in Shadleaf needs it.
 
 ## A working example
 

@@ -169,6 +169,8 @@ of its own replaces it, such as another icon; that content is not turned around.
 
 ## Messages
 
+[Translating](https://shadleaf.dev/current/guides/translating.md) lists the languages Shadleaf ships them in, and explains how to add one.
+
 | Key | English |
 | --- | --- |
 | `sl.breadcrumb.label` | Breadcrumb |
