@@ -3,6 +3,7 @@
 import previewsJson from '../generated/previews.json';
 import componentsJson from '../generated/components.json';
 import themeScriptJson from '../generated/theme-script.json';
+import messagesJson from '../generated/messages.json';
 
 export type Skin = { name: string; css: string };
 
@@ -44,12 +45,16 @@ export type Component = {
   accessibleName?: { prop?: string; values: string[] };
 };
 
+/** A built-in message key: the comment above it in messages.properties, and its English text. */
+export type Message = { key: string; comment?: string | null; text: string };
+
 /** The script of each shadleaf.assets.alpine value, relative to the site's base. */
 export type Scripts = { bundled?: string; csp?: string; external?: string };
 
 export const previews = previewsJson as { version: string; skins: Skin[]; scripts?: Scripts; scenarios: Scenario[] };
 export const components = (componentsJson as { version: string; components: Component[] }).components;
 export const themeScript = themeScriptJson as { cspHash: string; script: string };
+export const messages = messagesJson as { languages: string[]; messages: Message[] };
 
 /** The command that fills the generated files, for the hints shown when they are empty. */
 export const GENERATE_COMMAND = 'pnpm run generate';

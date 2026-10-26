@@ -1,0 +1,108 @@
+---
+title: Translating
+description: The components' built-in texts are messages, which Shadleaf ships in several languages; your own message files add a language or reword them.
+sidebar:
+  order: 9
+---
+
+import MessageKeys from '../../../components/MessageKeys.astro';
+import SupportedLanguages from '../../../components/SupportedLanguages.astro';
+
+Some Shadleaf components have built-in texts, such as the "Cancel" button of an alert dialog.
+Shadleaf ships these texts in the languages [listed below](#supported-languages), and your application can add a language or reword a text if needed.
+
+## How it works
+
+Shadleaf puts its messages behind your application's message source: it becomes the last parent of the `messageSource`
+bean, whether Spring Boot configured it (`spring.messages.basename`) or you declared it. Spring asks your messages first,
+so a key you define wins; the keys you leave out come from Shadleaf. An application without messages of its own gets
+Shadleaf's as its message source.
+
+The request's locale picks the language, as for your own messages. Spring Boot takes it from the `Accept-Language`
+header unless you set `spring.web.locale` and `spring.web.locale-resolver=fixed`, or declare a `LocaleResolver` of your
+own. A language Shadleaf has no messages for gets English, whatever the server's own locale is.
+
+Set the page's language too, on the `<html>` element of your layout. Shadleaf formats numbers, dates and lists in the
+browser (charts, the selection count of a table, the file sizes of a file upload) in that language:
+
+```html
+<html th:lang="${#locale.toLanguageTag()}">
+```
+
+## Your application's messages
+
+Keep your own keys in your `messages.properties` and `messages_<language>.properties`, as you would without Shadleaf.
+Leave Shadleaf's keys out of them: they come from Shadleaf, in the page's language.
+
+Set this in `application.properties`:
+
+```properties
+spring.messages.fallback-to-system-locale=false
+```
+
+Without it, Spring Boot answers a language your application has no file for with the server's language: on a server
+in Dutch, a French page gets the texts of your `messages_nl.properties`, while Shadleaf, which never falls back to the
+server's language, writes English. With it off, such a page gets your `messages.properties` and Shadleaf's English.
+
+## Adding a language
+
+For a language Shadleaf does not ship, add its keys to your file of that language, next to your own keys:
+
+```properties title="src/main/resources/messages_fr.properties"
+app.greeting=Bonjour
+sl.alert-dialog.cancel=Annuler
+sl.pagination.previous=Précédent
+sl.pagination.next=Suivant
+```
+
+The [list below](#the-keys) has every key. A key you leave out shows Shadleaf's English text.
+
+## Rewording a text
+
+To word one of Shadleaf's texts differently, define its key in your file of that language, such as
+`messages_en.properties` for English. Not in `messages.properties`: Spring reads that file for every language, so the
+new wording would replace Shadleaf's other translations too. This needs `fallback-to-system-locale` off, as
+[above](#your-applications-messages); on a server in English, a page in another language Shadleaf ships would read
+your `messages_en.properties` otherwise.
+
+An `aria-label` or the content you give a component replaces its message for that one element, as each component page
+says.
+
+## Arguments and apostrophes
+
+Some messages have arguments: `sl.table.select-row=Select {0}` gets the row's name. A message with arguments is a
+`MessageFormat` pattern, in which an apostrophe starts quoted text, so write an apostrophe twice:
+
+```properties
+sl.file-upload.announce.uploading={0} fichiers en cours d''envoi.
+sl.dialog.error=Une erreur s'est produite. Veuillez réessayer.
+```
+
+A message without arguments is used as it is written, with a single apostrophe, as long as
+`spring.messages.always-use-message-format` stays off (the default). With it on, every message in your own files is a
+pattern and needs the doubled apostrophe.
+
+Some messages are filled in by the browser: the selection count of a table (`sl.table.selection.count`), the number
+of results and the chips' remove buttons of a combobox (`sl.combobox.results`, `sl.combobox.remove`), the range of a
+date picker (`sl.date-picker.range`) and the file upload's messages with arguments (`sl.file-upload.*`). The server
+renders their pattern into the page with `{0}` left in, and the script replaces it. They are the same keys, translated
+the same way, but keep their arguments plain: `{0}`, never `{0,number}` or `{0,choice,...}`.
+
+## Supported languages
+
+These languages are supported by Shadleaf:
+
+<SupportedLanguages />
+
+## The keys
+
+Every key with its English text, generated from the library's `messages.properties`, with the comment it has there.
+The texts are shown as written in the file.
+
+<MessageKeys />
+
+## Contributing a language
+
+A new language is a `shadleaf/messages_<language>.properties` in the starter (`src/main/resources/shadleaf/`), with
+every key of `messages.properties`. `ShadleafMessageBundlesTest` checks that each translation has exactly the English
+keys, the same arguments, and its apostrophes written for whether the message has arguments. Pull requests are welcome.

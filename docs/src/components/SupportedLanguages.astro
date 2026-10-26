@@ -1,0 +1,20 @@
+---
+// The languages Shadleaf ships its built-in messages in (messages.json, from the library's messages*.properties), each
+// with a flag for fun.
+import Missing from './Missing.astro';
+import {supportedLanguages} from '../lib/messages';
+
+const languages = supportedLanguages();
+---
+
+{
+  languages.length === 0 ? (
+    <Missing what="supported languages"/>
+  ) : (
+    <ul>
+      {languages.map(language => (
+        <li>{language.flag && <span aria-hidden="true">{language.flag} </span>}{language.name} (<code>{language.code}</code>)</li>
+      ))}
+    </ul>
+  )
+}

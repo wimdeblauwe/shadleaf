@@ -1,0 +1,48 @@
+---
+// Every built-in message key (messages.json, generated from the library's messages.properties), a table per
+// component: the key with the comment above it, and its English text.
+import Missing from './Missing.astro';
+import {codeSpans, withBase} from '../lib/generated';
+import {messageGroups} from '../lib/messages';
+
+const groups = messageGroups();
+---
+
+{
+  groups.length === 0 ? (
+    <Missing what="message keys"/>
+  ) : groups.map(group => (
+    <>
+      <h3 id={`keys-${group.page}`}>{group.linked ? <a href={withBase(`components/${group.page}/`)}>{group.title}</a> : group.title}</h3>
+      <table class="message-keys">
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>English</th>
+          </tr>
+        </thead>
+        <tbody>
+          {group.messages.map(message => (
+            <tr>
+              <td>
+                <code>{message.key}</code>
+                {message.comment && (
+                  <p>{codeSpans(message.comment).map((part, i) => i % 2 === 1 ? <code>{part}</code> : part)}</p>
+                )}
+              </td>
+              <td><code>{message.text}</code></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  ))
+}
+
+<style>
+  .message-keys p {
+    margin-top: 0.25rem;
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+  }
+</style>

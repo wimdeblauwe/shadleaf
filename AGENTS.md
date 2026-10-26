@@ -113,7 +113,9 @@ there instead of fetching from the web.
   execution with those jars removed).
 - **Messages** live in `shadleaf/messages.properties` (`sl.*`), attached as the last parent of the application's
   `messageSource`. Every visible or accessible text has a message key; a caller's `aria-label` replaces the default
-  (take it from `attrs`, see `theme-toggle.html`).
+  (take it from `attrs`, see `theme-toggle.html`). A new key goes into every `messages_<language>.properties` too
+  (`ShadleafMessageBundlesTest` checks), with a comment above it when it has arguments; the docs' Translating page
+  lists the keys and the languages from those files (a new language's flag goes in `docs/src/lib/messages.ts`).
 - **Icons** are Lucide (`lucide-static`, pinned), turned into `lucide.json` at build time; `IconSource` beans are
   asked first. `<sl:icon name>`; icon-only buttons need an accessible name.
 

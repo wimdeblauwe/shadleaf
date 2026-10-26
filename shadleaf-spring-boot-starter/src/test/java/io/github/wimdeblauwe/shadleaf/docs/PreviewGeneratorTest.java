@@ -8,6 +8,7 @@ import io.github.wimdeblauwe.shadleaf.assets.ShadleafAssets;
 import io.github.wimdeblauwe.shadleaf.assets.ViteManifestParser;
 import io.github.wimdeblauwe.shadleaf.assets.ViteManifestParser.ViteManifest;
 import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
+import io.github.wimdeblauwe.shadleaf.i18n.MessageBundles;
 import io.github.wimdeblauwe.shadleaf.metadata.ComponentMetadata;
 import io.github.wimdeblauwe.shadleaf.metadata.WebTypes;
 import io.github.wimdeblauwe.shadleaf.security.ShadleafUser;
@@ -36,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -63,7 +65,9 @@ import tools.jackson.databind.json.JsonMapper;
  *   showcase and the behaviour tests;</li>
  *   <li>{@code components.json} and {@code web-types.json}: the registry export behind the attribute tables, and the
  *   IDE metadata offered for download;</li>
- *   <li>{@code theme-script.json}: the theme script and its CSP hash, for the CSP page.</li>
+ *   <li>{@code theme-script.json}: the theme script and its CSP hash, for the CSP page;</li>
+ *   <li>{@code messages.json}: the languages the library ships messages in, and every built-in message key with its
+ *   comment and its English text, for the Translating guide.</li>
  * </ul>
  * A scenario's {@code renderSource} can show a photo from {@code previews/photos/} as {@code ${photos.<name>}}, a data:
  * URI, so the previews and the showcase checks never fetch an image. A scenario's {@code pages} are Spring Data
@@ -131,6 +135,7 @@ class PreviewGeneratorTest {
     WebTypes.write(metadata, jsonMapper, OUTPUT_DIRECTORY.resolve("web-types.json"));
     ShadleafThemeScript themeScript = new ShadleafThemeScript("cspNonce");
     write("theme-script.json", new ThemeScript(themeScript.getCspHash(), themeScript.getContent()));
+    write("messages.json", new Messages(List.copyOf(MessageBundles.all().keySet()), messages()));
 
     assertThat(skins).extracting(Skin::name).startsWith(DEFAULT_SKIN).contains("lyra");
     for (Skin skin : skins) {
@@ -459,6 +464,13 @@ class PreviewGeneratorTest {
     return value;
   }
 
+  private static List<Message> messages() throws IOException {
+    Properties english = MessageBundles.all().get(MessageBundles.ENGLISH);
+    return MessageBundles.keys().stream()
+        .map(key -> new Message(key.name(), key.comment(), english.getProperty(key.name())))
+        .toList();
+  }
+
   private void write(String name, Object value) throws IOException {
     Files.writeString(OUTPUT_DIRECTORY.resolve(name),
         jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value) + "\n", StandardCharsets.UTF_8);
@@ -530,6 +542,21 @@ class PreviewGeneratorTest {
   }
 
   private record ThemeScript(String cspHash, String script) {
+
+  }
+
+  /**
+   * @param languages the languages of the bundles, English ({@code en}) first
+   */
+  private record Messages(List<String> languages, List<Message> messages) {
+
+  }
+
+  /**
+   * @param comment the comment above the key in {@code messages.properties}
+   * @param text    the English text, as written in {@code messages.properties}
+   */
+  private record Message(String key, @Nullable String comment, String text) {
 
   }
 }

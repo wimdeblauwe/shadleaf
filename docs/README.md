@@ -14,6 +14,8 @@ so the docs cannot drift from what the library renders. `PreviewGeneratorTest` i
 - `components.json`: the component registry export, behind `<ComponentAttributes>`
 - `web-types.json`: the IDE metadata, published as `shadleaf.web-types.json`
 - `theme-script.json`: the theme script and its CSP hash, behind `<CspHash>`
+- `messages.json`: the languages of the built-in messages and every `sl.*` key with its comment and its English text,
+  behind `<SupportedLanguages>` and `<MessageKeys>`
 
 `scripts/sync.mjs` copies them into `src/generated/` and `public/` before every `dev` and `build`. Without them (a fresh
 clone) the site still builds, and each page says which command to run.
