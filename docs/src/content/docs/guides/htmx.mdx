@@ -198,6 +198,7 @@ where htmx 4 does things differently:
 - **`HX-Trigger` runs after the swap**, on the element that sent the request, or on the document when the swap
   removed it. Send `sl-dialog-close` and `sl-popover-close` from a request whose element stays, as the examples here
   do (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
-- **A `null` detail in `HX-Trigger` throws** in htmx 4.0.0. htmx-spring-boot sends one for an event without a detail
+- **A `null` detail in `HX-Trigger` throws** in htmx 4.0.0 (fixed for the next release,
+  [htmx#4135](https://github.com/bigskysoftware/htmx/issues/4135)). htmx-spring-boot sends one for an event without a detail
   when another event of the same response has one, such as `sl-dialog-close` next to a toast: give it an empty detail
   there, `htmxResponse.addTrigger("sl-dialog-close", Map.of())`.

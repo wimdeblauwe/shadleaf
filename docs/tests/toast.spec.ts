@@ -333,7 +333,7 @@ for (const htmx of [true, 4] as const) {
     test(`htmx ${version}: a toast and sl-dialog-close in one response, ${order.join(' before ')}`, async ({page}) => {
       const events: Record<string, unknown> = {};
       for (const name of order) {
-        // htmx-spring-boot sends null for an event without a detail; htmx 4.0.0 throws on a null detail.
+        // htmx-spring-boot sends null for an event without a detail; htmx 4.0.0 throws on a null detail (htmx#4135).
         events[name] = name === 'sl-toast' ? {title: 'Member saved', variant: 'success'} : htmx === 4 ? {} : null;
       }
       const routes: Routes = {'/save': () => ({body: '', headers: {'HX-Trigger': JSON.stringify(events)}})};
