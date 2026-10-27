@@ -4,8 +4,8 @@
   - a request from outside opens the dialog at once (showModal, so focus returns to where it was when it closes). A
     request from inside a closed dialog, such as hx-trigger="load", opens nothing;
   - while it runs, the body has data-loading (the stylesheet covers the content and shows a spinner after a moment)
-    and the content aria-busy, and further requests into the body are cancelled (htmx:confirm), so a second click on
-    Save sends nothing;
+    and the content aria-busy, and further requests into the body are cancelled (htmx 2's htmx:confirm, htmx 4's
+    htmx:before:request), so a second click on Save sends nothing;
   - when it fails (an error status, no connection, a timeout), the body's alert shows; for the request that opened the
     dialog, unless data-on-load-error="inline" or the page has no toaster, the dialog closes and the alert's text is
     shown as an error toast (sl-toast) instead;
@@ -15,14 +15,17 @@
   - closing the dialog aborts a request still running (not one whose answer is in, which may be what closed it);
   - content marked data-clear-on-close (the body was empty in the page) is emptied once the dialog has closed, and at
     once when a request opens the dialog again or htmx saves the page in its history cache, so it never shows the
-    previous content.
+    previous content (htmx 4 keeps no history cache: it loads the page again).
+  Works with htmx 2 and htmx 4, whichever is on the page; htmx 4 swaps an error answer in by default, which is
+  stopped here for a request into the body, so a failed save keeps what was typed.
 */
 
 import {firstTabbable} from './popup.js';
 
 /** Watches the body of `dialog`, if it has one; `listen` adds a listener that is removed with the component. */
 export function watchBody(dialog, listen) {
-  // The request into the body that is running: its XMLHttpRequest, and whether it opened the dialog.
+  // The request into the body that is running: its key (htmx 2's XMLHttpRequest, htmx 4's ctx), how to abort it,
+  // and whether it opened the dialog.
   let request = null;
   // The showModal() waiting for the click that sent the request to be handled.
   let opening = null;
@@ -35,7 +38,12 @@ export function watchBody(dialog, listen) {
     const body = content.parentElement;
     return {content, body, error: body.querySelector(':scope > [role=alert]')};
   };
-  const owns = (event, body) => event.detail?.target instanceof Element && body.content.contains(event.detail.target);
+  const owns = (target, body) => target instanceof Element && body.content.contains(target);
+  /** Whether a request into the body is running already, so this one, which targets it as well, must not go. */
+  const busy = target => {
+    const body = parts();
+    return request !== null && body !== null && owns(target, body);
+  };
 
   const setLoading = (body, loading) => {
     if (loading) {
@@ -57,26 +65,18 @@ export function watchBody(dialog, listen) {
     }
   };
   const abort = () => {
-    const xhr = request?.xhr;
+    const running = request;
     request = null;
-    if (xhr && xhr.readyState !== XMLHttpRequest.DONE) {
-      xhr.abort();
-    }
+    running?.abort();
   };
 
-  listen(document, 'htmx:confirm', event => {
+  /** A request to `target`, made by `elt`, is sent. */
+  const begin = (target, elt, key, abortRequest) => {
     const body = parts();
-    if (request && body && owns(event, body)) {
-      event.preventDefault();
-    }
-  });
-
-  listen(document, 'htmx:beforeRequest', event => {
-    const body = parts();
-    if (!body || !owns(event, body)) {
+    if (!body || !owns(target, body)) {
       return;
     }
-    const fromOutside = !(event.detail.elt instanceof Node && dialog.contains(event.detail.elt));
+    const fromOutside = !(elt instanceof Node && dialog.contains(elt));
     if (!dialog.open && !fromOutside) {
       return;
     }
@@ -97,12 +97,13 @@ export function watchBody(dialog, listen) {
         }
       });
     }
-    request = {xhr: event.detail.xhr, opened: opens};
+    request = {key, abort: abortRequest, opened: opens};
     setLoading(body, true);
-  });
+  };
 
-  const end = (event, failed) => {
-    if (!request || event.detail?.xhr !== request.xhr) {
+  /** The request `key` is over: it failed (an error status, no connection, a timeout) or not (done, aborted). */
+  const end = (key, failed) => {
+    if (!request || key !== request.key) {
       return;
     }
     const {opened} = request;
@@ -127,18 +128,64 @@ export function watchBody(dialog, listen) {
       showError(body, true);
     }
   };
-  // After an error status afterRequest has failed; after no connection, a timeout or an abort it has neither, and the
-  // event that follows says which.
-  listen(document, 'htmx:afterRequest', event => {
-    if (event.detail?.successful === true) {
-      end(event, false);
-    } else if (event.detail?.failed === true) {
-      end(event, true);
+
+  // htmx 2. After an error status afterRequest has failed; after no connection, a timeout or an abort it has neither,
+  // and the event that follows says which.
+  listen(document, 'htmx:confirm', event => {
+    if (busy(event.detail?.target)) {
+      event.preventDefault();
     }
   });
-  listen(document, 'htmx:sendError', event => end(event, true));
-  listen(document, 'htmx:timeout', event => end(event, true));
-  listen(document, 'htmx:sendAbort', event => end(event, false));
+  listen(document, 'htmx:beforeRequest', event => {
+    const {target, elt, xhr} = event.detail ?? {};
+    begin(target, elt, xhr, () => {
+      if (xhr.readyState !== XMLHttpRequest.DONE) {
+        xhr.abort();
+      }
+    });
+  });
+  listen(document, 'htmx:afterRequest', event => {
+    if (event.detail?.successful === true) {
+      end(event.detail.xhr, false);
+    } else if (event.detail?.failed === true) {
+      end(event.detail.xhr, true);
+    }
+  });
+  listen(document, 'htmx:sendError', event => end(event.detail?.xhr, true));
+  listen(document, 'htmx:timeout', event => end(event.detail?.xhr, true));
+  listen(document, 'htmx:sendAbort', event => end(event.detail?.xhr, false));
+
+  // htmx 4, which sends with fetch(): its ctx is the key, and its abort() rejects the fetch. htmx:confirm fires only
+  // for hx-confirm, so a request into a busy body is stopped in htmx:config:request, which fires for each trigger
+  // before htmx queues the request (by default it would send it once the running one is done). An error answer is
+  // not swapped in, as with htmx 2 (an hx-status attribute or an HX-Reswap header still decides otherwise).
+  // htmx:finally:request comes after the swap, or after htmx:error (no connection, a timeout, an abort).
+  listen(document, 'htmx:config:request', event => {
+    if (busy(event.detail?.ctx?.target)) {
+      event.preventDefault();
+    }
+  });
+  listen(document, 'htmx:before:request', event => {
+    const ctx = event.detail?.ctx;
+    if (!ctx) {
+      return;
+    }
+    begin(ctx.target, ctx.sourceElement, ctx, () => {
+      if (ctx.text === undefined) {
+        ctx.request.abort();
+      }
+    });
+  });
+  listen(document, 'htmx:after:request', event => {
+    const ctx = event.detail?.ctx;
+    if (ctx && ctx === request?.key && ctx.response.status >= 400) {
+      ctx.swap = 'none';
+    }
+  });
+  listen(document, 'htmx:finally:request', event => {
+    const ctx = event.detail?.ctx;
+    end(ctx, String(ctx?.status ?? '').startsWith('error') || (ctx?.response?.status ?? 0) >= 400);
+  });
 
   listen(dialog, 'close', () => {
     abort();

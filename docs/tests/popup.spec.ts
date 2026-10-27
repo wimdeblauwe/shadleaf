@@ -481,8 +481,10 @@ test('menus and popovers slide and zoom in only where motion is fine', async ({p
 const ORIGIN = 'http://app.test';
 const PUBLIC_DIR = join(import.meta.dirname, '..', 'public');
 const HTMX = join(import.meta.dirname, '..', 'node_modules', 'htmx.org', 'dist', 'htmx.min.js');
+const HTMX_4 = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'htmx.min.js');
 const STRICT_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'";
 const HTMX_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>`;
+const HTMX_4_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorCSS": false}'>`;
 
 type Scripts = { bundled: string, csp: string, external: string };
 const scripts = (previews as unknown as { scripts: Scripts }).scripts;
@@ -516,8 +518,12 @@ function tooltip(trigger: string, text: string): string {
 
 type Routes = Record<string, (body: string, headers: Record<string, string>) => { body: string, headers?: Record<string, string> }>;
 
-/** Serves `body` at / with the csp build (and htmx), and `routes` for other requests; returns what the console said. */
-async function openFixture(page: Page, body: string, {htmx = false, routes = {} as Routes} = {}): Promise<string[]> {
+/**
+ * Serves `body` at / with the csp build (and htmx 2, true, or 4), and `routes` for other requests; returns what the
+ * console said.
+ */
+async function openFixture(page: Page, body: string,
+    {htmx = false as boolean | 4, routes = {} as Routes} = {}): Promise<string[]> {
   const messages: string[] = [];
   page.on('console', message => {
     if (message.type() === 'error' || message.type() === 'warning') {
@@ -529,13 +535,13 @@ async function openFixture(page: Page, body: string, {htmx = false, routes = {} 
       event => console.error(`CSP violation: ${event.violatedDirective}`)));
   const document = (main: string) => `<!doctype html><html lang="en"><head><title>Fixture</title>`
       + `<link rel="stylesheet" href="/${css}">`
-      + (htmx ? `${HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
+      + (htmx ? `${htmx === 4 ? HTMX_4_CONFIG : HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
       + `<script type="module" src="/${scripts.csp}"></script></head><body><main>${main}</main></body></html>`;
   await page.route(`${ORIGIN}/**`, route => {
     const request = route.request();
     const path = new URL(request.url()).pathname;
     if (path === '/webjars/htmx.min.js') {
-      return route.fulfill({contentType: 'text/javascript', path: HTMX});
+      return route.fulfill({contentType: 'text/javascript', path: htmx === 4 ? HTMX_4 : HTMX});
     }
     if (path.startsWith('/shadleaf/')) {
       return route.fulfill({path: join(PUBLIC_DIR, path)});
@@ -705,106 +711,112 @@ test('menu items: a submit button submits its form, a link navigates, a dialog o
   await expect(page.locator('#next-page')).toBeVisible();
 });
 
-test('htmx: an hx-* item sends its request and the menu closes', async ({page}) => {
-  const archived: string[] = [];
-  const messages = await openFixture(page, `<p id="status">Nothing archived</p>
-      ${menu('m', item('Archive', 'id="archive" hx-post="/archive" hx-target="#status" hx-swap="outerHTML"'))}`, {
-    htmx: true,
-    routes: {
-      '/archive': () => {
-        archived.push('1');
-        return {body: '<p id="status">Archived</p>'};
+for (const htmx of [true, 4] as const) {
+  const version = htmx === 4 ? 4 : 2;
+
+  test(`htmx ${version}: an hx-* item sends its request and the menu closes`, async ({page}) => {
+    const archived: string[] = [];
+    const messages = await openFixture(page, `<p id="status">Nothing archived</p>
+        ${menu('m', item('Archive', 'id="archive" hx-post="/archive" hx-target="#status" hx-swap="outerHTML"'))}`, {
+      htmx,
+      routes: {
+        '/archive': () => {
+          archived.push('1');
+          return {body: '<p id="status">Archived</p>'};
+        },
       },
-    },
+    });
+
+    await page.locator('#m-trigger').focus();
+    await page.keyboard.press('Enter');
+    await waitUntilOpen(page.locator('#m'));
+    await page.keyboard.press('Enter');
+    await expectClosed(page.locator('#m'));
+    await expect(page.locator('#status')).toHaveText('Archived');
+    await expect(page.locator('#m-trigger')).toBeFocused();
+    expect(archived).toEqual(['1']);
+    expect(messages).toEqual([]);
   });
 
-  await page.locator('#m-trigger').focus();
-  await page.keyboard.press('Enter');
-  await waitUntilOpen(page.locator('#m'));
-  await page.keyboard.press('Enter');
-  await expectClosed(page.locator('#m'));
-  await expect(page.locator('#status')).toHaveText('Archived');
-  await expect(page.locator('#m-trigger')).toBeFocused();
-  expect(archived).toEqual(['1']);
-  expect(messages).toEqual([]);
-});
+  test(`htmx ${version}: a swap that replaces an open menu leaves a closed, working one`, async ({page}) => {
+    // htmx 4's settle puts the new trigger's server attributes back after the menu has set aria-expanded on it.
+    test.fixme(htmx === 4, 'htmx 4 settle removes attributes set on init (#40)');
+    await openFixture(page, `<div id="row">${menu('m', item('Edit'))}</div>
+        <button type="button" id="refresh" hx-get="/row" hx-target="#row" hx-swap="innerHTML">Refresh</button>`, {
+      htmx,
+      routes: {'/row': () => ({body: menu('m', item('Edit') + item('Renamed'))})},
+    });
 
-test('htmx: a swap that replaces an open menu leaves a closed, working one', async ({page}) => {
-  await openFixture(page, `<div id="row">${menu('m', item('Edit'))}</div>
-      <button type="button" id="refresh" hx-get="/row" hx-target="#row" hx-swap="innerHTML">Refresh</button>`, {
-    htmx: true,
-    routes: {'/row': () => ({body: menu('m', item('Edit') + item('Renamed'))})},
+    await page.locator('#m-trigger').click();
+    await waitUntilOpen(page.locator('#m'));
+    // A swap from elsewhere (a poll, a server event) while the menu is open.
+    await page.evaluate(() => (window as unknown as {htmx: {ajax: Function}}).htmx.ajax('GET', '/row',
+        {target: '#row', swap: 'innerHTML'}));
+    await expect(page.locator('#m [role="menuitem"]', {hasText: 'Renamed'})).toBeAttached();
+    expect(await page.locator(':popover-open').count(), 'nothing is left open').toBe(0);
+    await expect(page.locator('#m-trigger')).toHaveAttribute('aria-expanded', 'false');
+
+    await page.locator('#m-trigger').click();
+    await waitUntilOpen(page.locator('#m'));
+    await expect(page.locator('#m-trigger')).toHaveAttribute('aria-expanded', 'true');
+    await page.locator('#m').getByRole('menuitem', {name: 'Renamed'}).hover();
+    await expect(page.locator('#m').getByRole('menuitem', {name: 'Renamed'})).toBeFocused();
   });
 
-  await page.locator('#m-trigger').click();
-  await waitUntilOpen(page.locator('#m'));
-  // A swap from elsewhere (a poll, a server event) while the menu is open.
-  await page.evaluate(() => (window as unknown as {htmx: {ajax: Function}}).htmx.ajax('GET', '/row',
-      {target: '#row', swap: 'innerHTML'}));
-  await expect(page.locator('#m [role="menuitem"]', {hasText: 'Renamed'})).toBeAttached();
-  expect(await page.locator(':popover-open').count(), 'nothing is left open').toBe(0);
-  await expect(page.locator('#m-trigger')).toHaveAttribute('aria-expanded', 'false');
+  test(`htmx ${version}: history never brings a menu back open or expanded`, async ({page}) => {
+    await openFixture(page, menu('m', item('Next page', 'id="next" hx-get="/next" hx-target="main" hx-push-url="true"')),
+        {htmx, routes: {'/next': () => ({body: '<p id="next-page">Next page</p>'})}});
 
-  await page.locator('#m-trigger').click();
-  await waitUntilOpen(page.locator('#m'));
-  await expect(page.locator('#m-trigger')).toHaveAttribute('aria-expanded', 'true');
-  await page.locator('#m').getByRole('menuitem', {name: 'Renamed'}).hover();
-  await expect(page.locator('#m').getByRole('menuitem', {name: 'Renamed'})).toBeFocused();
-});
-
-test('htmx: history never brings a menu back open or expanded', async ({page}) => {
-  await openFixture(page, menu('m', item('Next page', 'id="next" hx-get="/next" hx-target="main" hx-push-url="true"')),
-      {htmx: true, routes: {'/next': () => ({body: '<p id="next-page">Next page</p>'})}});
-
-  await page.locator('#m-trigger').click();
-  await waitUntilOpen(page.locator('#m'));
-  await page.locator('#next').click();
-  await expect(page.locator('#next-page')).toBeVisible();
-  await page.goBack();
-  await expect(page.locator('#m-trigger')).toBeVisible();
-  expect(await page.locator(':popover-open').count()).toBe(0);
-  await expect(page.locator('#m-trigger')).toHaveAttribute('aria-expanded', 'false');
-  await page.locator('#m-trigger').click();
-  await waitUntilOpen(page.locator('#m'));
-});
-
-test('htmx: history after a navigation from elsewhere with the menu open', async ({page}) => {
-  // The snapshot is taken with the menu open and its trigger expanded; going back shows it closed and not expanded
-  // (the open state is not in the markup, and Alpine initialises the restored markup again).
-  await openFixture(page, `${menu('m', item('Edit'))}
-      <a href="/next" id="next" hx-get="/next" hx-target="main" hx-push-url="true">Next</a>`,
-  {htmx: true, routes: {'/next': () => ({body: '<p id="next-page">Next page</p>'})}});
-
-  await page.locator('#m-trigger').click();
-  await waitUntilOpen(page.locator('#m'));
-  await page.evaluate(() => (document.getElementById('next') as HTMLElement).click());
-  await expect(page.locator('#next-page')).toBeVisible();
-  await page.goBack();
-  await expect(page.locator('#m-trigger')).toHaveAttribute('aria-expanded', 'false');
-  expect(await page.locator(':popover-open').count()).toBe(0);
-});
-
-test('htmx: a form in a popover swaps itself and HX-Trigger sl-popover-close closes it', async ({page}) => {
-  const messages = await openFixture(page, `<h2 id="team-name">Team</h2>
-      ${popover('rename', `<form hx-post="/rename" hx-target="#team-name" hx-swap="outerHTML">
-        <label for="name">Name</label><input id="name" name="name"><button type="submit">Save</button></form>`)}`, {
-    htmx: true,
-    routes: {
-      '/rename': body => ({
-        body: `<h2 id="team-name">${new URLSearchParams(body).get('name')}</h2>`,
-        headers: {'HX-Trigger': 'sl-popover-close'},
-      }),
-    },
+    await page.locator('#m-trigger').click();
+    await waitUntilOpen(page.locator('#m'));
+    await page.locator('#next').click();
+    await expect(page.locator('#next-page')).toBeVisible();
+    await page.goBack();
+    await expect(page.locator('#m-trigger')).toBeVisible();
+    expect(await page.locator(':popover-open').count()).toBe(0);
+    await expect(page.locator('#m-trigger')).toHaveAttribute('aria-expanded', 'false');
+    await page.locator('#m-trigger').click();
+    await waitUntilOpen(page.locator('#m'));
   });
-  const trigger = page.locator('button[popovertarget="rename"]');
 
-  await trigger.click();
-  await waitUntilOpen(page.locator('#rename'));
-  await expect(page.locator('#name')).toBeFocused();
-  await page.locator('#name').fill('Design');
-  await page.keyboard.press('Enter');
-  await expectClosed(page.locator('#rename'));
-  await expect(page.locator('#team-name')).toHaveText('Design');
-  await expect(trigger).toBeFocused();
-  expect(messages).toEqual([]);
-});
+  test(`htmx ${version}: history after a navigation from elsewhere with the menu open`, async ({page}) => {
+    // The snapshot is taken with the menu open and its trigger expanded; going back shows it closed and not expanded
+    // (the open state is not in the markup, and Alpine initialises the restored markup again).
+    await openFixture(page, `${menu('m', item('Edit'))}
+        <a href="/next" id="next" hx-get="/next" hx-target="main" hx-push-url="true">Next</a>`,
+    {htmx, routes: {'/next': () => ({body: '<p id="next-page">Next page</p>'})}});
+
+    await page.locator('#m-trigger').click();
+    await waitUntilOpen(page.locator('#m'));
+    await page.evaluate(() => (document.getElementById('next') as HTMLElement).click());
+    await expect(page.locator('#next-page')).toBeVisible();
+    await page.goBack();
+    await expect(page.locator('#m-trigger')).toHaveAttribute('aria-expanded', 'false');
+    expect(await page.locator(':popover-open').count()).toBe(0);
+  });
+
+  test(`htmx ${version}: a form in a popover swaps itself and HX-Trigger sl-popover-close closes it`, async ({page}) => {
+    const messages = await openFixture(page, `<h2 id="team-name">Team</h2>
+        ${popover('rename', `<form hx-post="/rename" hx-target="#team-name" hx-swap="outerHTML">
+          <label for="name">Name</label><input id="name" name="name"><button type="submit">Save</button></form>`)}`, {
+      htmx,
+      routes: {
+        '/rename': body => ({
+          body: `<h2 id="team-name">${new URLSearchParams(body).get('name')}</h2>`,
+          headers: {'HX-Trigger': 'sl-popover-close'},
+        }),
+      },
+    });
+    const trigger = page.locator('button[popovertarget="rename"]');
+
+    await trigger.click();
+    await waitUntilOpen(page.locator('#rename'));
+    await expect(page.locator('#name')).toBeFocused();
+    await page.locator('#name').fill('Design');
+    await page.keyboard.press('Enter');
+    await expectClosed(page.locator('#rename'));
+    await expect(page.locator('#team-name')).toHaveText('Design');
+    await expect(trigger).toBeFocused();
+    expect(messages).toEqual([]);
+  });
+}

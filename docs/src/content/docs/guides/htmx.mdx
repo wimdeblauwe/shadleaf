@@ -183,3 +183,21 @@ the toaster out of band. Use `HX-Trigger` rather than `HX-Trigger-After-Swap`/`-
 when the swap removed the element that sent the request, and a flash attribute rather than a toast when the response
 redirects. Toasts are removed before htmx saves a page in its history cache, so back never shows one again. A toast
 never takes the focus: it goes away.
+
+## htmx 4
+
+This guide uses htmx 2, which sample-01 serves. The components work with htmx 4 as well (with htmx-spring-boot 6),
+where htmx 4 does things differently:
+
+- **Error answers are swapped in.** htmx 4 swaps a `4xx` or `5xx` response like any other, where htmx 2 leaves the
+  page alone. A [dialog or sheet body](../../components/dialog/#loaded-into-the-dialog-a-body) stops that for the
+  requests into it, so a failed save still keeps what was typed; elsewhere, use `hx-status:5xx="swap:none"` or the
+  `noSwap` config where you want htmx 2's behaviour.
+- **No history cache.** Back loads the page from the server again, so what is said above about snapshots is htmx 2
+  only.
+- **`HX-Trigger` runs after the swap**, on the element that sent the request, or on the document when the swap
+  removed it. Send `sl-dialog-close` and `sl-popover-close` from a request whose element stays, as the examples here
+  do (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
+- **A `null` detail in `HX-Trigger` throws** in htmx 4.0.0. htmx-spring-boot sends one for an event without a detail
+  when another event of the same response has one, such as `sl-dialog-close` next to a toast: give it an empty detail
+  there, `htmxResponse.addTrigger("sl-dialog-close", Map.of())`.
