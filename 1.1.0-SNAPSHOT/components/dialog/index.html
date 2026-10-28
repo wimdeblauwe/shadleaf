@@ -210,7 +210,7 @@
 </dialog>
 </form>
 </div>
-<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-7et_Vhhe.js&quot;></script>
+<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-Ca89VAlv.js&quot;></script>
 <script>
   document.addEventListener('click', event => {
     if (event.target.closest('a[href], button[type=&quot;submit&quot;], input[type=&quot;submit&quot;]')) event.preventDefault();
@@ -326,7 +326,7 @@ adds an outline “Close” button after the footer’s own actions.</p>
 </div>
 </dialog>
 </div>
-<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-7et_Vhhe.js&quot;></script>
+<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-Ca89VAlv.js&quot;></script>
 <script>
   document.addEventListener('click', event => {
     if (event.target.closest('a[href], button[type=&quot;submit&quot;], input[type=&quot;submit&quot;]')) event.preventDefault();
@@ -369,8 +369,8 @@ swap. Without one, focus falls back to the top of the page. Use <code dir="auto"
 fire after the swap, when the element that made the request may be gone.</p>
 <p><code dir="auto">open</code> needs Alpine (on by default: see <a href="../../guides/alpine/">Alpine</a>); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page’s
-inertness with it. Before htmx saves a page in its history cache (<code dir="auto">hx-push-url</code>, <code dir="auto">hx-boost</code>), open dialogs close, so
-the back button never brings one back.</p>
+inertness with it. Before htmx 2 saves a page in its history cache (<code dir="auto">hx-push-url</code>, <code dir="auto">hx-boost</code>), open dialogs close, so
+the back button never brings one back; htmx 4 keeps no cache, and loads the page again.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="loaded-into-the-dialog-a-body">Loaded into the dialog: a body</h2><a class="sl-anchor-link" href="#loaded-into-the-dialog-a-body"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Loaded into the dialog: a body”</span></a></div>
 <p>The dialog above appears only once the server has answered, and a slow answer leaves the user waiting with nothing to
 show for the click. <code dir="auto">&lt;sl:dialog-body&gt;</code> turns this around: the dialog is in the page, closed, and its body is what htmx
@@ -485,7 +485,7 @@ form swaps itself, and <code dir="auto">HX-Trigger: sl-dialog-close</code> close
   
 </dialog>
 </div>
-<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-7et_Vhhe.js&quot;></script>
+<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-Ca89VAlv.js&quot;></script>
 <script>
   document.addEventListener('click', event => {
     if (event.target.closest('a[href], button[type=&quot;submit&quot;], input[type=&quot;submit&quot;]')) event.preventDefault();
@@ -521,6 +521,9 @@ always shows the error in the dialog, so nothing the user typed is lost; the nex
 <code dir="auto">error</code> slot replaces it for one dialog:</p>
 <div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="html"><code><div class="ec-line"><div class="code"><span style="--0:#7FDBCA;--1:#8844AE">&lt;</span><span style="--0:#FFFFFF;--1:#984E4D">sl:dialog-body</span><span style="--0:#7FDBCA;--1:#8844AE">&gt;</span></div></div><div class="ec-line"><div class="code"><span class="indent">  </span><span style="--0:#7FDBCA;--1:#8844AE">&lt;</span><span style="--0:#FFFFFF;--1:#984E4D">sl:slot</span><span style="--0:#7FDBCA;--1:#8844AE"> </span><span style="--0:#C5E478;--1:#3B61B0">name</span><span style="--0:#7FDBCA;--1:#8844AE">=</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">error</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#7FDBCA;--1:#8844AE">&gt;</span><span style="--0:#D6DEEB;--1:#403F53">The member could not be loaded.</span><span style="--0:#7FDBCA;--1:#8844AE">&lt;/</span><span style="--0:#FFFFFF;--1:#984E4D">sl:slot</span><span style="--0:#7FDBCA;--1:#8844AE">&gt;</span></div></div><div class="ec-line"><div class="code"><span style="--0:#7FDBCA;--1:#8844AE">&lt;/</span><span style="--0:#FFFFFF;--1:#984E4D">sl:dialog-body</span><span style="--0:#7FDBCA;--1:#8844AE">&gt;</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="<sl:dialog-body>  <sl:slot name=&quot;error&quot;>The member could not be loaded.</sl:slot></sl:dialog-body>"><div></div></button></div></figure></div>
 <p>Validation errors are no failure: return the form with its errors and a success status, as above.</p>
+<p>The body works with htmx 2 and htmx 4. htmx 4 swaps an error answer in by default; the body stops that for the
+requests into it, so the error shows above the content, as with htmx 2. An <code dir="auto">hx-status</code> attribute on the element that
+sends the request, or an <code dir="auto">HX-Reswap</code> header, still decides otherwise. See <a href="../../guides/htmx/#htmx-4">htmx 4</a>.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="width">Width</h2><a class="sl-anchor-link" href="#width"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Width”</span></a></div>
 <p>The skin decides the dialog’s width (at most <code dir="auto">28rem</code> in vega). Give the dialog a class and set its width in your own
 stylesheet, loaded after the library’s: the library’s rules sit in a cascade layer, so yours win.</p>

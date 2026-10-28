@@ -4961,8 +4961,8 @@ fire after the swap, when the element that made the request may be gone.
 
 `open` needs Alpine (on by default: see [Alpine](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/alpine.md)); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
-inertness with it. Before htmx saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
-the back button never brings one back.
+inertness with it. Before htmx 2 saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
+the back button never brings one back; htmx 4 keeps no cache, and loads the page again.
 
 ### Loaded into the dialog: a body
 
@@ -5036,6 +5036,10 @@ The message is "Something went wrong. Please try again." (`sl.dialog.error` in y
 ```
 
 Validation errors are no failure: return the form with its errors and a success status, as above.
+
+The body works with htmx 2 and htmx 4. htmx 4 swaps an error answer in by default; the body stops that for the
+requests into it, so the error shows above the content, as with htmx 2. An `hx-status` attribute on the element that
+sends the request, or an `HX-Reswap` header, still decides otherwise. See [htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-4).
 
 ### Width
 
@@ -16923,6 +16927,25 @@ the toaster out of band. Use `HX-Trigger` rather than `HX-Trigger-After-Swap`/`-
 when the swap removed the element that sent the request, and a flash attribute rather than a toast when the response
 redirects. Toasts are removed before htmx saves a page in its history cache, so back never shows one again. A toast
 never takes the focus: it goes away.
+
+### htmx 4
+
+This guide uses htmx 2, which sample-01 serves. The components work with htmx 4 as well (with htmx-spring-boot 6),
+where htmx 4 does things differently:
+
+- **Error answers are swapped in.** htmx 4 swaps a `4xx` or `5xx` response like any other, where htmx 2 leaves the
+  page alone. A [dialog or sheet body](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dialog.md#loaded-into-the-dialog-a-body) stops that for the
+  requests into it, so a failed save still keeps what was typed; elsewhere, use `hx-status:5xx="swap:none"` or the
+  `noSwap` config where you want htmx 2's behaviour.
+- **No history cache.** Back loads the page from the server again, so what is said above about snapshots is htmx 2
+  only.
+- **`HX-Trigger` runs after the swap**, on the element that sent the request, or on the document when the swap
+  removed it. Send `sl-dialog-close` and `sl-popover-close` from a request whose element stays, as the examples here
+  do (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
+- **A `null` detail in `HX-Trigger` throws** in htmx 4.0.0 (fixed for the next release,
+  [htmx#4135](https://github.com/bigskysoftware/htmx/issues/4135)). htmx-spring-boot sends one for an event without a detail
+  when another event of the same response has one, such as `sl-dialog-close` next to a toast: give it an empty detail
+  there, `htmxResponse.addTrigger("sl-dialog-close", Map.of())`.
 
 ---
 

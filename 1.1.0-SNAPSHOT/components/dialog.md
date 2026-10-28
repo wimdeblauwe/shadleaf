@@ -168,8 +168,8 @@ fire after the swap, when the element that made the request may be gone.
 
 `open` needs Alpine (on by default: see [Alpine](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/alpine.md)); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
-inertness with it. Before htmx saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
-the back button never brings one back.
+inertness with it. Before htmx 2 saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
+the back button never brings one back; htmx 4 keeps no cache, and loads the page again.
 
 ## Loaded into the dialog: a body
 
@@ -243,6 +243,10 @@ The message is "Something went wrong. Please try again." (`sl.dialog.error` in y
 ```
 
 Validation errors are no failure: return the form with its errors and a success status, as above.
+
+The body works with htmx 2 and htmx 4. htmx 4 swaps an error answer in by default; the body stops that for the
+requests into it, so the error shows above the content, as with htmx 2. An `hx-status` attribute on the element that
+sends the request, or an `HX-Reswap` header, still decides otherwise. See [htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-4).
 
 ## Width
 
