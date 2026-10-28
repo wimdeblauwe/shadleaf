@@ -192,6 +192,13 @@ where htmx 4 does things differently:
 - **Load htmx's Alpine extension.** htmx 4's settle step puts every attribute of the server's markup back on a swapped
   element whose `id` stayed the same, removing the ones the components set when they start (`aria-expanded` on a
   menu's trigger, for one). Load `ext/hx-alpine-compat.js` after htmx: it holds Alpine back until the settle is done.
+  The htmx 4 webjar (`htmx.org` version `4.0.0` in the pom above) has it:
+
+  ```html
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <script th:src="@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}" defer></script>
+  ```
+
   Without it, turn the settle off, `<meta name="htmx-config" content='{"defaultSettleDelay":0}'>` (or `settle:0` in
   one `hx-swap`), which also turns off htmx's settle transitions.
 - **Error answers are swapped in.** htmx 4 swaps a `4xx` or `5xx` response like any other, where htmx 2 leaves the
