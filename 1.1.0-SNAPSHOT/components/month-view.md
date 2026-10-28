@@ -91,6 +91,19 @@ for a second month view on the page.
 Today is marked; by default that is the server's date. If your users are in another time zone, put their date in the
 model (`LocalDate.now(zone)`) and pass it: `th:today="${today}"`.
 
+## Size of the navigation
+
+`nav-size` sets the size of the previous and next links, with the sizes of an icon [`<sl:button>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/button.md#sizes)
+(`icon-xs`, `icon-sm`, `icon`, `icon-lg`), so they can match the buttons elsewhere on the page. Without it they have the
+size of the skin's calendar. On a touch screen the links have a hit area of at least 44 by 44 pixels whatever their
+size, as the icon buttons.
+
+**Example: Size of the navigation.** The previous and next links take the size of an icon button, here icon-lg, to match the buttons around the month. On a touch screen their hit area is at least 44 by 44 pixels whatever they look like.
+
+```html
+<sl:month-view nav-size="icon-lg"/>
+```
+
 ## Week numbers and the first day of the week
 
 As for the [calendar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar.md#week-numbers-and-the-first-day-of-the-week), the page's locale decides the first day
@@ -142,6 +155,7 @@ Attributes of `<sl:month-view>`: A month to look at, rendered on the server: eac
 | `today` | *string* | — | Today, as `2026-10-23` (a `LocalDate`), marked as the current date. By default the server's date; pass it in the user's time zone when that differs. |
 | `show-outside-days` | *boolean* | `true` | Show the days of the previous and next month that fill the first and last week. |
 | `show-week-number` | *boolean* | — | Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe). |
+| `nav-size` | `default`, `icon-xs`, `icon-sm`, `icon`, `icon-lg` | `default` | Size of the previous and next month links, the sizes of an icon `sl:button`, to match the buttons elsewhere on the page. By default the skin's calendar size. On a touch screen the link is always at least 44 by 44 pixels to hit, whatever it looks like. |
 | `week-starts-on` | *number* | — | The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides. |
 
 Every prop can also be set from an expression: `th:month="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
