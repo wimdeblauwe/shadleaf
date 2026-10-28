@@ -16,6 +16,7 @@ export const ORIGIN = 'http://app.test';
 const PUBLIC_DIR = join(import.meta.dirname, '..', 'public');
 const HTMX = join(import.meta.dirname, '..', 'node_modules', 'htmx.org', 'dist', 'htmx.min.js');
 const HTMX_4 = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'htmx.min.js');
+const HTMX_4_ALPINE_COMPAT = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'ext', 'hx-alpine-compat.min.js');
 const STRICT_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'";
 const HTMX_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>`;
 const HTMX_4_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorCSS": false}'>`;
@@ -103,7 +104,8 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
       + (theme ? `<script>${themeScript.script}</script>` : '')
       + `<link rel="stylesheet" href="/${skin ? previews.skins.find(s => s.name === skin)!.css : css}">`
       + (stylesheet !== undefined ? '<link rel="stylesheet" href="/application.css">' : '')
-      + (htmx ? `${htmx === 4 ? HTMX_4_CONFIG : HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
+      + (htmx ? `${htmx === 4 ? HTMX_4_CONFIG : HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>`
+          + (htmx === 4 ? '<script defer src="/webjars/hx-alpine-compat.min.js"></script>' : '') : '')
       + (alpine ? `<script type="module" src="/${alpine === 'external' ? scripts.external : scripts.csp}"></script>` : '')
       + `</head><body ${bodyAttributes}>${wrap ? `<main>${content}</main>` : content}</body></html>`;
   await page.route(`${ORIGIN}/**`, async route => {
@@ -111,6 +113,9 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
     const url = new URL(request.url());
     if (url.pathname === '/webjars/htmx.min.js') {
       return route.fulfill({contentType: 'text/javascript', path: htmx === 4 ? HTMX_4 : HTMX});
+    }
+    if (url.pathname === '/webjars/hx-alpine-compat.min.js') {
+      return route.fulfill({contentType: 'text/javascript', path: HTMX_4_ALPINE_COMPAT});
     }
     if (url.pathname === '/application.css' && stylesheet !== undefined) {
       return route.fulfill({contentType: 'text/css', body: stylesheet});

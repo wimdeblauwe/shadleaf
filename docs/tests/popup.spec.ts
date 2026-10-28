@@ -482,6 +482,7 @@ const ORIGIN = 'http://app.test';
 const PUBLIC_DIR = join(import.meta.dirname, '..', 'public');
 const HTMX = join(import.meta.dirname, '..', 'node_modules', 'htmx.org', 'dist', 'htmx.min.js');
 const HTMX_4 = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'htmx.min.js');
+const HTMX_4_ALPINE_COMPAT = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'ext', 'hx-alpine-compat.min.js');
 const STRICT_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'";
 const HTMX_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>`;
 const HTMX_4_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorCSS": false}'>`;
@@ -535,13 +536,17 @@ async function openFixture(page: Page, body: string,
       event => console.error(`CSP violation: ${event.violatedDirective}`)));
   const document = (main: string) => `<!doctype html><html lang="en"><head><title>Fixture</title>`
       + `<link rel="stylesheet" href="/${css}">`
-      + (htmx ? `${htmx === 4 ? HTMX_4_CONFIG : HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>` : '')
+      + (htmx ? `${htmx === 4 ? HTMX_4_CONFIG : HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>`
+          + (htmx === 4 ? '<script defer src="/webjars/hx-alpine-compat.min.js"></script>' : '') : '')
       + `<script type="module" src="/${scripts.csp}"></script></head><body><main>${main}</main></body></html>`;
   await page.route(`${ORIGIN}/**`, route => {
     const request = route.request();
     const path = new URL(request.url()).pathname;
     if (path === '/webjars/htmx.min.js') {
       return route.fulfill({contentType: 'text/javascript', path: htmx === 4 ? HTMX_4 : HTMX});
+    }
+    if (path === '/webjars/hx-alpine-compat.min.js') {
+      return route.fulfill({contentType: 'text/javascript', path: HTMX_4_ALPINE_COMPAT});
     }
     if (path.startsWith('/shadleaf/')) {
       return route.fulfill({path: join(PUBLIC_DIR, path)});
@@ -739,8 +744,6 @@ for (const htmx of [true, 4] as const) {
   });
 
   test(`htmx ${version}: a swap that replaces an open menu leaves a closed, working one`, async ({page}) => {
-    // htmx 4's settle puts the new trigger's server attributes back after the menu has set aria-expanded on it.
-    test.fixme(htmx === 4, 'htmx 4 settle removes attributes set on init (#40)');
     await openFixture(page, `<div id="row">${menu('m', item('Edit'))}</div>
         <button type="button" id="refresh" hx-get="/row" hx-target="#row" hx-swap="innerHTML">Refresh</button>`, {
       htmx,
