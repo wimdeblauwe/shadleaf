@@ -5499,6 +5499,13 @@
             "required" : false
           }
         }, {
+          "name" : "sticky-first-column",
+          "description" : "Pin the first cell of every row to the start edge, so it stays in view when a wide table scrolls sideways. It gets the page's `--background` (set `--sl-table-bg` on the table when it sits on something else, such as `var(--card)`), and an edge line appears once the table has scrolled.",
+          "value" : {
+            "kind" : "no-value",
+            "required" : false
+          }
+        }, {
           "name" : "th:page",
           "description" : "The Spring Data `Page` or `Slice` the table shows. Its `Sort` tells every `sl:table-head` inside how the rows are sorted now. Without it, the headers read the order from the request's sort parameter.",
           "value" : {
@@ -5508,6 +5515,13 @@
         }, {
           "name" : "th:qualifier",
           "description" : "`qualifier` from a Thymeleaf expression, e.g. `th:qualifier=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:sticky-first-column",
+          "description" : "`sticky-first-column` from a Thymeleaf expression, e.g. `th:sticky-first-column=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
