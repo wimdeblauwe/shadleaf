@@ -168,17 +168,37 @@ never takes the focus: it goes away.</p>
 <p>This guide uses htmx 2, which sample-01 serves. The components work with htmx 4 as well (with htmx-spring-boot 6),
 where htmx 4 does things differently:</p>
 <ul>
-<li><strong>Error answers are swapped in.</strong> htmx 4 swaps a <code dir="auto">4xx</code> or <code dir="auto">5xx</code> response like any other, where htmx 2 leaves the
+<li>
+<p><strong>Load htmx’s Alpine extension.</strong> htmx 4’s settle step puts every attribute of the server’s markup back on a swapped
+element whose <code dir="auto">id</code> stayed the same, removing the ones the components set when they start (<code dir="auto">aria-expanded</code> on a
+menu’s trigger, for one). Load <code dir="auto">ext/hx-alpine-compat.js</code> after htmx: it holds Alpine back until the settle is done.
+The htmx 4 webjar (<code dir="auto">htmx.org</code> version <code dir="auto">4.0.0</code> in the pom above) has it. Alpine must start after the extension, so
+both scripts go before the <code dir="auto">assets</code> fragment, which starts Alpine (its module script runs in document order with
+the <code dir="auto">defer</code> scripts):</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="html"><code><div class="ec-line"><div class="code"><span style="--1:#8844AE"><span style="--0:#7FDBCA">&lt;</span><span style="--0:#CAECE6">script</span><span style="--0:#7FDBCA"> </span></span><span style="--0:#C5E478;--1:#3B61B0">th:src</span><span style="--0:#7FDBCA;--1:#8844AE">=</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">@{/webjars/htmx.org/dist/htmx.min.js}</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#7FDBCA;--1:#8844AE"> </span><span style="--0:#C5E478;--1:#3B61B0">defer</span><span style="--1:#8844AE"><span style="--0:#7FDBCA">&gt;&lt;/</span><span style="--0:#CAECE6">script</span><span style="--0:#7FDBCA">&gt;</span></span></div></div><div class="ec-line"><div class="code"><span style="--1:#8844AE"><span style="--0:#7FDBCA">&lt;</span><span style="--0:#CAECE6">script</span><span style="--0:#7FDBCA"> </span></span><span style="--0:#C5E478;--1:#3B61B0">th:src</span><span style="--0:#7FDBCA;--1:#8844AE">=</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#7FDBCA;--1:#8844AE"> </span><span style="--0:#C5E478;--1:#3B61B0">defer</span><span style="--1:#8844AE"><span style="--0:#7FDBCA">&gt;&lt;/</span><span style="--0:#CAECE6">script</span><span style="--0:#7FDBCA">&gt;</span></span></div></div><div class="ec-line"><div class="code"><span style="--0:#7FDBCA;--1:#8844AE">&lt;</span><span style="--0:#FFFFFF;--1:#984E4D">th:block</span><span style="--0:#7FDBCA;--1:#8844AE"> </span><span style="--0:#C5E478;--1:#3B61B0">th:replace</span><span style="--0:#7FDBCA;--1:#8844AE">=</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#ECC48D;--1:#984E4D">~{sl/layout :: assets}</span><span style="--0:#D9F5DD;--1:#111111">"</span><span style="--0:#7FDBCA;--1:#8844AE">&gt;&lt;/</span><span style="--0:#FFFFFF;--1:#984E4D">th:block</span><span style="--0:#7FDBCA;--1:#8844AE">&gt;</span></div></div></code></pre><div class="copy"><div aria-live="polite"></div><button title="Copy to clipboard" data-copied="Copied!" data-code="<script th:src=&quot;@{/webjars/htmx.org/dist/htmx.min.js}&quot; defer></script><script th:src=&quot;@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}&quot; defer></script><th:block th:replace=&quot;~{sl/layout :: assets}&quot;></th:block>"><div></div></button></div></figure></div>
+<p>With <code dir="auto">shadleaf.assets.alpine=external</code>, they go before the script that loads the application’s Alpine.</p>
+<p>Without it, turn the settle off, <code dir="auto">&lt;meta name="htmx-config" content='{"defaultSettleDelay":0}'&gt;</code> (or <code dir="auto">settle:0</code> in
+one <code dir="auto">hx-swap</code>), which also turns off htmx’s settle transitions.</p>
+</li>
+<li>
+<p><strong>Error answers are swapped in.</strong> htmx 4 swaps a <code dir="auto">4xx</code> or <code dir="auto">5xx</code> response like any other, where htmx 2 leaves the
 page alone. A <a href="../../components/dialog/#loaded-into-the-dialog-a-body">dialog or sheet body</a> stops that for the
 requests into it, so a failed save still keeps what was typed; elsewhere, use <code dir="auto">hx-status:5xx="swap:none"</code> or the
-<code dir="auto">noSwap</code> config where you want htmx 2’s behaviour.</li>
-<li><strong>No history cache.</strong> Back loads the page from the server again, so what is said above about snapshots is htmx 2
-only.</li>
-<li><strong><code dir="auto">HX-Trigger</code> runs after the swap</strong>, on the element that sent the request, or on the document when the swap
+<code dir="auto">noSwap</code> config where you want htmx 2’s behaviour.</p>
+</li>
+<li>
+<p><strong>No history cache.</strong> Back loads the page from the server again, so what is said above about snapshots is htmx 2
+only.</p>
+</li>
+<li>
+<p><strong><code dir="auto">HX-Trigger</code> runs after the swap</strong>, on the element that sent the request, or on the document when the swap
 removed it. Send <code dir="auto">sl-dialog-close</code> and <code dir="auto">sl-popover-close</code> from a request whose element stays, as the examples here
-do (<code dir="auto">HtmxReswap.none()</code>, or a target elsewhere); <code dir="auto">sl-toast</code> works either way.</li>
-<li><strong>A <code dir="auto">null</code> detail in <code dir="auto">HX-Trigger</code> throws</strong> in htmx 4.0.0 (fixed for the next release,
+do (<code dir="auto">HtmxReswap.none()</code>, or a target elsewhere); <code dir="auto">sl-toast</code> works either way.</p>
+</li>
+<li>
+<p><strong>A <code dir="auto">null</code> detail in <code dir="auto">HX-Trigger</code> throws</strong> in htmx 4.0.0 (fixed for the next release,
 <a href="https://github.com/bigskysoftware/htmx/issues/4135">htmx#4135</a>). htmx-spring-boot sends one for an event without a detail
 when another event of the same response has one, such as <code dir="auto">sl-dialog-close</code> next to a toast: give it an empty detail
-there, <code dir="auto">htmxResponse.addTrigger("sl-dialog-close", Map.of())</code>.</li>
+there, <code dir="auto">htmxResponse.addTrigger("sl-dialog-close", Map.of())</code>.</p>
+</li>
 </ul></div><footer class="sl-flex astro-spl6tqoe"><div class="meta sl-flex astro-spl6tqoe"><a href="https://github.com/wimdeblauwe/shadleaf/edit/main/docs/src/content/docs/guides/htmx.mdx" class="sl-flex print:hidden astro-coxfxs7g"><svg aria-hidden="true" class="astro-coxfxs7g astro-vf65c756" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.2em;"><path d="M22 7.24a1 1 0 0 0-.29-.71l-4.24-4.24a1 1 0 0 0-1.1-.22 1 1 0 0 0-.32.22l-2.83 2.83L2.29 16.05a1 1 0 0 0-.29.71V21a1 1 0 0 0 1 1h4.24a1 1 0 0 0 .76-.29l10.87-10.93L21.71 8c.1-.1.17-.2.22-.33a1 1 0 0 0 0-.24v-.14l.07-.05ZM6.83 20H4v-2.83l9.93-9.93 2.83 2.83L6.83 20ZM18.17 8.66l-2.83-2.83 1.42-1.41 2.82 2.82-1.41 1.42Z"/></svg>Edit page</a></div><div class="pagination-links print:hidden astro-u4zzljp5" dir="ltr"><a href="/1.1.0-SNAPSHOT/guides/tailwind/" rel="prev" class="astro-u4zzljp5"><svg aria-hidden="true" class="astro-u4zzljp5 astro-vf65c756" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-u4zzljp5">Previous<br class="astro-u4zzljp5"><span class="link-title astro-u4zzljp5">Tailwind CSS</span></span></a><a href="/1.1.0-SNAPSHOT/guides/tables-htmx/" rel="next" class="astro-u4zzljp5"><svg aria-hidden="true" class="astro-u4zzljp5 astro-vf65c756" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-u4zzljp5">Next<br class="astro-u4zzljp5"><span class="link-title astro-u4zzljp5">Tables with htmx</span></span></a></div></footer></div></div></main></div></div></div></div></body></html>

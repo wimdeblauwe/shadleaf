@@ -17060,6 +17060,23 @@ never takes the focus: it goes away.
 This guide uses htmx 2, which sample-01 serves. The components work with htmx 4 as well (with htmx-spring-boot 6),
 where htmx 4 does things differently:
 
+- **Load htmx's Alpine extension.** htmx 4's settle step puts every attribute of the server's markup back on a swapped
+  element whose `id` stayed the same, removing the ones the components set when they start (`aria-expanded` on a
+  menu's trigger, for one). Load `ext/hx-alpine-compat.js` after htmx: it holds Alpine back until the settle is done.
+  The htmx 4 webjar (`htmx.org` version `4.0.0` in the pom above) has it. Alpine must start after the extension, so
+  both scripts go before the `assets` fragment, which starts Alpine (its module script runs in document order with
+  the `defer` scripts):
+
+  ```html
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <script th:src="@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}" defer></script>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  ```
+
+  With `shadleaf.assets.alpine=external`, they go before the script that loads the application's Alpine.
+
+  Without it, turn the settle off, `<meta name="htmx-config" content='{"defaultSettleDelay":0}'>` (or `settle:0` in
+  one `hx-swap`), which also turns off htmx's settle transitions.
 - **Error answers are swapped in.** htmx 4 swaps a `4xx` or `5xx` response like any other, where htmx 2 leaves the
   page alone. A [dialog or sheet body](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dialog.md#loaded-into-the-dialog-a-body) stops that for the
   requests into it, so a failed save still keeps what was typed; elsewhere, use `hx-status:5xx="swap:none"` or the
