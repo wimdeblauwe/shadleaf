@@ -35,6 +35,22 @@ class TableComponentTest {
   }
 
   @Test
+  void stickyFirstColumnMarksTheTable() {
+    Rendered rendered = TESTER.render("<sl:table sticky-first-column><tbody><tr><td>Ada</td></tr></tbody></sl:table>");
+
+    assertThat(rendered).hasNoLeakedMarkup();
+    assertThat(rendered).element("div > table").hasClass("table").hasAttribute("data-sticky", "first-column");
+    assertThat(rendered).element("div > table").hasNoAttribute("sticky-first-column");
+  }
+
+  @Test
+  void aTableWithoutItIsNotMarked() {
+    Rendered rendered = TESTER.render("<sl:table><tbody><tr><td>Ada</td></tr></tbody></sl:table>");
+
+    assertThat(rendered).element("div > table").hasNoAttribute("data-sticky");
+  }
+
+  @Test
   void theTableIsAPlainTableInAScrollContainer() {
     Rendered rendered = TESTER.render("""
         <sl:table id="people" class="extra">

@@ -2500,6 +2500,12 @@
       "type" : "string",
       "values" : [ ],
       "description" : "The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its sort links use `members_sort` instead of `sort`."
+    }, {
+      "name" : "sticky-first-column",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Pin the first cell of every row to the start edge, so it stays in view when a wide table scrolls sideways. It gets the page's `--background` (set `--sl-table-bg` on the table when it sits on something else, such as `var(--card)`), and an edge line appears once the table has scrolled."
     } ]
   }, {
     "name" : "table-empty",
