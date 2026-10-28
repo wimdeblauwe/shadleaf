@@ -1,4 +1,4 @@
-import {expect, test} from '@playwright/test';
+import {expect, type Page, test} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import axe, {type Result} from 'axe-core';
 import {combinations, componentScenarios, keepScenarios, openShowcase, showcaseComponents, showcasePages, widths} from './showcase';
@@ -8,6 +8,33 @@ import {combinations, componentScenarios, keepScenarios, openShowcase, showcaseC
 
 // The hover pass is a test per component: in parallel, rather than one after the other in a single worker.
 test.describe.configure({mode: 'parallel'});
+
+// Violations a scenario shows on purpose: the rule, and the scenarios where it is accepted. The pinned-column table is
+// plain text and wider than the page, the case it is for; its container has no tabindex (table-scroll.spec.ts), so in
+// WebKit it cannot be scrolled with the keyboard. The table page says so under "Wide tables".
+const accepted: Record<string, string[]> = {
+  'scrollable-region-focusable': ['table--sticky-first-column'],
+};
+
+/** The violations without the nodes {@link accepted} allows, and without the violations left with no node. */
+async function withoutAccepted(page: Page, violations: Result[]): Promise<Result[]> {
+  const kept: Result[] = [];
+  for (const violation of violations) {
+    const scenarios = accepted[violation.id] ?? [];
+    const nodes = [];
+    for (const node of violation.nodes) {
+      const inAccepted = await page.evaluate(([target, selector]) => !!selector && !!document.querySelector(target)?.closest(selector),
+          [node.target.join(' '), scenarios.map(scenario => `[data-scenario="${scenario}"]`).join(', ')]);
+      if (!inAccepted) {
+        nodes.push(node);
+      }
+    }
+    if (nodes.length > 0) {
+      kept.push({...violation, nodes});
+    }
+  }
+  return kept;
+}
 
 function describe(violations: Result[]): string[] {
   return violations.map(violation =>
@@ -26,7 +53,7 @@ for (const {skin, theme} of combinations) {
         componentScenarios.forEach(scenario => builder.include(scenario));
         const results = await builder.analyze();
 
-        const summary = describe(results.violations);
+        const summary = describe(await withoutAccepted(page, results.violations));
         expect(summary, summary.join('\n')).toEqual([]);
       });
 

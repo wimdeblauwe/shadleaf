@@ -57,3 +57,46 @@ test('a table that fits adds no tab stop', async ({page}) => {
   await page.keyboard.press('Tab');
   expect(await focused(page)).toBe('after');
 });
+
+// sticky-first-column pins the first cell of every row to the inline start with CSS only.
+const pinned = (dir: 'ltr' | 'rtl') => `<div dir="${dir}"><div class="table-container"><table class="table" data-sticky="first-column">
+  <thead><tr><th id="h">Person</th>${head(false)}</tr></thead>
+  <tbody><tr><td id="c">Ada</td>${cells(8)}</tr></tbody>
+  <tfoot><tr><td id="f">Total</td>${cells(8)}</tr></tfoot></table></div></div>`;
+
+test('the first column stays in view after scrolling sideways', async ({page}) => {
+  await openFixture(page, pinned('ltr'), {alpine: false});
+  await page.locator('.table-container').evaluate(container => container.scrollTo({left: 400}));
+  await expect.poll(() => scrollLeft(page)).toBeGreaterThan(300);
+
+  for (const id of ['h', 'c', 'f']) {
+    const box = await page.locator(`#${id}`).boundingBox();
+    expect(box!.x).toBeGreaterThanOrEqual(0);
+    expect(box!.x).toBeLessThan(5);
+  }
+  // The second column has scrolled out from under it.
+  expect((await page.locator('#c + td').boundingBox())!.x).toBeLessThan(150);
+});
+
+test('the pinned column sticks to the right edge in a right-to-left page', async ({page}) => {
+  await openFixture(page, pinned('rtl'), {alpine: false});
+  await page.locator('.table-container').evaluate(container => container.scrollTo({left: -400}));
+  await expect.poll(() => scrollLeft(page)).toBeLessThan(-300);
+
+  const box = await page.locator('#c').boundingBox();
+  expect(box!.x + box!.width).toBeGreaterThan(420 - 5);
+  expect(box!.x + box!.width).toBeLessThanOrEqual(420 + 1);
+});
+
+test('the edge shows only while the table is scrolled, and the pinned cell is opaque', async ({page}) => {
+  await openFixture(page, pinned('ltr'), {alpine: false});
+  const edge = () => page.locator('#c').evaluate(cell => getComputedStyle(cell, '::after').opacity);
+  const supported = await page.evaluate(() => CSS.supports('animation-timeline', 'scroll()'));
+  if (supported) {
+    expect(await edge()).toBe('0');
+    await page.locator('.table-container').evaluate(container => container.scrollTo({left: 400}));
+    await expect.poll(edge).toBe('1');
+  }
+  expect(await page.locator('#c').evaluate(cell => getComputedStyle(cell).backgroundColor))
+      .not.toBe('rgba(0, 0, 0, 0)');
+});

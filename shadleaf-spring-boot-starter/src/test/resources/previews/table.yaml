@@ -43,6 +43,95 @@ scenarios:
         </tfoot>
       </sl:table>
 
+  - id: sticky-first-column
+    title: Pinned first column
+    description: A wide table whose first column stays in view while the rest scrolls sideways.
+    source: |-
+      <sl:table sticky-first-column>
+        <caption>Sales per month.</caption>
+        <thead>
+          <tr>
+            <th>Person</th>
+            <th data-align="end">Jan</th>
+            <th data-align="end">Feb</th>
+            <th data-align="end">Mar</th>
+            <th data-align="end">Apr</th>
+            <th data-align="end">May</th>
+            <th data-align="end">Jun</th>
+            <th data-align="end">Jul</th>
+            <th data-align="end">Aug</th>
+            <th data-align="end">Sep</th>
+            <th data-align="end">Oct</th>
+            <th data-align="end">Nov</th>
+            <th data-align="end">Dec</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ada Lovelace</td>
+            <td data-align="end">€1200</td>
+            <td data-align="end">€1237</td>
+            <td data-align="end">€1274</td>
+            <td data-align="end">€1311</td>
+            <td data-align="end">€1348</td>
+            <td data-align="end">€1385</td>
+            <td data-align="end">€1422</td>
+            <td data-align="end">€1459</td>
+            <td data-align="end">€1496</td>
+            <td data-align="end">€1533</td>
+            <td data-align="end">€1570</td>
+            <td data-align="end">€1607</td>
+          </tr>
+          <tr>
+            <td>Grace Hopper</td>
+            <td data-align="end">€900</td>
+            <td data-align="end">€953</td>
+            <td data-align="end">€1006</td>
+            <td data-align="end">€1059</td>
+            <td data-align="end">€1112</td>
+            <td data-align="end">€1165</td>
+            <td data-align="end">€1218</td>
+            <td data-align="end">€1271</td>
+            <td data-align="end">€1324</td>
+            <td data-align="end">€1377</td>
+            <td data-align="end">€1430</td>
+            <td data-align="end">€1483</td>
+          </tr>
+          <tr>
+            <td>Alan Turing</td>
+            <td data-align="end">€1500</td>
+            <td data-align="end">€1479</td>
+            <td data-align="end">€1458</td>
+            <td data-align="end">€1437</td>
+            <td data-align="end">€1416</td>
+            <td data-align="end">€1395</td>
+            <td data-align="end">€1374</td>
+            <td data-align="end">€1353</td>
+            <td data-align="end">€1332</td>
+            <td data-align="end">€1311</td>
+            <td data-align="end">€1290</td>
+            <td data-align="end">€1269</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td data-align="end">€3600</td>
+            <td data-align="end">€3669</td>
+            <td data-align="end">€3738</td>
+            <td data-align="end">€3807</td>
+            <td data-align="end">€3876</td>
+            <td data-align="end">€3945</td>
+            <td data-align="end">€4014</td>
+            <td data-align="end">€4083</td>
+            <td data-align="end">€4152</td>
+            <td data-align="end">€4221</td>
+            <td data-align="end">€4290</td>
+            <td data-align="end">€4359</td>
+          </tr>
+        </tfoot>
+      </sl:table>
+
   - id: sort
     title: Sorted on the server
     description: Sorted by name, in a request for /people?q=a&sort=name,asc. Each link keeps q.
@@ -53,7 +142,7 @@ scenarios:
           <tr>
             <sl:table-head sort="name">Name</sl:table-head>
             <sl:table-head sort="email">Email</sl:table-head>
-            <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+            <th data-align="end">Orders</th>
           </tr>
         </thead>
         <tbody>
@@ -70,7 +159,7 @@ scenarios:
           <tr>
             <sl:table-head sort="name">Name</sl:table-head>
             <sl:table-head sort="email">Email</sl:table-head>
-            <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+            <th data-align="end">Orders</th>
           </tr>
         </thead>
         <tbody>

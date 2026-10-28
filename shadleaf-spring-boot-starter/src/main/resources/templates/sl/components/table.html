@@ -13,6 +13,10 @@
       headers read the order from the request's sort parameter.</sl:prop>
     <sl:prop name="qualifier">The <code>@Qualifier</code> of the controller's <code>Pageable</code>, for a second
       table on the page: its sort links use <code>members_sort</code> instead of <code>sort</code>.</sl:prop>
+    <sl:prop name="sticky-first-column" type="boolean">Pin the first cell of every row to the start edge, so it stays in
+      view when a wide table scrolls sideways. It gets the page's <code>--background</code> (set
+      <code>--sl-table-bg</code> on the table when it sits on something else, such as <code>var(--card)</code>), and
+      an edge line appears once the table has scrolled.</sl:prop>
   </sl:props>
 </head>
 <body>
@@ -20,6 +24,7 @@
 <div th:fragment="table"
      class="table-container"
      th:with="slTablePage=${props.page}, slTableQualifier=${props.qualifier}"><table class="table"
+    th:attr="data-sticky=${props['sticky-first-column'] ? 'first-column' : null}"
     sl:attrs><sl:slot/></table></div>
 </body>
 </html>

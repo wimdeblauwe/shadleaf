@@ -1667,6 +1667,38 @@
     @apply mt-4 text-xs text-muted-foreground;
   }
 
+  /*
+    Pinned first column (sticky-first-column): the cells hide what scrolls under them with the table's background
+    (--sl-table-bg, --background unless the table sits on something else, such as a card), and a gradient carries the
+    tint of the row's hover, selected and foot state. The edge fades in with the container's scroll (table.css).
+  */
+  .table[data-sticky='first-column'] {
+    --sl-table-tint: transparent;
+  }
+
+  .table[data-sticky='first-column'] > tbody > tr:has(> :first-child .checkbox:checked) {
+    --sl-table-tint: var(--muted);
+  }
+
+  .table[data-sticky='first-column'] > tfoot > tr {
+    --sl-table-tint: color-mix(in oklab, var(--muted) 50%, transparent);
+  }
+
+  @media (hover: hover) {
+    .table[data-sticky='first-column'] > tbody > tr:hover:not(:has(> :first-child .checkbox:checked)) {
+      --sl-table-tint: color-mix(in oklab, var(--muted) 50%, transparent);
+    }
+  }
+
+  .table[data-sticky='first-column'] > :is(thead, tbody, tfoot) > tr > :is(th, td):first-child {
+    background-color: var(--sl-table-bg, var(--background));
+    background-image: linear-gradient(var(--sl-table-tint), var(--sl-table-tint));
+  }
+
+  .table[data-sticky='first-column'] > :is(thead, tbody, tfoot) > tr > :is(th, td):first-child::after {
+    border-inline-end: 1px solid var(--border);
+  }
+
   .table-sort {
     @apply -ms-2.5;
   }

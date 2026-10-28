@@ -1,4 +1,19 @@
 /*
+  The pinned column's edge is drawn while the container is scrolled: a scroll-driven animation raises this from 0 to 1
+  over the first 1.5rem of inline scrolling. Without animation-timeline support the edge is always drawn.
+*/
+@property --sl-table-scrolled {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
+@keyframes sl-table-scrolled {
+  from { --sl-table-scrolled: 0; }
+  to { --sl-table-scrolled: 1; }
+}
+
+/*
   Table: structure only. sl:table renders a container that scrolls sideways around a table; the rows and cells are
   the application's own plain elements. Every selector reaches them through child combinators, so a table nested in a
   cell is not styled twice. The sort link is a button (.button), whose rules set its look.
@@ -47,5 +62,44 @@
   .table-select-all[x-cloak],
   .table-selection-count[x-cloak] {
     @apply invisible;
+  }
+
+  /*
+    sticky-first-column: the first cell of every row sticks to the inline start (logical, so RTL works). The skins give
+    it a background; its ::after is the edge, which shows only after the container has scrolled.
+  */
+  .table[data-sticky='first-column'] > :is(thead, tbody, tfoot) > tr > :is(th, td):first-child {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 1;
+  }
+
+  .table[data-sticky='first-column'] > :is(thead, tbody, tfoot) > tr > :is(th, td):first-child::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    pointer-events: none;
+    opacity: var(--sl-table-scrolled);
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .table-container:has(> .table[data-sticky='first-column']) {
+      --sl-table-scrolled: 0;
+      animation: sl-table-scrolled linear both;
+      animation-timeline: scroll(self inline);
+      animation-range: 0 1.5rem;
+    }
+  }
+
+  /* Nothing scrolls on paper: the column stays in the flow and has no edge. */
+  @media print {
+    .table[data-sticky='first-column'] > :is(thead, tbody, tfoot) > tr > :is(th, td):first-child {
+      position: static;
+    }
+
+    .table[data-sticky='first-column'] > :is(thead, tbody, tfoot) > tr > :is(th, td):first-child::after {
+      display: none;
+    }
   }
 }

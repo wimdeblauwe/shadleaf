@@ -49,6 +49,22 @@ item*) its links can, as above. axe reports such a table as
 `scrollable-region-focusable`. Keep a table that is only text from growing wider than a phone, or give its rows
 something to focus.
 
+### Pin the first column
+
+When the first column names the row, it should not scroll away. `sticky-first-column` pins the first cell of every row
+(`th` and `td`, in `thead`, `tbody` and `tfoot`) to the start edge with `position: sticky`, so it also works in
+right-to-left pages. No JavaScript is involved:
+
+<ComponentPreview id="table--sticky-first-column" />
+
+The pinned cells have the page's `--background` so the scrolled cells do not show through; when the table sits on
+something else, such as a card, set `--sl-table-bg` on the table (`style` is not allowed under a strict CSP, so do it
+in your stylesheet: `.my-table { --sl-table-bg: var(--card); }`). Row hover, selected and footer tints carry over to the
+pinned cells. A line on the pinned column's end edge appears once the table has scrolled; it is driven by a CSS
+scroll-driven animation (Chromium and Safari 26; Firefox where `animation-timeline` is enabled), and where that is
+missing the line is always drawn. In forced colours the line is a system-coloured border, and on paper nothing is
+pinned. The example is plain text, so what [Wide tables](#wide-tables) says about WebKit and the keyboard applies to it.
+
 ## Sorting on the server
 
 The rows of a Spring application live on the server, which sends one page of them. So a sortable header is a link that
@@ -371,7 +387,7 @@ A checkbox of your own can be indeterminate too: set its `indeterminate` propert
 ## Left out
 
 shadcn's data table runs TanStack Table in the browser. These parts of it are not in Shadleaf: sorting and filtering
-in the browser, column visibility, resizing, reordering and pinning, drag handles, expandable rows, editable cells,
+in the browser, column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable rows, editable cells,
 virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts across pages (see
 above).
 

@@ -21,6 +21,8 @@ class TableApprovalTest {
     HtmlApproval.verifyRenders("table", tester, List.of(
         "<sl:table><tbody><tr><td>Ada</td></tr></tbody></sl:table>",
         "<sl:table id=\"people\" class=\"extra\"><tbody><tr><td>Ada</td></tr></tbody></sl:table>",
+        "<sl:table sticky-first-column><thead><tr><th>Name</th><th>Jan</th></tr></thead>"
+            + "<tbody><tr><td>Ada</td><td>1</td></tr></tbody></sl:table>",
         "<sl:table-head>Name</sl:table-head>",
         "<sl:table-head align=\"center\">Status</sl:table-head>",
         "<sl:table-head align=\"end\">Amount</sl:table-head>",
