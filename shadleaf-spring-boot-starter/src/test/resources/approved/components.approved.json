@@ -1654,6 +1654,12 @@
       "values" : [ ],
       "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe)."
     }, {
+      "name" : "nav-size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "icon-xs", "icon-sm", "icon", "icon-lg" ],
+      "description" : "Size of the previous and next month links, the sizes of an icon `sl:button`, to match the buttons elsewhere on the page. By default the skin's calendar size. On a touch screen the link is always at least 44 by 44 pixels to hit, whatever it looks like."
+    }, {
       "name" : "week-starts-on",
       "type" : "number",
       "values" : [ ],

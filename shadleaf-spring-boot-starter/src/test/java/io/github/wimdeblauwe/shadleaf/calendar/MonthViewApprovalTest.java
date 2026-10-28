@@ -23,6 +23,7 @@ class MonthViewApprovalTest {
             </sl:month-view>""",
         """
             <sl:month-view month="2026-02" today="2026-10-23" month-param="rota" show-outside-days="false"
-                           show-week-number week-starts-on="1"/>"""));
+                           show-week-number week-starts-on="1"/>""",
+        "<sl:month-view month=\"2026-10\" today=\"2026-10-23\" nav-size=\"icon-lg\"/>"));
   }
 }

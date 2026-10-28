@@ -85,6 +85,15 @@ for a second month view on the page.
 Today is marked; by default that is the server's date. If your users are in another time zone, put their date in the
 model (`LocalDate.now(zone)`) and pass it: `th:today="${today}"`.
 
+## Size of the navigation
+
+`nav-size` sets the size of the previous and next links, with the sizes of an icon [`<sl:button>`](../button/#sizes)
+(`icon-xs`, `icon-sm`, `icon`, `icon-lg`), so they can match the buttons elsewhere on the page. Without it they have the
+size of the skin's calendar. On a touch screen the links have a hit area of at least 44 by 44 pixels whatever their
+size, as the icon buttons.
+
+<ComponentPreview id="month-view--nav-size" />
+
 ## Week numbers and the first day of the week
 
 As for the [calendar](../calendar/#week-numbers-and-the-first-day-of-the-week), the page's locale decides the first day

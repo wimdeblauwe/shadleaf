@@ -17,6 +17,7 @@
 */
 @layer components {
   .month-view {
+    --nav-size: var(--cell-size);
     @apply relative w-full;
   }
 
@@ -25,10 +26,19 @@
   }
 
   .month-view-nav-button {
-    @apply pointer-events-auto inline-flex size-(--cell-size) shrink-0 items-center justify-center p-0 outline-none
+    @apply pointer-events-auto inline-flex relative size-(--nav-size) shrink-0 items-center justify-center p-0 outline-none
       select-none
       [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 rtl:[&_svg]:rotate-180
       forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid;
+  }
+
+  /* A bigger hit area than the look: an invisible ::after of at least 44px square, centred, on a touch screen. The
+     two links sit at either end of the row, so nothing is near enough to lose a click. */
+  @media (pointer: coarse) {
+    .month-view-nav-button::after {
+      content: '';
+      @apply absolute inset-0 m-auto h-[max(100%,2.75rem)] w-[max(100%,2.75rem)];
+    }
   }
 
   .month-view-grid {

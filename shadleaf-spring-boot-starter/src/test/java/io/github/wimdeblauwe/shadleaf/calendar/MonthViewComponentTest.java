@@ -22,6 +22,16 @@ class MonthViewComponentTest {
   private final ComponentRenderTester tester = ComponentRenderTester.create();
 
   @Test
+  void navSizeIsOnlyRenderedWhenItIsNotTheDefault() {
+    assertThat(tester.render("<sl:month-view month=\"2026-10\"/>").select(".month-view").first()
+        .hasAttr("data-nav-size")).isFalse();
+    assertThat(tester.render("<sl:month-view month=\"2026-10\" nav-size=\"default\"/>").select(".month-view")
+        .first().hasAttr("data-nav-size")).isFalse();
+    assertThat(tester.render("<sl:month-view month=\"2026-10\" nav-size=\"icon-sm\"/>").select(".month-view")
+        .first().attr("data-nav-size")).isEqualTo("icon-sm");
+  }
+
+  @Test
   void rendersTheWeeksOfTheMonthFromTheFirstDayOfTheLocalesWeek() {
     Rendered rendered = tester.render("<sl:month-view month=\"2026-10\" today=\"2026-10-23\"/>");
 
