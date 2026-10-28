@@ -3705,6 +3705,26 @@
             "required" : false
           }
         }, {
+          "name" : "nav-size",
+          "description" : "Size of the previous and next month links, the sizes of an icon `sl:button`, to match the buttons elsewhere on the page. By default the skin's calendar size. On a touch screen the link is always at least 44 by 44 pixels to hit, whatever it looks like.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "icon-xs"
+          }, {
+            "name" : "icon-sm"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "icon-lg"
+          } ],
+          "default" : "default"
+        }, {
           "name" : "week-starts-on",
           "description" : "The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides.",
           "value" : {
@@ -3750,6 +3770,13 @@
         }, {
           "name" : "th:show-week-number",
           "description" : "`show-week-number` from a Thymeleaf expression, e.g. `th:show-week-number=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:nav-size",
+          "description" : "`nav-size` from a Thymeleaf expression, e.g. `th:nav-size=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false

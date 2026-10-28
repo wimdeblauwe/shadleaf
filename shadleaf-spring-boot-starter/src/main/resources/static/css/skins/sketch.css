@@ -1068,6 +1068,31 @@
     @apply rounded-(--cell-radius) sketch-shape-sm hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 focus-visible:ring-[3px] focus-visible:ring-ring/50;
   }
 
+  /* Month view navigation: nav-size is the size of an icon button. */
+  .month-view:not([data-nav-size]) {
+    --nav-size: var(--cell-size);
+  }
+
+  .month-view[data-nav-size='icon-xs'] {
+    --nav-size: --spacing(6);
+  }
+
+  .month-view[data-nav-size='icon-sm'] {
+    --nav-size: --spacing(8);
+  }
+
+  .month-view[data-nav-size='icon'] {
+    --nav-size: --spacing(9);
+  }
+
+  .month-view[data-nav-size='icon-lg'] {
+    --nav-size: --spacing(10);
+  }
+
+  .month-view[data-nav-size='icon-xs'] > .month-view-nav > .month-view-nav-button svg {
+    @apply size-3;
+  }
+
   .month-view-caption {
     @apply text-sm font-bold;
   }

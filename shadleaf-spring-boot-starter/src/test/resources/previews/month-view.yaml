@@ -50,3 +50,12 @@ scenarios:
       <sl:month-view/>
     renderSource: |-
       <sl:month-view month="2026-10" today="2026-10-23"/>
+
+  - id: nav-size
+    title: Size of the navigation
+    description: The previous and next links take the size of an icon button, here icon-lg, to match the buttons around
+      the month. On a touch screen their hit area is at least 44 by 44 pixels whatever they look like.
+    source: |-
+      <sl:month-view nav-size="icon-lg"/>
+    renderSource: |-
+      <sl:month-view month="2026-10" today="2026-10-23" nav-size="icon-lg"/>

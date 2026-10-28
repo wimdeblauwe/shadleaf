@@ -23,6 +23,10 @@
       fill the first and last week.</sl:prop>
     <sl:prop name="show-week-number" type="boolean" default="false">Show the week numbers, counted as the page's
       locale counts them (ISO weeks in most of Europe).</sl:prop>
+    <sl:prop name="nav-size" default="default" values="default icon-xs icon-sm icon icon-lg">Size of the previous and
+      next month links, the sizes of an icon <code>sl:button</code>, to match the buttons elsewhere on the page. By
+      default the skin's calendar size. On a touch screen the link is always at least 44 by 44 pixels to hit,
+      whatever it looks like.</sl:prop>
     <sl:prop name="week-starts-on" type="number">The first day of the week: 0 is Sunday, 1 Monday, up to 6. By
       default the page's locale decides.</sl:prop>
   </sl:props>
@@ -39,6 +43,7 @@
               slPreviousHref=${#slPaging.link(props['month-param'], slMonth.previous)},
               slNextHref=${#slPaging.link(props['month-param'], slMonth.next)}"
      class="month-view"
+     th:attr="data-nav-size=${props.unlessDefault('nav-size')}"
      sl:attrs>
   <div class="month-view-nav">
     <a class="month-view-nav-button month-view-previous"
