@@ -312,80 +312,85 @@ function htmxButton(path: string): string {
   return `<button type="button" id="send" hx-post="${path}" hx-swap="none">Send</button>`;
 }
 
-test('htmx: HX-Trigger sends a toast', async ({page}) => {
-  const detail = {title: 'Zoë was invited', description: null, variant: 'success', duration: null};
-  const messages = await openFixture(page, htmxButton('/invite') + toaster(), {
-    htmx: true,
-    routes: {'/invite': () => ({body: '', headers: {'HX-Trigger': JSON.stringify({'sl-toast': detail})}})},
+for (const htmx of [true, 4] as const) {
+  const version = htmx === 4 ? 4 : 2;
+
+  test(`htmx ${version}: HX-Trigger sends a toast`, async ({page}) => {
+    const detail = {title: 'Zoë was invited', description: null, variant: 'success', duration: null};
+    const messages = await openFixture(page, htmxButton('/invite') + toaster(), {
+      htmx,
+      routes: {'/invite': () => ({body: '', headers: {'HX-Trigger': JSON.stringify({'sl-toast': detail})}})},
+    });
+
+    await page.locator('#send').click();
+    await expect(toasts(page)).toHaveText(['Zoë was invited']);
+    await expect(toasts(page).locator('.toast-description')).toHaveCount(0);
+    await expect.poll(() => announced(page, 'status')).toBe('Zoë was invited');
+    expect(messages).toEqual([]);
   });
 
-  await page.locator('#send').click();
-  await expect(toasts(page)).toHaveText(['Zoë was invited']);
-  await expect(toasts(page).locator('.toast-description')).toHaveCount(0);
-  await expect.poll(() => announced(page, 'status')).toBe('Zoë was invited');
-  expect(messages).toEqual([]);
-});
+  for (const order of [['sl-dialog-close', 'sl-toast'], ['sl-toast', 'sl-dialog-close']]) {
+    test(`htmx ${version}: a toast and sl-dialog-close in one response, ${order.join(' before ')}`, async ({page}) => {
+      const events: Record<string, unknown> = {};
+      for (const name of order) {
+        // htmx-spring-boot sends null for an event without a detail; htmx 4.0.0 throws on a null detail (htmx#4135).
+        events[name] = name === 'sl-toast' ? {title: 'Member saved', variant: 'success'} : htmx === 4 ? {} : null;
+      }
+      const routes: Routes = {'/save': () => ({body: '', headers: {'HX-Trigger': JSON.stringify(events)}})};
+      const messages = await openFixture(page, `
+          <button type="button" id="open" commandfor="d" command="show-modal">Edit</button>
+          ${dialog('d', htmxButton('/save'))}
+          ${toaster()}`, {htmx, routes});
+      const d = page.locator('#d');
 
-for (const order of [['sl-dialog-close', 'sl-toast'], ['sl-toast', 'sl-dialog-close']]) {
-  test(`htmx: a toast and sl-dialog-close in one response, ${order.join(' before ')}`, async ({page}) => {
-    const events: Record<string, unknown> = {};
-    for (const name of order) {
-      events[name] = name === 'sl-toast' ? {title: 'Member saved', variant: 'success'} : null;
-    }
-    const routes: Routes = {'/save': () => ({body: '', headers: {'HX-Trigger': JSON.stringify(events)}})};
-    const messages = await openFixture(page, `
-        <button type="button" id="open" commandfor="d" command="show-modal">Edit</button>
-        ${dialog('d', htmxButton('/save'))}
-        ${toaster()}`, {htmx: true, routes});
-    const d = page.locator('#d');
+      await page.locator('#open').click();
+      await page.locator('#send').click();
+      await expect(d).toHaveJSProperty('open', false);
+      await expect(toasts(page)).toHaveText(['Member saved']);
+      await expect.poll(() => page.locator('.toaster-viewport').evaluate(viewport => viewport.parentElement?.id))
+          .toBe('toaster');
+      await expect.poll(() => announced(page, 'status')).toBe('Member saved');
+      await expect(page.locator('#open'), 'closing returns the focus to the button that opened it').toBeFocused();
+      expect(messages).toEqual([]);
+    });
+  }
 
-    await page.locator('#open').click();
+  test(`htmx ${version}: a toast swapped in out of band`, async ({page}) => {
+    const messages = await openFixture(page, htmxButton('/invite') + toaster(), {
+      htmx,
+      routes: {'/invite': () => ({body: `<ol hx-swap-oob="beforeend:#toaster">${SERVER_TOAST}</ol>`})},
+    });
+
     await page.locator('#send').click();
-    await expect(d).toHaveJSProperty('open', false);
-    await expect(toasts(page)).toHaveText(['Member saved']);
-    await expect.poll(() => page.locator('.toaster-viewport').evaluate(viewport => viewport.parentElement?.id))
-        .toBe('toaster');
-    await expect.poll(() => announced(page, 'status')).toBe('Member saved');
-    await expect(page.locator('#open'), 'closing returns the focus to the button that opened it').toBeFocused();
+    await expect(toasts(page)).toHaveText([/Message sent/]);
+    expect(await toasts(page).evaluate(item => item.parentElement?.classList.contains('toaster-list'))).toBe(true);
+    await expect(toasts(page).getByRole('button', {name: 'Close'})).toBeVisible();
+    await expect.poll(() => announced(page, 'status')).toBe('Message sent. We answer within one working day.');
+    expect(messages).toEqual([]);
+  });
+
+  test(`htmx ${version}: a toast does not come back from the history cache`, async ({page}) => {
+    const page2 = (url: URL) => url.pathname === '/'
+        ? `<a href="/other" id="other" hx-get="/other" hx-target="main" hx-push-url="true">Other</a>${toaster('data-duration="0"')}`
+        : '';
+    const messages = await openFixture(page, page2, {
+      htmx,
+      routes: {'/other': () => ({body: '<p id="other-page">Other page</p>'})},
+    });
+
+    await toast(page, {title: 'Saved'});
+    await expect(toasts(page)).toHaveCount(1);
+    await page.locator('#other').click();
+    await expect(page.locator('#other-page')).toBeVisible();
+    await page.goBack();
+    await expect(page.locator('#other')).toBeVisible();
+    await page.waitForFunction(() => document.querySelector('.toaster-viewport')?.matches(':popover-open'));
+    await expect(page.locator('.toast')).toHaveCount(0);
+    await toast(page, {title: 'After'});
+    await expect(toasts(page)).toHaveText(['After']);
     expect(messages).toEqual([]);
   });
 }
-
-test('htmx: a toast swapped in out of band', async ({page}) => {
-  const messages = await openFixture(page, htmxButton('/invite') + toaster(), {
-    htmx: true,
-    routes: {'/invite': () => ({body: `<ol hx-swap-oob="beforeend:#toaster">${SERVER_TOAST}</ol>`})},
-  });
-
-  await page.locator('#send').click();
-  await expect(toasts(page)).toHaveText([/Message sent/]);
-  expect(await toasts(page).evaluate(item => item.parentElement?.classList.contains('toaster-list'))).toBe(true);
-  await expect(toasts(page).getByRole('button', {name: 'Close'})).toBeVisible();
-  await expect.poll(() => announced(page, 'status')).toBe('Message sent. We answer within one working day.');
-  expect(messages).toEqual([]);
-});
-
-test('htmx: a toast does not come back from the history cache', async ({page}) => {
-  const page2 = (url: URL) => url.pathname === '/'
-      ? `<a href="/other" id="other" hx-get="/other" hx-target="main" hx-push-url="true">Other</a>${toaster('data-duration="0"')}`
-      : '';
-  const messages = await openFixture(page, page2, {
-    htmx: true,
-    routes: {'/other': () => ({body: '<p id="other-page">Other page</p>'})},
-  });
-
-  await toast(page, {title: 'Saved'});
-  await expect(toasts(page)).toHaveCount(1);
-  await page.locator('#other').click();
-  await expect(page.locator('#other-page')).toBeVisible();
-  await page.goBack();
-  await expect(page.locator('#other')).toBeVisible();
-  await page.waitForFunction(() => document.querySelector('.toaster-viewport')?.matches(':popover-open'));
-  await expect(page.locator('.toast')).toHaveCount(0);
-  await toast(page, {title: 'After'});
-  await expect(toasts(page)).toHaveText(['After']);
-  expect(messages).toEqual([]);
-});
 
 test('a toaster removed in the same task as a toast arrives stays quiet', async ({page}) => {
   // Alpine destroys a removed component in a microtask; until then the old toaster still hears sl-toast. Found as a
