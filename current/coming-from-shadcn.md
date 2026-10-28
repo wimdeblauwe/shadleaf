@@ -358,7 +358,8 @@ data table sorts in the browser with TanStack Table, `<sl:table-head sort="name"
 the page in another order (`?sort=name,desc`), read from a Spring Data `Page`. A cell's alignment is `data-align="end"`
 rather than a `text-right` class. Filtering is a `GET` form the server answers, with `sl:query-params` keeping the
 order and page size, and htmx to search as the user types ([Tables with htmx](https://shadleaf.dev/current/guides/tables-htmx.md)). There is no
-column visibility or browser-side paging. Row selection is the application's own checkboxes, which submit with a form:
+column visibility or browser-side paging. Column pinning is only for the first column, the `sticky-first-column` prop
+on `<sl:table>`, which is CSS (`position: sticky`) and not TanStack's `column.pin()`. Row selection is the application's own checkboxes, which submit with a form:
 `<sl:table-select-all>` takes the place of the header's `Checkbox` with `table.getIsAllPageRowsSelected()`, and
 `<sl:table-selection-count>` of `"{n} of {total} row(s) selected."` (it reads "2 of 20 selected"). The selected row's
 background comes from CSS (a checked checkbox in the row's first cell), not from `data-state="selected"`. The

@@ -87,6 +87,109 @@ item*) its links can, as above. axe reports such a table as
 `scrollable-region-focusable`. Keep a table that is only text from growing wider than a phone, or give its rows
 something to focus.
 
+### Pin the first column
+
+When the first column names the row, it should not scroll away. `sticky-first-column` pins the first cell of every row
+(`th` and `td`, in `thead`, `tbody` and `tfoot`) to the start edge with `position: sticky`, so it also works in
+right-to-left pages. No JavaScript is involved:
+
+**Example: Pinned first column.** A wide table whose first column stays in view while the rest scrolls sideways.
+
+```html
+<sl:table sticky-first-column>
+  <caption>Sales per month.</caption>
+  <thead>
+    <tr>
+      <th>Person</th>
+      <th data-align="end">Jan</th>
+      <th data-align="end">Feb</th>
+      <th data-align="end">Mar</th>
+      <th data-align="end">Apr</th>
+      <th data-align="end">May</th>
+      <th data-align="end">Jun</th>
+      <th data-align="end">Jul</th>
+      <th data-align="end">Aug</th>
+      <th data-align="end">Sep</th>
+      <th data-align="end">Oct</th>
+      <th data-align="end">Nov</th>
+      <th data-align="end">Dec</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ada Lovelace</td>
+      <td data-align="end">€1200</td>
+      <td data-align="end">€1237</td>
+      <td data-align="end">€1274</td>
+      <td data-align="end">€1311</td>
+      <td data-align="end">€1348</td>
+      <td data-align="end">€1385</td>
+      <td data-align="end">€1422</td>
+      <td data-align="end">€1459</td>
+      <td data-align="end">€1496</td>
+      <td data-align="end">€1533</td>
+      <td data-align="end">€1570</td>
+      <td data-align="end">€1607</td>
+    </tr>
+    <tr>
+      <td>Grace Hopper</td>
+      <td data-align="end">€900</td>
+      <td data-align="end">€953</td>
+      <td data-align="end">€1006</td>
+      <td data-align="end">€1059</td>
+      <td data-align="end">€1112</td>
+      <td data-align="end">€1165</td>
+      <td data-align="end">€1218</td>
+      <td data-align="end">€1271</td>
+      <td data-align="end">€1324</td>
+      <td data-align="end">€1377</td>
+      <td data-align="end">€1430</td>
+      <td data-align="end">€1483</td>
+    </tr>
+    <tr>
+      <td>Alan Turing</td>
+      <td data-align="end">€1500</td>
+      <td data-align="end">€1479</td>
+      <td data-align="end">€1458</td>
+      <td data-align="end">€1437</td>
+      <td data-align="end">€1416</td>
+      <td data-align="end">€1395</td>
+      <td data-align="end">€1374</td>
+      <td data-align="end">€1353</td>
+      <td data-align="end">€1332</td>
+      <td data-align="end">€1311</td>
+      <td data-align="end">€1290</td>
+      <td data-align="end">€1269</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Total</td>
+      <td data-align="end">€3600</td>
+      <td data-align="end">€3669</td>
+      <td data-align="end">€3738</td>
+      <td data-align="end">€3807</td>
+      <td data-align="end">€3876</td>
+      <td data-align="end">€3945</td>
+      <td data-align="end">€4014</td>
+      <td data-align="end">€4083</td>
+      <td data-align="end">€4152</td>
+      <td data-align="end">€4221</td>
+      <td data-align="end">€4290</td>
+      <td data-align="end">€4359</td>
+    </tr>
+  </tfoot>
+</sl:table>
+```
+
+The pinned cells have the page's `--background` so the scrolled cells do not show through; when the table sits on
+something else, such as a card, set `--sl-table-bg` on the table (`style` is not allowed under a strict CSP, so do it
+in your stylesheet: `.my-table { --sl-table-bg: var(--card); }`). Row hover, selected and footer tints carry over to the
+pinned cells. A line on the pinned column's end edge appears once the table has scrolled; it is driven by a CSS
+scroll-driven animation (Chromium and Safari 26; Firefox where `animation-timeline` is enabled), and where that is
+missing the line is always drawn. In forced colours the line is a system-coloured border, and on paper nothing is
+pinned. The example is plain text, so what [Wide tables](#wide-tables) says about WebKit and the keyboard applies to it.
+
 ## Sorting on the server
 
 The rows of a Spring application live on the server, which sends one page of them. So a sortable header is a link that
@@ -100,7 +203,7 @@ asks the server for the page in another order, not a script that reorders the ro
     <tr>
       <sl:table-head sort="name">Name</sl:table-head>
       <sl:table-head sort="email">Email</sl:table-head>
-      <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+      <th data-align="end">Orders</th>
     </tr>
   </thead>
   <tbody>
@@ -517,7 +620,7 @@ A checkbox of your own can be indeterminate too: set its `indeterminate` propert
 ## Left out
 
 shadcn's data table runs TanStack Table in the browser. These parts of it are not in Shadleaf: sorting and filtering
-in the browser, column visibility, resizing, reordering and pinning, drag handles, expandable rows, editable cells,
+in the browser, column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable rows, editable cells,
 virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts across pages (see
 above).
 
@@ -531,6 +634,7 @@ Attributes of `<sl:table>`: A table in shadcn/ui's look. Write the plain table e
 | --- | --- | --- | --- |
 | `th:page` | *object* | — | The Spring Data `Page` or `Slice` the table shows. Its `Sort` tells every `sl:table-head` inside how the rows are sorted now. Without it, the headers read the order from the request's sort parameter. |
 | `qualifier` | *string* | — | The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its sort links use `members_sort` instead of `sort`. |
+| `sticky-first-column` | *boolean* | — | Pin the first cell of every row to the start edge, so it stays in view when a wide table scrolls sideways. It gets the page's `--background` (set `--sl-table-bg` on the table when it sits on something else, such as `var(--card)`), and an edge line appears once the table has scrolled. |
 
 Every prop can also be set from an expression: `th:page="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 

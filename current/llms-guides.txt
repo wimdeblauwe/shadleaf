@@ -2,7 +2,7 @@
 
 > Getting started with Shadleaf, its conventions, the layouts and the guides.
 
-Shadleaf 1.0.0.
+Shadleaf 1.0.1.
 
 ## Shadleaf
 
@@ -60,7 +60,7 @@ Add the dependency to your `pom.xml` of your Spring Boot with Thymeleaf applicat
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>shadleaf-spring-boot-starter</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
@@ -483,7 +483,8 @@ data table sorts in the browser with TanStack Table, `<sl:table-head sort="name"
 the page in another order (`?sort=name,desc`), read from a Spring Data `Page`. A cell's alignment is `data-align="end"`
 rather than a `text-right` class. Filtering is a `GET` form the server answers, with `sl:query-params` keeping the
 order and page size, and htmx to search as the user types ([Tables with htmx](https://shadleaf.dev/current/guides/tables-htmx.md)). There is no
-column visibility or browser-side paging. Row selection is the application's own checkboxes, which submit with a form:
+column visibility or browser-side paging. Column pinning is only for the first column, the `sticky-first-column` prop
+on `<sl:table>`, which is CSS (`position: sticky`) and not TanStack's `column.pin()`. Row selection is the application's own checkboxes, which submit with a form:
 `<sl:table-select-all>` takes the place of the header's `Checkbox` with `table.getIsAllPageRowsSelected()`, and
 `<sl:table-selection-count>` of `"{n} of {total} row(s) selected."` (it reads "2 of 20 selected"). The selected row's
 background comes from CSS (a checked checkbox in the row's first cell), not from `data-state="selected"`. The
@@ -4769,6 +4770,42 @@ the toaster out of band. Use `HX-Trigger` rather than `HX-Trigger-After-Swap`/`-
 when the swap removed the element that sent the request, and a flash attribute rather than a toast when the response
 redirects. Toasts are removed before htmx saves a page in its history cache, so back never shows one again. A toast
 never takes the focus: it goes away.
+
+### htmx 4
+
+This guide uses htmx 2, which sample-01 serves. The components work with htmx 4 as well (with htmx-spring-boot 6),
+where htmx 4 does things differently:
+
+- **Load htmx's Alpine extension.** htmx 4's settle step puts every attribute of the server's markup back on a swapped
+  element whose `id` stayed the same, removing the ones the components set when they start (`aria-expanded` on a
+  menu's trigger, for one). Load `ext/hx-alpine-compat.js` after htmx: it holds Alpine back until the settle is done.
+  The htmx 4 webjar (`htmx.org` version `4.0.0` in the pom above) has it. Alpine must start after the extension, so
+  both scripts go before the `assets` fragment, which starts Alpine (its module script runs in document order with
+  the `defer` scripts):
+
+  ```html
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <script th:src="@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}" defer></script>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  ```
+
+  With `shadleaf.assets.alpine=external`, they go before the script that loads the application's Alpine.
+
+  Without it, turn the settle off, `<meta name="htmx-config" content='{"defaultSettleDelay":0}'>` (or `settle:0` in
+  one `hx-swap`), which also turns off htmx's settle transitions.
+- **Error answers are swapped in.** htmx 4 swaps a `4xx` or `5xx` response like any other, where htmx 2 leaves the
+  page alone. A [dialog or sheet body](https://shadleaf.dev/current/components/dialog.md#loaded-into-the-dialog-a-body) stops that for the
+  requests into it, so a failed save still keeps what was typed; elsewhere, use `hx-status:5xx="swap:none"` or the
+  `noSwap` config where you want htmx 2's behaviour.
+- **No history cache.** Back loads the page from the server again, so what is said above about snapshots is htmx 2
+  only.
+- **`HX-Trigger` runs after the swap**, on the element that sent the request, or on the document when the swap
+  removed it. Send `sl-dialog-close` and `sl-popover-close` from a request whose element stays, as the examples here
+  do (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
+- **A `null` detail in `HX-Trigger` throws** in htmx 4.0.0 (fixed for the next release,
+  [htmx#4135](https://github.com/bigskysoftware/htmx/issues/4135)). htmx-spring-boot sends one for an event without a detail
+  when another event of the same response has one, such as `sl-dialog-close` next to a toast: give it an empty detail
+  there, `htmxResponse.addTrigger("sl-dialog-close", Map.of())`.
 
 ---
 

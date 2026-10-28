@@ -1,5 +1,5 @@
 {
-  "version" : "1.0.0",
+  "version" : "1.0.1",
   "components" : [ {
     "name" : "accordion",
     "tag" : "sl:accordion",
@@ -1654,6 +1654,12 @@
       "values" : [ ],
       "description" : "Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe)."
     }, {
+      "name" : "nav-size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "icon-xs", "icon-sm", "icon", "icon-lg" ],
+      "description" : "Size of the previous and next month links, the sizes of an icon `sl:button`, to match the buttons elsewhere on the page. By default the skin's calendar size. On a touch screen the link is always at least 44 by 44 pixels to hit, whatever it looks like."
+    }, {
       "name" : "week-starts-on",
       "type" : "number",
       "values" : [ ],
@@ -2500,6 +2506,12 @@
       "type" : "string",
       "values" : [ ],
       "description" : "The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its sort links use `members_sort` instead of `sort`."
+    }, {
+      "name" : "sticky-first-column",
+      "type" : "boolean",
+      "defaultValue" : "false",
+      "values" : [ ],
+      "description" : "Pin the first cell of every row to the start edge, so it stays in view when a wide table scrolls sideways. It gets the page's `--background` (set `--sl-table-bg` on the table when it sits on something else, such as `var(--card)`), and an edge line appears once the table has scrolled."
     } ]
   }, {
     "name" : "table-empty",

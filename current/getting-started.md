@@ -15,7 +15,7 @@ Add the dependency to your `pom.xml` of your Spring Boot with Thymeleaf applicat
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>shadleaf-spring-boot-starter</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 

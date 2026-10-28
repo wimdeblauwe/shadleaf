@@ -60,6 +60,14 @@ must have an `aria-label` (or `aria-labelledby`); rendering fails without one.
 <sl:button size="icon-lg" variant="outline" aria-label="Add"><sl:icon name="plus"/></sl:button>
 ```
 
+### Hit area on a touch screen
+
+The `icon`, `icon-xs` and `icon-sm` buttons are smaller than the 44 by 44 pixels that touch guidelines ask for. On a
+touch screen (`@media (pointer: coarse)`) such a button gets an invisible area around it, so that it is at least 44 by
+44 pixels to tap, without looking any bigger: a tap just outside the button still presses it. With a mouse, the hit area
+is the button itself. Buttons that touch each other (a row without a gap) only grow in height, so one never takes a tap
+from its neighbour, and a button in an `sl:input-group` is not enlarged. `icon-lg` is large enough as it is.
+
 ## With an icon
 
 Put an [`<sl:icon>`](https://shadleaf.dev/current/components/icon.md) in the `icon-start` or `icon-end` slot. It takes the button's colour and a 16 pixel size.

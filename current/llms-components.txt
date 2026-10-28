@@ -2,7 +2,7 @@
 
 > Every Shadleaf component: examples as Thymeleaf source, and attribute tables.
 
-Shadleaf 1.0.0.
+Shadleaf 1.0.1.
 
 ## Components
 
@@ -153,6 +153,14 @@ must have an `aria-label` (or `aria-labelledby`); rendering fails without one.
 <sl:button size="icon" variant="outline" aria-label="Add"><sl:icon name="plus"/></sl:button>
 <sl:button size="icon-lg" variant="outline" aria-label="Add"><sl:icon name="plus"/></sl:button>
 ```
+
+#### Hit area on a touch screen
+
+The `icon`, `icon-xs` and `icon-sm` buttons are smaller than the 44 by 44 pixels that touch guidelines ask for. On a
+touch screen (`@media (pointer: coarse)`) such a button gets an invisible area around it, so that it is at least 44 by
+44 pixels to tap, without looking any bigger: a tap just outside the button still presses it. With a mouse, the hit area
+is the button itself. Buttons that touch each other (a row without a gap) only grow in height, so one never takes a tap
+from its neighbour, and a button in an `sl:input-group` is not enlarged. `icon-lg` is large enough as it is.
 
 ### With an icon
 
@@ -4020,8 +4028,8 @@ fire after the swap, when the element that made the request may be gone.
 
 `open` needs Alpine (on by default: see [Alpine](https://shadleaf.dev/current/guides/alpine.md)); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
-inertness with it. Before htmx saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
-the back button never brings one back.
+inertness with it. Before htmx 2 saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
+the back button never brings one back; htmx 4 keeps no cache, and loads the page again.
 
 ### Loaded into the dialog: a body
 
@@ -4095,6 +4103,10 @@ The message is "Something went wrong. Please try again." (`sl.dialog.error` in y
 ```
 
 Validation errors are no failure: return the form with its errors and a success status, as above.
+
+The body works with htmx 2 and htmx 4. htmx 4 swaps an error answer in by default; the body stops that for the
+requests into it, so the error shows above the content, as with htmx 2. An `hx-status` attribute on the element that
+sends the request, or an `HX-Reswap` header, still decides otherwise. See [htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-4).
 
 ### Width
 
@@ -6529,6 +6541,109 @@ item*) its links can, as above. axe reports such a table as
 `scrollable-region-focusable`. Keep a table that is only text from growing wider than a phone, or give its rows
 something to focus.
 
+#### Pin the first column
+
+When the first column names the row, it should not scroll away. `sticky-first-column` pins the first cell of every row
+(`th` and `td`, in `thead`, `tbody` and `tfoot`) to the start edge with `position: sticky`, so it also works in
+right-to-left pages. No JavaScript is involved:
+
+**Example: Pinned first column.** A wide table whose first column stays in view while the rest scrolls sideways.
+
+```html
+<sl:table sticky-first-column>
+  <caption>Sales per month.</caption>
+  <thead>
+    <tr>
+      <th>Person</th>
+      <th data-align="end">Jan</th>
+      <th data-align="end">Feb</th>
+      <th data-align="end">Mar</th>
+      <th data-align="end">Apr</th>
+      <th data-align="end">May</th>
+      <th data-align="end">Jun</th>
+      <th data-align="end">Jul</th>
+      <th data-align="end">Aug</th>
+      <th data-align="end">Sep</th>
+      <th data-align="end">Oct</th>
+      <th data-align="end">Nov</th>
+      <th data-align="end">Dec</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ada Lovelace</td>
+      <td data-align="end">€1200</td>
+      <td data-align="end">€1237</td>
+      <td data-align="end">€1274</td>
+      <td data-align="end">€1311</td>
+      <td data-align="end">€1348</td>
+      <td data-align="end">€1385</td>
+      <td data-align="end">€1422</td>
+      <td data-align="end">€1459</td>
+      <td data-align="end">€1496</td>
+      <td data-align="end">€1533</td>
+      <td data-align="end">€1570</td>
+      <td data-align="end">€1607</td>
+    </tr>
+    <tr>
+      <td>Grace Hopper</td>
+      <td data-align="end">€900</td>
+      <td data-align="end">€953</td>
+      <td data-align="end">€1006</td>
+      <td data-align="end">€1059</td>
+      <td data-align="end">€1112</td>
+      <td data-align="end">€1165</td>
+      <td data-align="end">€1218</td>
+      <td data-align="end">€1271</td>
+      <td data-align="end">€1324</td>
+      <td data-align="end">€1377</td>
+      <td data-align="end">€1430</td>
+      <td data-align="end">€1483</td>
+    </tr>
+    <tr>
+      <td>Alan Turing</td>
+      <td data-align="end">€1500</td>
+      <td data-align="end">€1479</td>
+      <td data-align="end">€1458</td>
+      <td data-align="end">€1437</td>
+      <td data-align="end">€1416</td>
+      <td data-align="end">€1395</td>
+      <td data-align="end">€1374</td>
+      <td data-align="end">€1353</td>
+      <td data-align="end">€1332</td>
+      <td data-align="end">€1311</td>
+      <td data-align="end">€1290</td>
+      <td data-align="end">€1269</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Total</td>
+      <td data-align="end">€3600</td>
+      <td data-align="end">€3669</td>
+      <td data-align="end">€3738</td>
+      <td data-align="end">€3807</td>
+      <td data-align="end">€3876</td>
+      <td data-align="end">€3945</td>
+      <td data-align="end">€4014</td>
+      <td data-align="end">€4083</td>
+      <td data-align="end">€4152</td>
+      <td data-align="end">€4221</td>
+      <td data-align="end">€4290</td>
+      <td data-align="end">€4359</td>
+    </tr>
+  </tfoot>
+</sl:table>
+```
+
+The pinned cells have the page's `--background` so the scrolled cells do not show through; when the table sits on
+something else, such as a card, set `--sl-table-bg` on the table (`style` is not allowed under a strict CSP, so do it
+in your stylesheet: `.my-table { --sl-table-bg: var(--card); }`). Row hover, selected and footer tints carry over to the
+pinned cells. A line on the pinned column's end edge appears once the table has scrolled; it is driven by a CSS
+scroll-driven animation (Chromium and Safari 26; Firefox where `animation-timeline` is enabled), and where that is
+missing the line is always drawn. In forced colours the line is a system-coloured border, and on paper nothing is
+pinned. The example is plain text, so what [Wide tables](#wide-tables) says about WebKit and the keyboard applies to it.
+
 ### Sorting on the server
 
 The rows of a Spring application live on the server, which sends one page of them. So a sortable header is a link that
@@ -6542,7 +6657,7 @@ asks the server for the page in another order, not a script that reorders the ro
     <tr>
       <sl:table-head sort="name">Name</sl:table-head>
       <sl:table-head sort="email">Email</sl:table-head>
-      <sl:table-head sort="orders" align="end">Orders</sl:table-head>
+      <th data-align="end">Orders</th>
     </tr>
   </thead>
   <tbody>
@@ -6959,7 +7074,7 @@ A checkbox of your own can be indeterminate too: set its `indeterminate` propert
 ### Left out
 
 shadcn's data table runs TanStack Table in the browser. These parts of it are not in Shadleaf: sorting and filtering
-in the browser, column visibility, resizing, reordering and pinning, drag handles, expandable rows, editable cells,
+in the browser, column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable rows, editable cells,
 virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts across pages (see
 above).
 
@@ -6973,6 +7088,7 @@ Attributes of `<sl:table>`: A table in shadcn/ui's look. Write the plain table e
 | --- | --- | --- | --- |
 | `th:page` | *object* | — | The Spring Data `Page` or `Slice` the table shows. Its `Sort` tells every `sl:table-head` inside how the rows are sorted now. Without it, the headers read the order from the request's sort parameter. |
 | `qualifier` | *string* | — | The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its sort links use `members_sort` instead of `sort`. |
+| `sticky-first-column` | *boolean* | — | Pin the first cell of every row to the start edge, so it stays in view when a wide table scrolls sideways. It gets the page's `--background` (set `--sl-table-bg` on the table when it sits on something else, such as `var(--card)`), and an edge line appears once the table has scrolled. |
 
 Every prop can also be set from an expression: `th:page="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -7519,6 +7635,19 @@ for a second month view on the page.
 Today is marked; by default that is the server's date. If your users are in another time zone, put their date in the
 model (`LocalDate.now(zone)`) and pass it: `th:today="${today}"`.
 
+### Size of the navigation
+
+`nav-size` sets the size of the previous and next links, with the sizes of an icon [`<sl:button>`](https://shadleaf.dev/current/components/button.md#sizes)
+(`icon-xs`, `icon-sm`, `icon`, `icon-lg`), so they can match the buttons elsewhere on the page. Without it they have the
+size of the skin's calendar. On a touch screen the links have a hit area of at least 44 by 44 pixels whatever their
+size, as the icon buttons.
+
+**Example: Size of the navigation.** The previous and next links take the size of an icon button, here icon-lg, to match the buttons around the month. On a touch screen their hit area is at least 44 by 44 pixels whatever they look like.
+
+```html
+<sl:month-view nav-size="icon-lg"/>
+```
+
 ### Week numbers and the first day of the week
 
 As for the [calendar](https://shadleaf.dev/current/components/calendar.md#week-numbers-and-the-first-day-of-the-week), the page's locale decides the first day
@@ -7570,6 +7699,7 @@ Attributes of `<sl:month-view>`: A month to look at, rendered on the server: eac
 | `today` | *string* | — | Today, as `2026-10-23` (a `LocalDate`), marked as the current date. By default the server's date; pass it in the user's time zone when that differs. |
 | `show-outside-days` | *boolean* | `true` | Show the days of the previous and next month that fill the first and last week. |
 | `show-week-number` | *boolean* | — | Show the week numbers, counted as the page's locale counts them (ISO weeks in most of Europe). |
+| `nav-size` | `default`, `icon-xs`, `icon-sm`, `icon`, `icon-lg` | `default` | Size of the previous and next month links, the sizes of an icon `sl:button`, to match the buttons elsewhere on the page. By default the skin's calendar size. On a touch screen the link is always at least 44 by 44 pixels to hit, whatever it looks like. |
 | `week-starts-on` | *number* | — | The first day of the week: 0 is Sunday, 1 Monday, up to 6. By default the page's locale decides. |
 
 Every prop can also be set from an expression: `th:month="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
