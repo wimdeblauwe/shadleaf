@@ -15,9 +15,9 @@ Source: https://shadleaf.dev/current/components/date-picker/
 
 ## A popover with a calendar
 
-shadcn/ui has no date picker component. Its docs build one from a [popover](https://shadleaf.dev/current/components/popover.md), a button and a
-[calendar](https://shadleaf.dev/current/components/calendar.md), plus some React state that updates the button's text and closes the popover after a pick.
-`<sl:date-picker>` is that composition as one component, with the glue in the `slDatePicker` Alpine component.
+A date picker is a button in a [popover](https://shadleaf.dev/current/components/popover.md) with a [calendar](https://shadleaf.dev/current/components/calendar.md): the button shows the chosen date,
+and a pick closes the popover. `<sl:date-picker>` is that composition as one component, with the glue in the
+`slDatePicker` Alpine component.
 
 The value lives in the calendar's date inputs, so `th:field` binds a date picker as it binds a calendar, and the form
 submits ISO dates (`2026-10-23`). The [LocalDate fields](https://shadleaf.dev/current/components/calendar.md#localdate-fields) note applies here too.
@@ -160,13 +160,13 @@ The popover is a non-modal dialog, as [sl:popover](https://shadleaf.dev/current/
 
 ## Left out
 
-- **The input you type into** (shadcn's "Input" demo), **the time** and **natural language** variants are not here
-  yet. For a time, put an `<sl:input type="time">` next to the date picker.
+- **An input to type the date into**, **the time** and **natural language** variants are not here yet. For a time, put
+  an `<sl:input type="time">` next to the date picker.
 - **Presets** (a select of "Today", "Tomorrow", ...) are not here either.
 
 ## Attributes
 
-Attributes of `<sl:date-picker>`: A button showing the chosen date that opens a `sl:calendar` in a popover: shadcn/ui's date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type="date"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).
+Attributes of `<sl:date-picker>`: A button showing the chosen date that opens a `sl:calendar` in a popover. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type="date"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |

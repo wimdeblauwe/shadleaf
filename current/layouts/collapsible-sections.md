@@ -13,8 +13,6 @@ Phone to see it.
 
 **Example: Collapsible sections.** A sidebar of sections, each a group of pages under a label that opens and closes it, with a version switcher and a search field at the top. The trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
 
-For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-02) this layout is based on.
-
 ## The layout
 
 The whole layout file. It has what [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs): the
@@ -258,7 +256,7 @@ content), a border below the header, and the page's padding.
   pointer-events: none;
 }
 
-/* The sections close up, and their labels read as the links below them (shadcn's sidebar-02). */
+/* The sections close up, and their labels read as the links below them. */
 .docs-sections { gap: 0; }
 .docs-sections summary.sidebar-group-label:not(:hover) {
   font-size: 0.875rem;

@@ -1,6 +1,6 @@
 # Table
 
-> A table in shadcn/ui's look, whose column headers sort it on the server.
+> A styled table, whose column headers sort it on the server.
 
 Source: https://shadleaf.dev/current/components/table/
 
@@ -49,7 +49,7 @@ Source: https://shadleaf.dev/current/components/table/
 ## Plain rows and cells
 
 `<sl:table>` styles the plain table elements you write inside it: `caption`, `thead`, `tbody`, `tfoot`, `tr`, `th` and
-`td`. There is no component per row or cell, as there is in shadcn/ui, so a row is the `th:each` you already write:
+`td`. There is no component per row or cell, so a row is the `th:each` you already write:
 
 ```html
 <sl:table>
@@ -189,6 +189,193 @@ pinned cells. A line on the pinned column's end edge appears once the table has 
 scroll-driven animation (Chromium and Safari 26; Firefox where `animation-timeline` is enabled), and where that is
 missing the line is always drawn. In forced colours the line is a system-coloured border, and on paper nothing is
 pinned. The example is plain text, so what [Wide tables](#wide-tables) says about WebKit and the keyboard applies to it.
+
+### Column groups
+
+A wide table often groups its columns under a header row, such as sales and payments per quarter. Write a `colgroup`
+per group, as plain HTML: the table draws a line on the start edge of every group after the first, through the header,
+body and footer rows, in the colour of its row lines. The start edge is the right one in a right-to-left page.
+
+```html
+<sl:table sticky-first-column>
+  <colgroup></colgroup>
+  <colgroup span="4"></colgroup>
+  <colgroup span="4"></colgroup>
+  <thead>
+    <tr>
+      <td></td>
+      <th scope="colgroup" colspan="4">Sales</th>
+      <th scope="colgroup" colspan="4">Payments</th>
+    </tr>
+    <tr><th>Person</th><th>Q1</th>...</tr>
+  </thead>
+  ...
+</sl:table>
+```
+
+**Example: Column groups.** A colgroup per group of columns draws a line at the start of every group after the first.
+
+```html
+<sl:table sticky-first-column>
+  <caption>Sales and payments per quarter.</caption>
+  <colgroup></colgroup>
+  <colgroup span="4"></colgroup>
+  <colgroup span="4"></colgroup>
+  <thead>
+    <tr>
+      <td></td>
+      <th scope="colgroup" colspan="4" data-align="center">Sales</th>
+      <th scope="colgroup" colspan="4" data-align="center">Payments</th>
+    </tr>
+    <tr>
+      <th>Person</th>
+      <th data-align="end">Q1</th>
+      <th data-align="end">Q2</th>
+      <th data-align="end">Q3</th>
+      <th data-align="end">Q4</th>
+      <th data-align="end">Q1</th>
+      <th data-align="end">Q2</th>
+      <th data-align="end">Q3</th>
+      <th data-align="end">Q4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ada Lovelace</td>
+      <td data-align="end">€3711</td>
+      <td data-align="end">€4033</td>
+      <td data-align="end">€4144</td>
+      <td data-align="end">€4603</td>
+      <td data-align="end">€3500</td>
+      <td data-align="end">€3900</td>
+      <td data-align="end">€4100</td>
+      <td data-align="end">€4400</td>
+    </tr>
+    <tr>
+      <td>Grace Hopper</td>
+      <td data-align="end">€2859</td>
+      <td data-align="end">€3177</td>
+      <td data-align="end">€3495</td>
+      <td data-align="end">€3813</td>
+      <td data-align="end">€2800</td>
+      <td data-align="end">€3100</td>
+      <td data-align="end">€3400</td>
+      <td data-align="end">€3800</td>
+    </tr>
+    <tr>
+      <td>Alan Turing</td>
+      <td data-align="end">€4437</td>
+      <td data-align="end">€4374</td>
+      <td data-align="end">€4311</td>
+      <td data-align="end">€4248</td>
+      <td data-align="end">€4400</td>
+      <td data-align="end">€4300</td>
+      <td data-align="end">€4300</td>
+      <td data-align="end">€4200</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Total</td>
+      <td data-align="end">€11007</td>
+      <td data-align="end">€11584</td>
+      <td data-align="end">€11950</td>
+      <td data-align="end">€12664</td>
+      <td data-align="end">€10700</td>
+      <td data-align="end">€11300</td>
+      <td data-align="end">€11800</td>
+      <td data-align="end">€12400</td>
+    </tr>
+  </tfoot>
+</sl:table>
+```
+
+A `colgroup` without `span` covers one column, or the `col` elements inside it. `scope="colgroup"` on a group's
+header tells a screen reader which columns it heads. When the second group starts right after a pinned first column,
+the group line and the pinned column's edge are one line. The lines are borders, so they print and keep a system
+colour in forced colours. The example is plain text too, so what [Wide tables](#wide-tables) says about WebKit
+applies.
+
+## Compact tables
+
+A page of many rows of figures, such as a ledger or a report meant for one sheet of paper, takes less room with
+`size="sm"`: smaller cell padding, row height and text, in every skin. The header, body, footer, caption and
+`sl:table-empty` row follow it, and the sort links become extra-small buttons:
+
+**Example: Compact.** size="sm", for many rows of figures or a table meant for paper.
+
+```html
+<sl:table size="sm">
+  <caption>Cash book, October.</caption>
+  <thead>
+    <tr>
+      <sl:table-head sort="date">Date</sl:table-head>
+      <th>Description</th>
+      <sl:table-head sort="amount" align="end">In</sl:table-head>
+      <th data-align="end">Out</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>02/10</td>
+      <td>Opening balance</td>
+      <td data-align="end"></td>
+      <td data-align="end"></td>
+    </tr>
+    <tr>
+      <td>03/10</td>
+      <td>Invoice INV041</td>
+      <td data-align="end">€1250.00</td>
+      <td data-align="end"></td>
+    </tr>
+    <tr>
+      <td>04/10</td>
+      <td>Office rent</td>
+      <td data-align="end"></td>
+      <td data-align="end">€950.00</td>
+    </tr>
+    <tr>
+      <td>07/10</td>
+      <td>Invoice INV042</td>
+      <td data-align="end">€480.00</td>
+      <td data-align="end"></td>
+    </tr>
+    <tr>
+      <td>09/10</td>
+      <td>Software licences</td>
+      <td data-align="end"></td>
+      <td data-align="end">€120.00</td>
+    </tr>
+    <tr>
+      <td>11/10</td>
+      <td>Invoice INV043</td>
+      <td data-align="end">€2100.00</td>
+      <td data-align="end"></td>
+    </tr>
+    <tr>
+      <td>14/10</td>
+      <td>Travel</td>
+      <td data-align="end"></td>
+      <td data-align="end">€86.40</td>
+    </tr>
+    <tr>
+      <td>16/10</td>
+      <td>Invoice INV044</td>
+      <td data-align="end">€640.00</td>
+      <td data-align="end"></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="2">Total</td>
+      <td data-align="end">€4470.00</td>
+      <td data-align="end">€1156.40</td>
+    </tr>
+  </tfoot>
+</sl:table>
+```
+
+A table prints at the size you gave it: for a report meant for paper, render it with `size="sm"`.
 
 ## Sorting on the server
 
@@ -414,7 +601,7 @@ the text.
 
 ## Actions per row
 
-Put a [dropdown menu](https://shadleaf.dev/current/components/dropdown-menu.md) in the last cell, as shadcn's data table does. Give each menu an id built
+Put a [dropdown menu](https://shadleaf.dev/current/components/dropdown-menu.md) in the last cell. Give each menu an id built
 from its row, so every trigger has a stable id of its own (`people-12-actions-trigger`), and name the trigger after the
 row: a screen reader user tabbing through the table hears "Actions for Ada Lovelace, menu button". The header cell
 above the menus needs a name too, read out with each cell: `<span class="sl-sr-only">Actions</span>`.
@@ -482,7 +669,7 @@ A menu per row is markup per row: 50 rows with a badge and the menu above render
 For a bulk action (delete, change a role), give each row a checkbox of your own and put
 `<sl:table-select-all/>` in the header cell above them. Select-all checks or unchecks every row on the page, and is
 checked when they all are, indeterminate (a minus) when some are. `<sl:table-selection-count>` says how many are
-selected; place it where it fits, e.g. at the start of the footer, as shadcn's data table does.
+selected; place it where it fits, e.g. at the start of the footer.
 
 **Example: Selecting rows.** The rows are plain checkboxes named ids; one is selected, so select-all starts indeterminate.
 
@@ -540,8 +727,8 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
 - **Which checkboxes are rows.** Select-all works on the checkboxes in the body cells of the table it is in (not of a
   table nested in a cell), leaving out disabled ones, which would not be submitted. When the body has other
   checkboxes too, `name="ids"` on select-all narrows it to those.
-- **The selected look** comes from CSS: a row whose first cell holds a checked checkbox gets the muted background
-  (shadcn's `data-state="selected"`), with or without JavaScript. Put the selection in the first column.
+- **The selected look** comes from CSS: a row whose first cell holds a checked checkbox gets the muted background,
+  with or without JavaScript. Put the selection in the first column.
 - **Names.** Every row checkbox needs an accessible name, telling the rows apart. `aria-label` with the message
   `sl.table.select-row` (`Select {0}`) as above, or point at the cell that names the row:
 
@@ -619,22 +806,23 @@ A checkbox of your own can be indeterminate too: set its `indeterminate` propert
 
 ## Left out
 
-shadcn's data table runs TanStack Table in the browser. These parts of it are not in Shadleaf: sorting and filtering
-in the browser, column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable rows, editable cells,
-virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts across pages (see
-above).
+The table is sorted, filtered and paged on the server. These are not in Shadleaf: sorting and filtering in the browser,
+column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable
+rows, editable cells, virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts
+across pages (see above).
 
 ## Attributes
 
 ### sl:table
 
-Attributes of `<sl:table>`: A table in shadcn/ui's look. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.
+Attributes of `<sl:table>`: A styled table. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. A `colgroup` per group of columns draws a line between the groups. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
 | `th:page` | *object* | — | The Spring Data `Page` or `Slice` the table shows. Its `Sort` tells every `sl:table-head` inside how the rows are sorted now. Without it, the headers read the order from the request's sort parameter. |
 | `qualifier` | *string* | — | The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its sort links use `members_sort` instead of `sort`. |
 | `sticky-first-column` | *boolean* | — | Pin the first cell of every row to the start edge, so it stays in view when a wide table scrolls sideways. It gets the page's `--background` (set `--sl-table-bg` on the table when it sits on something else, such as `var(--card)`), and an edge line appears once the table has scrolled. |
+| `size` | `default`, `sm` | `default` | The density of the table. `sm` has smaller cells and text, for a table of many rows of figures or one meant for paper; the header, body, footer, caption, sort links and `sl:table-empty` row follow it. |
 
 Every prop can also be set from an expression: `th:page="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -671,7 +859,7 @@ Every prop can also be set from an expression: `th:name="${...}"`. Any other att
 
 ### sl:table-selection-count
 
-Attributes of `<sl:table-selection-count>`: How many rows of a `sl:table` are selected: "2 of 20 selected" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as shadcn/ui's data table does. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.
+Attributes of `<sl:table-selection-count>`: How many rows of a `sl:table` are selected: "2 of 20 selected" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |

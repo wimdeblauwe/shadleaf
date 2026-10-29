@@ -1,14 +1,13 @@
 # Layouts
 
-> Whole layout files to copy into an application, each with a page that uses it and the CSS around it, after shadcn/ui's sidebar blocks.
+> Whole layout files to copy into an application, each with a page that uses it and the CSS around it.
 
 Source: https://shadleaf.dev/current/layouts/
 
 A layout is the frame every page of an application shares: the navigation, the page's header, the skip link, and the
 places where dialogs and toasts appear. In Thymeleaf it is one template, `templates/layout/main.html`, whose fragment
 every page fills in with its title and content. The layouts here are built from Shadleaf's
-[application shell](https://shadleaf.dev/current/components/application-shell.md) components, most of them after one of
-[shadcn/ui's sidebar blocks](https://ui.shadcn.com/blocks/sidebar), and each one has what
+[application shell](https://shadleaf.dev/current/components/application-shell.md) components, and each one has what
 [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs).
 
 ## What a layout page holds

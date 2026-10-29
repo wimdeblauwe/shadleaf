@@ -91,9 +91,9 @@ The `qualifier` of the controller's second `Pageable` (`@Qualifier("members")`) 
 
 ## Written by hand
 
-With content of its own, `<sl:pagination>` is the `nav` around a pagination of parts, as in shadcn/ui:
+With content of its own, `<sl:pagination>` is the `nav` around a pagination of parts:
 
-**Example: Written by hand.** The parts, as in shadcn/ui's example.
+**Example: Written by hand.** The parts, written out one by one.
 
 ```html
 <sl:pagination aria-label="Invoice pages">
@@ -144,7 +144,7 @@ or [translates](https://shadleaf.dev/current/guides/translating.md) them; the nu
 
 ## Rows per page
 
-`<sl:pagination-size>` is a label and a [dropdown menu](https://shadleaf.dev/current/components/dropdown-menu.md) of sizes, as in shadcn/ui's data table:
+`<sl:pagination-size>` is a label and a [dropdown menu](https://shadleaf.dev/current/components/dropdown-menu.md) of sizes:
 
 **Example: Rows per page.** In a request for /people?sort=name,asc&page=3&size=20. Each size keeps the sort and starts on the first page.
 
@@ -159,8 +159,8 @@ accepts with `spring.data.web.pageable.max-page-size`.
 
 ## A table footer
 
-Summary, size and pagination are separate, so you lay out the footer. shadcn/ui's data table puts the summary at the
-start and the controls at the end:
+Summary, size and pagination are separate, so you lay out the footer, for example with the summary at the start and the
+controls at the end:
 
 ```html
 <div class="table-footer">
@@ -193,8 +193,7 @@ link is followed. [Tables with htmx](https://shadleaf.dev/current/guides/tables-
 - The `nav` is named "Pagination" (`sl.pagination.label`); an `aria-label` of your own replaces it, which two
   paginations on one page need.
 - Previous and Next are named "Go to previous page" and "Go to next page". On a narrow screen only their chevron shows.
-- The ellipsis reads "More pages", where shadcn/ui hides it from screen readers: a list item that says nothing is
-  harder to follow.
+- The ellipsis reads "More pages": a list item that says nothing is harder to follow.
 - The size menu's button reads "Rows per page" followed by the size.
 
 ## Messages
@@ -215,14 +214,14 @@ link is followed. [Tables with htmx](https://shadleaf.dev/current/guides/tables-
 
 ## Left out
 
-First and last page buttons (shadcn's dashboard has them; the first and the last page are always among the numbers),
+First and last page buttons (the first and the last page are always among the numbers),
 a field to type a page number, and paging in the browser.
 
 ## Attributes
 
 ### sl:pagination
 
-Attributes of `<sl:pagination>`: Links to the other pages of a list, in a `nav`. Given the Spring Data `Page` it shows (`th:page="${people}"`) and no content of its own, it renders them all: Previous, the first and the last page, the current page with `siblings` on each side, an ellipsis for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and has a stable id, so htmx can give the focus back after a swap. A `Slice`, which does not know how many pages there are, gets Previous and Next only. Without Spring Data, pass `current` and `total` instead. With content of its own it is the frame for a hand-written pagination of `sl:pagination-content`, `-item`, `-link`, `-previous`, `-next` and `-ellipsis`, as in shadcn/ui.
+Attributes of `<sl:pagination>`: Links to the other pages of a list, in a `nav`. Given the Spring Data `Page` it shows (`th:page="${people}"`) and no content of its own, it renders them all: Previous, the first and the last page, the current page with `siblings` on each side, an ellipsis for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and has a stable id, so htmx can give the focus back after a swap. A `Slice`, which does not know how many pages there are, gets Previous and Next only. Without Spring Data, pass `current` and `total` instead. With content of its own it is the frame for a hand-written pagination of `sl:pagination-content`, `-item`, `-link`, `-previous`, `-next` and `-ellipsis`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -297,7 +296,7 @@ Every prop can also be set from an expression: `th:page="${...}"`. Any other att
 
 ### sl:pagination-size
 
-Attributes of `<sl:pagination-size>`: "Rows per page" and a menu of page sizes, as in shadcn/ui's data table. The sizes are `sl:dropdown-menu-radio-item` links: each asks for the same request with that size, every other parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the menu is a popover). Takes the Spring Data `Page` shown now, whose size is the checked one; a size the page has but `sizes` does not list is added. The label is the message `sl.pagination-size.label`. Attributes go to the wrapper.
+Attributes of `<sl:pagination-size>`: "Rows per page" and a menu of page sizes. The sizes are `sl:dropdown-menu-radio-item` links: each asks for the same request with that size, every other parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the menu is a popover). Takes the Spring Data `Page` shown now, whose size is the checked one; a size the page has but `sizes` does not list is added. The label is the message `sl.pagination-size.label`. Attributes go to the wrapper.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |

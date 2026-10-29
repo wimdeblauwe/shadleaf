@@ -59,8 +59,8 @@ Source: https://shadleaf.dev/current/components/tabs/
 
 ## Built from parts
 
-Tabs are `<sl:tabs>` with an `<sl:tabs-list>` of `<sl:tabs-trigger>`s and an `<sl:tabs-content>` per tab, as in
-shadcn/ui. A trigger and its panel share a `tab`, and `active` on `<sl:tabs>` names the one that shows:
+Tabs are `<sl:tabs>` with an `<sl:tabs-list>` of `<sl:tabs-trigger>`s and an `<sl:tabs-content>` per tab. A trigger and
+its panel share a `tab`, and `active` on `<sl:tabs>` names the one that shows:
 
 ```html
 <sl:tabs id="settings" active="account">
@@ -73,8 +73,8 @@ shadcn/ui. A trigger and its panel share a `tab`, and `active` on `<sl:tabs>` na
 </sl:tabs>
 ```
 
-shadcn/ui calls these `value` and `defaultValue`; `value` is taken in Thymeleaf (`th:value` is Spring's form value). The
-tabs need an `id`: the triggers and panels get ids derived from it and their `tab` (`settings-account-trigger`,
+The attribute is `tab` because `value` is taken in Thymeleaf (`th:value` is Spring's form value). The tabs need an `id`:
+the triggers and panels get ids derived from it and their `tab` (`settings-account-trigger`,
 `settings-account-content`), which link each tab to its panel (`aria-controls`, `aria-labelledby`). So a `tab` is
 letters, digits and dashes.
 
@@ -128,8 +128,8 @@ tabs that must work without JavaScript.
 
 ## Keyboard
 
-Tab moves into the list on the active tab, and out of it to the active panel (which takes the focus, as in Radix, so a
-panel without controls can be scrolled and read). In the list:
+Tab moves into the list on the active tab, and out of it to the active panel (which takes the focus, so a panel without
+controls can be scrolled and read). In the list:
 
 | Key | Does |
 | --- | --- |
@@ -237,11 +237,9 @@ content loaded since; back restores exactly that. With link triggers the address
 
 ## Left out
 
-- **`value`/`onValueChange` and controlled state**: the server renders the active tab; the `sl-tabs-show` event
-  reports a switch.
-- **`dir`**: the arrow keys follow the page's direction (`dir` on an ancestor or the page).
-- **`loop`**: the arrow keys always wrap around, as Radix's do by default.
-- **`forceMount`**: every panel is always in the page; the inactive ones are hidden.
+- **A direction of their own**: the arrow keys follow the page's direction (`dir` on an ancestor or the page).
+- **Arrow keys that stop at the ends**: they always wrap around.
+- **Panels left out of the page**: every panel is always in the page; the inactive ones are hidden.
 
 ## Attributes
 

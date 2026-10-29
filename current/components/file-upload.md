@@ -18,8 +18,7 @@ Source: https://shadleaf.dev/current/components/file-upload/
 
 ## A file input with a drop zone
 
-shadcn/ui has no file upload component, so this one is Shadleaf's own. It looks like shadcn's file upload card: an
-outlined [empty state](https://shadleaf.dev/current/components/empty.md) with an icon, a title, a description and a Browse button.
+A file upload looks like an outlined [empty state](https://shadleaf.dev/current/components/empty.md) with an icon, a title, a description and a Browse button.
 
 Underneath is a plain `<input type="file">`, visually hidden. It holds the files and the form submits it, so it binds
 with `th:field` as any other input does, to a `MultipartFile`, or with `multiple` to a `List<MultipartFile>`. The form
@@ -75,7 +74,7 @@ Everything still goes through the input: the script puts the files back with a `
 dt.files`), so the form submits exactly what the list shows, and a drop dispatches `change` as a pick does, so
 `hx-trigger="change"` on the component works for both.
 
-**Example: In a card.** As shadcn's file upload card.
+**Example: In a card.** The file upload as the content of a card.
 
 ```html
 <sl:card>
@@ -328,7 +327,7 @@ failed upload: set the limits to what the form may send.
 
 ## Attributes
 
-Attributes of `<sl:file-upload>`: A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has none. A visually hidden `&lt;input type="file"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype="multipart/form-data"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.
+Attributes of `<sl:file-upload>`: A drop zone to pick files with, and the list of the files picked. A visually hidden `&lt;input type="file"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype="multipart/form-data"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |

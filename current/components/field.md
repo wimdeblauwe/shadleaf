@@ -248,8 +248,8 @@ heading.
 
 ## Disabled and read-only
 
-A field notices a disabled control inside it and fades its label: there is no `data-disabled` to set, as there is in
-shadcn. The description keeps its colour, since it often says why the control is disabled.
+A field notices a disabled control inside it and fades its label: there is no `data-disabled` to set. The description
+keeps its colour, since it often says why the control is disabled.
 
 **Example: Disabled.** The label fades with a disabled control, found by the field itself; the description stays legible, as it often says why.
 

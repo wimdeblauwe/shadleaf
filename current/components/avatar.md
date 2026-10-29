@@ -7,15 +7,15 @@ Source: https://shadleaf.dev/current/components/avatar/
 **Example: Avatar.**
 
 ```html
-<sl:avatar label="shadcn">
+<sl:avatar label="Alex Morgan">
   <sl:avatar-image th:src="@{/users/{id}/photo(id=${user.id})}"/>
-  <sl:avatar-fallback>CN</sl:avatar-fallback>
+  <sl:avatar-fallback>AM</sl:avatar-fallback>
 </sl:avatar>
 ```
 
 ## Image and fallback
 
-Write both parts, as in shadcn/ui: `<sl:avatar-image>` with the picture's `src` or `th:src`, and
+Write both parts: `<sl:avatar-image>` with the picture's `src` or `th:src`, and
 `<sl:avatar-fallback>` with what to show without one, usually initials or an [`<sl:icon>`](https://shadleaf.dev/current/components/icon.md). The avatar shows
 the fallback when the image has no `src` or an empty one. A `th:src` whose value is null renders an empty `src`, so a
 user without a photo needs no `th:if`:
@@ -38,7 +38,7 @@ assistive technology. The image lies over the fallback at the same size, so noth
 ## A photo that fails to load
 
 A photo URL that fails to load shows the fallback too: a 404, a URL your Content-Security-Policy's `img-src` blocks, a
-file that is no image, or no network. So does a photo that is still loading, as in shadcn/ui; the picture replaces the
+file that is no image, or no network. So does a photo that is still loading; the picture replaces the
 fallback once it is there.
 
 **Example: Broken image.** A photo URL that fails to load (a 404, a URL the Content-Security-Policy blocks, offline) shows the fallback, as does one that is still loading.
@@ -105,9 +105,9 @@ shows. `aria-labelledby`, pointing at a name elsewhere on the page, works too.
 
 ## Left out
 
-- **A delay before the fallback shows** (Radix's `delayMs`): the fallback shows at once while a photo loads. A photo
+- **A delay before the fallback shows**: the fallback shows at once while a photo loads. A photo
   from the browser's cache is there before the first paint, so it does not flash.
-- **A loading status event** (Radix's `onLoadingStatusChange`): read `data-status` on the image instead.
+- **A loading status event**: read `data-status` on the image instead.
 
 ## Attributes
 

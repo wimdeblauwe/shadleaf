@@ -19,8 +19,6 @@ Switch the preview to Phone to see it.
 
 **Example: Collapses to icons.** A team switcher at the top, the platform's sections as collapsible items, projects with a menu each, the signed-in user's menu at the bottom, and the page as a card beside it. On a desktop the trigger collapses the sidebar to a strip of icons with tooltips; on a phone it opens it as a panel.
 
-For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-07) this layout is based on.
-
 ## The layout
 
 The whole layout file. It has what [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs).

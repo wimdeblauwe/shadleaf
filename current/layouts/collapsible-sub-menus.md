@@ -13,9 +13,6 @@ Switch the preview to Phone to see it.
 
 **Example: Collapsible sub-menus.** A sidebar of sections that open and close, each with its pages in a sub-menu; only the current page's section is open. The trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
 
-For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-05) this layout is based on. Its
-plus and minus are Shadleaf's turning chevron here.
-
 ## The layout
 
 The whole layout file. It has what [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs): the

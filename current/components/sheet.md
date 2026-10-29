@@ -36,7 +36,7 @@ Source: https://shadleaf.dev/current/components/sheet/
 ## Built from parts
 
 A sheet is a [dialog](https://shadleaf.dev/current/components/dialog.md) on an edge of the screen, for content that complements the page: filters,
-settings, the details of a row. It is `<sl:sheet>` plus the parts you need, as in shadcn/ui: `<sl:sheet-header>`
+settings, the details of a row. It is `<sl:sheet>` plus the parts you need: `<sl:sheet-header>`
 (holding `<sl:sheet-title>` and `<sl:sheet-description>`), your own content and `<sl:sheet-footer>`.
 
 ```html

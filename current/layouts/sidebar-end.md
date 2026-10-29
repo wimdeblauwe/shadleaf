@@ -11,8 +11,6 @@ the sidebar; its icon shows a panel on that side. On a phone the panel slides in
 
 **Example: On the end.** A table of contents on the end of the line: the right, or the left on a right-to-left page. The sidebar comes after the page in the markup, so the keyboard reaches the page first, and the trigger sits at the end of the page's header.
 
-For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-14) this layout is based on.
-
 ## The layout
 
 The whole layout file, with what [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs). The

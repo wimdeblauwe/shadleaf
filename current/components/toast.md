@@ -1,6 +1,6 @@
 # Toast
 
-> A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
+> A short message in a corner of the page that closes itself, sent by the server.
 
 Source: https://shadleaf.dev/current/components/toast/
 
@@ -17,9 +17,8 @@ Source: https://shadleaf.dev/current/components/toast/
 
 ## One toaster, toasts from the server
 
-A toast says what just happened, such as "Member deleted", and goes away by itself. shadcn/ui uses
-[Sonner](https://sonner.emilkowal.ski/) for it, with a `<Toaster />` in the layout and `toast("...")` calls in the
-browser. In Shadleaf the layout has one `<sl:toaster>`, and the toasts come from the server, in one of three ways:
+A toast says what just happened, such as "Member deleted", and goes away by itself. The layout has one `<sl:toaster>`,
+and the toasts come from the server, in one of three ways:
 
 | Where the message comes from | How it gets to the toaster |
 | --- | --- |
@@ -141,7 +140,7 @@ The detail is a toast (`{title, description, variant, duration}`), a list of the
 
 ## Variants
 
-The variant only changes the icon, as in shadcn: none, a check (`success`), an i (`info`), a triangle (`warning`) and
+The variant only changes the icon: none, a check (`success`), an i (`info`), a triangle (`warning`) and
 an x (`error`), whose icon takes the destructive colour. A screen reader announces an `error` at once, interrupting
 what it was reading; the others when it is done. Give a toast a title that says what happened on its own ("Could not
 save"), since the icon is decoration and is not read out.
@@ -189,7 +188,7 @@ for a toast with a long description.
 
 - **The close button** closes one toast. It needs Alpine, so it only shows once Alpine runs; its label comes from the
   message `sl.toast.close` (see [Translating](https://shadleaf.dev/current/guides/translating.md)).
-- **Alt+T** moves the focus to the newest toast, as in Sonner, from anywhere on the page; the toaster's name,
+- **Alt+T** moves the focus to the newest toast from anywhere on the page; the toaster's name,
   "Notifications (Alt+T)" (message `sl.toaster.label`), tells screen reader users so. **Tab** then reaches the close
   buttons.
 - **Escape** closes the toast that has the focus, and nothing else: an open dialog around it stays open.
@@ -198,7 +197,7 @@ for a toast with a long description.
 
 ## Several at once
 
-Newer toasts stack in front of older ones, as Sonner's do; hovering or focusing them spreads them out. At most three
+Newer toasts stack in front of older ones; hovering or focusing them spreads them out. At most three
 show (`visible-toasts`); the older ones wait, with their time stopped, and show again when a newer one closes.
 
 **Example: Several at once.** Newer toasts stack in front; hover or focus them to spread them out, which also stops their time.
@@ -217,7 +216,7 @@ Where the user prefers reduced motion, toasts only fade in and out; they do not 
 ## Position
 
 `position` puts the toasts in a corner or at the middle of the top or bottom edge: `top-left`, `top-center`,
-`top-right`, `bottom-left`, `bottom-center` or `bottom-right` (the default, as Sonner's). Right and left are the end
+`top-right`, `bottom-left`, `bottom-center` or `bottom-right` (the default). Right and left are the end
 and the start of a line, so they swap on a right-to-left page. On a narrow screen the toasts take the full width.
 
 ```html
@@ -251,11 +250,11 @@ the next row.
 
 ## No action button
 
-Sonner's toast can hold an action button ("Undo"). Shadleaf's has none: a toast closes by itself, and whatever it offers
-is gone with it, for someone who reads slowly, uses a screen reader or looked away. WCAG asks that a time limit on
-something the user has to do can be turned off or extended. Put the action in the page (an Undo in the row's place, a
-link in the confirmation), and use the toast to say what happened. If a toast you render out of band holds a link, the
-same must be reachable elsewhere, or give it `duration="0"`.
+A toast has no action button ("Undo"): it closes by itself, and whatever it offers is gone with it, for someone who
+reads slowly, uses a screen reader or looked away. WCAG asks that a time limit on something the user has to do can be
+turned off or extended. Put the action in the page (an Undo in the row's place, a link in the confirmation), and use the
+toast to say what happened. If a toast you render out of band holds a link, the same must be reachable elsewhere, or
+give it `duration="0"`.
 
 ## Left out
 

@@ -21,7 +21,7 @@ Source: https://shadleaf.dev/current/components/attachment/
 
 ## Built from parts
 
-An attachment is `<sl:attachment>` plus the parts you need, as in shadcn/ui: `<sl:attachment-media>` (an icon or an
+An attachment is `<sl:attachment>` plus the parts you need: `<sl:attachment-media>` (an icon or an
 image), `<sl:attachment-content>` (holding `<sl:attachment-title>` and `<sl:attachment-description>`),
 `<sl:attachment-actions>` with one or more `<sl:attachment-action>`s, and an optional `<sl:attachment-trigger>` that
 makes the whole card clickable. `<sl:attachment-group>` lays several out in a row or a grid.
@@ -174,7 +174,7 @@ description.
 ## Group
 
 `<sl:attachment-group>` lays attachments out in a row that scrolls sideways when they do not fit, snapping to each
-attachment, its edges fading out. The scrollbar is hidden, as in shadcn: the fade shows there is more.
+attachment, its edges fading out. The scrollbar is hidden: the fade shows there is more.
 
 **Example: Group.** A row that scrolls sideways when the attachments do not fit, snapping to each one. Tab reaches the ones off screen through their actions.
 
@@ -354,7 +354,7 @@ Attributes of `<sl:attachment>`: A file or an image attached to something: a mes
 | `state` | `idle`, `uploading`, `processing`, `error`, `done` | `done` | Where the file is in its upload: `idle` (picked, not sent yet) draws a dashed border, `uploading` and `processing` shimmer the title and mark the attachment busy (`aria-busy`), `error` turns it destructive. `done` is a file that is there. |
 | `size` | `default`, `sm`, `xs` | `default` | Size of the attachment. |
 | `orientation` | `horizontal`, `vertical` | `horizontal` | `vertical` puts the media above the content, for an image. |
-| `full-width` | *boolean* | — | Fill the width of the container, for a list of attachments (shadcn's `w-full` class). Without it the attachment is as wide as its content. |
+| `full-width` | *boolean* | — | Fill the width of the container, for a list of attachments. Without it the attachment is as wide as its content. |
 
 Every prop can also be set from an expression: `th:state="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 

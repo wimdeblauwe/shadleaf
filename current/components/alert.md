@@ -16,8 +16,8 @@ Source: https://shadleaf.dev/current/components/alert/
 
 ## Built from parts
 
-`<sl:alert>` holds an optional [`<sl:icon>`](https://shadleaf.dev/current/components/icon.md), then `<sl:alert-title>` and `<sl:alert-description>`, as in
-shadcn/ui. The icon takes the alert's colour and sits beside both. Use either part on its own.
+`<sl:alert>` holds an optional [`<sl:icon>`](https://shadleaf.dev/current/components/icon.md), then `<sl:alert-title>` and `<sl:alert-description>`. The icon
+takes the alert's colour and sits beside both. Use either part on its own.
 
 **Example: Title only, no icon.**
 
@@ -85,7 +85,7 @@ Attributes of `<sl:alert-title>`: The title of an alert, inside `sl:alert`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui. |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`) that screen reader users can jump to; without it, plain text. |
 
 Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 

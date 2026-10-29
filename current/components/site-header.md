@@ -164,7 +164,7 @@ The [Navigation in the header](https://shadleaf.dev/current/layouts/header.md) l
 
 ## As the page's header
 
-At the top of `<sl:sidebar-inset>`, in the sidebar layout, it is the page's header (shadcn's sidebar-07): the trigger,
+At the top of `<sl:sidebar-inset>`, in the sidebar layout, it is the page's header: the trigger,
 a vertical [separator](https://shadleaf.dev/current/components/separator.md), the [breadcrumb](https://shadleaf.dev/current/components/breadcrumb.md), and the theme toggle at the end. Inside the
 `main` it is no landmark, and it has no border or colour of its own. The separator is a short line in the middle of the
 row there. The [Collapses to icons](https://shadleaf.dev/current/layouts/collapses-to-icons.md) layout uses it this way.

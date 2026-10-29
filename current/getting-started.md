@@ -15,7 +15,7 @@ Add the dependency to your `pom.xml` of your Spring Boot with Thymeleaf applicat
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>shadleaf-spring-boot-starter</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
@@ -68,7 +68,7 @@ There are also [Layouts](https://shadleaf.dev/current/layouts.md) with whole pag
 
 | Property                       | Default      |                                                                                                                                                                                  |
 |--------------------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `shadleaf.skin`                | `vega`       | The visual identity, named after the shadcn/ui style it follows; see [Skin](https://shadleaf.dev/current/guides/adjustability.md#4-skin) for the list.                                                       |
+| `shadleaf.skin`                | `vega`       | The visual identity; see [Skin](https://shadleaf.dev/current/guides/adjustability.md#4-skin) for the list.                                                                                                   |
 | `shadleaf.assets.variant`      | `standalone` | `embedded` leaves out Tailwind's reset, for applications that compile Tailwind themselves.                                                                                       |
 | `shadleaf.assets.alpine`       | `bundled`    | Where Alpine.js comes from: `bundled`, `csp` or `external`; see [Alpine.js](https://shadleaf.dev/current/guides/alpine.md).                                                                                  |
 | `shadleaf.csp.nonce-attribute` | `cspNonce`   | The request attribute holding a CSP nonce for the theme script.                                                                                                                  |

@@ -26,7 +26,7 @@ Source: https://shadleaf.dev/current/components/empty/
 
 ## Built from parts
 
-An empty state is `<sl:empty>` plus the parts you need, as in shadcn/ui: `<sl:empty-header>` (holding
+An empty state is `<sl:empty>` plus the parts you need: `<sl:empty-header>` (holding
 `<sl:empty-media>`, `<sl:empty-title>` and `<sl:empty-description>`) and `<sl:empty-content>` for what to do next, such
 as a button, a search field or a link. Everything is centred, and the empty state grows to fill a flex container, so
 it sits in the middle of the space it is given.
@@ -200,7 +200,7 @@ Attributes of `<sl:empty>`: An empty state: what a list, a table, a search or a 
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `border` | *boolean* | — | A dashed line around the empty state, to mark out the area (shadcn's `border border-dashed` classes). |
+| `border` | *boolean* | — | A dashed line around the empty state, to mark out the area. |
 
 Every prop can also be set from an expression: `th:border="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 

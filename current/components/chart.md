@@ -1,10 +1,10 @@
 # Chart
 
-> shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+> Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
 
 Source: https://shadleaf.dev/current/components/chart/
 
-**Example: Bar chart.** Two series side by side, in a card as shadcn shows it. The months are YearMonths: month-short writes the ticks (Jan), month the tooltip's label (January).
+**Example: Bar chart.** Two series side by side, in a card. The months are YearMonths: month-short writes the ticks (Jan), month the tooltip's label (January).
 
 ```html
 <sl:card>
@@ -29,8 +29,8 @@ Source: https://shadleaf.dev/current/components/chart/
 
 ## Built from parts
 
-A chart is shadcn's: [Recharts](https://recharts.github.io/) draws it in the browser, with shadcn's look. The template
-says what to draw, the controller gives the rows:
+[Recharts](https://recharts.github.io/) draws a chart in the browser, in the skin's look. The template says what to
+draw, the controller gives the rows:
 
 ```html
 <sl:chart th:data="${visitors}" th:label="#{visitors.title}">
@@ -55,7 +55,7 @@ String visitors(Model model) {
 - **`th:data`** takes a list of rows: records, objects or maps, or a Spring Data `Page`. They go into the page as
   JSON, written by Jackson.
 - **The series parts** (`sl:chart-bar`, `sl:chart-line`, `sl:chart-area`) name the property they draw in `key`, and
-  carry the series' `label` and `color`: what shadcn's `ChartConfig` holds. The chart draws bars for bars only, lines
+  carry the series' `label` and `color`. The chart draws bars for bars only, lines
   for lines only, areas for areas only, and a composed chart for a mix.
 - **The other parts** add a grid, the axes, a tooltip and a legend. Every part is optional; their order is the order
   Recharts draws them in.
@@ -176,7 +176,7 @@ The tooltip shows the hovered category and every series' label and value. `indic
 
 ## Formats
 
-Instead of shadcn's `tickFormatter`, `formatter` and `labelFormatter` functions, the parts take a named format,
+Instead of formatting functions, the parts take a named format,
 written with `Intl` in the page's language (`<html lang>`, from Spring's locale):
 
 | Format | Writes | For |
@@ -252,8 +252,8 @@ For series known only at run time, put `th:each` on a series part:
 
 ## Size
 
-A chart is as wide as its container and 16:9, as shadcn's. For a fixed height, give it one in your CSS, with
-`aspect-ratio: auto` (shadcn's `aspect-auto h-[250px]`):
+A chart is as wide as its container and 16:9. For a fixed height, give it one in your CSS, with
+`aspect-ratio: auto`:
 
 ```css
 .visitors-chart { aspect-ratio: auto; height: 250px; }
@@ -273,21 +273,21 @@ keys follow what you see.
 
 ## Left out
 
-These shadcn and Recharts features have no counterpart yet: pie, radar and radial charts (pie charts are planned),
-horizontal bars, gradients, custom tooltip and legend content, icons in the config, reference lines and brushes.
-For anything else, `sl-chart` is a custom element: an application can write its own.
+These Recharts features have no counterpart yet: pie, radar and radial charts (pie charts are planned), horizontal bars,
+gradients, custom tooltip and legend content, icons in the tooltip and legend, reference lines and brushes. For anything
+else, `sl-chart` is a custom element: an application can write its own.
 
 ## Attributes
 
 ### sl:chart
 
-Attributes of `<sl:chart>`: A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.
+Attributes of `<sl:chart>`: A chart drawn by Recharts in the browser: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
 | `th:data` | *object* | **required** | The rows: a list (or a Spring Data `Page`) of objects, records or maps, one per category or point in time. Each row holds the category (`month`) and a number per series (`desktop`, `mobile`). Serialised with Jackson: dates as ISO strings, which the named date formats read by their Java type. |
 | `label` | *string* | **required** | The chart's accessible name, such as its title: what a screen reader announces when the chart takes the focus. |
-| `margin` | *number* | — | Space in pixels left and right of the plot, so the first and last tick labels fit (shadcn's line and area charts use 12). |
+| `margin` | *number* | — | Space in pixels left and right of the plot, so the first and last tick labels fit (12 suits a line or area chart). |
 | `time-zone` | *string* | — | The time zone (an IANA id such as `Europe/Brussels`) instants in the data are shown in: `Instant`, `OffsetDateTime` and `ZonedDateTime`. Defaults to the request's (Spring's `LocaleContextHolder`). A `LocalDate` or `LocalDateTime` is shown as written, in any zone. |
 
 Every prop can also be set from an expression: `th:data="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
@@ -305,7 +305,7 @@ Every prop can also be set from an expression: `th:vertical="${...}"`. Any other
 
 ### sl:chart-x-axis
 
-Attributes of `<sl:chart-x-axis>`: The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines (as shadcn's). Under `dir="rtl"` it runs from right to left. Draws no element of its own on the page: the chart reads it.
+Attributes of `<sl:chart-x-axis>`: The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines. Under `dir="rtl"` it runs from right to left. Draws no element of its own on the page: the chart reads it.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -319,7 +319,7 @@ Every prop can also be set from an expression: `th:key="${...}"`. Any other attr
 
 ### sl:chart-y-axis
 
-Attributes of `<sl:chart-y-axis>`: The value axis of a `sl:chart`, at the start side (the left, or the right under `dir="rtl"`), without tick or axis lines. shadcn's charts often leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.
+Attributes of `<sl:chart-y-axis>`: The value axis of a `sl:chart`, at the start side (the left, or the right under `dir="rtl"`), without tick or axis lines. A chart can leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |

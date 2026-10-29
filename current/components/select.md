@@ -1,6 +1,6 @@
 # Select
 
-> shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
+> A select drawn in the page's style on a real select element, bound with th:field; the browser's customizable select where it has one.
 
 Source: https://shadleaf.dev/current/components/select/
 
@@ -49,9 +49,8 @@ Give an item its text as content (`[[${fruit.name}]]`), not with `th:text`: that
 
 All three are a real `<select>` underneath, bind with `th:field` and submit with the form.
 
-- **`<sl:select>`** looks like shadcn/ui's Select: its list is drawn in the page's style, with a check mark on the
-  chosen item, and items can start with an icon. Use it where the look matters and the list is short enough to scan:
-  a few to a few dozen items.
+- **`<sl:select>`** draws its list in the page's style, with a check mark on the chosen item, and items can start with
+  an icon. Use it where the look matters and the list is short enough to scan: a few to a few dozen items.
 - **[`<sl:native-select>`](https://shadleaf.dev/current/components/select-native.md)** styles only the closed control and leaves the list to the operating
   system: on a phone that is the system's own picker wheel or sheet, which many people find easier to use. Use it for
   long lists (countries, years), inside dense forms, and for `multiple`, which `<sl:select>` does not support.
@@ -152,7 +151,7 @@ Long lists scroll; the list never grows taller than the window.
 </sl:select>
 ```
 
-`size` picks the height, as in shadcn/ui. The list opens below the select, lined up with its start and at least as
+`size` picks the height. The list opens below the select, lined up with its start and at least as
 wide as it, and above it when there is no room below.
 
 ## Width
@@ -252,22 +251,15 @@ replace the page's (Windows High Contrast). A disabled select turns `GrayText` i
 
 ## Left out
 
-These shadcn/Radix parts and props have no counterpart, on purpose:
+These are left out on purpose:
 
-- **`SelectTrigger`, `SelectValue` and `SelectContent`.** In HTML the select is the trigger, shows its own value and
-  holds its options, so `<sl:select>` covers all three: `size` from the trigger, `placeholder` from the value.
-- **`SelectLabel` on its own.** A group's heading is the `label` of `<sl:select-group>` (an `<optgroup>` needs one);
-  there is no heading outside a group, which no browser would show.
-- **`SelectScrollUpButton`, `SelectScrollDownButton`.** The list scrolls like any other, with the wheel, the keys or a
-  finger.
-- **`position="item-aligned"`, `side`, `align`.** shadcn's default lays the list over the select with the chosen item
-  on top of it; the customizable select always opens below the select (above when there is no room), and the list box
-  does the same, so both look alike.
-- **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
-  value with `th:field`, and the select's `change` event reports a new one.
-- **`multiple`**, which shadcn does not have either: use [`<sl:combobox multiple>`](https://shadleaf.dev/current/components/combobox.md#multiple),
+- **A heading outside a group.** A group's heading is the `label` of `<sl:select-group>` (an `<optgroup>` needs one);
+  no browser would show a heading outside a group.
+- **Scroll buttons.** The list scrolls like any other, with the wheel, the keys or a finger.
+- **Placing the list elsewhere.** The customizable select always opens below the select (above when there is no room),
+  and the list box does the same, so both look alike.
+- **Several values**: use [`<sl:combobox multiple>`](https://shadleaf.dev/current/components/combobox.md#multiple),
   [`<sl:native-select multiple>`](https://shadleaf.dev/current/components/select-native.md) or a [field set](https://shadleaf.dev/current/components/field.md) of checkboxes.
-- **`SelectItem`'s `textValue`**: typeahead reads the item's text.
 
 ## How it is drawn
 
@@ -300,7 +292,7 @@ an item's icon is extra, never its only label.
 
 ### sl:select
 
-Attributes of `<sl:select>`: A select drawn like shadcn/ui's: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
+Attributes of `<sl:select>`: A select whose list is drawn in the page's style: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -321,7 +313,7 @@ Attributes of `<sl:select-group>`: A group of `sl:select-item`s under a heading:
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `label` | *string* | **required** | The group's heading, shadcn/ui's `SelectLabel`. |
+| `label` | *string* | **required** | The group's heading. |
 
 Every prop can also be set from an expression: `th:label="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 

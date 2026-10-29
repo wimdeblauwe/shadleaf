@@ -12,8 +12,6 @@ sub-menus. The page's header has no border. On a phone the panel is the same as 
 
 **Example: Floating, with sub-menus.** The same sections and sub-menus in a floating sidebar: a panel with a margin all round, rounded and with a shadow, wider than the default, with more room between the sections and no line along the sub-menus.
 
-For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-04) this layout is based on.
-
 ## The layout
 
 The whole layout file, with what [every layout needs](https://shadleaf.dev/current/components/application-shell.md#what-every-layout-needs). The
