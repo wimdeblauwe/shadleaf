@@ -679,10 +679,7 @@
     }
 
     .alert-dialog:is([open], :popover-open, :open) {
-      --tw-scale-x: 100%;
-      --tw-scale-y: 100%;
-      --tw-scale-z: 100%;
-      scale: var(--tw-scale-x) var(--tw-scale-y);
+      scale: none;
     }
   }
 
@@ -2169,10 +2166,7 @@
     }
 
     .dialog:is([open], :popover-open, :open) {
-      --tw-scale-x: 100%;
-      --tw-scale-y: 100%;
-      --tw-scale-z: 100%;
-      scale: var(--tw-scale-x) var(--tw-scale-y);
+      scale: none;
     }
   }
 
@@ -3128,10 +3122,7 @@
     }
 
     :is(.dropdown-menu-content, .popover-content, .select-content, .combobox-content, .tooltip-content):is([open], :popover-open, :open) {
-      --tw-scale-x: 100%;
-      --tw-scale-y: 100%;
-      --tw-scale-z: 100%;
-      scale: var(--tw-scale-x) var(--tw-scale-y);
+      scale: none;
     }
   }
 
@@ -3236,7 +3227,7 @@
     }
 
     :is(.dropdown-menu-content, .popover-content, .select-content, .combobox-content, .tooltip-content):popover-open {
-      translate: 0;
+      translate: none;
     }
 
     @starting-style {
@@ -3533,7 +3524,7 @@
     }
 
     .sheet[open] {
-      translate: 0;
+      translate: none;
     }
 
     @starting-style {
