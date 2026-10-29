@@ -59,7 +59,7 @@ Without `th:field`, write `aria-invalid="true"` yourself.
 
 ## Disabled
 
-A disabled input fades and cannot be focused, as in shadcn; the lyra and nova skins also give it a grey background. Its
+A disabled input fades and cannot be focused; the lyra and nova skins also give it a grey background. Its
 value is not submitted, and its label fades with it. In Windows' high-contrast mode it turns the system's grey text
 colour instead of fading.
 
@@ -77,7 +77,7 @@ focus, its value can be selected and copied, and it is submitted with the form: 
 see or quote, such as a reference number. It gets a muted background and loses its shadow, but keeps its full text
 colour, so it reads differently from a disabled input and its text keeps its contrast (a read-only input is not
 exempt from WCAG's contrast minimum, a disabled one is). Errors still show: the destructive border and ring win over
-the read-only look. shadcn has no read-only style.
+the read-only look.
 
 **Example: Read-only.** The value cannot be changed, but it can be focused, selected and copied, and it is submitted.
 

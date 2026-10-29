@@ -13,8 +13,6 @@ the same sidebar as a panel. Switch the preview to Phone to see it.
 
 **Example: Grouped by section.** A sidebar of sections, each a group of pages under its label, with a version switcher and a search field at the top, as in documentation. The trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
 
-For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-01) this layout is based on.
-
 ## The layout
 
 The whole layout file. It has what [every layout needs](https://shadleaf.dev/1.1.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the

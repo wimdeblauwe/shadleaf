@@ -33,7 +33,7 @@ Pick a sidebar when the application has more pages than fit in a header row or n
 the header for a smaller application. Moving from one to the other later means changing the layout template, not the
 pages: both take the same `pageTitle` and `content` (a sidebar layout takes the breadcrumb's levels too). The other
 [layouts](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts.md#the-layouts) are sidebars as well: grouped by section, with sub-menus, floating, on the
-end, and more, most of them after one of shadcn/ui's sidebar blocks.
+end, and more.
 
 ## What every layout needs
 
@@ -151,11 +151,11 @@ to the page instead, which then asks the user to sign in and comes back to it:
 
 ## A sidebar below a full-width header
 
-shadcn/ui's sidebar-16 puts a header across the whole top of the page and the sidebar below it. Shadleaf does not
-support that layout. From 768 px the sidebar is sticky at the top of the screen and as tall as the screen, so below a
-header it would slide under the header and run past the bottom of the screen. `<sl:sidebar-provider>` has to start
-at the top of the page. Put the page's header inside `<sl:sidebar-inset>` (a sidebar layout), or put the navigation
-in the header ([Navigation in the header](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/header.md)).
+A header across the whole top of the page with the sidebar below it is not supported. From 768 px the sidebar is sticky
+at the top of the screen and as tall as the screen, so below a header it would slide under the header and run past the
+bottom of the screen. `<sl:sidebar-provider>` has to start at the top of the page. Put the page's header inside
+`<sl:sidebar-inset>` (a sidebar layout), or put the navigation in the header
+([Navigation in the header](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/header.md)).
 
 ## The signed-in user
 

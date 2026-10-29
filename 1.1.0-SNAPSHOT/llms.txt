@@ -1,6 +1,6 @@
 # Shadleaf
 
-> shadcn/ui for Thymeleaf, as a Spring Boot starter. Components are Thymeleaf tags with the `sl:` prefix
+> UI components for Thymeleaf, as a Spring Boot starter. Components are Thymeleaf tags with the `sl:` prefix
 > (`<sl:button variant="outline">`), rendered on the server. Not React: no JSX, no Radix, no `asChild`.
 
 These docs describe Shadleaf 1.1.0-SNAPSHOT. The docs of other versions live next to this one, at /<version>/.
@@ -10,7 +10,7 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 
 ## Start here
 
-- [Shadleaf](https://shadleaf.dev/1.1.0-SNAPSHOT/index.md): shadcn/ui for Thymeleaf, as a Spring Boot starter.
+- [Shadleaf](https://shadleaf.dev/1.1.0-SNAPSHOT/index.md): UI components for Thymeleaf, as a Spring Boot starter.
 - [Getting started](https://shadleaf.dev/1.1.0-SNAPSHOT/getting-started.md): Add Shadleaf to a Spring Boot application.
 - [Coming from shadcn/ui](https://shadleaf.dev/1.1.0-SNAPSHOT/coming-from-shadcn.md): What carries over from shadcn/ui unchanged, and where Shadleaf differs, and why.
 - [IDE completion](https://shadleaf.dev/1.1.0-SNAPSHOT/ide-completion.md): Completion for sl:* tags, their attributes and values in IntelliJ IDEA and WebStorm.
@@ -33,15 +33,15 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 - [Input](https://shadleaf.dev/1.1.0-SNAPSHOT/components/input.md): A text input, bound to a form field with th:field.
 - [Input Group](https://shadleaf.dev/1.1.0-SNAPSHOT/components/input-group.md): Text, icons and buttons inside the border of an input or textarea.
 - [Textarea](https://shadleaf.dev/1.1.0-SNAPSHOT/components/textarea.md): A multi-line text input, bound to a form field with th:field.
-- [Select](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select.md): shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
+- [Select](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select.md): A select drawn in the page's style on a real select element, bound with th:field; the browser's customizable select where it has one.
 - [Select (Native)](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select-native.md): The browser's own select, styled, bound to a form field with th:field.
-- [Combobox](https://shadleaf.dev/1.1.0-SNAPSHOT/components/combobox.md): shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+- [Combobox](https://shadleaf.dev/1.1.0-SNAPSHOT/components/combobox.md): A searchable select on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
 - [Checkbox](https://shadleaf.dev/1.1.0-SNAPSHOT/components/checkbox.md): The browser's own checkbox, styled, bound to a form field with th:field.
 - [Radio Group](https://shadleaf.dev/1.1.0-SNAPSHOT/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field.
 - [Switch](https://shadleaf.dev/1.1.0-SNAPSHOT/components/switch.md): An on/off control, bound to a boolean form field with th:field.
 - [Toggle](https://shadleaf.dev/1.1.0-SNAPSHOT/components/toggle.md): A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
 - [Toggle Group](https://shadleaf.dev/1.1.0-SNAPSHOT/components/toggle-group.md): A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
-- [Calendar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar.md): shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+- [Calendar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar.md): A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates.
 - [Date Picker](https://shadleaf.dev/1.1.0-SNAPSHOT/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
 - [File Upload](https://shadleaf.dev/1.1.0-SNAPSHOT/components/file-upload.md): A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
 
@@ -57,18 +57,18 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 ### Feedback
 
 - [Alert](https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert.md): A callout for a message the user should notice.
-- [Toast](https://shadleaf.dev/1.1.0-SNAPSHOT/components/toast.md): A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
+- [Toast](https://shadleaf.dev/1.1.0-SNAPSHOT/components/toast.md): A short message in a corner of the page that closes itself, sent by the server.
 - [Skeleton](https://shadleaf.dev/1.1.0-SNAPSHOT/components/skeleton.md): A placeholder that pulses while content loads.
 - [Spinner](https://shadleaf.dev/1.1.0-SNAPSHOT/components/spinner.md): A spinning icon that says something is loading.
 - [Empty](https://shadleaf.dev/1.1.0-SNAPSHOT/components/empty.md): What a list, a table, a search or a page shows when there is nothing to show yet.
 
 ### Data
 
-- [Table](https://shadleaf.dev/1.1.0-SNAPSHOT/components/table.md): A table in shadcn/ui's look, whose column headers sort it on the server.
+- [Table](https://shadleaf.dev/1.1.0-SNAPSHOT/components/table.md): A styled table, whose column headers sort it on the server.
 - [Pagination](https://shadleaf.dev/1.1.0-SNAPSHOT/components/pagination.md): Links to the other pages of a list, built from the Spring Data Page the controller returns.
 - [Query params](https://shadleaf.dev/1.1.0-SNAPSHOT/components/query-params.md): Hidden inputs that keep a table's order, page size and filters when a search form is sent.
 - [Month view](https://shadleaf.dev/1.1.0-SNAPSHOT/components/month-view.md): A month rendered on the server, with content of your own per day and a link per day; no picking.
-- [Chart](https://shadleaf.dev/1.1.0-SNAPSHOT/components/chart.md): shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+- [Chart](https://shadleaf.dev/1.1.0-SNAPSHOT/components/chart.md): Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
 
 ### Application shell
 
@@ -97,7 +97,7 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 
 ## Layouts
 
-- [Layouts](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts.md): Whole layout files to copy into an application, each with a page that uses it and the CSS around it, after shadcn/ui's sidebar blocks.
+- [Layouts](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts.md): Whole layout files to copy into an application, each with a page that uses it and the CSS around it.
 - [Grouped by section](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/grouped-by-section.md): A sidebar of sections, each a group of pages under its label, with a version switcher and a search field, as documentation has.
 - [Collapsible sections](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/collapsible-sections.md): A sidebar of sections whose labels open and close them, with a version switcher and a search field, as documentation has.
 - [Sub-menus](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/sub-menus.md): A sidebar of sections with their pages in sub-menus that are always open, as documentation has.

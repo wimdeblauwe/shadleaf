@@ -12,8 +12,6 @@ a phone it opens the same sidebar as a panel. Switch the preview to Phone to see
 
 **Example: Sub-menus.** A sidebar of sections, each with its pages in a sub-menu that is always open, as in documentation. The current page is a sub-button; the trigger moves the sidebar out of view on a desktop and opens it as a panel on a phone.
 
-For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-03) this layout is based on.
-
 The [floating variant](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/floating-sub-menus.md) has the same menus in a panel with a margin round it.
 
 ## The layout

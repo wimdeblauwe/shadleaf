@@ -28,7 +28,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/accordion/
 ## Built from parts
 
 An accordion is `<sl:accordion>` holding `<sl:accordion-item>`s, each with an `<sl:accordion-trigger>` and an
-`<sl:accordion-content>`, as in shadcn/ui:
+`<sl:accordion-content>`:
 
 ```html
 <sl:accordion>
@@ -51,10 +51,10 @@ The trigger must be the item's first child.
 ## One or several open
 
 `type="single"` (the default) keeps one section open: opening another closes it. The items share a `details` `name`,
-which the browser uses to close the others. The open section closes on a click too, so a single accordion is always
-what shadcn/ui calls `collapsible`. The name must be unique on the page; without `name` each render generates one
-(`sl-accordion-` and eight random characters), so an accordion that htmx swaps in never joins one that is already there.
-Set `name` yourself when you want stable markup, but not on an accordion that htmx replaces: see below.
+which the browser uses to close the others. The open section closes on a click too, so a single accordion can always be
+closed. The name must be unique on the page; without `name` each render generates one (`sl-accordion-` and eight random
+characters), so an accordion that htmx swaps in never joins one that is already there. Set `name` yourself when you want
+stable markup, but not on an accordion that htmx replaces: see below.
 
 `type="multiple"` opens and closes every section on its own:
 
@@ -76,7 +76,7 @@ Set `name` yourself when you want stable markup, but not on an accordion that ht
 
 ## Open from the server
 
-`open` on an item renders it open, where shadcn/ui takes `defaultValue`. The server decides, for example from a
+`open` on an item renders it open. The server decides, for example from a
 request parameter or a fragment of the URL it rendered a link to:
 
 ```html
@@ -93,7 +93,7 @@ In a single accordion only the first open item stays open. Write the trigger's t
 
 ## Headings
 
-shadcn/ui puts each trigger in an `h3`. A `<summary>` must be the first child of its `<details>`, so it cannot sit in
+A trigger's text is a heading. A `<summary>` must be the first child of its `<details>`, so it cannot sit in
 a heading; the heading goes inside it instead. The trigger renders
 `<summary><span role="heading" aria-level="3">…</span><svg …/></summary>`: the summary keeps its own role, a
 disclosure with its expanded state, and screen reader users can still jump from question to question by heading.
@@ -150,8 +150,7 @@ motion. The chevron turns in both cases (not under reduced motion).
 ## Disabled
 
 `disabled` on an item keeps it closed (or open, with `open`): its trigger fades, leaves the tab order and ignores the
-pointer. A closed disabled item renders no content, so find-in-page cannot open it either. shadcn/ui does the same by
-not rendering closed content at all.
+pointer. A closed disabled item renders no content, so find-in-page cannot open it either.
 
 **Example: Disabled.** A disabled section cannot be opened, and renders no content while it is closed.
 
@@ -184,15 +183,12 @@ the old one.
 
 ## Left out
 
-- **Arrow keys between the triggers.** Radix moves the focus with the up and down arrows, Home and End; the ARIA
-  pattern makes these optional. A `details` accordion has no script, so Tab moves between the triggers.
-- **A single accordion that cannot be closed** (shadcn/ui's single without `collapsible`): the browser always lets the
-  open `details` close.
-- **`value`, `onValueChange` and controlled state**: the server renders the open items with `open`; the browser's
-  `toggle` event reports changes.
-- **`dir` and `orientation`**: the accordion follows the page's direction, and is vertical.
-- **`role="region"` on the content.** Radix gives every panel one; the ARIA pattern advises against it where more than
-  about six panels can be open at once, as landmarks pile up. The content is inside the `details`, which already
+- **Arrow keys between the triggers** (up and down, Home and End): the ARIA pattern makes these optional. A `details`
+  accordion has no script, so Tab moves between the triggers.
+- **A single accordion that cannot be closed**: the browser always lets the open `details` close.
+- **A horizontal accordion**: the accordion is vertical, and follows the page's direction.
+- **`role="region"` on the content.** The ARIA pattern advises against it where more than about six panels can be open
+  at once, as landmarks pile up. The content is inside the `details`, which already
   groups it with its trigger.
 
 ## Attributes
@@ -225,7 +221,7 @@ Attributes of `<sl:accordion-trigger>`: The heading of a `sl:accordion-item`, wh
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `level` | `1`, `2`, `3`, `4`, `5`, `6` | `3` | Heading level of the text (`role="heading"` and `aria-level`), as shadcn/ui's trigger sits in an `h3`. Pick the level that fits the page's outline. |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | `3` | Heading level of the text (`role="heading"` and `aria-level`). Pick the level that fits the page's outline. |
 
 Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 

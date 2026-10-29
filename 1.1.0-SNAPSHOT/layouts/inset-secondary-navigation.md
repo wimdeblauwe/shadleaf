@@ -14,8 +14,6 @@ the sidebar out of view; on a phone it opens the same sidebar as a panel. Switch
 
 **Example: Inset with secondary navigation.** Sections that are pages of their own, with a chevron beside each that opens its sub-menu, projects with a menu each, a secondary navigation at the bottom and the signed-in user's menu, and the page as a card beside it.
 
-For reference: the [shadcn/ui block](https://ui.shadcn.com/blocks/sidebar#sidebar-08) this layout is based on.
-
 ## The layout
 
 The whole layout file. It has what [every layout needs](https://shadleaf.dev/1.1.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs): the

@@ -17,10 +17,10 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/select-native/
 ## Native select or select?
 
 Both are a real `<select>` underneath, bind with `th:field` and submit with the form. This one styles only the closed
-control and leaves the list to the operating system: on a phone that is the system's own picker, which many people
-find easier to use. Use it for long lists (countries, years), in dense forms, and for `multiple`.
-[`<sl:select>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select.md) draws its list in the page's style, like shadcn/ui's Select, with a check mark on the
-chosen item and room for an icon; use it where the look matters and the list is short enough to scan.
+control and leaves the list to the operating system: on a phone that is the system's own picker, which many people find
+easier to use. Use it for long lists (countries, years), in dense forms, and for `multiple`. [`<sl:select>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select.md)
+draws its list in the page's style, with a check mark on the chosen item and room for an icon; use it where the look
+matters and the list is short enough to scan.
 
 ## Options
 
@@ -58,7 +58,7 @@ Write plain `<option>` and `<optgroup>` elements as the content, with `th:each` 
 </sl:native-select>
 ```
 
-`size` picks the height, as in shadcn/ui. It replaces HTML's own `size` attribute, which turns a select into a list box;
+`size` picks the height. It replaces HTML's own `size` attribute, which turns a select into a list box;
 `multiple` still works, and hides the chevron.
 
 ## Width

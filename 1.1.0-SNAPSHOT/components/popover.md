@@ -30,7 +30,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/popover/
 
 ## Built from parts
 
-A popover is `<sl:popover>` with a `<sl:popover-trigger>` and a `<sl:popover-content>`, as in shadcn/ui. The
+A popover is `<sl:popover>` with a `<sl:popover-trigger>` and a `<sl:popover-content>`. The
 content can hold a `<sl:popover-header>` with `<sl:popover-title>` and `<sl:popover-description>`, and anything
 else: text, a small form, links. `<sl:popover>` renders no element of its own: it gives the parts their ids.
 
@@ -176,7 +176,7 @@ Attributes of `<sl:popover-title>`: The title of a `sl:popover`, inside `sl:popo
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`); without it, plain text, as in shadcn/ui. |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`); without it, plain text. |
 
 Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 

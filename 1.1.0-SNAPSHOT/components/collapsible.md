@@ -33,24 +33,22 @@ A collapsible is `<sl:collapsible>` with an `<sl:collapsible-trigger>` and an `<
 
 It is a [`<details>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details) element with the
 trigger as its `<summary>`, so it needs no JavaScript: the browser opens and closes it, from the keyboard too, and
-tells a screen reader whether it is expanded. Two consequences for porting a shadcn/ui example:
+tells a screen reader whether it is expanded. Two consequences:
 
-- **The trigger comes first**, and the content after it, both inside `<sl:collapsible>`. shadcn/ui's examples can put
-  the trigger anywhere in the collapsible, even after the content; a `summary` must be the first child.
-- **Everything else goes in the trigger or the content.** Text next to the trigger (shadcn's "@peduarte starred 3
-  repositories" heading) can be part of the trigger.
+- **The trigger comes first**, and the content after it, both inside `<sl:collapsible>`: a `summary` must be the first
+  child.
+- **Everything else goes in the trigger or the content.** Text next to the trigger, such as a heading, can be part of
+  the trigger.
 
 `open` renders it open. As with the [accordion](https://shadleaf.dev/1.1.0-SNAPSHOT/components/accordion.md), find-in-page and a link to an element inside open a
-closed collapsible on a match (Chrome and Edge 97, Firefox 148, Safari 26.2). It does not animate, as shadcn/ui's does
-not.
+closed collapsible on a match (Chrome and Edge 97, Firefox 148, Safari 26.2). It does not animate.
 
 ## Drawn as a button
 
-The trigger is plain text by default. `variant` or `size` draws it as a [button](https://shadleaf.dev/1.1.0-SNAPSHOT/components/button.md), with the button's
-variants and sizes, where shadcn/ui writes `<CollapsibleTrigger asChild><Button …>`. An icon-only trigger
-(`size="icon"`) needs an `aria-label`.
+The trigger is plain text by default. `variant` or `size` draws it as a [button](https://shadleaf.dev/1.1.0-SNAPSHOT/components/button.md), with the button's variants
+and sizes. An icon-only trigger (`size="icon"`) needs an `aria-label`.
 
-**Example: Drawn as a button.** variant and size draw the trigger as a button, as shadcn/ui's asChild on a Button does.
+**Example: Drawn as a button.** variant and size draw the trigger as a button.
 
 ```html
 <sl:collapsible open>
@@ -80,11 +78,9 @@ a closed disabled collapsible renders no content, so find-in-page cannot open it
 
 ## Left out
 
-- **`asChild` on the trigger**: `variant` and `size` draw it as a button; the element stays a `summary`.
-- **`open`/`onOpenChange` state**: `open` renders it open; the browser's `toggle` event reports changes.
 - **A trigger outside the collapsible**, or after the content: a `details` element has its `summary` first.
-- **Styling the trigger's icon by state** (shadcn's `group-data-[state=open]:rotate-90`): the bundle has no utility
-  classes. In your own CSS, `.collapsible[open] > .collapsible-trigger svg { rotate: 90deg; }` does it.
+- **Styling the trigger's icon by state** with utility classes: the bundle has none. In your own CSS,
+  `.collapsible[open] > .collapsible-trigger svg { rotate: 90deg; }` does it.
 
 ## Attributes
 

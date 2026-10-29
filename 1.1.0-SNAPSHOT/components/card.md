@@ -24,7 +24,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/card/
 
 ## Built from parts
 
-A card is `<sl:card>` plus the parts you need, as in shadcn/ui: `<sl:card-header>` (holding `<sl:card-title>`,
+A card is `<sl:card>` plus the parts you need: `<sl:card-header>` (holding `<sl:card-title>`,
 `<sl:card-description>` and `<sl:card-action>`), `<sl:card-content>` and `<sl:card-footer>`. Use any of them, in any
 order. Each part is its own component, so it has its own attributes and IDE completion, and passes every other
 attribute through.

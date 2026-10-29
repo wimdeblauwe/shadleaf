@@ -1,6 +1,6 @@
 # Table
 
-> A table in shadcn/ui's look, whose column headers sort it on the server.
+> A styled table, whose column headers sort it on the server.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/table/
 
@@ -49,7 +49,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/table/
 ## Plain rows and cells
 
 `<sl:table>` styles the plain table elements you write inside it: `caption`, `thead`, `tbody`, `tfoot`, `tr`, `th` and
-`td`. There is no component per row or cell, as there is in shadcn/ui, so a row is the `th:each` you already write:
+`td`. There is no component per row or cell, so a row is the `th:each` you already write:
 
 ```html
 <sl:table>
@@ -495,7 +495,7 @@ the text.
 
 ## Actions per row
 
-Put a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) in the last cell, as shadcn's data table does. Give each menu an id built
+Put a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) in the last cell. Give each menu an id built
 from its row, so every trigger has a stable id of its own (`people-12-actions-trigger`), and name the trigger after the
 row: a screen reader user tabbing through the table hears "Actions for Ada Lovelace, menu button". The header cell
 above the menus needs a name too, read out with each cell: `<span class="sl-sr-only">Actions</span>`.
@@ -563,7 +563,7 @@ A menu per row is markup per row: 50 rows with a badge and the menu above render
 For a bulk action (delete, change a role), give each row a checkbox of your own and put
 `<sl:table-select-all/>` in the header cell above them. Select-all checks or unchecks every row on the page, and is
 checked when they all are, indeterminate (a minus) when some are. `<sl:table-selection-count>` says how many are
-selected; place it where it fits, e.g. at the start of the footer, as shadcn's data table does.
+selected; place it where it fits, e.g. at the start of the footer.
 
 **Example: Selecting rows.** The rows are plain checkboxes named ids; one is selected, so select-all starts indeterminate.
 
@@ -621,8 +621,8 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
 - **Which checkboxes are rows.** Select-all works on the checkboxes in the body cells of the table it is in (not of a
   table nested in a cell), leaving out disabled ones, which would not be submitted. When the body has other
   checkboxes too, `name="ids"` on select-all narrows it to those.
-- **The selected look** comes from CSS: a row whose first cell holds a checked checkbox gets the muted background
-  (shadcn's `data-state="selected"`), with or without JavaScript. Put the selection in the first column.
+- **The selected look** comes from CSS: a row whose first cell holds a checked checkbox gets the muted background,
+  with or without JavaScript. Put the selection in the first column.
 - **Names.** Every row checkbox needs an accessible name, telling the rows apart. `aria-label` with the message
   `sl.table.select-row` (`Select {0}`) as above, or point at the cell that names the row:
 
@@ -700,16 +700,16 @@ A checkbox of your own can be indeterminate too: set its `indeterminate` propert
 
 ## Left out
 
-shadcn's data table runs TanStack Table in the browser. These parts of it are not in Shadleaf: sorting and filtering
-in the browser, column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable rows, editable cells,
-virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts across pages (see
-above).
+The table is sorted, filtered and paged on the server. These are not in Shadleaf: sorting and filtering in the browser,
+column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable
+rows, editable cells, virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts
+across pages (see above).
 
 ## Attributes
 
 ### sl:table
 
-Attributes of `<sl:table>`: A table in shadcn/ui's look. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.
+Attributes of `<sl:table>`: A styled table. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -753,7 +753,7 @@ Every prop can also be set from an expression: `th:name="${...}"`. Any other att
 
 ### sl:table-selection-count
 
-Attributes of `<sl:table-selection-count>`: How many rows of a `sl:table` are selected: "2 of 20 selected" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as shadcn/ui's data table does. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.
+Attributes of `<sl:table-selection-count>`: How many rows of a `sl:table` are selected: "2 of 20 selected" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |

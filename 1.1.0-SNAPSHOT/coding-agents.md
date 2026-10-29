@@ -5,8 +5,8 @@
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/coding-agents/
 
 Coding agents are great company when you build with Shadleaf, with a little help to get started. Shadleaf is new, so
-models haven't learned it yet, and because it looks so much like shadcn/ui, an agent tends to reach for what it knows
-from React: a `<Button asChild>`, a few Tailwind classes, or a `<sl:dialog-trigger>` that doesn't exist.
+models haven't learned it yet, and because it looks so much like a React component library, an agent tends to reach for
+what it knows from React: a `<Button asChild>`, a few Tailwind classes, or a `<sl:dialog-trigger>` that doesn't exist.
 
 The good news is that two small steps take care of most of this: a few rules in the file your agent reads at the start
 of every session, and docs it can read as Markdown. Both take only a couple of minutes to set up.
@@ -20,7 +20,7 @@ your `pom.xml`, so the agent reads the docs of the version you use.
 ```markdown
 ## Shadleaf (Thymeleaf UI components)
 
-- The UI uses Shadleaf: shadcn/ui as Thymeleaf tags with the `sl:` prefix
+- The UI uses Shadleaf: UI components as Thymeleaf tags with the `sl:` prefix
   (`xmlns:sl="https://shadleaf.dev/sl"`), rendered on the server. Not React: no JSX, no Radix, no `asChild`.
 - Docs as Markdown: https://shadleaf.dev/<version>/llms.txt. Read the component's page
   (`.../components/<name>.md`) before using a component; it ends with the attribute table.

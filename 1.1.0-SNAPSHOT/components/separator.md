@@ -27,7 +27,7 @@ container, such as a toolbar or a row of links.
 
 ## Decorative or announced
 
-A separator is decorative by default, as in shadcn/ui: it only draws a line and is hidden from assistive technology
+A separator is decorative by default: it only draws a line and is hidden from assistive technology
 (`role="none"`). When the line divides the content into groups a screen reader user should know about, write
 `decorative="false"`. It is then announced as a separator (`role="separator"`, with `aria-orientation` when
 vertical).

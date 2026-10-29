@@ -20,7 +20,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/breadcrumb/
 
 ## Built from parts
 
-A breadcrumb is shadcn/ui's parts: a `nav` holding an ordered list of levels, with a separator between them. The last
+A breadcrumb is built from parts: a `nav` holding an ordered list of levels, with a separator between them. The last
 level is the page shown now.
 
 ```html
@@ -100,7 +100,7 @@ levels".
 ### With a menu
 
 Give the ellipsis the levels it stands for, as [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) items, and it becomes a ghost icon
-button that opens a menu of them, as in shadcn's example:
+button that opens a menu of them:
 
 **Example: With a menu.** An ellipsis with the hidden levels as its content is a button that opens a menu of them. Arrow keys move through the menu, Escape closes it.
 
@@ -162,9 +162,9 @@ of its own replaces it, such as another icon; that content is not turned around.
 - The `nav` is named "Breadcrumb" (`sl.breadcrumb.label`); an `aria-label` of your own replaces it, which two
   breadcrumbs on one page need.
 - The separators are list items hidden from assistive technology, so a screen reader counts only the levels.
-- The page shown now has `aria-current="page"` and is not a link. shadcn's adds `role="link"` and
-  `aria-disabled="true"`, which a screen reader announces as a link that goes nowhere.
-- The empty ellipsis reads "More levels", where shadcn/ui hides it from screen readers.
+- The page shown now has `aria-current="page"` and is not a link, so a screen reader does not announce a link that goes
+  nowhere.
+- The empty ellipsis reads "More levels".
 - In Windows' high-contrast mode a focused link gets an outline, as the focus ring (a shadow) is gone there.
 
 ## Messages

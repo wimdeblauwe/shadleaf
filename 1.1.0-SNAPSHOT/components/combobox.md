@@ -1,6 +1,6 @@
 # Combobox
 
-> shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+> A searchable select on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/combobox/
 
@@ -448,21 +448,12 @@ system's colours replace the page's (Windows High Contrast). A disabled combobox
 
 ## Left out
 
-These shadcn/Base UI parts and props have no counterpart, on purpose:
+These are left out on purpose:
 
-- **`ComboboxInput`, `ComboboxContent`, `ComboboxList`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipsInput`,
-  `ComboboxValue` and `ComboboxTrigger`.** `<sl:combobox>` draws them all: `showClear`, `showTrigger` and
-  `autoHighlight` are its `show-clear`, `show-trigger` and `auto-highlight`.
-- **`items` and the render function.** Items are written as `<sl:combobox-item>`s (with `th:each`): `value` and their
-  text take the place of `itemToStringValue`.
-- **`ComboboxEmpty`** is the `empty` attribute; **`ComboboxLabel`** is a group's `label`, and there is no
-  `ComboboxCollection`.
 - **The popup layout**, with a button as the trigger and the input inside the list, and **addons** in the input.
-- **Free text**, which Base UI's Combobox does not allow either (its Autocomplete does).
-- **Removing chips is always possible** (`showRemove`), and a chip shows the item's text.
-- **`side`, `align`**: the list opens below the input, or above it when there is no room.
-- **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
-  value with `th:field`, and the select's `change` event reports a new one.
+- **Free text**: the value is always one of the items.
+- **Chips that cannot be removed**: a chip always has its remove button, and shows the item's text.
+- **Placing the list elsewhere**: the list opens below the input, or above it when there is no room.
 
 ## Without JavaScript
 
@@ -474,7 +465,7 @@ select. With Alpine, `slCombobox` puts its input and list in the select's place.
 
 ### sl:combobox
 
-Attributes of `<sl:combobox>`: A text input that filters a list of options as you type: shadcn/ui's combobox. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
+Attributes of `<sl:combobox>`: A text input that filters a list of options as you type. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -500,7 +491,7 @@ Attributes of `<sl:combobox-group>`: A group of `sl:combobox-item`s under a head
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `label` | *string* | **required** | The group's heading, shadcn/ui's `ComboboxLabel`. |
+| `label` | *string* | **required** | The group's heading. |
 
 Every prop can also be set from an expression: `th:label="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 

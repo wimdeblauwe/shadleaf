@@ -45,7 +45,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu/
 ## Built from parts
 
 A dropdown menu is `<sl:dropdown-menu>` with a `<sl:dropdown-menu-trigger>` and a `<sl:dropdown-menu-content>`
-holding the items, as in shadcn/ui. `<sl:dropdown-menu>` renders no element of its own: it gives the parts their ids.
+holding the items. `<sl:dropdown-menu>` renders no element of its own: it gives the parts their ids.
 
 ```html
 <sl:dropdown-menu id="account-menu">
@@ -75,8 +75,7 @@ The menu is labelled by its trigger. A menu opened by a button of your own needs
 
 ## Opened from the sidebar
 
-`as` makes the trigger a sidebar part instead of a button: shadcn's `<DropdownMenuTrigger asChild>` around a
-`SidebarMenuButton` or a `SidebarMenuAction`.
+`as` makes the trigger a sidebar part instead of a button: a menu button or a menu action.
 
 | `as` | Renders | For |
 | --- | --- | --- |
@@ -274,17 +273,13 @@ focus to the trigger when it closes.
 
 ## Left out
 
-These shadcn/Radix parts and props have no counterpart, on purpose:
+These are left out on purpose:
 
-- **Sub-menus** (`DropdownMenuSub`, `-SubTrigger`, `-SubContent`). They need a lot more JavaScript (hover intent,
+- **Sub-menus.** They need a lot more JavaScript (hover intent,
   a pointer grace area towards the sub-menu, arrow right and left) and are hard to use on a touch screen and with a
   screen reader. A server-rendered menu is short: flatten it with labels and groups, or open a dialog.
-- **`DropdownMenuPortal`**: the top layer does what the portal is for.
-- **State in the browser** (`open`/`onOpenChange`, `checked`/`onCheckedChange`, `value`/`onValueChange`, `onSelect`):
-  the menu is opened by its trigger, an item is chosen by what its attributes say, and checked states come from the
-  server.
-- **`modal`**: the menu never makes the rest of the page inert; a click outside closes it.
-- **`loop`**: arrow keys stop at the first and last item, Radix's default.
+- **A modal menu**: the menu never makes the rest of the page inert; a click outside closes it.
+- **Wrapping around**: the arrow keys stop at the first and the last item.
 
 ## Attributes
 
@@ -300,7 +295,7 @@ Every prop can also be set from an expression: `th:id="${...}"`. Any other attri
 
 ### sl:dropdown-menu-trigger
 
-Attributes of `<sl:dropdown-menu-trigger>`: What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part (shadcn's `&lt;DropdownMenuTrigger asChild&gt;`). It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.
+Attributes of `<sl:dropdown-menu-trigger>`: What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part. It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |

@@ -27,15 +27,15 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 - [Input](https://shadleaf.dev/1.1.0-SNAPSHOT/components/input.md): A text input, bound to a form field with th:field.
 - [Input Group](https://shadleaf.dev/1.1.0-SNAPSHOT/components/input-group.md): Text, icons and buttons inside the border of an input or textarea.
 - [Textarea](https://shadleaf.dev/1.1.0-SNAPSHOT/components/textarea.md): A multi-line text input, bound to a form field with th:field.
-- [Select](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select.md): shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
+- [Select](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select.md): A select drawn in the page's style on a real select element, bound with th:field; the browser's customizable select where it has one.
 - [Select (Native)](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select-native.md): The browser's own select, styled, bound to a form field with th:field.
-- [Combobox](https://shadleaf.dev/1.1.0-SNAPSHOT/components/combobox.md): shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+- [Combobox](https://shadleaf.dev/1.1.0-SNAPSHOT/components/combobox.md): A searchable select on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
 - [Checkbox](https://shadleaf.dev/1.1.0-SNAPSHOT/components/checkbox.md): The browser's own checkbox, styled, bound to a form field with th:field.
 - [Radio Group](https://shadleaf.dev/1.1.0-SNAPSHOT/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field.
 - [Switch](https://shadleaf.dev/1.1.0-SNAPSHOT/components/switch.md): An on/off control, bound to a boolean form field with th:field.
 - [Toggle](https://shadleaf.dev/1.1.0-SNAPSHOT/components/toggle.md): A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
 - [Toggle Group](https://shadleaf.dev/1.1.0-SNAPSHOT/components/toggle-group.md): A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
-- [Calendar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar.md): shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+- [Calendar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar.md): A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates.
 - [Date Picker](https://shadleaf.dev/1.1.0-SNAPSHOT/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
 - [File Upload](https://shadleaf.dev/1.1.0-SNAPSHOT/components/file-upload.md): A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
 
@@ -51,18 +51,18 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 ### Feedback
 
 - [Alert](https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert.md): A callout for a message the user should notice.
-- [Toast](https://shadleaf.dev/1.1.0-SNAPSHOT/components/toast.md): A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
+- [Toast](https://shadleaf.dev/1.1.0-SNAPSHOT/components/toast.md): A short message in a corner of the page that closes itself, sent by the server.
 - [Skeleton](https://shadleaf.dev/1.1.0-SNAPSHOT/components/skeleton.md): A placeholder that pulses while content loads.
 - [Spinner](https://shadleaf.dev/1.1.0-SNAPSHOT/components/spinner.md): A spinning icon that says something is loading.
 - [Empty](https://shadleaf.dev/1.1.0-SNAPSHOT/components/empty.md): What a list, a table, a search or a page shows when there is nothing to show yet.
 
 ### Data
 
-- [Table](https://shadleaf.dev/1.1.0-SNAPSHOT/components/table.md): A table in shadcn/ui's look, whose column headers sort it on the server.
+- [Table](https://shadleaf.dev/1.1.0-SNAPSHOT/components/table.md): A styled table, whose column headers sort it on the server.
 - [Pagination](https://shadleaf.dev/1.1.0-SNAPSHOT/components/pagination.md): Links to the other pages of a list, built from the Spring Data Page the controller returns.
 - [Query params](https://shadleaf.dev/1.1.0-SNAPSHOT/components/query-params.md): Hidden inputs that keep a table's order, page size and filters when a search form is sent.
 - [Month view](https://shadleaf.dev/1.1.0-SNAPSHOT/components/month-view.md): A month rendered on the server, with content of your own per day and a link per day; no picking.
-- [Chart](https://shadleaf.dev/1.1.0-SNAPSHOT/components/chart.md): shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+- [Chart](https://shadleaf.dev/1.1.0-SNAPSHOT/components/chart.md): Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
 
 ### Application shell
 
@@ -369,7 +369,7 @@ toggle is then not shown at all (`@media (scripting: none)`), rather than shown 
 - **More themes than light and dark.** The theme script and the skins know the `dark` class only.
 - **A choice stored on the server** (a user setting). Render `class="dark"` on `<html>` yourself and leave out the
   theme script and the toggle; the toggle stores in the browser only.
-- **The keyboard shortcut** shadcn's own site has (D). Your application can add one that clicks the toggle.
+- **A keyboard shortcut.** Your application can add one that clicks the toggle.
 
 ### Attributes
 
@@ -655,8 +655,8 @@ heading.
 
 ### Disabled and read-only
 
-A field notices a disabled control inside it and fades its label: there is no `data-disabled` to set, as there is in
-shadcn. The description keeps its colour, since it often says why the control is disabled.
+A field notices a disabled control inside it and fades its label: there is no `data-disabled` to set. The description
+keeps its colour, since it often says why the control is disabled.
 
 **Example: Disabled.** The label fades with a disabled control, found by the field itself; the description stays legible, as it often says why.
 
@@ -1128,7 +1128,7 @@ Without `th:field`, write `aria-invalid="true"` yourself.
 
 ### Disabled
 
-A disabled input fades and cannot be focused, as in shadcn; the lyra and nova skins also give it a grey background. Its
+A disabled input fades and cannot be focused; the lyra and nova skins also give it a grey background. Its
 value is not submitted, and its label fades with it. In Windows' high-contrast mode it turns the system's grey text
 colour instead of fading.
 
@@ -1146,7 +1146,7 @@ focus, its value can be selected and copied, and it is submitted with the form: 
 see or quote, such as a reference number. It gets a muted background and loses its shadow, but keeps its full text
 colour, so it reads differently from a disabled input and its text keeps its contrast (a read-only input is not
 exempt from WCAG's contrast minimum, a disabled one is). Errors still show: the destructive border and ring win over
-the read-only look. shadcn has no read-only style.
+the read-only look.
 
 **Example: Read-only.** The value cannot be changed, but it can be focused, selected and copied, and it is submitted.
 
@@ -1560,7 +1560,7 @@ Attributes of `<sl:textarea>`: A multi-line text input that grows with its conte
 
 ## Select
 
-> shadcn/ui's Select on a real select element, bound with th:field; the browser's customizable select where it has one.
+> A select drawn in the page's style on a real select element, bound with th:field; the browser's customizable select where it has one.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/select/
 
@@ -1609,9 +1609,8 @@ Give an item its text as content (`[[${fruit.name}]]`), not with `th:text`: that
 
 All three are a real `<select>` underneath, bind with `th:field` and submit with the form.
 
-- **`<sl:select>`** looks like shadcn/ui's Select: its list is drawn in the page's style, with a check mark on the
-  chosen item, and items can start with an icon. Use it where the look matters and the list is short enough to scan:
-  a few to a few dozen items.
+- **`<sl:select>`** draws its list in the page's style, with a check mark on the chosen item, and items can start with
+  an icon. Use it where the look matters and the list is short enough to scan: a few to a few dozen items.
 - **[`<sl:native-select>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select-native.md)** styles only the closed control and leaves the list to the operating
   system: on a phone that is the system's own picker wheel or sheet, which many people find easier to use. Use it for
   long lists (countries, years), inside dense forms, and for `multiple`, which `<sl:select>` does not support.
@@ -1712,7 +1711,7 @@ Long lists scroll; the list never grows taller than the window.
 </sl:select>
 ```
 
-`size` picks the height, as in shadcn/ui. The list opens below the select, lined up with its start and at least as
+`size` picks the height. The list opens below the select, lined up with its start and at least as
 wide as it, and above it when there is no room below.
 
 ### Width
@@ -1812,22 +1811,15 @@ replace the page's (Windows High Contrast). A disabled select turns `GrayText` i
 
 ### Left out
 
-These shadcn/Radix parts and props have no counterpart, on purpose:
+These are left out on purpose:
 
-- **`SelectTrigger`, `SelectValue` and `SelectContent`.** In HTML the select is the trigger, shows its own value and
-  holds its options, so `<sl:select>` covers all three: `size` from the trigger, `placeholder` from the value.
-- **`SelectLabel` on its own.** A group's heading is the `label` of `<sl:select-group>` (an `<optgroup>` needs one);
-  there is no heading outside a group, which no browser would show.
-- **`SelectScrollUpButton`, `SelectScrollDownButton`.** The list scrolls like any other, with the wheel, the keys or a
-  finger.
-- **`position="item-aligned"`, `side`, `align`.** shadcn's default lays the list over the select with the chosen item
-  on top of it; the customizable select always opens below the select (above when there is no room), and the list box
-  does the same, so both look alike.
-- **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
-  value with `th:field`, and the select's `change` event reports a new one.
-- **`multiple`**, which shadcn does not have either: use [`<sl:combobox multiple>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/combobox.md#multiple),
+- **A heading outside a group.** A group's heading is the `label` of `<sl:select-group>` (an `<optgroup>` needs one);
+  no browser would show a heading outside a group.
+- **Scroll buttons.** The list scrolls like any other, with the wheel, the keys or a finger.
+- **Placing the list elsewhere.** The customizable select always opens below the select (above when there is no room),
+  and the list box does the same, so both look alike.
+- **Several values**: use [`<sl:combobox multiple>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/combobox.md#multiple),
   [`<sl:native-select multiple>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select-native.md) or a [field set](https://shadleaf.dev/1.1.0-SNAPSHOT/components/field.md) of checkboxes.
-- **`SelectItem`'s `textValue`**: typeahead reads the item's text.
 
 ### How it is drawn
 
@@ -1860,7 +1852,7 @@ an item's icon is extra, never its only label.
 
 #### sl:select
 
-Attributes of `<sl:select>`: A select drawn like shadcn/ui's: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
+Attributes of `<sl:select>`: A select whose list is drawn in the page's style: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -1881,7 +1873,7 @@ Attributes of `<sl:select-group>`: A group of `sl:select-item`s under a heading:
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `label` | *string* | **required** | The group's heading, shadcn/ui's `SelectLabel`. |
+| `label` | *string* | **required** | The group's heading. |
 
 Every prop can also be set from an expression: `th:label="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -1929,10 +1921,10 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/select-native/
 ### Native select or select?
 
 Both are a real `<select>` underneath, bind with `th:field` and submit with the form. This one styles only the closed
-control and leaves the list to the operating system: on a phone that is the system's own picker, which many people
-find easier to use. Use it for long lists (countries, years), in dense forms, and for `multiple`.
-[`<sl:select>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select.md) draws its list in the page's style, like shadcn/ui's Select, with a check mark on the
-chosen item and room for an icon; use it where the look matters and the list is short enough to scan.
+control and leaves the list to the operating system: on a phone that is the system's own picker, which many people find
+easier to use. Use it for long lists (countries, years), in dense forms, and for `multiple`. [`<sl:select>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/select.md)
+draws its list in the page's style, with a check mark on the chosen item and room for an icon; use it where the look
+matters and the list is short enough to scan.
 
 ### Options
 
@@ -1970,7 +1962,7 @@ Write plain `<option>` and `<optgroup>` elements as the content, with `th:each` 
 </sl:native-select>
 ```
 
-`size` picks the height, as in shadcn/ui. It replaces HTML's own `size` attribute, which turns a select into a list box;
+`size` picks the height. It replaces HTML's own `size` attribute, which turns a select into a list box;
 `multiple` still works, and hides the chevron.
 
 ### Width
@@ -2016,7 +2008,7 @@ Every prop can also be set from an expression: `th:size="${...}"`. Any other att
 
 ## Combobox
 
-> shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+> A searchable select on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/combobox/
 
@@ -2464,21 +2456,12 @@ system's colours replace the page's (Windows High Contrast). A disabled combobox
 
 ### Left out
 
-These shadcn/Base UI parts and props have no counterpart, on purpose:
+These are left out on purpose:
 
-- **`ComboboxInput`, `ComboboxContent`, `ComboboxList`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipsInput`,
-  `ComboboxValue` and `ComboboxTrigger`.** `<sl:combobox>` draws them all: `showClear`, `showTrigger` and
-  `autoHighlight` are its `show-clear`, `show-trigger` and `auto-highlight`.
-- **`items` and the render function.** Items are written as `<sl:combobox-item>`s (with `th:each`): `value` and their
-  text take the place of `itemToStringValue`.
-- **`ComboboxEmpty`** is the `empty` attribute; **`ComboboxLabel`** is a group's `label`, and there is no
-  `ComboboxCollection`.
 - **The popup layout**, with a button as the trigger and the input inside the list, and **addons** in the input.
-- **Free text**, which Base UI's Combobox does not allow either (its Autocomplete does).
-- **Removing chips is always possible** (`showRemove`), and a chip shows the item's text.
-- **`side`, `align`**: the list opens below the input, or above it when there is no room.
-- **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
-  value with `th:field`, and the select's `change` event reports a new one.
+- **Free text**: the value is always one of the items.
+- **Chips that cannot be removed**: a chip always has its remove button, and shows the item's text.
+- **Placing the list elsewhere**: the list opens below the input, or above it when there is no room.
 
 ### Without JavaScript
 
@@ -2490,7 +2473,7 @@ select. With Alpine, `slCombobox` puts its input and list in the select's place.
 
 #### sl:combobox
 
-Attributes of `<sl:combobox>`: A text input that filters a list of options as you type: shadcn/ui's combobox. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
+Attributes of `<sl:combobox>`: A text input that filters a list of options as you type. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -2516,7 +2499,7 @@ Attributes of `<sl:combobox-group>`: A group of `sl:combobox-item`s under a head
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `label` | *string* | **required** | The group's heading, shadcn/ui's `ComboboxLabel`. |
+| `label` | *string* | **required** | The group's heading. |
 
 Every prop can also be set from an expression: `th:label="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -3101,7 +3084,7 @@ Attributes of `<sl:toggle-group-item>`: One item of a `sl:toggle-group`, drawn a
 
 ## Calendar
 
-> shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+> A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar/
 
@@ -3276,15 +3259,10 @@ When the focus moves past the months that show, the calendar shows the next ones
 
 ### Left out
 
-These react-day-picker props, which shadcn's Calendar passes on, have no counterpart, on purpose:
-
-- **`mode`.** The inputs decide: one is a date, two are a range. `mode="multiple"` has no counterpart yet.
-- **`selected` and `onSelect`.** The inputs are the value: `th:field` renders it, and the input's `change` event
-  reports a new one.
-- **`disabled` with matchers.** `disabled` disables the whole calendar, as on any input; the days go in
-  `disabled-dates`.
-- **`timeZone`.** A date input holds a date without a time, so there is no time zone to get wrong.
-- **`buttonVariant`, `classNames`, `components` and `formatters`.** The skins draw the calendar; the locale formats it.
+- **Several separate dates.** The inputs decide: one is a date, two are a range. Picking several dates is not here yet.
+- **A time zone.** A date input holds a date without a time, so there is no time zone to get wrong.
+- **Custom drawing and formatting.** The skins draw the calendar; the locale formats it. For content per day, use the
+  [month view](https://shadleaf.dev/1.1.0-SNAPSHOT/components/month-view.md).
 
 For a button that opens the calendar in a popover, see the [date picker](https://shadleaf.dev/1.1.0-SNAPSHOT/components/date-picker.md).
 
@@ -3337,9 +3315,9 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/date-picker/
 
 ### A popover with a calendar
 
-shadcn/ui has no date picker component. Its docs build one from a [popover](https://shadleaf.dev/1.1.0-SNAPSHOT/components/popover.md), a button and a
-[calendar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar.md), plus some React state that updates the button's text and closes the popover after a pick.
-`<sl:date-picker>` is that composition as one component, with the glue in the `slDatePicker` Alpine component.
+A date picker is a button in a [popover](https://shadleaf.dev/1.1.0-SNAPSHOT/components/popover.md) with a [calendar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar.md): the button shows the chosen date,
+and a pick closes the popover. `<sl:date-picker>` is that composition as one component, with the glue in the
+`slDatePicker` Alpine component.
 
 The value lives in the calendar's date inputs, so `th:field` binds a date picker as it binds a calendar, and the form
 submits ISO dates (`2026-10-23`). The [LocalDate fields](https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar.md#localdate-fields) note applies here too.
@@ -3482,13 +3460,13 @@ The popover is a non-modal dialog, as [sl:popover](https://shadleaf.dev/1.1.0-SN
 
 ### Left out
 
-- **The input you type into** (shadcn's "Input" demo), **the time** and **natural language** variants are not here
-  yet. For a time, put an `<sl:input type="time">` next to the date picker.
+- **An input to type the date into**, **the time** and **natural language** variants are not here yet. For a time, put
+  an `<sl:input type="time">` next to the date picker.
 - **Presets** (a select of "Today", "Tomorrow", ...) are not here either.
 
 ### Attributes
 
-Attributes of `<sl:date-picker>`: A button showing the chosen date that opens a `sl:calendar` in a popover: shadcn/ui's date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type="date"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).
+Attributes of `<sl:date-picker>`: A button showing the chosen date that opens a `sl:calendar` in a popover. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type="date"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -3532,8 +3510,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/file-upload/
 
 ### A file input with a drop zone
 
-shadcn/ui has no file upload component, so this one is Shadleaf's own. It looks like shadcn's file upload card: an
-outlined [empty state](https://shadleaf.dev/1.1.0-SNAPSHOT/components/empty.md) with an icon, a title, a description and a Browse button.
+A file upload looks like an outlined [empty state](https://shadleaf.dev/1.1.0-SNAPSHOT/components/empty.md) with an icon, a title, a description and a Browse button.
 
 Underneath is a plain `<input type="file">`, visually hidden. It holds the files and the form submits it, so it binds
 with `th:field` as any other input does, to a `MultipartFile`, or with `multiple` to a `List<MultipartFile>`. The form
@@ -3589,7 +3566,7 @@ Everything still goes through the input: the script puts the files back with a `
 dt.files`), so the form submits exactly what the list shows, and a drop dispatches `change` as a pick does, so
 `hx-trigger="change"` on the component works for both.
 
-**Example: In a card.** As shadcn's file upload card.
+**Example: In a card.** The file upload as the content of a card.
 
 ```html
 <sl:card>
@@ -3842,7 +3819,7 @@ failed upload: set the limits to what the form may send.
 
 ### Attributes
 
-Attributes of `<sl:file-upload>`: A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has none. A visually hidden `&lt;input type="file"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype="multipart/form-data"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.
+Attributes of `<sl:file-upload>`: A drop zone to pick files with, and the list of the files picked. A visually hidden `&lt;input type="file"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype="multipart/form-data"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -3896,10 +3873,9 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/dialog/
 
 ### Built from parts
 
-A dialog is `<sl:dialog>` plus the parts you need, as in shadcn/ui: `<sl:dialog-header>` (holding
-`<sl:dialog-title>` and `<sl:dialog-description>`), your own content and `<sl:dialog-footer>`. shadcn's `Dialog`,
-`DialogContent`, `DialogOverlay` and `DialogPortal` are all `<sl:dialog>`: it renders the browser's own `<dialog>`
-element, which is the panel, and its `::backdrop` is the overlay.
+A dialog is `<sl:dialog>` plus the parts you need: `<sl:dialog-header>` (holding `<sl:dialog-title>` and
+`<sl:dialog-description>`), your own content and `<sl:dialog-footer>`. `<sl:dialog>` renders the browser's own
+`<dialog>` element, which is the panel, and its `::backdrop` is the overlay.
 
 The browser does the hard parts. A dialog opened as a modal is drawn above everything else, the page behind it is inert
 (no clicks, no focus, hidden from screen readers), focus moves to the first control in it, Escape closes it, and closing
@@ -3938,7 +3914,7 @@ adds an outline "Close" button after the footer's own actions.
     <sl:dialog-title>Share link</sl:dialog-title>
     <sl:dialog-description>Anyone who has this link will be able to view this.</sl:dialog-description>
   </sl:dialog-header>
-  <sl:input aria-label="Link" value="https://ui.shadcn.com/docs/installation" readonly/>
+  <sl:input aria-label="Link" value="https://shadleaf.dev/current/getting-started/" readonly/>
   <sl:dialog-footer show-close-button/>
 </sl:dialog>
 ```
@@ -3960,7 +3936,7 @@ To react when a dialog closes, listen for the `close` event of the `<dialog>` el
 
 ### A form in a dialog
 
-Put the form around the dialog, as shadcn's example does, so the submit button in the footer submits it. After a full
+Put the form around the dialog, so the submit button in the footer submits it. After a full
 page post, the page renders again and the dialog is closed. To show the form's errors in the dialog again, render it
 with `open`, below.
 
@@ -4230,7 +4206,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert-dialog/
 ### Built from parts
 
 An alert dialog asks a question the user has to answer before going on, such as "Delete this account?". It is
-`<sl:alert-dialog>` plus its parts, as in shadcn/ui: `<sl:alert-dialog-header>` (holding an optional
+`<sl:alert-dialog>` plus its parts: `<sl:alert-dialog-header>` (holding an optional
 `<sl:alert-dialog-media>`, `<sl:alert-dialog-title>` and `<sl:alert-dialog-description>`) and
 `<sl:alert-dialog-footer>` with `<sl:alert-dialog-cancel>` and the action, a plain `<sl:button>`.
 
@@ -4252,7 +4228,7 @@ An alert dialog asks a question the user has to answer before going on, such as 
 It works like a [dialog](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dialog.md), with the differences an alert dialog needs:
 
 - It has `role="alertdialog"`, so a screen reader announces it as an alert and reads the description with the title.
-- A click outside does not close it: the user has to choose. Escape still does, as in Radix, and counts as cancel.
+- A click outside does not close it: the user has to choose. Escape still does, and counts as cancel.
 - It has no close button in the corner.
 - `<sl:alert-dialog-cancel>` takes the focus when it opens, so pressing Enter straight away never confirms by accident.
   It closes the dialog (`commandfor` and `command="close"` are set for you) and says "Cancel" unless you give it text
@@ -4523,7 +4499,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/sheet/
 ### Built from parts
 
 A sheet is a [dialog](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dialog.md) on an edge of the screen, for content that complements the page: filters,
-settings, the details of a row. It is `<sl:sheet>` plus the parts you need, as in shadcn/ui: `<sl:sheet-header>`
+settings, the details of a row. It is `<sl:sheet>` plus the parts you need: `<sl:sheet-header>`
 (holding `<sl:sheet-title>` and `<sl:sheet-description>`), your own content and `<sl:sheet-footer>`.
 
 ```html
@@ -4928,7 +4904,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/popover/
 
 ### Built from parts
 
-A popover is `<sl:popover>` with a `<sl:popover-trigger>` and a `<sl:popover-content>`, as in shadcn/ui. The
+A popover is `<sl:popover>` with a `<sl:popover-trigger>` and a `<sl:popover-content>`. The
 content can hold a `<sl:popover-header>` with `<sl:popover-title>` and `<sl:popover-description>`, and anything
 else: text, a small form, links. `<sl:popover>` renders no element of its own: it gives the parts their ids.
 
@@ -5074,7 +5050,7 @@ Attributes of `<sl:popover-title>`: The title of a `sl:popover`, inside `sl:popo
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`); without it, plain text, as in shadcn/ui. |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`); without it, plain text. |
 
 Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -5152,7 +5128,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu/
 ### Built from parts
 
 A dropdown menu is `<sl:dropdown-menu>` with a `<sl:dropdown-menu-trigger>` and a `<sl:dropdown-menu-content>`
-holding the items, as in shadcn/ui. `<sl:dropdown-menu>` renders no element of its own: it gives the parts their ids.
+holding the items. `<sl:dropdown-menu>` renders no element of its own: it gives the parts their ids.
 
 ```html
 <sl:dropdown-menu id="account-menu">
@@ -5182,8 +5158,7 @@ The menu is labelled by its trigger. A menu opened by a button of your own needs
 
 ### Opened from the sidebar
 
-`as` makes the trigger a sidebar part instead of a button: shadcn's `<DropdownMenuTrigger asChild>` around a
-`SidebarMenuButton` or a `SidebarMenuAction`.
+`as` makes the trigger a sidebar part instead of a button: a menu button or a menu action.
 
 | `as` | Renders | For |
 | --- | --- | --- |
@@ -5381,17 +5356,13 @@ focus to the trigger when it closes.
 
 ### Left out
 
-These shadcn/Radix parts and props have no counterpart, on purpose:
+These are left out on purpose:
 
-- **Sub-menus** (`DropdownMenuSub`, `-SubTrigger`, `-SubContent`). They need a lot more JavaScript (hover intent,
+- **Sub-menus.** They need a lot more JavaScript (hover intent,
   a pointer grace area towards the sub-menu, arrow right and left) and are hard to use on a touch screen and with a
   screen reader. A server-rendered menu is short: flatten it with labels and groups, or open a dialog.
-- **`DropdownMenuPortal`**: the top layer does what the portal is for.
-- **State in the browser** (`open`/`onOpenChange`, `checked`/`onCheckedChange`, `value`/`onValueChange`, `onSelect`):
-  the menu is opened by its trigger, an item is chosen by what its attributes say, and checked states come from the
-  server.
-- **`modal`**: the menu never makes the rest of the page inert; a click outside closes it.
-- **`loop`**: arrow keys stop at the first and last item, Radix's default.
+- **A modal menu**: the menu never makes the rest of the page inert; a click outside closes it.
+- **Wrapping around**: the arrow keys stop at the first and the last item.
 
 ### Attributes
 
@@ -5407,7 +5378,7 @@ Every prop can also be set from an expression: `th:id="${...}"`. Any other attri
 
 #### sl:dropdown-menu-trigger
 
-Attributes of `<sl:dropdown-menu-trigger>`: What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part (shadcn's `&lt;DropdownMenuTrigger asChild&gt;`). It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.
+Attributes of `<sl:dropdown-menu-trigger>`: What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part. It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -5697,8 +5668,8 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert/
 
 ### Built from parts
 
-`<sl:alert>` holds an optional [`<sl:icon>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/icon.md), then `<sl:alert-title>` and `<sl:alert-description>`, as in
-shadcn/ui. The icon takes the alert's colour and sits beside both. Use either part on its own.
+`<sl:alert>` holds an optional [`<sl:icon>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/icon.md), then `<sl:alert-title>` and `<sl:alert-description>`. The icon
+takes the alert's colour and sits beside both. Use either part on its own.
 
 **Example: Title only, no icon.**
 
@@ -5766,7 +5737,7 @@ Attributes of `<sl:alert-title>`: The title of an alert, inside `sl:alert`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui. |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | — | Heading level. With it the title is a heading (`role="heading"` and `aria-level`) that screen reader users can jump to; without it, plain text. |
 
 Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -5780,7 +5751,7 @@ Attributes of `<sl:alert-description>`: The body of an alert, inside `sl:alert`:
 
 ## Toast
 
-> A short message in a corner of the page that closes itself, sent by the server; shadcn/ui's Sonner.
+> A short message in a corner of the page that closes itself, sent by the server.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/toast/
 
@@ -5797,9 +5768,8 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/toast/
 
 ### One toaster, toasts from the server
 
-A toast says what just happened, such as "Member deleted", and goes away by itself. shadcn/ui uses
-[Sonner](https://sonner.emilkowal.ski/) for it, with a `<Toaster />` in the layout and `toast("...")` calls in the
-browser. In Shadleaf the layout has one `<sl:toaster>`, and the toasts come from the server, in one of three ways:
+A toast says what just happened, such as "Member deleted", and goes away by itself. The layout has one `<sl:toaster>`,
+and the toasts come from the server, in one of three ways:
 
 | Where the message comes from | How it gets to the toaster |
 | --- | --- |
@@ -5921,7 +5891,7 @@ The detail is a toast (`{title, description, variant, duration}`), a list of the
 
 ### Variants
 
-The variant only changes the icon, as in shadcn: none, a check (`success`), an i (`info`), a triangle (`warning`) and
+The variant only changes the icon: none, a check (`success`), an i (`info`), a triangle (`warning`) and
 an x (`error`), whose icon takes the destructive colour. A screen reader announces an `error` at once, interrupting
 what it was reading; the others when it is done. Give a toast a title that says what happened on its own ("Could not
 save"), since the icon is decoration and is not read out.
@@ -5969,7 +5939,7 @@ for a toast with a long description.
 
 - **The close button** closes one toast. It needs Alpine, so it only shows once Alpine runs; its label comes from the
   message `sl.toast.close` (see [Translating](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/translating.md)).
-- **Alt+T** moves the focus to the newest toast, as in Sonner, from anywhere on the page; the toaster's name,
+- **Alt+T** moves the focus to the newest toast from anywhere on the page; the toaster's name,
   "Notifications (Alt+T)" (message `sl.toaster.label`), tells screen reader users so. **Tab** then reaches the close
   buttons.
 - **Escape** closes the toast that has the focus, and nothing else: an open dialog around it stays open.
@@ -5978,7 +5948,7 @@ for a toast with a long description.
 
 ### Several at once
 
-Newer toasts stack in front of older ones, as Sonner's do; hovering or focusing them spreads them out. At most three
+Newer toasts stack in front of older ones; hovering or focusing them spreads them out. At most three
 show (`visible-toasts`); the older ones wait, with their time stopped, and show again when a newer one closes.
 
 **Example: Several at once.** Newer toasts stack in front; hover or focus them to spread them out, which also stops their time.
@@ -5997,7 +5967,7 @@ Where the user prefers reduced motion, toasts only fade in and out; they do not 
 ### Position
 
 `position` puts the toasts in a corner or at the middle of the top or bottom edge: `top-left`, `top-center`,
-`top-right`, `bottom-left`, `bottom-center` or `bottom-right` (the default, as Sonner's). Right and left are the end
+`top-right`, `bottom-left`, `bottom-center` or `bottom-right` (the default). Right and left are the end
 and the start of a line, so they swap on a right-to-left page. On a narrow screen the toasts take the full width.
 
 ```html
@@ -6031,11 +6001,11 @@ the next row.
 
 ### No action button
 
-Sonner's toast can hold an action button ("Undo"). Shadleaf's has none: a toast closes by itself, and whatever it offers
-is gone with it, for someone who reads slowly, uses a screen reader or looked away. WCAG asks that a time limit on
-something the user has to do can be turned off or extended. Put the action in the page (an Undo in the row's place, a
-link in the confirmation), and use the toast to say what happened. If a toast you render out of band holds a link, the
-same must be reachable elsewhere, or give it `duration="0"`.
+A toast has no action button ("Undo"): it closes by itself, and whatever it offers is gone with it, for someone who
+reads slowly, uses a screen reader or looked away. WCAG asks that a time limit on something the user has to do can be
+turned off or extended. Put the action in the page (an Undo in the row's place, a link in the confirmation), and use the
+toast to say what happened. If a toast you render out of band holds a link, the same must be reachable elsewhere, or
+give it `duration="0"`.
 
 ### Left out
 
@@ -6234,7 +6204,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/empty/
 
 ### Built from parts
 
-An empty state is `<sl:empty>` plus the parts you need, as in shadcn/ui: `<sl:empty-header>` (holding
+An empty state is `<sl:empty>` plus the parts you need: `<sl:empty-header>` (holding
 `<sl:empty-media>`, `<sl:empty-title>` and `<sl:empty-description>`) and `<sl:empty-content>` for what to do next, such
 as a button, a search field or a link. Everything is centred, and the empty state grows to fill a flex container, so
 it sits in the middle of the space it is given.
@@ -6408,7 +6378,7 @@ Attributes of `<sl:empty>`: An empty state: what a list, a table, a search or a 
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `border` | *boolean* | — | A dashed line around the empty state, to mark out the area (shadcn's `border border-dashed` classes). |
+| `border` | *boolean* | — | A dashed line around the empty state, to mark out the area. |
 
 Every prop can also be set from an expression: `th:border="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -6454,7 +6424,7 @@ Attributes of `<sl:empty-content>`: What to do next in an `sl:empty`, below its 
 
 ## Table
 
-> A table in shadcn/ui's look, whose column headers sort it on the server.
+> A styled table, whose column headers sort it on the server.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/table/
 
@@ -6503,7 +6473,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/table/
 ### Plain rows and cells
 
 `<sl:table>` styles the plain table elements you write inside it: `caption`, `thead`, `tbody`, `tfoot`, `tr`, `th` and
-`td`. There is no component per row or cell, as there is in shadcn/ui, so a row is the `th:each` you already write:
+`td`. There is no component per row or cell, so a row is the `th:each` you already write:
 
 ```html
 <sl:table>
@@ -6949,7 +6919,7 @@ the text.
 
 ### Actions per row
 
-Put a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) in the last cell, as shadcn's data table does. Give each menu an id built
+Put a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) in the last cell. Give each menu an id built
 from its row, so every trigger has a stable id of its own (`people-12-actions-trigger`), and name the trigger after the
 row: a screen reader user tabbing through the table hears "Actions for Ada Lovelace, menu button". The header cell
 above the menus needs a name too, read out with each cell: `<span class="sl-sr-only">Actions</span>`.
@@ -7017,7 +6987,7 @@ A menu per row is markup per row: 50 rows with a badge and the menu above render
 For a bulk action (delete, change a role), give each row a checkbox of your own and put
 `<sl:table-select-all/>` in the header cell above them. Select-all checks or unchecks every row on the page, and is
 checked when they all are, indeterminate (a minus) when some are. `<sl:table-selection-count>` says how many are
-selected; place it where it fits, e.g. at the start of the footer, as shadcn's data table does.
+selected; place it where it fits, e.g. at the start of the footer.
 
 **Example: Selecting rows.** The rows are plain checkboxes named ids; one is selected, so select-all starts indeterminate.
 
@@ -7075,8 +7045,8 @@ selected; place it where it fits, e.g. at the start of the footer, as shadcn's d
 - **Which checkboxes are rows.** Select-all works on the checkboxes in the body cells of the table it is in (not of a
   table nested in a cell), leaving out disabled ones, which would not be submitted. When the body has other
   checkboxes too, `name="ids"` on select-all narrows it to those.
-- **The selected look** comes from CSS: a row whose first cell holds a checked checkbox gets the muted background
-  (shadcn's `data-state="selected"`), with or without JavaScript. Put the selection in the first column.
+- **The selected look** comes from CSS: a row whose first cell holds a checked checkbox gets the muted background,
+  with or without JavaScript. Put the selection in the first column.
 - **Names.** Every row checkbox needs an accessible name, telling the rows apart. `aria-label` with the message
   `sl.table.select-row` (`Select {0}`) as above, or point at the cell that names the row:
 
@@ -7154,16 +7124,16 @@ A checkbox of your own can be indeterminate too: set its `indeterminate` propert
 
 ### Left out
 
-shadcn's data table runs TanStack Table in the browser. These parts of it are not in Shadleaf: sorting and filtering
-in the browser, column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable rows, editable cells,
-virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts across pages (see
-above).
+The table is sorted, filtered and paged on the server. These are not in Shadleaf: sorting and filtering in the browser,
+column visibility, resizing, reordering and pinning other than the first column (see above), drag handles, expandable
+rows, editable cells, virtual scrolling, selecting a range of rows with Shift and a click, and a selection that lasts
+across pages (see above).
 
 ### Attributes
 
 #### sl:table
 
-Attributes of `<sl:table>`: A table in shadcn/ui's look. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.
+Attributes of `<sl:table>`: A styled table. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -7207,7 +7177,7 @@ Every prop can also be set from an expression: `th:name="${...}"`. Any other att
 
 #### sl:table-selection-count
 
-Attributes of `<sl:table-selection-count>`: How many rows of a `sl:table` are selected: "2 of 20 selected" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as shadcn/ui's data table does. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.
+Attributes of `<sl:table-selection-count>`: How many rows of a `sl:table` are selected: "2 of 20 selected" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -7310,9 +7280,9 @@ The `qualifier` of the controller's second `Pageable` (`@Qualifier("members")`) 
 
 ### Written by hand
 
-With content of its own, `<sl:pagination>` is the `nav` around a pagination of parts, as in shadcn/ui:
+With content of its own, `<sl:pagination>` is the `nav` around a pagination of parts:
 
-**Example: Written by hand.** The parts, as in shadcn/ui's example.
+**Example: Written by hand.** The parts, written out one by one.
 
 ```html
 <sl:pagination aria-label="Invoice pages">
@@ -7363,7 +7333,7 @@ or [translates](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/translating.md) them;
 
 ### Rows per page
 
-`<sl:pagination-size>` is a label and a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) of sizes, as in shadcn/ui's data table:
+`<sl:pagination-size>` is a label and a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) of sizes:
 
 **Example: Rows per page.** In a request for /people?sort=name,asc&page=3&size=20. Each size keeps the sort and starts on the first page.
 
@@ -7378,8 +7348,8 @@ accepts with `spring.data.web.pageable.max-page-size`.
 
 ### A table footer
 
-Summary, size and pagination are separate, so you lay out the footer. shadcn/ui's data table puts the summary at the
-start and the controls at the end:
+Summary, size and pagination are separate, so you lay out the footer, for example with the summary at the start and the
+controls at the end:
 
 ```html
 <div class="table-footer">
@@ -7412,8 +7382,7 @@ link is followed. [Tables with htmx](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/
 - The `nav` is named "Pagination" (`sl.pagination.label`); an `aria-label` of your own replaces it, which two
   paginations on one page need.
 - Previous and Next are named "Go to previous page" and "Go to next page". On a narrow screen only their chevron shows.
-- The ellipsis reads "More pages", where shadcn/ui hides it from screen readers: a list item that says nothing is
-  harder to follow.
+- The ellipsis reads "More pages": a list item that says nothing is harder to follow.
 - The size menu's button reads "Rows per page" followed by the size.
 
 ### Messages
@@ -7434,14 +7403,14 @@ link is followed. [Tables with htmx](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/
 
 ### Left out
 
-First and last page buttons (shadcn's dashboard has them; the first and the last page are always among the numbers),
+First and last page buttons (the first and the last page are always among the numbers),
 a field to type a page number, and paging in the browser.
 
 ### Attributes
 
 #### sl:pagination
 
-Attributes of `<sl:pagination>`: Links to the other pages of a list, in a `nav`. Given the Spring Data `Page` it shows (`th:page="${people}"`) and no content of its own, it renders them all: Previous, the first and the last page, the current page with `siblings` on each side, an ellipsis for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and has a stable id, so htmx can give the focus back after a swap. A `Slice`, which does not know how many pages there are, gets Previous and Next only. Without Spring Data, pass `current` and `total` instead. With content of its own it is the frame for a hand-written pagination of `sl:pagination-content`, `-item`, `-link`, `-previous`, `-next` and `-ellipsis`, as in shadcn/ui.
+Attributes of `<sl:pagination>`: Links to the other pages of a list, in a `nav`. Given the Spring Data `Page` it shows (`th:page="${people}"`) and no content of its own, it renders them all: Previous, the first and the last page, the current page with `siblings` on each side, an ellipsis for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and has a stable id, so htmx can give the focus back after a swap. A `Slice`, which does not know how many pages there are, gets Previous and Next only. Without Spring Data, pass `current` and `total` instead. With content of its own it is the frame for a hand-written pagination of `sl:pagination-content`, `-item`, `-link`, `-previous`, `-next` and `-ellipsis`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -7516,7 +7485,7 @@ Every prop can also be set from an expression: `th:page="${...}"`. Any other att
 
 #### sl:pagination-size
 
-Attributes of `<sl:pagination-size>`: "Rows per page" and a menu of page sizes, as in shadcn/ui's data table. The sizes are `sl:dropdown-menu-radio-item` links: each asks for the same request with that size, every other parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the menu is a popover). Takes the Spring Data `Page` shown now, whose size is the checked one; a size the page has but `sizes` does not list is added. The label is the message `sl.pagination-size.label`. Attributes go to the wrapper.
+Attributes of `<sl:pagination-size>`: "Rows per page" and a menu of page sizes. The sizes are `sl:dropdown-menu-radio-item` links: each asks for the same request with that size, every other parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the menu is a popover). Takes the Spring Data `Page` shown now, whose size is the checked one; a size the page has but `sizes` does not list is added. The label is the message `sl.pagination-size.label`. Attributes go to the wrapper.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -7790,11 +7759,11 @@ Every prop can also be set from an expression: `th:month="${...}"`. Any other at
 
 ## Chart
 
-> shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+> Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/chart/
 
-**Example: Bar chart.** Two series side by side, in a card as shadcn shows it. The months are YearMonths: month-short writes the ticks (Jan), month the tooltip's label (January).
+**Example: Bar chart.** Two series side by side, in a card. The months are YearMonths: month-short writes the ticks (Jan), month the tooltip's label (January).
 
 ```html
 <sl:card>
@@ -7819,8 +7788,8 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/chart/
 
 ### Built from parts
 
-A chart is shadcn's: [Recharts](https://recharts.github.io/) draws it in the browser, with shadcn's look. The template
-says what to draw, the controller gives the rows:
+[Recharts](https://recharts.github.io/) draws a chart in the browser, in the skin's look. The template says what to
+draw, the controller gives the rows:
 
 ```html
 <sl:chart th:data="${visitors}" th:label="#{visitors.title}">
@@ -7845,7 +7814,7 @@ String visitors(Model model) {
 - **`th:data`** takes a list of rows: records, objects or maps, or a Spring Data `Page`. They go into the page as
   JSON, written by Jackson.
 - **The series parts** (`sl:chart-bar`, `sl:chart-line`, `sl:chart-area`) name the property they draw in `key`, and
-  carry the series' `label` and `color`: what shadcn's `ChartConfig` holds. The chart draws bars for bars only, lines
+  carry the series' `label` and `color`. The chart draws bars for bars only, lines
   for lines only, areas for areas only, and a composed chart for a mix.
 - **The other parts** add a grid, the axes, a tooltip and a legend. Every part is optional; their order is the order
   Recharts draws them in.
@@ -7966,7 +7935,7 @@ The tooltip shows the hovered category and every series' label and value. `indic
 
 ### Formats
 
-Instead of shadcn's `tickFormatter`, `formatter` and `labelFormatter` functions, the parts take a named format,
+Instead of formatting functions, the parts take a named format,
 written with `Intl` in the page's language (`<html lang>`, from Spring's locale):
 
 | Format | Writes | For |
@@ -8042,8 +8011,8 @@ For series known only at run time, put `th:each` on a series part:
 
 ### Size
 
-A chart is as wide as its container and 16:9, as shadcn's. For a fixed height, give it one in your CSS, with
-`aspect-ratio: auto` (shadcn's `aspect-auto h-[250px]`):
+A chart is as wide as its container and 16:9. For a fixed height, give it one in your CSS, with
+`aspect-ratio: auto`:
 
 ```css
 .visitors-chart { aspect-ratio: auto; height: 250px; }
@@ -8063,21 +8032,21 @@ keys follow what you see.
 
 ### Left out
 
-These shadcn and Recharts features have no counterpart yet: pie, radar and radial charts (pie charts are planned),
-horizontal bars, gradients, custom tooltip and legend content, icons in the config, reference lines and brushes.
-For anything else, `sl-chart` is a custom element: an application can write its own.
+These Recharts features have no counterpart yet: pie, radar and radial charts (pie charts are planned), horizontal bars,
+gradients, custom tooltip and legend content, icons in the tooltip and legend, reference lines and brushes. For anything
+else, `sl-chart` is a custom element: an application can write its own.
 
 ### Attributes
 
 #### sl:chart
 
-Attributes of `<sl:chart>`: A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.
+Attributes of `<sl:chart>`: A chart drawn by Recharts in the browser: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
 | `th:data` | *object* | **required** | The rows: a list (or a Spring Data `Page`) of objects, records or maps, one per category or point in time. Each row holds the category (`month`) and a number per series (`desktop`, `mobile`). Serialised with Jackson: dates as ISO strings, which the named date formats read by their Java type. |
 | `label` | *string* | **required** | The chart's accessible name, such as its title: what a screen reader announces when the chart takes the focus. |
-| `margin` | *number* | — | Space in pixels left and right of the plot, so the first and last tick labels fit (shadcn's line and area charts use 12). |
+| `margin` | *number* | — | Space in pixels left and right of the plot, so the first and last tick labels fit (12 suits a line or area chart). |
 | `time-zone` | *string* | — | The time zone (an IANA id such as `Europe/Brussels`) instants in the data are shown in: `Instant`, `OffsetDateTime` and `ZonedDateTime`. Defaults to the request's (Spring's `LocaleContextHolder`). A `LocalDate` or `LocalDateTime` is shown as written, in any zone. |
 
 Every prop can also be set from an expression: `th:data="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
@@ -8095,7 +8064,7 @@ Every prop can also be set from an expression: `th:vertical="${...}"`. Any other
 
 #### sl:chart-x-axis
 
-Attributes of `<sl:chart-x-axis>`: The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines (as shadcn's). Under `dir="rtl"` it runs from right to left. Draws no element of its own on the page: the chart reads it.
+Attributes of `<sl:chart-x-axis>`: The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines. Under `dir="rtl"` it runs from right to left. Draws no element of its own on the page: the chart reads it.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -8109,7 +8078,7 @@ Every prop can also be set from an expression: `th:key="${...}"`. Any other attr
 
 #### sl:chart-y-axis
 
-Attributes of `<sl:chart-y-axis>`: The value axis of a `sl:chart`, at the start side (the left, or the right under `dir="rtl"`), without tick or axis lines. shadcn's charts often leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.
+Attributes of `<sl:chart-y-axis>`: The value axis of a `sl:chart`, at the start side (the left, or the right under `dir="rtl"`), without tick or axis lines. A chart can leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
@@ -8251,7 +8220,7 @@ Pick a sidebar when the application has more pages than fit in a header row or n
 the header for a smaller application. Moving from one to the other later means changing the layout template, not the
 pages: both take the same `pageTitle` and `content` (a sidebar layout takes the breadcrumb's levels too). The other
 [layouts](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts.md#the-layouts) are sidebars as well: grouped by section, with sub-menus, floating, on the
-end, and more, most of them after one of shadcn/ui's sidebar blocks.
+end, and more.
 
 ### What every layout needs
 
@@ -8369,11 +8338,11 @@ to the page instead, which then asks the user to sign in and comes back to it:
 
 ### A sidebar below a full-width header
 
-shadcn/ui's sidebar-16 puts a header across the whole top of the page and the sidebar below it. Shadleaf does not
-support that layout. From 768 px the sidebar is sticky at the top of the screen and as tall as the screen, so below a
-header it would slide under the header and run past the bottom of the screen. `<sl:sidebar-provider>` has to start
-at the top of the page. Put the page's header inside `<sl:sidebar-inset>` (a sidebar layout), or put the navigation
-in the header ([Navigation in the header](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/header.md)).
+A header across the whole top of the page with the sidebar below it is not supported. From 768 px the sidebar is sticky
+at the top of the screen and as tall as the screen, so below a header it would slide under the header and run past the
+bottom of the screen. `<sl:sidebar-provider>` has to start at the top of the page. Put the page's header inside
+`<sl:sidebar-inset>` (a sidebar layout), or put the navigation in the header
+([Navigation in the header](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/header.md)).
 
 ### The signed-in user
 
@@ -8623,7 +8592,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/sidebar/
 
 ### Built from parts
 
-An application shell with a sidebar is four components, as in shadcn/ui:
+An application shell with a sidebar is four components:
 
 - `<sl:sidebar-provider>` wraps the whole page and holds the state: is the sidebar expanded or collapsed on a desktop.
 - `<sl:sidebar>` is the navigation itself: a `<nav>` landmark named "Main".
@@ -8656,13 +8625,13 @@ there.
 
 The [skip link](https://shadleaf.dev/1.1.0-SNAPSHOT/components/skip-link.md) comes first in the body: the sidebar puts many links before the content, and it lets a
 keyboard user jump past them to the inset. The header at the top of the inset holds the trigger, a vertical
-[separator](https://shadleaf.dev/1.1.0-SNAPSHOT/components/separator.md) and the [breadcrumb](https://shadleaf.dev/1.1.0-SNAPSHOT/components/breadcrumb.md), as shadcn's blocks have it. Lay it out as a row
-yourself, or use a [site header](https://shadleaf.dev/1.1.0-SNAPSHOT/components/site-header.md), which does it for you, as the
-[Collapses to icons](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/collapses-to-icons.md) layout does.
+[separator](https://shadleaf.dev/1.1.0-SNAPSHOT/components/separator.md) and the [breadcrumb](https://shadleaf.dev/1.1.0-SNAPSHOT/components/breadcrumb.md). Lay it out as a row yourself, or use a
+[site header](https://shadleaf.dev/1.1.0-SNAPSHOT/components/site-header.md), which does it for you, as the [Collapses to icons](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/collapses-to-icons.md)
+layout does.
 
 ### What goes inside
 
-The sidebar holds a header, the content and a footer, with shadcn/ui's names:
+The sidebar holds a header, the content and a footer:
 
 - `<sl:sidebar-header>` at the top (the application or team) and `<sl:sidebar-footer>` at the bottom (settings, help,
   the signed-in user's [user menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/user-menu.md)). They stay in view.
@@ -8832,10 +8801,10 @@ without an `id` the item generates one on every render.
 `<sl:sidebar-group-action>` is an icon button at the end of a group's label ("Add project"), and
 `<sl:sidebar-menu-action>` one at the end of a menu item, beside its button ("More"). Both hold only an icon, so they
 need an `aria-label`; name the entry too, as every item has one ("More for Design Engineering"). With `as="a"` they are
-links. `show-on-hover` on a menu action hides it on a desktop until the pointer is over its item or the focus is in
-it; on a phone it is always there. A menu action is 24 px, the minimum target size of WCAG 2.2 (shadcn's is 20 px);
-a group action is 20 px on a desktop, where nothing is close to it, and 24 px on a phone. A "More" that opens a menu is
-a [menu trigger](#menus-in-the-sidebar).
+links. `show-on-hover` on a menu action hides it on a desktop until the pointer is over its item or the focus is in it;
+on a phone it is always there. A menu action is 24 px, the minimum target size of WCAG 2.2; a group action is 20 px on a
+desktop, where nothing is close to it, and 24 px on a phone. A "More" that opens a menu is a
+[menu trigger](#menus-in-the-sidebar).
 
 ```html
 <sl:sidebar-menu-item>
@@ -8848,12 +8817,12 @@ a [menu trigger](#menus-in-the-sidebar).
 
 ### Menus in the sidebar
 
-A dropdown menu opens from a sidebar part when its trigger says so: `<sl:dropdown-menu-trigger as="sidebar-menu-button">`
-renders a menu button, `as="sidebar-menu-action"` a menu action (shadcn's `<DropdownMenuTrigger asChild>`). The trigger
-takes the part's props (`size`, `variant`, `tooltip`; `show-on-hover`) and its `icon-start` and `icon-end` slots, and
-any other attribute passes through. Put the `<sl:dropdown-menu>` in the `<sl:sidebar-menu-item>`, where the part would
-be. The default example above has three: a team switcher in the header, "More" beside Design Engineering, and the
-[user menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/user-menu.md) in the footer, which is one component.
+A dropdown menu opens from a sidebar part when its trigger says so:
+`<sl:dropdown-menu-trigger as="sidebar-menu-button">` renders a menu button, `as="sidebar-menu-action"` a menu action.
+The trigger takes the part's props (`size`, `variant`, `tooltip`; `show-on-hover`) and its `icon-start` and `icon-end`
+slots, and any other attribute passes through. Put the `<sl:dropdown-menu>` in the `<sl:sidebar-menu-item>`, where the
+part would be. The default example above has three: a team switcher in the header, "More" beside Design Engineering, and
+the [user menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/user-menu.md) in the footer, which is one component.
 
 ```html
 <sl:sidebar-header>
@@ -8903,9 +8872,9 @@ checked by the server. A screen reader says "Acme Inc., radio menu item, checked
 JavaScript, as the [radio items](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md#checkbox-and-radio-items) of a sort menu do. The menu is labelled by its
 trigger; the group of teams by the label above it.
 
-A version switcher (shadcn's sidebar-01) is the same menu with the versions, opened from the header's large menu button:
+A version switcher is the same menu with the versions, opened from the header's large menu button:
 
-**Example: Version switcher.** A dropdown menu opened from a large menu button in the header (sl:dropdown-menu-trigger as="sidebar-menu-button"), as shadcn's version switcher. The versions are links, and the server checks the current one, so it works without JavaScript. In the phone panel it opens below the button.
+**Example: Version switcher.** A dropdown menu opened from a large menu button in the header (sl:dropdown-menu-trigger as="sidebar-menu-button"), to switch between versions. The versions are links, and the server checks the current one, so it works without JavaScript. In the phone panel it opens below the button.
 
 ```html
 <sl:sidebar-provider>
@@ -8960,7 +8929,7 @@ A version switcher (shadcn's sidebar-01) is the same menu with the versions, ope
 
 | State | The menu |
 | --- | --- |
-| Expanded, on a desktop | On the side its content asks for: `side="right"` puts it beside the sidebar, its top lined up with the trigger, as shadcn's team switcher and user menu. A menu from a menu button is at least as wide as the button, and 14 rem. |
+| Expanded, on a desktop | On the side its content asks for: `side="right"` puts it beside the sidebar, its top lined up with the trigger, as the team switcher and the user menu. A menu from a menu button is at least as wide as the button, and 14 rem. |
 | Collapsed to icons | Beside the strip, the same way. The button's tooltip and its menu are never shown together: the tooltip hides when the menu opens and does not show while it is open. A "More" action is not in the strip, like every action. |
 | The phone panel | Below its trigger, lined up with its end, whatever `side` says (there is no room beside a panel as wide as the screen); above it when there is no room below. The menu is drawn above the panel and the panel's `inert` leaves it alone. Escape closes the menu first, with the focus back on its trigger, and the panel on the next Escape. A click elsewhere in the panel closes only the menu. |
 | The header layout's row | Below its trigger, lined up with its end, as in the panel. The row's sideways scrolling does not clip it. A menu button that opens a menu keeps its `icon-end` (a chevron) in the row, where other icons are left out. |
@@ -8969,10 +8938,10 @@ The trigger looks active while its menu is open, and a `show-on-hover` action st
 
 ### Collapsible groups
 
-A menu item with `collapsible` is a group of links that opens and closes, as shadcn's sidebar-07 has: its menu button
-is what the user clicks, and `<sl:sidebar-menu-sub>` holds the links, indented along a line below it. It is the
-browser's `details` element (the button becomes its `summary`, with a chevron that turns when it opens), so it needs
-no JavaScript, and the keyboard opens and closes it with Enter and Space.
+A menu item with `collapsible` is a group of links that opens and closes: its menu button is what the user clicks, and
+`<sl:sidebar-menu-sub>` holds the links, indented along a line below it. It is the browser's `details` element (the
+button becomes its `summary`, with a chevron that turns when it opens), so it needs no JavaScript, and the keyboard
+opens and closes it with Enter and Space.
 
 ```html
 <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/settings')}">
@@ -9070,11 +9039,10 @@ no JavaScript, and the keyboard opens and closes it with Enter and Space.
 
 #### A section that is a page too
 
-When the section has a page of its own, keep its menu button a link and give the sub-menu `collapsible`: a chevron
-at the end of the button opens and closes it, as in shadcn's sidebar-08. The chevron is the `summary` of a `details`
-element beside the link (a link cannot sit inside a `summary`), drawn as a [menu action](#actions). It holds only an
-icon, so it needs an `aria-label` that names what it opens; the other attributes go to the list. `open` works as on a
-collapsible item.
+When the section has a page of its own, keep its menu button a link and give the sub-menu `collapsible`: a chevron at
+the end of the button opens and closes it. The chevron is the `summary` of a `details` element beside the link (a link
+cannot sit inside a `summary`), drawn as a [menu action](#actions). It holds only an icon, so it needs an `aria-label`
+that names what it opens; the other attributes go to the list. `open` works as on a collapsible item.
 
 ```html
 <sl:sidebar-menu-item>
@@ -9097,9 +9065,9 @@ section's icon shows when the current page is one of its pages. The
 
 #### Collapsible sections
 
-A group with `collapsible` opens and closes as a whole, as in shadcn's sidebar-02: its
-`<sl:sidebar-group-label>` becomes the `summary` of a `details` element, with a chevron at the end, so it must be the
-group's first part. The label still names the group. `open` renders it open.
+A group with `collapsible` opens and closes as a whole: its `<sl:sidebar-group-label>` becomes the `summary` of a
+`details` element, with a chevron at the end, so it must be the group's first part. The label still names the group.
+`open` renders it open.
 
 ```html
 <sl:sidebar-group id="build" collapsible th:open="${#slNav.current('/build')}">
@@ -9118,9 +9086,9 @@ has one per section.
 
 The server does not know how wide the screen is, so the sidebar is one element for both:
 
-- **From 768 px** (shadcn's `md`) it is a column beside the page, as tall as the screen and sticky while the page
-  scrolls. The trigger, or **Ctrl+B** (**⌘B** on a Mac), collapses it out of view and expands it again. A collapsed
-  sidebar's links leave the tab order.
+- **From 768 px** it is a column beside the page, as tall as the screen and sticky while the page scrolls. The trigger,
+  or **Ctrl+B** (**⌘B** on a Mac), collapses it out of view and expands it again. A collapsed sidebar's links leave the
+  tab order.
 - **Below 768 px** it is hidden, and the trigger opens it as a panel over the page, with the page dimmed behind it.
   The focus moves to the current page's link (`aria-current="page"`) or the first link. Tab stays in the panel, and the
   rest of the page is inert, so a screen reader finds only the navigation. Escape, a click outside, Ctrl/⌘B, following
@@ -9132,10 +9100,10 @@ CSS shows it in the page instead, where it is a plain navigation landmark.
 
 Ctrl/⌘B does nothing while the focus is in a rich text editor (`contenteditable`), where it means bold.
 
-`<sl:sidebar-provider>` has to start at the top of the page. On a desktop the sidebar is sticky at the top of the
-screen and as tall as the screen, so below a header of the page's own (shadcn's sidebar-16) it would slide under that
-header and run past the bottom of the screen. Put the page's header inside `<sl:sidebar-inset>`, or the navigation in
-the header with [`placement="header"`](#in-the-header).
+`<sl:sidebar-provider>` has to start at the top of the page. On a desktop the sidebar is sticky at the top of the screen
+and as tall as the screen, so below a header of the page's own it would slide under that header and run past the bottom
+of the screen. Put the page's header inside `<sl:sidebar-inset>`, or the navigation in the header with
+[`placement="header"`](#in-the-header).
 
 ### The state is remembered
 
@@ -9181,7 +9149,7 @@ The phone panel ignores the state: it always opens with everything in it.
 
 ### Variants
 
-`variant` changes how the sidebar looks on a desktop, as shadcn/ui's:
+`variant` changes how the sidebar looks on a desktop:
 
 - `sidebar` (the default) is a column along the edge of the screen, with a border on the page's side.
 - `floating` is a panel with a margin all round, rounded (in the vega skin) and with a shadow. It takes as much room
@@ -9226,9 +9194,8 @@ Below 768 px the variant makes no difference: the panel and the page are the sam
 
 ### Collapsed to icons
 
-`collapsible="icon"` collapses the sidebar to a strip of its menu buttons' icons instead of moving it out of view, as
-shadcn's sidebar-07 does. It is as wide as `--sidebar-width-icon` (3 rem in both skins); floating and inset add their
-margin around it.
+`collapsible="icon"` collapses the sidebar to a strip of its menu buttons' icons instead of moving it out of view. It is
+as wide as `--sidebar-width-icon` (3 rem in both skins); floating and inset add their margin around it.
 
 ```html
 <sl:sidebar variant="inset" collapsible="icon">
@@ -9253,9 +9220,8 @@ margin around it.
   while the menu is open.
 - A click (or Enter) on a [collapsible group's](#collapsible-groups) icon expands the sidebar and opens the group, as
   the sub-menu has no room in the strip. A group that holds the current page shows it on its icon.
-- `icon-hidden` on a [group](#what-goes-inside) leaves it out of the strip, as shadcn's sidebar-07 does with its
-  projects: links without icons of their own would be a row of identical squares. Expanded, and in the phone panel,
-  the group shows as usual.
+- `icon-hidden` on a [group](#what-goes-inside) leaves it out of the strip, for a group such as projects: links without
+  icons of their own would be a row of identical squares. Expanded, and in the phone panel, the group shows as usual.
 - The server renders the strip from the cookie, so the first paint is right with and without JavaScript. On a phone
   the panel ignores it and shows everything.
 
@@ -9705,15 +9671,15 @@ tell such a link apart, or the sidebar's link to that page gets the fragment alo
 
 For now:
 
-- sub-menus that open as dropdown menus while collapsed to icons (shadcn's sidebar-06), and collapsible items nested
-  in sub-menus to any depth, such as a file tree (sidebar-11);
-- plus and minus instead of the turning chevron (sidebar-05);
-- `SidebarInput` (use `<sl:input>`) and `SidebarMenuSkeleton` (use `<sl:skeleton>`);
-- `SidebarRail`, the strip along the sidebar's edge that toggles it;
+- sub-menus that open as dropdown menus while collapsed to icons, and collapsible items nested in sub-menus to any
+  depth, such as a file tree;
+- plus and minus instead of the turning chevron;
+- an input or a loading skeleton of the sidebar's own (use `<sl:input>` and `<sl:skeleton>`);
+- a rail, the strip along the sidebar's edge that toggles it;
 - a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page;
 - in the header placement: sub-menus that drop down from the row (a navigation menu), and a "More" entry gathering
   the links that do not fit (the row scrolls instead);
-- a sidebar below a header across the whole page (shadcn's sidebar-16): see
+- a sidebar below a header across the whole page: see
   [One element for a desktop and a phone](#one-element-for-a-desktop-and-a-phone).
 
 ### Attributes
@@ -10108,7 +10074,7 @@ The [Navigation in the header](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/heade
 
 ### As the page's header
 
-At the top of `<sl:sidebar-inset>`, in the sidebar layout, it is the page's header (shadcn's sidebar-07): the trigger,
+At the top of `<sl:sidebar-inset>`, in the sidebar layout, it is the page's header: the trigger,
 a vertical [separator](https://shadleaf.dev/1.1.0-SNAPSHOT/components/separator.md), the [breadcrumb](https://shadleaf.dev/1.1.0-SNAPSHOT/components/breadcrumb.md), and the theme toggle at the end. Inside the
 `main` it is no landmark, and it has no border or colour of its own. The separator is a short line in the middle of the
 row there. The [Collapses to icons](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/collapses-to-icons.md) layout uses it this way.
@@ -10180,7 +10146,7 @@ Put it in the [sidebar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/sidebar.m
 ```
 
 It shows who is signed in, as Spring Security knows them: the user's picture, name and email, in a large
-[menu button](https://shadleaf.dev/1.1.0-SNAPSHOT/components/sidebar.md#menu-buttons) (shadcn's `NavUser`). The button opens a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md)
+[menu button](https://shadleaf.dev/1.1.0-SNAPSHOT/components/sidebar.md#menu-buttons). The button opens a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md)
 with the user at the top, then the items you put inside `<sl:user-menu>`, then **Sign out**. Without items there is
 nothing between the user and Sign out but a separator.
 
@@ -10223,7 +10189,7 @@ login's user is named by the username), or nothing.
 </sl:site-header>
 ```
 
-The button has no text, so it is named "Account: " and the user's name: a screen reader says "Account: shadcn, menu
+The button has no text, so it is named "Account: " and the user's name: a screen reader says "Account: Alex Morgan, menu
 button". The menu opens below it, lined up with its end.
 
 ### The picture
@@ -10320,7 +10286,7 @@ menu. In the sidebar the button is named by the name and email it shows, and the
 
 ### A different user menu
 
-`<sl:user-menu>` covers shadcn's `NavUser`. A menu laid out differently (another trigger, items above the user, a
+`<sl:user-menu>` covers the usual account menu. A menu laid out differently (another trigger, items above the user, a
 second group) is a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) of your own that reads `#slUser`:
 
 ```html
@@ -10353,7 +10319,7 @@ Attributes of `<sl:user-menu>`: The signed-in user (`#slUser.current`) with a me
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `placement` | `sidebar`, `header` | `sidebar` | `sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named "Account: " and the user's name. |
+| `placement` | `sidebar`, `header` | `sidebar` | `sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer`. `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named "Account: " and the user's name. |
 | `id` | *string* | `user-menu` | The menu's id. Its button gets the id with `-trigger` added, the sign-out form with `-sign-out`. Two user menus on a page need different ids. |
 | `side` | `top`, `right`, `bottom`, `left` | — | The side of the button the menu opens on, as on `sl:dropdown-menu-content`. By default `right` in the sidebar (below the button in the phone panel) and `bottom` in the header. |
 | `align` | `start`, `center`, `end` | `end` | How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`. |
@@ -10384,7 +10350,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/breadcrumb/
 
 ### Built from parts
 
-A breadcrumb is shadcn/ui's parts: a `nav` holding an ordered list of levels, with a separator between them. The last
+A breadcrumb is built from parts: a `nav` holding an ordered list of levels, with a separator between them. The last
 level is the page shown now.
 
 ```html
@@ -10464,7 +10430,7 @@ levels".
 #### With a menu
 
 Give the ellipsis the levels it stands for, as [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) items, and it becomes a ghost icon
-button that opens a menu of them, as in shadcn's example:
+button that opens a menu of them:
 
 **Example: With a menu.** An ellipsis with the hidden levels as its content is a button that opens a menu of them. Arrow keys move through the menu, Escape closes it.
 
@@ -10526,9 +10492,9 @@ of its own replaces it, such as another icon; that content is not turned around.
 - The `nav` is named "Breadcrumb" (`sl.breadcrumb.label`); an `aria-label` of your own replaces it, which two
   breadcrumbs on one page need.
 - The separators are list items hidden from assistive technology, so a screen reader counts only the levels.
-- The page shown now has `aria-current="page"` and is not a link. shadcn's adds `role="link"` and
-  `aria-disabled="true"`, which a screen reader announces as a link that goes nowhere.
-- The empty ellipsis reads "More levels", where shadcn/ui hides it from screen readers.
+- The page shown now has `aria-current="page"` and is not a link, so a screen reader does not announce a link that goes
+  nowhere.
+- The empty ellipsis reads "More levels".
 - In Windows' high-contrast mode a focused link gets an outline, as the focus ring (a shadow) is gone there.
 
 ### Messages
@@ -10741,8 +10707,8 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/tabs/
 
 ### Built from parts
 
-Tabs are `<sl:tabs>` with an `<sl:tabs-list>` of `<sl:tabs-trigger>`s and an `<sl:tabs-content>` per tab, as in
-shadcn/ui. A trigger and its panel share a `tab`, and `active` on `<sl:tabs>` names the one that shows:
+Tabs are `<sl:tabs>` with an `<sl:tabs-list>` of `<sl:tabs-trigger>`s and an `<sl:tabs-content>` per tab. A trigger and
+its panel share a `tab`, and `active` on `<sl:tabs>` names the one that shows:
 
 ```html
 <sl:tabs id="settings" active="account">
@@ -10755,8 +10721,8 @@ shadcn/ui. A trigger and its panel share a `tab`, and `active` on `<sl:tabs>` na
 </sl:tabs>
 ```
 
-shadcn/ui calls these `value` and `defaultValue`; `value` is taken in Thymeleaf (`th:value` is Spring's form value). The
-tabs need an `id`: the triggers and panels get ids derived from it and their `tab` (`settings-account-trigger`,
+The attribute is `tab` because `value` is taken in Thymeleaf (`th:value` is Spring's form value). The tabs need an `id`:
+the triggers and panels get ids derived from it and their `tab` (`settings-account-trigger`,
 `settings-account-content`), which link each tab to its panel (`aria-controls`, `aria-labelledby`). So a `tab` is
 letters, digits and dashes.
 
@@ -10810,8 +10776,8 @@ tabs that must work without JavaScript.
 
 ### Keyboard
 
-Tab moves into the list on the active tab, and out of it to the active panel (which takes the focus, as in Radix, so a
-panel without controls can be scrolled and read). In the list:
+Tab moves into the list on the active tab, and out of it to the active panel (which takes the focus, so a panel without
+controls can be scrolled and read). In the list:
 
 | Key | Does |
 | --- | --- |
@@ -10919,11 +10885,9 @@ content loaded since; back restores exactly that. With link triggers the address
 
 ### Left out
 
-- **`value`/`onValueChange` and controlled state**: the server renders the active tab; the `sl-tabs-show` event
-  reports a switch.
-- **`dir`**: the arrow keys follow the page's direction (`dir` on an ancestor or the page).
-- **`loop`**: the arrow keys always wrap around, as Radix's do by default.
-- **`forceMount`**: every panel is always in the page; the inactive ones are hidden.
+- **A direction of their own**: the arrow keys follow the page's direction (`dir` on an ancestor or the page).
+- **Arrow keys that stop at the ends**: they always wrap around.
+- **Panels left out of the page**: every panel is always in the page; the inactive ones are hidden.
 
 ### Attributes
 
@@ -11018,7 +10982,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/accordion/
 ### Built from parts
 
 An accordion is `<sl:accordion>` holding `<sl:accordion-item>`s, each with an `<sl:accordion-trigger>` and an
-`<sl:accordion-content>`, as in shadcn/ui:
+`<sl:accordion-content>`:
 
 ```html
 <sl:accordion>
@@ -11041,10 +11005,10 @@ The trigger must be the item's first child.
 ### One or several open
 
 `type="single"` (the default) keeps one section open: opening another closes it. The items share a `details` `name`,
-which the browser uses to close the others. The open section closes on a click too, so a single accordion is always
-what shadcn/ui calls `collapsible`. The name must be unique on the page; without `name` each render generates one
-(`sl-accordion-` and eight random characters), so an accordion that htmx swaps in never joins one that is already there.
-Set `name` yourself when you want stable markup, but not on an accordion that htmx replaces: see below.
+which the browser uses to close the others. The open section closes on a click too, so a single accordion can always be
+closed. The name must be unique on the page; without `name` each render generates one (`sl-accordion-` and eight random
+characters), so an accordion that htmx swaps in never joins one that is already there. Set `name` yourself when you want
+stable markup, but not on an accordion that htmx replaces: see below.
 
 `type="multiple"` opens and closes every section on its own:
 
@@ -11066,7 +11030,7 @@ Set `name` yourself when you want stable markup, but not on an accordion that ht
 
 ### Open from the server
 
-`open` on an item renders it open, where shadcn/ui takes `defaultValue`. The server decides, for example from a
+`open` on an item renders it open. The server decides, for example from a
 request parameter or a fragment of the URL it rendered a link to:
 
 ```html
@@ -11083,7 +11047,7 @@ In a single accordion only the first open item stays open. Write the trigger's t
 
 ### Headings
 
-shadcn/ui puts each trigger in an `h3`. A `<summary>` must be the first child of its `<details>`, so it cannot sit in
+A trigger's text is a heading. A `<summary>` must be the first child of its `<details>`, so it cannot sit in
 a heading; the heading goes inside it instead. The trigger renders
 `<summary><span role="heading" aria-level="3">…</span><svg …/></summary>`: the summary keeps its own role, a
 disclosure with its expanded state, and screen reader users can still jump from question to question by heading.
@@ -11140,8 +11104,7 @@ motion. The chevron turns in both cases (not under reduced motion).
 ### Disabled
 
 `disabled` on an item keeps it closed (or open, with `open`): its trigger fades, leaves the tab order and ignores the
-pointer. A closed disabled item renders no content, so find-in-page cannot open it either. shadcn/ui does the same by
-not rendering closed content at all.
+pointer. A closed disabled item renders no content, so find-in-page cannot open it either.
 
 **Example: Disabled.** A disabled section cannot be opened, and renders no content while it is closed.
 
@@ -11174,15 +11137,12 @@ the old one.
 
 ### Left out
 
-- **Arrow keys between the triggers.** Radix moves the focus with the up and down arrows, Home and End; the ARIA
-  pattern makes these optional. A `details` accordion has no script, so Tab moves between the triggers.
-- **A single accordion that cannot be closed** (shadcn/ui's single without `collapsible`): the browser always lets the
-  open `details` close.
-- **`value`, `onValueChange` and controlled state**: the server renders the open items with `open`; the browser's
-  `toggle` event reports changes.
-- **`dir` and `orientation`**: the accordion follows the page's direction, and is vertical.
-- **`role="region"` on the content.** Radix gives every panel one; the ARIA pattern advises against it where more than
-  about six panels can be open at once, as landmarks pile up. The content is inside the `details`, which already
+- **Arrow keys between the triggers** (up and down, Home and End): the ARIA pattern makes these optional. A `details`
+  accordion has no script, so Tab moves between the triggers.
+- **A single accordion that cannot be closed**: the browser always lets the open `details` close.
+- **A horizontal accordion**: the accordion is vertical, and follows the page's direction.
+- **`role="region"` on the content.** The ARIA pattern advises against it where more than about six panels can be open
+  at once, as landmarks pile up. The content is inside the `details`, which already
   groups it with its trigger.
 
 ### Attributes
@@ -11215,7 +11175,7 @@ Attributes of `<sl:accordion-trigger>`: The heading of a `sl:accordion-item`, wh
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `level` | `1`, `2`, `3`, `4`, `5`, `6` | `3` | Heading level of the text (`role="heading"` and `aria-level`), as shadcn/ui's trigger sits in an `h3`. Pick the level that fits the page's outline. |
+| `level` | `1`, `2`, `3`, `4`, `5`, `6` | `3` | Heading level of the text (`role="heading"` and `aria-level`). Pick the level that fits the page's outline. |
 
 Every prop can also be set from an expression: `th:level="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -11262,24 +11222,22 @@ A collapsible is `<sl:collapsible>` with an `<sl:collapsible-trigger>` and an `<
 
 It is a [`<details>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details) element with the
 trigger as its `<summary>`, so it needs no JavaScript: the browser opens and closes it, from the keyboard too, and
-tells a screen reader whether it is expanded. Two consequences for porting a shadcn/ui example:
+tells a screen reader whether it is expanded. Two consequences:
 
-- **The trigger comes first**, and the content after it, both inside `<sl:collapsible>`. shadcn/ui's examples can put
-  the trigger anywhere in the collapsible, even after the content; a `summary` must be the first child.
-- **Everything else goes in the trigger or the content.** Text next to the trigger (shadcn's "@peduarte starred 3
-  repositories" heading) can be part of the trigger.
+- **The trigger comes first**, and the content after it, both inside `<sl:collapsible>`: a `summary` must be the first
+  child.
+- **Everything else goes in the trigger or the content.** Text next to the trigger, such as a heading, can be part of
+  the trigger.
 
 `open` renders it open. As with the [accordion](https://shadleaf.dev/1.1.0-SNAPSHOT/components/accordion.md), find-in-page and a link to an element inside open a
-closed collapsible on a match (Chrome and Edge 97, Firefox 148, Safari 26.2). It does not animate, as shadcn/ui's does
-not.
+closed collapsible on a match (Chrome and Edge 97, Firefox 148, Safari 26.2). It does not animate.
 
 ### Drawn as a button
 
-The trigger is plain text by default. `variant` or `size` draws it as a [button](https://shadleaf.dev/1.1.0-SNAPSHOT/components/button.md), with the button's
-variants and sizes, where shadcn/ui writes `<CollapsibleTrigger asChild><Button …>`. An icon-only trigger
-(`size="icon"`) needs an `aria-label`.
+The trigger is plain text by default. `variant` or `size` draws it as a [button](https://shadleaf.dev/1.1.0-SNAPSHOT/components/button.md), with the button's variants
+and sizes. An icon-only trigger (`size="icon"`) needs an `aria-label`.
 
-**Example: Drawn as a button.** variant and size draw the trigger as a button, as shadcn/ui's asChild on a Button does.
+**Example: Drawn as a button.** variant and size draw the trigger as a button.
 
 ```html
 <sl:collapsible open>
@@ -11309,11 +11267,9 @@ a closed disabled collapsible renders no content, so find-in-page cannot open it
 
 ### Left out
 
-- **`asChild` on the trigger**: `variant` and `size` draw it as a button; the element stays a `summary`.
-- **`open`/`onOpenChange` state**: `open` renders it open; the browser's `toggle` event reports changes.
 - **A trigger outside the collapsible**, or after the content: a `details` element has its `summary` first.
-- **Styling the trigger's icon by state** (shadcn's `group-data-[state=open]:rotate-90`): the bundle has no utility
-  classes. In your own CSS, `.collapsible[open] > .collapsible-trigger svg { rotate: 90deg; }` does it.
+- **Styling the trigger's icon by state** with utility classes: the bundle has none. In your own CSS,
+  `.collapsible[open] > .collapsible-trigger svg { rotate: 90deg; }` does it.
 
 ### Attributes
 
@@ -11373,7 +11329,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/card/
 
 ### Built from parts
 
-A card is `<sl:card>` plus the parts you need, as in shadcn/ui: `<sl:card-header>` (holding `<sl:card-title>`,
+A card is `<sl:card>` plus the parts you need: `<sl:card-header>` (holding `<sl:card-title>`,
 `<sl:card-description>` and `<sl:card-action>`), `<sl:card-content>` and `<sl:card-footer>`. Use any of them, in any
 order. Each part is its own component, so it has its own attributes and IDE completion, and passes every other
 attribute through.
@@ -11516,7 +11472,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/attachment/
 
 ### Built from parts
 
-An attachment is `<sl:attachment>` plus the parts you need, as in shadcn/ui: `<sl:attachment-media>` (an icon or an
+An attachment is `<sl:attachment>` plus the parts you need: `<sl:attachment-media>` (an icon or an
 image), `<sl:attachment-content>` (holding `<sl:attachment-title>` and `<sl:attachment-description>`),
 `<sl:attachment-actions>` with one or more `<sl:attachment-action>`s, and an optional `<sl:attachment-trigger>` that
 makes the whole card clickable. `<sl:attachment-group>` lays several out in a row or a grid.
@@ -11669,7 +11625,7 @@ description.
 ### Group
 
 `<sl:attachment-group>` lays attachments out in a row that scrolls sideways when they do not fit, snapping to each
-attachment, its edges fading out. The scrollbar is hidden, as in shadcn: the fade shows there is more.
+attachment, its edges fading out. The scrollbar is hidden: the fade shows there is more.
 
 **Example: Group.** A row that scrolls sideways when the attachments do not fit, snapping to each one. Tab reaches the ones off screen through their actions.
 
@@ -11849,7 +11805,7 @@ Attributes of `<sl:attachment>`: A file or an image attached to something: a mes
 | `state` | `idle`, `uploading`, `processing`, `error`, `done` | `done` | Where the file is in its upload: `idle` (picked, not sent yet) draws a dashed border, `uploading` and `processing` shimmer the title and mark the attachment busy (`aria-busy`), `error` turns it destructive. `done` is a file that is there. |
 | `size` | `default`, `sm`, `xs` | `default` | Size of the attachment. |
 | `orientation` | `horizontal`, `vertical` | `horizontal` | `vertical` puts the media above the content, for an image. |
-| `full-width` | *boolean* | — | Fill the width of the container, for a list of attachments (shadcn's `w-full` class). Without it the attachment is as wide as its content. |
+| `full-width` | *boolean* | — | Fill the width of the container, for a list of attachments. Without it the attachment is as wide as its content. |
 
 Every prop can also be set from an expression: `th:state="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -12024,15 +11980,15 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/avatar/
 **Example: Avatar.**
 
 ```html
-<sl:avatar label="shadcn">
+<sl:avatar label="Alex Morgan">
   <sl:avatar-image th:src="@{/users/{id}/photo(id=${user.id})}"/>
-  <sl:avatar-fallback>CN</sl:avatar-fallback>
+  <sl:avatar-fallback>AM</sl:avatar-fallback>
 </sl:avatar>
 ```
 
 ### Image and fallback
 
-Write both parts, as in shadcn/ui: `<sl:avatar-image>` with the picture's `src` or `th:src`, and
+Write both parts: `<sl:avatar-image>` with the picture's `src` or `th:src`, and
 `<sl:avatar-fallback>` with what to show without one, usually initials or an [`<sl:icon>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/icon.md). The avatar shows
 the fallback when the image has no `src` or an empty one. A `th:src` whose value is null renders an empty `src`, so a
 user without a photo needs no `th:if`:
@@ -12055,7 +12011,7 @@ assistive technology. The image lies over the fallback at the same size, so noth
 ### A photo that fails to load
 
 A photo URL that fails to load shows the fallback too: a 404, a URL your Content-Security-Policy's `img-src` blocks, a
-file that is no image, or no network. So does a photo that is still loading, as in shadcn/ui; the picture replaces the
+file that is no image, or no network. So does a photo that is still loading; the picture replaces the
 fallback once it is there.
 
 **Example: Broken image.** A photo URL that fails to load (a 404, a URL the Content-Security-Policy blocks, offline) shows the fallback, as does one that is still loading.
@@ -12122,9 +12078,9 @@ shows. `aria-labelledby`, pointing at a name elsewhere on the page, works too.
 
 ### Left out
 
-- **A delay before the fallback shows** (Radix's `delayMs`): the fallback shows at once while a photo loads. A photo
+- **A delay before the fallback shows**: the fallback shows at once while a photo loads. A photo
   from the browser's cache is there before the first paint, so it does not flash.
-- **A loading status event** (Radix's `onLoadingStatusChange`): read `data-status` on the image instead.
+- **A loading status event**: read `data-status` on the image instead.
 
 ### Attributes
 
@@ -12346,7 +12302,7 @@ container, such as a toolbar or a row of links.
 
 ### Decorative or announced
 
-A separator is decorative by default, as in shadcn/ui: it only draws a line and is hidden from assistive technology
+A separator is decorative by default: it only draws a line and is hidden from assistive technology
 (`role="none"`). When the line divides the content into groups a screen reader user should know about, write
 `decorative="false"`. It is then announced as a separator (`role="separator"`, with `aria-orientation` when
 vertical).

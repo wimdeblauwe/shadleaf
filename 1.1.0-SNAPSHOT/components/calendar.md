@@ -1,6 +1,6 @@
 # Calendar
 
-> shadcn/ui's Calendar over native date inputs, bound with th:field; a date or a range of dates.
+> A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/calendar/
 
@@ -175,15 +175,10 @@ When the focus moves past the months that show, the calendar shows the next ones
 
 ## Left out
 
-These react-day-picker props, which shadcn's Calendar passes on, have no counterpart, on purpose:
-
-- **`mode`.** The inputs decide: one is a date, two are a range. `mode="multiple"` has no counterpart yet.
-- **`selected` and `onSelect`.** The inputs are the value: `th:field` renders it, and the input's `change` event
-  reports a new one.
-- **`disabled` with matchers.** `disabled` disables the whole calendar, as on any input; the days go in
-  `disabled-dates`.
-- **`timeZone`.** A date input holds a date without a time, so there is no time zone to get wrong.
-- **`buttonVariant`, `classNames`, `components` and `formatters`.** The skins draw the calendar; the locale formats it.
+- **Several separate dates.** The inputs decide: one is a date, two are a range. Picking several dates is not here yet.
+- **A time zone.** A date input holds a date without a time, so there is no time zone to get wrong.
+- **Custom drawing and formatting.** The skins draw the calendar; the locale formats it. For content per day, use the
+  [month view](https://shadleaf.dev/1.1.0-SNAPSHOT/components/month-view.md).
 
 For a button that opens the calendar in a popover, see the [date picker](https://shadleaf.dev/1.1.0-SNAPSHOT/components/date-picker.md).
 

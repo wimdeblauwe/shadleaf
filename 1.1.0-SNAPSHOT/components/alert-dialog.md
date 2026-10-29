@@ -26,7 +26,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert-dialog/
 ## Built from parts
 
 An alert dialog asks a question the user has to answer before going on, such as "Delete this account?". It is
-`<sl:alert-dialog>` plus its parts, as in shadcn/ui: `<sl:alert-dialog-header>` (holding an optional
+`<sl:alert-dialog>` plus its parts: `<sl:alert-dialog-header>` (holding an optional
 `<sl:alert-dialog-media>`, `<sl:alert-dialog-title>` and `<sl:alert-dialog-description>`) and
 `<sl:alert-dialog-footer>` with `<sl:alert-dialog-cancel>` and the action, a plain `<sl:button>`.
 
@@ -48,7 +48,7 @@ An alert dialog asks a question the user has to answer before going on, such as 
 It works like a [dialog](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dialog.md), with the differences an alert dialog needs:
 
 - It has `role="alertdialog"`, so a screen reader announces it as an alert and reads the description with the title.
-- A click outside does not close it: the user has to choose. Escape still does, as in Radix, and counts as cancel.
+- A click outside does not close it: the user has to choose. Escape still does, and counts as cancel.
 - It has no close button in the corner.
 - `<sl:alert-dialog-cancel>` takes the focus when it opens, so pressing Enter straight away never confirms by accident.
   It closes the dialog (`commandfor` and `command="close"` are set for you) and says "Cancel" unless you give it text

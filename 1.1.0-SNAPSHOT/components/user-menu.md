@@ -40,7 +40,7 @@ Put it in the [sidebar](https://shadleaf.dev/1.1.0-SNAPSHOT/components/sidebar.m
 ```
 
 It shows who is signed in, as Spring Security knows them: the user's picture, name and email, in a large
-[menu button](https://shadleaf.dev/1.1.0-SNAPSHOT/components/sidebar.md#menu-buttons) (shadcn's `NavUser`). The button opens a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md)
+[menu button](https://shadleaf.dev/1.1.0-SNAPSHOT/components/sidebar.md#menu-buttons). The button opens a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md)
 with the user at the top, then the items you put inside `<sl:user-menu>`, then **Sign out**. Without items there is
 nothing between the user and Sign out but a separator.
 
@@ -83,7 +83,7 @@ login's user is named by the username), or nothing.
 </sl:site-header>
 ```
 
-The button has no text, so it is named "Account: " and the user's name: a screen reader says "Account: shadcn, menu
+The button has no text, so it is named "Account: " and the user's name: a screen reader says "Account: Alex Morgan, menu
 button". The menu opens below it, lined up with its end.
 
 ## The picture
@@ -180,7 +180,7 @@ menu. In the sidebar the button is named by the name and email it shows, and the
 
 ## A different user menu
 
-`<sl:user-menu>` covers shadcn's `NavUser`. A menu laid out differently (another trigger, items above the user, a
+`<sl:user-menu>` covers the usual account menu. A menu laid out differently (another trigger, items above the user, a
 second group) is a [dropdown menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md) of your own that reads `#slUser`:
 
 ```html
@@ -213,7 +213,7 @@ Attributes of `<sl:user-menu>`: The signed-in user (`#slUser.current`) with a me
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |
-| `placement` | `sidebar`, `header` | `sidebar` | `sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named "Account: " and the user's name. |
+| `placement` | `sidebar`, `header` | `sidebar` | `sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer`. `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named "Account: " and the user's name. |
 | `id` | *string* | `user-menu` | The menu's id. Its button gets the id with `-trigger` added, the sign-out form with `-sign-out`. Two user menus on a page need different ids. |
 | `side` | `top`, `right`, `bottom`, `left` | — | The side of the button the menu opens on, as on `sl:dropdown-menu-content`. By default `right` in the sidebar (below the button in the phone panel) and `bottom` in the header. |
 | `align` | `start`, `center`, `end` | `end` | How the menu lines up with the button along that side, as on `sl:dropdown-menu-content`. |

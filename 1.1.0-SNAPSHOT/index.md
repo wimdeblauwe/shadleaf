@@ -1,10 +1,10 @@
 # Shadleaf
 
-> shadcn/ui for Thymeleaf, as a Spring Boot starter.
+> UI components for Thymeleaf, as a Spring Boot starter.
 
 Source: https://shadleaf.dev/1.1.0-SNAPSHOT/
 
-Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) design system to Thymeleaf. Add one dependency, include two
+Shadleaf is a library of UI components for Thymeleaf, as a Spring Boot starter. Add one dependency, include two
 fragments in your layout's `<head>`, and write `<sl:button>`:
 
 **Example: Variants.**
@@ -21,7 +21,8 @@ fragments in your layout's `<head>`, and write `<sl:button>`:
 - **Fits your build.** The jar ships compiled CSS, served under `/shadleaf/**`, so a plain Maven build is enough.
   Already compiling Tailwind? The [embedded bundle](guides/tailwind/) fits into your own
   build.
-- **shadcn's token names, verbatim.** `--primary`, `--radius`, `--ring`: any shadcn theme drops in unchanged.
+- **Themed with CSS variables.** `--primary`, `--radius`, `--ring`: redefine them and every component follows, see
+  [token overrides](guides/adjustability/#3-token-overrides).
 - **Declared props.** A typo such as `variant="destructve"` fails with the legal values, and an icon-only button
   without an `aria-label` fails too, instead of shipping.
 - **Adjustable in five steps**, from a prop to owning the template yourself: see

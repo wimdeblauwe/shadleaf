@@ -183,7 +183,7 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/sidebar/
 
 ## Built from parts
 
-An application shell with a sidebar is four components, as in shadcn/ui:
+An application shell with a sidebar is four components:
 
 - `<sl:sidebar-provider>` wraps the whole page and holds the state: is the sidebar expanded or collapsed on a desktop.
 - `<sl:sidebar>` is the navigation itself: a `<nav>` landmark named "Main".
@@ -216,13 +216,13 @@ there.
 
 The [skip link](https://shadleaf.dev/1.1.0-SNAPSHOT/components/skip-link.md) comes first in the body: the sidebar puts many links before the content, and it lets a
 keyboard user jump past them to the inset. The header at the top of the inset holds the trigger, a vertical
-[separator](https://shadleaf.dev/1.1.0-SNAPSHOT/components/separator.md) and the [breadcrumb](https://shadleaf.dev/1.1.0-SNAPSHOT/components/breadcrumb.md), as shadcn's blocks have it. Lay it out as a row
-yourself, or use a [site header](https://shadleaf.dev/1.1.0-SNAPSHOT/components/site-header.md), which does it for you, as the
-[Collapses to icons](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/collapses-to-icons.md) layout does.
+[separator](https://shadleaf.dev/1.1.0-SNAPSHOT/components/separator.md) and the [breadcrumb](https://shadleaf.dev/1.1.0-SNAPSHOT/components/breadcrumb.md). Lay it out as a row yourself, or use a
+[site header](https://shadleaf.dev/1.1.0-SNAPSHOT/components/site-header.md), which does it for you, as the [Collapses to icons](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/collapses-to-icons.md)
+layout does.
 
 ## What goes inside
 
-The sidebar holds a header, the content and a footer, with shadcn/ui's names:
+The sidebar holds a header, the content and a footer:
 
 - `<sl:sidebar-header>` at the top (the application or team) and `<sl:sidebar-footer>` at the bottom (settings, help,
   the signed-in user's [user menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/user-menu.md)). They stay in view.
@@ -392,10 +392,10 @@ without an `id` the item generates one on every render.
 `<sl:sidebar-group-action>` is an icon button at the end of a group's label ("Add project"), and
 `<sl:sidebar-menu-action>` one at the end of a menu item, beside its button ("More"). Both hold only an icon, so they
 need an `aria-label`; name the entry too, as every item has one ("More for Design Engineering"). With `as="a"` they are
-links. `show-on-hover` on a menu action hides it on a desktop until the pointer is over its item or the focus is in
-it; on a phone it is always there. A menu action is 24 px, the minimum target size of WCAG 2.2 (shadcn's is 20 px);
-a group action is 20 px on a desktop, where nothing is close to it, and 24 px on a phone. A "More" that opens a menu is
-a [menu trigger](#menus-in-the-sidebar).
+links. `show-on-hover` on a menu action hides it on a desktop until the pointer is over its item or the focus is in it;
+on a phone it is always there. A menu action is 24 px, the minimum target size of WCAG 2.2; a group action is 20 px on a
+desktop, where nothing is close to it, and 24 px on a phone. A "More" that opens a menu is a
+[menu trigger](#menus-in-the-sidebar).
 
 ```html
 <sl:sidebar-menu-item>
@@ -408,12 +408,12 @@ a [menu trigger](#menus-in-the-sidebar).
 
 ## Menus in the sidebar
 
-A dropdown menu opens from a sidebar part when its trigger says so: `<sl:dropdown-menu-trigger as="sidebar-menu-button">`
-renders a menu button, `as="sidebar-menu-action"` a menu action (shadcn's `<DropdownMenuTrigger asChild>`). The trigger
-takes the part's props (`size`, `variant`, `tooltip`; `show-on-hover`) and its `icon-start` and `icon-end` slots, and
-any other attribute passes through. Put the `<sl:dropdown-menu>` in the `<sl:sidebar-menu-item>`, where the part would
-be. The default example above has three: a team switcher in the header, "More" beside Design Engineering, and the
-[user menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/user-menu.md) in the footer, which is one component.
+A dropdown menu opens from a sidebar part when its trigger says so:
+`<sl:dropdown-menu-trigger as="sidebar-menu-button">` renders a menu button, `as="sidebar-menu-action"` a menu action.
+The trigger takes the part's props (`size`, `variant`, `tooltip`; `show-on-hover`) and its `icon-start` and `icon-end`
+slots, and any other attribute passes through. Put the `<sl:dropdown-menu>` in the `<sl:sidebar-menu-item>`, where the
+part would be. The default example above has three: a team switcher in the header, "More" beside Design Engineering, and
+the [user menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/user-menu.md) in the footer, which is one component.
 
 ```html
 <sl:sidebar-header>
@@ -463,9 +463,9 @@ checked by the server. A screen reader says "Acme Inc., radio menu item, checked
 JavaScript, as the [radio items](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dropdown-menu.md#checkbox-and-radio-items) of a sort menu do. The menu is labelled by its
 trigger; the group of teams by the label above it.
 
-A version switcher (shadcn's sidebar-01) is the same menu with the versions, opened from the header's large menu button:
+A version switcher is the same menu with the versions, opened from the header's large menu button:
 
-**Example: Version switcher.** A dropdown menu opened from a large menu button in the header (sl:dropdown-menu-trigger as="sidebar-menu-button"), as shadcn's version switcher. The versions are links, and the server checks the current one, so it works without JavaScript. In the phone panel it opens below the button.
+**Example: Version switcher.** A dropdown menu opened from a large menu button in the header (sl:dropdown-menu-trigger as="sidebar-menu-button"), to switch between versions. The versions are links, and the server checks the current one, so it works without JavaScript. In the phone panel it opens below the button.
 
 ```html
 <sl:sidebar-provider>
@@ -520,7 +520,7 @@ A version switcher (shadcn's sidebar-01) is the same menu with the versions, ope
 
 | State | The menu |
 | --- | --- |
-| Expanded, on a desktop | On the side its content asks for: `side="right"` puts it beside the sidebar, its top lined up with the trigger, as shadcn's team switcher and user menu. A menu from a menu button is at least as wide as the button, and 14 rem. |
+| Expanded, on a desktop | On the side its content asks for: `side="right"` puts it beside the sidebar, its top lined up with the trigger, as the team switcher and the user menu. A menu from a menu button is at least as wide as the button, and 14 rem. |
 | Collapsed to icons | Beside the strip, the same way. The button's tooltip and its menu are never shown together: the tooltip hides when the menu opens and does not show while it is open. A "More" action is not in the strip, like every action. |
 | The phone panel | Below its trigger, lined up with its end, whatever `side` says (there is no room beside a panel as wide as the screen); above it when there is no room below. The menu is drawn above the panel and the panel's `inert` leaves it alone. Escape closes the menu first, with the focus back on its trigger, and the panel on the next Escape. A click elsewhere in the panel closes only the menu. |
 | The header layout's row | Below its trigger, lined up with its end, as in the panel. The row's sideways scrolling does not clip it. A menu button that opens a menu keeps its `icon-end` (a chevron) in the row, where other icons are left out. |
@@ -529,10 +529,10 @@ The trigger looks active while its menu is open, and a `show-on-hover` action st
 
 ## Collapsible groups
 
-A menu item with `collapsible` is a group of links that opens and closes, as shadcn's sidebar-07 has: its menu button
-is what the user clicks, and `<sl:sidebar-menu-sub>` holds the links, indented along a line below it. It is the
-browser's `details` element (the button becomes its `summary`, with a chevron that turns when it opens), so it needs
-no JavaScript, and the keyboard opens and closes it with Enter and Space.
+A menu item with `collapsible` is a group of links that opens and closes: its menu button is what the user clicks, and
+`<sl:sidebar-menu-sub>` holds the links, indented along a line below it. It is the browser's `details` element (the
+button becomes its `summary`, with a chevron that turns when it opens), so it needs no JavaScript, and the keyboard
+opens and closes it with Enter and Space.
 
 ```html
 <sl:sidebar-menu-item collapsible th:open="${#slNav.current('/settings')}">
@@ -630,11 +630,10 @@ no JavaScript, and the keyboard opens and closes it with Enter and Space.
 
 ### A section that is a page too
 
-When the section has a page of its own, keep its menu button a link and give the sub-menu `collapsible`: a chevron
-at the end of the button opens and closes it, as in shadcn's sidebar-08. The chevron is the `summary` of a `details`
-element beside the link (a link cannot sit inside a `summary`), drawn as a [menu action](#actions). It holds only an
-icon, so it needs an `aria-label` that names what it opens; the other attributes go to the list. `open` works as on a
-collapsible item.
+When the section has a page of its own, keep its menu button a link and give the sub-menu `collapsible`: a chevron at
+the end of the button opens and closes it. The chevron is the `summary` of a `details` element beside the link (a link
+cannot sit inside a `summary`), drawn as a [menu action](#actions). It holds only an icon, so it needs an `aria-label`
+that names what it opens; the other attributes go to the list. `open` works as on a collapsible item.
 
 ```html
 <sl:sidebar-menu-item>
@@ -657,9 +656,9 @@ section's icon shows when the current page is one of its pages. The
 
 ### Collapsible sections
 
-A group with `collapsible` opens and closes as a whole, as in shadcn's sidebar-02: its
-`<sl:sidebar-group-label>` becomes the `summary` of a `details` element, with a chevron at the end, so it must be the
-group's first part. The label still names the group. `open` renders it open.
+A group with `collapsible` opens and closes as a whole: its `<sl:sidebar-group-label>` becomes the `summary` of a
+`details` element, with a chevron at the end, so it must be the group's first part. The label still names the group.
+`open` renders it open.
 
 ```html
 <sl:sidebar-group id="build" collapsible th:open="${#slNav.current('/build')}">
@@ -678,9 +677,9 @@ has one per section.
 
 The server does not know how wide the screen is, so the sidebar is one element for both:
 
-- **From 768 px** (shadcn's `md`) it is a column beside the page, as tall as the screen and sticky while the page
-  scrolls. The trigger, or **Ctrl+B** (**⌘B** on a Mac), collapses it out of view and expands it again. A collapsed
-  sidebar's links leave the tab order.
+- **From 768 px** it is a column beside the page, as tall as the screen and sticky while the page scrolls. The trigger,
+  or **Ctrl+B** (**⌘B** on a Mac), collapses it out of view and expands it again. A collapsed sidebar's links leave the
+  tab order.
 - **Below 768 px** it is hidden, and the trigger opens it as a panel over the page, with the page dimmed behind it.
   The focus moves to the current page's link (`aria-current="page"`) or the first link. Tab stays in the panel, and the
   rest of the page is inert, so a screen reader finds only the navigation. Escape, a click outside, Ctrl/⌘B, following
@@ -692,10 +691,10 @@ CSS shows it in the page instead, where it is a plain navigation landmark.
 
 Ctrl/⌘B does nothing while the focus is in a rich text editor (`contenteditable`), where it means bold.
 
-`<sl:sidebar-provider>` has to start at the top of the page. On a desktop the sidebar is sticky at the top of the
-screen and as tall as the screen, so below a header of the page's own (shadcn's sidebar-16) it would slide under that
-header and run past the bottom of the screen. Put the page's header inside `<sl:sidebar-inset>`, or the navigation in
-the header with [`placement="header"`](#in-the-header).
+`<sl:sidebar-provider>` has to start at the top of the page. On a desktop the sidebar is sticky at the top of the screen
+and as tall as the screen, so below a header of the page's own it would slide under that header and run past the bottom
+of the screen. Put the page's header inside `<sl:sidebar-inset>`, or the navigation in the header with
+[`placement="header"`](#in-the-header).
 
 ## The state is remembered
 
@@ -741,7 +740,7 @@ The phone panel ignores the state: it always opens with everything in it.
 
 ## Variants
 
-`variant` changes how the sidebar looks on a desktop, as shadcn/ui's:
+`variant` changes how the sidebar looks on a desktop:
 
 - `sidebar` (the default) is a column along the edge of the screen, with a border on the page's side.
 - `floating` is a panel with a margin all round, rounded (in the vega skin) and with a shadow. It takes as much room
@@ -786,9 +785,8 @@ Below 768 px the variant makes no difference: the panel and the page are the sam
 
 ## Collapsed to icons
 
-`collapsible="icon"` collapses the sidebar to a strip of its menu buttons' icons instead of moving it out of view, as
-shadcn's sidebar-07 does. It is as wide as `--sidebar-width-icon` (3 rem in both skins); floating and inset add their
-margin around it.
+`collapsible="icon"` collapses the sidebar to a strip of its menu buttons' icons instead of moving it out of view. It is
+as wide as `--sidebar-width-icon` (3 rem in both skins); floating and inset add their margin around it.
 
 ```html
 <sl:sidebar variant="inset" collapsible="icon">
@@ -813,9 +811,8 @@ margin around it.
   while the menu is open.
 - A click (or Enter) on a [collapsible group's](#collapsible-groups) icon expands the sidebar and opens the group, as
   the sub-menu has no room in the strip. A group that holds the current page shows it on its icon.
-- `icon-hidden` on a [group](#what-goes-inside) leaves it out of the strip, as shadcn's sidebar-07 does with its
-  projects: links without icons of their own would be a row of identical squares. Expanded, and in the phone panel,
-  the group shows as usual.
+- `icon-hidden` on a [group](#what-goes-inside) leaves it out of the strip, for a group such as projects: links without
+  icons of their own would be a row of identical squares. Expanded, and in the phone panel, the group shows as usual.
 - The server renders the strip from the cookie, so the first paint is right with and without JavaScript. On a phone
   the panel ignores it and shows everything.
 
@@ -1265,15 +1262,15 @@ tell such a link apart, or the sidebar's link to that page gets the fragment alo
 
 For now:
 
-- sub-menus that open as dropdown menus while collapsed to icons (shadcn's sidebar-06), and collapsible items nested
-  in sub-menus to any depth, such as a file tree (sidebar-11);
-- plus and minus instead of the turning chevron (sidebar-05);
-- `SidebarInput` (use `<sl:input>`) and `SidebarMenuSkeleton` (use `<sl:skeleton>`);
-- `SidebarRail`, the strip along the sidebar's edge that toggles it;
+- sub-menus that open as dropdown menus while collapsed to icons, and collapsible items nested in sub-menus to any
+  depth, such as a file tree;
+- plus and minus instead of the turning chevron;
+- an input or a loading skeleton of the sidebar's own (use `<sl:input>` and `<sl:skeleton>`);
+- a rail, the strip along the sidebar's edge that toggles it;
 - a second sidebar on the same page; Ctrl/⌘B toggles every sidebar on the page;
 - in the header placement: sub-menus that drop down from the row (a navigation menu), and a "More" entry gathering
   the links that do not fit (the row scrolls instead);
-- a sidebar below a header across the whole page (shadcn's sidebar-16): see
+- a sidebar below a header across the whole page: see
   [One element for a desktop and a phone](#one-element-for-a-desktop-and-a-phone).
 
 ## Attributes

@@ -36,10 +36,9 @@ Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/dialog/
 
 ## Built from parts
 
-A dialog is `<sl:dialog>` plus the parts you need, as in shadcn/ui: `<sl:dialog-header>` (holding
-`<sl:dialog-title>` and `<sl:dialog-description>`), your own content and `<sl:dialog-footer>`. shadcn's `Dialog`,
-`DialogContent`, `DialogOverlay` and `DialogPortal` are all `<sl:dialog>`: it renders the browser's own `<dialog>`
-element, which is the panel, and its `::backdrop` is the overlay.
+A dialog is `<sl:dialog>` plus the parts you need: `<sl:dialog-header>` (holding `<sl:dialog-title>` and
+`<sl:dialog-description>`), your own content and `<sl:dialog-footer>`. `<sl:dialog>` renders the browser's own
+`<dialog>` element, which is the panel, and its `::backdrop` is the overlay.
 
 The browser does the hard parts. A dialog opened as a modal is drawn above everything else, the page behind it is inert
 (no clicks, no focus, hidden from screen readers), focus moves to the first control in it, Escape closes it, and closing
@@ -78,7 +77,7 @@ adds an outline "Close" button after the footer's own actions.
     <sl:dialog-title>Share link</sl:dialog-title>
     <sl:dialog-description>Anyone who has this link will be able to view this.</sl:dialog-description>
   </sl:dialog-header>
-  <sl:input aria-label="Link" value="https://ui.shadcn.com/docs/installation" readonly/>
+  <sl:input aria-label="Link" value="https://shadleaf.dev/current/getting-started/" readonly/>
   <sl:dialog-footer show-close-button/>
 </sl:dialog>
 ```
@@ -100,7 +99,7 @@ To react when a dialog closes, listen for the `close` event of the `<dialog>` el
 
 ## A form in a dialog
 
-Put the form around the dialog, as shadcn's example does, so the submit button in the footer submits it. After a full
+Put the form around the dialog, so the submit button in the footer submits it. After a full
 page post, the page renders again and the dialog is closed. To show the form's errors in the dialog again, render it
 with `open`, below.
 
