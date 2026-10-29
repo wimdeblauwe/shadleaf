@@ -22,7 +22,7 @@ Put it in the [sidebar](../sidebar/)'s footer:
 ```
 
 It shows who is signed in, as Spring Security knows them: the user's picture, name and email, in a large
-[menu button](../sidebar/#menu-buttons) (shadcn's `NavUser`). The button opens a [dropdown menu](../dropdown-menu/)
+[menu button](../sidebar/#menu-buttons). The button opens a [dropdown menu](../dropdown-menu/)
 with the user at the top, then the items you put inside `<sl:user-menu>`, then **Sign out**. Without items there is
 nothing between the user and Sign out but a separator.
 
@@ -50,7 +50,7 @@ login's user is named by the username), or nothing.
 </sl:site-header>
 ```
 
-The button has no text, so it is named "Account: " and the user's name: a screen reader says "Account: shadcn, menu
+The button has no text, so it is named "Account: " and the user's name: a screen reader says "Account: Alex Morgan, menu
 button". The menu opens below it, lined up with its end.
 
 ## The picture
@@ -127,7 +127,7 @@ menu. In the sidebar the button is named by the name and email it shows, and the
 
 ## A different user menu
 
-`<sl:user-menu>` covers shadcn's `NavUser`. A menu laid out differently (another trigger, items above the user, a
+`<sl:user-menu>` covers the usual account menu. A menu laid out differently (another trigger, items above the user, a
 second group) is a [dropdown menu](../dropdown-menu/) of your own that reads `#slUser`:
 
 ```html

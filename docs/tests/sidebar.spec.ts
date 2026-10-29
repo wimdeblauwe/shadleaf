@@ -984,7 +984,7 @@ test.describe('collapsed to icons', () => {
     expect(stops).toEqual(['Skip to main content', 'sidebar: #team-switcher-trigger Acme Inc. Enterprise', 'sidebar: Home',
       'sidebar: Inbox',
       'sidebar: Calendar', 'sidebar: Documents', 'sidebar: Design Engineering', 'sidebar: Sales & Marketing',
-      'sidebar: Settings', 'sidebar: Help', 'sidebar: #user-menu-trigger shadcn m@example.com', 'sidebar: Section']);
+      'sidebar: Settings', 'sidebar: Help', 'sidebar: #user-menu-trigger Alex Morgan m@example.com', 'sidebar: Section']);
   });
 
   test.describe('without JavaScript', () => {

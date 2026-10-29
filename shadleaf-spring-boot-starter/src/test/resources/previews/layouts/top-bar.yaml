@@ -9,7 +9,7 @@ description: >-
   menu button in the bar opens the sidebar as a panel.
 request: /users
 user:
-  name: shadcn
+  name: Alex Morgan
   email: m@example.com
   photo: shadcn
 page:

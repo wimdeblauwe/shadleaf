@@ -152,10 +152,9 @@ light and dark mode:
 Tailwind's own palette (`bg-slate-100`) keeps working next to these colours, but it does not follow the tokens: it
 stays the same in dark mode and after a token override.
 
-`inline` makes `bg-primary` compile to `var(--primary)` itself, so a token you override reaches your utilities and
-the components alike. Add `--color-chart-*` and `--color-sidebar-*` the same way when you use them. The token names
-are shadcn/ui's: a shadcn theme from its generator or tweakcn drops in as it is, see
-[Token overrides](../adjustability/#3-token-overrides).
+`inline` makes `bg-primary` compile to `var(--primary)` itself, so a token you override reaches your utilities and the
+components alike. Add `--color-chart-*` and `--color-sidebar-*` the same way when you use them. To change their values,
+see [Token overrides](../adjustability/#3-token-overrides).
 
 
 #### Borders in the components' colour

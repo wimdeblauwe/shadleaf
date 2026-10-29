@@ -15,7 +15,7 @@ export const GET: APIRoute = async () => {
   const file = (name: string) => new URL(name, siteRoot()).href;
   const text = `# Shadleaf
 
-> shadcn/ui for Thymeleaf, as a Spring Boot starter. Components are Thymeleaf tags with the \`sl:\` prefix
+> UI components for Thymeleaf, as a Spring Boot starter. Components are Thymeleaf tags with the \`sl:\` prefix
 > (\`<sl:button variant="outline">\`), rendered on the server. Not React: no JSX, no Radix, no \`asChild\`.
 ${version ? `\nThese docs describe Shadleaf ${version}. The docs of other versions live next to this one, at /<version>/.\n` : ''}
 Read "Using Shadleaf with coding agents" first: it lists the rules an agent most often gets wrong. Every component

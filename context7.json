@@ -1,7 +1,7 @@
 {
   "$schema": "https://context7.com/schema/context7.json",
   "projectTitle": "Shadleaf",
-  "description": "shadcn/ui for Thymeleaf, packaged as a Spring Boot starter: server-rendered sl:* components (buttons, forms, dialogs, menus, tables, application shell) with htmx and Alpine.js support.",
+  "description": "UI components for Thymeleaf, packaged as a Spring Boot starter: server-rendered sl:* components (buttons, forms, dialogs, menus, tables, application shell) with htmx and Alpine.js support.",
   "folders": ["docs/src/content/docs"],
   "excludeFolders": ["docs/tests", "docs/src/pages", "samples", "shadleaf-spring-boot-starter", "references", "scripts"],
   "excludeFiles": ["AGENTS.md", "CLAUDE.md", "CLAUDE.local.md"],

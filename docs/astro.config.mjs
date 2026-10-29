@@ -29,13 +29,13 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Shadleaf',
-      description: 'shadcn/ui for Thymeleaf, as a Spring Boot starter.',
+      description: 'UI components for Thymeleaf, as a Spring Boot starter.',
       customCss: ['./src/styles/docs.css'],
       head: [
         {tag: 'meta', attrs: {property: 'og:image', content: socialImage}},
         {tag: 'meta', attrs: {property: 'og:image:width', content: '1200'}},
         {tag: 'meta', attrs: {property: 'og:image:height', content: '630'}},
-        {tag: 'meta', attrs: {property: 'og:image:alt', content: 'Shadleaf: UI components for Spring Boot and Thymeleaf. shadcn/ui, rendered by Thymeleaf.'}},
+        {tag: 'meta', attrs: {property: 'og:image:alt', content: 'Shadleaf: UI components for Spring Boot and Thymeleaf. Themeable, rendered by Thymeleaf.'}},
         {tag: 'meta', attrs: {name: 'twitter:image', content: socialImage}},
       ],
       components: {SiteTitle: './src/components/SiteTitle.astro'},

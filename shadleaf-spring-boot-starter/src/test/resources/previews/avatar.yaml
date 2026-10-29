@@ -8,14 +8,14 @@ scenarios:
   - id: default
     title: Avatar
     source: |-
-      <sl:avatar label="shadcn">
+      <sl:avatar label="Alex Morgan">
         <sl:avatar-image th:src="@{/users/{id}/photo(id=${user.id})}"/>
-        <sl:avatar-fallback>CN</sl:avatar-fallback>
+        <sl:avatar-fallback>AM</sl:avatar-fallback>
       </sl:avatar>
     renderSource: |-
-      <sl:avatar label="shadcn">
+      <sl:avatar label="Alex Morgan">
         <sl:avatar-image th:src="${photos.shadcn}"/>
-        <sl:avatar-fallback>CN</sl:avatar-fallback>
+        <sl:avatar-fallback>AM</sl:avatar-fallback>
       </sl:avatar>
 
   - id: fallback

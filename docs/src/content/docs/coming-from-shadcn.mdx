@@ -130,7 +130,9 @@ their trigger with CSS anchor positioning, so there are no portals and no `open`
   `hx-*`, `type="submit"`, `commandfor`) and the menu closes.
 - Checkbox and radio items show the state the server renders (`checked`); there is no `onCheckedChange` or `value`.
   Choosing one sends a request, and the page that comes back shows the new state.
-- No sub-menus, no `DropdownMenuPortal`, no `modal`. See [Dropdown menu](../components/dropdown-menu/#left-out).
+- No sub-menus, no `DropdownMenuPortal` (the top layer does what the portal is for), no `modal`, and no `loop`: the
+  arrow keys stop at the first and the last item, Radix's default. See
+  [Dropdown menu](../components/dropdown-menu/#left-out).
 - No `PopoverAnchor`. A form in a popover can close it with an `HX-Trigger: sl-popover-close` response header. See
   [Popover](../components/popover/).
 - There is no `TooltipTrigger` and no `TooltipProvider`: the first element inside `<sl:tooltip>` is the trigger, and
@@ -159,7 +161,9 @@ select.
 - A group's heading is `<sl:select-group label>`; there is no `SelectLabel` part.
 - No scroll buttons, no `position="item-aligned"`, `side` or `align`: the list opens below the select, or above it
   when there is no room.
-- No `value`/`onValueChange`: `th:field` renders the value, and the select fires `change`.
+- No `value`/`onValueChange` or `open`/`onOpenChange`: `th:field` renders the value, and the select fires `change`.
+- No `multiple`, which shadcn's Select does not have either: use `<sl:combobox multiple>`, `<sl:native-select multiple>`
+  or checkboxes. No `textValue` on an item: typeahead reads the item's text.
 - The keyboard is the browser's where it draws the list: typing a letter on the closed select chooses the matching
   item at once, as on any select, where Radix opens the list. See [Select](../components/select/#left-out).
 
@@ -190,8 +194,11 @@ the chips and the list box in its place; without Alpine it is a select drawn lik
   `itemToStringValue`. A group's heading is `<sl:combobox-group label>`; there is no `ComboboxLabel` or
   `ComboboxCollection`.
 - An addition: `search-url` loads the options from the server as you type, as an HTML fragment of items.
-- No popup layout (a button trigger with the input in the list), no input addons, no `showRemove` on a chip, no
-  `side`/`align`. See [Combobox](../components/combobox/#left-out).
+- No popup layout (a button trigger with the input in the list), no input addons, no `showRemove` on a chip (a chip can
+  always be removed), no `side`/`align`. No free text either, which Base UI's Combobox does not allow (its Autocomplete
+  does).
+- No `value`/`onValueChange` or `open`/`onOpenChange`: `th:field` renders the value, and the select fires `change`.
+  See [Combobox](../components/combobox/#left-out).
 
 ### Toggle and toggle group are checkboxes and radio buttons
 
@@ -309,6 +316,11 @@ no JavaScript. That changes a few things:
 - The trigger must be the first child of its item or collapsible; a collapsible's trigger cannot sit after its
   content. `<CollapsibleTrigger asChild><Button …>` is `<sl:collapsible-trigger variant="…" size="…">`.
 - A closed disabled item renders no content, as Radix renders no closed content at all.
+- No `dir` or `orientation`: the accordion follows the page's direction, and is vertical. No `role="region"` on the
+  content, which Radix gives every panel: the ARIA pattern advises against it where many panels can be open at once.
+- No `open`/`onOpenChange` on a collapsible: `open` renders it open, and the browser's `toggle` event reports changes.
+- A collapsible's trigger in shadcn's examples turns its icon with `group-data-[state=open]:rotate-90`; without
+  utility classes, write `.collapsible[open] > .collapsible-trigger svg { rotate: 90deg; }` in your CSS.
 
 See [Accordion](../components/accordion/) and [Collapsible](../components/collapsible/).
 
@@ -327,7 +339,9 @@ works without JavaScript:
 ```
 
 `activationMode` is `activation-mode`; there is no `onValueChange` (an `sl-tabs-show` event fires on the panel that is
-shown). See [Tabs](../components/tabs/).
+shown). There is no `dir` (the arrow keys follow the page's direction), no `loop` (the arrow keys always wrap around,
+Radix's default) and no `forceMount` (every panel is always in the page). A panel takes the focus, as in Radix. See
+[Tabs](../components/tabs/).
 
 ### Toast: the server sends the toasts
 
@@ -344,9 +358,11 @@ same detail as Sonner's options: `{title, description, variant, duration}`. `toa
 shadcn's dark mode is next-themes: a `ThemeProvider` around the app and a `ModeToggle` you copy from the docs. Shadleaf
 has the theme script in the layout's `<head>` (the provider's part: the `dark` class before the first paint) and
 `<sl:theme-toggle/>`, the same menu with Light, Dark and System, its items checked by the current choice
-(`menuitemradio`s; shadcn's are plain items). `as="button"` is the one-button switch of shadcn's own site. The choice
-is stored under `localStorage['shadleaf-theme']` (next-themes uses `theme`), and System removes it. There is no
-`useTheme()`: the `sl-theme-change` event tells a script about a change. See [Theme toggle](../components/theme-toggle/).
+(`menuitemradio`s; shadcn's are plain items). `as="button"` is the one-button switch of shadcn's own site. The choice is
+stored under `localStorage['shadleaf-theme']` (next-themes uses `theme`), and System removes it. There is no
+`useTheme()`: the `sl-theme-change` event tells a script about a change. shadcn's own site toggles the theme with the D
+key; Shadleaf has no shortcut, but your application can add one that clicks the toggle. See
+[Theme toggle](../components/theme-toggle/).
 
 ### Table: plain rows and cells, sorted on the server
 
@@ -375,7 +391,8 @@ request's other parameters, first and last page, ellipses, Previous and Next dis
 `aria-disabled`). `isActive` is `active`. The ellipsis is not `aria-hidden`: it reads "More pages", where shadcn's
 hidden screen-reader text is never read. The labels are messages (`sl.pagination.*`) rather than props such as
 Previous's `text`. The data table's footer pieces are components: `sl:pagination-summary` ("11–20 of 270") and
-`sl:pagination-size` (a menu of links rather than a select). See [Pagination](../components/pagination/).
+`sl:pagination-size` (a menu of links rather than a select). There are no first and last page buttons, which shadcn's
+dashboard has: the first and the last page are always among the numbers. See [Pagination](../components/pagination/).
 
 ### Chart: parts with props instead of Recharts JSX
 
@@ -402,6 +419,7 @@ series, `sl:chart-bar`, `sl:chart-line` and `sl:chart-area`. Their props are Rec
   focus for its arrow keys, so each skin draws one.
 - **Recharts 3.10 on Preact**, not React, and not the 3.8 shadcn pins: the script is smaller, and 3.10 fixes a line
   drawn only partway with reduced motion.
+- **A fixed height** is `aspect-ratio: auto` and a height in your CSS, shadcn's `aspect-auto h-[250px]`.
 - **Not there yet:** pie, radar and radial charts, horizontal bars, gradients, icons in the tooltip and legend, and
   custom tooltip or legend content.
 
@@ -452,6 +470,23 @@ switcher's shortcuts (⌘1, ⌘2) are left out of the [layout](../layouts/collap
 nothing handles the keys. A menu action is
 24 px, shadcn's 20 px being too small a target once it shows (WCAG 2.2). See
 [Sidebar](../components/sidebar/#menus-in-the-sidebar).
+
+Not there yet: `SidebarInput` (use `<sl:input>`), `SidebarMenuSkeleton` (use `<sl:skeleton>`), `SidebarRail`,
+sidebar-06's sub-menus that open as dropdown menus while collapsed to icons, and sidebar-11's file tree of collapsible
+items nested to any depth. See [Sidebar](../components/sidebar/#left-out).
+
+The [layouts](../layouts/) follow shadcn's sidebar blocks:
+
+| Layout | shadcn/ui block |
+| --- | --- |
+| [Grouped by section](../layouts/grouped-by-section/) | [sidebar-01](https://ui.shadcn.com/blocks/sidebar#sidebar-01) |
+| [Collapsible sections](../layouts/collapsible-sections/) | [sidebar-02](https://ui.shadcn.com/blocks/sidebar#sidebar-02) |
+| [Sub-menus](../layouts/sub-menus/) | [sidebar-03](https://ui.shadcn.com/blocks/sidebar#sidebar-03) |
+| [Floating, with sub-menus](../layouts/floating-sub-menus/) | [sidebar-04](https://ui.shadcn.com/blocks/sidebar#sidebar-04) |
+| [Collapsible sub-menus](../layouts/collapsible-sub-menus/) | [sidebar-05](https://ui.shadcn.com/blocks/sidebar#sidebar-05), with the turning chevron instead of plus and minus |
+| [Collapses to icons](../layouts/collapses-to-icons/) | [sidebar-07](https://ui.shadcn.com/blocks/sidebar#sidebar-07) |
+| [Inset with secondary navigation](../layouts/inset-secondary-navigation/) | [sidebar-08](https://ui.shadcn.com/blocks/sidebar#sidebar-08) |
+| [On the end](../layouts/sidebar-end/) | [sidebar-14](https://ui.shadcn.com/blocks/sidebar#sidebar-14) |
 
 ### Site header and the header placement
 

@@ -8,7 +8,7 @@ description: >-
   strip of icons with tooltips; on a phone it opens it as a panel.
 request: /playground/history
 user:
-  name: shadcn
+  name: Alex Morgan
   email: m@example.com
   photo: shadcn
 htmx: true

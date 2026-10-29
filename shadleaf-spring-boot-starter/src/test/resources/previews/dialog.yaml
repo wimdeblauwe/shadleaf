@@ -42,7 +42,7 @@ scenarios:
           <sl:dialog-title>Share link</sl:dialog-title>
           <sl:dialog-description>Anyone who has this link will be able to view this.</sl:dialog-description>
         </sl:dialog-header>
-        <sl:input aria-label="Link" value="https://ui.shadcn.com/docs/installation" readonly/>
+        <sl:input aria-label="Link" value="https://shadleaf.dev/current/getting-started/" readonly/>
         <sl:dialog-footer show-close-button/>
       </sl:dialog>
 

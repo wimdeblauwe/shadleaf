@@ -183,7 +183,7 @@ const social = `<style>
 ${logo(colors.dark).replace(/<svg /, '<svg class="logo" ')}
 <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">${markPaths(colors.dark)}</svg>
 <h1>UI components for Spring Boot and Thymeleaf</h1>
-<p>shadcn/ui, rendered by Thymeleaf.</p>
+<p>Themeable, rendered by Thymeleaf.</p>
 <footer><span>A Spring Boot starter</span><span>shadleaf.dev</span></footer>`;
 
 const browser = await chromium.launch();

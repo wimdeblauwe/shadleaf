@@ -5,12 +5,13 @@
   </picture>
 </h1>
 
-shadcn/ui for Thymeleaf, packaged as a Spring Boot starter.
+UI components for Thymeleaf, packaged as a Spring Boot starter.
 
 > **Status:** pre-release, under active development. Before 1.0, the rendered markup can change between versions.
 
-Shadleaf brings the [shadcn/ui](https://ui.shadcn.com) components to server-rendered Spring Boot applications. It is
-a Thymeleaf dialect with a library of components, each one an ordinary Thymeleaf template, that you use as custom tags:
+Shadleaf brings accessible, themeable UI components to server-rendered Spring Boot applications. Inspired by
+[shadcn/ui](https://ui.shadcn.com), it is a Thymeleaf dialect with a library of components, each one an ordinary
+Thymeleaf template, that you use as custom tags:
 
 ```html
 <sl:button variant="destructive" hx-delete="/orders/42">
@@ -21,8 +22,9 @@ a Thymeleaf dialect with a library of components, each one an ordinary Thymeleaf
 
 - **Fits your build.** The jar ships compiled CSS and JavaScript and serves them under `/shadleaf/**`, so a plain
   Maven build is enough. If you already compile Tailwind yourself, an embedded bundle fits into your own build.
-- **shadcn's design tokens, verbatim.** `--primary`, `--radius`, `--ring`: a shadcn theme drops in unchanged, with
-  light and dark mode.
+- **Themed with shadcn's CSS variables.** `--primary`, `--radius`, `--ring`: redefine them and every component
+  follows, in light and dark mode. A theme from a shadcn theme builder such as [tweakcn](https://tweakcn.com) drops in
+  unchanged. Nine skins change the look without touching your templates.
 - **Checked props.** Each component declares its props, so `variant="destructve"` or an icon-only button without an
   accessible name fails with a clear message instead of reaching the browser.
 - **Adjustable step by step**, from a prop to overriding the component's template in your own application.

@@ -20,7 +20,7 @@ scenarios:
 
   - id: card
     title: In a card
-    description: As shadcn's file upload card.
+    description: The file upload as the content of a card.
     source: |-
       <sl:card>
         <sl:card-header>

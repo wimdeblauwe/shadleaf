@@ -10,8 +10,7 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
 ## A file input with a drop zone
 
-shadcn/ui has no file upload component, so this one is Shadleaf's own. It looks like shadcn's file upload card: an
-outlined [empty state](../empty/) with an icon, a title, a description and a Browse button.
+A file upload looks like an outlined [empty state](../empty/) with an icon, a title, a description and a Browse button.
 
 Underneath is a plain `<input type="file">`, visually hidden. It holds the files and the form submits it, so it binds
 with `th:field` as any other input does, to a `MultipartFile`, or with `multiple` to a `List<MultipartFile>`. The form

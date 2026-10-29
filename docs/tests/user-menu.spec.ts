@@ -64,7 +64,7 @@ test.describe('sidebar, desktop', () => {
   test('the keyboard opens the menu beside the sidebar, the user above the items and Sign out', async ({page}) => {
     const {messages} = await open(page, SIDEBAR);
     await expect(trigger(page)).toHaveRole('button');
-    await expect(trigger(page)).toHaveAccessibleName('shadcn m@example.com');
+    await expect(trigger(page)).toHaveAccessibleName('Alex Morgan m@example.com');
     await expect(trigger(page)).toHaveAttribute('aria-expanded', 'false');
     // The picture loaded: the image shows, the initials do not.
     await expect(trigger(page).locator('.avatar-image')).toHaveAttribute('data-status', 'loaded');
@@ -75,8 +75,8 @@ test.describe('sidebar, desktop', () => {
     await expect(menu(page)).toBeVisible();
     await expect(trigger(page)).toHaveAttribute('aria-expanded', 'true');
     await expect.poll(() => focusedText(page)).toBe('Account');
-    await expect(menu(page)).toHaveAccessibleName('shadcn m@example.com');
-    await expect(menu(page).locator('.user-menu-label')).toHaveText(/shadcn\s*m@example\.com/);
+    await expect(menu(page)).toHaveAccessibleName('Alex Morgan m@example.com');
+    await expect(menu(page).locator('.user-menu-label')).toHaveText(/Alex Morgan\s*m@example\.com/);
     await expect(menu(page).getByRole('menuitem')).toHaveText(['Account', 'Notifications', 'Sign out']);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('ArrowDown');
@@ -135,11 +135,11 @@ test.describe('sidebar, desktop', () => {
     expect(button.width).toBe(32);
     // The picture fills the square; the name and email are visually hidden, and still name the button.
     expect(await rectOf(trigger(page).locator('.avatar'))).toMatchObject({width: 32});
-    await expect(trigger(page)).toHaveAccessibleName('shadcn m@example.com');
+    await expect(trigger(page)).toHaveAccessibleName('Alex Morgan m@example.com');
 
     await trigger(page).hover();
     await expect(tooltip).toBeVisible();
-    await expect(tooltip).toHaveText('shadcn');
+    await expect(tooltip).toHaveText('Alex Morgan');
     await trigger(page).click();
     await expect(menu(page)).toBeVisible();
     await expect(tooltip).toBeHidden();
@@ -224,7 +224,7 @@ test.describe('header', () => {
     test(`${viewport.width} px: the picture button opens the menu below it, lined up with its end`, async ({page}) => {
       await page.setViewportSize(viewport);
       const {messages} = await open(page, HEADER);
-      await expect(trigger(page, id)).toHaveAccessibleName('Account: shadcn');
+      await expect(trigger(page, id)).toHaveAccessibleName('Account: Alex Morgan');
       await expect(trigger(page, id).locator('.avatar-image')).toHaveAttribute('data-status', 'loaded');
       const button = await rectOf(trigger(page, id));
       // Round, the picture filling it.

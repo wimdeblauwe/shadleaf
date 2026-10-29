@@ -1,6 +1,6 @@
 ---
 title: Combobox
-description: shadcn/ui's Combobox on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+description: A searchable select on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
@@ -201,21 +201,12 @@ system's colours replace the page's (Windows High Contrast). A disabled combobox
 
 ## Left out
 
-These shadcn/Base UI parts and props have no counterpart, on purpose:
+These are left out on purpose:
 
-- **`ComboboxInput`, `ComboboxContent`, `ComboboxList`, `ComboboxChips`, `ComboboxChip`, `ComboboxChipsInput`,
-  `ComboboxValue` and `ComboboxTrigger`.** `<sl:combobox>` draws them all: `showClear`, `showTrigger` and
-  `autoHighlight` are its `show-clear`, `show-trigger` and `auto-highlight`.
-- **`items` and the render function.** Items are written as `<sl:combobox-item>`s (with `th:each`): `value` and their
-  text take the place of `itemToStringValue`.
-- **`ComboboxEmpty`** is the `empty` attribute; **`ComboboxLabel`** is a group's `label`, and there is no
-  `ComboboxCollection`.
 - **The popup layout**, with a button as the trigger and the input inside the list, and **addons** in the input.
-- **Free text**, which Base UI's Combobox does not allow either (its Autocomplete does).
-- **Removing chips is always possible** (`showRemove`), and a chip shows the item's text.
-- **`side`, `align`**: the list opens below the input, or above it when there is no room.
-- **State in the browser** (`value`/`defaultValue`/`onValueChange`, `open`/`onOpenChange`): the server renders the
-  value with `th:field`, and the select's `change` event reports a new one.
+- **Free text**: the value is always one of the items.
+- **Chips that cannot be removed**: a chip always has its remove button, and shows the item's text.
+- **Placing the list elsewhere**: the list opens below the input, or above it when there is no room.
 
 ## Without JavaScript
 

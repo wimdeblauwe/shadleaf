@@ -51,7 +51,7 @@
       "type" : "enum",
       "defaultValue" : "3",
       "values" : [ "1", "2", "3", "4", "5", "6" ],
-      "description" : "Heading level of the text (`role=\"heading\"` and `aria-level`), as shadcn/ui's trigger sits in an `h3`. Pick the level that fits the page's outline."
+      "description" : "Heading level of the text (`role=\"heading\"` and `aria-level`). Pick the level that fits the page's outline."
     } ]
   }, {
     "name" : "alert",
@@ -164,7 +164,7 @@
       "name" : "level",
       "type" : "enum",
       "values" : [ "1", "2", "3", "4", "5", "6" ],
-      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text, as in shadcn/ui."
+      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text."
     } ]
   }, {
     "name" : "attachment",
@@ -194,7 +194,7 @@
       "type" : "boolean",
       "defaultValue" : "false",
       "values" : [ ],
-      "description" : "Fill the width of the container, for a list of attachments (shadcn's `w-full` class). Without it the attachment is as wide as its content."
+      "description" : "Fill the width of the container, for a list of attachments. Without it the attachment is as wide as its content."
     } ]
   }, {
     "name" : "attachment-action",
@@ -555,7 +555,7 @@
   }, {
     "name" : "chart",
     "tag" : "sl:chart",
-    "description" : "A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.",
+    "description" : "A chart drawn by Recharts in the browser: bars, lines and areas over a category or time axis, with a grid, axes, a tooltip and a legend. Pass the rows in `th:data` and put the parts inside, in the order Recharts draws them: `sl:chart-grid`, `sl:chart-x-axis`, `sl:chart-y-axis`, `sl:chart-tooltip`, `sl:chart-legend`, then one `sl:chart-bar`, `sl:chart-line` or `sl:chart-area` per series (only bars give a bar chart, a mix a composed chart). Needs JavaScript: without it the chart's skeleton stays. The chart is 16:9; for a fixed height, give it one in your CSS with `aspect-ratio: auto`. Every attribute that is not a prop passes through to the element.",
     "declared" : true,
     "props" : [ {
       "name" : "data",
@@ -573,7 +573,7 @@
       "name" : "margin",
       "type" : "number",
       "values" : [ ],
-      "description" : "Space in pixels left and right of the plot, so the first and last tick labels fit (shadcn's line and area charts use 12)."
+      "description" : "Space in pixels left and right of the plot, so the first and last tick labels fit (12 suits a line or area chart)."
     }, {
       "name" : "time-zone",
       "type" : "string",
@@ -812,7 +812,7 @@
   }, {
     "name" : "chart-x-axis",
     "tag" : "sl:chart-x-axis",
-    "description" : "The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines (as shadcn's). Under `dir=\"rtl\"` it runs from right to left. Draws no element of its own on the page: the chart reads it.",
+    "description" : "The category or time axis of a `sl:chart`, along the bottom: its ticks are the values of `key` in the rows, without tick or axis lines. Under `dir=\"rtl\"` it runs from right to left. Draws no element of its own on the page: the chart reads it.",
     "declared" : true,
     "props" : [ {
       "name" : "key",
@@ -846,7 +846,7 @@
   }, {
     "name" : "chart-y-axis",
     "tag" : "sl:chart-y-axis",
-    "description" : "The value axis of a `sl:chart`, at the start side (the left, or the right under `dir=\"rtl\"`), without tick or axis lines. shadcn's charts often leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.",
+    "description" : "The value axis of a `sl:chart`, at the start side (the left, or the right under `dir=\"rtl\"`), without tick or axis lines. A chart can leave it out and show the values in the tooltip. Draws no element of its own on the page: the chart reads it.",
     "declared" : true,
     "props" : [ {
       "name" : "format",
@@ -930,7 +930,7 @@
   }, {
     "name" : "combobox",
     "tag" : "sl:combobox",
-    "description" : "A text input that filters a list of options as you type: shadcn/ui's combobox. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+    "description" : "A text input that filters a list of options as you type. Like `sl:select`, it is a real `select` with `sl:combobox-item`, `sl:combobox-group` and `sl:combobox-separator` as content, so `th:field` binds it (a collection with `multiple`) and the form submits it. Once Alpine runs, `slCombobox` hides the select and puts an input and a list box in its place; without it, the select is drawn like `sl:native-select`. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
     "declared" : true,
     "props" : [ {
       "name" : "placeholder",
@@ -981,7 +981,7 @@
       "name" : "label",
       "type" : "string",
       "values" : [ ],
-      "description" : "The group's heading, shadcn/ui's `ComboboxLabel`.",
+      "description" : "The group's heading.",
       "required" : true
     } ]
   }, {
@@ -999,7 +999,7 @@
   }, {
     "name" : "date-picker",
     "tag" : "sl:date-picker",
-    "description" : "A button showing the chosen date that opens a `sl:calendar` in a popover: shadcn/ui's date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).",
+    "description" : "A button showing the chosen date that opens a `sl:calendar` in a popover. Its value lives in the calendar's date inputs, so `th:field` binds it and the form submits ISO dates. Every attribute that is not a prop goes to the `sl:calendar` inside, except `class`, which stays on the date picker: the calendar's props (`caption-layout`, `number-of-months`, `disabled-dates`, ...) and, for a single date, the attributes of its input (`th:field`, `name`, `required`, `min`, `max`). In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`, and the button is named by the field's label. For a range, give it two `sl:input type=\"date\"`s as content, the start and the end, and an `aria-label`. A pick closes the popover; for a range the second pick does. Needs JavaScript (`slDatePicker`).",
     "declared" : true,
     "props" : [ {
       "name" : "placeholder",
@@ -1267,7 +1267,7 @@
   }, {
     "name" : "dropdown-menu-trigger",
     "tag" : "sl:dropdown-menu-trigger",
-    "description" : "What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part (shadcn's `&lt;DropdownMenuTrigger asChild&gt;`). It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.",
+    "description" : "What opens and closes a `sl:dropdown-menu`: by default a `sl:button`, or with `as` a sidebar part. It renders that part with `popovertarget` set to the menu, which it names. Arrow down opens the menu on its first item, arrow up on its last. Its `icon-start` and `icon-end` slots go to the part's; any other attribute passes through to it.",
     "declared" : true,
     "props" : [ {
       "name" : "as",
@@ -1309,7 +1309,7 @@
       "type" : "boolean",
       "defaultValue" : "false",
       "values" : [ ],
-      "description" : "A dashed line around the empty state, to mark out the area (shadcn's `border border-dashed` classes)."
+      "description" : "A dashed line around the empty state, to mark out the area."
     } ]
   }, {
     "name" : "empty-content",
@@ -1420,7 +1420,7 @@
   }, {
     "name" : "file-upload",
     "tag" : "sl:file-upload",
-    "description" : "A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has none. A visually hidden `&lt;input type=\"file\"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype=\"multipart/form-data\"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.",
+    "description" : "A drop zone to pick files with, and the list of the files picked. A visually hidden `&lt;input type=\"file\"&gt;` holds the files and is submitted with the form, so put `th:field` on the component (a `MultipartFile`, or with `multiple` a `List&lt;MultipartFile&gt;`) and give the form `enctype=\"multipart/form-data\"`. Every attribute that is not a prop goes to the input (`th:field`, `name`, `id`, `required`, `disabled`, `aria-*`, `hx-*`); `class` is appended to the component. In a `sl:field`, the input takes the field's `th:field`, id and `aria-describedby`. With JavaScript, files can be dropped too, each picked file shows as an `sl:attachment` with a remove button, and a file that does not match `accept` or is larger than `max-size` shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the upload. With `previews`, a picked image shows a thumbnail. Without JavaScript, the Browse button still picks files. The server checks the files anyway.",
     "declared" : true,
     "props" : [ {
       "name" : "multiple",
@@ -1680,7 +1680,7 @@
   }, {
     "name" : "pagination",
     "tag" : "sl:pagination",
-    "description" : "Links to the other pages of a list, in a `nav`. Given the Spring Data `Page` it shows (`th:page=\"${people}\"`) and no content of its own, it renders them all: Previous, the first and the last page, the current page with `siblings` on each side, an ellipsis for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and has a stable id, so htmx can give the focus back after a swap. A `Slice`, which does not know how many pages there are, gets Previous and Next only. Without Spring Data, pass `current` and `total` instead. With content of its own it is the frame for a hand-written pagination of `sl:pagination-content`, `-item`, `-link`, `-previous`, `-next` and `-ellipsis`, as in shadcn/ui.",
+    "description" : "Links to the other pages of a list, in a `nav`. Given the Spring Data `Page` it shows (`th:page=\"${people}\"`) and no content of its own, it renders them all: Previous, the first and the last page, the current page with `siblings` on each side, an ellipsis for the pages left out, and Next. Every link keeps the request's other parameters (sort, size, filters) and has a stable id, so htmx can give the focus back after a swap. A `Slice`, which does not know how many pages there are, gets Previous and Next only. Without Spring Data, pass `current` and `total` instead. With content of its own it is the frame for a hand-written pagination of `sl:pagination-content`, `-item`, `-link`, `-previous`, `-next` and `-ellipsis`.",
     "declared" : true,
     "props" : [ {
       "name" : "page",
@@ -1778,7 +1778,7 @@
   }, {
     "name" : "pagination-size",
     "tag" : "sl:pagination-size",
-    "description" : "\"Rows per page\" and a menu of page sizes, as in shadcn/ui's data table. The sizes are `sl:dropdown-menu-radio-item` links: each asks for the same request with that size, every other parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the menu is a popover). Takes the Spring Data `Page` shown now, whose size is the checked one; a size the page has but `sizes` does not list is added. The label is the message `sl.pagination-size.label`. Attributes go to the wrapper.",
+    "description" : "\"Rows per page\" and a menu of page sizes. The sizes are `sl:dropdown-menu-radio-item` links: each asks for the same request with that size, every other parameter kept except the page number, so the list starts on the first page. It works without JavaScript (the menu is a popover). Takes the Spring Data `Page` shown now, whose size is the checked one; a size the page has but `sizes` does not list is added. The label is the message `sl.pagination-size.label`. Attributes go to the wrapper.",
     "declared" : true,
     "props" : [ {
       "name" : "page",
@@ -1870,7 +1870,7 @@
       "name" : "level",
       "type" : "enum",
       "values" : [ "1", "2", "3", "4", "5", "6" ],
-      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`); without it, plain text, as in shadcn/ui."
+      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`); without it, plain text."
     } ]
   }, {
     "name" : "popover-trigger",
@@ -1927,7 +1927,7 @@
   }, {
     "name" : "select",
     "tag" : "sl:select",
-    "description" : "A select drawn like shadcn/ui's: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
+    "description" : "A select whose list is drawn in the page's style: a real `select` with `sl:select-item`, `sl:select-group` and `sl:select-separator` as content, so `th:field`, submitting and the keyboard work as for any select. Where the browser supports the customizable select (`appearance: base-select`) it draws the list itself; elsewhere `slSelect` puts a list box in its place once Alpine runs. Every attribute that is not a prop passes through to the `select`, except `class`, which goes to the wrapper around it. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
     "declared" : true,
     "props" : [ {
       "name" : "size",
@@ -1950,7 +1950,7 @@
       "name" : "label",
       "type" : "string",
       "values" : [ ],
-      "description" : "The group's heading, shadcn/ui's `SelectLabel`.",
+      "description" : "The group's heading.",
       "required" : true
     } ]
   }, {
@@ -2494,7 +2494,7 @@
   }, {
     "name" : "table",
     "tag" : "sl:table",
-    "description" : "A table in shadcn/ui's look. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.",
+    "description" : "A styled table. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.",
     "declared" : true,
     "props" : [ {
       "name" : "page",
@@ -2562,7 +2562,7 @@
   }, {
     "name" : "table-selection-count",
     "tag" : "sl:table-selection-count",
-    "description" : "How many rows of a `sl:table` are selected: \"2 of 20 selected\" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer as shadcn/ui's data table does. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.",
+    "description" : "How many rows of a `sl:table` are selected: \"2 of 20 selected\" (the message `sl.table.selection.count`), kept up to date in the browser as rows are checked, as rows are replaced (an htmx swap) and after a form reset. Place it anywhere, e.g. at the start of the table's footer. It is not a live region: a click on `sl:table-select-all` announces the count, a row's checkbox announces its own state. Empty and hidden until Alpine starts.",
     "declared" : true,
     "props" : [ {
       "name" : "for",
@@ -2866,7 +2866,7 @@
       "type" : "enum",
       "defaultValue" : "sidebar",
       "values" : [ "sidebar", "header" ],
-      "description" : "`sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer` (shadcn's NavUser). `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named \"Account: \" and the user's name."
+      "description" : "`sidebar`: a `sl:sidebar-menu` with one large menu button, for the `sl:sidebar-footer`. `header`: a round button with the picture, for the `end` slot of `sl:site-header`, named \"Account: \" and the user's name."
     }, {
       "name" : "id",
       "type" : "string",

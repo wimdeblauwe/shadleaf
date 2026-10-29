@@ -51,7 +51,7 @@ scenarios:
 
   - id: hand-written
     title: Written by hand
-    description: The parts, as in shadcn/ui's example.
+    description: The parts, written out one by one.
     source: |-
       <sl:pagination aria-label="Invoice pages">
         <sl:pagination-content>
