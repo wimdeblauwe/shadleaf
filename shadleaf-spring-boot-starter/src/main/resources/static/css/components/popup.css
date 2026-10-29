@@ -13,7 +13,9 @@
   text-align: end, white-space: nowrap and a header's font weight. It starts from the defaults instead.
 
   Opening and closing fade through @starting-style, with display and overlay transitioned discretely so the closing
-  transition is seen; where motion is fine, the popup also zooms from 95% and slides in from its trigger.
+  transition is seen; where motion is fine, the popup also zooms from 95% and slides in from its trigger. Open, scale and
+  translate are none, not 1 and 0 0: any other value makes the popup the containing block of fixed descendants, such
+  as the icon a password manager places in a field.
 */
 @layer components {
   .dropdown-menu-content,
@@ -24,7 +26,7 @@
     @apply max-h-none max-w-none opacity-0
       transition-[opacity,scale,translate,overlay,display] transition-discrete
       open:opacity-100 starting:open:opacity-0
-      motion-safe:scale-95 motion-safe:open:scale-100 motion-safe:starting:open:scale-95
+      motion-safe:scale-95 motion-safe:open:scale-none motion-safe:starting:open:scale-95
       forced-colors:border forced-colors:border-solid
       text-start font-normal whitespace-normal;
     inset: auto;
@@ -135,7 +137,7 @@
     }
 
     :is(.dropdown-menu-content, .popover-content, .select-content, .combobox-content, .tooltip-content):popover-open {
-      translate: 0 0;
+      translate: none;
     }
 
     @starting-style {

@@ -5,14 +5,16 @@
   The <dialog> is the panel itself: showModal() puts it in the top layer, and the user agent's modal styles centre it
   (fixed, inset 0, margin auto). Its ::backdrop is the overlay. Opening and closing fade (and, where motion is fine,
   zoom) through @starting-style, with display and overlay transitioned discretely so the closing transition is seen.
-  Only an open dialog is a grid: any display would override the user agent's display: none on a closed one.
+  Only an open dialog is a grid: any display would override the user agent's display: none on a closed one. An open
+  dialog's scale is none, not 1: any other value makes it the containing block of fixed descendants, so the icon a
+  password manager places in a field (fixed, in viewport coordinates) lands outside the dialog and is clipped.
 */
 @layer components {
   .dialog {
     @apply m-auto w-full open:grid overflow-y-auto border-0 opacity-0
       transition-[opacity,scale,overlay,display] transition-discrete
       open:opacity-100 starting:open:opacity-0
-      motion-safe:scale-95 motion-safe:open:scale-100 motion-safe:starting:open:scale-95
+      motion-safe:scale-95 motion-safe:open:scale-none motion-safe:starting:open:scale-95
       backdrop:opacity-0 backdrop:transition-[opacity,overlay,display] backdrop:transition-discrete
       open:backdrop:opacity-100 starting:open:backdrop:opacity-0
       forced-colors:border forced-colors:border-solid;
