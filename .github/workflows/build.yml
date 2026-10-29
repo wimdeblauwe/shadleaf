@@ -99,7 +99,7 @@ jobs:
 
       # axe-core and the keyboard focus pass over the showcase page, in the default skin, light and dark
       - name: Check the showcase's accessibility
-        run: pnpm test -- --shard=${{ matrix.shard }}/3
+        run: pnpm test --shard=${{ matrix.shard }}/3
 
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
