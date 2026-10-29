@@ -7738,6 +7738,112 @@ scroll-driven animation (Chromium and Safari 26; Firefox where `animation-timeli
 missing the line is always drawn. In forced colours the line is a system-coloured border, and on paper nothing is
 pinned. The example is plain text, so what [Wide tables](#wide-tables) says about WebKit and the keyboard applies to it.
 
+#### Column groups
+
+A wide table often groups its columns under a header row, such as sales and payments per quarter. Write a `colgroup`
+per group, as plain HTML: the table draws a line on the start edge of every group after the first, through the header,
+body and footer rows, in the colour of its row lines. The start edge is the right one in a right-to-left page.
+
+```html
+<sl:table sticky-first-column>
+  <colgroup></colgroup>
+  <colgroup span="4"></colgroup>
+  <colgroup span="4"></colgroup>
+  <thead>
+    <tr>
+      <td></td>
+      <th scope="colgroup" colspan="4">Sales</th>
+      <th scope="colgroup" colspan="4">Payments</th>
+    </tr>
+    <tr><th>Person</th><th>Q1</th>...</tr>
+  </thead>
+  ...
+</sl:table>
+```
+
+**Example: Column groups.** A colgroup per group of columns draws a line at the start of every group after the first.
+
+```html
+<sl:table sticky-first-column>
+  <caption>Sales and payments per quarter.</caption>
+  <colgroup></colgroup>
+  <colgroup span="4"></colgroup>
+  <colgroup span="4"></colgroup>
+  <thead>
+    <tr>
+      <td></td>
+      <th scope="colgroup" colspan="4" data-align="center">Sales</th>
+      <th scope="colgroup" colspan="4" data-align="center">Payments</th>
+    </tr>
+    <tr>
+      <th>Person</th>
+      <th data-align="end">Q1</th>
+      <th data-align="end">Q2</th>
+      <th data-align="end">Q3</th>
+      <th data-align="end">Q4</th>
+      <th data-align="end">Q1</th>
+      <th data-align="end">Q2</th>
+      <th data-align="end">Q3</th>
+      <th data-align="end">Q4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ada Lovelace</td>
+      <td data-align="end">€3711</td>
+      <td data-align="end">€4033</td>
+      <td data-align="end">€4144</td>
+      <td data-align="end">€4603</td>
+      <td data-align="end">€3500</td>
+      <td data-align="end">€3900</td>
+      <td data-align="end">€4100</td>
+      <td data-align="end">€4400</td>
+    </tr>
+    <tr>
+      <td>Grace Hopper</td>
+      <td data-align="end">€2859</td>
+      <td data-align="end">€3177</td>
+      <td data-align="end">€3495</td>
+      <td data-align="end">€3813</td>
+      <td data-align="end">€2800</td>
+      <td data-align="end">€3100</td>
+      <td data-align="end">€3400</td>
+      <td data-align="end">€3800</td>
+    </tr>
+    <tr>
+      <td>Alan Turing</td>
+      <td data-align="end">€4437</td>
+      <td data-align="end">€4374</td>
+      <td data-align="end">€4311</td>
+      <td data-align="end">€4248</td>
+      <td data-align="end">€4400</td>
+      <td data-align="end">€4300</td>
+      <td data-align="end">€4300</td>
+      <td data-align="end">€4200</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>Total</td>
+      <td data-align="end">€11007</td>
+      <td data-align="end">€11584</td>
+      <td data-align="end">€11950</td>
+      <td data-align="end">€12664</td>
+      <td data-align="end">€10700</td>
+      <td data-align="end">€11300</td>
+      <td data-align="end">€11800</td>
+      <td data-align="end">€12400</td>
+    </tr>
+  </tfoot>
+</sl:table>
+```
+
+A `colgroup` without `span` covers one column, or the `col` elements inside it. `scope="colgroup"` on a group's
+header tells a screen reader which columns it heads. When the second group starts right after a pinned first column,
+the group line and the pinned column's edge are one line. The lines are borders, so they print and keep a system
+colour in forced colours. The example is plain text too, so what [Wide tables](#wide-tables) says about WebKit
+applies.
+
 ### Compact tables
 
 A page of many rows of figures, such as a ledger or a report meant for one sheet of paper, takes less room with
@@ -8257,7 +8363,7 @@ across pages (see above).
 
 #### sl:table
 
-Attributes of `<sl:table>`: A styled table. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.
+Attributes of `<sl:table>`: A styled table. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. A `colgroup` per group of columns draws a line between the groups. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.
 
 | Attribute | Values | Default | Description |
 | --- | --- | --- | --- |

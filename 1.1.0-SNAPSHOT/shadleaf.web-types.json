@@ -5517,7 +5517,7 @@
         } ]
       }, {
         "name" : "sl:table",
-        "description" : "A styled table. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.",
+        "description" : "A styled table. Write the plain table elements inside it (`caption`, `thead`, `tbody`, `tfoot`, `tr`, `th`, `td`), with `th:each` on a row; there is no component per row or cell. Use `sl:table-head` for a header cell that sorts or aligns, and `sl:table-empty` for the row that says nothing was found. A `colgroup` per group of columns draws a line between the groups. The table scrolls sideways inside its own container when it is wider than the page. Attributes go to the `table`.",
         "attributes" : [ {
           "name" : "qualifier",
           "description" : "The `@Qualifier` of the controller's `Pageable`, for a second table on the page: its sort links use `members_sort` instead of `sort`.",
