@@ -7,8 +7,6 @@
 
 UI components for Thymeleaf, packaged as a Spring Boot starter.
 
-> **Status:** pre-release, under active development. Before 1.0, the rendered markup can change between versions.
-
 Shadleaf brings accessible, themeable UI components to server-rendered Spring Boot applications. Inspired by
 [shadcn/ui](https://ui.shadcn.com), it is a Thymeleaf dialect with a library of components, each one an ordinary
 Thymeleaf template, that you use as custom tags:
