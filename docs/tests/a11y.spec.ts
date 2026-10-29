@@ -65,8 +65,6 @@ for (const {skin, theme} of combinations) {
       for (const {name, scenarios} of showcaseComponents(showcase)) {
         test(`text keeps its contrast on hover: ${skin}, ${theme}, ${width.name}, ${showcase.name}, ${name}`, async ({page}) => {
           await page.setViewportSize(width.viewport);
-          // The calendar's day buttons take some 20 s on a laptop, twice that on a CI runner.
-          test.slow();
           await openShowcase(page, skin, theme, showcase.path);
           await keepScenarios(page, scenarios);
           // evaluate, not addScriptTag: a page's Content-Security-Policy does not apply to it
@@ -93,11 +91,23 @@ for (const {skin, theme} of combinations) {
               if (!element.checkVisibility()) {
                 return 'hidden';
               }
+              // A calendar's days look alike but for their state (today, selected, in a range, outside the month,
+              // unavailable): one day per state and scenario, rather than some 40 per month.
+              if (element.matches('.calendar-day-button')) {
+                const seen = ((window as unknown as {slHoveredDays?: Set<string>}).slHoveredDays ??= new Set());
+                const day = element as HTMLButtonElement;
+                const look = [element.closest('[data-scenario]')?.getAttribute('data-scenario'), day.tabIndex,
+                  ...Object.keys(day.dataset).filter(key => key !== 'date').sort()].join(' ');
+                if (seen.has(look)) {
+                  return 'seen';
+                }
+                seen.add(look);
+              }
               element.setAttribute('data-hovered', '');
               // A skip link is only drawn while it has the focus.
               return element.matches('.skip-link') ? 'skip-link' : 'shown';
             });
-            if (state === 'hidden') {
+            if (state === 'hidden' || state === 'seen') {
               continue;
             }
             if (state === 'skip-link') {

@@ -14,8 +14,9 @@
   </sl:props>
 </head>
 <body>
-<!--/* The link is a ghost button (its classes set the look), as the button in shadcn/ui's data table column header.
-  Its id lets htmx give the focus back to the new link after it swapped the table. */-->
+<!--/* The link is a ghost button (its classes set the look), as the button in shadcn/ui's data table column header,
+  an xs one in a compact table (slTableSize, from sl:table). Its id lets htmx give the focus back to the new link
+  after it swapped the table. */-->
 <th:block th:fragment="table-head">
   <th th:if="${props.sort == null}"
       class="table-head"
@@ -27,7 +28,7 @@
       th:attr="data-align=${props.unlessDefault('align')}, aria-sort=${slSort.ariaSort}"
       sl:attrs><a class="button table-sort"
       data-variant="ghost"
-      data-size="sm"
+      th:attr="data-size=${slTableSize == 'sm' ? 'xs' : 'sm'}"
       th:href="${slSort.href}"
       th:id="${slSort.id}"><sl:slot/><sl:icon th:name="${slSort.icon}"/></a></th>
 </th:block>

@@ -1,7 +1,7 @@
 import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 import {openFixture} from './fixture';
 
 // sl:date-picker: a sl:button opening a sl:popover-content with a sl:calendar, tied together by slDatePicker. On the
@@ -79,6 +79,7 @@ for (const {skin, theme} of combinations) {
       async ({page}) => {
         await page.clock.setFixedTime(TODAY);
         await openShowcase(page, skin, theme);
+        await keepScenariosWith(page, '.date-picker-content');
         await page.waitForFunction(() => 'Alpine' in window);
         const ids = await page.locator('.showcase .date-picker-content').evaluateAll(popups => popups.map(p => p.id));
         expect(ids.length, 'the showcase has date pickers').toBeGreaterThan(0);

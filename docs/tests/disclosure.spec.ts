@@ -1,6 +1,6 @@
 import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 import {openFixture} from './fixture';
 
 // sl:accordion and sl:collapsible, details elements with no script. On the showcase, in every skin and theme: every
@@ -34,6 +34,7 @@ for (const {skin, theme} of combinations) {
   test(`every accordion and collapsible works with the keyboard and passes axe open: ${skin}, ${theme}`,
       async ({page}) => {
         await openShowcase(page, skin, theme);
+        await keepScenariosWith(page, ':is(.accordion-item, .collapsible)');
         const items = page.locator('.showcase :is(.accordion-item, .collapsible)');
         const count = await items.count();
         expect(count, 'the showcase has accordions and collapsibles').toBeGreaterThan(0);

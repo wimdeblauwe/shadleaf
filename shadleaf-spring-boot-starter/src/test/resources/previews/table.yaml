@@ -132,6 +132,80 @@ scenarios:
         </tfoot>
       </sl:table>
 
+  - id: compact
+    title: Compact
+    description: size="sm", for many rows of figures or a table meant for paper.
+    request: /ledger?sort=date,asc
+    source: |-
+      <sl:table size="sm">
+        <caption>Cash book, October.</caption>
+        <thead>
+          <tr>
+            <sl:table-head sort="date">Date</sl:table-head>
+            <th>Description</th>
+            <sl:table-head sort="amount" align="end">In</sl:table-head>
+            <th data-align="end">Out</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>02/10</td>
+            <td>Opening balance</td>
+            <td data-align="end"></td>
+            <td data-align="end"></td>
+          </tr>
+          <tr>
+            <td>03/10</td>
+            <td>Invoice INV041</td>
+            <td data-align="end">€1250.00</td>
+            <td data-align="end"></td>
+          </tr>
+          <tr>
+            <td>04/10</td>
+            <td>Office rent</td>
+            <td data-align="end"></td>
+            <td data-align="end">€950.00</td>
+          </tr>
+          <tr>
+            <td>07/10</td>
+            <td>Invoice INV042</td>
+            <td data-align="end">€480.00</td>
+            <td data-align="end"></td>
+          </tr>
+          <tr>
+            <td>09/10</td>
+            <td>Software licences</td>
+            <td data-align="end"></td>
+            <td data-align="end">€120.00</td>
+          </tr>
+          <tr>
+            <td>11/10</td>
+            <td>Invoice INV043</td>
+            <td data-align="end">€2100.00</td>
+            <td data-align="end"></td>
+          </tr>
+          <tr>
+            <td>14/10</td>
+            <td>Travel</td>
+            <td data-align="end"></td>
+            <td data-align="end">€86.40</td>
+          </tr>
+          <tr>
+            <td>16/10</td>
+            <td>Invoice INV044</td>
+            <td data-align="end">€640.00</td>
+            <td data-align="end"></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2">Total</td>
+            <td data-align="end">€4470.00</td>
+            <td data-align="end">€1156.40</td>
+          </tr>
+        </tfoot>
+      </sl:table>
+
   - id: sort
     title: Sorted on the server
     description: Sorted by name, in a request for /people?q=a&sort=name,asc. Each link keeps q.

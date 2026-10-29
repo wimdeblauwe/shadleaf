@@ -51,6 +51,29 @@ class TableComponentTest {
   }
 
   @Test
+  void aCompactTableIsMarkedAndItsSortLinksAreExtraSmall() {
+    Rendered rendered = TESTER.render("""
+        <sl:table size="sm"><thead><tr>
+          <sl:table-head sort="name">Name</sl:table-head>
+        </tr></thead></sl:table>""");
+
+    assertThat(rendered).hasNoLeakedMarkup();
+    assertThat(rendered).element("div > table").hasAttribute("data-size", "sm").hasNoAttribute("size");
+    assertThat(rendered).element("th > a.table-sort").hasAttribute("data-size", "xs");
+  }
+
+  @Test
+  void aDefaultTableHasNoSizeAndSmallSortLinks() {
+    Rendered rendered = TESTER.render("""
+        <sl:table size="default"><thead><tr>
+          <sl:table-head sort="name">Name</sl:table-head>
+        </tr></thead></sl:table>""");
+
+    assertThat(rendered).element("div > table").hasNoAttribute("data-size");
+    assertThat(rendered).element("th > a.table-sort").hasAttribute("data-size", "sm");
+  }
+
+  @Test
   void theTableIsAPlainTableInAScrollContainer() {
     Rendered rendered = TESTER.render("""
         <sl:table id="people" class="extra">

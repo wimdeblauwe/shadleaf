@@ -1,7 +1,7 @@
 import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 import {openFixture} from './fixture';
 
 // sl:chart: Recharts on Preact in <sl-chart>, loaded on demand by the loader every entry holds. On the showcase, in
@@ -70,6 +70,7 @@ function ticks(chart: Locator, axis: 'x' | 'y') {
 for (const {skin, theme} of combinations) {
   test(`every chart draws, shows focus and passes axe with its tooltip: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
+    await keepScenariosWith(page, 'sl-chart');
     expect(chartScenarios.length, 'the showcase has charts').toBeGreaterThan(0);
     const failures: string[] = [];
     for (const scenario of chartScenarios) {

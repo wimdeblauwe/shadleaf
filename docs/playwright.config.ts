@@ -7,7 +7,8 @@ const full = !!process.env.SHADLEAF_TEST_FULL;
 export default defineConfig({
   testDir: 'tests',
   forbidOnly: !!process.env.CI,
-  reporter: process.env.CI ? [['list'], ['html', {open: 'never'}]] : 'list',
+  // CI runs in shards; its docs-report job merges their blob reports into one HTML report.
+  reporter: process.env.CI ? [['list'], ['blob']] : 'list',
   use: {
     baseURL: 'http://localhost:4399',
     // Keeps the skins' motion-safe transitions from leaving a computed style half-way when it is read.
