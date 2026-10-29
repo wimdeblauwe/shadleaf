@@ -100,3 +100,40 @@ test('the edge shows only while the table is scrolled, and the pinned cell is op
   expect(await page.locator('#c').evaluate(cell => getComputedStyle(cell).backgroundColor))
       .not.toBe('rgba(0, 0, 0, 0)');
 });
+
+// A colgroup per group of columns: a line on the start edge of every group after the first, a collapsed border.
+const grouped = (dir: 'ltr' | 'rtl', sticky: boolean) => `<div dir="${dir}"><div class="table-container">
+  <table class="table"${sticky ? ' data-sticky="first-column"' : ''}>
+  <colgroup id="g0"></colgroup><colgroup id="g1" span="4"></colgroup><colgroup id="g2" span="4"></colgroup>
+  <thead><tr><th id="h">Person</th>${head(false)}</tr></thead>
+  <tbody><tr><td id="c">Ada</td>${cells(8)}</tr></tbody></table></div></div>`;
+
+const borders = (page: Page, id: string) => page.locator(`#${id}`).evaluate(group => {
+  const style = getComputedStyle(group);
+  return {left: style.borderLeftWidth, right: style.borderRightWidth, style: style.borderLeftStyle};
+});
+
+test('a line starts every column group after the first', async ({page}) => {
+  await openFixture(page, grouped('ltr', false), {alpine: false});
+  expect(await page.locator('.table').evaluate(table => getComputedStyle(table).borderCollapse)).toBe('collapse');
+
+  expect((await borders(page, 'g0')).left).toBe('0px');
+  for (const id of ['g1', 'g2']) {
+    expect(await borders(page, id)).toEqual({left: '1px', right: '0px', style: 'solid'});
+  }
+});
+
+test('the group line is on the right in a right-to-left page', async ({page}) => {
+  await openFixture(page, grouped('rtl', false), {alpine: false});
+
+  expect(await borders(page, 'g1')).toMatchObject({left: '0px', right: '1px'});
+});
+
+test('the pinned edge lies on the line of a group that starts at the second column', async ({page}) => {
+  await openFixture(page, grouped('ltr', true), {alpine: false});
+  const edge = () => page.locator('#c').evaluate(cell => getComputedStyle(cell, '::after').right);
+  expect(await edge()).toBe('-1px');
+
+  await openFixture(page, pinned('ltr'), {alpine: false});
+  expect(await edge()).toBe('0px');
+});

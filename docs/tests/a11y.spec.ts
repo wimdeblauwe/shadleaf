@@ -9,11 +9,12 @@ import {combinations, componentScenarios, keepScenarios, openShowcase, showcaseC
 // The hover pass is a test per component: in parallel, rather than one after the other in a single worker.
 test.describe.configure({mode: 'parallel'});
 
-// Violations a scenario shows on purpose: the rule, and the scenarios where it is accepted. The pinned-column table is
-// plain text and wider than the page, the case it is for; its container has no tabindex (table-scroll.spec.ts), so in
-// WebKit it cannot be scrolled with the keyboard. The table page says so under "Wide tables".
+// Violations a scenario shows on purpose: the rule, and the scenarios where it is accepted. The pinned-column and
+// column-group tables are plain text and wider than the page, the case they are for; their container has no tabindex
+// (table-scroll.spec.ts), so in WebKit it cannot be scrolled with the keyboard. The table page says so under "Wide
+// tables".
 const accepted: Record<string, string[]> = {
-  'scrollable-region-focusable': ['table--sticky-first-column'],
+  'scrollable-region-focusable': ['table--sticky-first-column', 'table--column-groups'],
 };
 
 /** The violations without the nodes {@link accepted} allows, and without the violations left with no node. */

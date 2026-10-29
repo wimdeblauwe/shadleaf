@@ -23,8 +23,9 @@
     @apply relative w-full overflow-x-auto;
   }
 
+  /* Collapsed borders: the row lines are on tr, the column group lines on colgroup, neither drawn otherwise. */
   .table {
-    @apply w-full caption-bottom;
+    @apply w-full caption-bottom border-collapse;
   }
 
   .table > :is(thead, tbody, tfoot) > tr > :is(th, td) {
@@ -81,6 +82,15 @@
     inset-inline-end: 0;
     pointer-events: none;
     opacity: var(--sl-table-scrolled);
+  }
+
+  /*
+    Column groups (colgroup): the skins draw a line on the start edge of every group after the first. When the second
+    group starts at the second column, that line runs along the pinned edge: the edge moves onto it, so the two are
+    one line, and the pinned cell covers the group line once it scrolls under.
+  */
+  .table[data-sticky='first-column']:has(> colgroup + colgroup) > :is(thead, tbody, tfoot) > tr > :is(th, td):first-child::after {
+    inset-inline-end: -1px;
   }
 
   @supports (animation-timeline: scroll()) {

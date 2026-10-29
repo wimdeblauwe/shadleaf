@@ -51,6 +51,16 @@ class TableComponentTest {
   }
 
   @Test
+  void columnGroupsReachTheTable() {
+    Rendered rendered = TESTER.render("""
+        <sl:table><colgroup></colgroup><colgroup span="2"></colgroup>\
+        <tbody><tr><td>Ada</td><td>1</td><td>2</td></tr></tbody></sl:table>""");
+
+    assertThat(rendered).elements("div > table > colgroup").hasSize(2);
+    assertThat(rendered).element("div > table > colgroup + colgroup").hasAttribute("span", "2");
+  }
+
+  @Test
   void aCompactTableIsMarkedAndItsSortLinksAreExtraSmall() {
     Rendered rendered = TESTER.render("""
         <sl:table size="sm"><thead><tr>
