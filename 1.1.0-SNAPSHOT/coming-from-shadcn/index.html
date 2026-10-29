@@ -311,7 +311,7 @@ the page in another order (<code dir="auto">?sort=name,desc</code>), read from a
 rather than a <code dir="auto">text-right</code> class. Filtering is a <code dir="auto">GET</code> form the server answers, with <code dir="auto">sl:query-params</code> keeping the
 order and page size, and htmx to search as the user types (<a href="../guides/tables-htmx/">Tables with htmx</a>). There is no
 column visibility or browser-side paging. Column pinning is only for the first column, the <code dir="auto">sticky-first-column</code> prop
-on <code dir="auto">&lt;sl:table&gt;</code>, which is CSS (<code dir="auto">position: sticky</code>) and not TanStack’s <code dir="auto">column.pin()</code>. Row selection is the application’s own checkboxes, which submit with a form:
+on <code dir="auto">&lt;sl:table&gt;</code>, which is CSS (<code dir="auto">position: sticky</code>) and not TanStack’s <code dir="auto">column.pin()</code>. A dense table is <code dir="auto">size="sm"</code> on <code dir="auto">&lt;sl:table&gt;</code>, where shadcn passes <code dir="auto">text-xs</code> and tighter cell padding as classes. Row selection is the application’s own checkboxes, which submit with a form:
 <code dir="auto">&lt;sl:table-select-all&gt;</code> takes the place of the header’s <code dir="auto">Checkbox</code> with <code dir="auto">table.getIsAllPageRowsSelected()</code>, and
 <code dir="auto">&lt;sl:table-selection-count&gt;</code> of <code dir="auto">"{n} of {total} row(s) selected."</code> (it reads “2 of 20 selected”). The selected row’s
 background comes from CSS (a checked checkbox in the row’s first cell), not from <code dir="auto">data-state="selected"</code>. The

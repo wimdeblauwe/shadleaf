@@ -5533,6 +5533,20 @@
             "required" : false
           }
         }, {
+          "name" : "size",
+          "description" : "The density of the table. `sm` has smaller cells and text, for a table of many rows of figures or one meant for paper; the header, body, footer, caption, sort links and `sl:table-empty` row follow it.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          } ],
+          "default" : "default"
+        }, {
           "name" : "th:page",
           "description" : "The Spring Data `Page` or `Slice` the table shows. Its `Sort` tells every `sl:table-head` inside how the rows are sorted now. Without it, the headers read the order from the request's sort parameter.",
           "value" : {
@@ -5549,6 +5563,13 @@
         }, {
           "name" : "th:sticky-first-column",
           "description" : "`sticky-first-column` from a Thymeleaf expression, e.g. `th:sticky-first-column=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
           "value" : {
             "kind" : "expression",
             "required" : false
