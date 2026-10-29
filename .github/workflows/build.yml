@@ -45,9 +45,14 @@ jobs:
         run: mvn -B verify
         working-directory: samples/shadleaf-sample-03
 
+  # The browser tests in three shards side by side; docs-report merges their reports into one.
   docs:
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     defaults:
       run:
         working-directory: docs
@@ -72,16 +77,66 @@ jobs:
       - name: Build the docs site
         run: pnpm run build
 
+      - name: Find the Playwright version
+        id: playwright
+        run: echo "version=$(pnpm exec playwright --version | cut -d ' ' -f 2)" >> "$GITHUB_OUTPUT"
+
+      # The browser is cached per Playwright version; the system packages it needs are installed every time.
+      - uses: actions/cache@v5
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+
       # Chromium and the default skin only; `pnpm run test:full` adds Firefox and every skin, run it locally.
       - name: Install Chromium for Playwright
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm exec playwright install --with-deps chromium
+
+      - name: Install Chromium's system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps chromium
 
       # axe-core and the keyboard focus pass over the showcase page, in the default skin, light and dark
       - name: Check the showcase's accessibility
-        run: pnpm test
+        run: pnpm test -- --shard=${{ matrix.shard }}/3
 
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: docs/blob-report/
+          retention-days: 1
+
+  docs-report:
+    needs: docs
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/setup@v3
+        with:
+          version: 12.6.0
+          runtime: node@24
+          working-directory: docs
+          require-lockfile: true
+          cache: true
+          cache-dependency-path: docs/pnpm-lock.yaml
+
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: blob-report-*
+          path: docs/all-blob-reports/
+          merge-multiple: true
+
+      - name: Merge the shards' reports
+        run: pnpm exec playwright merge-reports --reporter html ./all-blob-reports
+
+      - uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: docs/playwright-report/

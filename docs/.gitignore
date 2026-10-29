@@ -3,6 +3,7 @@ dist/
 .astro/
 test-results/
 playwright-report/
+blob-report/
 
 # Copied in by scripts/sync.mjs from shadleaf-spring-boot-starter/target/generated-docs
 src/generated/
