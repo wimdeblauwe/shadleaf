@@ -1,6 +1,6 @@
 import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 import {openFixture} from './fixture';
 
 // sl:tabs, with slTabs adding the ARIA tabs pattern to markup the server renders with the active panel showing. On the
@@ -42,6 +42,7 @@ function state(page: Page, id: string) {
 for (const {skin, theme} of combinations) {
   test(`every tabs works with the keyboard and passes axe: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
+    await keepScenariosWith(page, '.tabs');
     await page.waitForFunction(() => 'Alpine' in window);
     const ids = await page.locator('.showcase .tabs').evaluateAll(all => all.map(tabs => tabs.id));
     expect(ids.length, 'the showcase has tabs').toBeGreaterThan(0);

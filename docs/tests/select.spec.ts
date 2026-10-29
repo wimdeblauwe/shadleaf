@@ -2,7 +2,7 @@ import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 
 // sl:select, in both of the ways it is drawn:
 // - 'base-select': the browser's customizable select (appearance: base-select), in Chromium;
@@ -141,6 +141,7 @@ for (const {skin, theme} of combinations) {
     const mode: Mode = browserName === 'chromium' ? 'base-select' : 'listbox';
     {
       await openShowcase(page, skin, theme);
+      await keepScenariosWith(page, '.select-wrapper');
       await page.waitForFunction(() => 'Alpine' in window);
       const wrappers = page.locator('.showcase .select-wrapper:not(:has(> select:disabled))');
       const count = await wrappers.count();

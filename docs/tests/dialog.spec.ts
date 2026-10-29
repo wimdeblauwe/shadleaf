@@ -2,7 +2,7 @@ import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 
 // sl:dialog, sl:alert-dialog and sl:sheet. On the showcase, in every skin and theme: every one opens from its trigger
 // with the keyboard, takes focus (an alert dialog on its cancel button), passes axe open, shows focus on every control
@@ -23,7 +23,8 @@ for (const {skin, theme} of combinations) {
   test(`every dialog, alert dialog and sheet works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
     await page.waitForFunction(() => 'Alpine' in window);
-    const ids = await page.locator('.showcase dialog:is(.dialog, .alert-dialog, .sheet)')
+    await keepScenariosWith(page, 'dialog:is(.dialog, .alert-dialog, .sheet)');
+    const ids =await page.locator('.showcase dialog:is(.dialog, .alert-dialog, .sheet)')
         .evaluateAll(dialogs => dialogs.map(dialog => dialog.id));
     for (const kind of ['dialog', 'alert-dialog', 'sheet']) {
       expect(await page.locator(`.showcase dialog.${kind}`).count(), `the showcase has a ${kind}`).toBeGreaterThan(0);

@@ -1,7 +1,7 @@
 import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 import {openFixture, type Routes} from './fixture';
 
 // sl:combobox: a real select that slCombobox replaces by an input and a list box. On the showcase, in every skin and
@@ -129,6 +129,7 @@ for (const {skin, theme} of combinations) {
   test(`every combobox opens from the keyboard, passes axe open, shows focus and closes on Escape: ${skin}, ${theme}`,
       async ({page}) => {
         await openShowcase(page, skin, theme);
+        await keepScenariosWith(page, '.combobox');
         await page.waitForFunction(() => 'Alpine' in window);
         const ids = await page.locator('.showcase .combobox[data-enhanced] > select:not(:disabled)')
             .evaluateAll(selects => selects.map(select => select.id));

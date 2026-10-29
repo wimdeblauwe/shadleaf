@@ -2,7 +2,7 @@ import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 
 // sl:dropdown-menu, sl:popover and sl:tooltip, all popovers placed with CSS anchor positioning. On the showcase, in
 // every skin and theme: every menu and popover opens from its trigger with the keyboard, takes focus, passes axe open,
@@ -47,6 +47,7 @@ function axeFailures(id: string, violations: Awaited<ReturnType<AxeBuilder['anal
 for (const {skin, theme} of combinations) {
   test(`every dropdown menu works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
+    await keepScenariosWith(page, '.dropdown-menu-content');
     await page.waitForFunction(() => 'Alpine' in window);
     const ids = await page.locator('.showcase .dropdown-menu-content').evaluateAll(menus => menus.map(menu => menu.id));
     expect(ids.length, 'the showcase has dropdown menus').toBeGreaterThan(0);
@@ -86,6 +87,7 @@ for (const {skin, theme} of combinations) {
 
   test(`every popover works with the keyboard and passes axe open: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
+    await keepScenariosWith(page, '.popover-content');
     await page.waitForFunction(() => 'Alpine' in window);
     // A date picker's popover opens on its day, its last stop, rather than its first: date-picker.spec.ts checks it.
     const ids = await page.locator('.showcase .popover-content:not(.date-picker-content)')
@@ -128,6 +130,7 @@ for (const {skin, theme} of combinations) {
 
   test(`every tooltip shows on keyboard focus and passes axe: ${skin}, ${theme}`, async ({page}) => {
     await openShowcase(page, skin, theme);
+    await keepScenariosWith(page, '.tooltip');
     await page.waitForFunction(() => 'Alpine' in window);
     const tooltips = page.locator('.showcase .tooltip');
     const count = await tooltips.count();

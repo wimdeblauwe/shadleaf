@@ -69,6 +69,14 @@ export async function keepScenarios(page: Page, scenarios: string[]) {
 }
 
 /**
+ * Takes every scenario without an element matching the selector off the opened showcase: for tests that run axe per
+ * element, as every axe run walks the whole page.
+ */
+export async function keepScenariosWith(page: Page, selector: string) {
+  await keepScenarios(page, [`[data-scenario]:has(${selector})`]);
+}
+
+/**
  * The components a showcase page shows (only SHADLEAF_TEST_COMPONENT's with it), each with a selector per scenario: for
  * checks too slow to walk the whole page in one test.
  */

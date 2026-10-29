@@ -1,6 +1,6 @@
 import {expect, test, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import {combinations, openShowcase} from './showcase';
+import {combinations, keepScenariosWith, openShowcase} from './showcase';
 import {openFixture} from './fixture';
 
 // sl:calendar, with slCalendar drawing the month over the date inputs the server renders. On the showcase, in every
@@ -87,6 +87,7 @@ for (const {skin, theme} of combinations) {
   test(`every calendar is one tab stop, moves with the arrows, shows focus and passes axe: ${skin}, ${theme}`,
       async ({page}) => {
         await openShowcase(page, skin, theme);
+        await keepScenariosWith(page, '.calendar');
         const calendars = page.locator('.calendar[data-enhanced]');
         await expect(calendars.first()).toBeVisible();
         const count = await calendars.count();
