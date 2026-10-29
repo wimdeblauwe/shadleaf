@@ -37,6 +37,9 @@ the starter to your application.
 
 | Shadleaf                                                              | Spring Boot | Minimum Java version | Docs                                                 |
 |-----------------------------------------------------------------------|-------------|----------------------|------------------------------------------------------|
+| [1.0.2](https://github.com/wimdeblauwe/shadleaf/releases/tag/1.0.2)   | 4.1.x       | 17                   | [Documentation 1.0.2](https://shadleaf.dev/1.0.2/)   |
+| [1.0.1](https://github.com/wimdeblauwe/shadleaf/releases/tag/1.0.1)   | 4.1.x       | 17                   | [Documentation 1.0.1](https://shadleaf.dev/1.0.1/)   |
+| [1.0.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/1.0.0)   | 4.1.x       | 17                   | [Documentation 1.0.0](https://shadleaf.dev/1.0.0/)   |
 | [0.10.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.10.0) | 4.1.x       | 17                   | [Documentation 0.10.0](https://shadleaf.dev/0.10.0/) |
 | [0.9.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.9.0)   | 4.1.x       | 17                   | [Documentation 0.9.0](https://shadleaf.dev/0.9.0/)   |
 | [0.8.0](https://github.com/wimdeblauwe/shadleaf/releases/tag/0.8.0)   | 4.1.x       | 17                   | [Documentation 0.8.0](https://shadleaf.dev/0.8.0/)   |
