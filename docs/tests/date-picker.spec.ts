@@ -134,7 +134,7 @@ test('a pick writes the input, fires input and change, closes the popover and sh
 
       await trigger(page).click();
       await waitUntilOpen(popup(page));
-      expect(await focusedDate(page), 'today takes the focus').toBe('2026-10-23');
+      await expect.poll(() => focusedDate(page), 'today takes the focus').toBe('2026-10-23');
       await expect(popup(page)).toHaveAccessibleName('Choose a date');
 
       await day(page, '2026-10-14').click();
@@ -148,7 +148,7 @@ test('a pick writes the input, fires input and change, closes the popover and sh
 
       await trigger(page).click();
       await waitUntilOpen(popup(page));
-      expect(await focusedDate(page), 'the chosen day takes the focus').toBe('2026-10-14');
+      await expect.poll(() => focusedDate(page), 'the chosen day takes the focus').toBe('2026-10-14');
       await day(page, '2026-10-14').click();
       await expect(input, 'a second click clears an optional date').toHaveValue('');
       await expect(popup(page), 'and keeps the popover open').toBeVisible();
@@ -164,7 +164,7 @@ test('keyboard: Enter opens on the chosen day, the arrows and Enter pick, Escape
       await trigger(page).focus();
       await page.keyboard.press('Enter');
       await waitUntilOpen(popup(page));
-      expect(await focusedDate(page)).toBe('2026-10-23');
+      await expect.poll(() => focusedDate(page)).toBe('2026-10-23');
 
       await page.keyboard.press('ArrowRight');
       await page.keyboard.press('ArrowDown');
@@ -321,7 +321,7 @@ test('htmx: back restores the date picker with the text of its input and one wor
 
   await trigger(page).click();
   await waitUntilOpen(popup(page));
-  expect(await focusedDate(page)).toBe('2026-10-23');
+  await expect.poll(() => focusedDate(page)).toBe('2026-10-23');
   await day(page, '2026-10-22').click();
   await expectClosed(popup(page));
   await expect(input).toHaveValue('2026-10-22');
@@ -341,5 +341,5 @@ test('reopened after browsing other months, it shows the chosen date\'s month ag
   await page.keyboard.press('Enter');
   await waitUntilOpen(popup(page));
   expect(await page.locator('.calendar-caption').innerText()).toBe('October 2026');
-  expect(await focusedDate(page)).toBe('2026-10-23');
+  await expect.poll(() => focusedDate(page)).toBe('2026-10-23');
 });

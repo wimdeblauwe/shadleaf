@@ -5,7 +5,8 @@
   The <dialog> is the panel, fixed to one edge instead of centred: no margin, no user agent maximum size. right and
   left are the inline end and start, so they swap on a right-to-left page. Opening and closing fade through
   @starting-style (see dialog.css), and where motion is fine the panel also slides in from its edge; under reduced
-  motion only the fade remains. The slide distance is identity (--sheet-slide, set by the skins).
+  motion only the fade remains. The slide distance is identity (--sheet-slide, set by the skins). An open sheet's
+  translate is none, not 0 0, for the reason in dialog.css.
 */
 @layer components {
   .sheet {
@@ -52,7 +53,7 @@
     }
 
     .sheet[open] {
-      translate: 0 0;
+      translate: none;
     }
 
     @starting-style {

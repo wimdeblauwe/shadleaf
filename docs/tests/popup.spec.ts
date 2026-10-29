@@ -477,6 +477,11 @@ test('menus and popovers slide and zoom in only where motion is fine', async ({p
   expect(await style('#popover-top')).toEqual({translate: '0px 8px', scale: '0.95'});
   expect((await style('#popover-right')).translate).toBe('-8px');
   expect((await style('#popover-left')).translate).toBe('8px');
+
+  // Open, none and not 1 and 0 0: any other value makes the menu the containing block of its fixed descendants.
+  await page.locator('#file-menu-trigger').click();
+  await waitUntilOpen(page.locator('#file-menu'));
+  await expect.poll(() => style('#file-menu')).toEqual({translate: 'none', scale: 'none'});
 });
 
 // --- fixture pages ---------------------------------------------------------------------------------------------------

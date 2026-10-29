@@ -201,7 +201,33 @@ test('a sheet slides in from its edge only where motion is fine', async ({page})
   await page.locator('.showcase button[commandfor="sheet-right"][command="show-modal"]').click();
   const sheet = page.locator('#sheet-right');
   await waitUntilOpen(sheet);
-  await expect.poll(() => translate('sheet-right')).toBe('0px');
+  await expect.poll(() => translate('sheet-right')).toBe('none');
+});
+
+// A scale or translate other than none makes an element the containing block of its fixed descendants, as a
+// transform does. A password manager places its icon in a field as such a descendant, in viewport coordinates.
+test('an open dialog, alert dialog and sheet leave fixed descendants on the viewport', async ({page}) => {
+  await openShowcase(page, 'vega', 'light');
+  await page.emulateMedia({reducedMotion: 'no-preference'});
+  await page.waitForFunction(() => 'Alpine' in window);
+
+  for (const id of ['edit-profile', 'delete-account', 'sheet-right']) {
+    await page.locator(`.showcase button[commandfor="${id}"][command="show-modal"]`).click();
+    const dialog = page.locator(`#${id}`);
+    await waitUntilOpen(dialog);
+    const origin = await dialog.evaluate(element => {
+      const fixed = document.createElement('div');
+      fixed.style.position = 'fixed';
+      fixed.style.inset = '0 auto auto 0';
+      element.append(fixed);
+      const {x, y} = fixed.getBoundingClientRect();
+      fixed.remove();
+      return {x, y};
+    });
+    expect(origin, id).toEqual({x: 0, y: 0});
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveJSProperty('open', false);
+  }
 });
 
 // --- fixture pages ---------------------------------------------------------------------------------------------------
