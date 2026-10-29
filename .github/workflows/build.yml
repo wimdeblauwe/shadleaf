@@ -67,7 +67,7 @@ jobs:
       # pnpm, Node.js and `pnpm install --frozen-lockfile` in docs/, with the pnpm store cached on the lockfile.
       - uses: pnpm/setup@v3
         with:
-          version: 12.6.0
+          version: 12.14.0
           runtime: node@24
           working-directory: docs
           require-lockfile: true
@@ -120,7 +120,7 @@ jobs:
 
       - uses: pnpm/setup@v3
         with:
-          version: 12.6.0
+          version: 12.14.0
           runtime: node@24
           working-directory: docs
           require-lockfile: true

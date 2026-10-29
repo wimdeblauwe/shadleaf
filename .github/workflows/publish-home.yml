@@ -54,7 +54,7 @@ jobs:
       - uses: pnpm/setup@v3
         if: steps.pages.outputs.found == 'true'
         with:
-          version: 12.6.0
+          version: 12.14.0
           runtime: node@24
           working-directory: docs
           require-lockfile: true
