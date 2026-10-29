@@ -30,7 +30,7 @@ scenarios:
       Design Engineering opens one too.
     request: /
     user:
-      name: shadcn
+      name: Alex Morgan
       email: m@example.com
       photo: shadcn
     source: |-
@@ -273,7 +273,7 @@ scenarios:
     title: Version switcher
     description: >-
       A dropdown menu opened from a large menu button in the header (sl:dropdown-menu-trigger as="sidebar-menu-button"),
-      as shadcn's version switcher. The versions are links, and the server checks the current one, so it works without
+      to switch between versions. The versions are links, and the server checks the current one, so it works without
       JavaScript. In the phone panel it opens below the button.
     showcase: false
     source: |-
@@ -577,7 +577,7 @@ scenarios:
     showcase: false
     request: /
     user:
-      name: shadcn
+      name: Alex Morgan
       email: m@example.com
       photo: shadcn
     source: &header-source |-
@@ -702,7 +702,7 @@ scenarios:
     request: /
     width: 390
     user:
-      name: shadcn
+      name: Alex Morgan
       email: m@example.com
       photo: shadcn
     source: *header-source

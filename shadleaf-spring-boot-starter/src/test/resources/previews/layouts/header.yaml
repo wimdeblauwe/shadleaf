@@ -8,7 +8,7 @@ description: >-
   navigation as a panel, with its icons and the panel-only parts.
 request: /forms
 user:
-  name: shadcn
+  name: Alex Morgan
   email: m@example.com
   photo: shadcn
 page:

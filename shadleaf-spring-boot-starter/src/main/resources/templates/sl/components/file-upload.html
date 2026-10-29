@@ -2,19 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
 <head>
   <sl:props>
-    <sl:description>A drop zone to pick files with, and the list of the files picked. Shadleaf's own: shadcn/ui has
-      none. A visually hidden <code>&lt;input type="file"&gt;</code> holds the files and is submitted with the form,
-      so put <code>th:field</code> on the component (a <code>MultipartFile</code>, or with <code>multiple</code> a
+    <sl:description>A drop zone to pick files with, and the list of the files picked. A visually hidden
+      <code>&lt;input type="file"&gt;</code> holds the files and is submitted with the form, so put
+      <code>th:field</code> on the component (a <code>MultipartFile</code>, or with <code>multiple</code> a
       <code>List&lt;MultipartFile&gt;</code>) and give the form <code>enctype="multipart/form-data"</code>. Every
       attribute that is not a prop goes to the input (<code>th:field</code>, <code>name</code>, <code>id</code>,
       <code>required</code>, <code>disabled</code>, <code>aria-*</code>, <code>hx-*</code>); <code>class</code> is
-      appended to the component. In a <code>sl:field</code>, the input takes the field's <code>th:field</code>, id
-      and <code>aria-describedby</code>. With JavaScript, files can be dropped too, each picked file shows as an
-      <code>sl:attachment</code> with a remove button, and a file that does not match <code>accept</code> or is
-      larger than <code>max-size</code> shows as an error. When the form is sent with htmx (2 or 4), each file shows its
-      upload progress, then that the server is processing it, and an error if the request fails; a Cancel button
-      stops the upload. With <code>previews</code>, a picked image shows a thumbnail. Without JavaScript, the Browse
-      button still picks files. The server checks the files anyway.</sl:description>
+      appended to the component. In a <code>sl:field</code>, the input takes the field's <code>th:field</code>, id and
+      <code>aria-describedby</code>. With JavaScript, files can be dropped too, each picked file shows as an
+      <code>sl:attachment</code> with a remove button, and a file that does not match <code>accept</code> or is larger
+      than <code>max-size</code> shows as an error. When the form is sent with htmx (2 or 4), each file shows its upload
+      progress, then that the server is processing it, and an error if the request fails; a Cancel button stops the
+      upload. With <code>previews</code>, a picked image shows a thumbnail. Without JavaScript, the Browse button still
+      picks files. The server checks the files anyway.</sl:description>
     <sl:prop name="multiple" type="boolean">Take more than one file. Picking or dropping files adds them to the
       ones already there.</sl:prop>
     <sl:prop name="accept">The file types to take, as the input's <code>accept</code>: extensions

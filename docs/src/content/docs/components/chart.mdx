@@ -1,6 +1,6 @@
 ---
 title: Chart
-description: shadcn/ui's Chart, Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+description: Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
@@ -10,8 +10,8 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
 ## Built from parts
 
-A chart is shadcn's: [Recharts](https://recharts.github.io/) draws it in the browser, with shadcn's look. The template
-says what to draw, the controller gives the rows:
+[Recharts](https://recharts.github.io/) draws a chart in the browser, in the skin's look. The template says what to
+draw, the controller gives the rows:
 
 ```html
 <sl:chart th:data="${visitors}" th:label="#{visitors.title}">
@@ -36,7 +36,7 @@ String visitors(Model model) {
 - **`th:data`** takes a list of rows: records, objects or maps, or a Spring Data `Page`. They go into the page as
   JSON, written by Jackson.
 - **The series parts** (`sl:chart-bar`, `sl:chart-line`, `sl:chart-area`) name the property they draw in `key`, and
-  carry the series' `label` and `color`: what shadcn's `ChartConfig` holds. The chart draws bars for bars only, lines
+  carry the series' `label` and `color`. The chart draws bars for bars only, lines
   for lines only, areas for areas only, and a composed chart for a mix.
 - **The other parts** add a grid, the axes, a tooltip and a legend. Every part is optional; their order is the order
   Recharts draws them in.
@@ -95,7 +95,7 @@ The tooltip shows the hovered category and every series' label and value. `indic
 
 ## Formats
 
-Instead of shadcn's `tickFormatter`, `formatter` and `labelFormatter` functions, the parts take a named format,
+Instead of formatting functions, the parts take a named format,
 written with `Intl` in the page's language (`<html lang>`, from Spring's locale):
 
 | Format | Writes | For |
@@ -142,8 +142,8 @@ For series known only at run time, put `th:each` on a series part:
 
 ## Size
 
-A chart is as wide as its container and 16:9, as shadcn's. For a fixed height, give it one in your CSS, with
-`aspect-ratio: auto` (shadcn's `aspect-auto h-[250px]`):
+A chart is as wide as its container and 16:9. For a fixed height, give it one in your CSS, with
+`aspect-ratio: auto`:
 
 ```css
 .visitors-chart { aspect-ratio: auto; height: 250px; }
@@ -163,9 +163,9 @@ keys follow what you see.
 
 ## Left out
 
-These shadcn and Recharts features have no counterpart yet: pie, radar and radial charts (pie charts are planned),
-horizontal bars, gradients, custom tooltip and legend content, icons in the config, reference lines and brushes.
-For anything else, `sl-chart` is a custom element: an application can write its own.
+These Recharts features have no counterpart yet: pie, radar and radial charts (pie charts are planned), horizontal bars,
+gradients, custom tooltip and legend content, icons in the tooltip and legend, reference lines and brushes. For anything
+else, `sl-chart` is a custom element: an application can write its own.
 
 ## Attributes
 

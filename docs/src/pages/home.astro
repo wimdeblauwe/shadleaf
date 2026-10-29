@@ -38,13 +38,13 @@ const features = [
   },
   {
     icon: icons.palette,
-    term: 'shadcn’s token names',
-    text: 'Shadleaf reads the same CSS variables as shadcn/ui (--primary, --radius, --ring), so a shadcn theme works unchanged in light and dark mode.',
+    term: 'Themed with CSS variables',
+    text: 'Colours, radius and focus ring are CSS variables (--primary, --radius, --ring): redefine them once and every component follows, in light and dark mode.',
   },
   {
     icon: icons.swatchBook,
     term: 'Predefined skins',
-    text: 'Every style of shadcn’s is a skin, from Vega’s classic look to boxy Lyra, soft Luma and editorial Sera, plus a hand-drawn Sketch of Shadleaf’s own for mockups. The shadleaf.skin property switches between them; your templates stay the same.',
+    text: 'Nine skins, from Vega’s classic look to boxy Lyra, soft Luma and editorial Sera, and a hand-drawn Sketch for mockups. The shadleaf.skin property switches between them; your templates stay the same.',
   },
   {
     icon: icons.bot,
@@ -70,7 +70,7 @@ const features = [
 <StarlightPage
   frontmatter={{
     title: 'Shadleaf',
-    description: 'shadcn/ui for Thymeleaf, as a Spring Boot starter.',
+    description: 'UI components for Thymeleaf, as a Spring Boot starter.',
     template: 'splash',
     // Search results would link to <base>/home/, which is not published.
     pagefind: false,
@@ -83,10 +83,10 @@ const features = [
   <div class="home not-content">
     <section class="home-hero">
       <p class="home-hero__title">UI components for Spring Boot and Thymeleaf</p>
-      <p class="home-hero__tagline">shadcn/ui, rendered by Thymeleaf.</p>
+      <p class="home-hero__tagline">Themeable, rendered by Thymeleaf.</p>
       <p class="home-hero__lead">
         Shadleaf is a Spring Boot starter. Add the dependency, write <code>&lt;sl:dialog&gt;</code> in a template,
-        and your page gets shadcn’s dialog, rendered on the server.
+        and your page gets an accessible dialog, rendered on the server.
       </p>
       <div class="home-actions">
         <a class="home-button home-button--primary" href={withBase('getting-started/')}>Add Shadleaf to your project</a>

@@ -2,16 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
 <head>
   <sl:props>
-    <sl:description>A button showing the chosen date that opens a <code>sl:calendar</code> in a popover: shadcn/ui's
-      date picker, made of its popover and calendar, as one component. Its value lives in the calendar's date inputs,
-      so <code>th:field</code> binds it and the form submits ISO dates. Every attribute that is not a prop goes to the
-      <code>sl:calendar</code> inside, except <code>class</code>, which stays on the date picker: the calendar's props
-      (<code>caption-layout</code>, <code>number-of-months</code>, <code>disabled-dates</code>, ...) and, for a single
-      date, the attributes of its input (<code>th:field</code>, <code>name</code>, <code>required</code>,
-      <code>min</code>, <code>max</code>). In a <code>sl:field</code>, the input takes the field's
-      <code>th:field</code>, id and <code>aria-describedby</code>, and the button is named by the field's label. For a
-      range, give it two <code>sl:input type="date"</code>s as content, the start and the end, and an
-      <code>aria-label</code>. A pick closes the popover; for a range the second pick does. Needs JavaScript
+    <sl:description>A button showing the chosen date that opens a <code>sl:calendar</code> in a popover. Its value lives
+      in the calendar's date inputs, so <code>th:field</code> binds it and the form submits ISO dates. Every attribute
+      that is not a prop goes to the <code>sl:calendar</code> inside, except <code>class</code>, which stays on the date
+      picker: the calendar's props (<code>caption-layout</code>, <code>number-of-months</code>,
+      <code>disabled-dates</code>, ...) and, for a single date, the attributes of its input (<code>th:field</code>,
+      <code>name</code>, <code>required</code>, <code>min</code>, <code>max</code>). In a <code>sl:field</code>, the
+      input takes the field's <code>th:field</code>, id and <code>aria-describedby</code>, and the button is named by
+      the field's label. For a range, give it two <code>sl:input type="date"</code>s as content, the start and the end,
+      and an <code>aria-label</code>. A pick closes the popover; for a range the second pick does. Needs JavaScript
       (<code>slDatePicker</code>).</sl:description>
     <sl:prop name="placeholder">The button's text while no date is chosen. By default "Pick a date".</sl:prop>
     <sl:prop name="format" default="long" values="short medium long full">How the button shows the date, in the page's

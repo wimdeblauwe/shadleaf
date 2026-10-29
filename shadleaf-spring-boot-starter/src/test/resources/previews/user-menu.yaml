@@ -13,7 +13,7 @@ scenarios:
       tooltip.
     showcase: false
     user:
-      name: shadcn
+      name: Alex Morgan
       email: m@example.com
       photo: shadcn
     source: |-
@@ -40,7 +40,7 @@ scenarios:
       placement="header": a round button with the picture, named "Account: " and the user's name, at the end of a
       sl:site-header. The menu opens below it, lined up with its end.
     user:
-      name: shadcn
+      name: Alex Morgan
       email: m@example.com
       photo: shadcn
     source: |-

@@ -7,7 +7,7 @@ description: >-
   each, a secondary navigation at the bottom and the signed-in user's menu, and the page as a card beside it.
 request: /playground/history
 user:
-  name: shadcn
+  name: Alex Morgan
   email: m@example.com
   photo: shadcn
 page:

@@ -10,9 +10,9 @@ import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
 ## A popover with a calendar
 
-shadcn/ui has no date picker component. Its docs build one from a [popover](../popover/), a button and a
-[calendar](../calendar/), plus some React state that updates the button's text and closes the popover after a pick.
-`<sl:date-picker>` is that composition as one component, with the glue in the `slDatePicker` Alpine component.
+A date picker is a button in a [popover](../popover/) with a [calendar](../calendar/): the button shows the chosen date,
+and a pick closes the popover. `<sl:date-picker>` is that composition as one component, with the glue in the
+`slDatePicker` Alpine component.
 
 The value lives in the calendar's date inputs, so `th:field` binds a date picker as it binds a calendar, and the form
 submits ISO dates (`2026-10-23`). The [LocalDate fields](../calendar/#localdate-fields) note applies here too.
@@ -108,8 +108,8 @@ The popover is a non-modal dialog, as [sl:popover](../popover/) is. The focus is
 
 ## Left out
 
-- **The input you type into** (shadcn's "Input" demo), **the time** and **natural language** variants are not here
-  yet. For a time, put an `<sl:input type="time">` next to the date picker.
+- **An input to type the date into**, **the time** and **natural language** variants are not here yet. For a time, put
+  an `<sl:input type="time">` next to the date picker.
 - **Presets** (a select of "Today", "Tomorrow", ...) are not here either.
 
 ## Attributes

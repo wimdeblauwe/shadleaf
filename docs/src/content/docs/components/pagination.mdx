@@ -72,7 +72,7 @@ The `qualifier` of the controller's second `Pageable` (`@Qualifier("members")`) 
 
 ## Written by hand
 
-With content of its own, `<sl:pagination>` is the `nav` around a pagination of parts, as in shadcn/ui:
+With content of its own, `<sl:pagination>` is the `nav` around a pagination of parts:
 
 <ComponentPreview id="pagination--hand-written" />
 
@@ -92,7 +92,7 @@ or [translates](../../guides/translating/) them; the numbers are formatted for t
 
 ## Rows per page
 
-`<sl:pagination-size>` is a label and a [dropdown menu](../dropdown-menu/) of sizes, as in shadcn/ui's data table:
+`<sl:pagination-size>` is a label and a [dropdown menu](../dropdown-menu/) of sizes:
 
 <ComponentPreview id="pagination--size" />
 
@@ -103,8 +103,8 @@ accepts with `spring.data.web.pageable.max-page-size`.
 
 ## A table footer
 
-Summary, size and pagination are separate, so you lay out the footer. shadcn/ui's data table puts the summary at the
-start and the controls at the end:
+Summary, size and pagination are separate, so you lay out the footer, for example with the summary at the start and the
+controls at the end:
 
 ```html
 <div class="table-footer">
@@ -137,8 +137,7 @@ link is followed. [Tables with htmx](../../guides/tables-htmx/) shows the whole 
 - The `nav` is named "Pagination" (`sl.pagination.label`); an `aria-label` of your own replaces it, which two
   paginations on one page need.
 - Previous and Next are named "Go to previous page" and "Go to next page". On a narrow screen only their chevron shows.
-- The ellipsis reads "More pages", where shadcn/ui hides it from screen readers: a list item that says nothing is
-  harder to follow.
+- The ellipsis reads "More pages": a list item that says nothing is harder to follow.
 - The size menu's button reads "Rows per page" followed by the size.
 
 ## Messages
@@ -159,7 +158,7 @@ link is followed. [Tables with htmx](../../guides/tables-htmx/) shows the whole 
 
 ## Left out
 
-First and last page buttons (shadcn's dashboard has them; the first and the last page are always among the numbers),
+First and last page buttons (the first and the last page are always among the numbers),
 a field to type a page number, and paging in the browser.
 
 ## Attributes

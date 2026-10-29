@@ -55,7 +55,7 @@ css: |-
     pointer-events: none;
   }
 
-  /* The sections close up, and their labels read as the links below them (shadcn's sidebar-02). */
+  /* The sections close up, and their labels read as the links below them. */
   .docs-sections { gap: 0; }
   .docs-sections summary.sidebar-group-label:not(:hover) {
     font-size: 0.875rem;

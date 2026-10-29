@@ -16,7 +16,7 @@ scenarios:
 
   - id: button
     title: Drawn as a button
-    description: variant and size draw the trigger as a button, as shadcn/ui's asChild on a Button does.
+    description: variant and size draw the trigger as a button.
     source: |-
       <sl:collapsible open>
         <sl:collapsible-trigger variant="outline" size="sm"><sl:icon name="sliders-horizontal"/> Filters</sl:collapsible-trigger>

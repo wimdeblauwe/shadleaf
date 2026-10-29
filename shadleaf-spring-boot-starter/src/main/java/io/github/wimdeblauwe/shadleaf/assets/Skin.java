@@ -4,11 +4,11 @@ import java.util.Locale;
 
 /**
  * The visual identity of the components, set with {@code shadleaf.skin}. Same markup and tokens, different geometry,
- * spacing, type size and shadow. All but {@link #SKETCH} are named after the shadcn/ui style they follow.
+ * spacing, type size and shadow.
  */
 public enum Skin {
 
-  /** shadcn's classic look, the default. */
+  /** The classic look, the default. */
   VEGA,
 
   /** Boxy and sharp. */
@@ -32,7 +32,7 @@ public enum Skin {
   /** Editorial and typographic. */
   SERA,
 
-  /** Shadleaf's own: looks hand-drawn, for mockups. */
+  /** Looks hand-drawn, for mockups. */
   SKETCH;
 
   /** The name used in the asset file names and in the Vite manifest, e.g. {@code vega}. */

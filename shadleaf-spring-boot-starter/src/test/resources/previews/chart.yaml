@@ -14,7 +14,7 @@ scenarios:
   - id: bar-multiple
     title: Bar chart
     description: >-
-      Two series side by side, in a card as shadcn shows it. The months are YearMonths: month-short writes the ticks
+      Two series side by side, in a card. The months are YearMonths: month-short writes the ticks
       (Jan), month the tooltip's label (January).
     source: |-
       <sl:card>

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
 <head>
   <sl:props>
-    <sl:description>A chart drawn by Recharts in the browser, as shadcn's: bars, lines and areas over a category or
+    <sl:description>A chart drawn by Recharts in the browser: bars, lines and areas over a category or
       time axis, with a grid, axes, a tooltip and a legend. Pass the rows in <code>th:data</code> and put the parts
       inside, in the order Recharts draws them: <code>sl:chart-grid</code>, <code>sl:chart-x-axis</code>,
       <code>sl:chart-y-axis</code>, <code>sl:chart-tooltip</code>, <code>sl:chart-legend</code>, then one
@@ -17,7 +17,7 @@
     <sl:prop name="label" required>The chart's accessible name, such as its title: what a screen reader announces
       when the chart takes the focus.</sl:prop>
     <sl:prop name="margin" type="number">Space in pixels left and right of the plot, so the first and last tick
-      labels fit (shadcn's line and area charts use 12).</sl:prop>
+      labels fit (12 suits a line or area chart).</sl:prop>
     <sl:prop name="time-zone">The time zone (an IANA id such as <code>Europe/Brussels</code>) instants in the data
       are shown in: <code>Instant</code>, <code>OffsetDateTime</code> and <code>ZonedDateTime</code>. Defaults to the
       request's (Spring's <code>LocaleContextHolder</code>). A <code>LocalDate</code> or
