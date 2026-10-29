@@ -2512,6 +2512,12 @@
       "defaultValue" : "false",
       "values" : [ ],
       "description" : "Pin the first cell of every row to the start edge, so it stays in view when a wide table scrolls sideways. It gets the page's `--background` (set `--sl-table-bg` on the table when it sits on something else, such as `var(--card)`), and an edge line appears once the table has scrolled."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "sm" ],
+      "description" : "The density of the table. `sm` has smaller cells and text, for a table of many rows of figures or one meant for paper; the header, body, footer, caption, sort links and `sl:table-empty` row follow it."
     } ]
   }, {
     "name" : "table-empty",

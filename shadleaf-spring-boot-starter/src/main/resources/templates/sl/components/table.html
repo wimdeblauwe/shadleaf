@@ -17,14 +17,19 @@
       view when a wide table scrolls sideways. It gets the page's <code>--background</code> (set
       <code>--sl-table-bg</code> on the table when it sits on something else, such as <code>var(--card)</code>), and
       an edge line appears once the table has scrolled.</sl:prop>
+    <sl:prop name="size" default="default" values="default sm">The density of the table. <code>sm</code> has smaller
+      cells and text, for a table of many rows of figures or one meant for paper; the header, body, footer, caption,
+      sort links and <code>sl:table-empty</code> row follow it.</sl:prop>
   </sl:props>
 </head>
 <body>
-<!--/* The headers read slTablePage and slTableQualifier: slot content sees this template's local variables. */-->
+<!--/* The headers read slTablePage, slTableQualifier and slTableSize: slot content sees this template's local
+  variables. */-->
 <div th:fragment="table"
      class="table-container"
-     th:with="slTablePage=${props.page}, slTableQualifier=${props.qualifier}"><table class="table"
-    th:attr="data-sticky=${props['sticky-first-column'] ? 'first-column' : null}"
+     th:with="slTablePage=${props.page}, slTableQualifier=${props.qualifier}, slTableSize=${props.size}"><table class="table"
+    th:attr="data-sticky=${props['sticky-first-column'] ? 'first-column' : null},
+      data-size=${props.unlessDefault('size')}"
     sl:attrs><sl:slot/></table></div>
 </body>
 </html>
