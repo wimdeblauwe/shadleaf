@@ -5,7 +5,8 @@
     <sl:description>A styled table. Write the plain table elements inside it (<code>caption</code>,
       <code>thead</code>, <code>tbody</code>, <code>tfoot</code>, <code>tr</code>, <code>th</code>, <code>td</code>),
       with <code>th:each</code> on a row; there is no component per row or cell. Use <code>sl:table-head</code> for a
-      header cell that sorts or aligns, and <code>sl:table-empty</code> for the row that says nothing was found. The
+      header cell that sorts or aligns, and <code>sl:table-empty</code> for the row that says nothing was found. A
+      <code>colgroup</code> per group of columns draws a line between the groups. The
       table scrolls sideways inside its own container when it is wider than the page. Attributes go to the
       <code>table</code>.</sl:description>
     <sl:prop name="page" type="object">The Spring Data <code>Page</code> or <code>Slice</code> the table shows. Its

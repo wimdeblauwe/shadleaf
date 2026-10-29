@@ -132,6 +132,83 @@ scenarios:
         </tfoot>
       </sl:table>
 
+  - id: column-groups
+    title: Column groups
+    description: A colgroup per group of columns draws a line at the start of every group after the first.
+    source: |-
+      <sl:table sticky-first-column>
+        <caption>Sales and payments per quarter.</caption>
+        <colgroup></colgroup>
+        <colgroup span="4"></colgroup>
+        <colgroup span="4"></colgroup>
+        <thead>
+          <tr>
+            <td></td>
+            <th scope="colgroup" colspan="4" data-align="center">Sales</th>
+            <th scope="colgroup" colspan="4" data-align="center">Payments</th>
+          </tr>
+          <tr>
+            <th>Person</th>
+            <th data-align="end">Q1</th>
+            <th data-align="end">Q2</th>
+            <th data-align="end">Q3</th>
+            <th data-align="end">Q4</th>
+            <th data-align="end">Q1</th>
+            <th data-align="end">Q2</th>
+            <th data-align="end">Q3</th>
+            <th data-align="end">Q4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ada Lovelace</td>
+            <td data-align="end">€3711</td>
+            <td data-align="end">€4033</td>
+            <td data-align="end">€4144</td>
+            <td data-align="end">€4603</td>
+            <td data-align="end">€3500</td>
+            <td data-align="end">€3900</td>
+            <td data-align="end">€4100</td>
+            <td data-align="end">€4400</td>
+          </tr>
+          <tr>
+            <td>Grace Hopper</td>
+            <td data-align="end">€2859</td>
+            <td data-align="end">€3177</td>
+            <td data-align="end">€3495</td>
+            <td data-align="end">€3813</td>
+            <td data-align="end">€2800</td>
+            <td data-align="end">€3100</td>
+            <td data-align="end">€3400</td>
+            <td data-align="end">€3800</td>
+          </tr>
+          <tr>
+            <td>Alan Turing</td>
+            <td data-align="end">€4437</td>
+            <td data-align="end">€4374</td>
+            <td data-align="end">€4311</td>
+            <td data-align="end">€4248</td>
+            <td data-align="end">€4400</td>
+            <td data-align="end">€4300</td>
+            <td data-align="end">€4300</td>
+            <td data-align="end">€4200</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td data-align="end">€11007</td>
+            <td data-align="end">€11584</td>
+            <td data-align="end">€11950</td>
+            <td data-align="end">€12664</td>
+            <td data-align="end">€10700</td>
+            <td data-align="end">€11300</td>
+            <td data-align="end">€11800</td>
+            <td data-align="end">€12400</td>
+          </tr>
+        </tfoot>
+      </sl:table>
+
   - id: compact
     title: Compact
     description: size="sm", for many rows of figures or a table meant for paper.

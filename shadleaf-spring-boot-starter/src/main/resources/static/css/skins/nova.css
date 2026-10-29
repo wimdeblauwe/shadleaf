@@ -1737,6 +1737,11 @@
     border-inline-end: 1px solid var(--border);
   }
 
+  /* Column groups: a line on the start edge of every colgroup after the first, through every row (table.css). */
+  .table > colgroup + colgroup {
+    border-inline-start: 1px solid var(--border);
+  }
+
   .table-sort {
     @apply -ms-2.5;
   }
