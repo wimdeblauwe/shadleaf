@@ -1,0 +1,65 @@
+---
+title: Shadleaf and Pines
+description: "Pines, by DevDojo, is a collection of Tailwind CSS and Alpine.js snippets and marketing sections to copy."
+sidebar:
+  label: Pines
+  order: 9
+---
+
+[Pines](https://devdojo.com/pines) is DevDojo's free (MIT) library of Alpine.js and Tailwind CSS elements and
+marketing sections. Like [Penguin UI](../penguin-ui/), it is markup to copy: add Tailwind and Alpine.js to the page and
+paste an element.
+
+## The same dialog
+
+```html
+<!-- Pines, utility classes shortened -->
+<div x-data="{ modalOpen: false }" @keydown.escape.window="modalOpen = false">
+  <button @click="modalOpen=true" class="...">Edit profile</button>
+  <template x-teleport="body">
+    <div x-show="modalOpen" class="fixed top-0 left-0 z-[99] ...">
+      <div x-show="modalOpen" @click="modalOpen=false" class="absolute inset-0 bg-black/40"></div>
+      <div x-show="modalOpen" x-trap.inert.noscroll="modalOpen" class="relative ...">
+        <h3 class="text-lg font-semibold">Edit profile</h3>
+        ...
+      </div>
+    </div>
+  </template>
+</div>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  ...
+</sl:dialog>
+```
+
+## Where Pines is stronger
+
+- **You own the markup**, in any stack with Tailwind and Alpine.js.
+- **Marketing sections**: heroes, pricing tables, footers, ready to paste.
+- **Some elements Shadleaf has not**: a Monaco editor, an image gallery, a marquee, text and typing effects, a retro
+  grid.
+- **Its look is close to shadcn/ui's**: neutral greys, small radii, a focus ring.
+
+## Where Shadleaf is stronger
+
+- **No Tailwind build**, and no markup to keep up to date across pages. See
+  [what a component engine adds](../#what-a-component-engine-adds).
+- **Theming.** Pines has no tokens or themes: a colour change is a change of classes in every snippet. Shadleaf
+  follows shadcn/ui's tokens and has nine skins.
+- **Without JavaScript.** Pines' dialogs and menus are hidden until Alpine.js shows them; Shadleaf's work on native
+  elements first.
+- **More components for applications**: no combobox, chart, sidebar or application layout, or form field with
+  validation in Pines.
+- **Activity.** Pines has had no release, and its last change was in August 2025.
+
+## Which one to choose
+
+**Choose Pines** for a marketing page, or for single elements in a project that already uses Tailwind and Alpine.js.
+**Choose Shadleaf** for a Spring Boot application with forms, tables and navigation.
