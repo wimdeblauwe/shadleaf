@@ -23,23 +23,28 @@ Java listener runs, and the changes go back to the browser. There are no templat
 
 ```java
 // Vaadin Flow
-Dialog dialog = new Dialog();
-dialog.setHeaderTitle("Edit profile");
-dialog.add(new TextField("Name"));
-Button cancel = new Button("Cancel", e -> dialog.close());
-Button save = new Button("Save", e -> {
-  service.save(...);
-  dialog.close();
-});
-dialog.getFooter().add(cancel, save);
-add(new Button("Edit profile", e -> dialog.open()), dialog);
+var name = new TextField("Name");
+var binder = new BeanValidationBinder<>(Profile.class);
+binder.forField(name).bind("name");
+binder.setBean(service.load());
+
+var dialog = new Dialog("Edit profile", name);
+dialog.getFooter().add(
+    new Button("Cancel", e -> dialog.close()),
+    new Button("Save", e -> {
+      if (binder.validate().isOk()) {
+        service.save(binder.getBean());
+        dialog.close();
+      }
+    }));
+add(new Button("Edit profile", e -> dialog.open()));
 ```
 
 ```html
-<!-- Shadleaf -->
+<!-- Shadleaf: profile.html -->
 <sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
 <form th:action="@{/profile}" th:object="${profile}" method="post">
-  <sl:dialog id="edit-profile">
+  <sl:dialog id="edit-profile" th:open="${#fields.hasErrors('*')}">
     <sl:dialog-header>
       <sl:dialog-title>Edit profile</sl:dialog-title>
     </sl:dialog-header>
@@ -56,12 +61,39 @@ add(new Button("Edit profile", e -> dialog.open()), dialog);
 </form>
 ```
 
+```java
+// Shadleaf: the controller
+@GetMapping("/profile")
+String show(Model model) {
+  model.addAttribute("profile", service.load());
+  return "profile";
+}
+
+@PostMapping("/profile")
+String save(@Valid @ModelAttribute("profile") Profile profile, BindingResult result) {
+  if (result.hasErrors()) {
+    return "profile";
+  }
+  service.save(profile);
+  return "redirect:/profile";
+}
+```
+
+Both validate the name with Bean Validation and show its error under the field. In Vaadin the dialog stays open while
+the user fixes it. In Shadleaf the form posts, and with errors the controller renders the page again, with the dialog
+open (`th:open`, which needs Alpine). With htmx only the form is swapped, and the dialog never closes (see the
+[dialog](../../components/dialog/)).
+
 Most of the differences below follow from that one.
 
 ## Where Vaadin is stronger
 
-- **Only Java.** The whole UI is Java: type-checked, refactorable, testable without a browser. A team that knows no
-  HTML or CSS can build a complete application.
+- **Only Java.** The whole UI is Java: type-checked, refactorable, and testable without a browser, with browserless
+  UI tests that are free since Vaadin 25.1. A team that knows no HTML or CSS can build a complete application.
+- **No API layer.** You don't design, document or secure requests and endpoints. A click calls your Java method.
+- **State stays on the server.** The client cannot change a hidden field or call an endpoint you forgot to protect,
+  because there are none. It sends events, and the server decides what they mean.
+- **Binder.** Form binding, conversion and validation work the same way in every screen.
 - **Rich, stateful screens.** Its Grid scrolls lazily through large data sets, sorts, filters and edits in place, and
   the server can push changes to the browser. In Shadleaf each of those is a request you design.
 - **Breadth.** Around 60 components, among them a tree grid, master-detail and split layouts, a login form and a
@@ -73,30 +105,33 @@ Most of the differences below follow from that one.
 ## Where Shadleaf is stronger
 
 - **Plain HTTP and HTML.** Every page is a request and a response, rendered on the server. It works with a load
-  balancer without sticky sessions, holds no UI state per user in server memory, can be indexed by search engines and
-  cached, and fits into an existing Spring MVC application one page at a time.
-- **Familiar to front-end developers.** A Shadleaf page is an HTML template with CSS and a little JavaScript, the same
-  material as an Angular or React application, and the components carry shadcn/ui's names, which many React developers
-  already know. Developers coming from those frameworks read and debug a Shadleaf page in the browser's developer tools,
-  as they do today. In Vaadin the UI is Java objects, and the HTML they render is an implementation detail.
+  balancer without sticky sessions, holds no UI state per user in server memory, can be cached and indexed by search
+  engines, and fits into an existing Spring MVC application one page at a time. Without its script the components
+  still show their content, and forms and links still work; a Vaadin page is empty until its client engine has
+  started. For partial updates, [htmx](../../guides/htmx/) swaps parts of the page, and Shadleaf's components are
+  tested with its swaps and history restores.
+- **Familiar to front-end developers.** A Shadleaf page is an HTML template with CSS and a little JavaScript, the
+  same material as an Angular or React application. Developers coming from those frameworks read and debug it in the
+  browser's developer tools, as they do today. In Vaadin the UI is Java objects, and the HTML they render is an
+  implementation detail.
 - **The web's ecosystem.** Any HTML, CSS or JavaScript library goes straight into a template: a map, a rich text
   editor, a charting library, an Alpine.js plugin, a snippet from a blog post. In Vaadin a JavaScript library first
   needs a Java class that wraps it (`@NpmPackage`, `@JsModule`), or an add-on from the Vaadin Directory.
-- **Works without JavaScript.** A Shadleaf page is HTML; without its script the components still show their content,
-  and forms and links still work. A Vaadin page is empty until its client engine has started.
-- **A strict Content-Security-Policy.** Vaadin's client engine needs `script-src 'unsafe-inline' 'unsafe-eval'` and
-  `style-src 'unsafe-inline'`, which its documentation calls an architectural limitation. Shadleaf runs under a policy
-  without either ([CSP](../../guides/csp/)).
-- **A lighter build.** Shadleaf is a jar on Java 17, with no Node.js and no frontend build. Vaadin 25 needs Java 21 and
-  Node.js 24 for its frontend build.
+- **A strict Content-Security-Policy.** Shadleaf runs under a policy without `'unsafe-inline'` or `'unsafe-eval'`, in
+  development too ([CSP](../../guides/csp/)). Vaadin's default policy needs both. Its documentation describes a
+  nonce-based strict policy for scripts, but only in production mode, and only after you replace `eval` and the
+  `Function` constructor with a map of predefined code.
+- **Java 17, and no Node.js.** Shadleaf runs on Java 17; Vaadin 25 needs Java 21. Shadleaf does not need Node.js on
+  its own, but a Thymeleaf project may still use it for its build: one generated by
+  [ttcli](https://github.com/wimdeblauwe/ttcli) uses Vite for building and live reload, for example. Vaadin uses a
+  pre-compiled frontend bundle until you add frontend code or a theme of your own, and then runs npm and Vite (it
+  downloads Node.js when it is missing).
 - **No licence fees.** All of Shadleaf is Apache 2.0, the chart included. Vaadin's core is Apache 2.0 too, but its
   Charts, Grid Pro, CRUD, Map, Dashboard and Rich Text Editor need a subscription, per developer, at the time of
   writing $159 per month.
 - **shadcn/ui's design.** Shadleaf's skins are shadcn/ui's styles, themed with its tokens. Vaadin has its own themes,
   Lumo and Aura, styled through custom properties and the parts of its web components; Tailwind support is
   experimental.
-- **htmx.** Shadleaf's components are tested with htmx swaps and history restores. Vaadin owns the page and its state,
-  so htmx has no place there.
 
 ## Which one to choose
 
