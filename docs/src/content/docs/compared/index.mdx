@@ -7,8 +7,8 @@ sidebar:
 ---
 
 Shadleaf is not the only way to get good-looking components into a server-rendered application. This section sets it
-next to the libraries people most often ask about, one page each, and says when one of them is the better choice. The
-pages describe them as of November 2026; prices and versions change, so check their own sites before you decide.
+next to the libraries people most often ask about, one page each or one for two that are close, and says when one of
+them is the better choice. The pages describe them as of November 2026; prices and versions change, so check their own sites before you decide.
 
 ## At a glance
 
@@ -19,12 +19,12 @@ pages describe them as of November 2026; prices and versions change, so check th
 | **Shadleaf** | Thymeleaf tags: `<sl:button>` | Spring Boot 4 and Thymeleaf | nothing: the jar ships compiled CSS | Alpine.js and native elements | Apache 2.0 |
 | [Vaadin](./vaadin/) | Java code: `new Button(...)` | Spring Boot (Java 21) | Node.js, for Vaadin's frontend build | web components, kept in step with the server | Apache 2.0; commercial components by subscription |
 | [Flux](./flux/) | Blade tags: `<flux:button>` | Laravel and Livewire | Tailwind CSS 4.2+ | Livewire and Alpine.js | free core; Pro components paid once |
-| [Basecoat](./basecoat/) | classes on HTML; Jinja and Nunjucks macros | any | nothing with the CDN stylesheet; Tailwind otherwise | vanilla JS | MIT |
-| [starting-point-ui](./starting-point-ui/) | classes on HTML | any | Tailwind CSS v4 | vanilla JS | MIT |
+| [Basecoat](./basecoat-and-starting-point-ui/) | classes on HTML; Jinja and Nunjucks macros | any | nothing with the CDN stylesheet; Tailwind otherwise | vanilla JS | MIT |
+| [starting-point-ui](./basecoat-and-starting-point-ui/) | classes on HTML | any | Tailwind CSS v4 | vanilla JS | MIT |
 | [daisyUI](./daisyui/) | classes on HTML | any | nothing with the CDN stylesheet; Tailwind otherwise | CSS and native elements; the rest is your JS | MIT; templates and charts sold separately |
 | [Flowbite](./flowbite/) | Tailwind utility classes and data attributes | any | Tailwind CSS (or the CDN build) | vanilla JS | MIT; Pro blocks and Figma kit paid |
-| [Penguin UI](./penguin-ui/) | copied Tailwind and Alpine.js markup | any | Tailwind CSS v4 | Alpine.js, inline in the markup | MIT |
-| [Pines](./pines/) | copied Tailwind and Alpine.js markup | any | Tailwind CSS | Alpine.js, inline in the markup | MIT |
+| [Penguin UI](./penguin-ui-and-pines/) | copied Tailwind and Alpine.js markup | any | Tailwind CSS v4 | Alpine.js, inline in the markup | MIT |
+| [Pines](./penguin-ui-and-pines/) | copied Tailwind and Alpine.js markup | any | Tailwind CSS | Alpine.js, inline in the markup | MIT |
 | [Canon](./canon/) | classes on HTML | any | nothing: one stylesheet | optional vanilla JS | MIT |
 
 </div>
@@ -34,10 +34,10 @@ The libraries fall into four groups, and the comparison is a different one for e
 1. **Components for another stack** ([Flux](./flux/)): the same idea as Shadleaf, for Laravel.
 2. **Another architecture on the same stack** ([Vaadin](./vaadin/)): Java and Spring, but the UI lives on the server
    as Java objects instead of HTML templates.
-3. **shadcn/ui as plain HTML** ([Basecoat](./basecoat/), [starting-point-ui](./starting-point-ui/)): the same design
+3. **shadcn/ui as plain HTML** ([Basecoat](./basecoat-and-starting-point-ui/), [starting-point-ui](./basecoat-and-starting-point-ui/)): the same design
    as Shadleaf, as CSS classes for any stack.
-4. **Class and copy-paste libraries** ([daisyUI](./daisyui/), [Flowbite](./flowbite/), [Penguin UI](./penguin-ui/),
-   [Pines](./pines/), [Canon](./canon/)): markup you write or copy into your templates, with a look of their own.
+4. **Class and copy-paste libraries** ([daisyUI](./daisyui/), [Flowbite](./flowbite/), [Penguin UI](./penguin-ui-and-pines/),
+   [Pines](./penguin-ui-and-pines/), [Canon](./canon/)): markup you write or copy into your templates, with a look of their own.
 
 ## What a component engine adds
 

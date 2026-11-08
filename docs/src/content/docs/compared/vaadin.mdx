@@ -75,6 +75,13 @@ Most of the differences below follow from that one.
 - **Plain HTTP and HTML.** Every page is a request and a response, rendered on the server. It works with a load
   balancer without sticky sessions, holds no UI state per user in server memory, can be indexed by search engines and
   cached, and fits into an existing Spring MVC application one page at a time.
+- **Familiar to front-end developers.** A Shadleaf page is an HTML template with CSS and a little JavaScript, the
+  same material as an Angular or React application, and the components carry shadcn/ui's names, which many React
+  developers already know. Someone coming from those will feel at home in a template and in the browser's developer
+  tools. In Vaadin the UI is Java objects, and the HTML they render is an implementation detail.
+- **The web's ecosystem.** Any HTML, CSS or JavaScript library goes straight into a template: a map, a rich text
+  editor, a charting library, an Alpine.js plugin, a snippet from a blog post. In Vaadin a JavaScript library first
+  needs a Java class that wraps it (`@NpmPackage`, `@JsModule`), or an add-on from the Vaadin Directory.
 - **Works without JavaScript.** A Shadleaf page is HTML; without its script the components still show their content,
   and forms and links still work. A Vaadin page is empty until its client engine has started.
 - **A strict Content-Security-Policy.** Vaadin's client engine needs `script-src 'unsafe-inline' 'unsafe-eval'` and
@@ -98,4 +105,4 @@ team that would rather write only Java, or when paid support and long-term maint
 
 **Choose Shadleaf** for an application that is, or should stay, Spring MVC with Thymeleaf: public pages, pages that
 must work under a strict CSP or without JavaScript, horizontal scaling without session state, or a team that is happy
-writing HTML and wants shadcn/ui's look.
+writing HTML (developers coming from Angular or React among them) and wants shadcn/ui's look.
