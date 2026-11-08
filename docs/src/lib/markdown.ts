@@ -16,8 +16,8 @@ export type Section = { title: string; entries: DocsEntry[]; groups?: { title: s
 const START_HERE = ['index', 'getting-started', 'coming-from-shadcn', 'ide-completion', 'coding-agents'];
 
 /**
- * The docs in the sidebar's order: Start here, Components (the overview, then by group), Layouts and Guides (by
- * sidebar.order).
+ * The docs in the sidebar's order: Start here, Components (the overview, then by group), Layouts, Guides and Compared
+ * with (by sidebar.order).
  */
 export async function sections(): Promise<Section[]> {
   const entries = await getCollection('docs');
@@ -41,6 +41,7 @@ export async function sections(): Promise<Section[]> {
     {title: 'Components', entries: [...overview, ...groups.flatMap(group => group.entries)], groups},
     {title: 'Layouts', entries: byOrder('layouts')},
     {title: 'Guides', entries: byOrder('guides')},
+    {title: 'Compared with', entries: byOrder('compared')},
   ];
 }
 
@@ -138,7 +139,8 @@ export function bodyMarkdown(entry: DocsEntry): string {
       aside = false;
       continue;
     }
-    if (/^\s*<\/?Steps>\s*$/.test(line)) {
+    // Wrappers that only style what they hold, such as <div class="sticky-header"> around a table.
+    if (/^\s*<\/?(Steps|div)\b[^>]*>\s*$/.test(line)) {
       continue;
     }
     const converted = convertLine(line, entry);
