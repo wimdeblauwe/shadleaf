@@ -69,6 +69,7 @@ export default defineConfig({
         },
         {label: 'Layouts', items: [{autogenerate: {directory: 'layouts'}}]},
         {label: 'Guides', items: [{autogenerate: {directory: 'guides'}}]},
+        {label: 'Compared with', items: [{autogenerate: {directory: 'compared'}}]},
       ],
     }),
   ],

@@ -12,6 +12,23 @@
   color: var(--sl-color-text-accent);
 }
 
+/* A long table whose header row stays below the page header while you scroll through it. Starlight makes every table
+   its own scroll box (display: block; overflow: auto), which a sticky header would stick to instead of the page; so
+   only from the width where the table fits without scrolling sideways. Narrower, it keeps scrolling as any table. */
+@media (min-width: 65rem) {
+  .sl-markdown-content .sticky-header table {
+    display: table;
+    overflow: visible;
+  }
+
+  .sl-markdown-content .sticky-header thead th {
+    position: sticky;
+    inset-block-start: calc(var(--sl-nav-height) + var(--sl-mobile-toc-height));
+    z-index: 1;
+    background-color: var(--sl-color-bg);
+  }
+}
+
 /* Brand colours: pine teal on slate. Starlight's dark theme is :root, its light theme :root[data-theme='light']. */
 :root {
   --sl-color-accent-low: #0c2725;

@@ -1,0 +1,100 @@
+---
+title: Shadleaf and Vaadin
+description: "Two ways to build a Spring Boot UI: Thymeleaf templates with Shadleaf's components, or Java components with Vaadin Flow."
+sidebar:
+  order: 2
+---
+
+[Vaadin](https://vaadin.com) is the best-known UI framework for Java, and it runs on Spring Boot like Shadleaf. The two
+answer the same question, how to give a Spring application a good-looking interface, in opposite ways. This page is
+about Vaadin Flow, as of version 25 (November 2026); Vaadin's other part, Hilla, is a React front end with Java
+endpoints.
+
+## Two architectures
+
+**Shadleaf** is a set of Thymeleaf components. A controller handles a request and returns a view; Thymeleaf renders
+it to HTML, and the browser gets a page. Between requests the server remembers nothing about the page. Forms post,
+links navigate, and [htmx](../../guides/htmx/) can swap parts of the page if you want that.
+
+**Vaadin Flow** keeps the UI on the server. You build it from Java objects, a tree of components per user session,
+and a client engine in the browser shows it with Vaadin's web components. A click goes to the server as an event, your
+Java listener runs, and the changes go back to the browser. There are no templates and no requests you write.
+
+```java
+// Vaadin Flow
+Dialog dialog = new Dialog();
+dialog.setHeaderTitle("Edit profile");
+dialog.add(new TextField("Name"));
+Button cancel = new Button("Cancel", e -> dialog.close());
+Button save = new Button("Save", e -> {
+  service.save(...);
+  dialog.close();
+});
+dialog.getFooter().add(cancel, save);
+add(new Button("Edit profile", e -> dialog.open()), dialog);
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<form th:action="@{/profile}" th:object="${profile}" method="post">
+  <sl:dialog id="edit-profile">
+    <sl:dialog-header>
+      <sl:dialog-title>Edit profile</sl:dialog-title>
+    </sl:dialog-header>
+    <sl:field th:field="*{name}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:dialog-footer>
+      <sl:button variant="outline" commandfor="edit-profile" command="close">Cancel</sl:button>
+      <sl:button type="submit">Save</sl:button>
+    </sl:dialog-footer>
+  </sl:dialog>
+</form>
+```
+
+Most of the differences below follow from that one.
+
+## Where Vaadin is stronger
+
+- **Only Java.** The whole UI is Java: type-checked, refactorable, testable without a browser. A team that knows no
+  HTML or CSS can build a complete application.
+- **Rich, stateful screens.** Its Grid scrolls lazily through large data sets, sorts, filters and edits in place, and
+  the server can push changes to the browser. In Shadleaf each of those is a request you design.
+- **Breadth.** Around 60 components, among them a tree grid, master-detail and split layouts, a login form and a
+  message list. The commercial ones add charts, maps, a dashboard, a CRUD editor, a spreadsheet and a rich text
+  editor.
+- **A company behind it.** Paid support, long-term maintenance of a major version, a published table of WCAG criteria
+  per component, a visual editor (Copilot) and Figma libraries.
+
+## Where Shadleaf is stronger
+
+- **Plain HTTP and HTML.** Every page is a request and a response, rendered on the server. It works with a load
+  balancer without sticky sessions, holds no UI state per user in server memory, can be indexed by search engines and
+  cached, and fits into an existing Spring MVC application one page at a time.
+- **Works without JavaScript.** A Shadleaf page is HTML; without its script the components still show their content,
+  and forms and links still work. A Vaadin page is empty until its client engine has started.
+- **A strict Content-Security-Policy.** Vaadin's client engine needs `script-src 'unsafe-inline' 'unsafe-eval'` and
+  `style-src 'unsafe-inline'`, which its documentation calls an architectural limitation. Shadleaf runs under a policy
+  without either ([CSP](../../guides/csp/)).
+- **A lighter build.** Shadleaf is a jar: no Node.js and no frontend build, on Java 17. Vaadin 25 needs Java 21 and
+  Node.js 24 for its frontend build.
+- **No licence fees.** All of Shadleaf is Apache 2.0, the chart included. Vaadin's core is Apache 2.0 too, but its
+  Charts, Grid Pro, CRUD, Map, Dashboard and Rich Text Editor need a subscription, per developer, at the time of
+  writing $159 per month.
+- **shadcn/ui's design.** Shadleaf's skins are shadcn/ui's styles, themed with its tokens. Vaadin has its own themes,
+  Lumo and Aura, styled through custom properties and the parts of its web components; Tailwind support is
+  experimental.
+- **htmx.** Shadleaf's components are tested with htmx swaps and history restores. Vaadin owns the page and its state,
+  so htmx has no place there.
+
+## Which one to choose
+
+**Choose Vaadin** for an internal application with complex, stateful screens (large editable grids, live updates), a
+team that would rather write only Java, or when paid support and long-term maintenance matter.
+
+**Choose Shadleaf** for an application that is, or should stay, Spring MVC with Thymeleaf: public pages, pages that
+must work under a strict CSP or without JavaScript, horizontal scaling without session state, or a team that is happy
+writing HTML and wants shadcn/ui's look.
