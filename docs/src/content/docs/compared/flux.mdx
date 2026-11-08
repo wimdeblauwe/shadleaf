@@ -1,6 +1,6 @@
 ---
 title: Shadleaf and Flux
-description: "Flux is Livewire's component library for Laravel: the same idea as Shadleaf, on another stack."
+description: "Flux is Livewire's component library for Laravel, built on the same idea as Shadleaf."
 sidebar:
   label: Flux
   order: 3
@@ -43,13 +43,13 @@ follows Flux's. This page describes Flux 2 (November 2026).
 </sl:dialog>
 ```
 
-The two read much alike. The difference is underneath: a Flux modal's state can live in a Livewire component on the
+The two read much alike. The difference is underneath. A Flux modal's state can live in a Livewire component on the
 server (`wire:model` on the modal), and Livewire sends changes back and forth as the user works. A Shadleaf page is
 rendered once per request; forms post, and [htmx](../../guides/htmx/) swaps parts of the page if you want that.
 
 ## Where Flux is stronger
 
-- **Livewire.** Server-side state with live updates, without writing requests or JavaScript: a property bound with
+- **Livewire.** Server-side state with live updates, without writing requests or JavaScript. A property bound with
   `wire:model` updates the server as the user types.
 - **Breadth.** Around 50 components, among them some Shadleaf has not: a rich text editor, a kanban board, a command
   palette, an autocomplete, OTP and phone inputs, a carousel and a timeline.
@@ -62,11 +62,11 @@ rendered once per request; forms post, and [htmx](../../guides/htmx/) swaps part
 - **No Tailwind build.** Flux needs Tailwind CSS 4.2 or later compiled into your application; Shadleaf's jar ships its
   CSS.
 - **shadcn/ui's design**, in nine skins. Flux has its own design, with an accent colour and a base grey to choose.
-- **A strict Content-Security-Policy and no JavaScript.** Shadleaf documents both: it runs without `'unsafe-inline'`
+- **A strict Content-Security-Policy and no JavaScript.** Shadleaf documents both. It runs without `'unsafe-inline'`
   or `'unsafe-eval'` ([CSP](../../guides/csp/)) and its components degrade without a script. Flux's documentation says
   nothing about either, and Livewire's interactivity needs JavaScript.
 
 ## Which one to choose
 
-**Choose Flux** if your application is Laravel. **Choose Shadleaf** if it is Spring Boot: the two never compete for
+**Choose Flux** if your application is Laravel. **Choose Shadleaf** if it is Spring Boot. The two never compete for
 the same project.

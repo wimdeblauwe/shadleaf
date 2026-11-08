@@ -75,10 +75,10 @@ Most of the differences below follow from that one.
 - **Plain HTTP and HTML.** Every page is a request and a response, rendered on the server. It works with a load
   balancer without sticky sessions, holds no UI state per user in server memory, can be indexed by search engines and
   cached, and fits into an existing Spring MVC application one page at a time.
-- **Familiar to front-end developers.** A Shadleaf page is an HTML template with CSS and a little JavaScript, the
-  same material as an Angular or React application, and the components carry shadcn/ui's names, which many React
-  developers already know. Someone coming from those will feel at home in a template and in the browser's developer
-  tools. In Vaadin the UI is Java objects, and the HTML they render is an implementation detail.
+- **Familiar to front-end developers.** A Shadleaf page is an HTML template with CSS and a little JavaScript, the same
+  material as an Angular or React application, and the components carry shadcn/ui's names, which many React developers
+  already know. Developers coming from those frameworks read and debug a Shadleaf page in the browser's developer tools,
+  as they do today. In Vaadin the UI is Java objects, and the HTML they render is an implementation detail.
 - **The web's ecosystem.** Any HTML, CSS or JavaScript library goes straight into a template: a map, a rich text
   editor, a charting library, an Alpine.js plugin, a snippet from a blog post. In Vaadin a JavaScript library first
   needs a Java class that wraps it (`@NpmPackage`, `@JsModule`), or an add-on from the Vaadin Directory.
@@ -87,7 +87,7 @@ Most of the differences below follow from that one.
 - **A strict Content-Security-Policy.** Vaadin's client engine needs `script-src 'unsafe-inline' 'unsafe-eval'` and
   `style-src 'unsafe-inline'`, which its documentation calls an architectural limitation. Shadleaf runs under a policy
   without either ([CSP](../../guides/csp/)).
-- **A lighter build.** Shadleaf is a jar: no Node.js and no frontend build, on Java 17. Vaadin 25 needs Java 21 and
+- **A lighter build.** Shadleaf is a jar on Java 17, with no Node.js and no frontend build. Vaadin 25 needs Java 21 and
   Node.js 24 for its frontend build.
 - **No licence fees.** All of Shadleaf is Apache 2.0, the chart included. Vaadin's core is Apache 2.0 too, but its
   Charts, Grid Pro, CRUD, Map, Dashboard and Rich Text Editor need a subscription, per developer, at the time of
