@@ -18069,3 +18069,731 @@ The texts are shown as written in the file.
 A new language is a `shadleaf/messages_<language>.properties` in the starter (`src/main/resources/shadleaf/`), with
 every key of `messages.properties`. `ShadleafMessageBundlesTest` checks that each translation has exactly the English
 keys, the same arguments, and its apostrophes written for whether the message has arguments. Pull requests are welcome.
+
+---
+
+## Compared with other libraries
+
+> How Shadleaf differs from daisyUI, Flowbite, Basecoat, Flux, Vaadin and other UI libraries, and when another one is the better choice.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/compared/
+
+Shadleaf is not the only way to get good-looking components into a server-rendered application. This section sets it
+next to the libraries people most often ask about, one page each or one for two that are close, and says when one of
+them is the better choice. The pages describe them as of November 2026; prices and versions change, so check their own
+sites before you decide.
+
+### At a glance
+
+| Library | What you write | Runs on | Your build needs | Behaviour | Licence |
+| --- | --- | --- | --- | --- | --- |
+| **Shadleaf** | Thymeleaf tags: `<sl:button>` | Spring Boot 4 and Thymeleaf | nothing: the jar ships compiled CSS | Alpine.js and native elements | Apache 2.0 |
+| [Vaadin](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/vaadin.md) | Java code: `new Button(...)` | Spring Boot (Java 21) | nothing until you add frontend code or a theme; then Node.js, which Vaadin downloads | web components, kept in step with the server | Apache 2.0; commercial components by subscription |
+| [Flux](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/flux.md) | Blade tags: `<flux:button>` | Laravel and Livewire | Tailwind CSS 4.2+ | Livewire and Alpine.js | free core; Pro components paid once |
+| [Basecoat](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/basecoat-and-starting-point-ui.md) | classes on HTML; Jinja and Nunjucks macros | any | nothing with the CDN stylesheet; Tailwind otherwise | vanilla JS | MIT |
+| [starting-point-ui](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/basecoat-and-starting-point-ui.md) | classes on HTML | any | Tailwind CSS v4 | vanilla JS | MIT |
+| [daisyUI](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/daisyui.md) | classes on HTML | any | nothing with the CDN stylesheet; Tailwind otherwise | CSS and native elements; the rest is your JS | MIT; templates and charts sold separately |
+| [Flowbite](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/flowbite.md) | Tailwind utility classes and data attributes | any | Tailwind CSS (or the CDN build) | vanilla JS | MIT; Pro blocks and Figma kit paid |
+| [Penguin UI](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/penguin-ui-and-pines.md) | copied Tailwind and Alpine.js markup | any | Tailwind CSS v4 | Alpine.js, inline in the markup | MIT |
+| [Pines](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/penguin-ui-and-pines.md) | copied Tailwind and Alpine.js markup | any | Tailwind CSS | Alpine.js, inline in the markup | MIT |
+| [Canon](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/canon.md) | classes on HTML | any | nothing: one stylesheet | optional vanilla JS | MIT |
+
+The libraries fall into four groups, and the comparison is a different one for each:
+
+1. **Components for another stack** ([Flux](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/flux.md)): the same idea as Shadleaf, for Laravel.
+2. **Another architecture on the same stack** ([Vaadin](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/vaadin.md)): Java and Spring, but the UI lives on the server
+   as Java objects instead of HTML templates.
+3. **shadcn/ui as plain HTML** ([Basecoat](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/basecoat-and-starting-point-ui.md),
+   [starting-point-ui](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/basecoat-and-starting-point-ui.md)): the same design as Shadleaf, as CSS classes for any stack.
+4. **Class and copy-paste libraries** ([daisyUI](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/daisyui.md), [Flowbite](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/flowbite.md),
+   [Penguin UI](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/penguin-ui-and-pines.md), [Pines](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/penguin-ui-and-pines.md), [Canon](https://shadleaf.dev/1.1.0-SNAPSHOT/compared/canon.md)): markup you write or
+   copy into your templates, with a look of their own.
+
+### What a component engine adds
+
+Every library in groups 3 and 4 works from Thymeleaf, because they are CSS and a script, and Thymeleaf writes HTML. The
+difference is in what you write, and what you keep up to date. With a class library, a dialog is its markup, written
+out in every template that has one:
+
+```html
+<!-- daisyUI -->
+<button class="btn" onclick="edit_profile.showModal()">Edit profile</button>
+<dialog id="edit_profile" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Edit profile</h3>
+    <div class="modal-action">
+      <form method="dialog"><button class="btn">Close</button></form>
+    </div>
+  </div>
+</dialog>
+```
+
+With Shadleaf the markup is in the library's template, and you write the component:
+
+```html
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  ...
+</sl:dialog>
+```
+
+That brings a few things no class library can:
+
+- **One place to change.** A fix or a new version of a component's markup reaches every page that uses it. Copied
+  markup stays as it was copied.
+- **Declared props.** `variant="destructve"` fails the render with the legal values, and so does an icon-only button
+  without an accessible name. A misspelt class does nothing, silently.
+- **Spring wiring.** `th:field` on a field gives its label, control, error message, `aria-describedby` and
+  `aria-invalid` in one go; the [table](https://shadleaf.dev/1.1.0-SNAPSHOT/components/table.md) sorts and pages a Spring Data `Page`; the
+  [user menu](https://shadleaf.dev/1.1.0-SNAPSHOT/components/user-menu.md) reads Spring Security; every text is a message you can
+  [translate](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/translating.md). With a class library, you write all of that yourself.
+- **No Tailwind build.** Most class libraries are Tailwind plugins, so your application compiles Tailwind. Shadleaf's
+  jar ships the compiled CSS ([Tailwind CSS](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/tailwind.md)).
+- **IDE completion** of tags and props, through [web-types](https://shadleaf.dev/1.1.0-SNAPSHOT/ide-completion.md).
+
+What you give up is the freedom of owning every line of markup, and a library that works the same in any language.
+Shadleaf lets you take a template over when a prop is not enough (the
+[adjustability ladder](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/adjustability.md)), but it only runs in Spring Boot with Thymeleaf.
+
+---
+
+## Shadleaf and Vaadin
+
+> Two ways to build a Spring Boot UI: Thymeleaf templates with Shadleaf's components, or Java components with Vaadin Flow.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/compared/vaadin/
+
+[Vaadin](https://vaadin.com) is the best-known UI framework for Java, and it runs on Spring Boot like Shadleaf. The two
+answer the same question, how to give a Spring application a good-looking interface, in opposite ways. This page is
+about Vaadin Flow, as of version 25 (November 2026); Vaadin's other part, Hilla, is a React front end with Java
+endpoints.
+
+### Two architectures
+
+**Shadleaf** is a set of Thymeleaf components. A controller handles a request and returns a view; Thymeleaf renders
+it to HTML, and the browser gets a page. Between requests the server remembers nothing about the page. Forms post,
+links navigate, and [htmx](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md) can swap parts of the page if you want that.
+
+**Vaadin Flow** keeps the UI on the server. You build it from Java objects, a tree of components per user session,
+and a client engine in the browser shows it with Vaadin's web components. A click goes to the server as an event, your
+Java listener runs, and the changes go back to the browser. There are no templates and no requests you write.
+
+```java
+// Vaadin Flow
+var name = new TextField("Name");
+var binder = new BeanValidationBinder<>(Profile.class);
+binder.forField(name).bind("name");
+binder.setBean(service.load());
+
+var dialog = new Dialog("Edit profile", name);
+dialog.getFooter().add(
+    new Button("Cancel", e -> dialog.close()),
+    new Button("Save", e -> {
+      if (binder.validate().isOk()) {
+        service.save(binder.getBean());
+        dialog.close();
+      }
+    }));
+add(new Button("Edit profile", e -> dialog.open()));
+```
+
+```html
+<!-- Shadleaf: profile.html -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<form th:action="@{/profile}" th:object="${profile}" method="post">
+  <sl:dialog id="edit-profile" th:open="${#fields.hasErrors('*')}">
+    <sl:dialog-header>
+      <sl:dialog-title>Edit profile</sl:dialog-title>
+    </sl:dialog-header>
+    <sl:field th:field="*{name}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:dialog-footer>
+      <sl:button variant="outline" commandfor="edit-profile" command="close">Cancel</sl:button>
+      <sl:button type="submit">Save</sl:button>
+    </sl:dialog-footer>
+  </sl:dialog>
+</form>
+```
+
+```java
+// Shadleaf: the controller
+@GetMapping("/profile")
+String show(Model model) {
+  model.addAttribute("profile", service.load());
+  return "profile";
+}
+
+@PostMapping("/profile")
+String save(@Valid @ModelAttribute("profile") Profile profile, BindingResult result) {
+  if (result.hasErrors()) {
+    return "profile";
+  }
+  service.save(profile);
+  return "redirect:/profile";
+}
+```
+
+Both validate the name with Bean Validation and show its error under the field. In Vaadin the dialog stays open while
+the user fixes it. In Shadleaf the form posts, and with errors the controller renders the page again, with the dialog
+open (`th:open`, which needs Alpine). With htmx only the form is swapped, and the dialog never closes (see the
+[dialog](https://shadleaf.dev/1.1.0-SNAPSHOT/components/dialog.md)).
+
+Most of the differences below follow from that one.
+
+### Where Vaadin is stronger
+
+- **Only Java.** The whole UI is Java: type-checked, refactorable, and testable without a browser, with browserless
+  UI tests that are free since Vaadin 25.1. A team that knows no HTML or CSS can build a complete application.
+- **No API layer.** You don't design, document or secure requests and endpoints. A click calls your Java method.
+- **State stays on the server.** The client cannot change a hidden field or call an endpoint you forgot to protect,
+  because there are none. It sends events, and the server decides what they mean.
+- **Binder.** Form binding, conversion and validation work the same way in every screen.
+- **Rich, stateful screens.** Its Grid scrolls lazily through large data sets, sorts, filters and edits in place, and
+  the server can push changes to the browser. In Shadleaf each of those is a request you design.
+- **Breadth.** Around 60 components, among them a tree grid, master-detail and split layouts, a login form and a
+  message list. The commercial ones add charts, maps, a dashboard, a CRUD editor, a spreadsheet and a rich text
+  editor.
+- **A company behind it.** Paid support, long-term maintenance of a major version, a published table of WCAG criteria
+  per component, a visual editor (Copilot) and Figma libraries.
+
+### Where Shadleaf is stronger
+
+- **Plain HTTP and HTML.** Every page is a request and a response, rendered on the server. It works with a load
+  balancer without sticky sessions, holds no UI state per user in server memory, can be cached and indexed by search
+  engines, and fits into an existing Spring MVC application one page at a time. Without its script the components
+  still show their content, and forms and links still work; a Vaadin page is empty until its client engine has
+  started. For partial updates, [htmx](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md) swaps parts of the page, and Shadleaf's components are
+  tested with its swaps and history restores.
+- **Familiar to front-end developers.** A Shadleaf page is an HTML template with CSS and a little JavaScript, the
+  same material as an Angular or React application. Developers coming from those frameworks read and debug it in the
+  browser's developer tools, as they do today. In Vaadin the UI is Java objects, and the HTML they render is an
+  implementation detail.
+- **The web's ecosystem.** Any HTML, CSS or JavaScript library goes straight into a template: a map, a rich text
+  editor, a charting library, an Alpine.js plugin, a snippet from a blog post. In Vaadin a JavaScript library first
+  needs a Java class that wraps it (`@NpmPackage`, `@JsModule`), or an add-on from the Vaadin Directory.
+- **A strict Content-Security-Policy.** Shadleaf runs under a policy without `'unsafe-inline'` or `'unsafe-eval'`, in
+  development too ([CSP](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/csp.md)). Vaadin's default policy needs both. Its documentation describes a
+  nonce-based strict policy for scripts, but only in production mode, and only after you replace `eval` and the
+  `Function` constructor with a map of predefined code.
+- **Java 17.** Shadleaf runs on Java 17; Vaadin 25 needs Java 21.
+- **No licence fees.** All of Shadleaf is Apache 2.0, the chart included. Vaadin's core is Apache 2.0 too, but its
+  Charts, Grid Pro, CRUD, Map, Dashboard and Rich Text Editor need a subscription, per developer, at the time of
+  writing $159 per month.
+- **shadcn/ui's design.** Shadleaf's skins are shadcn/ui's styles, themed with its tokens. Vaadin has its own themes,
+  Lumo and Aura, styled through custom properties and the parts of its web components; Tailwind support is
+  experimental.
+
+### Which one to choose
+
+**Choose Vaadin** for an internal application with complex, stateful screens (large editable grids, live updates), a
+team that would rather write only Java, or when paid support and long-term maintenance matter.
+
+**Choose Shadleaf** for an application that is, or should stay, Spring MVC with Thymeleaf: public pages, pages that
+must work under a strict CSP or without JavaScript, horizontal scaling without session state, or a team that is happy
+writing HTML (developers coming from Angular or React among them) and wants shadcn/ui's look.
+
+---
+
+## Shadleaf and Flux
+
+> Flux is Livewire's component library for Laravel, built on the same idea as Shadleaf.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/compared/flux/
+
+[Flux](https://fluxui.dev) is the official component library of Livewire, made by Livewire's authors, for Laravel. It
+is the closest relative of Shadleaf on this list: components are tags, form controls show their own validation errors,
+and templates can be published into the application to change them. Shadleaf's [header layout](https://shadleaf.dev/1.1.0-SNAPSHOT/layouts/header.md)
+follows Flux's. This page describes Flux 2 (November 2026).
+
+### The same dialog
+
+```blade
+<!-- Flux -->
+<flux:modal.trigger name="edit-profile">
+  <flux:button>Edit profile</flux:button>
+</flux:modal.trigger>
+
+<flux:modal name="edit-profile" class="md:w-96">
+  <flux:heading size="lg">Edit profile</flux:heading>
+  <flux:input label="Name" wire:model="name" />
+  <flux:button type="submit" variant="primary">Save</flux:button>
+</flux:modal>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  <sl:field th:field="*{name}">
+    <sl:field-label>Name</sl:field-label>
+    <sl:input/>
+  </sl:field>
+  <sl:dialog-footer>
+    <sl:button type="submit">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+The two read much alike. The difference is underneath. A Flux modal's state can live in a Livewire component on the
+server (`wire:model` on the modal), and Livewire sends changes back and forth as the user works. A Shadleaf page is
+rendered once per request; forms post, and [htmx](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md) swaps parts of the page if you want that.
+
+### Where Flux is stronger
+
+- **Livewire.** Server-side state with live updates, without writing requests or JavaScript. A property bound with
+  `wire:model` updates the server as the user types.
+- **Breadth.** Around 50 components, among them some Shadleaf has not: a rich text editor, a kanban board, a command
+  palette, an autocomplete, OTP and phone inputs, a carousel and a timeline.
+- **A funded team** behind it, selling the Pro components.
+
+### Where Shadleaf is stronger
+
+- **No licence fees.** Flux's core components are free, but the Pro ones, among them the chart, calendar, date picker
+  and combobox, are a one-time licence from $149 for one project. All of Shadleaf is Apache 2.0.
+- **No Tailwind build.** Flux needs Tailwind CSS 4.2 or later compiled into your application; Shadleaf's jar ships its
+  CSS.
+- **shadcn/ui's design**, in nine skins. Flux has its own design, with an accent colour and a base grey to choose.
+- **A strict Content-Security-Policy and no JavaScript.** Shadleaf documents both. It runs without `'unsafe-inline'`
+  or `'unsafe-eval'` ([CSP](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/csp.md)) and its components degrade without a script. Flux's documentation says
+  nothing about either, and Livewire's interactivity needs JavaScript.
+
+### Which one to choose
+
+**Choose Flux** if your application is Laravel. **Choose Shadleaf** if it is Spring Boot. The two never compete for
+the same project.
+
+---
+
+## Shadleaf, Basecoat and starting-point-ui
+
+> Basecoat and starting-point-ui bring shadcn/ui's design to any stack as plain HTML and CSS classes. The look is the same as Shadleaf's; the components are not there.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/compared/basecoat-and-starting-point-ui/
+
+[Basecoat](https://basecoatui.com) and [starting-point-ui](https://startingpointui.com) do the same thing. They bring
+shadcn/ui to any stack that writes HTML, as CSS classes on native elements with a small vanilla script, and no React.
+Shadleaf owes both a lot. Its skins follow Basecoat's style files, and starting-point-ui's CSS was a reference for its
+components.
+
+|  | Basecoat | starting-point-ui |
+| --- | --- | --- |
+| Version (November 2026) | 1.1 | 0.41, before 1.0 |
+| Your build needs | nothing with the CDN stylesheet; Tailwind otherwise | Tailwind CSS v4 |
+| shadcn/ui styles | all eight | the default look; any shadcn/ui theme pasted in |
+| Templates | Jinja and Nunjucks macros for nine components | none |
+| Strict CSP | blocked by the inline `onclick` in its dialog markup, dialog macro and toast actions | fine; only its experimental event attributes need `'unsafe-eval'` |
+
+### The same dialog
+
+```html
+<!-- Basecoat -->
+<button type="button" class="btn" data-variant="outline"
+        onclick="document.getElementById('edit-profile').showModal()">Edit profile</button>
+<dialog id="edit-profile" class="dialog" aria-labelledby="edit-profile-title"
+        onclick="if (event.target === this) this.close()">
+  <div class="sm:max-w-sm">
+    <header>
+      <h2 id="edit-profile-title">Edit profile</h2>
+    </header>
+    <section>...</section>
+    <footer>
+      <button type="button" class="btn" onclick="this.closest('dialog').close()">Save</button>
+    </footer>
+  </div>
+</dialog>
+```
+
+```html
+<!-- starting-point-ui -->
+<button id="edit-profile-trigger" class="btn btn-outline">Edit profile</button>
+<dialog class="dialog" data-sp-toggle="#edit-profile-trigger">
+  <form class="dialog-panel">
+    <div class="dialog-header">
+      <h2 class="dialog-title">Edit profile</h2>
+    </div>
+    ...
+    <div class="dialog-footer">
+      <button type="button" class="btn btn-outline" data-sp-dismiss>Cancel</button>
+      <button type="submit" class="btn">Save</button>
+    </div>
+  </form>
+</dialog>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button variant="outline" commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  ...
+  <sl:dialog-footer>
+    <sl:button variant="outline" commandfor="edit-profile" command="close">Cancel</sl:button>
+    <sl:button type="submit">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+All three follow shadcn/ui's part names on the native `<dialog>`. In Basecoat and starting-point-ui you write the ids,
+the ARIA wiring and the close behaviour yourself, in every template.
+
+### Where Basecoat is stronger
+
+- **Any stack.** Django, Flask, Express, Go, Rails, PHP or static HTML: the same classes everywhere.
+- **No build at all.** A stylesheet from a CDN holds everything it needs; as a Tailwind plugin it mixes with your own
+  utility classes.
+- **Plain HTML** that you read, copy and change as you like, with no component engine between you and the markup.
+- **The most widely used** library of its kind, with thousands of GitHub stars.
+
+### Where starting-point-ui is stronger
+
+- **Any stack.** The same classes in Laravel, Rails, Django or a React application.
+- **Wide range.** Around 50 components, among them some Shadleaf has not: a carousel, a command palette, a context
+  menu, an OTP input, and chat message components.
+- **Any shadcn/ui theme**, pasted in as it is, and right-to-left support.
+- **Small script.** Vanilla TypeScript on native elements, with Playwright tests for each interactive component.
+
+### Where Shadleaf is stronger
+
+- **Components instead of markup.** One template per component, declared props that fail on a typo, and a fix that
+  reaches every page. See [what a component engine adds](https://shadleaf.dev/1.1.0-SNAPSHOT/compared.md#what-a-component-engine-adds).
+- **Spring wiring.** `th:field` sets the label, the error message and `aria-invalid` (which both libraries only
+  style); tables sort and page a Spring Data `Page`; the user menu reads Spring Security; texts are translated. With
+  either library, all of that is yours to write.
+- **No Tailwind build.** starting-point-ui is imported into your own Tailwind v4 build; Shadleaf's jar ships its CSS.
+- **More components than Basecoat.** Basecoat has no calendar, date picker or file upload, and its table is styling
+  only; its chart and drawer are marked beta.
+- **A strict Content-Security-Policy.** Basecoat's documented dialog markup, its dialog macro and the action buttons of
+  its toasts use inline `onclick` handlers, which a policy without `'unsafe-inline'` blocks. Shadleaf renders none
+  ([CSP](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/csp.md)).
+- **Tested accessibility.** axe runs on every Shadleaf example in every skin, with keyboard and forced-colours tests;
+  Basecoat publishes no such tests.
+- **Stability.** starting-point-ui is before 1.0 and its classes can change between versions.
+
+Shadleaf and Basecoat have the same eight shadcn/ui styles (vega, nova, maia, lyra, mira, luma, sera, rhea) and
+shadcn/ui's colour tokens, so a theme works in all three. Shadleaf adds one skin of its own, `sketch`, for mockups.
+
+### Which one to choose
+
+**Choose Basecoat** for shadcn/ui's look in a stack that is not Spring Boot with Thymeleaf, with no build at all.
+**Choose starting-point-ui** for the same in a project that already compiles Tailwind v4 and wants its wider range of
+components. Either also fits a Thymeleaf application where you want to own every line of markup. **Choose Shadleaf**
+to write components instead of markup, with forms, tables and security wired to Spring.
+
+---
+
+## Shadleaf and daisyUI
+
+> daisyUI is a Tailwind plugin of component classes, with many themes, for any stack.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/compared/daisyui/
+
+[daisyUI](https://daisyui.com) is a Tailwind CSS plugin that adds component classes (`btn btn-primary`) to plain HTML.
+It is by far the most used library on these pages, at version 5 (November 2026), and has a look and colour names of
+its own rather than shadcn/ui's.
+
+### The same dialog
+
+```html
+<!-- daisyUI -->
+<button class="btn" onclick="edit_profile.showModal()">Edit profile</button>
+<dialog id="edit_profile" class="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Edit profile</h3>
+    ...
+    <div class="modal-action">
+      <form method="dialog"><button class="btn">Close</button></form>
+    </div>
+  </div>
+</dialog>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  ...
+  <sl:dialog-footer show-close-button/>
+</sl:dialog>
+```
+
+daisyUI's markup is short, and its modal is the native `<dialog>`, opened with your own script.
+
+### Where daisyUI is stronger
+
+- **Any stack**, and a huge community: tutorials, templates and answers for every question.
+- **Themes.** 35 built-in themes and an online theme generator.
+- **No build needed.** It loads from a CDN without Tailwind in your build; as a plugin it mixes with every Tailwind
+  utility.
+- **Many small pieces**: a timeline, a dock, a rating, a countdown, chat bubbles, device mockups.
+- **Little to learn.** It is CSS: there is no script and no component engine to understand.
+
+### Where Shadleaf is stronger
+
+- **Behaviour.** daisyUI is CSS and native elements only. A modal opens from your script, a toast is a positioned
+  container you fill yourself, and its legacy checkbox and anchor modals do not close on Escape. Shadleaf's components
+  bring their keyboard handling, focus management and htmx support.
+- **More components.** daisyUI has no combobox, no date picker (its calendar styles third-party calendar libraries)
+  and no data table; its charts are a paid add-on.
+- **Components instead of markup**, with declared props and one place to change. See
+  [what a component engine adds](https://shadleaf.dev/1.1.0-SNAPSHOT/compared.md#what-a-component-engine-adds).
+- **Spring wiring.** In daisyUI you apply `input-error` and write the error message yourself; Shadleaf does it from
+  `th:field`.
+- **Tested accessibility.** axe runs on every Shadleaf example in every skin; daisyUI publishes no accessibility
+  tests.
+
+### Which one to choose
+
+**Choose daisyUI** for a quick, themeable look in any stack, for pages that are mostly content, or when your
+application already compiles Tailwind and you want its utilities everywhere. **Choose Shadleaf** for a Spring Boot
+application with forms, tables and dialogs that should behave the same everywhere, without writing that behaviour
+yourself.
+
+---
+
+## Shadleaf and Flowbite
+
+> Flowbite is Tailwind CSS markup to copy, with a script driven by data attributes, for any stack.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/compared/flowbite/
+
+[Flowbite](https://flowbite.com) is a large collection of Tailwind CSS components to copy into your templates, with a
+script that reads data attributes (`data-modal-toggle`) and adds the behaviour. It is at version 4 (November 2026),
+with a free core under MIT and paid blocks, templates and a Figma design system.
+
+### The same dialog
+
+```html
+<!-- Flowbite, utility classes shortened -->
+<button data-modal-target="edit-profile" data-modal-toggle="edit-profile" class="..." type="button">
+  Edit profile
+</button>
+<div id="edit-profile" tabindex="-1" aria-hidden="true" class="hidden fixed top-0 right-0 left-0 z-50 ...">
+  <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <div class="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6">
+      <h3 class="text-lg font-medium text-heading">Edit profile</h3>
+      ...
+      <button data-modal-hide="edit-profile" type="button" class="...">Save</button>
+    </div>
+  </div>
+</div>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  ...
+  <sl:dialog-footer>
+    <sl:button type="submit">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+Every element in Flowbite's markup carries its utility classes, ten to twenty of them in the real examples, and they
+repeat on every page that has the component.
+
+### Where Flowbite is stronger
+
+- **Ecosystem.** Integration guides for many frameworks and back ends, versions for React, Vue and Svelte, an MCP
+  server for coding agents, a Figma design system, and paid blocks and templates.
+- **Any stack**, and a large community.
+- **Tailwind all the way.** Every class can be changed in place; there is nothing between you and the markup.
+
+### Where Shadleaf is stronger
+
+- **Short markup.** A component instead of its markup, with declared props and one place to change. See
+  [what a component engine adds](https://shadleaf.dev/1.1.0-SNAPSHOT/compared.md#what-a-component-engine-adds).
+- **No Tailwind build.** Flowbite is a Tailwind plugin (a CDN build exists); Shadleaf's jar ships its CSS.
+- **Native elements.** Flowbite's modal is a `div` that its script shows and hides; Shadleaf's dialog is the
+  browser's `<dialog>`, with focus and Escape handled by the browser.
+- **htmx and CSP.** Flowbite's components start from init functions (`initFlowbite()`) that you call again for markup
+  added later, and its documentation says nothing about a Content-Security-Policy. Shadleaf's components survive htmx
+  swaps and run under a strict policy.
+- **Spring wiring and tested accessibility**, as on the other pages: `th:field` binding and errors, Spring Data paging,
+  axe on every example.
+
+### Which one to choose
+
+**Choose Flowbite** for a non-Java or multi-framework project that already compiles Tailwind, or when you want its
+paid blocks, templates and Figma kit. **Choose Shadleaf** for a Spring Boot application with Thymeleaf, where you
+would rather write components than keep long markup up to date.
+
+---
+
+## Shadleaf, Penguin UI and Pines
+
+> Penguin UI and Pines are collections of Tailwind CSS and Alpine.js snippets to copy into your templates.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/compared/penguin-ui-and-pines/
+
+[Penguin UI](https://www.penguinui.com) and DevDojo's [Pines](https://devdojo.com/pines) are both free (MIT)
+collections of markup built with Tailwind CSS and Alpine.js. There is nothing to install beyond those two. You copy an
+element into your template and change it as you like. The behaviour sits in the markup as Alpine.js expressions,
+where you can read and change it.
+
+|  | Penguin UI | Pines |
+| --- | --- | --- |
+| Theming | a theme designer with presets (Arctic, Minimal, Neo Brutalism, Pastel and more), dark mode included | none: a colour change is a change of classes in every snippet |
+| Beyond components | components for AI chat interfaces | marketing sections: heroes, pricing tables, footers |
+
+### The same dialog
+
+```html
+<!-- Penguin UI, utility classes shortened -->
+<div x-data="{modalIsOpen: false}">
+  <button x-on:click="modalIsOpen = true" type="button" class="...">Edit profile</button>
+  <div x-cloak x-show="modalIsOpen" x-trap.inert.noscroll="modalIsOpen"
+       x-on:keydown.esc.window="modalIsOpen = false" x-on:click.self="modalIsOpen = false"
+       class="fixed inset-0 z-30 ..." role="dialog" aria-modal="true" aria-labelledby="edit-profile-title">
+    <div x-show="modalIsOpen" class="...">
+      <h3 id="edit-profile-title" class="...">Edit profile</h3>
+      ...
+      <button x-on:click="modalIsOpen = false" type="button" class="...">Save</button>
+    </div>
+  </div>
+</div>
+```
+
+```html
+<!-- Pines, utility classes shortened -->
+<div x-data="{ modalOpen: false }" @keydown.escape.window="modalOpen = false">
+  <button @click="modalOpen=true" class="...">Edit profile</button>
+  <template x-teleport="body">
+    <div x-show="modalOpen" class="fixed top-0 left-0 z-[99] ...">
+      <div x-show="modalOpen" @click="modalOpen=false" class="absolute inset-0 bg-black/40"></div>
+      <div x-show="modalOpen" x-trap.inert.noscroll="modalOpen" class="relative ...">
+        <h3 class="text-lg font-semibold">Edit profile</h3>
+        ...
+      </div>
+    </div>
+  </template>
+</div>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  ...
+  <sl:dialog-footer>
+    <sl:button type="submit">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+### Where Penguin UI and Pines are stronger
+
+- **You own the markup.** No dependency to upgrade and no engine to learn.
+- **Any stack** that can load Tailwind and Alpine.js, Spring included.
+- **Elements Shadleaf has not.** Penguin UI has a carousel, chat bubbles, a rating, a counter and steps; Pines has a
+  Monaco editor, an image gallery, a marquee, text and typing effects and a retro grid.
+- **Pines' marketing sections**, ready to paste, and a look close to shadcn/ui's: neutral greys, small radii, a focus
+  ring.
+
+### Where Shadleaf is stronger
+
+- **No Tailwind build.** Both need Tailwind CSS in your build; Shadleaf's jar ships its CSS.
+- **Without JavaScript.** Their modals, dropdowns and tabs keep their state in Alpine.js and stay hidden without it.
+  Shadleaf's are native elements first (`<dialog>`, popovers, `<details>`) that work with Alpine.js missing.
+- **More components for applications.** Neither has a date picker or a chart, and Penguin UI's table is styling
+  only; Pines also has no combobox, sidebar, application layout, or form field with validation.
+- **Activity.** Pines has had no release, and its last change was in August 2025.
+- **Components instead of markup**, with declared props and one place to change. See
+  [what a component engine adds](https://shadleaf.dev/1.1.0-SNAPSHOT/compared.md#what-a-component-engine-adds).
+- **Spring wiring, a documented strict CSP, and tested accessibility**: `th:field` binding and errors, Spring Data
+  paging, a [CSP guide](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/csp.md), axe on every example.
+
+### Which one to choose
+
+**Choose Penguin UI** if you already compile Tailwind and use Alpine.js, want a look of your own, and are happy to
+own and maintain the markup. **Choose Pines** for a marketing page, or for single elements in such a project.
+**Choose Shadleaf** for a Spring Boot application with forms, tables and navigation, and the Spring wiring done.
+
+---
+
+## Shadleaf and Canon
+
+> Canon is a new library of plain HTML and CSS components for internal tools, with swappable themes and no build.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/compared/canon/
+
+[Canon](https://recepkutuk.github.io/canon/reference/introduction.html) is a component library for internal tools
+(tables, forms, dialogs and records) made of plain HTML with `canon-*` classes, one stylesheet and an optional script.
+It is new, first released in October 2026 and at version 0.2.
+
+The idea comes from CSS Zen Garden. The markup stays the same, and a new stylesheet gives it a new look. The markup
+carries meaning (`data-*` and ARIA attributes) and never a look: no `primary`, `outline` or `rounded` in the classes.
+
+### The same dialog
+
+```html
+<!-- Canon -->
+<button type="button" class="canon-button" commandfor="edit-profile" command="show-modal">
+  <span class="canon-button-label">Edit profile</span>
+</button>
+<dialog id="edit-profile" class="canon-dialog">
+  <div class="canon-dialog-header">Edit profile</div>
+  <div class="canon-dialog-body">...</div>
+  <div class="canon-dialog-footer">...</div>
+</dialog>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  ...
+</sl:dialog>
+```
+
+Both open the browser's `<dialog>` with invoker commands, and both have a script that stands in for them (and for
+`closedby`) where a browser lacks them.
+
+### Where Canon is stronger
+
+- **Any stack**, with no build: one stylesheet and one deferred script, from a CDN or npm.
+- **Themes.** Its own, and themes inspired by Carbon, Material, Fluent, Ant Design and Bootstrap, swapped by changing
+  the stylesheet only.
+- **Without JavaScript.** It ranks its components by how much script they need, and all but one of its 68 work
+  without.
+- **Components for internal tools** Shadleaf has not: a form repeater, a save bar, a menubar, a split button and a time
+  input.
+
+### Where Shadleaf is stronger
+
+- **Maturity.** Canon was first released in October 2026, by one author, and is before 1.0. Shadleaf's components
+  are tested in every skin, in Chromium and Firefox.
+- **Components instead of markup**, with declared props and one place to change. See
+  [what a component engine adds](https://shadleaf.dev/1.1.0-SNAPSHOT/compared.md#what-a-component-engine-adds).
+- **Spring wiring.** Canon's data table, fields and forms have no binding to a back end; Shadleaf's sort and page a
+  Spring Data `Page` and bind with `th:field`.
+- **shadcn/ui's design and a chart.** Canon has a look of its own and no chart.
+
+### Which one to choose
+
+**Choose Canon** for an internal tool in any stack where you want plain HTML, no build, and a Material, Fluent or
+Carbon look, and are fine with a young library. **Choose Shadleaf** for a Spring Boot application that wants
+shadcn/ui's design and Thymeleaf components with Spring wired in.
