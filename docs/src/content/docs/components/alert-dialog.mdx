@@ -45,10 +45,16 @@ with `hx-delete`, or one with `commandfor` and `command="close"` when closing is
 
 ## Small, and with media
 
-`size="sm"` makes it narrower, centres the header and puts the two buttons side by side in equal columns.
+`size="sm"` makes it narrower, centres the header and puts the two buttons side by side in equal halves.
 `<sl:alert-dialog-media>` shows an icon above the title.
 
 <ComponentPreview id="alert-dialog--small-media" />
+
+A button is never narrower than its label. When a label doesn't fit in half the width, as happens soon in Dutch,
+German or French, the small dialog stacks the buttons, each full width, with the action on top as the default dialog
+does on a narrow screen. Only where they appear changes: Tab still goes from Cancel to the action.
+
+<ComponentPreview id="alert-dialog--small-long-label" />
 
 In a default-size dialog on a wide screen, the media sits beside the title and description.
 
