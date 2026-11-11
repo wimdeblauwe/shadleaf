@@ -313,7 +313,7 @@
 
   .empty-description {
     @apply text-sm/relaxed text-muted-foreground
-      [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary;
+      [&>a:not(.button)]:underline [&>a:not(.button)]:underline-offset-4 [&>a:not(.button):hover]:text-primary;
   }
 
   .empty-content {
@@ -1334,8 +1334,8 @@
   }
 
   .dialog-description {
-    @apply text-sm text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground
-      [&_a:hover]:decoration-wavy;
+    @apply text-sm text-muted-foreground [&_a:not(.button)]:underline [&_a:not(.button)]:underline-offset-3 [&_a:not(.button):hover]:text-foreground
+      [&_a:not(.button):hover]:decoration-wavy;
   }
 
   .dialog-footer {
@@ -1392,7 +1392,7 @@
 
   .alert-dialog-description {
     @apply text-sm text-balance text-muted-foreground md:text-pretty
-      [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground [&_a:hover]:decoration-wavy;
+      [&_a:not(.button)]:underline [&_a:not(.button)]:underline-offset-3 [&_a:not(.button):hover]:text-foreground [&_a:not(.button):hover]:decoration-wavy;
   }
 
   .alert-dialog-footer {
@@ -1439,8 +1439,8 @@
   }
 
   .sheet-description {
-    @apply text-sm text-muted-foreground [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground
-      [&_a:hover]:decoration-wavy;
+    @apply text-sm text-muted-foreground [&_a:not(.button)]:underline [&_a:not(.button)]:underline-offset-3 [&_a:not(.button):hover]:text-foreground
+      [&_a:not(.button):hover]:decoration-wavy;
   }
 
   /*
@@ -1604,8 +1604,8 @@
   }
 
   .accordion-content {
-    @apply pt-0 pb-4 text-sm [&_a]:underline [&_a]:underline-offset-3 [&_a:hover]:text-foreground
-      [&_a:hover]:decoration-wavy [&_p:not(:last-child)]:mb-4;
+    @apply pt-0 pb-4 text-sm [&_a:not(.button)]:underline [&_a:not(.button)]:underline-offset-3 [&_a:not(.button):hover]:text-foreground
+      [&_a:not(.button):hover]:decoration-wavy [&_p:not(:last-child)]:mb-4;
   }
 
   /* Collapsible. A trigger drawn as a button (.button) gets the rest from the button's rules. */
