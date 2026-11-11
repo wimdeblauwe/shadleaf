@@ -48,6 +48,23 @@ Put an [`<sl:icon>`](../icon/) in the `icon-start` or `icon-end` slot. It takes 
 
 <ComponentPreview id="button--link" />
 
+## The cursor
+
+A button keeps the arrow cursor on hover, as in shadcn/ui and Tailwind CSS 4; only `as="a"` shows the hand, because
+it is a link. To show the hand on every button, add this rule to your own stylesheet:
+
+```css
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+```
+
+It lives in the base layer, below Shadleaf's components, so a component that sets its own cursor (a tab, a menu item)
+keeps it.
+
 ## As a label
 
 `as="label"` renders a `<label>` that looks the same, for a control that is visually hidden: `for` points at it, and
