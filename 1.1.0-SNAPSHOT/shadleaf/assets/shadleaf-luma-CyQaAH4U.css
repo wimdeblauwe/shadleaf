@@ -43,6 +43,7 @@
       --tw-border-spacing-x: 0;
       --tw-border-spacing-y: 0;
       --tw-ease: initial;
+      --tw-tracking: initial;
       --tw-backdrop-blur: initial;
       --tw-backdrop-brightness: initial;
       --tw-backdrop-contrast: initial;
@@ -52,7 +53,6 @@
       --tw-backdrop-opacity: initial;
       --tw-backdrop-saturate: initial;
       --tw-backdrop-sepia: initial;
-      --tw-tracking: initial;
     }
   }
 }
@@ -69,7 +69,6 @@
     --container-xs: 20rem;
     --container-sm: 24rem;
     --container-md: 28rem;
-    --container-lg: 32rem;
     --text-xs: .75rem;
     --text-xs--line-height: calc(1 / .75);
     --text-sm: .875rem;
@@ -80,17 +79,20 @@
     --text-lg--line-height: calc(1.75 / 1.125);
     --font-weight-normal: 400;
     --font-weight-medium: 500;
-    --font-weight-bold: 700;
+    --tracking-tight: -.025em;
     --tracking-widest: .1em;
     --leading-tight: 1.25;
     --leading-snug: 1.375;
     --leading-normal: 1.5;
     --leading-relaxed: 1.625;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    --radius-4xl: 2rem;
     --ease-out: cubic-bezier(0, 0, .2, 1);
     --ease-in-out: cubic-bezier(.4, 0, .2, 1);
     --animate-spin: spin 1s linear infinite;
     --animate-pulse: pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;
-    --blur-xs: 4px;
+    --blur-sm: 8px;
     --aspect-video: 16 / 9;
     --default-transition-duration: .15s;
     --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
@@ -429,7 +431,6 @@
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: Balsamiq Sans, Comic Neue, Comic Sans MS, Chalkboard SE, cursive;
   }
 }
 
@@ -5125,15 +5126,15 @@
   }
 
   .button {
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-normal);
-    font-weight: var(--font-weight-normal);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     background-clip: padding-box;
-    border-width: 2px;
+    border-width: 1px;
     border-color: #0000;
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
   }
 
   .button:focus-visible {
@@ -5145,7 +5146,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .button:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -5211,17 +5212,17 @@
   .button[data-size="xs"] {
     height: calc(var(--spacing) * 6);
     gap: var(--spacing);
-    padding-inline: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 2.5);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
 
   .button[data-size="xs"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .button[data-size="xs"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2);
   }
 
   .button[data-size="xs"] svg:not([class*="size-"], [data-icon-size]) {
@@ -5232,15 +5233,15 @@
   .button[data-size="sm"] {
     height: calc(var(--spacing) * 8);
     gap: var(--spacing);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   .button[data-size="sm"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .button[data-size="sm"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2);
   }
 
   .button[data-size="lg"] {
@@ -5260,13 +5261,11 @@
   .button[data-size="icon"] {
     width: calc(var(--spacing) * 9);
     height: calc(var(--spacing) * 9);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   .button[data-size="icon-xs"] {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   .button[data-size="icon-xs"] svg:not([class*="size-"], [data-icon-size]) {
@@ -5277,39 +5276,16 @@
   .button[data-size="icon-sm"] {
     width: calc(var(--spacing) * 8);
     height: calc(var(--spacing) * 8);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   .button[data-size="icon-lg"] {
     width: calc(var(--spacing) * 10);
     height: calc(var(--spacing) * 10);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-  }
-
-  .button:not([data-variant]), .button[data-variant="default"] {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .button:not([data-variant]), .button[data-variant="default"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
   }
 
   .button:not([data-variant]), .button[data-variant="default"] {
     background-color: var(--primary);
     color: var(--primary-foreground);
-    --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .button:not([data-variant]), .button[data-variant="default"] {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .button:not([data-variant]), .button[data-variant="default"] {
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   @media (hover: hover) {
@@ -5319,18 +5295,8 @@
 
     @supports (color: color-mix(in lab, red, red)) {
       :is(.button:not([data-variant]), .button[data-variant="default"]):hover {
-        background-color: color-mix(in oklab, var(--primary) 85%, transparent);
+        background-color: color-mix(in oklab, var(--primary) 80%, transparent);
       }
-    }
-  }
-
-  .button[data-variant="secondary"] {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .button[data-variant="secondary"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
     }
   }
 
@@ -5357,34 +5323,30 @@
   }
 
   .button[data-variant="outline"] {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .button[data-variant="outline"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .button[data-variant="outline"] {
+    border-color: var(--border);
     background-color: var(--background);
-    --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .button[data-variant="outline"] {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .button[data-variant="outline"] {
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   @media (hover: hover) {
     .button[data-variant="outline"]:hover {
       background-color: var(--muted);
       color: var(--foreground);
+    }
+  }
+
+  .button[data-variant="outline"]:where(.dark, .dark *) {
+    background-color: #0000;
+  }
+
+  @media (hover: hover) {
+    .button[data-variant="outline"]:where(.dark, .dark *):hover {
+      background-color: var(--input);
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .button[data-variant="outline"]:where(.dark, .dark *):hover {
+        background-color: color-mix(in oklab, var(--input) 30%, transparent);
+      }
     }
   }
 
@@ -5418,17 +5380,15 @@
   .button[data-variant="link"] {
     color: var(--primary);
     text-underline-offset: 4px;
-    text-decoration-line: underline;
   }
 
   @media (hover: hover) {
     .button[data-variant="link"]:hover {
-      text-decoration-style: wavy;
+      text-decoration-line: underline;
     }
   }
 
   .button[data-variant="destructive"] {
-    border-color: var(--destructive);
     background-color: var(--destructive);
   }
 
@@ -5462,6 +5422,15 @@
 
   .button[data-variant="destructive"]:focus-visible {
     border-color: var(--destructive);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .button[data-variant="destructive"]:focus-visible {
+      border-color: color-mix(in oklab, var(--destructive) 40%, transparent);
+    }
+  }
+
+  .button[data-variant="destructive"]:focus-visible {
     --tw-ring-color: var(--destructive);
   }
 
@@ -5506,14 +5475,16 @@
   .badge {
     height: calc(var(--spacing) * 5);
     gap: var(--spacing);
+    border-radius: var(--radius-3xl);
     border-style: var(--tw-border-style);
     padding-inline: calc(var(--spacing) * 2);
     padding-block: calc(var(--spacing) * .5);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
-    border-width: 1.5px;
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+    border-width: 1px;
     border-color: #0000;
-    border-radius: 999px 850px 999px 900px / 850px 999px 900px;
   }
 
   .badge:focus-visible {
@@ -5525,7 +5496,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .badge:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -5564,16 +5535,6 @@
   }
 
   .badge:not([data-variant]), .badge[data-variant="default"] {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .badge:not([data-variant]), .badge[data-variant="default"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .badge:not([data-variant]), .badge[data-variant="default"] {
     background-color: var(--primary);
     color: var(--primary-foreground);
   }
@@ -5585,18 +5546,8 @@
 
     @supports (color: color-mix(in lab, red, red)) {
       :is(.badge:not([data-variant]), .badge[data-variant="default"]):is(a):hover {
-        background-color: color-mix(in oklab, var(--primary) 85%, transparent);
+        background-color: color-mix(in oklab, var(--primary) 80%, transparent);
       }
-    }
-  }
-
-  .badge[data-variant="secondary"] {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .badge[data-variant="secondary"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
     }
   }
 
@@ -5618,16 +5569,7 @@
   }
 
   .badge[data-variant="outline"] {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .badge[data-variant="outline"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .badge[data-variant="outline"] {
+    border-color: var(--border);
     color: var(--foreground);
   }
 
@@ -5656,17 +5598,15 @@
   .badge[data-variant="link"] {
     color: var(--primary);
     text-underline-offset: 4px;
-    text-decoration-line: underline;
   }
 
   @media (hover: hover) {
     .badge[data-variant="link"]:is(a):hover {
-      text-decoration-style: wavy;
+      text-decoration-line: underline;
     }
   }
 
   .badge[data-variant="destructive"] {
-    border-color: var(--destructive);
     background-color: var(--destructive);
   }
 
@@ -5739,29 +5679,20 @@
   }
 
   .card {
+    border-radius: var(--radius-4xl);
     background-color: var(--card);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--card-foreground);
-    --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .card {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .card {
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .card {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
@@ -5769,14 +5700,24 @@
     padding-top: 0;
   }
 
+  .card:where(.dark, .dark *) {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .card:where(.dark, .dark *) {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
+  }
+
   .card > img:first-child {
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
+    border-top-left-radius: var(--radius-4xl);
+    border-top-right-radius: var(--radius-4xl);
   }
 
   .card > img:last-child {
-    border-bottom-right-radius: inherit;
-    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: var(--radius-4xl);
+    border-bottom-left-radius: var(--radius-4xl);
   }
 
   .card:not([data-size]), .card[data-size="default"] {
@@ -5798,25 +5739,13 @@
   }
 
   .card-header {
-    gap: var(--spacing);
+    gap: calc(var(--spacing) * 1.5);
   }
 
   .card-header[data-border] {
     border-bottom-style: var(--tw-border-style);
-    --tw-border-style: dashed;
-    border-style: dashed;
-    border-bottom-width: 2px;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .card-header[data-border] {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
-  }
-
-  .card-header[data-border] {
     padding-bottom: calc(var(--spacing) * 6);
+    border-bottom-width: 1px;
   }
 
   .card[data-size="sm"] > .card-header[data-border] {
@@ -5824,17 +5753,10 @@
   }
 
   .card-title {
-    font-size: var(--text-lg);
-    line-height: var(--tw-leading, var(--text-lg--line-height));
-    --tw-leading: var(--leading-normal);
-    line-height: var(--leading-normal);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
-  }
-
-  .card[data-size="sm"] > .card-header > .card-title {
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .card-description {
@@ -5849,20 +5771,8 @@
 
   .card-footer[data-border] {
     border-top-style: var(--tw-border-style);
-    --tw-border-style: dashed;
-    border-style: dashed;
-    border-top-width: 2px;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .card-footer[data-border] {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
-  }
-
-  .card-footer[data-border] {
     padding-top: calc(var(--spacing) * 6);
+    border-top-width: 1px;
   }
 
   .card[data-size="sm"] > .card-footer[data-border] {
@@ -5871,14 +5781,14 @@
 
   .alert {
     row-gap: calc(var(--spacing) * .5);
+    border-radius: var(--radius-2xl);
     border-style: var(--tw-border-style);
     padding-inline: calc(var(--spacing) * 4);
     padding-block: calc(var(--spacing) * 3);
     text-align: start;
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    border-width: 2px;
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
+    border-width: 1px;
   }
 
   .alert:has( > svg) {
@@ -5896,22 +5806,11 @@
   }
 
   .alert:not([data-variant]) {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .alert:not([data-variant]) {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .alert:not([data-variant]) {
     background-color: var(--card);
     color: var(--card-foreground);
   }
 
   .alert[data-variant="destructive"] {
-    border-color: var(--destructive);
     background-color: var(--card);
     color: var(--destructive);
   }
@@ -5924,8 +5823,10 @@
 
   .alert-title {
     min-height: calc(var(--spacing) * 4);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+    --tw-tracking: var(--tracking-tight);
+    letter-spacing: var(--tracking-tight);
   }
 
   .alert-description {
@@ -5952,22 +5853,15 @@
 
   .empty {
     gap: calc(var(--spacing) * 4);
+    border-radius: var(--radius-2xl);
+    --tw-border-style: dashed;
     padding: calc(var(--spacing) * 12);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+    border-style: dashed;
   }
 
   .empty[data-border] {
     border-style: var(--tw-border-style);
-    --tw-border-style: dashed;
-    border-style: dashed;
-    border-width: 2px;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .empty[data-border] {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
+    border-width: 1px;
   }
 
   .empty-header {
@@ -5985,33 +5879,23 @@
   .empty-media[data-variant="icon"] {
     width: calc(var(--spacing) * 10);
     height: calc(var(--spacing) * 10);
-    border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .empty-media[data-variant="icon"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .empty-media[data-variant="icon"] {
+    border-radius: calc(var(--radius) + 4px);
     background-color: var(--muted);
     color: var(--foreground);
   }
 
   .empty-media[data-variant="icon"] svg:not([class*="size-"], [data-icon-size]) {
-    width: calc(var(--spacing) * 6);
-    height: calc(var(--spacing) * 6);
+    width: calc(var(--spacing) * 5);
+    height: calc(var(--spacing) * 5);
   }
 
   .empty-title {
     font-size: var(--text-lg);
     line-height: var(--tw-leading, var(--text-lg--line-height));
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+    --tw-tracking: var(--tracking-tight);
+    letter-spacing: var(--tracking-tight);
   }
 
   .empty-description {
@@ -6020,12 +5904,12 @@
     color: var(--muted-foreground);
   }
 
-  .empty-description > a:not(.button) {
+  .empty-description > a {
     text-underline-offset: 4px;
     text-decoration-line: underline;
   }
 
-  .empty-description > a:not(.button):hover {
+  .empty-description > a:hover {
     color: var(--primary);
   }
 
@@ -6036,32 +5920,12 @@
   }
 
   .attachment {
+    border-radius: var(--radius-3xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .attachment {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .attachment {
+    border-width: 1px;
+    border-color: var(--border);
     background-color: var(--card);
     color: var(--card-foreground);
-    --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .attachment {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .attachment {
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .attachment:not([data-width]) {
@@ -6076,17 +5940,16 @@
   .attachment[data-state="idle"] {
     --tw-border-style: dashed;
     border-style: dashed;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .attachment[data-state="idle"] {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
   }
 
   .attachment[data-state="error"] {
     border-color: var(--destructive);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .attachment[data-state="error"] {
+      border-color: color-mix(in oklab, var(--destructive) 30%, transparent);
+    }
   }
 
   .attachment:has( > .attachment-trigger):hover {
@@ -6111,7 +5974,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .attachment-trigger:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -6159,9 +6022,9 @@
 
   .attachment[data-size="xs"] {
     gap: calc(var(--spacing) * 1.5);
+    border-radius: var(--radius-2xl);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   .attachment[data-size="xs"]:has( > .attachment-media) {
@@ -6175,19 +6038,7 @@
 
   .attachment-media {
     width: calc(var(--spacing) * 10);
-    border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .attachment-media {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .attachment-media {
+    border-radius: var(--radius-2xl);
     background-color: var(--muted);
     color: var(--foreground);
   }
@@ -6203,7 +6054,7 @@
 
   .attachment[data-size="xs"] > .attachment-media {
     width: calc(var(--spacing) * 7);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    border-radius: calc(var(--radius) + 4px);
   }
 
   .attachment[data-size="xs"] > .attachment-media:not([data-variant]) svg:not([class*="size-"], [data-icon-size]) {
@@ -6254,8 +6105,8 @@
   }
 
   .attachment-title {
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .attachment-description {
@@ -6286,7 +6137,7 @@
   }
 
   .attachment-group {
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    border-radius: var(--radius-2xl);
   }
 
   .attachment-group:not([data-layout]) {
@@ -6308,7 +6159,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .attachment-group:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -6334,12 +6185,18 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .file-upload:has( > .file-upload-input:focus-visible) > .file-upload-dropzone > .empty-content > .file-upload-browse {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
-  .file-upload:has( > .file-upload-input[aria-invalid="true"]) > .file-upload-dropzone {
+  .file-upload:has( > .file-upload-input[aria-invalid="true"]) > .file-upload-dropzone, .file-upload:has( > .file-upload-input[aria-invalid="true"]) > .file-upload-dropzone:where(.dark, .dark *) {
     border-color: var(--destructive);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .file-upload:has( > .file-upload-input[aria-invalid="true"]) > .file-upload-dropzone:where(.dark, .dark *) {
+      border-color: color-mix(in oklab, var(--destructive) 50%, transparent);
+    }
   }
 
   .file-upload[data-dragging] > .file-upload-dropzone {
@@ -6362,51 +6219,24 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .form-errors:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
   .separator {
-    background-color: var(--foreground);
-    border-radius: 3.40282e38px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .separator {
-      background-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
+    background-color: var(--border);
   }
 
   .separator:not([data-orientation]), .separator[data-orientation="horizontal"] {
-    height: calc(var(--spacing) * .5);
+    height: 1px;
   }
 
   .separator[data-orientation="vertical"] {
-    width: calc(var(--spacing) * .5);
+    width: 1px;
   }
 
   .skeleton {
-    border-style: var(--tw-border-style);
-    --tw-border-style: dashed;
-    border-style: dashed;
-    border-width: 2px;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .skeleton {
-      border-color: color-mix(in oklab, var(--foreground) 30%, transparent);
-    }
-  }
-
-  .skeleton {
-    background-image: repeating-linear-gradient(-45deg,var(--foreground) 0 2px,transparent 2px 7px);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .skeleton {
-      background-image: repeating-linear-gradient(-45deg,color-mix(in oklch,var(--foreground) 12%,transparent) 0 2px,transparent 2px 7px);
-    }
+    background-color: var(--accent);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -6417,14 +6247,13 @@
 
   .skeleton:not([data-shape]), .skeleton[data-shape="line"] {
     height: calc(var(--spacing) * 4);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    border-radius: var(--radius-2xl);
     width: 100%;
   }
 
   .skeleton[data-shape="circle"] {
     width: calc(var(--spacing) * 10);
     height: calc(var(--spacing) * 10);
-    border-radius: 58% 42% 53% 47% / 45% 55%;
   }
 
   .skeleton:is(:not([data-shape]), [data-shape="line"]) + .skeleton:is(:not([data-shape]), [data-shape="line"]) {
@@ -6432,29 +6261,17 @@
   }
 
   .kbd {
-    height: calc(var(--spacing) * 5);
-    min-width: calc(var(--spacing) * 5);
+    height: calc(var(--spacing) * 5.5);
+    min-width: calc(var(--spacing) * 5.5);
     gap: var(--spacing);
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-    border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .kbd {
-      border-color: color-mix(in oklab, var(--foreground) 50%, transparent);
-    }
-  }
-
-  .kbd {
+    border-radius: var(--radius);
     background-color: var(--muted);
-    padding-inline: var(--spacing);
-    font-family: Balsamiq Sans, Comic Neue, Comic Sans MS, Chalkboard SE, cursive;
+    padding-inline: calc(var(--spacing) * 1.5);
+    font-family: var(--font-sans);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--muted-foreground);
   }
 
@@ -6475,16 +6292,7 @@
 
   .avatar {
     background-color: var(--muted);
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    --tw-ring-color: var(--foreground);
-    border-radius: 58% 42% 53% 47% / 45% 55%;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .avatar {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
+    border-radius: 3.40282e38px;
   }
 
   .avatar:not([data-size]), .avatar[data-size="default"] {
@@ -6495,8 +6303,6 @@
   .avatar[data-size="sm"] {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1.5px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .avatar[data-size="lg"] {
@@ -6536,29 +6342,31 @@
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-leading: 1;
+    --tw-font-weight: var(--font-weight-medium);
     line-height: 1;
+    font-weight: var(--font-weight-medium);
   }
 
   .input {
     height: calc(var(--spacing) * 9);
+    border-radius: var(--radius-3xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .input {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 50%, transparent);
     }
   }
 
   .input {
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
     padding-block: var(--spacing);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
-    background-color: #0000;
   }
 
   .input::file-selector-button {
@@ -6571,8 +6379,8 @@
   }
 
   .input::file-selector-button {
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .input::file-selector-button {
@@ -6592,7 +6400,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .input:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -6611,7 +6419,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .input {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -6645,16 +6453,6 @@
   }
 
   .input[readonly]:not(:disabled) {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .input[readonly]:not(:disabled) {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
-  }
-
-  .input[readonly]:not(:disabled) {
     background-color: var(--muted);
   }
 
@@ -6669,24 +6467,24 @@
   }
 
   .textarea {
+    border-radius: var(--radius-2xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .textarea {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 50%, transparent);
     }
   }
 
   .textarea {
-    padding-inline: calc(var(--spacing) * 2.5);
-    padding-block: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 3);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
-    background-color: #0000;
   }
 
   .textarea::placeholder {
@@ -6702,7 +6500,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .textarea:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -6721,7 +6519,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .textarea {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -6751,16 +6549,6 @@
   @supports (color: color-mix(in lab, red, red)) {
     .textarea:where(.dark, .dark *)[aria-invalid="true"] {
       --tw-ring-color: color-mix(in oklab, var(--destructive) 40%, transparent);
-    }
-  }
-
-  .textarea[readonly]:not(:disabled) {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .textarea[readonly]:not(:disabled) {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
     }
   }
 
@@ -6780,28 +6568,33 @@
 
   .input-group {
     height: calc(var(--spacing) * 9);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .input-group {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 50%, transparent);
     }
-  }
-
-  .input-group {
-    background-color: #0000;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .input-group {
-      transition-property: color, box-shadow;
+      transition-property: color, box-shadow, background-color;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
+  }
+
+  .input-group:has( > .input-group-addon:is([data-align="block-start"], [data-align="block-end"])) {
+    border-radius: var(--radius-3xl);
+  }
+
+  .input-group:has( > .input-group-textarea) {
+    border-radius: var(--radius-2xl);
   }
 
   .input-group:has( > .input-group-input[aria-invalid="true"]), .input-group:has( > .input-group-textarea[aria-invalid="true"]) {
@@ -6846,32 +6639,12 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .input-group:has( > .input-group-input:focus-visible), .input-group:has( > .input-group-textarea:focus-visible) {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
-    }
-  }
-
-  .input-group:has( > .input-group-input[readonly]), .input-group:has( > .input-group-textarea[readonly]) {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .input-group:has( > .input-group-input[readonly]), .input-group:has( > .input-group-textarea[readonly]) {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
   .input-group:has( > .input-group-input[readonly]), .input-group:has( > .input-group-textarea[readonly]) {
     background-color: var(--muted);
-  }
-
-  .input-group:has( > .input-group-input[readonly]) :is(.input-group-addon, .input-group-text), .input-group:has( > .input-group-textarea[readonly]) :is(.input-group-addon, .input-group-text) {
-    color: var(--muted-foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .input-group:has( > .input-group-input[readonly]) :is(.input-group-addon, .input-group-text), .input-group:has( > .input-group-textarea[readonly]) :is(.input-group-addon, .input-group-text) {
-      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
-    }
   }
 
   :is(.input-group-input[readonly], .input-group-textarea[readonly])::placeholder {
@@ -6885,7 +6658,7 @@
   }
 
   .input-group-input {
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
     padding-block: var(--spacing);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
@@ -6903,8 +6676,8 @@
   }
 
   .input-group-textarea {
-    padding-inline: calc(var(--spacing) * 2.5);
-    padding-block: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2.5);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
   }
@@ -6938,7 +6711,7 @@
 
   .input-group-addon {
     gap: calc(var(--spacing) * 2);
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-font-weight: var(--font-weight-medium);
@@ -6946,51 +6719,58 @@
     color: var(--muted-foreground);
   }
 
+  @supports (color: color-mix(in lab, red, red)) {
+    .input-group-addon {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+    }
+  }
+
   .input-group-addon > svg:not([class*="size-"], [data-icon-size]) {
     width: calc(var(--spacing) * 4);
     height: calc(var(--spacing) * 4);
   }
 
-  .input-group-addon:is(:not([data-align]), [data-align="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 2);
+  .input-group-addon > .kbd {
+    border-radius: var(--radius-3xl);
+    padding-inline: calc(var(--spacing) * 1.5);
   }
 
-  .input-group-addon:is(:not([data-align]), [data-align="inline-start"]):has( > .button) {
+  .input-group-addon:is(:not([data-align]), [data-align="inline-start"]) {
+    padding-inline-start: calc(var(--spacing) * 3);
+  }
+
+  .input-group-addon:is(:not([data-align]), [data-align="inline-start"]):has( > .button), .input-group-addon:is(:not([data-align]), [data-align="inline-start"]):has( > .kbd) {
     margin-inline-start: calc(var(--spacing) * -1);
   }
 
-  .input-group-addon:is(:not([data-align]), [data-align="inline-start"]):has( > .kbd) {
-    margin-inline-start: -.15rem;
-  }
-
   .input-group-addon[data-align="inline-end"] {
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
-  .input-group-addon[data-align="inline-end"]:has( > .button) {
+  .input-group-addon[data-align="inline-end"]:has( > .button), .input-group-addon[data-align="inline-end"]:has( > .kbd) {
     margin-inline-end: calc(var(--spacing) * -1);
   }
 
-  .input-group-addon[data-align="inline-end"]:has( > .kbd) {
-    margin-inline-end: -.15rem;
-  }
-
   .input-group-addon[data-align="block-start"] {
-    padding-inline: calc(var(--spacing) * 2.5);
-    padding-top: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-top: calc(var(--spacing) * 3);
   }
 
   .input-group-addon[data-align="block-end"] {
-    padding-inline: calc(var(--spacing) * 2.5);
-    padding-bottom: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-bottom: calc(var(--spacing) * 3);
   }
 
-  .input-group-addon[data-border="bottom"] {
-    padding-bottom: calc(var(--spacing) * 2);
+  .input-group:has( > .input-group-input) > .input-group-addon[data-align="block-start"] {
+    padding-top: calc(var(--spacing) * 3.5);
+  }
+
+  .input-group:has( > .input-group-input) > .input-group-addon[data-align="block-end"], .input-group-addon[data-border="bottom"] {
+    padding-bottom: calc(var(--spacing) * 3.5);
   }
 
   .input-group-addon[data-border="top"] {
-    padding-top: calc(var(--spacing) * 2);
+    padding-top: calc(var(--spacing) * 3.5);
   }
 
   .input-group-text {
@@ -7000,6 +6780,12 @@
     color: var(--muted-foreground);
   }
 
+  @supports (color: color-mix(in lab, red, red)) {
+    .input-group-text {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+    }
+  }
+
   .input-group-text svg:not([class*="size-"], [data-icon-size]) {
     width: calc(var(--spacing) * 4);
     height: calc(var(--spacing) * 4);
@@ -7007,6 +6793,7 @@
 
   .button.input-group-button {
     gap: calc(var(--spacing) * 2);
+    border-radius: var(--radius-4xl);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-shadow: 0 0 #0000;
@@ -7016,6 +6803,7 @@
   .button.input-group-button[data-size="xs"] {
     height: calc(var(--spacing) * 6);
     gap: var(--spacing);
+    border-radius: calc(var(--radius) + 4px);
     padding-inline: calc(var(--spacing) * 1.5);
   }
 
@@ -7027,6 +6815,7 @@
   .button.input-group-button[data-size="icon-xs"] {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
+    border-radius: calc(var(--radius) + 4px);
     padding: 0;
   }
 
@@ -7037,15 +6826,16 @@
   }
 
   .native-select {
+    border-radius: var(--radius-3xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .native-select {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 50%, transparent);
     }
   }
 
@@ -7053,21 +6843,8 @@
     padding-block: var(--spacing);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    background-color: #0000;
-    padding-inline-start: calc(var(--spacing) * 2.5);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
-  }
-
-  @media (hover: hover) {
-    .native-select:hover {
-      background-color: var(--muted);
-    }
-
-    @supports (color: color-mix(in lab, red, red)) {
-      .native-select:hover {
-        background-color: color-mix(in oklab, var(--muted) 50%, transparent);
-      }
-    }
   }
 
   .native-select:focus-visible {
@@ -7079,7 +6856,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .native-select:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -7098,7 +6875,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .native-select {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -7125,8 +6902,7 @@
   }
 
   .native-select[multiple] {
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-    padding-inline-end: calc(var(--spacing) * 2.5);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .native-select-wrapper:not([data-size]) > .native-select:not([multiple]), .native-select-wrapper[data-size="default"] > .native-select:not([multiple]) {
@@ -7138,41 +6914,30 @@
   }
 
   .native-select-icon {
-    color: var(--foreground);
+    color: var(--muted-foreground);
+    inset-inline-end: calc(var(--spacing) * 2.5);
   }
 
   .select {
     gap: calc(var(--spacing) * 1.5);
+    border-radius: var(--radius-3xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .select {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 50%, transparent);
     }
   }
 
   .select {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    background-color: #0000;
-    padding-inline-start: calc(var(--spacing) * 2.5);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
-  }
-
-  @media (hover: hover) {
-    .select:hover {
-      background-color: var(--muted);
-    }
-
-    @supports (color: color-mix(in lab, red, red)) {
-      .select:hover {
-        background-color: color-mix(in oklab, var(--muted) 50%, transparent);
-      }
-    }
   }
 
   .select:focus-visible {
@@ -7184,7 +6949,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .select:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -7203,7 +6968,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .select {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -7250,33 +7015,31 @@
     color: var(--muted-foreground);
   }
 
+  @supports (color: color-mix(in lab, red, red)) {
+    .select:has( > option[data-placeholder]:checked), .select[data-placeholder] {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+    }
+  }
+
   .select-icon {
-    color: var(--foreground);
+    color: var(--muted-foreground);
+    inset-inline-end: calc(var(--spacing) * 3.5);
   }
 
   .select-content, .combobox-content {
+    border-radius: var(--radius-3xl);
     background-color: var(--popover);
-    padding: var(--spacing);
+    padding: calc(var(--spacing) * 1.5);
     color: var(--popover-foreground);
-    --tw-shadow: 4px 5px 0 var(--tw-shadow-color, var(--foreground));
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .select-content, .combobox-content {
-      --tw-shadow: 4px 5px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .select-content, .combobox-content {
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .select-content, .combobox-content {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
@@ -7285,49 +7048,62 @@
     transition-duration: .1s;
   }
 
-  .select::picker(select) {
-    background-color: var(--popover);
-    padding: var(--spacing);
-    color: var(--popover-foreground);
-    --tw-shadow: 4px 5px 0 var(--tw-shadow-color, var(--foreground));
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
+  :is(.select-content, .combobox-content):where(.dark, .dark *) {
+    --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
-    .select::picker(select) {
-      --tw-shadow: 4px 5px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
+    :is(.select-content, .combobox-content):where(.dark, .dark *) {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
     }
   }
 
   .select::picker(select) {
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    border-radius: var(--radius-3xl);
+    background-color: var(--popover);
+    padding: calc(var(--spacing) * 1.5);
+    color: var(--popover-foreground);
+    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .select::picker(select) {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
   .select::picker(select) {
     --tw-duration: .1s;
     transition-duration: .1s;
+  }
+
+  .select::picker(select):where() {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .select::picker(select):where() {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
   }
 
   .select-content, .combobox-content, .select {
-    --popup-offset: calc(var(--spacing) * 1.5);
+    --popup-offset: var(--spacing);
     --popup-slide: calc(var(--spacing) * 2);
   }
 
   .select-item, .combobox-item {
-    gap: calc(var(--spacing) * 2);
-    padding-block: calc(var(--spacing) * 1.5);
+    gap: calc(var(--spacing) * 2.5);
+    border-radius: var(--radius-2xl);
+    padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-    padding-inline-start: calc(var(--spacing) * 2);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
   }
 
@@ -7375,8 +7151,8 @@
   }
 
   .select-label, .combobox-label {
-    padding-inline: calc(var(--spacing) * 2);
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2.5);
   }
 
   .select-group > .select-item {
@@ -7386,27 +7162,22 @@
   }
 
   .select-separator, .combobox-separator {
-    margin-inline: calc(var(--spacing) * -1);
-    margin-block: var(--spacing);
-    background-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .select-separator, .combobox-separator {
-      background-color: color-mix(in oklab, var(--foreground) 30%, transparent);
-    }
+    margin-inline: calc(var(--spacing) * -1.5);
+    margin-block: calc(var(--spacing) * 1.5);
+    background-color: var(--border);
   }
 
   .combobox-select {
+    border-radius: var(--radius-3xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .combobox-select {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 50%, transparent);
     }
   }
 
@@ -7414,21 +7185,8 @@
     padding-block: var(--spacing);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    background-color: #0000;
-    padding-inline-start: calc(var(--spacing) * 2.5);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
-  }
-
-  @media (hover: hover) {
-    .combobox-select:hover {
-      background-color: var(--muted);
-    }
-
-    @supports (color: color-mix(in lab, red, red)) {
-      .combobox-select:hover {
-        background-color: color-mix(in oklab, var(--muted) 50%, transparent);
-      }
-    }
   }
 
   .combobox-select:focus-visible {
@@ -7440,7 +7198,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .combobox-select:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -7459,7 +7217,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .combobox-select {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -7486,8 +7244,7 @@
   }
 
   .combobox-select[multiple] {
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-    padding-inline-end: calc(var(--spacing) * 2.5);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .combobox-select:not([multiple]) {
@@ -7495,34 +7252,35 @@
   }
 
   .combobox-icon {
-    color: var(--foreground);
+    color: var(--muted-foreground);
+    inset-inline-end: calc(var(--spacing) * 2.5);
   }
 
   .combobox-control {
     min-height: calc(var(--spacing) * 9);
+    border-radius: var(--radius-3xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .combobox-control {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 50%, transparent);
     }
   }
 
   .combobox-control {
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
     padding-block: var(--spacing);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
-    background-color: #0000;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .combobox-control {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -7577,22 +7335,12 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .combobox-control:has( > .combobox-input:focus-visible) {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
   .combobox-control:has( > .combobox-input:disabled) {
     cursor: not-allowed;
-  }
-
-  .combobox-control:has( > .combobox-input[readonly]) {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .combobox-control:has( > .combobox-input[readonly]) {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
   }
 
   .combobox-control:has( > .combobox-input[readonly]) {
@@ -7613,9 +7361,9 @@
   }
 
   .combobox-clear, .combobox-trigger {
+    border-radius: calc(var(--radius) + 4px);
     color: var(--muted-foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-    margin-inline-end: calc(var(--spacing) * -1.5);
+    margin-inline-end: calc(var(--spacing) * -2);
   }
 
   @media (hover: hover) {
@@ -7645,25 +7393,35 @@
   .combobox-chip {
     height: calc(var(--spacing) * 5.5);
     gap: var(--spacing);
-    background-color: var(--muted);
-    padding-inline: calc(var(--spacing) * 1.5);
+    border-radius: var(--radius-3xl);
+    background-color: var(--input);
+    padding-inline: calc(var(--spacing) * 2);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   .combobox-chip:has( > .combobox-chip-remove) {
     padding-inline-end: 0;
   }
 
+  .combobox-chip:where(.dark, .dark *) {
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .combobox-chip:where(.dark, .dark *) {
+      background-color: color-mix(in oklab, var(--input) 60%, transparent);
+    }
+  }
+
   .combobox-chip-remove {
     width: calc(var(--spacing) * 5);
     height: calc(var(--spacing) * 5);
+    border-radius: var(--radius-3xl);
     opacity: .5;
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
     margin-inline-start: calc(var(--spacing) * -1);
   }
 
@@ -7702,12 +7460,11 @@
     background-color: var(--background);
     padding: calc(var(--spacing) * 3);
     --cell-size: calc(var(--spacing) * 8);
-    --cell-radius: calc(var(--radius) - 2px);
+    --cell-radius: var(--radius-4xl);
   }
 
   .calendar-nav-button {
     border-radius: var(--cell-radius);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   @media (hover: hover) {
@@ -7725,7 +7482,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .calendar-nav-button:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -7744,21 +7501,14 @@
   .calendar-caption, .calendar-dropdowns {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .calendar-dropdown {
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .calendar-dropdown {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
+    border-width: 1px;
+    border-color: var(--input);
   }
 
   .calendar-dropdown:has( > .calendar-select:focus-visible) {
@@ -7770,15 +7520,14 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .calendar-dropdown:has( > .calendar-select:focus-visible) {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
   .calendar-dropdown-label {
     height: calc(var(--spacing) * 8);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-    padding-inline-start: calc(var(--spacing) * 2);
-    padding-inline-end: var(--spacing);
+    padding-inline-start: calc(var(--spacing) * 3);
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .calendar-dropdown-label > svg {
@@ -7797,7 +7546,6 @@
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-font-weight: var(--font-weight-normal);
     font-weight: var(--font-weight-normal);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   @media (hover: hover) {
@@ -7815,7 +7563,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .calendar-day-button:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -7893,9 +7641,9 @@
 
   .month-view {
     --cell-size: calc(var(--spacing) * 7);
-    --cell-radius: calc(var(--radius) - 2px);
+    --cell-radius: var(--radius-4xl);
     --day-height: calc(var(--spacing) * 16);
-    --day-radius: calc(var(--radius) - 2px);
+    --day-radius: calc(var(--radius) + 4px);
   }
 
   @media (min-width: 48rem) {
@@ -7906,7 +7654,6 @@
 
   .month-view-nav-button {
     border-radius: var(--cell-radius);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   @media (hover: hover) {
@@ -7924,7 +7671,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .month-view-nav-button:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -7968,8 +7715,8 @@
   .month-view-caption {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .month-view-weekday, .month-view-week-number {
@@ -7981,18 +7728,8 @@
 
   .month-view-day-link, .month-view-day-body {
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .month-view-day-link, .month-view-day-body {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
-  }
-
-  .month-view-day-link, .month-view-day-body {
+    border-width: 1px;
+    border-color: var(--border);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-font-weight: var(--font-weight-normal);
@@ -8014,7 +7751,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .month-view-day-link:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -8051,39 +7788,21 @@
     width: calc(var(--spacing) * 4);
     height: calc(var(--spacing) * 4);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
+    border-radius: 5px;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .checkbox {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 90%, transparent);
     }
   }
 
-  .checkbox {
-    background-color: #0000;
-  }
-
-  .checkbox:checked {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .checkbox:checked {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .checkbox:indeterminate {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .checkbox:indeterminate {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
+  .checkbox:checked, .checkbox:indeterminate {
+    border-color: var(--primary);
+    background-color: var(--primary);
   }
 
   .checkbox:focus-visible {
@@ -8095,7 +7814,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .checkbox:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -8112,12 +7831,20 @@
     }
   }
 
+  .checkbox[aria-invalid="true"]:checked, .checkbox[aria-invalid="true"]:indeterminate {
+    border-color: var(--primary);
+  }
+
   @media (prefers-reduced-motion: no-preference) {
     .checkbox {
       transition-property: box-shadow;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
+  }
+
+  .checkbox:where(.dark, .dark *):checked, .checkbox:where(.dark, .dark *):indeterminate {
+    background-color: var(--primary);
   }
 
   .checkbox:where(.dark, .dark *)[aria-invalid="true"] {
@@ -8143,8 +7870,7 @@
   .checkbox-indicator, .checkbox-indeterminate-indicator {
     width: calc(var(--spacing) * 3.5);
     height: calc(var(--spacing) * 3.5);
-    stroke-width: 3px;
-    color: var(--foreground);
+    color: var(--primary-foreground);
   }
 
   .radio-group {
@@ -8155,24 +7881,25 @@
     width: calc(var(--spacing) * 4);
     height: calc(var(--spacing) * 4);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 58% 42% 53% 47% / 45% 55%;
+    background-color: var(--input);
+    border-width: 1px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .radio-group-item {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 90%, transparent);
     }
   }
 
   .radio-group-item {
-    background-color: #0000;
-    background-size: .375rem;
+    background-size: .5rem;
   }
 
   .radio-group-item:checked {
-    background-image: radial-gradient(circle closest-side,var(--foreground) calc(100% - 1px),transparent 100%);
+    border-color: var(--primary);
+    background-color: var(--primary);
+    background-image: radial-gradient(circle closest-side,var(--primary-foreground) calc(100% - 1px),transparent 100%);
   }
 
   .radio-group-item:focus-visible {
@@ -8184,7 +7911,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .radio-group-item:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -8201,6 +7928,14 @@
     }
   }
 
+  .radio-group-item[aria-invalid="true"]:checked {
+    border-color: var(--primary);
+  }
+
+  .radio-group-item:where(.dark, .dark *):checked {
+    background-color: var(--primary);
+  }
+
   .radio-group-item:where(.dark, .dark *)[aria-invalid="true"] {
     border-color: var(--destructive);
   }
@@ -8223,28 +7958,24 @@
 
   .switch {
     border-style: var(--tw-border-style);
+    background-color: var(--input);
     border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 999px 850px 999px 900px / 850px 999px 900px;
+    border-color: #0000;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .switch {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      background-color: color-mix(in oklab, var(--input) 90%, transparent);
     }
   }
 
   .switch {
-    padding: calc(var(--spacing) * .5);
-    --switch-thumb: var(--foreground);
-    background-color: #0000;
-    background-origin: content-box;
-    background-clip: padding-box;
+    --switch-thumb: var(--background);
   }
 
   .switch:checked {
+    border-color: var(--primary);
     background-color: var(--primary);
-    --switch-thumb: var(--primary-foreground);
   }
 
   .switch:focus-visible {
@@ -8256,7 +7987,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .switch:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -8273,6 +8004,15 @@
     }
   }
 
+  .switch:where(.dark, .dark *) {
+    --switch-thumb: var(--foreground);
+  }
+
+  .switch:where(.dark, .dark *):checked {
+    background-color: var(--primary);
+    --switch-thumb: var(--primary-foreground);
+  }
+
   .switch:where(.dark, .dark *)[aria-invalid="true"] {
     border-color: var(--destructive);
   }
@@ -8293,28 +8033,37 @@
     }
   }
 
+  .switch {
+    --switch-thumb-start: calc(var(--switch-thumb-height) / 2);
+    --switch-thumb-circle: circle var(--switch-thumb-start);
+    --switch-thumb-fill: var(--switch-thumb) calc(100% - 1px), transparent 100%;
+    background-image: radial-gradient(var(--switch-thumb-circle) at var(--switch-thumb-start) 50%, var(--switch-thumb-fill)), radial-gradient(var(--switch-thumb-circle) at calc(var(--switch-thumb-start) / 2 + 25%) 50%, var(--switch-thumb-fill)), radial-gradient(var(--switch-thumb-circle) at 50% 50%, var(--switch-thumb-fill)), radial-gradient(var(--switch-thumb-circle) at calc(75% - var(--switch-thumb-start) / 2) 50%, var(--switch-thumb-fill)), radial-gradient(var(--switch-thumb-circle) at calc(100% - var(--switch-thumb-start)) 50%, var(--switch-thumb-fill));
+  }
+
   .switch:not([data-size]), .switch[data-size="default"] {
     height: calc(var(--spacing) * 5);
-    width: calc(var(--spacing) * 9);
-    background-size: .75rem;
+    width: calc(var(--spacing) * 11);
+    --switch-thumb-height: 1rem;
+    background-size: 1.5rem 1rem;
   }
 
   .switch[data-size="sm"] {
     height: calc(var(--spacing) * 4);
     width: calc(var(--spacing) * 7);
-    background-size: .5rem;
+    --switch-thumb-height: .75rem;
+    background-size: 1rem .75rem;
   }
 
   .toggle {
     gap: var(--spacing);
+    border-radius: var(--radius-3xl);
     border-style: var(--tw-border-style);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-normal);
-    font-weight: var(--font-weight-normal);
-    border-width: 2px;
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
+    border-width: 1px;
     border-color: #0000;
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   @media (hover: hover) {
@@ -8325,7 +8074,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .toggle {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -8347,28 +8096,8 @@
   }
 
   .toggle[data-variant="outline"] {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .toggle[data-variant="outline"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .toggle[data-variant="outline"] {
-    background-color: var(--background);
-    --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .toggle[data-variant="outline"] {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .toggle[data-variant="outline"] {
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    border-color: var(--input);
+    background-color: #0000;
   }
 
   @media (hover: hover) {
@@ -8380,43 +8109,43 @@
   .toggle:not([data-size]), .toggle[data-size="default"] {
     height: calc(var(--spacing) * 9);
     min-width: calc(var(--spacing) * 9);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   :is(.toggle:not([data-size]), .toggle[data-size="default"]):has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 2.5);
   }
 
   :is(.toggle:not([data-size]), .toggle[data-size="default"]):has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 2.5);
   }
 
   .toggle[data-size="sm"] {
     height: calc(var(--spacing) * 8);
     min-width: calc(var(--spacing) * 8);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   .toggle[data-size="sm"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .toggle[data-size="sm"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2);
   }
 
   .toggle[data-size="lg"] {
     height: calc(var(--spacing) * 10);
     min-width: calc(var(--spacing) * 10);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 4);
   }
 
   .toggle[data-size="lg"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .toggle[data-size="lg"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 3);
   }
 
   .toggle:has( > .toggle-input:checked), .toggle:has( > .toggle-input:indeterminate:not([type="radio"])) {
@@ -8438,7 +8167,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .toggle:has( > .toggle-input:focus-visible) {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -8464,53 +8193,42 @@
   }
 
   .toggle-group[data-spacing="0"] > .toggle-group-item, .toggle-group[data-spacing="0"] > .tooltip > .toggle-group-item {
-    padding-inline: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
     --tw-shadow: 0 0 #0000;
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     border-radius: 0;
   }
 
   :is(.toggle-group[data-spacing="0"] > .toggle-group-item, .toggle-group[data-spacing="0"] > .tooltip > .toggle-group-item):has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 2.5);
   }
 
   :is(.toggle-group[data-spacing="0"] > .toggle-group-item, .toggle-group[data-spacing="0"] > .tooltip > .toggle-group-item):has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2.5);
   }
 
   .toggle-group[data-spacing="0"]:not([data-orientation]) > .toggle-group-item:first-child, .toggle-group[data-spacing="0"]:not([data-orientation]) > .tooltip:first-child > .toggle-group-item {
-    border-start-start-radius: calc(var(--radius) - 2px);
-    border-end-start-radius: calc(var(--radius) - 2px);
+    border-start-start-radius: var(--radius-3xl);
+    border-end-start-radius: var(--radius-3xl);
   }
 
   .toggle-group[data-spacing="0"]:not([data-orientation]) > .toggle-group-item:last-child, .toggle-group[data-spacing="0"]:not([data-orientation]) > .tooltip:last-child > .toggle-group-item {
-    border-start-end-radius: calc(var(--radius) - 2px);
-    border-end-end-radius: calc(var(--radius) - 2px);
+    border-start-end-radius: var(--radius-3xl);
+    border-end-end-radius: var(--radius-3xl);
   }
 
   .toggle-group[data-spacing="0"][data-orientation="vertical"] > .toggle-group-item:first-child, .toggle-group[data-spacing="0"][data-orientation="vertical"] > .tooltip:first-child > .toggle-group-item {
-    border-top-left-radius: calc(var(--radius) - 2px);
-    border-top-right-radius: calc(var(--radius) - 2px);
+    border-top-left-radius: var(--radius-3xl);
+    border-top-right-radius: var(--radius-3xl);
   }
 
   .toggle-group[data-spacing="0"][data-orientation="vertical"] > .toggle-group-item:last-child, .toggle-group[data-spacing="0"][data-orientation="vertical"] > .tooltip:last-child > .toggle-group-item {
-    border-bottom-right-radius: calc(var(--radius) - 2px);
-    border-bottom-left-radius: calc(var(--radius) - 2px);
+    border-bottom-right-radius: var(--radius-3xl);
+    border-bottom-left-radius: var(--radius-3xl);
   }
 
   .toggle-group[data-spacing="0"]:has( > .toggle-group-item[data-variant="outline"],  > .tooltip > .toggle-group-item[data-variant="outline"]) {
-    border-radius: calc(var(--radius) - 2px);
-    --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .toggle-group[data-spacing="0"]:has( > .toggle-group-item[data-variant="outline"],  > .tooltip > .toggle-group-item[data-variant="outline"]) {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .toggle-group[data-spacing="0"]:has( > .toggle-group-item[data-variant="outline"],  > .tooltip > .toggle-group-item[data-variant="outline"]) {
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    border-radius: var(--radius-3xl);
   }
 
   .field-set {
@@ -8523,8 +8241,8 @@
 
   .field-legend {
     margin-bottom: calc(var(--spacing) * 3);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .field-legend:not([data-variant]), .field-legend[data-variant="legend"] {
@@ -8594,31 +8312,22 @@
 
   .dialog {
     gap: calc(var(--spacing) * 6);
+    border-radius: var(--radius-4xl);
     background-color: var(--popover);
     max-width: calc(100% - 2rem);
     padding: calc(var(--spacing) * 6);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--popover-foreground);
-    --tw-shadow: 4px 5px 0 var(--tw-shadow-color, var(--foreground));
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .dialog {
-      --tw-shadow: 4px 5px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .dialog {
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    --tw-shadow: 0 20px 25px -5px var(--tw-shadow-color, #0000001a), 0 8px 10px -6px var(--tw-shadow-color, #0000001a);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .dialog {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
@@ -8628,12 +8337,12 @@
   }
 
   .dialog::backdrop {
-    background-color: #0000001a;
+    background-color: #0000004d;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .dialog::backdrop {
-      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+      background-color: color-mix(in oklab, var(--color-black) 30%, transparent);
     }
   }
 
@@ -8644,7 +8353,7 @@
 
   @supports ((-webkit-backdrop-filter: var(--tw)) or (backdrop-filter: var(--tw))) {
     .dialog::backdrop {
-      --tw-backdrop-blur: blur(var(--blur-xs));
+      --tw-backdrop-blur: blur(var(--blur-sm));
       -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );
       backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );
     }
@@ -8656,22 +8365,33 @@
     }
   }
 
+  .dialog:where(.dark, .dark *) {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .dialog:where(.dark, .dark *) {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
+  }
+
   .dialog-close {
     inset-inline-end: calc(var(--spacing) * 4);
     top: calc(var(--spacing) * 4);
+    background-color: var(--secondary);
   }
 
   .dialog-header {
-    gap: calc(var(--spacing) * 2);
+    gap: calc(var(--spacing) * 1.5);
   }
 
   .dialog-title {
-    font-size: var(--text-lg);
-    line-height: var(--tw-leading, var(--text-lg--line-height));
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
     --tw-leading: 1;
-    --tw-font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
     line-height: 1;
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-medium);
   }
 
   .dialog-description {
@@ -8680,14 +8400,13 @@
     color: var(--muted-foreground);
   }
 
-  .dialog-description a:not(.button) {
+  .dialog-description a {
     text-underline-offset: 3px;
     text-decoration-line: underline;
   }
 
-  .dialog-description a:not(.button):hover {
+  .dialog-description a:hover {
     color: var(--foreground);
-    text-decoration-style: wavy;
   }
 
   .dialog-footer {
@@ -8720,30 +8439,21 @@
   .alert-dialog {
     max-width: var(--container-xs);
     gap: calc(var(--spacing) * 6);
+    border-radius: var(--radius-4xl);
     background-color: var(--popover);
     padding: calc(var(--spacing) * 6);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--popover-foreground);
-    --tw-shadow: 4px 5px 0 var(--tw-shadow-color, var(--foreground));
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .alert-dialog {
-      --tw-shadow: 4px 5px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .alert-dialog {
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    --tw-shadow: 0 20px 25px -5px var(--tw-shadow-color, #0000001a), 0 8px 10px -6px var(--tw-shadow-color, #0000001a);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .alert-dialog {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
@@ -8753,12 +8463,12 @@
   }
 
   .alert-dialog::backdrop {
-    background-color: #0000001a;
+    background-color: #0000004d;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .alert-dialog::backdrop {
-      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+      background-color: color-mix(in oklab, var(--color-black) 30%, transparent);
     }
   }
 
@@ -8769,15 +8479,25 @@
 
   @supports ((-webkit-backdrop-filter: var(--tw)) or (backdrop-filter: var(--tw))) {
     .alert-dialog::backdrop {
-      --tw-backdrop-blur: blur(var(--blur-xs));
+      --tw-backdrop-blur: blur(var(--blur-sm));
       -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );
       backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );
     }
   }
 
+  .alert-dialog:where(.dark, .dark *) {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .alert-dialog:where(.dark, .dark *) {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
+  }
+
   @media (min-width: 40rem) {
     .alert-dialog:not([data-size]) {
-      max-width: var(--container-lg);
+      max-width: var(--container-md);
     }
   }
 
@@ -8797,9 +8517,7 @@
     margin-bottom: calc(var(--spacing) * 2);
     width: calc(var(--spacing) * 16);
     height: calc(var(--spacing) * 16);
-    border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    border-radius: 3.40282e38px;
   }
 
   .alert-dialog-media svg:not([class*="size-"], [data-icon-size]) {
@@ -8808,21 +8526,10 @@
   }
 
   .alert-dialog-media:not([data-variant]) {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .alert-dialog-media:not([data-variant]) {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .alert-dialog-media:not([data-variant]) {
     background-color: var(--muted);
   }
 
   .alert-dialog-media[data-variant="destructive"] {
-    border-color: var(--destructive);
     background-color: var(--destructive);
   }
 
@@ -8849,8 +8556,8 @@
   .alert-dialog-title {
     font-size: var(--text-lg);
     line-height: var(--tw-leading, var(--text-lg--line-height));
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .alert-dialog-description {
@@ -8866,14 +8573,13 @@
     }
   }
 
-  .alert-dialog-description a:not(.button) {
+  .alert-dialog-description a {
     text-underline-offset: 3px;
     text-decoration-line: underline;
   }
 
-  .alert-dialog-description a:not(.button):hover {
+  .alert-dialog-description a:hover {
     color: var(--foreground);
-    text-decoration-style: wavy;
   }
 
   .alert-dialog-footer {
@@ -8881,22 +8587,12 @@
   }
 
   .sheet {
-    gap: calc(var(--spacing) * 4);
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .sheet {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .sheet {
+    border-color: var(--border);
     background-color: var(--popover);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--popover-foreground);
-    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
+    --tw-shadow: 0 20px 25px -5px var(--tw-shadow-color, #0000001a), 0 8px 10px -6px var(--tw-shadow-color, #0000001a);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-duration: .2s;
     --tw-ease: var(--ease-in-out);
@@ -8906,12 +8602,12 @@
   }
 
   .sheet::backdrop {
-    background-color: #0000001a;
+    background-color: #0000004d;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .sheet::backdrop {
-      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+      background-color: color-mix(in oklab, var(--color-black) 30%, transparent);
     }
   }
 
@@ -8922,7 +8618,7 @@
 
   @supports ((-webkit-backdrop-filter: var(--tw)) or (backdrop-filter: var(--tw))) {
     .sheet::backdrop {
-      --tw-backdrop-blur: blur(var(--blur-xs));
+      --tw-backdrop-blur: blur(var(--blur-sm));
       -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );
       backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );
     }
@@ -8943,33 +8639,34 @@
   }
 
   .sheet > :not(.sheet-header, .sheet-footer, .sheet-close, .sheet-body), .sheet-body-content {
-    padding-inline: calc(var(--spacing) * 4);
+    padding-inline: calc(var(--spacing) * 6);
   }
 
   .sheet-body-error {
-    margin-inline: calc(var(--spacing) * 4);
+    margin-inline: calc(var(--spacing) * 6);
   }
 
   .sheet-close {
     inset-inline-end: calc(var(--spacing) * 4);
     top: calc(var(--spacing) * 4);
+    background-color: var(--secondary);
   }
 
   .sheet-header {
     gap: calc(var(--spacing) * 1.5);
-    padding: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 6);
   }
 
   .sheet-footer {
     gap: calc(var(--spacing) * 2);
-    padding: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 6);
   }
 
   .sheet-title {
-    font-size: var(--text-lg);
-    line-height: var(--tw-leading, var(--text-lg--line-height));
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--foreground);
   }
 
@@ -8979,55 +8676,60 @@
     color: var(--muted-foreground);
   }
 
-  .sheet-description a:not(.button) {
+  .sheet-description a {
     text-underline-offset: 3px;
     text-decoration-line: underline;
   }
 
-  .sheet-description a:not(.button):hover {
+  .sheet-description a:hover {
     color: var(--foreground);
-    text-decoration-style: wavy;
   }
 
   .dropdown-menu-content {
+    border-radius: var(--radius-3xl);
     background-color: var(--popover);
-    padding: var(--spacing);
+    padding: calc(var(--spacing) * 1.5);
     color: var(--popover-foreground);
-    --tw-shadow: 4px 5px 0 var(--tw-shadow-color, var(--foreground));
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .dropdown-menu-content {
-      --tw-shadow: 4px 5px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .dropdown-menu-content {
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .dropdown-menu-content {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
   .dropdown-menu-content {
     --tw-duration: .1s;
-    --popup-offset: calc(var(--spacing) * 1.5);
-    --popup-slide: calc(var(--spacing) * 2);
     transition-duration: .1s;
   }
 
+  .dropdown-menu-content:where(.dark, .dark *) {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .dropdown-menu-content:where(.dark, .dark *) {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
+  }
+
+  .dropdown-menu-content {
+    --popup-offset: var(--spacing);
+    --popup-slide: calc(var(--spacing) * 2);
+  }
+
   .dropdown-menu-item, .dropdown-menu-checkbox-item, .dropdown-menu-radio-item {
-    gap: calc(var(--spacing) * 2);
-    padding-block: calc(var(--spacing) * 1.5);
+    gap: calc(var(--spacing) * 2.5);
+    border-radius: var(--radius-2xl);
+    padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   :is(.dropdown-menu-item, .dropdown-menu-checkbox-item, .dropdown-menu-radio-item):focus {
@@ -9057,20 +8759,20 @@
   }
 
   .dropdown-menu-item {
-    padding-inline: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   .dropdown-menu-item[data-inset] {
-    padding-inline-start: calc(var(--spacing) * 8);
+    padding-inline-start: calc(var(--spacing) * 9.5);
   }
 
   .dropdown-menu-checkbox-item, .dropdown-menu-radio-item {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
   }
 
   :is(.dropdown-menu-checkbox-item, .dropdown-menu-radio-item)[data-inset] {
-    padding-inline-start: calc(var(--spacing) * 8);
+    padding-inline-start: calc(var(--spacing) * 9.5);
   }
 
   :is(.dropdown-menu-item:not([data-variant]):focus *) {
@@ -9116,21 +8818,21 @@
   }
 
   .dropdown-menu-label {
-    padding-inline: calc(var(--spacing) * 2);
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2.5);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
     color: var(--muted-foreground);
   }
 
   .dropdown-menu-label[data-inset] {
-    padding-inline-start: calc(var(--spacing) * 8);
+    padding-inline-start: calc(var(--spacing) * 9.5);
   }
 
   .dropdown-menu-label.user-menu-label {
     gap: calc(var(--spacing) * 2);
-    padding-inline: var(--spacing);
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 2);
+    padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-leading: var(--leading-tight);
@@ -9141,8 +8843,8 @@
   }
 
   .user-menu-name {
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .user-menu-detail {
@@ -9151,18 +8853,18 @@
   }
 
   .button.user-menu-trigger {
-    border-radius: 58% 42% 53% 47% / 45% 55%;
+    border-radius: 3.40282e38px;
   }
 
   .dropdown-menu-separator {
-    margin-inline: calc(var(--spacing) * -1);
-    margin-block: var(--spacing);
-    background-color: var(--foreground);
+    margin-inline: calc(var(--spacing) * -1.5);
+    margin-block: calc(var(--spacing) * 1.5);
+    background-color: var(--border);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .dropdown-menu-separator {
-      background-color: color-mix(in oklab, var(--foreground) 30%, transparent);
+      background-color: color-mix(in oklab, var(--border) 50%, transparent);
     }
   }
 
@@ -9181,36 +8883,27 @@
   .popover-content {
     width: calc(var(--spacing) * 72);
     gap: calc(var(--spacing) * 4);
+    border-radius: var(--radius-3xl);
     background-color: var(--popover);
     padding: calc(var(--spacing) * 4);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--popover-foreground);
-    --tw-shadow: 4px 5px 0 var(--tw-shadow-color, var(--foreground));
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .popover-content {
-      --tw-shadow: 4px 5px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .popover-content {
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .popover-content {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
   .popover-content {
     --tw-duration: .1s;
-    --popup-offset: calc(var(--spacing) * 1.5);
+    --popup-offset: var(--spacing);
     --popup-slide: calc(var(--spacing) * 2);
     transition-duration: .1s;
   }
@@ -9234,8 +8927,10 @@
   }
 
   .popover-title {
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .popover-description {
@@ -9245,6 +8940,7 @@
   .tooltip-content {
     max-width: var(--container-xs);
     gap: calc(var(--spacing) * 1.5);
+    border-radius: calc(var(--radius) + 4px);
     background-color: var(--foreground);
     padding-inline: calc(var(--spacing) * 3);
     padding-block: calc(var(--spacing) * 1.5);
@@ -9252,7 +8948,6 @@
     line-height: var(--tw-leading, var(--text-xs--line-height));
     color: var(--background);
     --tw-duration: .1s;
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
     transition-duration: .1s;
   }
 
@@ -9273,16 +8968,7 @@
   }
 
   .tooltip-content .kbd {
-    border-color: var(--background);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .tooltip-content .kbd {
-      border-color: color-mix(in oklab, var(--background) 40%, transparent);
-    }
-  }
-
-  .tooltip-content .kbd {
+    border-radius: var(--radius);
     background-color: var(--background);
   }
 
@@ -9308,57 +8994,38 @@
 
   .chart-tooltip-content {
     gap: calc(var(--spacing) * 1.5);
+    border-radius: calc(var(--radius) + 4px);
     background-color: var(--popover);
     padding-inline: calc(var(--spacing) * 2.5);
     padding-block: calc(var(--spacing) * 1.5);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
     color: var(--popover-foreground);
-    --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .chart-tooltip-content {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .chart-tooltip-content {
-    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
+    --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .chart-tooltip-content {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
+    }
+  }
+
+  .chart-tooltip-content:where(.dark, .dark *) {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .chart-tooltip-content:where(.dark, .dark *) {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
     }
   }
 
   .chart-skeleton {
-    border-style: var(--tw-border-style);
-    --tw-border-style: dashed;
-    border-style: dashed;
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .chart-skeleton {
-      border-color: color-mix(in oklab, var(--foreground) 30%, transparent);
-    }
-  }
-
-  .chart-skeleton {
-    background-image: repeating-linear-gradient(-45deg,var(--foreground) 0 2px,transparent 2px 7px);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .chart-skeleton {
-      background-image: repeating-linear-gradient(-45deg,color-mix(in oklch,var(--foreground) 12%,transparent) 0 2px,transparent 2px 7px);
-    }
+    border-radius: var(--radius-2xl);
+    background-color: var(--accent);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -9385,21 +9052,31 @@
     outline-style: solid;
   }
 
-  .accordion-item {
-    --tw-border-style: dashed;
-    border-style: dashed;
-    border-color: var(--foreground);
+  .accordion {
+    border-radius: var(--radius-2xl);
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+    border-color: var(--border);
+    overflow: hidden;
   }
 
-  @supports (color: color-mix(in lab, red, red)) {
-    .accordion-item {
-      border-color: color-mix(in oklab, var(--foreground) 40%, transparent);
-    }
+  .accordion-item {
+    border-color: var(--border);
   }
 
   .accordion-item:not(:last-child) {
     border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 2px;
+    border-bottom-width: 1px;
+  }
+
+  .accordion-item:is([open], :popover-open, :open) {
+    background-color: var(--muted);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .accordion-item:is([open], :popover-open, :open) {
+      background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+    }
   }
 
   .accordion-item {
@@ -9407,24 +9084,21 @@
   }
 
   .accordion-trigger {
-    padding-block: calc(var(--spacing) * 4);
+    gap: calc(var(--spacing) * 6);
+    padding: calc(var(--spacing) * 4);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
-    text-underline-offset: 4px;
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   @media (hover: hover) {
     .accordion-trigger:hover {
       text-decoration-line: underline;
-      text-decoration-style: wavy;
     }
   }
 
   .accordion-trigger:focus-visible {
-    border-color: var(--ring);
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--ring);
@@ -9432,31 +9106,35 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .accordion-trigger:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
+  }
+
+  .accordion-trigger:focus-visible {
+    --tw-ring-inset: inset;
   }
 
   .accordion-trigger-icon {
     width: calc(var(--spacing) * 4);
     height: calc(var(--spacing) * 4);
-    color: var(--foreground);
+    color: var(--muted-foreground);
   }
 
   .accordion-content {
+    padding-inline: calc(var(--spacing) * 4);
     padding-top: 0;
     padding-bottom: calc(var(--spacing) * 4);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
 
-  .accordion-content a:not(.button) {
+  .accordion-content a {
     text-underline-offset: 3px;
     text-decoration-line: underline;
   }
 
-  .accordion-content a:not(.button):hover {
+  .accordion-content a:hover {
     color: var(--foreground);
-    text-decoration-style: wavy;
   }
 
   .accordion-content p:not(:last-child) {
@@ -9464,7 +9142,7 @@
   }
 
   .collapsible-trigger {
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    border-radius: calc(var(--radius) - 2px);
   }
 
   .collapsible-trigger:focus-visible {
@@ -9476,7 +9154,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .collapsible-trigger:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -9487,8 +9165,8 @@
   .collapsible-trigger:not(.button) {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .tabs {
@@ -9496,13 +9174,17 @@
   }
 
   .tabs-list {
+    padding: var(--spacing);
     color: var(--muted-foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
-    padding: 3px;
+    border-radius: 3.40282e38px;
+  }
+
+  .tabs[data-orientation="vertical"] > .tabs-list {
+    border-radius: var(--radius-2xl);
   }
 
   .tabs:not([data-orientation]) > .tabs-list {
-    height: calc(var(--spacing) * 10);
+    height: calc(var(--spacing) * 9);
   }
 
   .tabs-list:not([data-variant]) {
@@ -9516,21 +9198,23 @@
   }
 
   .tabs-trigger {
-    gap: calc(var(--spacing) * 1.5);
+    gap: calc(var(--spacing) * 2);
     border-style: var(--tw-border-style);
-    padding-inline: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
     padding-block: var(--spacing);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--foreground);
-    border-width: 2px;
+    border-width: 1px;
     border-color: #0000;
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
+    border-radius: 3.40282e38px;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .tabs-trigger {
-      color: color-mix(in oklab, var(--foreground) 70%, transparent);
+      color: color-mix(in oklab, var(--foreground) 60%, transparent);
     }
   }
 
@@ -9549,7 +9233,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .tabs-trigger:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -9586,27 +9270,33 @@
     height: calc(100% - 1px);
   }
 
+  .tabs[data-orientation="vertical"] > .tabs-list > .tabs-trigger {
+    border-radius: var(--radius-2xl);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 1.5);
+  }
+
   .tabs-trigger:has( > svg:first-child) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2);
   }
 
   .tabs-trigger:has( > svg:last-child) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
-  }
-
-  .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected="true"] {
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected="true"] {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected="true"] {
     background-color: var(--background);
     color: var(--foreground);
+  }
+
+  .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected="true"]:where(.dark, .dark *) {
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected="true"]:where(.dark, .dark *) {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
   }
 
   .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected="true"]:where(.dark, .dark *) {
@@ -9616,25 +9306,16 @@
   .tabs-list[data-variant="line"] > .tabs-trigger:after {
     content: var(--tw-content);
     background-color: var(--foreground);
-    border-radius: 3.40282e38px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .tabs-list[data-variant="line"] > .tabs-trigger:after {
-      background-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
   }
 
   .tabs-list[data-variant="line"] > .tabs-trigger[aria-selected="true"] {
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
     color: var(--foreground);
   }
 
   .tabs-content {
+    border-radius: calc(var(--radius) - 2px);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   .tabs-content:focus-visible {
@@ -9645,40 +9326,21 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .tabs-content:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
   .toast {
     gap: calc(var(--spacing) * 1.5);
+    border-radius: var(--radius-2xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .toast {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .toast {
     background-color: var(--popover);
     padding: calc(var(--spacing) * 4);
     color: var(--popover-foreground);
-    --tw-shadow: 4px 5px 0 var(--tw-shadow-color, var(--foreground));
-    font-size: 13px;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .toast {
-      --tw-shadow: 4px 5px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .toast {
+    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    border-width: 1px;
+    font-size: 13px;
   }
 
   .toast:focus-visible {
@@ -9690,7 +9352,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .toast:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -9720,8 +9382,8 @@
   .toast-title {
     --tw-leading: var(--leading-normal);
     line-height: var(--leading-normal);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .toast-description {
@@ -9740,30 +9402,10 @@
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
 
-  .table > thead > tr {
+  .table > :is(thead, tbody, tfoot) > tr {
     border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 2px;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .table > thead > tr {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .table > :is(tbody, tfoot) > tr {
-    border-bottom-style: var(--tw-border-style);
-    --tw-border-style: dashed;
-    border-style: dashed;
     border-bottom-width: 1px;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .table > :is(tbody, tfoot) > tr {
-      border-color: color-mix(in oklab, var(--foreground) 30%, transparent);
-    }
+    border-color: var(--border);
   }
 
   @media (hover: hover) {
@@ -9797,17 +9439,8 @@
 
   .table > tfoot {
     border-top-style: var(--tw-border-style);
-    border-top-width: 2px;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .table > tfoot {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .table > tfoot {
+    border-top-width: 1px;
+    border-color: var(--border);
     background-color: var(--muted);
   }
 
@@ -9818,20 +9451,20 @@
   }
 
   .table > tfoot {
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .table > :is(thead, tbody, tfoot) > tr > th {
-    height: calc(var(--spacing) * 10);
-    padding-inline: calc(var(--spacing) * 2);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    height: calc(var(--spacing) * 12);
+    padding-inline: calc(var(--spacing) * 3);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--foreground);
   }
 
   .table > :is(thead, tbody, tfoot) > tr > td {
-    padding: calc(var(--spacing) * 2);
+    padding: calc(var(--spacing) * 3);
   }
 
   .table > :is(thead, tbody, tfoot) > tr > :is(th, td):has( > .checkbox-wrapper) {
@@ -9881,17 +9514,11 @@
   }
 
   .table > colgroup + colgroup {
-    border-inline-start: 1px solid var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .table > colgroup + colgroup {
-      border-inline-start: 1px solid color-mix(in oklab, var(--foreground) 30%, transparent);
-    }
+    border-inline-start: 1px solid var(--border);
   }
 
   .table-sort {
-    margin-inline-start: calc(var(--spacing) * -2.5);
+    margin-inline-start: calc(var(--spacing) * -3);
   }
 
   .table-head[data-align="center"] > .table-sort {
@@ -9900,7 +9527,7 @@
 
   .table-head[data-align="end"] > .table-sort {
     margin-inline-start: 0;
-    margin-inline-end: calc(var(--spacing) * -2.5);
+    margin-inline-end: calc(var(--spacing) * -3);
   }
 
   .table > tbody > tr.table-empty > td {
@@ -9913,13 +9540,13 @@
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > th {
-    height: calc(var(--spacing) * 8);
+    height: calc(var(--spacing) * 9);
     padding-inline: calc(var(--spacing) * 2);
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > td {
     padding-inline: calc(var(--spacing) * 2);
-    padding-block: var(--spacing);
+    padding-block: calc(var(--spacing) * 1.5);
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > :is(th, td):has( > .checkbox-wrapper) {
@@ -9933,7 +9560,7 @@
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > .table-head > .table-sort {
-    margin-inline-start: calc(var(--spacing) * -2);
+    margin-inline-start: calc(var(--spacing) * -2.5);
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > .table-head[data-align="center"] > .table-sort {
@@ -9942,7 +9569,7 @@
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > .table-head[data-align="end"] > .table-sort {
     margin-inline-start: 0;
-    margin-inline-end: calc(var(--spacing) * -2);
+    margin-inline-end: calc(var(--spacing) * -2.5);
   }
 
   .table[data-size="sm"] > tbody > tr.table-empty > td {
@@ -9984,6 +9611,8 @@
   .pagination-size-label {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
 
   .breadcrumb-list {
@@ -10004,18 +9633,15 @@
   }
 
   .breadcrumb-link {
-    text-underline-offset: 4px;
+    border-radius: calc(var(--radius) - 4px);
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   @media (hover: hover) {
     .breadcrumb-link:hover {
       color: var(--foreground);
-      text-decoration-line: underline;
-      text-decoration-style: wavy;
     }
   }
 
@@ -10027,7 +9653,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .breadcrumb-link:focus-visible {
-      --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--ring) 30%, transparent);
     }
   }
 
@@ -10054,37 +9680,21 @@
 
   .skip-link:focus {
     height: calc(var(--spacing) * 9);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
-    border-width: 2px;
-    border-color: var(--foreground);
-    border-radius: 255px 15px 225px / 15px 225px 15px 255px;
-    align-items: center;
-    display: inline-flex;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .skip-link:focus {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .skip-link:focus {
+    border-width: 1px;
+    border-color: var(--border);
     background-color: var(--background);
     padding-inline: calc(var(--spacing) * 4);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--foreground);
-    --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .skip-link:focus {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .skip-link:focus {
+    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    align-items: center;
+    display: inline-flex;
   }
 
   .skip-link:focus-visible {
@@ -10104,17 +9714,8 @@
     --site-header-height: 3.5rem;
     gap: calc(var(--spacing) * 2);
     border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 2px;
-    border-color: var(--foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .site-header {
-      border-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-    }
-  }
-
-  .site-header {
+    border-bottom-width: 1px;
+    border-color: var(--border);
     background-color: var(--background);
     padding-inline: calc(var(--spacing) * 4);
   }
@@ -10144,16 +9745,7 @@
   }
 
   .sidebar {
-    border-color: var(--sidebar-foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .sidebar {
-      border-color: color-mix(in oklab, var(--sidebar-foreground) 80%, transparent);
-    }
-  }
-
-  .sidebar {
+    border-color: var(--sidebar-border);
     background-color: var(--sidebar);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
@@ -10165,12 +9757,12 @@
   }
 
   .sidebar::backdrop {
-    background-color: #0000001a;
+    background-color: #0000004d;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .sidebar::backdrop {
-      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+      background-color: color-mix(in oklab, var(--color-black) 30%, transparent);
     }
   }
 
@@ -10181,23 +9773,14 @@
 
   @supports ((-webkit-backdrop-filter: var(--tw)) or (backdrop-filter: var(--tw))) {
     .sidebar::backdrop {
-      --tw-backdrop-blur: blur(var(--blur-xs));
+      --tw-backdrop-blur: blur(var(--blur-sm));
       -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );
       backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, ) var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, ) var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, ) var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, ) var(--tw-backdrop-sepia, );
     }
   }
 
   .sidebar:popover-open {
-    --tw-shadow: 4px 5px 0 var(--tw-shadow-color, var(--foreground));
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .sidebar:popover-open {
-      --tw-shadow: 4px 5px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-    }
-  }
-
-  .sidebar:popover-open {
+    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a), 0 4px 6px -4px var(--tw-shadow-color, #0000001a);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
@@ -10207,17 +9790,8 @@
 
   @media (min-width: 48rem) {
     .sidebar[data-variant="floating"] {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-      border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-    }
-
-    @supports (color: color-mix(in lab, red, red)) {
-      .sidebar[data-variant="floating"] {
-        --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-      }
-    }
-
-    .sidebar[data-variant="floating"] {
+      border-radius: var(--radius-2xl);
+      --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
@@ -10235,27 +9809,9 @@
 
   @media (min-width: 48rem) {
     .sidebar-provider:has( > .sidebar[data-variant="inset"],  > .site-header > .sidebar[data-variant="inset"]) > .sidebar-inset {
-      --tw-shadow: 2px 3px 0 var(--tw-shadow-color, var(--foreground));
-      border-radius: 15px 255px 15px 225px / 225px 15px 255px;
-    }
-
-    @supports (color: color-mix(in lab, red, red)) {
-      .sidebar-provider:has( > .sidebar[data-variant="inset"],  > .site-header > .sidebar[data-variant="inset"]) > .sidebar-inset {
-        --tw-shadow: 2px 3px 0 var(--tw-shadow-color, color-mix(in oklch,var(--foreground) 18%,transparent));
-      }
-    }
-
-    .sidebar-provider:has( > .sidebar[data-variant="inset"],  > .site-header > .sidebar[data-variant="inset"]) > .sidebar-inset {
+      border-radius: var(--radius-2xl);
+      --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-      --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
-      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-      --tw-ring-color: var(--foreground);
-    }
-
-    @supports (color: color-mix(in lab, red, red)) {
-      .sidebar-provider:has( > .sidebar[data-variant="inset"],  > .site-header > .sidebar[data-variant="inset"]) > .sidebar-inset {
-        --tw-ring-color: color-mix(in oklab, var(--foreground) 80%, transparent);
-      }
     }
   }
 
@@ -10277,13 +9833,7 @@
 
   .sidebar-separator {
     margin-inline: calc(var(--spacing) * 2);
-    background-color: var(--sidebar-foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .sidebar-separator {
-      background-color: color-mix(in oklab, var(--sidebar-foreground) 30%, transparent);
-    }
+    background-color: var(--sidebar-border);
   }
 
   .sidebar-group {
@@ -10292,11 +9842,13 @@
 
   .sidebar-group-label {
     height: calc(var(--spacing) * 8);
-    padding-inline: calc(var(--spacing) * 2);
+    border-radius: calc(var(--radius) + 4px);
+    padding-inline: calc(var(--spacing) * 3);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--sidebar-foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
@@ -10332,7 +9884,7 @@
   }
 
   .sidebar-menu {
-    gap: var(--spacing);
+    gap: calc(var(--spacing) * .5);
   }
 
   .sidebar-menu-button:not([data-variant]) {
@@ -10341,16 +9893,7 @@
 
   .sidebar-menu-button[data-variant="outline"] {
     background-color: var(--background);
-    --tw-shadow: 0 0 0 2px var(--tw-shadow-color, var(--sidebar-foreground));
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .sidebar-menu-button[data-variant="outline"] {
-      --tw-shadow: 0 0 0 2px var(--tw-shadow-color, color-mix(in oklch,var(--sidebar-foreground) 80%,transparent));
-    }
-  }
-
-  .sidebar-menu-button[data-variant="outline"] {
+    --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--sidebar-border));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
@@ -10358,15 +9901,18 @@
     .sidebar-menu-button[data-variant="outline"]:hover {
       background-color: var(--sidebar-accent);
       color: var(--sidebar-accent-foreground);
+      --tw-shadow: 0 0 0 1px var(--tw-shadow-color, var(--sidebar-accent));
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
 
   .sidebar-menu-button {
     gap: calc(var(--spacing) * 2);
-    padding: calc(var(--spacing) * 2);
+    border-radius: calc(var(--radius) + 4px);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2);
     color: var(--sidebar-foreground);
     --tw-ring-color: var(--sidebar-ring);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   @media (hover: hover) {
@@ -10393,8 +9939,8 @@
 
   .sidebar-menu-button:is([aria-current="page"], [aria-current="true"]) {
     background-color: var(--sidebar-accent);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--sidebar-accent-foreground);
   }
 
@@ -10404,19 +9950,19 @@
   }
 
   .sidebar-menu-button:not([data-size]) {
-    height: calc(var(--spacing) * 8);
+    height: calc(var(--spacing) * 9);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
 
   .sidebar-menu-button[data-size="sm"] {
-    height: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 8);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
 
   .sidebar-menu-button[data-size="lg"] {
-    height: calc(var(--spacing) * 12);
+    height: calc(var(--spacing) * 14);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
@@ -10430,9 +9976,9 @@
     inset-inline-end: calc(var(--spacing) * 3);
     top: calc(var(--spacing) * 3.5);
     width: calc(var(--spacing) * 5);
+    border-radius: calc(var(--radius) + 4px);
     color: var(--sidebar-foreground);
     --tw-ring-color: var(--sidebar-ring);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
     padding: 0;
   }
 
@@ -10455,11 +10001,11 @@
 
   .sidebar-menu-action {
     inset-inline-end: calc(var(--spacing) * 1);
-    top: var(--spacing);
+    top: calc(var(--spacing) * 1.5);
     width: calc(var(--spacing) * 6);
+    border-radius: calc(var(--radius) + 4px);
     color: var(--sidebar-foreground);
     --tw-ring-color: var(--sidebar-ring);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
     padding: 0;
   }
 
@@ -10482,30 +10028,32 @@
 
   .sidebar-menu-badge {
     inset-inline-end: calc(var(--spacing) * 1);
-    top: calc(var(--spacing) * 1.5);
+    top: calc(var(--spacing) * 2);
     height: calc(var(--spacing) * 5);
     min-width: calc(var(--spacing) * 5);
+    border-radius: calc(var(--radius) + 4px);
     padding-inline: var(--spacing);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
     color: var(--sidebar-foreground);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   .sidebar-menu-button[data-size="sm"] ~ .sidebar-menu-badge {
-    top: var(--spacing);
+    top: calc(var(--spacing) * 1.5);
   }
 
   .sidebar-menu-button[data-size="lg"] ~ .sidebar-menu-badge {
-    top: calc(var(--spacing) * 3.5);
+    top: calc(var(--spacing) * 4.5);
   }
 
   .sidebar-menu-button[data-size="sm"] ~ .sidebar-menu-action {
-    top: calc(var(--spacing) * .5);
+    top: var(--spacing);
   }
 
   .sidebar-menu-button[data-size="lg"] ~ .sidebar-menu-action {
-    top: calc(var(--spacing) * 3);
+    top: calc(var(--spacing) * 4);
   }
 
   .sidebar-menu-button:is(:hover, [aria-current="page"], [aria-current="true"], [aria-expanded="true"]) ~ :is(.sidebar-menu-action, .sidebar-menu-badge) {
@@ -10516,19 +10064,8 @@
     margin-inline: calc(var(--spacing) * 3.5);
     gap: var(--spacing);
     border-inline-start-style: var(--tw-border-style);
-    --tw-border-style: dashed;
-    border-inline-start-width: 2px;
-    border-style: dashed;
-    border-color: var(--sidebar-foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .sidebar-menu-sub {
-      border-color: color-mix(in oklab, var(--sidebar-foreground) 40%, transparent);
-    }
-  }
-
-  .sidebar-menu-sub {
+    border-inline-start-width: 1px;
+    border-color: var(--sidebar-border);
     padding-inline: calc(var(--spacing) * 2.5);
     padding-block: calc(var(--spacing) * .5);
   }
@@ -10536,10 +10073,10 @@
   .sidebar-menu-sub-button {
     height: calc(var(--spacing) * 7);
     gap: calc(var(--spacing) * 2);
-    padding-inline: calc(var(--spacing) * 2);
+    border-radius: calc(var(--radius) + 4px);
+    padding-inline: calc(var(--spacing) * 3);
     color: var(--sidebar-foreground);
     --tw-ring-color: var(--sidebar-ring);
-    border-radius: 10px 3px 9px / 3px 9px 3px 10px;
   }
 
   @media (hover: hover) {
@@ -10570,8 +10107,6 @@
 
   .sidebar-menu-sub-button:is([aria-current="page"], [aria-current="true"]) {
     background-color: var(--sidebar-accent);
-    --tw-font-weight: var(--font-weight-bold);
-    font-weight: var(--font-weight-bold);
     color: var(--sidebar-accent-foreground);
   }
 
@@ -10603,8 +10138,8 @@
 
     .sidebar-provider[data-state="collapsed"] > .sidebar[data-collapsible="icon"] .sidebar-menu-collapsible:has(.sidebar-menu-sub-button:is([aria-current="page"], [aria-current="true"])) > .sidebar-menu-button, .sidebar-provider[data-state="collapsed"] > .sidebar[data-collapsible="icon"] .sidebar-menu-item:has( > .sidebar-menu-sub-collapsible .sidebar-menu-sub-button:is([aria-current="page"], [aria-current="true"])) > .sidebar-menu-button {
       background-color: var(--sidebar-accent);
-      --tw-font-weight: var(--font-weight-bold);
-      font-weight: var(--font-weight-bold);
+      --tw-font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-medium);
       color: var(--sidebar-accent-foreground);
     }
   }
@@ -10822,22 +10357,6 @@
   }
 }
 
-@font-face {
-  font-family: Balsamiq Sans;
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("./balsamiq-sans-latin-400-normal-DuUqbZG9.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: Balsamiq Sans;
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("./balsamiq-sans-latin-700-normal-CGk_g3Ft.woff2") format("woff2");
-}
-
 @property --tw-border-style {
   syntax: "*";
   inherits: false;
@@ -11034,6 +10553,11 @@
   inherits: false
 }
 
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false
+}
+
 @property --tw-backdrop-blur {
   syntax: "*";
   inherits: false
@@ -11075,11 +10599,6 @@
 }
 
 @property --tw-backdrop-sepia {
-  syntax: "*";
-  inherits: false
-}
-
-@property --tw-tracking {
   syntax: "*";
   inherits: false
 }

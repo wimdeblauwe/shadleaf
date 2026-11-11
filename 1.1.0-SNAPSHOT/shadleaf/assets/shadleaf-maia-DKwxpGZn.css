@@ -69,7 +69,6 @@
     --container-xs: 20rem;
     --container-sm: 24rem;
     --container-md: 28rem;
-    --container-lg: 32rem;
     --text-xs: .75rem;
     --text-xs--line-height: calc(1 / .75);
     --text-sm: .875rem;
@@ -87,6 +86,7 @@
     --leading-normal: 1.5;
     --leading-relaxed: 1.625;
     --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
     --radius-4xl: 2rem;
     --ease-out: cubic-bezier(0, 0, .2, 1);
     --ease-in-out: cubic-bezier(.4, 0, .2, 1);
@@ -5126,7 +5126,7 @@
   }
 
   .button {
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
@@ -5198,32 +5198,31 @@
   .button:not([data-size]), .button[data-size="default"] {
     height: calc(var(--spacing) * 9);
     gap: calc(var(--spacing) * 1.5);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   :is(.button:not([data-size]), .button[data-size="default"]):has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 2.5);
   }
 
   :is(.button:not([data-size]), .button[data-size="default"]):has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 2.5);
   }
 
   .button[data-size="xs"] {
     height: calc(var(--spacing) * 6);
     gap: var(--spacing);
-    border-radius: min(calc(var(--radius) - 2px), 8px);
-    padding-inline: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 2.5);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
 
   .button[data-size="xs"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .button[data-size="xs"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2);
   }
 
   .button[data-size="xs"] svg:not([class*="size-"], [data-icon-size]) {
@@ -5234,30 +5233,29 @@
   .button[data-size="sm"] {
     height: calc(var(--spacing) * 8);
     gap: var(--spacing);
-    border-radius: min(calc(var(--radius) - 2px), 10px);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   .button[data-size="sm"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .button[data-size="sm"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2);
   }
 
   .button[data-size="lg"] {
     height: calc(var(--spacing) * 10);
     gap: calc(var(--spacing) * 1.5);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 4);
   }
 
   .button[data-size="lg"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .button[data-size="lg"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 3);
   }
 
   .button[data-size="icon"] {
@@ -5268,7 +5266,6 @@
   .button[data-size="icon-xs"] {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
-    border-radius: min(calc(var(--radius) - 2px), 8px);
   }
 
   .button[data-size="icon-xs"] svg:not([class*="size-"], [data-icon-size]) {
@@ -5279,7 +5276,6 @@
   .button[data-size="icon-sm"] {
     width: calc(var(--spacing) * 8);
     height: calc(var(--spacing) * 8);
-    border-radius: min(calc(var(--radius) - 2px), 10px);
   }
 
   .button[data-size="icon-lg"] {
@@ -5328,38 +5324,28 @@
 
   .button[data-variant="outline"] {
     border-color: var(--border);
-    background-color: var(--background);
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-
-  @media (hover: hover) {
-    .button[data-variant="outline"]:hover {
-      background-color: var(--muted);
-      color: var(--foreground);
-    }
-  }
-
-  .button[data-variant="outline"]:where(.dark, .dark *) {
-    border-color: var(--input);
     background-color: var(--input);
   }
 
   @supports (color: color-mix(in lab, red, red)) {
-    .button[data-variant="outline"]:where(.dark, .dark *) {
+    .button[data-variant="outline"] {
       background-color: color-mix(in oklab, var(--input) 30%, transparent);
     }
   }
 
   @media (hover: hover) {
-    .button[data-variant="outline"]:where(.dark, .dark *):hover {
+    .button[data-variant="outline"]:hover {
       background-color: var(--input);
     }
 
     @supports (color: color-mix(in lab, red, red)) {
-      .button[data-variant="outline"]:where(.dark, .dark *):hover {
+      .button[data-variant="outline"]:hover {
         background-color: color-mix(in oklab, var(--input) 50%, transparent);
       }
+    }
+
+    .button[data-variant="outline"]:hover {
+      color: var(--foreground);
     }
   }
 
@@ -5583,6 +5569,16 @@
 
   .badge[data-variant="outline"] {
     border-color: var(--border);
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .badge[data-variant="outline"] {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
+  }
+
+  .badge[data-variant="outline"] {
     color: var(--foreground);
   }
 
@@ -5692,12 +5688,11 @@
   }
 
   .card {
-    border-radius: calc(var(--radius) + 4px);
+    border-radius: var(--radius-2xl);
     background-color: var(--card);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--card-foreground);
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
@@ -5742,7 +5737,7 @@
   }
 
   .card-header {
-    gap: var(--spacing);
+    gap: calc(var(--spacing) * 2);
   }
 
   .card-header[data-border] {
@@ -5758,15 +5753,8 @@
   .card-title {
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
-    --tw-leading: var(--leading-normal);
-    line-height: var(--leading-normal);
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
-  }
-
-  .card[data-size="sm"] > .card-header > .card-title {
-    font-size: var(--text-sm);
-    line-height: var(--tw-leading, var(--text-sm--line-height));
   }
 
   .card-description {
@@ -5914,12 +5902,12 @@
     color: var(--muted-foreground);
   }
 
-  .empty-description > a:not(.button) {
+  .empty-description > a {
     text-underline-offset: 4px;
     text-decoration-line: underline;
   }
 
-  .empty-description > a:not(.button):hover {
+  .empty-description > a:hover {
     color: var(--primary);
   }
 
@@ -5930,7 +5918,7 @@
   }
 
   .attachment {
-    border-radius: calc(var(--radius) + 4px);
+    border-radius: var(--radius-2xl);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--border);
@@ -6032,7 +6020,7 @@
 
   .attachment[data-size="xs"] {
     gap: calc(var(--spacing) * 1.5);
-    border-radius: var(--radius);
+    border-radius: calc(var(--radius) + 4px);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
@@ -6048,7 +6036,7 @@
 
   .attachment-media {
     width: calc(var(--spacing) * 10);
-    border-radius: var(--radius);
+    border-radius: calc(var(--radius) + 4px);
     background-color: var(--muted);
     color: var(--foreground);
   }
@@ -6064,7 +6052,7 @@
 
   .attachment[data-size="xs"] > .attachment-media {
     width: calc(var(--spacing) * 7);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius);
   }
 
   .attachment[data-size="xs"] > .attachment-media:not([data-variant]) svg:not([class*="size-"], [data-icon-size]) {
@@ -6147,7 +6135,7 @@
   }
 
   .attachment-group {
-    border-radius: var(--radius);
+    border-radius: calc(var(--radius) + 4px);
   }
 
   .attachment-group:not([data-layout]) {
@@ -6257,7 +6245,7 @@
 
   .skeleton:not([data-shape]), .skeleton[data-shape="line"] {
     height: calc(var(--spacing) * 4);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: calc(var(--radius) + 4px);
     width: 100%;
   }
 
@@ -6359,17 +6347,24 @@
 
   .input {
     height: calc(var(--spacing) * 9);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
-    padding-inline: calc(var(--spacing) * 2.5);
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .input {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
+  }
+
+  .input {
+    padding-inline: calc(var(--spacing) * 3);
     padding-block: var(--spacing);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    background-color: #0000;
   }
 
   .input::file-selector-button {
@@ -6422,7 +6417,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .input {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -6432,16 +6427,6 @@
     .input {
       font-size: var(--text-sm);
       line-height: var(--tw-leading, var(--text-sm--line-height));
-    }
-  }
-
-  .input:where(.dark, .dark *) {
-    background-color: var(--input);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .input:where(.dark, .dark *) {
-      background-color: color-mix(in oklab, var(--input) 30%, transparent);
     }
   }
 
@@ -6467,8 +6452,6 @@
 
   .input[readonly]:not(:disabled) {
     background-color: var(--muted);
-    --tw-shadow: 0 0 #0000;
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .input[readonly]:not(:disabled)::placeholder {
@@ -6482,17 +6465,24 @@
   }
 
   .textarea {
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: calc(var(--radius) + 4px);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
-    padding-inline: calc(var(--spacing) * 2.5);
-    padding-block: calc(var(--spacing) * 2);
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .textarea {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
+  }
+
+  .textarea {
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 3);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    background-color: #0000;
   }
 
   .textarea::placeholder {
@@ -6527,7 +6517,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .textarea {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -6537,16 +6527,6 @@
     .textarea {
       font-size: var(--text-sm);
       line-height: var(--tw-leading, var(--text-sm--line-height));
-    }
-  }
-
-  .textarea:where(.dark, .dark *) {
-    background-color: var(--input);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .textarea:where(.dark, .dark *) {
-      background-color: color-mix(in oklab, var(--input) 30%, transparent);
     }
   }
 
@@ -6572,8 +6552,6 @@
 
   .textarea[readonly]:not(:disabled) {
     background-color: var(--muted);
-    --tw-shadow: 0 0 #0000;
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .textarea[readonly]:not(:disabled)::placeholder {
@@ -6588,31 +6566,33 @@
 
   .input-group {
     height: calc(var(--spacing) * 9);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    background-color: #0000;
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .input-group {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .input-group {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
   }
 
-  .input-group:where(.dark, .dark *) {
-    background-color: var(--input);
+  .input-group:has( > .input-group-addon:is([data-align="block-start"], [data-align="block-end"])) {
+    border-radius: var(--radius-2xl);
   }
 
-  @supports (color: color-mix(in lab, red, red)) {
-    .input-group:where(.dark, .dark *) {
-      background-color: color-mix(in oklab, var(--input) 30%, transparent);
-    }
+  .input-group:has( > .input-group-textarea) {
+    border-radius: calc(var(--radius) + 4px);
   }
 
   .input-group:has( > .input-group-input[aria-invalid="true"]), .input-group:has( > .input-group-textarea[aria-invalid="true"]) {
@@ -6663,18 +6643,6 @@
 
   .input-group:has( > .input-group-input[readonly]), .input-group:has( > .input-group-textarea[readonly]) {
     background-color: var(--muted);
-    --tw-shadow: 0 0 #0000;
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-
-  .input-group:has( > .input-group-input[readonly]) :is(.input-group-addon, .input-group-text), .input-group:has( > .input-group-textarea[readonly]) :is(.input-group-addon, .input-group-text) {
-    color: var(--muted-foreground);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .input-group:has( > .input-group-input[readonly]) :is(.input-group-addon, .input-group-text), .input-group:has( > .input-group-textarea[readonly]) :is(.input-group-addon, .input-group-text) {
-      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
-    }
   }
 
   :is(.input-group-input[readonly], .input-group-textarea[readonly])::placeholder {
@@ -6688,7 +6656,7 @@
   }
 
   .input-group-input {
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
     padding-block: var(--spacing);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
@@ -6706,7 +6674,7 @@
   }
 
   .input-group-textarea {
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
     padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
@@ -6741,12 +6709,18 @@
 
   .input-group-addon {
     gap: calc(var(--spacing) * 2);
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
     color: var(--muted-foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .input-group-addon {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+    }
   }
 
   .input-group-addon > svg:not([class*="size-"], [data-icon-size]) {
@@ -6755,11 +6729,12 @@
   }
 
   .input-group-addon > .kbd {
-    border-radius: calc(var(--radius) - 5px);
+    border-radius: var(--radius-4xl);
+    padding-inline: calc(var(--spacing) * 1.5);
   }
 
   .input-group-addon:is(:not([data-align]), [data-align="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 3);
   }
 
   .input-group-addon:is(:not([data-align]), [data-align="inline-start"]):has( > .button) {
@@ -6771,7 +6746,7 @@
   }
 
   .input-group-addon[data-align="inline-end"] {
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .input-group-addon[data-align="inline-end"]:has( > .button) {
@@ -6783,21 +6758,21 @@
   }
 
   .input-group-addon[data-align="block-start"] {
-    padding-inline: calc(var(--spacing) * 2.5);
-    padding-top: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-top: calc(var(--spacing) * 3);
   }
 
   .input-group-addon[data-align="block-end"] {
-    padding-inline: calc(var(--spacing) * 2.5);
-    padding-bottom: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-bottom: calc(var(--spacing) * 3);
   }
 
   .input-group-addon[data-border="bottom"] {
-    padding-bottom: calc(var(--spacing) * 2);
+    padding-bottom: calc(var(--spacing) * 3);
   }
 
   .input-group-addon[data-border="top"] {
-    padding-top: calc(var(--spacing) * 2);
+    padding-top: calc(var(--spacing) * 3);
   }
 
   .input-group-text {
@@ -6807,6 +6782,12 @@
     color: var(--muted-foreground);
   }
 
+  @supports (color: color-mix(in lab, red, red)) {
+    .input-group-text {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+    }
+  }
+
   .input-group-text svg:not([class*="size-"], [data-icon-size]) {
     width: calc(var(--spacing) * 4);
     height: calc(var(--spacing) * 4);
@@ -6814,6 +6795,7 @@
 
   .button.input-group-button {
     gap: calc(var(--spacing) * 2);
+    border-radius: var(--radius-4xl);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-shadow: 0 0 #0000;
@@ -6823,7 +6805,6 @@
   .button.input-group-button[data-size="xs"] {
     height: calc(var(--spacing) * 6);
     gap: var(--spacing);
-    border-radius: calc(var(--radius) - 5px);
     padding-inline: calc(var(--spacing) * 1.5);
   }
 
@@ -6835,7 +6816,6 @@
   .button.input-group-button[data-size="icon-xs"] {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
-    border-radius: calc(var(--radius) - 5px);
     padding: 0;
   }
 
@@ -6846,17 +6826,24 @@
   }
 
   .native-select {
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .native-select {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
+  }
+
+  .native-select {
     padding-block: var(--spacing);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    background-color: #0000;
-    padding-inline-start: calc(var(--spacing) * 2.5);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
   }
 
@@ -6888,19 +6875,9 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .native-select {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
-    }
-  }
-
-  .native-select:where(.dark, .dark *) {
-    background-color: var(--input);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .native-select:where(.dark, .dark *) {
-      background-color: color-mix(in oklab, var(--input) 30%, transparent);
     }
   }
 
@@ -6937,7 +6914,7 @@
   }
 
   .native-select[multiple] {
-    padding-inline-end: calc(var(--spacing) * 2.5);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .native-select-wrapper:not([data-size]) > .native-select:not([multiple]), .native-select-wrapper[data-size="default"] > .native-select:not([multiple]) {
@@ -6950,20 +6927,28 @@
 
   .native-select-icon {
     color: var(--muted-foreground);
+    inset-inline-end: calc(var(--spacing) * 3.5);
   }
 
   .select {
     gap: calc(var(--spacing) * 1.5);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .select {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
+  }
+
+  .select {
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    background-color: #0000;
-    padding-inline-start: calc(var(--spacing) * 2.5);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
   }
 
@@ -6995,19 +6980,9 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .select {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
-    }
-  }
-
-  .select:where(.dark, .dark *) {
-    background-color: var(--input);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .select:where(.dark, .dark *) {
-      background-color: color-mix(in oklab, var(--input) 30%, transparent);
     }
   }
 
@@ -7060,16 +7035,27 @@
     height: calc(var(--spacing) * 8);
   }
 
-  .select:has( > option[data-placeholder]:checked), .select[data-placeholder], .select-icon {
+  .select:has( > option[data-placeholder]:checked), .select[data-placeholder] {
     color: var(--muted-foreground);
   }
 
+  @supports (color: color-mix(in lab, red, red)) {
+    .select:has( > option[data-placeholder]:checked), .select[data-placeholder] {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+    }
+  }
+
+  .select-icon {
+    color: var(--muted-foreground);
+    inset-inline-end: calc(var(--spacing) * 3.5);
+  }
+
   .select-content, .combobox-content {
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-2xl);
     background-color: var(--popover);
     padding: var(--spacing);
     color: var(--popover-foreground);
-    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
+    --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, #00000040);
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
@@ -7077,7 +7063,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .select-content, .combobox-content {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
@@ -7086,12 +7072,22 @@
     transition-duration: .1s;
   }
 
+  :is(.select-content, .combobox-content):where(.dark, .dark *) {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    :is(.select-content, .combobox-content):where(.dark, .dark *) {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
+  }
+
   .select::picker(select) {
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-2xl);
     background-color: var(--popover);
     padding: var(--spacing);
     color: var(--popover-foreground);
-    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
+    --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, #00000040);
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
@@ -7099,13 +7095,23 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .select::picker(select) {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
   .select::picker(select) {
     --tw-duration: .1s;
     transition-duration: .1s;
+  }
+
+  .select::picker(select):where() {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .select::picker(select):where() {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
   }
 
   .select-content, .combobox-content, .select {
@@ -7114,12 +7120,12 @@
   }
 
   .select-item, .combobox-item {
-    gap: calc(var(--spacing) * 2);
-    border-radius: calc(var(--radius) - 4px);
-    padding-block: calc(var(--spacing) * 1.5);
+    gap: calc(var(--spacing) * 2.5);
+    border-radius: calc(var(--radius) + 4px);
+    padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
   }
 
@@ -7167,8 +7173,8 @@
   }
 
   .select-label, .combobox-label {
-    padding-inline: calc(var(--spacing) * 2);
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2.5);
   }
 
   .select-group > .select-item {
@@ -7183,18 +7189,31 @@
     background-color: var(--border);
   }
 
+  @supports (color: color-mix(in lab, red, red)) {
+    .select-separator, .combobox-separator {
+      background-color: color-mix(in oklab, var(--border) 50%, transparent);
+    }
+  }
+
   .combobox-select {
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .combobox-select {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
+  }
+
+  .combobox-select {
     padding-block: var(--spacing);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    background-color: #0000;
-    padding-inline-start: calc(var(--spacing) * 2.5);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
   }
 
@@ -7226,19 +7245,9 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .combobox-select {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
-    }
-  }
-
-  .combobox-select:where(.dark, .dark *) {
-    background-color: var(--input);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .combobox-select:where(.dark, .dark *) {
-      background-color: color-mix(in oklab, var(--input) 30%, transparent);
     }
   }
 
@@ -7275,7 +7284,7 @@
   }
 
   .combobox-select[multiple] {
-    padding-inline-end: calc(var(--spacing) * 2.5);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .combobox-select:not([multiple]) {
@@ -7284,26 +7293,34 @@
 
   .combobox-icon {
     color: var(--muted-foreground);
+    inset-inline-end: calc(var(--spacing) * 3.5);
   }
 
   .combobox-control {
     min-height: calc(var(--spacing) * 9);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
-    padding-inline: calc(var(--spacing) * 2.5);
+    background-color: var(--input);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .combobox-control {
+      background-color: color-mix(in oklab, var(--input) 30%, transparent);
+    }
+  }
+
+  .combobox-control {
+    padding-inline: calc(var(--spacing) * 3);
     padding-block: var(--spacing);
     font-size: var(--text-base);
     line-height: var(--tw-leading, var(--text-base--line-height));
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    background-color: #0000;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .combobox-control {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -7313,16 +7330,6 @@
     .combobox-control {
       font-size: var(--text-sm);
       line-height: var(--tw-leading, var(--text-sm--line-height));
-    }
-  }
-
-  .combobox-control:where(.dark, .dark *) {
-    background-color: var(--input);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .combobox-control:where(.dark, .dark *) {
-      background-color: color-mix(in oklab, var(--input) 30%, transparent);
     }
   }
 
@@ -7378,8 +7385,6 @@
 
   .combobox-control:has( > .combobox-input[readonly]) {
     background-color: var(--muted);
-    --tw-shadow: 0 0 #0000;
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .combobox-input::placeholder {
@@ -7396,9 +7401,9 @@
   }
 
   .combobox-clear, .combobox-trigger {
-    border-radius: calc(var(--radius) - 5px);
+    border-radius: var(--radius-4xl);
     color: var(--muted-foreground);
-    margin-inline-end: calc(var(--spacing) * -1.5);
+    margin-inline-end: calc(var(--spacing) * -2);
   }
 
   @media (hover: hover) {
@@ -7428,9 +7433,18 @@
   .combobox-chip {
     height: calc(var(--spacing) * 5.5);
     gap: var(--spacing);
-    border-radius: calc(var(--radius) - 4px);
-    background-color: var(--muted);
-    padding-inline: calc(var(--spacing) * 1.5);
+    border-radius: var(--radius-4xl);
+    background-color: var(--muted-foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .combobox-chip {
+      background-color: color-mix(in oklab, var(--muted-foreground) 10%, transparent);
+    }
+  }
+
+  .combobox-chip {
+    padding-inline: calc(var(--spacing) * 2);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
     --tw-font-weight: var(--font-weight-medium);
@@ -7445,7 +7459,7 @@
   .combobox-chip-remove {
     width: calc(var(--spacing) * 5);
     height: calc(var(--spacing) * 5);
-    border-radius: calc(var(--radius) - 4px);
+    border-radius: var(--radius-4xl);
     opacity: .5;
     margin-inline-start: calc(var(--spacing) * -1);
   }
@@ -7485,7 +7499,7 @@
     background-color: var(--background);
     padding: calc(var(--spacing) * 3);
     --cell-size: calc(var(--spacing) * 8);
-    --cell-radius: calc(var(--radius) - 2px);
+    --cell-radius: var(--radius-4xl);
   }
 
   .calendar-nav-button {
@@ -7534,8 +7548,6 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .calendar-dropdown:has( > .calendar-select:focus-visible) {
@@ -7553,8 +7565,8 @@
 
   .calendar-dropdown-label {
     height: calc(var(--spacing) * 8);
-    padding-inline-start: calc(var(--spacing) * 2);
-    padding-inline-end: var(--spacing);
+    padding-inline-start: calc(var(--spacing) * 3);
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .calendar-dropdown-label > svg {
@@ -7651,6 +7663,12 @@
     color: var(--muted-foreground);
   }
 
+  @supports (color: color-mix(in lab, red, red)) {
+    .button.date-picker-trigger[data-empty] {
+      color: color-mix(in oklch, var(--muted-foreground), var(--foreground) 20%);
+    }
+  }
+
   @media (hover: hover) {
     .button.date-picker-trigger[data-empty]:hover {
       color: var(--foreground);
@@ -7668,9 +7686,9 @@
 
   .month-view {
     --cell-size: calc(var(--spacing) * 7);
-    --cell-radius: calc(var(--radius) - 2px);
+    --cell-radius: var(--radius-4xl);
     --day-height: calc(var(--spacing) * 16);
-    --day-radius: calc(var(--radius) - 2px);
+    --day-radius: calc(var(--radius) + 4px);
   }
 
   @media (min-width: 48rem) {
@@ -7817,10 +7835,8 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--input);
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     background-color: #0000;
-    border-radius: 4px;
+    border-radius: 6px;
   }
 
   .checkbox:checked, .checkbox:indeterminate {
@@ -7993,8 +8009,6 @@
   .switch {
     border-style: var(--tw-border-style);
     background-color: var(--input);
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --switch-thumb: var(--background);
     border-width: 1px;
     border-color: #0000;
@@ -8083,7 +8097,7 @@
 
   .toggle {
     gap: var(--spacing);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
@@ -8101,7 +8115,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .toggle {
-      transition-property: color, box-shadow;
+      transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
     }
@@ -8124,8 +8138,6 @@
 
   .toggle[data-variant="outline"] {
     border-color: var(--input);
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     background-color: #0000;
   }
 
@@ -8138,43 +8150,43 @@
   .toggle:not([data-size]), .toggle[data-size="default"] {
     height: calc(var(--spacing) * 9);
     min-width: calc(var(--spacing) * 9);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   :is(.toggle:not([data-size]), .toggle[data-size="default"]):has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 2.5);
   }
 
   :is(.toggle:not([data-size]), .toggle[data-size="default"]):has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 2.5);
   }
 
   .toggle[data-size="sm"] {
     height: calc(var(--spacing) * 8);
     min-width: calc(var(--spacing) * 8);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   .toggle[data-size="sm"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 2);
   }
 
   .toggle[data-size="sm"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2);
   }
 
   .toggle[data-size="lg"] {
     height: calc(var(--spacing) * 10);
     min-width: calc(var(--spacing) * 10);
-    padding-inline: calc(var(--spacing) * 2.5);
+    padding-inline: calc(var(--spacing) * 4);
   }
 
   .toggle[data-size="lg"]:has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 2);
+    padding-inline-end: calc(var(--spacing) * 3);
   }
 
   .toggle[data-size="lg"]:has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 3);
   }
 
   .toggle:has( > .toggle-input:checked), .toggle:has( > .toggle-input:indeterminate:not([type="radio"])) {
@@ -8222,44 +8234,42 @@
   }
 
   .toggle-group[data-spacing="0"] > .toggle-group-item, .toggle-group[data-spacing="0"] > .tooltip > .toggle-group-item {
-    padding-inline: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
     --tw-shadow: 0 0 #0000;
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     border-radius: 0;
   }
 
   :is(.toggle-group[data-spacing="0"] > .toggle-group-item, .toggle-group[data-spacing="0"] > .tooltip > .toggle-group-item):has([data-icon="inline-end"]) {
-    padding-inline-end: calc(var(--spacing) * 1.5);
+    padding-inline-end: calc(var(--spacing) * 2.5);
   }
 
   :is(.toggle-group[data-spacing="0"] > .toggle-group-item, .toggle-group[data-spacing="0"] > .tooltip > .toggle-group-item):has([data-icon="inline-start"]) {
-    padding-inline-start: calc(var(--spacing) * 1.5);
+    padding-inline-start: calc(var(--spacing) * 2.5);
   }
 
   .toggle-group[data-spacing="0"]:not([data-orientation]) > .toggle-group-item:first-child, .toggle-group[data-spacing="0"]:not([data-orientation]) > .tooltip:first-child > .toggle-group-item {
-    border-start-start-radius: calc(var(--radius) - 2px);
-    border-end-start-radius: calc(var(--radius) - 2px);
+    border-start-start-radius: var(--radius-3xl);
+    border-end-start-radius: var(--radius-3xl);
   }
 
   .toggle-group[data-spacing="0"]:not([data-orientation]) > .toggle-group-item:last-child, .toggle-group[data-spacing="0"]:not([data-orientation]) > .tooltip:last-child > .toggle-group-item {
-    border-start-end-radius: calc(var(--radius) - 2px);
-    border-end-end-radius: calc(var(--radius) - 2px);
+    border-start-end-radius: var(--radius-3xl);
+    border-end-end-radius: var(--radius-3xl);
   }
 
   .toggle-group[data-spacing="0"][data-orientation="vertical"] > .toggle-group-item:first-child, .toggle-group[data-spacing="0"][data-orientation="vertical"] > .tooltip:first-child > .toggle-group-item {
-    border-top-left-radius: calc(var(--radius) - 2px);
-    border-top-right-radius: calc(var(--radius) - 2px);
+    border-top-left-radius: var(--radius-3xl);
+    border-top-right-radius: var(--radius-3xl);
   }
 
   .toggle-group[data-spacing="0"][data-orientation="vertical"] > .toggle-group-item:last-child, .toggle-group[data-spacing="0"][data-orientation="vertical"] > .tooltip:last-child > .toggle-group-item {
-    border-bottom-right-radius: calc(var(--radius) - 2px);
-    border-bottom-left-radius: calc(var(--radius) - 2px);
+    border-bottom-right-radius: var(--radius-3xl);
+    border-bottom-left-radius: var(--radius-3xl);
   }
 
   .toggle-group[data-spacing="0"]:has( > .toggle-group-item[data-variant="outline"],  > .tooltip > .toggle-group-item[data-variant="outline"]) {
-    border-radius: calc(var(--radius) - 2px);
-    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, #0000000d);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    border-radius: var(--radius-4xl);
   }
 
   .field-set {
@@ -8343,7 +8353,7 @@
 
   .dialog {
     gap: calc(var(--spacing) * 6);
-    border-radius: calc(var(--radius) + 4px);
+    border-radius: var(--radius-4xl);
     background-color: var(--popover);
     max-width: calc(100% - 2rem);
     padding: calc(var(--spacing) * 6);
@@ -8357,7 +8367,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .dialog {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
@@ -8367,12 +8377,12 @@
   }
 
   .dialog::backdrop {
-    background-color: #0000001a;
+    background-color: #000c;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .dialog::backdrop {
-      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+      background-color: color-mix(in oklab, var(--color-black) 80%, transparent);
     }
   }
 
@@ -8405,6 +8415,8 @@
   }
 
   .dialog-title {
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
     --tw-leading: 1;
     --tw-font-weight: var(--font-weight-medium);
     line-height: 1;
@@ -8417,12 +8429,12 @@
     color: var(--muted-foreground);
   }
 
-  .dialog-description a:not(.button) {
+  .dialog-description a {
     text-underline-offset: 3px;
     text-decoration-line: underline;
   }
 
-  .dialog-description a:not(.button):hover {
+  .dialog-description a:hover {
     color: var(--foreground);
   }
 
@@ -8456,7 +8468,7 @@
   .alert-dialog {
     max-width: var(--container-xs);
     gap: calc(var(--spacing) * 6);
-    border-radius: calc(var(--radius) + 4px);
+    border-radius: var(--radius-4xl);
     background-color: var(--popover);
     padding: calc(var(--spacing) * 6);
     font-size: var(--text-sm);
@@ -8469,7 +8481,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .alert-dialog {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
@@ -8479,12 +8491,12 @@
   }
 
   .alert-dialog::backdrop {
-    background-color: #0000001a;
+    background-color: #000c;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .alert-dialog::backdrop {
-      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+      background-color: color-mix(in oklab, var(--color-black) 80%, transparent);
     }
   }
 
@@ -8503,7 +8515,7 @@
 
   @media (min-width: 40rem) {
     .alert-dialog:not([data-size]) {
-      max-width: var(--container-lg);
+      max-width: var(--container-md);
     }
   }
 
@@ -8523,7 +8535,7 @@
     margin-bottom: calc(var(--spacing) * 2);
     width: calc(var(--spacing) * 16);
     height: calc(var(--spacing) * 16);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: 3.40282e38px;
   }
 
   .alert-dialog-media svg:not([class*="size-"], [data-icon-size]) {
@@ -8579,12 +8591,12 @@
     }
   }
 
-  .alert-dialog-description a:not(.button) {
+  .alert-dialog-description a {
     text-underline-offset: 3px;
     text-decoration-line: underline;
   }
 
-  .alert-dialog-description a:not(.button):hover {
+  .alert-dialog-description a:hover {
     color: var(--foreground);
   }
 
@@ -8593,7 +8605,6 @@
   }
 
   .sheet {
-    gap: calc(var(--spacing) * 4);
     border-color: var(--border);
     background-color: var(--popover);
     font-size: var(--text-sm);
@@ -8609,12 +8620,12 @@
   }
 
   .sheet::backdrop {
-    background-color: #0000001a;
+    background-color: #000c;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .sheet::backdrop {
-      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+      background-color: color-mix(in oklab, var(--color-black) 80%, transparent);
     }
   }
 
@@ -8646,11 +8657,11 @@
   }
 
   .sheet > :not(.sheet-header, .sheet-footer, .sheet-close, .sheet-body), .sheet-body-content {
-    padding-inline: calc(var(--spacing) * 4);
+    padding-inline: calc(var(--spacing) * 6);
   }
 
   .sheet-body-error {
-    margin-inline: calc(var(--spacing) * 4);
+    margin-inline: calc(var(--spacing) * 6);
   }
 
   .sheet-close {
@@ -8660,15 +8671,17 @@
 
   .sheet-header {
     gap: calc(var(--spacing) * 1.5);
-    padding: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 6);
   }
 
   .sheet-footer {
     gap: calc(var(--spacing) * 2);
-    padding: calc(var(--spacing) * 4);
+    padding: calc(var(--spacing) * 6);
   }
 
   .sheet-title {
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
     color: var(--foreground);
@@ -8680,21 +8693,21 @@
     color: var(--muted-foreground);
   }
 
-  .sheet-description a:not(.button) {
+  .sheet-description a {
     text-underline-offset: 3px;
     text-decoration-line: underline;
   }
 
-  .sheet-description a:not(.button):hover {
+  .sheet-description a:hover {
     color: var(--foreground);
   }
 
   .dropdown-menu-content {
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-2xl);
     background-color: var(--popover);
     padding: var(--spacing);
     color: var(--popover-foreground);
-    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
+    --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, #00000040);
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
@@ -8702,21 +8715,34 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .dropdown-menu-content {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
   .dropdown-menu-content {
     --tw-duration: .1s;
-    --popup-offset: var(--spacing);
-    --popup-slide: calc(var(--spacing) * 2);
     transition-duration: .1s;
   }
 
+  .dropdown-menu-content:where(.dark, .dark *) {
+    --tw-ring-color: var(--foreground);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .dropdown-menu-content:where(.dark, .dark *) {
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+    }
+  }
+
+  .dropdown-menu-content {
+    --popup-offset: var(--spacing);
+    --popup-slide: calc(var(--spacing) * 2);
+  }
+
   .dropdown-menu-item, .dropdown-menu-checkbox-item, .dropdown-menu-radio-item {
-    gap: calc(var(--spacing) * 2);
-    border-radius: calc(var(--radius) - 4px);
-    padding-block: calc(var(--spacing) * 1.5);
+    gap: calc(var(--spacing) * 2.5);
+    border-radius: calc(var(--radius) + 4px);
+    padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
@@ -8748,20 +8774,20 @@
   }
 
   .dropdown-menu-item {
-    padding-inline: calc(var(--spacing) * 2);
+    padding-inline: calc(var(--spacing) * 3);
   }
 
   .dropdown-menu-item[data-inset] {
-    padding-inline-start: calc(var(--spacing) * 8);
+    padding-inline-start: calc(var(--spacing) * 9.5);
   }
 
   .dropdown-menu-checkbox-item, .dropdown-menu-radio-item {
-    padding-inline-start: calc(var(--spacing) * 2);
+    padding-inline-start: calc(var(--spacing) * 3);
     padding-inline-end: calc(var(--spacing) * 8);
   }
 
   :is(.dropdown-menu-checkbox-item, .dropdown-menu-radio-item)[data-inset] {
-    padding-inline-start: calc(var(--spacing) * 8);
+    padding-inline-start: calc(var(--spacing) * 9.5);
   }
 
   :is(.dropdown-menu-item:not([data-variant]):focus *) {
@@ -8807,23 +8833,21 @@
   }
 
   .dropdown-menu-label {
-    padding-inline: calc(var(--spacing) * 2);
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2.5);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
-    --tw-font-weight: var(--font-weight-medium);
-    font-weight: var(--font-weight-medium);
     color: var(--muted-foreground);
   }
 
   .dropdown-menu-label[data-inset] {
-    padding-inline-start: calc(var(--spacing) * 8);
+    padding-inline-start: calc(var(--spacing) * 9.5);
   }
 
   .dropdown-menu-label.user-menu-label {
     gap: calc(var(--spacing) * 2);
-    padding-inline: var(--spacing);
-    padding-block: calc(var(--spacing) * 1.5);
+    padding-inline: calc(var(--spacing) * 2);
+    padding-block: calc(var(--spacing) * 2);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-leading: var(--leading-tight);
@@ -8853,6 +8877,12 @@
     background-color: var(--border);
   }
 
+  @supports (color: color-mix(in lab, red, red)) {
+    .dropdown-menu-separator {
+      background-color: color-mix(in oklab, var(--border) 50%, transparent);
+    }
+  }
+
   .dropdown-menu-shortcut {
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
@@ -8868,13 +8898,13 @@
   .popover-content {
     width: calc(var(--spacing) * 72);
     gap: calc(var(--spacing) * 4);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-2xl);
     background-color: var(--popover);
     padding: calc(var(--spacing) * 4);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     color: var(--popover-foreground);
-    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
+    --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, #00000040);
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--foreground);
@@ -8882,7 +8912,7 @@
 
   @supports (color: color-mix(in lab, red, red)) {
     .popover-content {
-      --tw-ring-color: color-mix(in oklab, var(--foreground) 10%, transparent);
+      --tw-ring-color: color-mix(in oklab, var(--foreground) 5%, transparent);
     }
   }
 
@@ -8912,6 +8942,8 @@
   }
 
   .popover-title {
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
   }
@@ -8923,7 +8955,7 @@
   .tooltip-content {
     max-width: var(--container-xs);
     gap: calc(var(--spacing) * 1.5);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-2xl);
     background-color: var(--foreground);
     padding-inline: calc(var(--spacing) * 3);
     padding-block: calc(var(--spacing) * 1.5);
@@ -8951,7 +8983,7 @@
   }
 
   .tooltip-content .kbd {
-    border-radius: calc(var(--radius) - 4px);
+    border-radius: var(--radius-4xl);
     background-color: var(--background);
   }
 
@@ -9000,7 +9032,7 @@
   }
 
   .chart-skeleton {
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: calc(var(--radius) + 4px);
     background-color: var(--accent);
   }
 
@@ -9028,6 +9060,14 @@
     outline-style: solid;
   }
 
+  .accordion {
+    border-radius: var(--radius-2xl);
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+    border-color: var(--border);
+    overflow: hidden;
+  }
+
   .accordion-item {
     border-color: var(--border);
   }
@@ -9037,13 +9077,23 @@
     border-bottom-width: 1px;
   }
 
+  .accordion-item:is([open], :popover-open, :open) {
+    background-color: var(--muted);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .accordion-item:is([open], :popover-open, :open) {
+      background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+    }
+  }
+
   .accordion-item {
     --accordion-duration: .2s;
   }
 
   .accordion-trigger {
-    border-radius: calc(var(--radius) - 2px);
-    padding-block: calc(var(--spacing) * 4);
+    gap: calc(var(--spacing) * 6);
+    padding: calc(var(--spacing) * 4);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
     --tw-font-weight: var(--font-weight-medium);
@@ -9057,7 +9107,6 @@
   }
 
   .accordion-trigger:focus-visible {
-    border-color: var(--ring);
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     --tw-ring-color: var(--ring);
@@ -9069,6 +9118,10 @@
     }
   }
 
+  .accordion-trigger:focus-visible {
+    --tw-ring-inset: inset;
+  }
+
   .accordion-trigger-icon {
     width: calc(var(--spacing) * 4);
     height: calc(var(--spacing) * 4);
@@ -9076,18 +9129,19 @@
   }
 
   .accordion-content {
+    padding-inline: calc(var(--spacing) * 4);
     padding-top: 0;
     padding-bottom: calc(var(--spacing) * 4);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
 
-  .accordion-content a:not(.button) {
+  .accordion-content a {
     text-underline-offset: 3px;
     text-decoration-line: underline;
   }
 
-  .accordion-content a:not(.button):hover {
+  .accordion-content a:hover {
     color: var(--foreground);
   }
 
@@ -9128,9 +9182,13 @@
   }
 
   .tabs-list {
-    border-radius: var(--radius);
+    border-radius: var(--radius-4xl);
     color: var(--muted-foreground);
     padding: 3px;
+  }
+
+  .tabs[data-orientation="vertical"] > .tabs-list {
+    border-radius: var(--radius-2xl);
   }
 
   .tabs:not([data-orientation]) > .tabs-list {
@@ -9149,7 +9207,7 @@
 
   .tabs-trigger {
     gap: calc(var(--spacing) * 1.5);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: calc(var(--radius) + 4px);
     border-style: var(--tw-border-style);
     padding-inline: calc(var(--spacing) * 2);
     padding-block: var(--spacing);
@@ -9220,6 +9278,11 @@
     height: calc(100% - 1px);
   }
 
+  .tabs[data-orientation="vertical"] > .tabs-list > .tabs-trigger {
+    padding-inline: calc(var(--spacing) * 2.5);
+    padding-block: calc(var(--spacing) * 1.5);
+  }
+
   .tabs-trigger:has( > svg:first-child) {
     padding-inline-start: calc(var(--spacing) * 1.5);
   }
@@ -9231,8 +9294,6 @@
   .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected="true"] {
     background-color: var(--background);
     color: var(--foreground);
-    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, #0000001a), 0 1px 2px -1px var(--tw-shadow-color, #0000001a);
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
   .tabs-list:not([data-variant]) > .tabs-trigger[aria-selected="true"]:where(.dark, .dark *) {
@@ -9403,15 +9464,15 @@
   }
 
   .table > :is(thead, tbody, tfoot) > tr > th {
-    height: calc(var(--spacing) * 10);
-    padding-inline: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 12);
+    padding-inline: calc(var(--spacing) * 3);
     --tw-font-weight: var(--font-weight-medium);
     font-weight: var(--font-weight-medium);
     color: var(--foreground);
   }
 
   .table > :is(thead, tbody, tfoot) > tr > td {
-    padding: calc(var(--spacing) * 2);
+    padding: calc(var(--spacing) * 3);
   }
 
   .table > :is(thead, tbody, tfoot) > tr > :is(th, td):has( > .checkbox-wrapper) {
@@ -9465,7 +9526,7 @@
   }
 
   .table-sort {
-    margin-inline-start: calc(var(--spacing) * -2.5);
+    margin-inline-start: calc(var(--spacing) * -3);
   }
 
   .table-head[data-align="center"] > .table-sort {
@@ -9474,7 +9535,7 @@
 
   .table-head[data-align="end"] > .table-sort {
     margin-inline-start: 0;
-    margin-inline-end: calc(var(--spacing) * -2.5);
+    margin-inline-end: calc(var(--spacing) * -3);
   }
 
   .table > tbody > tr.table-empty > td {
@@ -9487,13 +9548,13 @@
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > th {
-    height: calc(var(--spacing) * 8);
+    height: calc(var(--spacing) * 9);
     padding-inline: calc(var(--spacing) * 2);
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > td {
     padding-inline: calc(var(--spacing) * 2);
-    padding-block: var(--spacing);
+    padding-block: calc(var(--spacing) * 1.5);
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > :is(th, td):has( > .checkbox-wrapper) {
@@ -9507,7 +9568,7 @@
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > .table-head > .table-sort {
-    margin-inline-start: calc(var(--spacing) * -2);
+    margin-inline-start: calc(var(--spacing) * -2.5);
   }
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > .table-head[data-align="center"] > .table-sort {
@@ -9516,7 +9577,7 @@
 
   .table[data-size="sm"] > :is(thead, tbody, tfoot) > tr > .table-head[data-align="end"] > .table-sort {
     margin-inline-start: 0;
-    margin-inline-end: calc(var(--spacing) * -2);
+    margin-inline-end: calc(var(--spacing) * -2.5);
   }
 
   .table[data-size="sm"] > tbody > tr.table-empty > td {
@@ -9627,7 +9688,7 @@
 
   .skip-link:focus {
     height: calc(var(--spacing) * 9);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-4xl);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--border);
@@ -9704,12 +9765,12 @@
   }
 
   .sidebar::backdrop {
-    background-color: #0000001a;
+    background-color: #000c;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .sidebar::backdrop {
-      background-color: color-mix(in oklab, var(--color-black) 10%, transparent);
+      background-color: color-mix(in oklab, var(--color-black) 80%, transparent);
     }
   }
 
@@ -9789,8 +9850,8 @@
 
   .sidebar-group-label {
     height: calc(var(--spacing) * 8);
-    border-radius: calc(var(--radius) - 2px);
-    padding-inline: calc(var(--spacing) * 2);
+    border-radius: var(--radius);
+    padding-inline: calc(var(--spacing) * 3);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
     --tw-font-weight: var(--font-weight-medium);
@@ -9855,8 +9916,9 @@
 
   .sidebar-menu-button {
     gap: calc(var(--spacing) * 2);
-    border-radius: calc(var(--radius) - 2px);
-    padding: calc(var(--spacing) * 2);
+    border-radius: calc(var(--radius) + 4px);
+    padding-inline: calc(var(--spacing) * 3);
+    padding-block: calc(var(--spacing) * 2);
     color: var(--sidebar-foreground);
     --tw-ring-color: var(--sidebar-ring);
   }
@@ -9896,19 +9958,19 @@
   }
 
   .sidebar-menu-button:not([data-size]) {
-    height: calc(var(--spacing) * 8);
+    height: calc(var(--spacing) * 9);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
 
   .sidebar-menu-button[data-size="sm"] {
-    height: calc(var(--spacing) * 7);
+    height: calc(var(--spacing) * 8);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
 
   .sidebar-menu-button[data-size="lg"] {
-    height: calc(var(--spacing) * 12);
+    height: calc(var(--spacing) * 14);
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
@@ -9922,7 +9984,7 @@
     inset-inline-end: calc(var(--spacing) * 3);
     top: calc(var(--spacing) * 3.5);
     width: calc(var(--spacing) * 5);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius);
     color: var(--sidebar-foreground);
     --tw-ring-color: var(--sidebar-ring);
     padding: 0;
@@ -9947,9 +10009,9 @@
 
   .sidebar-menu-action {
     inset-inline-end: calc(var(--spacing) * 1);
-    top: var(--spacing);
+    top: calc(var(--spacing) * 1.5);
     width: calc(var(--spacing) * 6);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius);
     color: var(--sidebar-foreground);
     --tw-ring-color: var(--sidebar-ring);
     padding: 0;
@@ -9974,10 +10036,10 @@
 
   .sidebar-menu-badge {
     inset-inline-end: calc(var(--spacing) * 1);
-    top: calc(var(--spacing) * 1.5);
+    top: calc(var(--spacing) * 2);
     height: calc(var(--spacing) * 5);
     min-width: calc(var(--spacing) * 5);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius);
     padding-inline: var(--spacing);
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
@@ -9987,19 +10049,19 @@
   }
 
   .sidebar-menu-button[data-size="sm"] ~ .sidebar-menu-badge {
-    top: var(--spacing);
+    top: calc(var(--spacing) * 1.5);
   }
 
   .sidebar-menu-button[data-size="lg"] ~ .sidebar-menu-badge {
-    top: calc(var(--spacing) * 3.5);
+    top: calc(var(--spacing) * 4.5);
   }
 
   .sidebar-menu-button[data-size="sm"] ~ .sidebar-menu-action {
-    top: calc(var(--spacing) * .5);
+    top: var(--spacing);
   }
 
   .sidebar-menu-button[data-size="lg"] ~ .sidebar-menu-action {
-    top: calc(var(--spacing) * 3);
+    top: calc(var(--spacing) * 4);
   }
 
   .sidebar-menu-button:is(:hover, [aria-current="page"], [aria-current="true"], [aria-expanded="true"]) ~ :is(.sidebar-menu-action, .sidebar-menu-badge) {
@@ -10019,7 +10081,7 @@
   .sidebar-menu-sub-button {
     height: calc(var(--spacing) * 7);
     gap: calc(var(--spacing) * 2);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius);
     padding-inline: calc(var(--spacing) * 2);
     color: var(--sidebar-foreground);
     --tw-ring-color: var(--sidebar-ring);
