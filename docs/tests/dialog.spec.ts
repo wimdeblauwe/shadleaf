@@ -2,7 +2,8 @@ import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {combinations, keepScenariosWith, openShowcase} from './showcase';
+import {openFixture as openSkinFixture} from './fixture';
+import {combinations, keepScenariosWith, openShowcase, skins} from './showcase';
 
 // sl:dialog, sl:alert-dialog and sl:sheet. On the showcase, in every skin and theme: every one opens from its trigger
 // with the keyboard, takes focus (an alert dialog on its cancel button), passes axe open, shows focus on every control
@@ -525,6 +526,61 @@ test('without closedby, an alert dialog still ignores a click outside', async ({
   await page.keyboard.press('Escape');
   await expect(d).toHaveJSProperty('open', false);
 });
+
+/** Where the footer's buttons of the open small alert dialog sit, and whether a label runs out of its button. */
+function footerLayout(dialog: Locator) {
+  return dialog.evaluate(element => {
+    const footer = element.querySelector('.alert-dialog-footer')!;
+    const style = getComputedStyle(footer);
+    const box = footer.getBoundingClientRect();
+    const content = box.width - parseFloat(style.paddingInlineStart) - parseFloat(style.paddingInlineEnd);
+    const [cancel, action] = [...footer.children].map(button => {
+      const rect = button.getBoundingClientRect();
+      return {top: rect.top, bottom: rect.bottom, width: rect.width, overflows: button.scrollWidth > button.clientWidth};
+    });
+    return {content, cancel, action};
+  });
+}
+
+for (const skin of skins) {
+  test(`a small alert dialog keeps short labels side by side in equal halves and stacks long ones: ${skin}`, async ({page}) => {
+    await openSkinFixture(page, alertDialog('short', '<button type="button" class="button">Delete</button>')
+        + alertDialog('long', '<button type="button" class="button" data-variant="destructive">Gebruiker definitief verwijderen</button>')
+            .replace('>Cancel<', '>Annuleren<')
+        + alertDialog('issue', '<button type="button" class="button" data-variant="destructive">Gebruiker verwijderen</button>')
+            .replace('>Cancel<', '>Annuleren<'), {skin});
+
+    const short = page.locator('#short');
+    await short.evaluate((element: HTMLDialogElement) => element.showModal());
+    await waitUntilOpen(short);
+    const side = await footerLayout(short);
+    expect(side.cancel.top, 'short labels share a line').toBe(side.action.top);
+    expect(Math.abs(side.cancel.width - side.action.width), 'in equal halves').toBeLessThanOrEqual(1);
+    await short.evaluate((element: HTMLDialogElement) => element.close());
+
+    const long = page.locator('#long');
+    await long.evaluate((element: HTMLDialogElement) => element.showModal());
+    await waitUntilOpen(long);
+    const stacked = await footerLayout(long);
+    expect(stacked.action.bottom, 'the action goes on top').toBeLessThanOrEqual(stacked.cancel.top);
+    expect(stacked.action.width, 'the action is full width').toBeCloseTo(stacked.content, 0);
+    expect(stacked.cancel.width, 'Cancel is full width').toBeCloseTo(stacked.content, 0);
+    expect(stacked.action.overflows || stacked.cancel.overflows, 'no label runs out of its button').toBe(false);
+    await expect(long.locator('.alert-dialog-cancel'), 'Cancel keeps the focus').toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(long.locator('.button[data-variant="destructive"]'), 'Tab goes on to the action').toBeFocused();
+    await long.evaluate((element: HTMLDialogElement) => element.close());
+
+    // The labels of the issue that reported the overflow (#57): together they fit on a line, but the action's not in
+    // half of it, so they stack rather than share the line unequally.
+    const issue = page.locator('#issue');
+    await issue.evaluate((element: HTMLDialogElement) => element.showModal());
+    await waitUntilOpen(issue);
+    const reported = await footerLayout(issue);
+    expect(reported.action.bottom, 'a label wider than half stacks the buttons').toBeLessThanOrEqual(reported.cancel.top);
+    expect(reported.action.overflows || reported.cancel.overflows, 'no label runs out of its button').toBe(false);
+  });
+}
 
 /** The markup <sl:toaster/> renders, from its default preview scenario (a button, then the toaster). */
 const TOASTER = (() => {

@@ -4,8 +4,10 @@
 
   The <dialog> opens and closes as sl:dialog's does (see dialog.css). The header is a centred grid, which from sm on
   aligns to the start in a default-size dialog; there the media spans the title and description rows. The footer
-  stacks the buttons on a narrow screen and puts them side by side from sm on; a small dialog always has two equal
-  columns.
+  stacks the buttons on a narrow screen and puts them side by side from sm on. A small dialog puts them side by side
+  in equal halves, and stacks them (the action on top, as the default footer does) when a label does not fit in its
+  half: a button never gets narrower than its label, so a long one goes to a line of its own instead of overflowing.
+  wrap-reverse only moves the second line up; the order for the keyboard and screen readers stays that of the markup.
 */
 @layer components {
   .alert-dialog {
@@ -44,6 +46,13 @@
   }
 
   .alert-dialog[data-size='sm'] > .alert-dialog-footer {
-    @apply grid grid-cols-2;
+    @apply flex-row flex-wrap-reverse;
+  }
+
+  /* Each starts at half the line, minus half the skins' gap-2, and never below its label: when one label is wider
+     than half, the two no longer fit and the action wraps, so the halves are always equal. */
+  .alert-dialog[data-size='sm'] > .alert-dialog-footer > * {
+    flex: 1 1 calc(50% - --spacing(1));
+    min-width: max-content;
   }
 }
