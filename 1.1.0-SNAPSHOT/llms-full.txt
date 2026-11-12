@@ -287,7 +287,11 @@ server-rendered page the action submits a form or sends an htmx request, so it i
 ```
 
 shadcn's destructive example colours the media with `className="bg-destructive/10 text-destructive"`; Shadleaf has
-`<sl:alert-dialog-media variant="destructive">`. See [Alert Dialog](https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert-dialog.md).
+`<sl:alert-dialog-media variant="destructive">`.
+
+In a small alert dialog, shadcn puts the buttons in two equal columns, whatever their labels; a long label then runs
+out of its button. Shadleaf stacks the buttons, the action on top, when a label doesn't fit in its half. See
+[Alert Dialog](https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert-dialog.md#small-and-with-media).
 
 #### Sheet
 
@@ -5381,7 +5385,7 @@ with `hx-delete`, or one with `commandfor` and `command="close"` when closing is
 
 ### Small, and with media
 
-`size="sm"` makes it narrower, centres the header and puts the two buttons side by side in equal columns.
+`size="sm"` makes it narrower, centres the header and puts the two buttons side by side in equal halves.
 `<sl:alert-dialog-media>` shows an icon above the title.
 
 **Example: Small, with media.** size="sm" centres the header and puts the two buttons side by side; the media shows an icon above the title.
@@ -5399,6 +5403,28 @@ with `hx-delete`, or one with `commandfor` and `command="close"` when closing is
   <sl:alert-dialog-footer>
     <sl:alert-dialog-cancel>Don't allow</sl:alert-dialog-cancel>
     <sl:button>Allow</sl:button>
+  </sl:alert-dialog-footer>
+</sl:alert-dialog>
+```
+
+A button is never narrower than its label. When a label doesn't fit in half the width, as happens soon in Dutch,
+German or French, the small dialog stacks the buttons, each full width, with the action on top as the default dialog
+does on a narrow screen. Only where they appear changes: Tab still goes from Cancel to the action.
+
+**Example: Small, with a long label.** When a label doesn't fit in half the width, a small dialog stacks the buttons, the action on top.
+
+```html
+<sl:button variant="outline" commandfor="remove-member" command="show-modal">Remove member</sl:button>
+<sl:alert-dialog id="remove-member" size="sm">
+  <sl:alert-dialog-header>
+    <sl:alert-dialog-title>Remove Ada Lovelace?</sl:alert-dialog-title>
+    <sl:alert-dialog-description>
+      They lose access to the team and its projects at once.
+    </sl:alert-dialog-description>
+  </sl:alert-dialog-header>
+  <sl:alert-dialog-footer>
+    <sl:alert-dialog-cancel>Keep member</sl:alert-dialog-cancel>
+    <sl:button variant="destructive">Remove member and their data</sl:button>
   </sl:alert-dialog-footer>
 </sl:alert-dialog>
 ```

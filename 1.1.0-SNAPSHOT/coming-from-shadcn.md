@@ -161,7 +161,11 @@ server-rendered page the action submits a form or sends an htmx request, so it i
 ```
 
 shadcn's destructive example colours the media with `className="bg-destructive/10 text-destructive"`; Shadleaf has
-`<sl:alert-dialog-media variant="destructive">`. See [Alert Dialog](https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert-dialog.md).
+`<sl:alert-dialog-media variant="destructive">`.
+
+In a small alert dialog, shadcn puts the buttons in two equal columns, whatever their labels; a long label then runs
+out of its button. Shadleaf stacks the buttons, the action on top, when a label doesn't fit in its half. See
+[Alert Dialog](https://shadleaf.dev/1.1.0-SNAPSHOT/components/alert-dialog.md#small-and-with-media).
 
 ### Sheet
 
