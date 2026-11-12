@@ -3,7 +3,7 @@
 > UI components for Thymeleaf, as a Spring Boot starter. Components are Thymeleaf tags with the `sl:` prefix
 > (`<sl:button variant="outline">`), rendered on the server. Not React: no JSX, no Radix, no `asChild`.
 
-These docs describe Shadleaf 1.0.2. The docs of other versions live next to this one, at /<version>/.
+These docs describe Shadleaf 1.0.3. The docs of other versions live next to this one, at /<version>/.
 
 Read "Using Shadleaf with coding agents" first: it lists the rules an agent most often gets wrong. Every component
 page ends with its attribute table (props, allowed values, defaults); the examples are the Thymeleaf source to write.
@@ -120,6 +120,17 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 - [Forms with htmx](https://shadleaf.dev/current/guides/htmx.md): Post a Shadleaf form with htmx, get it back with its errors without a page load, and keep it working as a plain POST.
 - [Tables with htmx](https://shadleaf.dev/current/guides/tables-htmx.md): Search as you type, sort and page a server-side table with htmx, act on a row from its menu, load more rows, keep the focus and the back button, and keep it working without JavaScript.
 - [Translating](https://shadleaf.dev/current/guides/translating.md): The components' built-in texts are messages, which Shadleaf ships in several languages; your own message files add a language or reword them.
+
+## Compared with
+
+- [Compared with other libraries](https://shadleaf.dev/current/compared.md): How Shadleaf differs from daisyUI, Flowbite, Basecoat, Flux, Vaadin and other UI libraries, and when another one is the better choice.
+- [Shadleaf and Vaadin](https://shadleaf.dev/current/compared/vaadin.md): Two ways to build a Spring Boot UI: Thymeleaf templates with Shadleaf's components, or Java components with Vaadin Flow.
+- [Shadleaf and Flux](https://shadleaf.dev/current/compared/flux.md): Flux is Livewire's component library for Laravel, built on the same idea as Shadleaf.
+- [Shadleaf, Basecoat and starting-point-ui](https://shadleaf.dev/current/compared/basecoat-and-starting-point-ui.md): Basecoat and starting-point-ui bring shadcn/ui's design to any stack as plain HTML and CSS classes. The look is the same as Shadleaf's; the components are not there.
+- [Shadleaf and daisyUI](https://shadleaf.dev/current/compared/daisyui.md): daisyUI is a Tailwind plugin of component classes, with many themes, for any stack.
+- [Shadleaf and Flowbite](https://shadleaf.dev/current/compared/flowbite.md): Flowbite is Tailwind CSS markup to copy, with a script driven by data attributes, for any stack.
+- [Shadleaf, Penguin UI and Pines](https://shadleaf.dev/current/compared/penguin-ui-and-pines.md): Penguin UI and Pines are collections of Tailwind CSS and Alpine.js snippets to copy into your templates.
+- [Shadleaf and Canon](https://shadleaf.dev/current/compared/canon.md): Canon is a new library of plain HTML and CSS components for internal tools, with swappable themes and no build.
 
 ## Optional
 

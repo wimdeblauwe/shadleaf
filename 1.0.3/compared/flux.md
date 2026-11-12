@@ -1,0 +1,70 @@
+# Shadleaf and Flux
+
+> Flux is Livewire's component library for Laravel, built on the same idea as Shadleaf.
+
+Source: https://shadleaf.dev/1.0.3/compared/flux/
+
+[Flux](https://fluxui.dev) is the official component library of Livewire, made by Livewire's authors, for Laravel. It
+is the closest relative of Shadleaf on this list: components are tags, form controls show their own validation errors,
+and templates can be published into the application to change them. Shadleaf's [header layout](https://shadleaf.dev/1.0.3/layouts/header.md)
+follows Flux's. This page describes Flux 2 (November 2026).
+
+## The same dialog
+
+```blade
+<!-- Flux -->
+<flux:modal.trigger name="edit-profile">
+  <flux:button>Edit profile</flux:button>
+</flux:modal.trigger>
+
+<flux:modal name="edit-profile" class="md:w-96">
+  <flux:heading size="lg">Edit profile</flux:heading>
+  <flux:input label="Name" wire:model="name" />
+  <flux:button type="submit" variant="primary">Save</flux:button>
+</flux:modal>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  <sl:field th:field="*{name}">
+    <sl:field-label>Name</sl:field-label>
+    <sl:input/>
+  </sl:field>
+  <sl:dialog-footer>
+    <sl:button type="submit">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+The two read much alike. The difference is underneath. A Flux modal's state can live in a Livewire component on the
+server (`wire:model` on the modal), and Livewire sends changes back and forth as the user works. A Shadleaf page is
+rendered once per request; forms post, and [htmx](https://shadleaf.dev/1.0.3/guides/htmx.md) swaps parts of the page if you want that.
+
+## Where Flux is stronger
+
+- **Livewire.** Server-side state with live updates, without writing requests or JavaScript. A property bound with
+  `wire:model` updates the server as the user types.
+- **Breadth.** Around 50 components, among them some Shadleaf has not: a rich text editor, a kanban board, a command
+  palette, an autocomplete, OTP and phone inputs, a carousel and a timeline.
+- **A funded team** behind it, selling the Pro components.
+
+## Where Shadleaf is stronger
+
+- **No licence fees.** Flux's core components are free, but the Pro ones, among them the chart, calendar, date picker
+  and combobox, are a one-time licence from $149 for one project. All of Shadleaf is Apache 2.0.
+- **No Tailwind build.** Flux needs Tailwind CSS 4.2 or later compiled into your application; Shadleaf's jar ships its
+  CSS.
+- **shadcn/ui's design**, in nine skins. Flux has its own design, with an accent colour and a base grey to choose.
+- **A strict Content-Security-Policy and no JavaScript.** Shadleaf documents both. It runs without `'unsafe-inline'`
+  or `'unsafe-eval'` ([CSP](https://shadleaf.dev/1.0.3/guides/csp.md)) and its components degrade without a script. Flux's documentation says
+  nothing about either, and Livewire's interactivity needs JavaScript.
+
+## Which one to choose
+
+**Choose Flux** if your application is Laravel. **Choose Shadleaf** if it is Spring Boot. The two never compete for
+the same project.

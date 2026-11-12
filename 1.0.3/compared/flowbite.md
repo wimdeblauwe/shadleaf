@@ -1,0 +1,70 @@
+# Shadleaf and Flowbite
+
+> Flowbite is Tailwind CSS markup to copy, with a script driven by data attributes, for any stack.
+
+Source: https://shadleaf.dev/1.0.3/compared/flowbite/
+
+[Flowbite](https://flowbite.com) is a large collection of Tailwind CSS components to copy into your templates, with a
+script that reads data attributes (`data-modal-toggle`) and adds the behaviour. It is at version 4 (November 2026),
+with a free core under MIT and paid blocks, templates and a Figma design system.
+
+## The same dialog
+
+```html
+<!-- Flowbite, utility classes shortened -->
+<button data-modal-target="edit-profile" data-modal-toggle="edit-profile" class="..." type="button">
+  Edit profile
+</button>
+<div id="edit-profile" tabindex="-1" aria-hidden="true" class="hidden fixed top-0 right-0 left-0 z-50 ...">
+  <div class="relative p-4 w-full max-w-2xl max-h-full">
+    <div class="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6">
+      <h3 class="text-lg font-medium text-heading">Edit profile</h3>
+      ...
+      <button data-modal-hide="edit-profile" type="button" class="...">Save</button>
+    </div>
+  </div>
+</div>
+```
+
+```html
+<!-- Shadleaf -->
+<sl:button commandfor="edit-profile" command="show-modal">Edit profile</sl:button>
+<sl:dialog id="edit-profile">
+  <sl:dialog-header>
+    <sl:dialog-title>Edit profile</sl:dialog-title>
+  </sl:dialog-header>
+  ...
+  <sl:dialog-footer>
+    <sl:button type="submit">Save</sl:button>
+  </sl:dialog-footer>
+</sl:dialog>
+```
+
+Every element in Flowbite's markup carries its utility classes, ten to twenty of them in the real examples, and they
+repeat on every page that has the component.
+
+## Where Flowbite is stronger
+
+- **Ecosystem.** Integration guides for many frameworks and back ends, versions for React, Vue and Svelte, an MCP
+  server for coding agents, a Figma design system, and paid blocks and templates.
+- **Any stack**, and a large community.
+- **Tailwind all the way.** Every class can be changed in place; there is nothing between you and the markup.
+
+## Where Shadleaf is stronger
+
+- **Short markup.** A component instead of its markup, with declared props and one place to change. See
+  [what a component engine adds](https://shadleaf.dev/1.0.3/compared.md#what-a-component-engine-adds).
+- **No Tailwind build.** Flowbite is a Tailwind plugin (a CDN build exists); Shadleaf's jar ships its CSS.
+- **Native elements.** Flowbite's modal is a `div` that its script shows and hides; Shadleaf's dialog is the
+  browser's `<dialog>`, with focus and Escape handled by the browser.
+- **htmx and CSP.** Flowbite's components start from init functions (`initFlowbite()`) that you call again for markup
+  added later, and its documentation says nothing about a Content-Security-Policy. Shadleaf's components survive htmx
+  swaps and run under a strict policy.
+- **Spring wiring and tested accessibility**, as on the other pages: `th:field` binding and errors, Spring Data paging,
+  axe on every example.
+
+## Which one to choose
+
+**Choose Flowbite** for a non-Java or multi-framework project that already compiles Tailwind, or when you want its
+paid blocks, templates and Figma kit. **Choose Shadleaf** for a Spring Boot application with Thymeleaf, where you
+would rather write components than keep long markup up to date.
