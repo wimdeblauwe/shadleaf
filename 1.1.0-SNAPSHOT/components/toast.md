@@ -70,7 +70,9 @@ it. Several toasts in one response are a list: `htmxResponse.addTrigger("sl-toas
 - **The text is only ever text.** The toaster puts the title and description in with `textContent`, so a name such as
   `<b>Ada</b>` shows as typed and can never inject markup.
 - **Use `HX-Trigger`**, not `HX-Trigger-After-Swap` or `-After-Settle`: those are dispatched on the element that sent
-  the request, and when the swap removed it (a deleted row), the event reaches no one.
+  the request, and when the swap removed it (a deleted row), the event reaches no one. htmx 4 has only `HX-Trigger`
+  (and htmx-spring-boot 6 only `addTrigger`), which it dispatches after the swap: see
+  [htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
 - **Not with a redirect.** An `HX-Redirect` or `HX-Location` loads another page, and the toast with it is gone. Put
   it in a flash attribute instead (next section).
 

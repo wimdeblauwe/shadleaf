@@ -92,7 +92,8 @@ Alpine component places it from the trigger's position instead.
 ## A form in a popover, with htmx
 
 A form in the panel can post with htmx and swap only what it changes. An `HX-Trigger: sl-popover-close` response
-header closes the popover after a valid save, and focus returns to the trigger:
+header closes the popover after a valid save, and focus returns to the trigger (htmx 2; for htmx 4, see
+[htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4)):
 
 ```html
 <h2 id="team-name" th:text="${team.name}">Design</h2>

@@ -253,7 +253,7 @@
   
 </li></template></div>
 </div>
-<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-Ca89VAlv.js&quot;></script>
+<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-D3Ktmw8M.js&quot;></script>
 <script>
   document.addEventListener('click', event => {
     if (event.target.closest('a[href], button[type=&quot;submit&quot;], input[type=&quot;submit&quot;]')) event.preventDefault();
@@ -309,7 +309,9 @@ it. Several toasts in one response are a list: <code dir="auto">htmxResponse.add
 <li><strong>The text is only ever text.</strong> The toaster puts the title and description in with <code dir="auto">textContent</code>, so a name such as
 <code dir="auto">&lt;b&gt;Ada&lt;/b&gt;</code> shows as typed and can never inject markup.</li>
 <li><strong>Use <code dir="auto">HX-Trigger</code></strong>, not <code dir="auto">HX-Trigger-After-Swap</code> or <code dir="auto">-After-Settle</code>: those are dispatched on the element that sent
-the request, and when the swap removed it (a deleted row), the event reaches no one.</li>
+the request, and when the swap removed it (a deleted row), the event reaches no one. htmx 4 has only <code dir="auto">HX-Trigger</code>
+(and htmx-spring-boot 6 only <code dir="auto">addTrigger</code>), which it dispatches after the swap: see
+<a href="../../guides/htmx/#htmx-2-and-htmx-4">htmx 2 and htmx 4</a>.</li>
 <li><strong>Not with a redirect.</strong> An <code dir="auto">HX-Redirect</code> or <code dir="auto">HX-Location</code> loads another page, and the toast with it is gone. Put
 it in a flash attribute instead (next section).</li>
 </ul>
@@ -505,7 +507,7 @@ toaster’s duration like any other.</p>
   
 </li></template></div>
 </div>
-<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-Ca89VAlv.js&quot;></script>
+<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-D3Ktmw8M.js&quot;></script>
 <script>
   document.addEventListener('click', event => {
     if (event.target.closest('a[href], button[type=&quot;submit&quot;], input[type=&quot;submit&quot;]')) event.preventDefault();
@@ -781,7 +783,7 @@ save”), since the icon is decoration and is not read out.</p>
   
 </li></template></div>
 </div>
-<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-Ca89VAlv.js&quot;></script>
+<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-D3Ktmw8M.js&quot;></script>
 <script>
   document.addEventListener('click', event => {
     if (event.target.closest('a[href], button[type=&quot;submit&quot;], input[type=&quot;submit&quot;]')) event.preventDefault();
@@ -995,7 +997,7 @@ show (<code dir="auto">visible-toasts</code>); the older ones wait, with their t
   
 </li></template></div>
 </div>
-<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-Ca89VAlv.js&quot;></script>
+<script type=&quot;module&quot; src=&quot;/1.1.0-SNAPSHOT/shadleaf/assets/shadleaf.alpine-D3Ktmw8M.js&quot;></script>
 <script>
   document.addEventListener('click', event => {
     if (event.target.closest('a[href], button[type=&quot;submit&quot;], input[type=&quot;submit&quot;]')) event.preventDefault();

@@ -208,6 +208,12 @@ re-rendered out of band with `autofocus`, which htmx focuses after the swap. Aft
 it, and once the table is empty, the button that adds a member. The toast is announced, so a screen reader user hears
 what happened and is where they can go on.
 
+> **Note: htmx 4**
+>
+> This example is htmx 2. The answer holds nothing but out-of-band rows, and htmx 4 then makes no main swap, so the row
+> the Delete button targets would stay. Add `swapEmpty:true` to its `hx-swap` (`hx-swap="outerHTML swapEmpty:true"`). The
+> dialog's own `hx:get` button needs nothing. See [htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+
 ```html
 <th:block th:fragment="member-row-focus" th:with="oob=true, focus=true">
   <tr th:replace="~{members :: member-row}"></tr>

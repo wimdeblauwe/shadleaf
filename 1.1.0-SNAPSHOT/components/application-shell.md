@@ -144,6 +144,24 @@ static boolean wantsFragment(HtmxRequest request) {
 A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
 table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/tables-htmx.md).
 
+> **Caution: htmx 4**
+>
+> This check is htmx 2. htmx 4 sends `HX-Target: body` for a link the body boosts (`getTarget()` is `"body"`, never null),
+> so the sidebar's links would get the fragment. Two more changes: the body needs `hx-boost:inherited="true"`, because
+> htmx 4 does not inherit `hx-boost` otherwise, and a history restore (`HX-History-Restore-Request`, which htmx 4 still
+> sends) is handled by the same check. This version works with both:
+>
+> ```java
+> static boolean wantsFragment(HtmxRequest request) {
+>   String target = request.getTarget();
+>   return request.isHtmxRequest()
+>       && !request.isHistoryRestoreRequest()
+>       && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
+> }
+> ```
+>
+> See [htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+
 A boosted link or form made after the session expired would get the sign-in page swapped into the body (or, for a
 form, nothing at all, as its CSRF token went with the session). The Spring Security guide shows how to send the browser
 to the page instead, which then asks the user to sign in and comes back to it:
