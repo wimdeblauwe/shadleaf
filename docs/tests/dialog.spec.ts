@@ -2,7 +2,7 @@ import {expect, test, type Locator, type Page} from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import {join} from 'node:path';
 import previews from '../src/generated/previews.json' with {type: 'json'};
-import {openFixture as openSkinFixture} from './fixture';
+import {type FixtureOptions, openFixture as openSkinFixture} from './fixture';
 import {combinations, keepScenariosWith, openShowcase, skins} from './showcase';
 
 // sl:dialog, sl:alert-dialog and sl:sheet. On the showcase, in every skin and theme: every one opens from its trigger
@@ -445,21 +445,34 @@ test('htmx: a swap that removes an open dialog leaves no inert page behind', asy
   await expect(page.locator('#clicked')).toBeVisible();
 });
 
-test('htmx: history never restores a dialog open', async ({page}) => {
-  await openFixture(page, `${TRIGGER}${dialog('d', `
-      <a href="/next" id="next" hx-get="/next" hx-target="main" hx-push-url="true">Next page</a>`)}`, {
-    htmx: true,
-    routes: {'/next': () => ({body: '<p id="next-page">Next page</p>'})},
-  });
+const HISTORY: [string, FixtureOptions][] = [
+  ['htmx 2', {htmx: true}],
+  ['htmx 4 with hx-history-cache', {htmx: 4, htmxExtensions: ['hx-history-cache']}],
+];
+for (const [name, options] of HISTORY) {
+  test(`${name}: history never restores a dialog open`, async ({page}) => {
+    // Fails until htmx changes this: hx-alpine-compat destroys the page's Alpine components before hx-history-cache saves it, listeners included
+    // (see history.js, https://github.com/bigskysoftware/htmx/issues/4221).
+    test.fail(options.htmx === 4);
+    const messages = await openSkinFixture(page, `${TRIGGER}${dialog('d', `
+        <a href="/next" id="next" hx-get="/next" hx-target="main" hx-push-url="true">Next page</a>`)}`, {
+      ...options,
+      routes: {'/next': () => ({body: '<p id="next-page">Next page</p>'})},
+    });
 
-  await page.locator('#trigger').click();
-  await waitUntilOpen(page.locator('#d'));
-  await page.locator('#next').click();
-  await expect(page.locator('#next-page')).toBeVisible();
-  await page.goBack();
-  await expect(page.locator('#trigger')).toBeVisible();
-  expect(await page.evaluate(() => document.querySelector('dialog[open]'))).toBeNull();
-});
+    await page.locator('#trigger').click();
+    await waitUntilOpen(page.locator('#d'));
+    await page.locator('#next').click();
+    await expect(page.locator('#next-page')).toBeVisible();
+    await page.goBack();
+    await expect(page.locator('#trigger')).toBeVisible();
+    expect(await page.evaluate(() => document.querySelector('dialog[open]'))).toBeNull();
+    // The restored page works: the dialog opens again.
+    await page.locator('#trigger').click();
+    await waitUntilOpen(page.locator('#d'));
+    expect(messages).toEqual([]);
+  });
+}
 
 test('the csp build opens and closes an alert dialog under a strict policy', async ({page}) => {
   const messages = await openFixture(page, TRIGGER + alertDialog('d', '<button type="button">Continue</button>'));

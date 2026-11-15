@@ -11,6 +11,7 @@
     and errors (see dialog-body.js).
 */
 import {watchBody} from '../dialog-body.js';
+import {onHistorySave} from '../history.js';
 
 const supportsCommands = 'commandForElement' in HTMLButtonElement.prototype;
 const supportsClosedBy = 'closedBy' in HTMLDialogElement.prototype;
@@ -35,7 +36,7 @@ export default function dialog() {
           dialog.close();
         }
       });
-      listen(document, 'htmx:beforeHistorySave', () => dialog.close());
+      onHistorySave(listen, () => dialog.close());
       if (!supportsCommands) {
         listen(document, 'click', event => runCommand(dialog, event));
       }

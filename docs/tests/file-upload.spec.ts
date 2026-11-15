@@ -605,11 +605,12 @@ for (const version of [2, 4] as const) {
       await expect(upload.remove('a.pdf')).toBeVisible();
       answers.release();
       await expect(page.locator('#saved')).toHaveCount(0);
-      // htmx logs an aborted request as an error, of its own: htmx 2 its afterRequest and sendAbort, htmx 4 its
-      // htmx:error (the fetch rejected with an AbortError).
-      expect(messages.length).toBeGreaterThan(0);
-      expect(messages.filter(message => !/^htmx(:afterRequest|:sendAbort|: htmx:error: .*abort)/is.test(message)))
-          .toEqual([]);
+      // htmx 2 logs an aborted request as an error, of its own: its afterRequest and sendAbort. htmx 4 (since 4.0.1)
+      // logs nothing.
+      if (version === 2) {
+        expect(messages.length).toBeGreaterThan(0);
+      }
+      expect(messages.filter(message => !/^htmx(:afterRequest|:sendAbort)/i.test(message))).toEqual([]);
     });
 
     test('a request that does not carry the files is left alone', async ({page}) => {

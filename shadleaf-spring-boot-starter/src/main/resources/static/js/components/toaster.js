@@ -18,6 +18,7 @@
     it came from. Alt+T moves the focus to the newest toast, as in Sonner.
   - toasts are removed before htmx saves the page in its history cache, so going back never shows one again.
 */
+import {onHistorySave} from '../history.js';
 import {listener} from '../popup.js';
 
 const DEFAULT_DURATION_MS = 5000;
@@ -348,7 +349,7 @@ export default function toaster() {
       };
       listen(document, 'toggle', replace, true);
       listen(document, 'close', replace, true);
-      listen(document, 'htmx:beforeHistorySave', () => {
+      onHistorySave(listen, () => {
         states.forEach(state => clearTimeout(state.timer));
         states.clear();
         list.replaceChildren();

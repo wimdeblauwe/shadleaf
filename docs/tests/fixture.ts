@@ -16,7 +16,7 @@ export const ORIGIN = 'http://app.test';
 const PUBLIC_DIR = join(import.meta.dirname, '..', 'public');
 const HTMX = join(import.meta.dirname, '..', 'node_modules', 'htmx.org', 'dist', 'htmx.min.js');
 const HTMX_4 = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'htmx.min.js');
-const HTMX_4_ALPINE_COMPAT = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'ext', 'hx-alpine-compat.min.js');
+const HTMX_4_EXT = join(import.meta.dirname, '..', 'node_modules', 'htmx4', 'dist', 'ext');
 const STRICT_CSP = "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; base-uri 'self'";
 const HTMX_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>`;
 const HTMX_4_CONFIG = `<meta name="htmx-config" content='{"includeIndicatorCSS": false}'>`;
@@ -67,6 +67,8 @@ export type FixtureOptions = {
   scriptDelay?: number,
   /** Load htmx 2 (true) or htmx 4 (4). */
   htmx?: boolean | 4,
+  /** htmx 4's extensions to load after hx-alpine-compat, by their file name in dist/ext (e.g. 'hx-history-cache'). */
+  htmxExtensions?: string[],
   routes?: Routes,
   /** Where to go first, e.g. '/#refunds' or '/?tab=b'. */
   path?: string,
@@ -87,7 +89,7 @@ export type FixtureOptions = {
 
 /** Serves `main` at /, and `routes` for other paths; returns what the console said (errors, warnings, CSP). */
 export async function openFixture(page: Page, main: string | ((url: URL, request: Request) => string),
-    {alpine = true, htmx = false, routes = {}, path = '/', theme = false, scriptDelay = 0, wrap = true,
+    {alpine = true, htmx = false, htmxExtensions = [], routes = {}, path = '/', theme = false, scriptDelay = 0, wrap = true,
       skin, stylesheet, imgSrc, htmlAttributes = '', bodyAttributes = ''}: FixtureOptions = {})
     : Promise<string[]> {
   const messages: string[] = [];
@@ -105,7 +107,8 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
       + `<link rel="stylesheet" href="/${skin ? previews.skins.find(s => s.name === skin)!.css : css}">`
       + (stylesheet !== undefined ? '<link rel="stylesheet" href="/application.css">' : '')
       + (htmx ? `${htmx === 4 ? HTMX_4_CONFIG : HTMX_CONFIG}<script defer src="/webjars/htmx.min.js"></script>`
-          + (htmx === 4 ? '<script defer src="/webjars/hx-alpine-compat.min.js"></script>' : '') : '')
+          + (htmx === 4 ? ['hx-alpine-compat', ...htmxExtensions]
+              .map(name => `<script defer src="/webjars/ext/${name}.min.js"></script>`).join('') : '') : '')
       + (alpine ? `<script type="module" src="/${alpine === 'external' ? scripts.external : scripts.csp}"></script>` : '')
       + `</head><body ${bodyAttributes}>${wrap ? `<main>${content}</main>` : content}</body></html>`;
   await page.route(`${ORIGIN}/**`, async route => {
@@ -114,8 +117,9 @@ export async function openFixture(page: Page, main: string | ((url: URL, request
     if (url.pathname === '/webjars/htmx.min.js') {
       return route.fulfill({contentType: 'text/javascript', path: htmx === 4 ? HTMX_4 : HTMX});
     }
-    if (url.pathname === '/webjars/hx-alpine-compat.min.js') {
-      return route.fulfill({contentType: 'text/javascript', path: HTMX_4_ALPINE_COMPAT});
+    const extension = url.pathname.match(/^\/webjars\/ext\/([a-z0-9-]+)\.min\.js$/);
+    if (extension) {
+      return route.fulfill({contentType: 'text/javascript', path: join(HTMX_4_EXT, `${extension[1]}.min.js`)});
     }
     if (url.pathname === '/application.css' && stylesheet !== undefined) {
       return route.fulfill({contentType: 'text/css', body: stylesheet});

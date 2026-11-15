@@ -34,6 +34,7 @@
   Events are listened to on the provider (toggle events in the capture phase: they do not bubble), so a sidebar or
   trigger that htmx swaps in keeps working.
 */
+import {onHistorySave} from '../history.js';
 import {firstTabbable, hide, listener, show} from '../popup.js';
 
 const COOKIE = 'sl-sidebar-state';
@@ -226,7 +227,7 @@ export default function sidebar() {
           hide(sidebar);
         }
       };
-      listen(document, 'htmx:beforeHistorySave', () => {
+      onHistorySave(listen, () => {
         close();
         provider.setAttribute('data-history', '');
       });

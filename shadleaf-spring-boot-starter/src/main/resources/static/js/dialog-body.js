@@ -15,11 +15,12 @@
   - closing the dialog aborts a request still running (not one whose answer is in, which may be what closed it);
   - content marked data-clear-on-close (the body was empty in the page) is emptied once the dialog has closed, and at
     once when a request opens the dialog again or htmx saves the page in its history cache, so it never shows the
-    previous content (htmx 4 keeps no history cache: it loads the page again).
+    previous content (htmx 4 keeps a cache only with its hx-history-cache extension: see history.js).
   Works with htmx 2 and htmx 4, whichever is on the page; htmx 4 swaps an error answer in by default, which is
   stopped here for a request into the body, so a failed save keeps what was typed.
 */
 
+import {onHistorySave} from './history.js';
 import {firstTabbable} from './popup.js';
 
 /** Watches the body of `dialog`, if it has one; `listen` adds a listener that is removed with the component. */
@@ -203,7 +204,7 @@ export function watchBody(dialog, listen) {
     });
   });
 
-  listen(document, 'htmx:beforeHistorySave', () => {
+  onHistorySave(listen, () => {
     opening = null;
     abort();
     const body = parts();

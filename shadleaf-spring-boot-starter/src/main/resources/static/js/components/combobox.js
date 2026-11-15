@@ -35,6 +35,7 @@
 
   htmx's history cache saves the markup this adds; a restored combobox removes it and starts again.
 */
+import {onHistorySave} from '../history.js';
 import {hide, listener, positionWithoutAnchoring, show} from '../popup.js';
 
 const SEARCH_DELAY_MS = 300;
@@ -496,7 +497,7 @@ function setUp(root, select, template, listen, cleanups) {
       filter();
     }));
   }
-  listen(document, 'htmx:beforeHistorySave', () => hide(content));
+  onHistorySave(listen, () => hide(content));
   if (document.activeElement === select) {
     input.focus();
   }
