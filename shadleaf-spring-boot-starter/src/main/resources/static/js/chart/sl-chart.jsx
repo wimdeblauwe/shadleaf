@@ -31,6 +31,7 @@ import {
 } from 'recharts';
 import {ChartContainer, ChartLegendContent, ChartTooltipContent} from './chart.jsx';
 import {formatter} from './formats.js';
+import {onHistorySave} from '../history.js';
 
 const SERIES = {'SL-CHART-BAR': BarChart, 'SL-CHART-LINE': LineChart, 'SL-CHART-AREA': AreaChart};
 // The chart tokens; a series without a color takes the next one, by its position among the series.
@@ -225,7 +226,7 @@ class SlChart extends HTMLElement {
 
 if (!customElements.get('sl-chart')) {
   customElements.define('sl-chart', SlChart);
-  document.addEventListener('htmx:beforeHistorySave', () => {
+  onHistorySave((target, type, handler) => target.addEventListener(type, handler), () => {
     const mounted = Array.from(document.querySelectorAll('sl-chart')).filter(chart => chart.root);
     mounted.forEach(chart => chart.unmount());
     // Recharts measures text in a span with inline styles of its own, appended to the body; it makes a new one.

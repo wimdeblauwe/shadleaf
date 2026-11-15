@@ -34,6 +34,7 @@
     tab") would run its script there. htmx's history snapshot gets the icons back: it would hold dead URLs.
   The messages arrive with a plain {0} (and {1}) in them, which this fills in.
 */
+import {onHistorySave} from '../history.js';
 import {listener} from '../popup.js';
 import {abortRequest, watchUploads} from '../htmx-uploads.js';
 
@@ -397,7 +398,7 @@ export default function fileUpload() {
         });
         // The snapshot is taken right after this event, as markup: it gets the icons, which the page gets back after
         // it, when the swap that follows has left the component there.
-        listen(document, 'htmx:beforeHistorySave', () => {
+        onHistorySave(listen, () => {
           const icon = fileTemplate.content.querySelector('.attachment-media');
           list.querySelectorAll(':scope > .file-upload-item > .attachment > .attachment-media[data-variant="image"]')
               .forEach(media => media.replaceWith(icon.cloneNode(true)));

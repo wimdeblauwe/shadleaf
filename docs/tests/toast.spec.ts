@@ -333,8 +333,8 @@ for (const htmx of [true, 4] as const) {
     test(`htmx ${version}: a toast and sl-dialog-close in one response, ${order.join(' before ')}`, async ({page}) => {
       const events: Record<string, unknown> = {};
       for (const name of order) {
-        // htmx-spring-boot sends null for an event without a detail; htmx 4.0.0 throws on a null detail (htmx#4135).
-        events[name] = name === 'sl-toast' ? {title: 'Member saved', variant: 'success'} : htmx === 4 ? {} : null;
+        // htmx-spring-boot sends null for an event without a detail when another one has a detail.
+        events[name] = name === 'sl-toast' ? {title: 'Member saved', variant: 'success'} : null;
       }
       const routes: Routes = {'/save': () => ({body: '', headers: {'HX-Trigger': JSON.stringify(events)}})};
       const messages = await openFixture(page, `
@@ -391,6 +391,31 @@ for (const htmx of [true, 4] as const) {
     expect(messages).toEqual([]);
   });
 }
+
+// Fails until htmx changes this: hx-alpine-compat destroys the page's Alpine components before hx-history-cache saves it, listeners included,
+// so the toaster never hears htmx:history:cache:before:save (see history.js, https://github.com/bigskysoftware/htmx/issues/4221).
+test.fail('htmx 4 with hx-history-cache: a toast does not come back from the history cache', async ({page}) => {
+  const page2 = (url: URL) => url.pathname === '/'
+      ? `<a href="/other" id="other" hx-get="/other" hx-target="main" hx-push-url="true">Other</a>${toaster('data-duration="0"')}`
+      : '';
+  const messages = await openFixture(page, page2, {
+    htmx: 4,
+    htmxExtensions: ['hx-history-cache'],
+    routes: {'/other': () => ({body: '<p id="other-page">Other page</p>'})},
+  });
+
+  await toast(page, {title: 'Saved'});
+  await expect(toasts(page)).toHaveCount(1);
+  await page.locator('#other').click();
+  await expect(page.locator('#other-page')).toBeVisible();
+  await page.goBack();
+  await expect(page.locator('#other')).toBeVisible();
+  await expect(page.locator('.toast')).toHaveCount(0);
+  await page.waitForFunction(() => document.querySelector('.toaster-viewport')?.matches(':popover-open'));
+  await toast(page, {title: 'After'});
+  await expect(toasts(page)).toHaveText(['After']);
+  expect(messages).toEqual([]);
+});
 
 test('a toaster removed in the same task as a toast arrives stays quiet', async ({page}) => {
   // Alpine destroys a removed component in a microtask; until then the old toaster still hears sl-toast. Found as a
