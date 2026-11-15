@@ -175,5 +175,11 @@ without an `Accept` header, a MockMvc test without `accept(...)`): those then ge
 the sign-in page. The htmx-spring-boot README has the details, and how this combines with a sign-in form that is itself
 sent with htmx.
 
+On htmx 4 (with htmx-spring-boot 6, which has the same entry point and handler), the problems above are the same,
+except the 403: htmx 4 swaps a `4xx` or `5xx` answer, so a POST that failed its CSRF check, and that the handler does
+not turn into an `HX-Redirect`, shows the error page in its target instead of doing nothing. The redirect itself works
+as it does in htmx 2: htmx 4 acts on `HX-Redirect` before it swaps anything, whatever the status. `HX-Current-URL` and
+`HX-Boosted`, which the handler reads, are unchanged. See [htmx 2 and htmx 4](../htmx/#htmx-2-and-htmx-4).
+
 Sample-02 (`samples/shadleaf-sample-02`) has it: `hx-boost` on the body, a tab on its Data page that loads with htmx,
 and a form. Its `SessionExpiryTest` makes these requests without a session.
