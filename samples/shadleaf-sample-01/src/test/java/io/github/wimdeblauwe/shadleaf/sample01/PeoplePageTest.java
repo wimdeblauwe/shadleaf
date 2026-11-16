@@ -233,10 +233,11 @@ class PeoplePageTest {
     assertThat(fragment.select("input[type=hidden][form=people-search]").eachAttr("name")).containsExactly("sort");
   }
 
-  /** Back to an entry htmx did not keep (hx-history="false"): htmx asks for the whole page. */
+  /** Back or forward: htmx 4 keeps no snapshots and asks for the whole page. */
   @Test
   void aHistoryRestoreGetsTheWholePage() throws Exception {
-    Document page = Jsoup.parse(html("/people?q=ada", "HX-Request", "true", "HX-History-Restore-Request", "true"));
+    Document page = Jsoup.parse(html("/people?q=ada", "HX-Request", "true", "HX-History-Restore-Request", "true",
+        "HX-Target", "body"));
 
     assertThat(page.select("h1").text()).isEqualTo("People");
     assertThat(page.getElementById("people-q").attr("value")).isEqualTo("ada");
@@ -298,7 +299,8 @@ class PeoplePageTest {
     assertThat(delete.attr("href")).isEqualTo("/people/" + id + "/delete?q=a&sort=orders,desc&page=1");
     assertThat(delete.attr("hx-get")).isEqualTo(delete.attr("href"));
     assertThat(delete.attr("hx-target")).isEqualTo("#modal-root");
-    assertThat(delete.attr("hx-select")).isEqualTo("unset");
+    assertThat(delete.hasAttr("hx-select")).as("an empty hx-select, which overrides the inherited one").isTrue();
+    assertThat(delete.attr("hx-select")).isEmpty();
     assertThat(page.select("[id]").eachAttr("id")).doesNotHaveDuplicates();
   }
 

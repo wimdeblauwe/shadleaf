@@ -311,7 +311,7 @@ class DialogPageTest {
     Element confirm = dialog.selectFirst("button[data-variant=destructive]");
     assertThat(confirm.attr("hx-delete")).isEqualTo("/dialog/members/2");
     assertThat(confirm.attr("hx-target")).isEqualTo("#member-2");
-    assertThat(confirm.attr("hx-swap")).isEqualTo("outerHTML");
+    assertThat(confirm.attr("hx-swap")).isEqualTo("outerHTML swapEmpty:true");
   }
 
   @Test

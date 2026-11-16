@@ -304,7 +304,7 @@
 </form>
 
 <!--/* The alert dialog htmx fetches to confirm a delete. The row goes: hx-target is the row, and the response has
-  nothing for it but the message out of band. */-->
+  nothing for it, only out-of-band content, after which htmx 4 skips the main swap unless swapEmpty asks for it. */-->
 <sl:alert-dialog th:fragment="delete-dialog" id="delete-member" size="sm" open>
   <sl:alert-dialog-header>
     <sl:alert-dialog-media variant="destructive"><sl:icon name="trash-2"/></sl:alert-dialog-media>
@@ -314,7 +314,7 @@
   <sl:alert-dialog-footer>
     <sl:alert-dialog-cancel/>
     <sl:button variant="destructive" hx:delete="@{/dialog/members/{id}(id=${member.id})}"
-               th:hx-target="|#member-${member.id}|" hx-swap="outerHTML">Delete</sl:button>
+               th:hx-target="|#member-${member.id}|" hx-swap="outerHTML swapEmpty:true">Delete</sl:button>
   </sl:alert-dialog-footer>
 </sl:alert-dialog>
 </body>

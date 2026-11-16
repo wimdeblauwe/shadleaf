@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -51,13 +52,20 @@ class HtmxFormPageTest {
     Document page = Jsoup.parse(mockMvc.perform(get("/htmx-form")).andReturn().getResponse().getContentAsString());
     String src = page.selectFirst("head script[src*=htmx]").attr("src");
     assertThat(src).as("the template leaves the version out; the webjar locator puts it in")
-        .isEqualTo("/webjars/htmx.org/2.0.11/dist/htmx.min.js");
+        .isEqualTo("/webjars/htmx.org/4.0.1/dist/htmx.min.js");
     assertThat(page.selectFirst("meta[name=htmx-config]").attr("content"))
-        .contains("\"includeIndicatorStyles\": false", "\"allowEval\": false");
+        .contains("\"includeIndicatorCSS\": false");
 
     mockMvc.perform(get(src))
         .andExpect(status().isOk())
-        .andExpect(content().string(containsString("version:\"2.0.11\"")));
+        .andExpect(content().string(containsString("version=\"4.0.1\"")));
+    // htmx's Alpine extension loads after htmx and before Alpine, which the module script of the assets starts.
+    List<String> scripts = page.select("head script[src]").eachAttr("src");
+    int extension = scripts.indexOf("/webjars/htmx.org/4.0.1/dist/ext/hx-alpine-compat.min.js");
+    assertThat(extension).isGreaterThan(scripts.indexOf(src));
+    assertThat(page.select("head script[type=module][src]").eachAttr("src"))
+        .allSatisfy(module -> assertThat(scripts.indexOf(module)).isGreaterThan(extension));
+    mockMvc.perform(get(scripts.get(extension))).andExpect(status().isOk());
   }
 
   @Test
@@ -143,7 +151,7 @@ class HtmxFormPageTest {
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString());
 
-    assertThat(page.select("head script[src*=htmx]")).hasSize(1);
+    assertThat(page.select("head script[src*=htmx.min.js]")).hasSize(1);
     assertThat(page.select("[autofocus]")).extracting(Element::id).containsExactly("topic");
   }
 
