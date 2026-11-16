@@ -55,3 +55,110 @@ scenarios:
       values: {bookingTitle: '', bookingStart: '10:00', bookingEnd: '09:30'}
       errors:
         bookingEnd: The meeting must end after it starts.
+
+  # The fixture of docs/tests/form-validate.spec.ts, off the docs page and the showcase: the same form rendered valid
+  # and with an error on every field. The spec's server answers a validation request with the fields of one or the
+  # other and the posted values, as an application's controller would.
+  - id: fixture-valid
+    title: Every control, valid
+    showcase: false
+    source: &controls |-
+      <sl:form th:object="${form}" action="/save" th:validate="@{/validate}" method="post">
+        <sl:field-group>
+          <sl:field th:field="*{title}">
+            <sl:field-label>Title</sl:field-label>
+            <sl:input/>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field th:field="*{password}">
+            <sl:field-label>Password</sl:field-label>
+            <sl:input type="password"/>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field th:field="*{notes}">
+            <sl:field-label>Notes</sl:field-label>
+            <sl:field-description>At most 20 characters.</sl:field-description>
+            <sl:textarea/>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field th:field="*{start}">
+            <sl:field-label>Start</sl:field-label>
+            <sl:input type="time"/>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field th:field="*{end}" depends-on="start">
+            <sl:field-label>End</sl:field-label>
+            <sl:input type="time"/>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field th:field="*{room}">
+            <sl:field-label>Room</sl:field-label>
+            <sl:native-select>
+              <option value="">Select a room</option>
+              <option value="atrium">Atrium</option>
+              <option value="cellar">Cellar</option>
+            </sl:native-select>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field th:field="*{fruit}">
+            <sl:field-label>Fruit</sl:field-label>
+            <sl:select placeholder="Select a fruit">
+              <sl:select-item value="apple">Apple</sl:select-item>
+              <sl:select-item value="banana">Banana</sl:select-item>
+            </sl:select>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field th:field="*{framework}">
+            <sl:field-label>Framework</sl:field-label>
+            <sl:combobox placeholder="Select a framework">
+              <sl:combobox-item value="astro">Astro</sl:combobox-item>
+              <sl:combobox-item value="remix">Remix</sl:combobox-item>
+            </sl:combobox>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field th:field="*{day}">
+            <sl:field-label>Day</sl:field-label>
+            <sl:date-picker/>
+            <sl:field-error/>
+          </sl:field>
+          <sl:field-set th:field="*{plan}">
+            <sl:field-legend variant="label">Plan</sl:field-legend>
+            <sl:radio-group>
+              <sl:label><sl:radio-group-item value="monthly"/>Monthly</sl:label>
+              <sl:label><sl:radio-group-item value="yearly"/>Yearly</sl:label>
+            </sl:radio-group>
+            <sl:field-error/>
+          </sl:field-set>
+          <sl:field th:field="*{terms}" orientation="horizontal">
+            <sl:checkbox/>
+            <sl:field-content>
+              <sl:field-label>I accept the terms</sl:field-label>
+              <sl:field-error/>
+            </sl:field-content>
+          </sl:field>
+          <sl:field th:field="*{updates}" orientation="horizontal">
+            <sl:switch/>
+            <sl:field-content>
+              <sl:field-label>Product updates</sl:field-label>
+              <sl:field-error/>
+            </sl:field-content>
+          </sl:field>
+          <sl:field orientation="horizontal">
+            <sl:button type="submit">Save</sl:button>
+          </sl:field>
+        </sl:field-group>
+      </sl:form>
+    form:
+      values: {title: '', password: '', notes: '', start: '', end: '', room: '', fruit: '', framework: '', day: '',
+               plan: '', terms: false, updates: false}
+
+  - id: fixture-invalid
+    title: Every control, invalid
+    showcase: false
+    source: *controls
+    form:
+      values: {title: '', password: '', notes: '', start: '', end: '', room: '', fruit: '', framework: '', day: '',
+               plan: '', terms: false, updates: false}
+      errors: {title: Title error, password: Password error, notes: Notes error, start: Start error, end: End error,
+               room: Room error, fruit: Fruit error, framework: Framework error, day: Day error, plan: Plan error,
+               terms: Terms error, updates: Updates error}
