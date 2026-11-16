@@ -79,6 +79,9 @@ them in the request body.
 The fragment holds the `<sl:form>`, with its `validate`, so each field in the answer is marked as the one on the page
 is. It may also be the whole page: htmx takes only the field it asked for.
 
+Sample-01's "Book a room" page (`samples/shadleaf-sample-01`, `/room-booking`) is a complete example: a class-level
+constraint for the rules over several fields, a room that may already be booked, and a chain of `depends-on`.
+
 **It needs htmx 4** (`htmx.org` 4.x, with its `hx-alpine-compat` extension; see
 [htmx 2 and htmx 4](../../guides/htmx/#htmx-2-and-htmx-4)). It swaps with `outerMorph` and `<hx-partial>`, which
 htmx 2 does not have: do not use `validate` with htmx 2. Without htmx, or without JavaScript, the controls are plain
