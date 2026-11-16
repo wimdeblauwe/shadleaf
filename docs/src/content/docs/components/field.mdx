@@ -64,6 +64,10 @@ yourself.
 Errors that belong to the whole form rather than one field, such as `reject(...)` in the controller, go in a
 [`<sl:form-errors/>`](../form-errors/) above the fields.
 
+To show a field's errors while the user fills it in, validated on the server with htmx 4, put the fields in a
+`<sl:form validate="...">`: see [Validating as you type](../form/#validating-as-you-type). `depends-on` names the
+fields whose rules report errors on this one.
+
 ## Ids
 
 The control's id is the field's name, the id `th:field` gives a text input: `email`, or `address.street` for a nested

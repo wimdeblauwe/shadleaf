@@ -10,7 +10,7 @@ export const componentGroups = [
   {label: 'Actions', pages: ['button', 'theme-toggle']},
   {
     label: 'Forms',
-    pages: ['field', 'form-errors', 'label', 'input', 'input-group', 'textarea', 'select', 'select-native', 'combobox',
+    pages: ['field', 'form', 'form-errors', 'label', 'input', 'input-group', 'textarea', 'select', 'select-native', 'combobox',
       'checkbox', 'radio-group', 'switch', 'toggle', 'toggle-group', 'calendar', 'date-picker', 'file-upload'],
   },
   {label: 'Overlays', pages: ['dialog', 'alert-dialog', 'sheet', 'popover', 'dropdown-menu', 'tooltip']},

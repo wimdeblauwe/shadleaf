@@ -30,7 +30,8 @@ your `pom.xml`, so the agent reads the docs of the version you use.
 - A link that looks like a button is `<sl:button as="a" th:href="@{/x}">`. `<sl:button>` renders
   `type="button"`: write `type="submit"` on the one that submits a form.
 - Forms: `th:object` on the `<form>`, `th:field` on `<sl:field>` (its label, control and errors share it),
-  `<sl:form-errors/>` before the fields.
+  `<sl:form-errors/>` before the fields. To validate as the user types (htmx 4 only), use
+  `<sl:form th:validate="@{/x/validate}">` and an endpoint that renders the same form; no rules in JavaScript.
 - Dialogs and sheets need an `id` and open from any button with `commandfor="<id>" command="show-modal"`
   (`command="close"` closes). There are no trigger or close parts. Menus and popovers open with
   `<sl:dropdown-menu-trigger>` / `<sl:popover-trigger>` or `popovertarget`.

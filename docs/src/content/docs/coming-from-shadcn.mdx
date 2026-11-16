@@ -276,6 +276,10 @@ See [Tooltip](../components/tooltip/).
 
 - An input, textarea or native select with `th:field` marks itself `aria-invalid` when its field has errors, so the
   invalid style needs no markup of yours.
+- `<sl:form>` is a `<form>` that passes every attribute on. shadcn has no form component any more (its old `Form`
+  wrapped react-hook-form, and its forms now use `Field` with the form library of your choice). With `validate`, it
+  validates each field on the server as the user types (htmx 4), where shadcn's examples validate in the browser with
+  a Zod schema.
 - `<sl:form-errors/>` shows the binding's global errors (`reject(...)`, a class-level constraint), or with
   `show="all"` every error, as a destructive alert above the fields. shadcn has no such component; you would write an
   `Alert` with the messages yourself.
