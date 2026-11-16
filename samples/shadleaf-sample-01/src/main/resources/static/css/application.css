@@ -114,3 +114,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0
 /* The charts page: two cards a row on a wide screen. */
 .charts-grid { display: grid; gap: 1rem; margin-block-start: 1.5rem; }
 @media (width >= 64rem) { .charts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Book a room: the rules, in a collapsible between the intro's paragraphs. */
+.booking-rules { margin-block: -0.25rem 0.75rem; }
+.booking-rules .explainer { margin-block: 0.5rem 0; }
