@@ -610,19 +610,21 @@ function memberRow(id: number, name: string, {oob = false, autofocus = false} = 
 /**
  * The htmx confirm pattern of the alert dialog's docs page and sample-01's /dialog page. The answer to the delete
  * closes the alert dialog and shows a toast (HX-Trigger), replaces the row by nothing and re-renders the next row out
- * of band with autofocus on its button: the row's own button, where the focus returns, is gone.
+ * of band with autofocus on its button: the row's own button, where the focus returns, is gone. htmx 4 skips the main
+ * swap of an answer that holds only out-of-band content unless swapEmpty asks for it.
  */
-async function openConfirmFixture(page: Page) {
+async function openConfirmFixture(page: Page, htmx: true | 4) {
   const deleted: string[] = [];
-  const messages = await openFixture(page, `
+  const messages = await openSkinFixture(page, `
       <table><tbody>${memberRow(1, 'Ada')}${memberRow(2, 'Grace')}</tbody></table>
       <div id="modal-root"></div>
       ${TOASTER}`, {
-    htmx: true,
+    htmx,
     routes: {
       '/members/1/delete': () => ({
         body: alertDialog('delete-member', `<button type="button" id="confirm" class="button" data-variant="destructive"
-            hx-delete="/members/1" hx-target="#member-1" hx-swap="outerHTML">Delete</button>`, {open: true}),
+            hx-delete="/members/1" hx-target="#member-1" hx-swap="outerHTML${htmx === 4 ? ' swapEmpty:true' : ''}">Delete</button>`,
+            {open: true}),
       }),
       '/members/1': () => {
         deleted.push('1');
@@ -639,39 +641,73 @@ async function openConfirmFixture(page: Page) {
   return {deleted, messages};
 }
 
-test('htmx: confirming a delete closes the alert dialog, removes the row, shows a toast and focuses the next row',
-    async ({page}) => {
-  const {deleted, messages} = await openConfirmFixture(page);
-  const dialog = page.locator('#delete-member');
+for (const [name, htmx] of [['htmx 2', true], ['htmx 4', 4]] as const) {
+  test(`${name}: confirming a delete closes the alert dialog, removes the row, shows a toast and focuses the next row`,
+      async ({page}) => {
+    const {deleted, messages} = await openConfirmFixture(page, htmx);
+    const dialog = page.locator('#delete-member');
 
-  await page.locator('#delete-1').click();
-  await waitUntilOpen(dialog);
-  await expect(dialog.locator('.alert-dialog-cancel')).toBeFocused();
-  await page.keyboard.press('Tab');
-  await expect(page.locator('#confirm')).toBeFocused();
-  await page.keyboard.press('Enter');
+    await page.locator('#delete-1').click();
+    await waitUntilOpen(dialog);
+    await expect(dialog.locator('.alert-dialog-cancel')).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#confirm')).toBeFocused();
+    await page.keyboard.press('Enter');
 
-  await expect(dialog).toHaveJSProperty('open', false);
-  await expect(page.locator('#member-1')).toHaveCount(0);
-  await expect(page.locator('#member-2')).toBeVisible();
-  await expect(page.locator('.toaster-list > .toast')).toHaveText([/Ada was deleted/]);
-  await expect.poll(() => page.locator('.toaster-announcer[role="status"]').textContent()).toBe('Ada was deleted');
-  await expect(page.locator('#delete-2'), 'the focus moves to the next row, not the top of the page').toBeFocused();
-  expect(await page.locator('.toaster-viewport').evaluate(viewport => viewport.parentElement?.id)).toBe('toaster');
-  expect(deleted).toEqual(['1']);
-  expect(messages).toEqual([]);
-});
+    await expect(dialog).toHaveJSProperty('open', false);
+    await expect(page.locator('#member-1')).toHaveCount(0);
+    await expect(page.locator('#member-2')).toBeVisible();
+    await expect(page.locator('.toaster-list > .toast')).toHaveText([/Ada was deleted/]);
+    await expect.poll(() => page.locator('.toaster-announcer[role="status"]').textContent()).toBe('Ada was deleted');
+    await expect(page.locator('#delete-2'), 'the focus moves to the next row, not the top of the page').toBeFocused();
+    expect(await page.locator('.toaster-viewport').evaluate(viewport => viewport.parentElement?.id)).toBe('toaster');
+    expect(deleted).toEqual(['1']);
+    expect(messages).toEqual([]);
+  });
 
-test('htmx: cancelling a delete sends nothing and returns focus to the Delete button', async ({page}) => {
-  const {deleted} = await openConfirmFixture(page);
-  const dialog = page.locator('#delete-member');
+  test(`${name}: cancelling a delete sends nothing and returns focus to the Delete button`, async ({page}) => {
+    const {deleted} = await openConfirmFixture(page, htmx);
+    const dialog = page.locator('#delete-member');
 
-  await page.locator('#delete-1').click();
-  await waitUntilOpen(dialog);
-  await page.keyboard.press('Enter');
+    await page.locator('#delete-1').click();
+    await waitUntilOpen(dialog);
+    await page.keyboard.press('Enter');
 
-  await expect(dialog).toHaveJSProperty('open', false);
-  await expect(page.locator('#delete-1')).toBeFocused();
-  await expect(page.locator('#member-1')).toBeVisible();
-  expect(deleted).toEqual([]);
-});
+    await expect(dialog).toHaveJSProperty('open', false);
+    await expect(page.locator('#delete-1')).toBeFocused();
+    await expect(page.locator('#member-1')).toBeVisible();
+    expect(deleted).toEqual([]);
+  });
+
+  // sample-01's edit dialog: a valid save closes the dialog (HX-Trigger, as a plain event name here), swaps nothing
+  // where the form is (HX-Reswap: none) and replaces the row, the dialog's opener included, out of band. The focus
+  // goes back to the opener's replacement, which htmx finds by its id. On htmx 4, which handles HX-Trigger after the
+  // swap, this needs the dialog closed when the swap starts: the page behind a modal dialog is inert.
+  test(`${name}: a save that replaces the dialog's opener returns the focus to the new one`, async ({page}) => {
+    const row = (label: string, oob = false) => `<tr id="row-1"${oob ? ' hx-swap-oob="true"' : ''}><td>${label}</td>
+        <td><button type="button" id="edit-1" commandfor="d" command="show-modal">Edit</button></td></tr>`;
+    const messages = await openSkinFixture(page, `<table><tbody>${row('Ada')}</tbody></table>${dialog('d', `
+        <form id="edit-form" hx-post="/members/1" hx-target="this" hx-swap="outerHTML">
+          <label for="edit-name">Name</label><input id="edit-name" name="name" value="Ada">
+          <button type="submit" id="save">Save</button>
+        </form>`)}`, {
+      htmx,
+      routes: {
+        '/members/1': () => ({
+          body: `<table>${row('Ada King', true)}</table>`,
+          headers: {'HX-Trigger': 'sl-dialog-close', 'HX-Reswap': 'none'},
+        }),
+      },
+    });
+    const d = page.locator('#d');
+
+    await page.locator('#edit-1').click();
+    await waitUntilOpen(d);
+    await page.locator('#save').click();
+
+    await expect(d).toHaveJSProperty('open', false);
+    await expect(page.locator('#row-1')).toContainText('Ada King');
+    await expect(page.locator('#edit-1'), 'the focus is on the new Edit button, not the top of the page').toBeFocused();
+    expect(messages).toEqual([]);
+  });
+}
