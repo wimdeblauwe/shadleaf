@@ -17,8 +17,8 @@ them a `Slice` at a time. Loading htmx is in [Forms with htmx](https://shadleaf.
 
 > **Caution: htmx 4**
 >
-> The snippets on this page are htmx 2, and on htmx 4 they break without an error. Four changes, all in
-> [htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4):
+> The snippets on this page are htmx 2, and on htmx 4 they break without an error. Sample-01 runs on htmx 4, with
+> these four changes, all in [htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4):
 >
 > - `#people-results` needs `hx-boost:inherited`, `hx-target:inherited`, `hx-select:inherited` and `hx-swap:inherited`
 >   (and `hx-boost:inherited` on the body): without them, the sort, page and size links are plain links and the menu

@@ -323,8 +323,7 @@ that button an id if the row is replaced, so htmx puts the focus back on the new
 keeps what was typed.
 
 The example is htmx 2. On htmx 4 the same markup works, with the changes in
-[htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4) (`HX-Trigger` is dispatched after the swap, which is why this
-example sends it with `HtmxReswap.none()`).
+[htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
 
 ## Width
 

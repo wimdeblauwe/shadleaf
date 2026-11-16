@@ -170,9 +170,10 @@ redirects. Toasts are removed before htmx saves a page in its history cache, so 
 never takes the focus: it goes away.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="htmx-2-and-htmx-4">htmx 2 and htmx 4</h2><a class="sl-anchor-link" href="#htmx-2-and-htmx-4"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “htmx 2 and htmx 4”</span></a></div>
 <p>The examples in this guide, in <a href="../tables-htmx/">Tables with htmx</a>, and on the component pages use <strong>htmx 2</strong>
-(<code dir="auto">htmx.org</code> 2.0.11 with htmx-spring-boot 5.1.1): that is what samples 01 to 03 load, and what the docs’ browser tests
-run against. A few of those tests also run on htmx 4.0.1 (popovers, toasts, file upload and the dialog body), and
-the components work with it. The guides’ own snippets are not tested on htmx 4. This section lists what a Shadleaf user
+(<code dir="auto">htmx.org</code> 2.0.11 with htmx-spring-boot 5.1.1): that is what samples 02 and 03 load, and what the docs’ browser
+tests run against. Sample-01 runs on htmx 4 (<code dir="auto">htmx.org</code> 4.0.1 with htmx-spring-boot 6.0.1), so its pages show the
+changes below in place. A few of the browser tests also run on htmx 4.0.1 (popovers, toasts, file upload and the
+dialog body), and the components work with it. The guides’ own snippets are not tested on htmx 4. This section lists what a Shadleaf user
 changes to use them there (<code dir="auto">htmx.org</code> 4.0.1 with htmx-spring-boot 6.0.1), and each htmx page has a note pointing here.
 htmx’s own list is <a href="https://four.htmx.org/docs/whats-new-in-htmx-4">What’s new in htmx 4</a>.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="versions">Versions</h3><a class="sl-anchor-link" href="#versions"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Versions”</span></a></div>
@@ -291,8 +292,10 @@ requests into it, so a failed save still keeps what was typed; elsewhere, use <c
 </li>
 <li>
 <p><strong><code dir="auto">HX-Trigger</code> runs after the swap</strong>, on the element that sent the request, or on the document when the swap
-removed it. Send <code dir="auto">sl-dialog-close</code> and <code dir="auto">sl-popover-close</code> from a request whose element stays, as the examples here
-do (<code dir="auto">HtmxReswap.none()</code>, or a target elsewhere); <code dir="auto">sl-toast</code> works either way.</p>
+removed it. A dialog, alert dialog or sheet whose request answers with <code dir="auto">sl-dialog-close</code> closes when the swap
+starts instead, as on htmx 2: the page behind a modal dialog is inert, so otherwise htmx could not put the focus
+back on a replaced opener (by its id) or on an <code dir="auto">autofocus</code> element in the answer. Send <code dir="auto">sl-popover-close</code> from a
+request whose element stays (<code dir="auto">HtmxReswap.none()</code>, or a target elsewhere); <code dir="auto">sl-toast</code> works either way.</p>
 </li>
 <li>
 <p><strong>Use htmx 4.0.1 or later. A <code dir="auto">null</code> detail in <code dir="auto">HX-Trigger</code> throws in htmx 4.0.0</strong> (<code dir="auto">detail.cancelled</code> in its <code dir="auto">trigger()</code>; 4.0.1 reads
