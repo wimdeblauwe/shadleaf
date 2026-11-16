@@ -4,10 +4,12 @@ import {watchAvatarImages} from '../avatar.js';
 import {watchCharts} from '../chart/loader.js';
 import {watchIndeterminateCheckboxes} from '../checkbox.js';
 import {watchInputGroupAddons} from '../input-group.js';
+import {watchValidationRequests} from '../validate.js';
 import {startBundled} from '../register.js';
 
 watchAvatarImages();
 watchCharts();
 watchIndeterminateCheckboxes();
 watchInputGroupAddons();
+watchValidationRequests();
 startBundled(Alpine);

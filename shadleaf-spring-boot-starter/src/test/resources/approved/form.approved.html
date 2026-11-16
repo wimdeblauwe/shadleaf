@@ -1,0 +1,62 @@
+<!-- <sl:form th:object="${form}" th:action="@{/bookings}" method="post" novalidate>
+  <sl:field th:field="*{title}"><sl:field-label>Title</sl:field-label><sl:input/></sl:field>
+</sl:form> -->
+<form class="form" action="/bookings" method="post" novalidate>
+  <div class="field">
+    <label class="label field-label" for="title">Title</label>
+    <input class="input" type="text" id="title" name="title" value="">
+  </div>
+</form>
+
+<!-- <sl:form th:object="${form}" th:action="@{/bookings}" th:validate="@{/bookings/validate}" method="post">
+  <sl:field th:field="*{title}"><sl:field-label>Title</sl:field-label><sl:input/></sl:field>
+  <sl:field th:field="*{start}"><sl:field-label>Start</sl:field-label><sl:input type="time"/></sl:field>
+  <sl:field th:field="*{end}" depends-on="start">
+    <sl:field-label>End</sl:field-label><sl:input type="time"/><sl:field-error/>
+  </sl:field>
+  <sl:field-set th:field="*{catering}">
+    <sl:field-legend>Catering</sl:field-legend>
+    <sl:radio-group>
+      <sl:field orientation="horizontal">
+        <sl:radio-group-item value="none"/><sl:field-label>None</sl:field-label>
+      </sl:field>
+      <sl:field orientation="horizontal">
+        <sl:radio-group-item value="lunch"/><sl:field-label>Lunch</sl:field-label>
+      </sl:field>
+    </sl:radio-group>
+  </sl:field-set>
+  <sl:field orientation="horizontal">
+    <sl:input sl:validate="false" th:field="*{title}" type="search"/>
+  </sl:field>
+</sl:form> -->
+<form class="form" action="/bookings" method="post">
+  <div class="field" data-validate-field="title">
+    <label class="label field-label" for="title">Title</label>
+    <input class="input" type="text" id="title" hx-post="/bookings/validate" hx-trigger="input changed delay:200ms" hx-include="closest form" hx-swap="outerMorph" hx-target="closest .field" hx-select="[data-validate-field='title']" hx-headers="SL-Validate-Field:'title'" name="title" value="">
+  </div>
+  <div class="field" data-validate-field="start">
+    <label class="label field-label" for="start">Start</label>
+    <input class="input" type="time" id="start" hx-post="/bookings/validate" hx-trigger="change" hx-include="closest form" hx-swap="outerMorph" hx-target="closest .field" hx-select="[data-validate-field='start']" hx-headers="SL-Validate-Field:'start'" name="start" value="10:00">
+  </div>
+  <div class="field" data-invalid="true" data-validate-field="end">
+    <label class="label field-label" for="end">End</label>
+    <input class="input" type="time" aria-invalid="true" id="end" aria-describedby="end-error" hx-post="/bookings/validate" hx-trigger="change" hx-include="closest form" hx-swap="outerMorph" hx-target="closest .field" hx-select="[data-validate-field='end']" hx-headers="SL-Validate-Field:'end'" name="end" value="09:30">
+    <div class="field-error" id="end-error">The meeting must end after it starts.</div>
+  </div>
+  <fieldset class="field-set" data-validate-field="catering">
+    <legend class="field-legend">Catering</legend>
+    <div class="radio-group" role="radiogroup">
+      <div class="field" data-orientation="horizontal">
+        <input type="radio" class="radio-group-item" value="none" id="catering1" hx-post="/bookings/validate" hx-trigger="change" hx-include="closest form" hx-swap="outerMorph" hx-target="closest .field-set" hx-select="[data-validate-field='catering']" hx-headers="SL-Validate-Field:'catering'" name="catering" checked>
+        <label class="label field-label" for="catering1">None</label>
+      </div>
+      <div class="field" data-orientation="horizontal">
+        <input type="radio" class="radio-group-item" value="lunch" id="catering2" hx-post="/bookings/validate" hx-trigger="change" hx-include="closest form" hx-swap="outerMorph" hx-target="closest .field-set" hx-select="[data-validate-field='catering']" hx-headers="SL-Validate-Field:'catering'" name="catering">
+        <label class="label field-label" for="catering2">Lunch</label>
+      </div>
+    </div>
+  </fieldset>
+  <div class="field" data-orientation="horizontal">
+    <input class="input" type="search" id="title" name="title" value="">
+  </div>
+</form>

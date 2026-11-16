@@ -37,6 +37,9 @@ import org.thymeleaf.standard.StandardDialect;
  * the {@link CalendarLocale} that gives {@code sl:calendar} the first day of the week of the page's locale. And
  * {@code #slCharts}, the {@link Charts} that checks the keys of {@code sl:chart}'s parts and gives it the request's
  * time zone.
+ * <p>
+ * Besides the components, it has the attributes {@code sl:attrs} ({@link AttrsAttributeProcessor}) and
+ * {@code sl:validate} ({@link ValidateAttributeProcessor}).
  */
 public class ShadleafDialect extends AbstractProcessorDialect implements IExpressionObjectDialect {
 
@@ -109,6 +112,7 @@ public class ShadleafDialect extends AbstractProcessorDialect implements IExpres
     return Set.of(
         new ComponentElementProcessor(dialectPrefix, registry),
         new AttrsAttributeProcessor(dialectPrefix),
+        new ValidateAttributeProcessor(dialectPrefix),
         new SlotElementProcessor(dialectPrefix));
   }
 }

@@ -18,7 +18,8 @@ import tools.jackson.databind.json.JsonMapper;
  * Everything comes from the declared props, nothing is inferred: {@code values} is the enum, {@code default} the
  * default, a {@code boolean} prop is an attribute without a value (or {@code true}/{@code false} when it defaults to
  * true), and the prop's text is the description. Every prop
- * is offered a second time as {@code th:<prop>}, for a value computed by an expression.
+ * is offered a second time as {@code th:<prop>}, for a value computed by an expression. The dialect's attribute
+ * {@code sl:validate}, which goes on any form control, is a global attribute.
  */
 public final class WebTypes {
 
@@ -38,7 +39,10 @@ public final class WebTypes {
     webTypes.put("name", "shadleaf");
     webTypes.put("version", metadata.version());
     webTypes.put("description-markup", "markdown");
-    webTypes.put("contributions", Map.of("html", Map.of("elements", elements)));
+    Map<String, Object> html = new LinkedHashMap<>();
+    html.put("elements", elements);
+    html.put("attributes", List.of(validateAttribute()));
+    webTypes.put("contributions", Map.of("html", html));
     return webTypes;
   }
 
@@ -138,6 +142,17 @@ public final class WebTypes {
     value.put("kind", kind);
     value.put("required", false);
     return value;
+  }
+
+  private static Map<String, Object> validateAttribute() {
+    Map<String, Object> attribute = new LinkedHashMap<>();
+    attribute.put("name", ShadleafDialect.PREFIX + ":validate");
+    attribute.put("description", "Validates this control's field on the server while the user edits it, with htmx 4: "
+        + "the URL of the validation endpoint, e.g. `sl:validate=\"@{/bookings/validate}\"`, or `false` to opt out "
+        + "of the validation of its `sl:form`. Writes `hx-post`, `hx-trigger`, `hx-include`, `hx-swap` and, in a "
+        + "`sl:field` with `th:field`, `hx-target`, `hx-select` and `hx-headers`, except those already present.");
+    attribute.put("value", value("plain"));
+    return attribute;
   }
 
   private static Map<String, Object> slotElement() {

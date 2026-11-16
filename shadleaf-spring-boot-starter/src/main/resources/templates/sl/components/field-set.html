@@ -8,16 +8,22 @@
       <code>th:field</code> and get Spring's numbered ids, <code>toppings1</code>). A
       <code>sl:field-description</code> and <code>sl:field-error</code> directly inside describe the fieldset, and it
       gets <code>data-invalid</code> when the binding has errors.</sl:description>
+    <sl:prop name="depends-on">As on <code>sl:field</code>: the fields whose rules report errors on this group, in a
+      form validated as the user types.</sl:prop>
   </sl:props>
 </head>
 <body>
-<fieldset th:fragment="field-set"
-          class="field-set"
+<!--/* As sl:field: the fieldset is what a validation request swaps, for every option in it. */-->
+<th:block th:fragment="field-set"
           th:with="slField=${#slFields.fieldSet(attrs,
                                                 slots.contains('field-description', 'field'),
-                                                slots.contains('field-error', 'field'))}"
+                                                slots.contains('field-error', 'field'), slots)}"><hx-partial
+    th:remove="${#slFields.affected(slField, props['depends-on'])} ? none : tag"
+    th:attr="hx-target=|[data-validate-field='${slField.validateMarker}']|"
+    hx-swap="outerMorph"><fieldset class="field-set"
           th:attr="data-invalid=${slField.invalid ? 'true' : null},
-                   aria-describedby=${slField.describedBy}"
-          sl:attrs="${attrs.without('field')}"><sl:slot/></fieldset>
+                   aria-describedby=${slField.describedBy},
+                   data-validate-field=${slField.validateMarker}"
+          sl:attrs="${attrs.without('field')}"><sl:slot/></fieldset></hx-partial></th:block>
 </body>
 </html>

@@ -29,6 +29,15 @@ class WebTypesTest {
   }
 
   @Test
+  void slValidateIsAGlobalAttribute() {
+    JsonNode webTypes = jsonMapper.readTree(WebTypes.toJson(ComponentMetadata.of(LibraryComponents.registry(), "test"),
+        jsonMapper));
+
+    assertThat(webTypes.get("contributions").get("html").get("attributes").findValuesAsString("name"))
+        .containsExactly("sl:validate");
+  }
+
+  @Test
   void mapsPropTypesToAttributeValues() {
     JsonNode element = element("""
         <sl:props>
