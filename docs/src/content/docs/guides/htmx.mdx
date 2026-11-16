@@ -338,6 +338,13 @@ and `HX-Reselect` remain.
 
 - **Validating as you type is htmx 4 only.** [`<sl:form validate>`](../../components/form/#validating-as-you-type)
   swaps with `outerMorph` and `<hx-partial>`, which htmx 2 does not have.
+- **Do not morph a combobox, select, calendar or date picker yourself.** Their scripts build part of their markup in
+  the browser (the combobox's input and list, the calendar's months, the date picker's button text and name). A
+  morph (`outerMorph`, `innerMorph`) makes the page match the server's markup and removes those parts, and the
+  component does not start again, so it stops working. Swap a region that holds one with `outerHTML` or `innerHTML`,
+  or put `hx-morph-skip` on the component to leave it out of the morph (it then keeps its value and ignores what the
+  server sent for it). Validating as you type morphs fields too, but Shadleaf keeps these components through its own
+  swaps.
 
 - **Load htmx's Alpine extension.** htmx 4's settle step puts every attribute of the server's markup back on a swapped
   element whose `id` stayed the same, removing the ones the components set when they start (`aria-expanded` on a
