@@ -182,7 +182,7 @@ class ShellPageTest {
         .containsExactly("Documentation", "Ada Lovelace ada@example.com");
   }
 
-  /** Requests a link in the boosted body sends: HX-Request and HX-Boosted, no HX-Target (the body has no id). */
+  /** Requests a link in the boosted body sends: HX-Request, HX-Boosted and, in htmx 4, HX-Target: body. */
   static Stream<String> boostedPages() {
     return Stream.of("/", "/form", "/htmx-form", "/dialog", "/settings", "/people", "/people-multiselect",
         "/people-load-more");
@@ -192,7 +192,7 @@ class ShellPageTest {
   @MethodSource("boostedPages")
   void aLinkTheBoostSendsGetsTheWholePage(String url) throws Exception {
     Document page = page(get(url).header("HX-Request", "true").header("HX-Boosted", "true")
-        .header("HX-Current-URL", "http://localhost/"));
+        .header("HX-Target", "body").header("HX-Request-Type", "full").header("HX-Current-URL", "http://localhost/"));
 
     assertShell(page);
   }
@@ -202,23 +202,23 @@ class ShellPageTest {
     Person person = repository.findAll(Sort.by("id")).get(0);
 
     assertShell(page(get("/people/{id}/delete", person.getId())
-        .header("HX-Request", "true").header("HX-Boosted", "true")));
+        .header("HX-Request", "true").header("HX-Boosted", "true").header("HX-Target", "body")));
     String dialog = html(get("/people/{id}/delete", person.getId())
-        .header("HX-Request", "true").header("HX-Boosted", "true").header("HX-Target", "modal-root"));
+        .header("HX-Request", "true").header("HX-Boosted", "true").header("HX-Target", "div#modal-root"));
     assertThat(dialog).contains("alert-dialog").doesNotContain("sidebar-provider");
   }
 
   @Test
   void aBoostedLinkInsideTheResultsStillGetsTheResultsAlone() throws Exception {
     String fragment = html(get("/people?sort=email,asc")
-        .header("HX-Request", "true").header("HX-Boosted", "true").header("HX-Target", "people-results"));
+        .header("HX-Request", "true").header("HX-Boosted", "true").header("HX-Target", "div#people-results"));
 
     assertThat(fragment).contains("id=\"people-results\"").doesNotContain("sidebar-provider", "<h1");
   }
 
   private static void assertShell(Document page) {
     Element body = page.body();
-    assertThat(body.attr("hx-boost")).isEqualTo("true");
+    assertThat(body.attr("hx-boost:inherited")).isEqualTo("true");
     // The skip link comes first, to the inset.
     Element skipLink = body.child(0);
     assertThat(skipLink.className()).isEqualTo("skip-link");

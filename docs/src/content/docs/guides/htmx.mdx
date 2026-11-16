@@ -192,9 +192,10 @@ never takes the focus: it goes away.
 ## htmx 2 and htmx 4
 
 The examples in this guide, in [Tables with htmx](../tables-htmx/), and on the component pages use **htmx 2**
-(`htmx.org` 2.0.11 with htmx-spring-boot 5.1.1): that is what samples 01 to 03 load, and what the docs' browser tests
-run against. A few of those tests also run on htmx 4.0.1 (popovers, toasts, file upload and the dialog body), and
-the components work with it. The guides' own snippets are not tested on htmx 4. This section lists what a Shadleaf user
+(`htmx.org` 2.0.11 with htmx-spring-boot 5.1.1): that is what samples 02 and 03 load, and what the docs' browser
+tests run against. Sample-01 runs on htmx 4 (`htmx.org` 4.0.1 with htmx-spring-boot 6.0.1), so its pages show the
+changes below in place. A few of the browser tests also run on htmx 4.0.1 (popovers, toasts, file upload and the
+dialog body), and the components work with it. The guides' own snippets are not tested on htmx 4. This section lists what a Shadleaf user
 changes to use them there (`htmx.org` 4.0.1 with htmx-spring-boot 6.0.1), and each htmx page has a note pointing here.
 htmx's own list is [What's new in htmx 4](https://four.htmx.org/docs/whats-new-in-htmx-4).
 
@@ -350,8 +351,10 @@ and `HX-Reselect` remain.
   requests into it, so a failed save still keeps what was typed; elsewhere, use `hx-status:5xx="swap:none"` or
   `"noSwap": [204, 304, "4xx", "5xx"]` in the config where you want htmx 2's behavior.
 - **`HX-Trigger` runs after the swap**, on the element that sent the request, or on the document when the swap
-  removed it. Send `sl-dialog-close` and `sl-popover-close` from a request whose element stays, as the examples here
-  do (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
+  removed it. A dialog, alert dialog or sheet whose request answers with `sl-dialog-close` closes when the swap
+  starts instead, as on htmx 2: the page behind a modal dialog is inert, so otherwise htmx could not put the focus
+  back on a replaced opener (by its id) or on an `autofocus` element in the answer. Send `sl-popover-close` from a
+  request whose element stays (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
 - **Use htmx 4.0.1 or later. A `null` detail in `HX-Trigger` throws in htmx 4.0.0** (`detail.cancelled` in its `trigger()`; 4.0.1 reads
   `detail?.cancelled`, see [htmx#4135](https://github.com/bigskysoftware/htmx/issues/4135)). htmx-spring-boot sends one
   for an event without a detail when another event of the same response has one, such as `sl-dialog-close` next to a

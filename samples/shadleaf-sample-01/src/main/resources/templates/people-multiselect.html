@@ -21,23 +21,23 @@
     300 ms after the last keystroke, at once on Enter (submit) or on clearing the field (search), and only the
     latest request counts (hx-sync replace). It asks for this page's own URL, so the address it pushes and the links
     the response builds from the request agree. The field stays outside what is swapped, so it keeps the focus and
-    whatever was typed while a request was out. hx-history="false": htmx's snapshot would keep the field's value of
-    the first load, not the search of that history entry, so going back asks the server for the page instead. */-->
+    whatever was typed while a request was out. Back and forward ask the server for the page again (htmx 4 keeps no
+    snapshots), so the field shows the search of that history entry. */-->
   <form id="people-search" class="people-search" role="search" method="get" th:action="@{/people-multiselect}"
         hx:get="@{/people-multiselect}" hx-trigger="input changed delay:300ms, search, submit" hx-sync="this:replace"
-        hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none" hx-push-url="true"
-        hx-history="false">
+        hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none" hx-push-url="true">
     <sl:input type="search" id="people-q" name="q" th:value="${search}" aria-label="Search people"
               placeholder="Filter by name or email…" autocomplete="off"/>
     <!--/* What a screen reader announces after a search; the response updates it out of band. */-->
     <p id="people-status" class="visually-hidden" role="status" th:text="${found}"></p>
   </form>
 
-  <!--/* Swapped by htmx: the boosted links inherit the target and select, and keep their ids, so htmx gives the focus
-    back to the link that was followed. The form's hidden inputs live here (form="people-search"), so they follow the
+  <!--/* Swapped by htmx: the boosted links inherit the target and select (:inherited, as htmx 4 inherits nothing
+    else), and keep their ids, so htmx gives the focus back to the link that was followed. The form's hidden inputs live here (form="people-search"), so they follow the
     order and size of the table they came with. */-->
   <div id="people-results" th:fragment="results"
-       hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+       hx-boost:inherited="true" hx-target:inherited="#people-results" hx-select:inherited="#people-results"
+       hx-swap:inherited="outerHTML show:none">
     <sl:query-params except="q" form="people-search"/>
     <p th:if="${fragment}" id="people-status" hx-swap-oob="innerHTML" th:text="${found}"></p>
     <!--/* The selection: the row checkboxes (ids) belong to this form, which posts to this page's own URL, so the
