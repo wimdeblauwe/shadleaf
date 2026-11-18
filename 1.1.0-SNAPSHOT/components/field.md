@@ -88,6 +88,10 @@ yourself.
 Errors that belong to the whole form rather than one field, such as `reject(...)` in the controller, go in a
 [`<sl:form-errors/>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/form-errors.md) above the fields.
 
+To show a field's errors while the user fills it in, validated on the server with htmx 4, put the fields in a
+`<sl:form validate="...">`: see [Validating as you type](https://shadleaf.dev/1.1.0-SNAPSHOT/components/form.md#validating-as-you-type). `depends-on` names the
+fields whose rules report errors on this one.
+
 ## Ids
 
 The control's id is the field's name, the id `th:field` gives a text input: `email`, or `address.street` for a nested
@@ -338,6 +342,7 @@ Attributes of `<sl:field>`: A form field: a `sl:field-label`, one control, and o
 | --- | --- | --- | --- |
 | `orientation` | `vertical`, `horizontal`, `responsive` | `vertical` | Stack the label above the control, or put them side by side (a checkbox or switch, then its label). `responsive` stacks them in a narrow `sl:field-group` and puts them side by side in a wide one. |
 | `for` | *string* | — | The id of the control: for a field without `th:field`, or to use another id than the field's name. The control gets it when it has no id of its own, and the description and error ids derive from it. |
+| `depends-on` | *string* | — | The fields (their `th:field` names, separated by spaces) whose rules report errors on this one, in a form validated as the user types: an end time that must come after the start, a confirmation that must match a password. Validating one of them swaps this field too, once it has a value. |
 
 Every prop can also be set from an expression: `th:orientation="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -369,7 +374,11 @@ Attributes of `<sl:field-content>`: Stacks a `sl:field-label` with its `sl:field
 
 Attributes of `<sl:field-set>`: A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.
 
-`sl:field-set` declares no props; every attribute passes through.
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `depends-on` | *string* | — | As on `sl:field`: the fields whose rules report errors on this group, in a form validated as the user types. |
+
+Every prop can also be set from an expression: `th:depends-on="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 ### sl:field-legend
 

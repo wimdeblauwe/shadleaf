@@ -1,0 +1,229 @@
+# Form
+
+> A form element that passes every attribute on, and validates its fields on the server as the user types, with htmx 4.
+
+Source: https://shadleaf.dev/1.1.0-SNAPSHOT/components/form/
+
+**Example: Form.** A form element that passes every attribute on (th:object, th:action, method). sl:field-group lays out its fields.
+
+```html
+<sl:form th:object="${form}" action="/rooms" method="post">
+  <sl:field-group>
+    <sl:field th:field="*{roomName}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+    </sl:field>
+    <sl:field th:field="*{roomCapacity}">
+      <sl:field-label>Capacity</sl:field-label>
+      <sl:input type="number" min="1"/>
+    </sl:field>
+    <sl:field orientation="horizontal">
+      <sl:button type="submit">Save</sl:button>
+    </sl:field>
+  </sl:field-group>
+</sl:form>
+```
+
+`<sl:form>` renders a `<form class="form">` and passes every attribute on: `th:object`, `th:action`, `method`,
+`novalidate`, `enctype`, `hx-*`. It has no styling of its own; a [`<sl:field-group>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/field.md#layout) lays out the
+fields. A plain `<form>` works just as well for a form that is validated when it is submitted: `<sl:form>` is there
+for `validate`.
+
+```html
+<sl:form th:object="${room}" th:action="@{/rooms}" method="post" novalidate>
+  <sl:field-group>
+    <sl:field th:field="*{name}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    ...
+  </sl:field-group>
+</sl:form>
+```
+
+## Validating as you type
+
+With `validate`, every control in a [`<sl:field>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/field.md) or `<sl:field-set>` with `th:field` posts the whole form
+to that URL while the user edits it, and swaps its own field from the answer: its error, its `aria-invalid` and its
+`aria-describedby`. The rules stay where they are, in Bean Validation and your controller; there are none in
+JavaScript.
+
+**Example: Validating as you type.** With validate, each control posts the form to that URL while the user edits it (htmx 4), and swaps its own field from the response. The end time depends on the start, so validating the start swaps the end time too, once it has a value.
+
+```html
+<sl:form th:object="${form}" action="/bookings" th:validate="@{/bookings/validate}" method="post">
+  <sl:field-group>
+    <sl:field th:field="*{bookingTitle}">
+      <sl:field-label>Title</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{bookingStart}">
+      <sl:field-label>Start</sl:field-label>
+      <sl:input type="time"/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{bookingEnd}" depends-on="bookingStart">
+      <sl:field-label>End</sl:field-label>
+      <sl:input type="time"/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field orientation="horizontal">
+      <sl:button type="submit">Book</sl:button>
+    </sl:field>
+  </sl:field-group>
+</sl:form>
+```
+
+```html
+<sl:form th:object="${booking}" th:action="@{/bookings}" th:validate="@{/bookings/validate}" method="post"
+         novalidate>
+  <sl:field-group>
+    <sl:field th:field="*{title}">
+      <sl:field-label>Title</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{start}">
+      <sl:field-label>Start</sl:field-label>
+      <sl:input type="time"/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{end}" depends-on="start">
+      <sl:field-label>End</sl:field-label>
+      <sl:input type="time"/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:button type="submit">Book</sl:button>
+  </sl:field-group>
+</sl:form>
+```
+
+The validation endpoint binds and validates the form like the submit does, and renders the same form again, errors
+and all. Nothing is saved; the answer is always `200`:
+
+```java
+@PostMapping("/bookings/validate")
+String validate(@Valid @ModelAttribute("booking") BookingForm booking, BindingResult bindingResult) {
+  return "bookings/new :: booking-form";
+}
+```
+
+> **Caution: Always a POST**
+>
+> Map the validation endpoint with `@PostMapping`, never `@GetMapping` or a `@RequestMapping` that takes any method,
+> and do not give a control `hx-get` in its place. Each request carries the whole form, passwords included: in a GET
+> they are in the URL, which ends up in server and proxy access logs, the browser's history and caches. A POST keeps
+> them in the request body.
+
+The fragment holds the `<sl:form>`, with its `validate`, so each field in the answer is marked as the one on the page
+is. It may also be the whole page: htmx takes only the field it asked for.
+
+Sample-01's "Book a room" page (`samples/shadleaf-sample-01`, `/room-booking`) is a complete example: a class-level
+constraint for the rules over several fields, a room that may already be booked, and a chain of `depends-on`.
+
+**It needs htmx 4** (`htmx.org` 4.x, with its `hx-alpine-compat` extension; see
+[htmx 2 and htmx 4](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4)). It swaps with `outerMorph` and `<hx-partial>`, which
+htmx 2 does not have: do not use `validate` with htmx 2. Without htmx, or without JavaScript, the controls are plain
+controls and the form is validated when it is submitted, as before. Keep the submit's own validation either way: the
+validation while typing is a help to the user, not a check.
+
+### What a control sends
+
+Each control gets these attributes. An attribute you write yourself, in any spelling (`hx-trigger`,
+`data-hx-trigger`, `th:hx-trigger`, `hx:trigger`), is kept:
+
+| Attribute    | Value                                                                                                                                                           |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `hx-post`    | the `validate` URL (unless the control has an `hx-get`, `hx-post`, `hx-put`, `hx-patch`, `hx-delete` or `hx-action` of its own)                                 |
+| `hx-trigger` | `input changed delay:200ms`: 200 ms after the user stops typing. `change` for a select, checkbox, radio button, date, time, month, week, color and range input. |
+| `hx-include` | `closest form`                                                                                                                                                  |
+| `hx-target`  | `closest .field`, or `closest .field-set` for a radio group or checkbox group                                                                                   |
+| `hx-select`  | `[data-validate-field='title']`: the field in the answer                                                                                                        |
+| `hx-swap`    | `outerMorph`                                                                                                                                                    |
+| `hx-headers` | `SL-Validate-Field:'title'`                                                                                                                                     |
+
+The `SL-Validate-Field` header holds the request parameter of the field being validated (`title`,
+`address.street`). The field gets `data-validate-field` with the same name. A controller can read the header to do
+less work, but it does not have to.
+
+The request never uploads files. htmx 4 posts every field of the form, file inputs included, so Shadleaf's script
+takes the files out of a request that has `SL-Validate-Field`, and a multipart form still posts multipart. A
+[file upload](https://shadleaf.dev/1.1.0-SNAPSHOT/components/file-upload.md) is not validated as the user types.
+
+### Fields that depend on another
+
+Some errors come from a rule over several fields: an end time that must come after the start, a confirmation that
+must match a password. `depends-on` on the field that shows the error names the fields it depends on, separated by
+spaces:
+
+```html
+<sl:field th:field="*{end}" depends-on="start">
+```
+
+When the start is validated, the answer also holds the end time's field, in an `<hx-partial>`, and htmx swaps both.
+That happens only once the end time has a value: a user who has not reached it yet does not get an error there. Put
+the error on the dependent field: a class-level constraint that reports on `end` (with
+`addPropertyNode("end")` in its `ConstraintValidatorContext`), or `bindingResult.rejectValue("end", ...)` in the
+controller.
+
+### What the user notices
+
+- **Focus and caret stay put.** The field is morphed, not replaced: the control that has the focus stays the same
+  element, keeps what the user is typing and where the caret is, and a password keeps its value, though the server
+  never sends it back.
+- **Fields the user has not touched stay clean.** Only the field being edited, and the fields that depend on it once
+  they have a value, are swapped. The rest of the answer is ignored, errors included.
+- **Errors are not announced.** The control becomes `aria-invalid` and described by its error, which a screen reader
+  reads when the user reaches it; a live region would talk over every keystroke. The submit still moves the focus to
+  the first error with [`<sl:form-errors autofocus/>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/form-errors.md), which does not take the focus while
+  rendering the answer to a validation request.
+- **Select, combobox and date picker keep working.** Their scripts add to the server's markup (the combobox's input
+  and list, the calendar's months, the date picker's button text). Shadleaf's script keeps those as they are during a
+  validation swap, and gives them only the field's new state, which they show on the control the user works with.
+
+### One control
+
+`sl:validate` does the same for one control, in or outside a `<sl:form>`. On a Shadleaf control inside a field, it
+gets the attributes above:
+
+```html
+<sl:field th:field="*{username}">
+  <sl:field-label>Username</sl:field-label>
+  <sl:input sl:validate="@{/signup/validate}"/>
+  <sl:field-error/>
+</sl:field>
+```
+
+A plain element (`<input sl:validate="@{/search/validate}">`), or a control outside a field, gets only `hx-post`,
+`hx-trigger`, `hx-include` and `hx-swap`: set `hx-target` and `hx-select` yourself. In a validating form,
+`sl:validate="false"` on a control leaves it out.
+
+### Limits
+
+- In a validating form, the controls that get the attributes are Shadleaf's, in a field with `th:field`:
+  `<sl:input>`, `<sl:textarea>`, `<sl:native-select>`, `<sl:select>`, `<sl:combobox>`, `<sl:checkbox>` (also in a
+  checkbox group), `<sl:switch>`, `<sl:radio-group>`, `<sl:toggle>` and `<sl:date-picker>` (or `<sl:calendar>`). A
+  plain `<input>` in a field is left alone. A `<sl:toggle-group>` with its own `th:field` is not validated as the user
+  types.
+- An `hx-headers` of your own on a control replaces `SL-Validate-Field`: the answer then has no `<hx-partial>` for
+  the fields that depend on it, and Shadleaf's script no longer leaves the files out.
+- The `<hx-partial>` finds its field by `data-validate-field` in the whole page. Two validating forms with a field of
+  the same name on one page would both be swapped.
+
+## Attributes
+
+Attributes of `<sl:form>`: A `form`. Every attribute that is not a prop (`th:object`, `th:action`, `method`, `novalidate`, `hx-*`) passes through. With `validate`, every control in a `sl:field` or `sl:field-set` with `th:field` is validated on the server while the user edits it: it posts the whole form to that URL with htmx 4 and swaps only its own field from the response (see `sl:validate`). A field whose errors come from a rule over several fields names them in its `depends-on`.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `validate` | *string* | — | The URL of the endpoint that validates the form object and renders the form again, such as `th:validate="@{/bookings/validate}"`. Needs htmx 4; without htmx the form posts as usual. |
+
+Every prop can also be set from an expression: `th:validate="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+`sl:validate` goes on a control (any element), not on `<sl:form>`:
+
+| Attribute     | Value                                                                                                                                                                       |
+|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `sl:validate` | The URL of the validation endpoint: an expression (`@{/signup/validate}`, `${url}`) or a literal (`/signup/validate`). `false` leaves the control out of a validating form. |

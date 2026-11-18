@@ -148,6 +148,12 @@ same reason: a live region inserted together with its text is not announced reli
 Add `role="alert"` when content changes without moving focus, for example a single field that htmx validates as the
 user leaves it: see [Field](https://shadleaf.dev/1.1.0-SNAPSHOT/components/field.md#errors).
 
+## Validating as you type
+
+On htmx 4, `<sl:form th:validate="@{/contact/validate}">` validates each field on the server while the user edits it,
+and swaps only that field: no rules in JavaScript, no focus moved, nothing announced. See
+[Validating as you type](https://shadleaf.dev/1.1.0-SNAPSHOT/components/form.md#validating-as-you-type).
+
 ## Back button and history
 
 `hx-post` pushes no history entry. The URL stays `/form`, and htmx's history cache, which snapshots the page into
@@ -192,8 +198,8 @@ never takes the focus: it goes away.
 The examples in this guide, in [Tables with htmx](https://shadleaf.dev/1.1.0-SNAPSHOT/guides/tables-htmx.md), and on the component pages use **htmx 2**
 (`htmx.org` 2.0.11 with htmx-spring-boot 5.1.1): that is what samples 02 and 03 load, and what the docs' browser
 tests run against. Sample-01 runs on htmx 4 (`htmx.org` 4.0.1 with htmx-spring-boot 6.0.1), so its pages show the
-changes below in place. A few of the browser tests also run on htmx 4.0.1 (popovers, toasts, file upload and the
-dialog body), and the components work with it. The guides' own snippets are not tested on htmx 4. This section lists what a Shadleaf user
+changes below in place. A few of the browser tests also run on htmx 4.0.1 (popovers, toasts, file upload, the
+dialog body and validating as you type), and the components work with it. The guides' own snippets are not tested on htmx 4. This section lists what a Shadleaf user
 changes to use them there (`htmx.org` 4.0.1 with htmx-spring-boot 6.0.1), and each htmx page has a note pointing here.
 htmx's own list is [What's new in htmx 4](https://four.htmx.org/docs/whats-new-in-htmx-4).
 
@@ -327,6 +333,16 @@ and `HX-Reselect` remain.
   work as before. A boosted link still scrolls to the top of the page unless `show:none` is there.
 
 ### What else changed for Shadleaf
+
+- **Validating as you type is htmx 4 only.** [`<sl:form validate>`](https://shadleaf.dev/1.1.0-SNAPSHOT/components/form.md#validating-as-you-type)
+  swaps with `outerMorph` and `<hx-partial>`, which htmx 2 does not have.
+- **Do not morph a combobox, select, calendar or date picker yourself.** Their scripts build part of their markup in
+  the browser (the combobox's input and list, the calendar's months, the date picker's button text and name). A
+  morph (`outerMorph`, `innerMorph`) makes the page match the server's markup and removes those parts, and the
+  component does not start again, so it stops working. Swap a region that holds one with `outerHTML` or `innerHTML`,
+  or put `hx-morph-skip` on the component to leave it out of the morph (it then keeps its value and ignores what the
+  server sent for it). Validating as you type morphs fields too, but Shadleaf keeps these components through its own
+  swaps.
 
 - **Load htmx's Alpine extension.** htmx 4's settle step puts every attribute of the server's markup back on a swapped
   element whose `id` stayed the same, removing the ones the components set when they start (`aria-expanded` on a
