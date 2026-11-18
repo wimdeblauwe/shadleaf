@@ -2,6 +2,7 @@ package io.github.wimdeblauwe.shadleaf.dialect;
 
 import io.github.wimdeblauwe.shadleaf.component.ShadleafComponentException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -14,6 +15,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.util.unit.DataSize;
 import org.thymeleaf.context.IExpressionContext;
 import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.context.IWebContext;
 import org.thymeleaf.model.IModel;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.spring6.context.IThymeleafBindStatus;
@@ -23,6 +25,7 @@ import org.thymeleaf.spring6.util.FieldUtils;
 import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.standard.expression.VariableExpression;
 import org.thymeleaf.util.StringUtils;
+import org.thymeleaf.web.IWebRequest;
 
 /**
  * The expression object {@code #slFields}: how {@code sl:field}, {@code sl:field-set} and the form controls share a
@@ -44,6 +47,14 @@ import org.thymeleaf.util.StringUtils;
  * {@link #control(Attrs, Object)} gives {@code autofocus}. That state lives in this object: Thymeleaf builds one per
  * template execution (the expression object is cacheable), and the form renders top to bottom, so the summary always
  * decides before the controls below it ask.
+ * <p>
+ * Validating as the user types: inside a {@code sl:form} with {@code validate} (which sets
+ * {@value #FORM_VALIDATE_VARIABLE}), or when a control in the field has {@code sl:validate} itself, a field with
+ * {@code th:field} knows the request parameter name it is validated under ({@link FieldBinding#getValidateField()}).
+ * {@link #control(Attrs, Object)} then gives its controls {@code sl:validate} with the form's URL, which
+ * {@link ValidateAttributeProcessor} turns into htmx attributes. While a validation request renders (it carries the
+ * {@value #VALIDATE_FIELD_HEADER} header), {@link #affected(Object, String)} tells a field with {@code depends-on}
+ * whether to wrap itself in an {@code <hx-partial>}, and no control takes {@code autofocus}.
  */
 public final class FieldBindings {
 
@@ -54,6 +65,12 @@ public final class FieldBindings {
   private static final String DISABLED_ATTRIBUTE = "disabled";
   private static final String VALUE_ATTRIBUTE = "value";
   private static final String EXPRESSION_PREFIX = "th:";
+
+  /** The request header with which a validated control names its field: {@code SL-Validate-Field: email}. */
+  public static final String VALIDATE_FIELD_HEADER = "SL-Validate-Field";
+  /** The local variable {@code sl:form} sets to its {@code validate} URL. */
+  public static final String FORM_VALIDATE_VARIABLE = "slFormValidate";
+  static final String VALIDATE_ATTRIBUTE = ShadleafDialect.PREFIX + ":" + ValidateAttributeProcessor.ATTR_NAME;
 
   private final IExpressionContext context;
   /** The form objects whose first control with errors takes {@code autofocus}, by name ({@code signup}). */
@@ -75,6 +92,18 @@ public final class FieldBindings {
    */
   public FieldBinding field(Attrs attrs, @Nullable String controlId, @Nullable Object enclosing,
       boolean hasDescription, boolean hasError) {
+    return field(attrs, controlId, enclosing, hasDescription, hasError, null);
+  }
+
+  /**
+   * The binding of a {@code sl:field}, which knows whether its controls are validated as the user types: inside a
+   * {@code sl:form} with {@code validate}, or when a control in its content has {@code sl:validate}. One option of a
+   * validated group is validated with the group.
+   *
+   * @param slots the field's content, {@code null} when no control in it can have {@code sl:validate}
+   */
+  public FieldBinding field(Attrs attrs, @Nullable String controlId, @Nullable Object enclosing,
+      boolean hasDescription, boolean hasError, @Nullable Slots slots) {
     String field = attrs.get(FIELD_ATTRIBUTE);
     boolean option = false;
     if (StringUtils.isEmptyOrWhitespace(field) && enclosing instanceof FieldBinding group && group.isGroup()) {
@@ -91,7 +120,12 @@ public final class FieldBindings {
       id = option ? base + nextSequence(base) : base;
     }
     List<String> errors = field == null || option ? List.of() : errors(field);
-    return binding(field, id, id, errors, hasDescription, hasError, false);
+    FieldBinding binding = binding(field, id, id, errors, hasDescription, hasError, false);
+    if (option) {
+      String groupField = ((FieldBinding) enclosing).getValidateField();
+      return groupField == null ? binding : binding.validated(groupField, false);
+    }
+    return field != null && validating(slots) ? binding.validated(parameterName(field), true) : binding;
   }
 
   /**
@@ -99,11 +133,64 @@ public final class FieldBindings {
    * checkboxes), which keep Spring's numbered ids. The description and error describe the fieldset.
    */
   public FieldBinding fieldSet(Attrs attrs, boolean hasDescription, boolean hasError) {
+    return fieldSet(attrs, hasDescription, hasError, null);
+  }
+
+  /**
+   * The binding of a {@code sl:field-set}, which knows whether its controls are validated as the user types, as
+   * {@link #field(Attrs, String, Object, boolean, boolean, Slots)} does.
+   *
+   * @param slots the fieldset's content, {@code null} when no control in it can have {@code sl:validate}
+   */
+  public FieldBinding fieldSet(Attrs attrs, boolean hasDescription, boolean hasError, @Nullable Slots slots) {
     String field = attrs.get(FIELD_ATTRIBUTE);
     if (StringUtils.isEmptyOrWhitespace(field)) {
       return binding(null, null, null, List.of(), hasDescription, hasError, true);
     }
-    return binding(field, null, idFromField(field), errors(field), hasDescription, hasError, true);
+    FieldBinding binding = binding(field, null, idFromField(field), errors(field), hasDescription, hasError, true);
+    return validating(slots) ? binding.validated(parameterName(field), true) : binding;
+  }
+
+  /**
+   * Whether a field or fieldset with {@code depends-on} is swapped along with the field a validation request is
+   * rendered for: the request names one of {@code dependsOn} in its {@value #VALIDATE_FIELD_HEADER} header, not this
+   * field, and the request's parameter of this field is not blank. A field the user has not reached yet is left
+   * alone, so it does not show errors such as "must not be blank". The field it was not swapped with, the main swap,
+   * must not be wrapped either: htmx takes partials out of the response before it selects the main swap's content.
+   *
+   * @param binding   the field's {@code slField}
+   * @param dependsOn the names of the fields this one depends on, separated by spaces or commas
+   */
+  public boolean affected(@Nullable Object binding, @Nullable String dependsOn) {
+    if (!(binding instanceof FieldBinding field) || field.getValidateMarker() == null
+        || StringUtils.isEmptyOrWhitespace(dependsOn)) {
+      return false;
+    }
+    IWebRequest request = request();
+    String validated = request == null ? null : request.getHeaderValue(VALIDATE_FIELD_HEADER);
+    String name = field.getValidateMarker();
+    if (validated == null || validated.equals(name) || !dependsOn(dependsOn).contains(validated)) {
+      return false;
+    }
+    String[] values = request.getParameterValues(name);
+    return values != null && Arrays.stream(values).anyMatch(value -> !StringUtils.isEmptyOrWhitespace(value));
+  }
+
+  /** The field names of a {@code depends-on}: separated by spaces, commas or both. */
+  public static List<String> dependsOn(@Nullable String dependsOn) {
+    if (StringUtils.isEmptyOrWhitespace(dependsOn)) {
+      return List.of();
+    }
+    return Arrays.stream(dependsOn.trim().split("[\\s,]+")).filter(name -> !name.isEmpty()).toList();
+  }
+
+  /**
+   * Whether the page renders for a validation request: one with the {@value #VALIDATE_FIELD_HEADER} header, sent by
+   * a control with {@code sl:validate}.
+   */
+  public boolean isValidationRequest() {
+    IWebRequest request = request();
+    return request != null && request.getHeaderValue(VALIDATE_FIELD_HEADER) != null;
   }
 
   /**
@@ -136,6 +223,10 @@ public final class FieldBindings {
               StringUtils.isEmptyOrWhitespace(own) ? describedBy : own + " " + describedBy);
         }
       }
+    }
+    if (binding instanceof FieldBinding field && field.getValidateField() != null
+        && !values.containsKey(VALIDATE_ATTRIBUTE) && formValidateUrl() != null) {
+      values.put(VALIDATE_ATTRIBUTE, formValidateUrl());
     }
     if (!focusFirstInvalid.isEmpty() && !values.containsKey(DISABLED_ATTRIBUTE) && invalid(values)) {
       String form = boundObjectName();
@@ -173,7 +264,7 @@ public final class FieldBindings {
         messages.add(error.getMessage());
       }
     }
-    if (autofocus && messages.isEmpty()) {
+    if (autofocus && messages.isEmpty() && !isValidationRequest()) {
       focusFirstInvalid.add(form);
     }
     return new FormErrors(id, messages);
@@ -275,6 +366,43 @@ public final class FieldBindings {
   private @Nullable String boundObjectName() {
     return context.getVariable(SpringContextVariableNames.SPRING_BOUND_OBJECT_EXPRESSION)
         instanceof VariableExpression boundObject ? boundObject.getExpression() : null;
+  }
+
+  /**
+   * Whether the controls of a field are validated as the user types: its form has a {@code validate} URL, or a
+   * control in its content has {@code sl:validate} (other than {@code false}).
+   */
+  private boolean validating(@Nullable Slots slots) {
+    if (formValidateUrl() != null) {
+      return true;
+    }
+    if (slots == null) {
+      return false;
+    }
+    IModel content = slots.defaultSlot();
+    for (int i = 0; i < content.size(); i++) {
+      if (content.get(i) instanceof IProcessableElementTag tag && tag.hasAttribute(VALIDATE_ATTRIBUTE)
+          && !"false".equals(tag.getAttributeValue(VALIDATE_ATTRIBUTE))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** The {@code validate} URL of the enclosing {@code sl:form}, {@code null} outside one or without it. */
+  private @Nullable String formValidateUrl() {
+    Object url = context.getVariable(FORM_VALIDATE_VARIABLE);
+    return url == null || url.toString().isBlank() ? null : url.toString();
+  }
+
+  /** The request parameter name of a {@code th:field} ({@code *{address.street}} is {@code address.street}). */
+  private String parameterName(String field) {
+    String name = FieldUtils.getBindStatus(context, field).getExpression();
+    return name == null ? "" : name;
+  }
+
+  private @Nullable IWebRequest request() {
+    return context instanceof IWebContext web ? web.getExchange().getRequest() : null;
   }
 
   private static FieldBinding binding(@Nullable String field, @Nullable String id, @Nullable String base,

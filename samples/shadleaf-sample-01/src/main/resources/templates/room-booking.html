@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sl="https://shadleaf.dev/sl"
+      th:replace="~{layout/main :: layout('Book a room', ~{::breadcrumb}, ~{::#page-content})}">
+<body>
+<!--/* The breadcrumb's levels, which the layout puts in the page header. */-->
+<th:block th:ref="breadcrumb">
+  <sl:breadcrumb-item>Forms</sl:breadcrumb-item>
+  <sl:breadcrumb-separator/>
+  <sl:breadcrumb-item><sl:breadcrumb-page>Book a room</sl:breadcrumb-page></sl:breadcrumb-item>
+</th:block>
+<div id="page-content">
+  <p>This form is validated on the server as you type. With <code>&lt;sl:form validate&gt;</code>, each control posts
+    the form to <code>/room-booking/validate</code> while you edit it, and htmx 4 swaps in only that field. The rules
+    are Bean Validation's, on the server; there are none in JavaScript.</p>
+
+  <sl:collapsible class="booking-rules">
+    <sl:collapsible-trigger variant="ghost" size="sm"><sl:icon name="chevrons-up-down"/>
+      The rules</sl:collapsible-trigger>
+    <sl:collapsible-content>
+      <ul class="explainer">
+        <li><strong>Title:</strong> required, at most 60 characters.</li>
+        <li><strong>Day:</strong> a weekday, today or later.</li>
+        <li><strong>Start:</strong> between 08:00 and 18:00.</li>
+        <li><strong>End:</strong> after the start, at most 4 hours later, and by 18:00. Depends on the start.</li>
+        <li><strong>Room:</strong> required, and free at that time (see the bookings below). Depends on the day, the
+          start and the end.</li>
+        <li><strong>Attendees:</strong> at least 1, at most what the room seats. Depends on the room.</li>
+        <li><strong>Catering:</strong> lunch is for 4 people or more. Depends on the attendees.</li>
+        <li><strong>Your email:</strong> a valid address.</li>
+        <li><strong>Notes:</strong> optional, at most 200 characters.</li>
+      </ul>
+    </sl:collapsible-content>
+  </sl:collapsible>
+
+  <p>A field that depends on others declares them with <code>depends-on</code>, and is checked again when one of them
+    changes, once it has a value itself. The submit validates everything again; without JavaScript, only the submit
+    does.</p>
+
+  <!--/* The validation endpoint renders this fragment: the form alone, errors and all. htmx takes the field it asked
+    for from it, and the fields that depend on it (each in an <hx-partial>). */-->
+  <sl:form th:fragment="booking" th:object="${roomBooking}" th:action="@{/room-booking}"
+           th:validate="@{/room-booking/validate}" method="post" novalidate>
+    <sl:form-errors autofocus/>
+
+    <sl:field-group>
+      <sl:field th:field="*{title}">
+        <sl:field-label>Title</sl:field-label>
+        <sl:input placeholder="Sprint planning"/>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field th:field="*{date}">
+        <sl:field-label>Day</sl:field-label>
+        <sl:date-picker th:min="${today}"/>
+        <sl:field-description>A weekday, today or later.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field th:field="*{start}">
+        <sl:field-label>Start</sl:field-label>
+        <sl:input type="time"/>
+        <sl:field-description>The rooms are open from 08:00 to 18:00.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field th:field="*{end}" depends-on="start">
+        <sl:field-label>End</sl:field-label>
+        <sl:input type="time"/>
+        <sl:field-description>At most 4 hours after the start.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field th:field="*{room}" depends-on="date start end">
+        <sl:field-label>Room</sl:field-label>
+        <sl:select placeholder="Choose a room">
+          <sl:select-item th:each="room : ${rooms}" th:value="${room.code}">[[${room.name}]] ([[${room.capacity}]]
+            seats)</sl:select-item>
+        </sl:select>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field th:field="*{attendees}" depends-on="room">
+        <sl:field-label>Attendees</sl:field-label>
+        <sl:input type="number" min="1"/>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field-set th:field="*{catering}" depends-on="attendees">
+        <sl:field-legend variant="label">Catering</sl:field-legend>
+        <sl:radio-group orientation="horizontal">
+          <sl:label><sl:radio-group-item value="none"/>None</sl:label>
+          <sl:label><sl:radio-group-item value="coffee"/>Coffee</sl:label>
+          <sl:label><sl:radio-group-item value="lunch"/>Lunch</sl:label>
+        </sl:radio-group>
+        <sl:field-description>Coffee for any meeting, lunch from 4 people.</sl:field-description>
+        <sl:field-error/>
+      </sl:field-set>
+
+      <sl:field th:field="*{organiserEmail}">
+        <sl:field-label>Your email</sl:field-label>
+        <sl:input type="email" autocomplete="email"/>
+        <sl:field-error/>
+      </sl:field>
+
+      <sl:field th:field="*{notes}">
+        <sl:field-label>Notes</sl:field-label>
+        <sl:textarea/>
+        <sl:field-description>Optional, at most 200 characters.</sl:field-description>
+        <sl:field-error/>
+      </sl:field>
+    </sl:field-group>
+
+    <div class="row">
+      <sl:button type="submit">Book the room</sl:button>
+      <sl:button as="a" variant="outline" th:href="@{/room-booking}">Reset</sl:button>
+    </div>
+  </sl:form>
+
+  <h2>Booked</h2>
+  <sl:table class="bookings">
+    <thead>
+      <tr>
+        <th>Day</th>
+        <th>Time</th>
+        <th>Room</th>
+        <th>Meeting</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="booking : ${bookings}">
+        <td th:text="${#temporals.format(booking.date, 'EEE d MMM')}">Tue 17 Nov</td>
+        <td>[[${booking.start}]]–[[${booking.end}]]</td>
+        <td th:text="${@roomBookings.room(booking.room).get().name}">Atrium</td>
+        <td th:text="${booking.title}">Team meeting</td>
+      </tr>
+      <sl:table-empty colspan="4" th:if="${bookings.empty}"/>
+    </tbody>
+  </sl:table>
+</div>
+</body>
+</html>

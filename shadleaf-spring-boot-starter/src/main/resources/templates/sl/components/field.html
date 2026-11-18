@@ -15,19 +15,28 @@
     <sl:prop name="for">The id of the control: for a field without <code>th:field</code>, or to use another id than
       the field's name. The control gets it when it has no id of its own, and the description and error ids derive
       from it.</sl:prop>
+    <sl:prop name="depends-on">The fields (their <code>th:field</code> names, separated by spaces) whose rules report
+      errors on this one, in a form validated as the user types: an end time that must come after the start, a
+      confirmation that must match a password. Validating one of them swaps this field too, once it has a
+      value.</sl:prop>
   </sl:props>
 </head>
 <body>
 <!--/* slField is what the parts and the control read: the th:field, the ids and the errors (FieldBindings). Slot
   content sees this template's local variables, so the author never repeats the field. A nested field's description
-  and error are its own, hence 'field' as the second argument of slots.contains. */-->
-<div th:fragment="field"
-     class="field"
-     th:with="slField=${#slFields.field(attrs, props['for'], slField,
-                                        slots.contains('field-description', 'field'),
-                                        slots.contains('field-error', 'field'))}"
+  and error are its own, hence 'field' as the second argument of slots.contains. In a validating form the field is
+  what a validation request swaps (data-validate-field); in the response to the validation of a field it depends on,
+  it wraps itself in an hx-partial, so htmx swaps it too. */-->
+<th:block th:fragment="field"
+          th:with="slField=${#slFields.field(attrs, props['for'], slField,
+                                             slots.contains('field-description', 'field'),
+                                             slots.contains('field-error', 'field'), slots)}"><hx-partial
+    th:remove="${#slFields.affected(slField, props['depends-on'])} ? none : tag"
+    th:attr="hx-target=|[data-validate-field='${slField.validateMarker}']|"
+    hx-swap="outerMorph"><div class="field"
      th:attr="data-orientation=${props.unlessDefault('orientation')},
-              data-invalid=${slField.invalid ? 'true' : null}"
-     sl:attrs="${attrs.without('field')}"><sl:slot/></div>
+              data-invalid=${slField.invalid ? 'true' : null},
+              data-validate-field=${slField.validateMarker}"
+     sl:attrs="${attrs.without('field')}"><sl:slot/></div></hx-partial></th:block>
 </body>
 </html>

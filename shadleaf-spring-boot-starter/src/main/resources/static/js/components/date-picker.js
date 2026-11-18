@@ -11,8 +11,9 @@
   - the button is named by what names the calendar's input (its labels, aria-labelledby or aria-label) or a range's
     calendar, followed by the date it shows; a click on the input's label focuses the button, as the input inside the
     closed popover cannot take the focus;
-  - the inputs' aria-invalid and aria-describedby (the field's errors) go to the button too. An input the browser
-    finds invalid on submit opens the popover, as the browser can only point at a control it can focus;
+  - the inputs' aria-invalid and aria-describedby (the field's errors) go to the button too, also when they change
+    later (a field validated as the user types). An input the browser finds invalid on submit opens the popover, as
+    the browser can only point at a control it can focus;
   - the button is disabled while every input is.
   htmx's history cache saves the button's text; a restored date picker starts again.
 */
@@ -90,6 +91,8 @@ function setUp(root, listen, cleanups) {
         .split(/\s+/).filter(Boolean)))];
     if (describedBy.length > 0) {
       trigger.setAttribute('aria-describedby', describedBy.join(' '));
+    } else {
+      trigger.removeAttribute('aria-describedby');
     }
   };
 
@@ -178,9 +181,15 @@ function setUp(root, listen, cleanups) {
     listen(form, 'reset', () => setTimeout(update));
   }
 
-  const observer = new MutationObserver(updateDisabled);
+  // The field's state changes too when a validation response (sl:validate) morphs the field.
+  const observer = new MutationObserver(records => {
+    updateDisabled();
+    if (records.some(record => record.attributeName !== 'disabled')) {
+      mirrorField();
+    }
+  });
   for (const input of inputs) {
-    observer.observe(input, {attributes: true, attributeFilter: ['disabled']});
+    observer.observe(input, {attributes: true, attributeFilter: ['disabled', 'aria-invalid', 'aria-describedby']});
   }
   const fieldset = root.closest('fieldset');
   if (fieldset) {
@@ -191,6 +200,8 @@ function setUp(root, listen, cleanups) {
   update();
   nameButton();
   updateDisabled();
+  // The button is this script's: a validation response leaves the date picker as it is (validate.js).
+  root.dataset.enhanced = 'true';
 }
 
 function formatFor(locale, dateStyle) {

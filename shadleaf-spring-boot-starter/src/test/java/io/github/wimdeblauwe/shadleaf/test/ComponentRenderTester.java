@@ -278,6 +278,22 @@ public final class ComponentRenderTester {
       return this;
     }
 
+    /** A header every render's request sends, such as htmx's {@code HX-Request}. */
+    public Builder header(String name, String value) {
+      return with(request -> {
+        request.addHeader(name, value);
+        return request;
+      });
+    }
+
+    /** A parameter every render's request has, as a form post sends it; several values for a multi-valued one. */
+    public Builder parameter(String name, String... values) {
+      return with(request -> {
+        request.addParameter(name, values);
+        return request;
+      });
+    }
+
     /**
      * Prepares every render's request, as {@code MockMvc}'s {@code with()}: Spring Security's {@code oidcLogin()},
      * {@code oauth2Login()} or {@code user("ada")} sign a user in for the render. Without one the visitor is

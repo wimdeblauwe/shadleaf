@@ -1,0 +1,23 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A <code>form</code>. Every attribute that is not a prop (<code>th:object</code>,
+      <code>th:action</code>, <code>method</code>, <code>novalidate</code>, <code>hx-*</code>) passes through. With
+      <code>validate</code>, every control in a <code>sl:field</code> or <code>sl:field-set</code> with
+      <code>th:field</code> is validated on the server while the user edits it: it posts the whole form to that URL
+      with htmx 4 and swaps only its own field from the response (see <code>sl:validate</code>). A field whose errors
+      come from a rule over several fields names them in its <code>depends-on</code>.</sl:description>
+    <sl:prop name="validate">The URL of the endpoint that validates the form object and renders the form again, such as
+      <code>th:validate="@{/bookings/validate}"</code>. Needs htmx 4; without htmx the form posts as usual.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* th:object on sl:form runs before the component, so the form object is selected for the whole template.
+  slFormValidate is the URL #slFields.control gives the controls of a field as sl:validate. */-->
+<form th:fragment="form"
+      class="form"
+      th:with="slFormValidate=${props.validate}"
+      sl:attrs><sl:slot/></form>
+</body>
+</html>

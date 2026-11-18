@@ -75,7 +75,7 @@ function setUp(root, listen, cleanups) {
     input.tabIndex = -1;
     input.setAttribute('aria-hidden', 'true');
   }
-  nameGroup(root, inputs, range, id);
+  const named = nameGroup(root, inputs, range, id);
 
   const state = {
     month: null,
@@ -579,10 +579,17 @@ function setUp(root, listen, cleanups) {
     }));
   }
 
-  // disabled, readonly, min, max and required can change after the page loaded.
-  const observer = new MutationObserver(() => render());
+  // disabled, readonly, min, max and required can change after the page loaded, and the field's errors
+  // (aria-describedby) when a validation response (sl:validate) morphs the field.
+  const observer = new MutationObserver(records => {
+    if (named && records.some(record => record.attributeName === 'aria-describedby')) {
+      describeGroup(root, inputs[0]);
+    }
+    render();
+  });
   for (const input of inputs) {
-    observer.observe(input, {attributes: true, attributeFilter: ['disabled', 'readonly', 'min', 'max', 'required']});
+    observer.observe(input, {attributes: true,
+      attributeFilter: ['disabled', 'readonly', 'min', 'max', 'required', 'aria-describedby']});
   }
   const fieldset = root.closest('fieldset');
   if (fieldset) {
@@ -613,12 +620,13 @@ function setUp(root, listen, cleanups) {
 }
 
 /**
- * The calendar is a group named like its single input: by the input's labels, aria-labelledby or aria-label. A range's
- * two inputs have names of their own (start, end); there the calendar keeps the attributes it was given.
+ * The calendar is a group named and described like its single input: by the input's labels, aria-labelledby or
+ * aria-label, and its aria-describedby. A range's two inputs have names of their own (start, end); there the calendar
+ * keeps the attributes it was given. Whether the calendar took its single input's name and description.
  */
 function nameGroup(root, inputs, range, id) {
   if (range || root.hasAttribute('aria-label') || root.hasAttribute('aria-labelledby')) {
-    return;
+    return false;
   }
   const [input] = inputs;
   const labels = Array.from(input.labels ?? []);
@@ -632,8 +640,15 @@ function nameGroup(root, inputs, range, id) {
   } else if (input.hasAttribute('aria-label')) {
     root.setAttribute('aria-label', input.getAttribute('aria-label'));
   }
+  describeGroup(root, input);
+  return true;
+}
+
+function describeGroup(root, input) {
   if (input.hasAttribute('aria-describedby')) {
     root.setAttribute('aria-describedby', input.getAttribute('aria-describedby'));
+  } else {
+    root.removeAttribute('aria-describedby');
   }
 }
 

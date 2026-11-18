@@ -26,14 +26,15 @@
 <body>
 <!--/* No role="alert", as sl:field-error: after a full page load it would be announced along with everything else,
   or not at all, depending on the screen reader. The docs page explains when to add autofocus. Without anything to
-  show, autofocus goes to the first control with errors: #slFields.form remembers it for #slFields.control. */-->
+  show, autofocus goes to the first control with errors: #slFields.form remembers it for #slFields.control. Not
+  while rendering a validation request (sl:validate): htmx would pull the focus out of the field being typed in. */-->
 <th:block th:fragment="form-errors"
           th:with="slForm=${#slFields.form(props.show == 'all', props.autofocus and !slots.hasDefault())}">
 <div th:if="${slots.hasDefault() or slForm.invalid}"
      class="form-errors alert"
      data-variant="destructive"
      tabindex="-1"
-     th:attr="id=${slForm.id}, autofocus=${props.autofocus ? 'autofocus' : null}"
+     th:attr="id=${slForm.id}, autofocus=${props.autofocus and !#slFields.validationRequest ? 'autofocus' : null}"
      sl:attrs><sl:icon name="circle-alert"/><div class="alert-title"
     th:attr="role=${props.level != null ? 'heading' : null}, aria-level=${props.level}"
     th:text="${props.title ?: #messages.msg('sl.form-errors.title')}">There is a problem</div><div

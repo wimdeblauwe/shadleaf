@@ -20,10 +20,18 @@ public final class FieldBinding {
   private final List<String> errors;
   private final @Nullable String describedBy;
   private final boolean group;
+  private final @Nullable String validateField;
+  private final boolean validateContainer;
   private boolean claimed;
 
   FieldBinding(@Nullable String field, @Nullable String id, @Nullable String descriptionId, @Nullable String errorId,
       List<String> errors, @Nullable String describedBy, boolean group) {
+    this(field, id, descriptionId, errorId, errors, describedBy, group, null, false);
+  }
+
+  private FieldBinding(@Nullable String field, @Nullable String id, @Nullable String descriptionId,
+      @Nullable String errorId, List<String> errors, @Nullable String describedBy, boolean group,
+      @Nullable String validateField, boolean validateContainer) {
     this.field = field;
     this.id = id;
     this.descriptionId = descriptionId;
@@ -31,6 +39,18 @@ public final class FieldBinding {
     this.errors = List.copyOf(errors);
     this.describedBy = describedBy;
     this.group = group;
+    this.validateField = validateField;
+    this.validateContainer = validateContainer;
+  }
+
+  /**
+   * This binding, validated as the user types: under the request parameter name {@code validateField}
+   * ({@code email}, {@code address.street}), the one the validation request names in its {@code SL-Validate-Field}
+   * header. {@code container} tells whether this field or fieldset is the element htmx swaps, or one option of the
+   * {@code sl:field-set} that is.
+   */
+  FieldBinding validated(String validateField, boolean container) {
+    return new FieldBinding(field, id, descriptionId, errorId, errors, describedBy, group, validateField, container);
   }
 
   /** The unevaluated {@code th:field} expression ({@code *{email}}), or {@code null} for a field without one. */
@@ -75,6 +95,32 @@ public final class FieldBinding {
   /** Whether this is a {@code sl:field-set}'s binding, shared by several controls (radio buttons, checkboxes). */
   public boolean isGroup() {
     return group;
+  }
+
+  /**
+   * The request parameter name the controls of this field are validated under while the user types
+   * ({@code email}), or {@code null} when they are not: outside a {@code sl:form} with {@code validate}, without a
+   * control with {@code sl:validate}, or without {@code th:field}.
+   */
+  public @Nullable String getValidateField() {
+    return validateField;
+  }
+
+  /**
+   * The value of this field's (or fieldset's) {@code data-validate-field}, which a validation response is selected
+   * by: {@link #getValidateField()} on the element htmx swaps, {@code null} on an option of a group, which the
+   * group's fieldset is swapped for.
+   */
+  public @Nullable String getValidateMarker() {
+    return validateContainer ? validateField : null;
+  }
+
+  /**
+   * The class of the element a validated control swaps: {@code field}, or {@code field-set} for a group and its
+   * options.
+   */
+  public String getValidateTarget() {
+    return group || !validateContainer ? "field-set" : "field";
   }
 
   /**

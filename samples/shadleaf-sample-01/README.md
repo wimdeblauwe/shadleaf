@@ -8,6 +8,7 @@ every page (`hx-boost` on the body).
 |-----------------------|----------------------------------------------------------------------------------------------------------|
 | `/`                   | Buttons: variants, sizes, icons, loading                                                                 |
 | `/form`, `/htmx-form` | A bound form with fields, server-side validation and a form error summary, without and with htmx         |
+| `/room-booking`       | A form validated on the server as the user types (`sl:form validate`, htmx 4), with fields that depend on others |
 | `/dialog`             | Dialog, alert dialog, sheet, dropdown menus, popover, tooltip and toasts, with htmx                      |
 | `/settings`           | Tabs as links (one panel loaded with htmx), collapsible, accordion                                       |
 | `/people`             | A table from Spring Data JPA (in-memory H2): sorting, pagination, page size, live search, a menu per row |
