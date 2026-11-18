@@ -16,6 +16,7 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 ## Forms
 
 - [Field](https://shadleaf.dev/current/components/field.md): A label, a control, a description and the binding's error messages, wired together from one th:field.
+- [Form](https://shadleaf.dev/current/components/form.md): A form element that passes every attribute on, and validates its fields on the server as the user types, with htmx 4.
 - [Form errors](https://shadleaf.dev/current/components/form-errors.md): The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
 - [Label](https://shadleaf.dev/current/components/label.md): A label for a form control.
 - [Input](https://shadleaf.dev/current/components/input.md): A text input, bound to a form field with th:field.

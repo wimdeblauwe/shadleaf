@@ -3,7 +3,7 @@
 > UI components for Thymeleaf, as a Spring Boot starter. Components are Thymeleaf tags with the `sl:` prefix
 > (`<sl:button variant="outline">`), rendered on the server. Not React: no JSX, no Radix, no `asChild`.
 
-These docs describe Shadleaf 1.0.3. The docs of other versions live next to this one, at /<version>/.
+These docs describe Shadleaf 1.1.0. The docs of other versions live next to this one, at /<version>/.
 
 Read "Using Shadleaf with coding agents" first: it lists the rules an agent most often gets wrong. Every component
 page ends with its attribute table (props, allowed values, defaults); the examples are the Thymeleaf source to write.
@@ -28,6 +28,7 @@ page ends with its attribute table (props, allowed values, defaults); the exampl
 ### Forms
 
 - [Field](https://shadleaf.dev/current/components/field.md): A label, a control, a description and the binding's error messages, wired together from one th:field.
+- [Form](https://shadleaf.dev/current/components/form.md): A form element that passes every attribute on, and validates its fields on the server as the user types, with htmx 4.
 - [Form errors](https://shadleaf.dev/current/components/form-errors.md): The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
 - [Label](https://shadleaf.dev/current/components/label.md): A label for a form control.
 - [Input](https://shadleaf.dev/current/components/input.md): A text input, bound to a form field with th:field.

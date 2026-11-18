@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .lit { fill: #0f6e66; }
+    .stem { stroke: #0f6e66; }
+    .shade { fill: #6fcfc3; }
+    @media (prefers-color-scheme: dark) {
+      .lit { fill: #3bbfb1; }
+      .stem { stroke: #3bbfb1; }
+      .shade { fill: #13665e; }
+    }
+  </style>
+  <path class="lit" d="M5 27C5 14 14 5 27 5Z"/>
+  <path class="shade" d="M5 27L27 5C27 18 18 27 5 27Z"/>
+  <path class="stem" d="M5.5 26.5L2.5 29.5" stroke-width="2.25" stroke-linecap="round"/>
+</svg>

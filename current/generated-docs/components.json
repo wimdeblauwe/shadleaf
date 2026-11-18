@@ -1,5 +1,5 @@
 {
-  "version" : "1.0.3",
+  "version" : "1.1.0",
   "components" : [ {
     "name" : "accordion",
     "tag" : "sl:accordion",
@@ -1368,6 +1368,11 @@
       "type" : "string",
       "values" : [ ],
       "description" : "The id of the control: for a field without `th:field`, or to use another id than the field's name. The control gets it when it has no id of its own, and the description and error ids derive from it."
+    }, {
+      "name" : "depends-on",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The fields (their `th:field` names, separated by spaces) whose rules report errors on this one, in a form validated as the user types: an end time that must come after the start, a confirmation that must match a password. Validating one of them swaps this field too, once it has a value."
     } ]
   }, {
     "name" : "field-content",
@@ -1416,7 +1421,12 @@
     "tag" : "sl:field-set",
     "description" : "A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.",
     "declared" : true,
-    "props" : [ ]
+    "props" : [ {
+      "name" : "depends-on",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "As on `sl:field`: the fields whose rules report errors on this group, in a form validated as the user types."
+    } ]
   }, {
     "name" : "file-upload",
     "tag" : "sl:file-upload",
@@ -1460,6 +1470,17 @@
       "type" : "string",
       "values" : [ ],
       "description" : "The text of the Browse button. Defaults to \"Browse files\", or \"Browse\" without `multiple`."
+    } ]
+  }, {
+    "name" : "form",
+    "tag" : "sl:form",
+    "description" : "A `form`. Every attribute that is not a prop (`th:object`, `th:action`, `method`, `novalidate`, `hx-*`) passes through. With `validate`, every control in a `sl:field` or `sl:field-set` with `th:field` is validated on the server while the user edits it: it posts the whole form to that URL with htmx 4 and swaps only its own field from the response (see `sl:validate`). A field whose errors come from a rule over several fields names them in its `depends-on`.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "validate",
+      "type" : "string",
+      "values" : [ ],
+      "description" : "The URL of the endpoint that validates the form object and renders the form again, such as `th:validate=\"@{/bookings/validate}\"`. Needs htmx 4; without htmx the form posts as usual."
     } ]
   }, {
     "name" : "form-errors",

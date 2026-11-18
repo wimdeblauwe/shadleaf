@@ -322,6 +322,9 @@ that button an id if the row is replaced, so htmx puts the focus back on the new
 [Dialog](https://shadleaf.dev/current/components/dialog.md#rendered-by-the-server-htmx)). A failed save (an error status) shows the error in the sheet and
 keeps what was typed.
 
+The example is htmx 2. On htmx 4 the same markup works, with the changes in
+[htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4).
+
 ## Width
 
 A sheet on the right or left is three quarters of the screen wide, up to a maximum the skin sets (`24rem` in vega).

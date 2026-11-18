@@ -2,7 +2,7 @@
 
 > UI components for Thymeleaf, as a Spring Boot starter. The complete documentation.
 
-Shadleaf 1.0.3.
+Shadleaf 1.1.0.
 
 ## Shadleaf
 
@@ -61,7 +61,7 @@ Add the dependency to your `pom.xml` of your Spring Boot with Thymeleaf applicat
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>shadleaf-spring-boot-starter</artifactId>
-  <version>1.0.3</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -403,6 +403,10 @@ See [Tooltip](https://shadleaf.dev/current/components/tooltip.md).
 
 - An input, textarea or native select with `th:field` marks itself `aria-invalid` when its field has errors, so the
   invalid style needs no markup of yours.
+- `<sl:form>` is a `<form>` that passes every attribute on. shadcn has no form component any more (its old `Form`
+  wrapped react-hook-form, and its forms now use `Field` with the form library of your choice). With `validate`, it
+  validates each field on the server as the user types (htmx 4), where shadcn's examples validate in the browser with
+  a Zod schema.
 - `<sl:form-errors/>` shows the binding's global errors (`reject(...)`, a class-level constraint), or with
   `show="all"` every error, as a destructive alert above the fields. shadcn has no such component; you would write an
   `Alert` with the messages yourself.
@@ -1071,7 +1075,8 @@ your `pom.xml`, so the agent reads the docs of the version you use.
 - A link that looks like a button is `<sl:button as="a" th:href="@{/x}">`. `<sl:button>` renders
   `type="button"`: write `type="submit"` on the one that submits a form.
 - Forms: `th:object` on the `<form>`, `th:field` on `<sl:field>` (its label, control and errors share it),
-  `<sl:form-errors/>` before the fields.
+  `<sl:form-errors/>` before the fields. To validate as the user types (htmx 4 only), use
+  `<sl:form th:validate="@{/x/validate}">` and an endpoint that renders the same form; no rules in JavaScript.
 - Dialogs and sheets need an `id` and open from any button with `commandfor="<id>" command="show-modal"`
   (`command="close"` closes). There are no trigger or close parts. Menus and popovers open with
   `<sl:dropdown-menu-trigger>` / `<sl:popover-trigger>` or `popovertarget`.
@@ -1150,6 +1155,7 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 ### Forms
 
 - [Field](https://shadleaf.dev/current/components/field.md): A label, a control, a description and the binding's error messages, wired together from one th:field.
+- [Form](https://shadleaf.dev/current/components/form.md): A form element that passes every attribute on, and validates its fields on the server as the user types, with htmx 4.
 - [Form errors](https://shadleaf.dev/current/components/form-errors.md): The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
 - [Label](https://shadleaf.dev/current/components/label.md): A label for a form control.
 - [Input](https://shadleaf.dev/current/components/input.md): A text input, bound to a form field with th:field.
@@ -1640,6 +1646,10 @@ yourself.
 Errors that belong to the whole form rather than one field, such as `reject(...)` in the controller, go in a
 [`<sl:form-errors/>`](https://shadleaf.dev/current/components/form-errors.md) above the fields.
 
+To show a field's errors while the user fills it in, validated on the server with htmx 4, put the fields in a
+`<sl:form validate="...">`: see [Validating as you type](https://shadleaf.dev/current/components/form.md#validating-as-you-type). `depends-on` names the
+fields whose rules report errors on this one.
+
 ### Ids
 
 The control's id is the field's name, the id `th:field` gives a text input: `email`, or `address.street` for a nested
@@ -1890,6 +1900,7 @@ Attributes of `<sl:field>`: A form field: a `sl:field-label`, one control, and o
 | --- | --- | --- | --- |
 | `orientation` | `vertical`, `horizontal`, `responsive` | `vertical` | Stack the label above the control, or put them side by side (a checkbox or switch, then its label). `responsive` stacks them in a narrow `sl:field-group` and puts them side by side in a wide one. |
 | `for` | *string* | — | The id of the control: for a field without `th:field`, or to use another id than the field's name. The control gets it when it has no id of its own, and the description and error ids derive from it. |
+| `depends-on` | *string* | — | The fields (their `th:field` names, separated by spaces) whose rules report errors on this one, in a form validated as the user types: an end time that must come after the start, a confirmation that must match a password. Validating one of them swaps this field too, once it has a value. |
 
 Every prop can also be set from an expression: `th:orientation="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
@@ -1921,7 +1932,11 @@ Attributes of `<sl:field-content>`: Stacks a `sl:field-label` with its `sl:field
 
 Attributes of `<sl:field-set>`: A group of related fields or options under a `sl:field-legend`, as a `fieldset`. With `th:field`, the options inside share it: radio buttons in a `sl:radio-group`, or checkboxes each in a `sl:field` of their own (which then need no `th:field` and get Spring's numbered ids, `toppings1`). A `sl:field-description` and `sl:field-error` directly inside describe the fieldset, and it gets `data-invalid` when the binding has errors.
 
-`sl:field-set` declares no props; every attribute passes through.
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `depends-on` | *string* | — | As on `sl:field`: the fields whose rules report errors on this group, in a form validated as the user types. |
+
+Every prop can also be set from an expression: `th:depends-on="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
 
 #### sl:field-legend
 
@@ -1938,6 +1953,238 @@ Every prop can also be set from an expression: `th:variant="${...}"`. Any other 
 Attributes of `<sl:field-group>`: Stacks `sl:field`s and `sl:field-set`s with even spacing. Fields with `orientation="responsive"` inside it go side by side when it is wide enough.
 
 `sl:field-group` declares no props; every attribute passes through.
+
+---
+
+## Form
+
+> A form element that passes every attribute on, and validates its fields on the server as the user types, with htmx 4.
+
+Source: https://shadleaf.dev/current/components/form/
+
+**Example: Form.** A form element that passes every attribute on (th:object, th:action, method). sl:field-group lays out its fields.
+
+```html
+<sl:form th:object="${form}" action="/rooms" method="post">
+  <sl:field-group>
+    <sl:field th:field="*{roomName}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+    </sl:field>
+    <sl:field th:field="*{roomCapacity}">
+      <sl:field-label>Capacity</sl:field-label>
+      <sl:input type="number" min="1"/>
+    </sl:field>
+    <sl:field orientation="horizontal">
+      <sl:button type="submit">Save</sl:button>
+    </sl:field>
+  </sl:field-group>
+</sl:form>
+```
+
+`<sl:form>` renders a `<form class="form">` and passes every attribute on: `th:object`, `th:action`, `method`,
+`novalidate`, `enctype`, `hx-*`. It has no styling of its own; a [`<sl:field-group>`](https://shadleaf.dev/current/components/field.md#layout) lays out the
+fields. A plain `<form>` works just as well for a form that is validated when it is submitted: `<sl:form>` is there
+for `validate`.
+
+```html
+<sl:form th:object="${room}" th:action="@{/rooms}" method="post" novalidate>
+  <sl:field-group>
+    <sl:field th:field="*{name}">
+      <sl:field-label>Name</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    ...
+  </sl:field-group>
+</sl:form>
+```
+
+### Validating as you type
+
+With `validate`, every control in a [`<sl:field>`](https://shadleaf.dev/current/components/field.md) or `<sl:field-set>` with `th:field` posts the whole form
+to that URL while the user edits it, and swaps its own field from the answer: its error, its `aria-invalid` and its
+`aria-describedby`. The rules stay where they are, in Bean Validation and your controller; there are none in
+JavaScript.
+
+**Example: Validating as you type.** With validate, each control posts the form to that URL while the user edits it (htmx 4), and swaps its own field from the response. The end time depends on the start, so validating the start swaps the end time too, once it has a value.
+
+```html
+<sl:form th:object="${form}" action="/bookings" th:validate="@{/bookings/validate}" method="post">
+  <sl:field-group>
+    <sl:field th:field="*{bookingTitle}">
+      <sl:field-label>Title</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{bookingStart}">
+      <sl:field-label>Start</sl:field-label>
+      <sl:input type="time"/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{bookingEnd}" depends-on="bookingStart">
+      <sl:field-label>End</sl:field-label>
+      <sl:input type="time"/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field orientation="horizontal">
+      <sl:button type="submit">Book</sl:button>
+    </sl:field>
+  </sl:field-group>
+</sl:form>
+```
+
+```html
+<sl:form th:object="${booking}" th:action="@{/bookings}" th:validate="@{/bookings/validate}" method="post"
+         novalidate>
+  <sl:field-group>
+    <sl:field th:field="*{title}">
+      <sl:field-label>Title</sl:field-label>
+      <sl:input/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{start}">
+      <sl:field-label>Start</sl:field-label>
+      <sl:input type="time"/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:field th:field="*{end}" depends-on="start">
+      <sl:field-label>End</sl:field-label>
+      <sl:input type="time"/>
+      <sl:field-error/>
+    </sl:field>
+    <sl:button type="submit">Book</sl:button>
+  </sl:field-group>
+</sl:form>
+```
+
+The validation endpoint binds and validates the form like the submit does, and renders the same form again, errors
+and all. Nothing is saved; the answer is always `200`:
+
+```java
+@PostMapping("/bookings/validate")
+String validate(@Valid @ModelAttribute("booking") BookingForm booking, BindingResult bindingResult) {
+  return "bookings/new :: booking-form";
+}
+```
+
+> **Caution: Always a POST**
+>
+> Map the validation endpoint with `@PostMapping`, never `@GetMapping` or a `@RequestMapping` that takes any method,
+> and do not give a control `hx-get` in its place. Each request carries the whole form, passwords included: in a GET
+> they are in the URL, which ends up in server and proxy access logs, the browser's history and caches. A POST keeps
+> them in the request body.
+
+The fragment holds the `<sl:form>`, with its `validate`, so each field in the answer is marked as the one on the page
+is. It may also be the whole page: htmx takes only the field it asked for.
+
+Sample-01's "Book a room" page (`samples/shadleaf-sample-01`, `/room-booking`) is a complete example: a class-level
+constraint for the rules over several fields, a room that may already be booked, and a chain of `depends-on`.
+
+**It needs htmx 4** (`htmx.org` 4.x, with its `hx-alpine-compat` extension; see
+[htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4)). It swaps with `outerMorph` and `<hx-partial>`, which
+htmx 2 does not have: do not use `validate` with htmx 2. Without htmx, or without JavaScript, the controls are plain
+controls and the form is validated when it is submitted, as before. Keep the submit's own validation either way: the
+validation while typing is a help to the user, not a check.
+
+#### What a control sends
+
+Each control gets these attributes. An attribute you write yourself, in any spelling (`hx-trigger`,
+`data-hx-trigger`, `th:hx-trigger`, `hx:trigger`), is kept:
+
+| Attribute    | Value                                                                                                                                                           |
+|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `hx-post`    | the `validate` URL (unless the control has an `hx-get`, `hx-post`, `hx-put`, `hx-patch`, `hx-delete` or `hx-action` of its own)                                 |
+| `hx-trigger` | `input changed delay:200ms`: 200 ms after the user stops typing. `change` for a select, checkbox, radio button, date, time, month, week, color and range input. |
+| `hx-include` | `closest form`                                                                                                                                                  |
+| `hx-target`  | `closest .field`, or `closest .field-set` for a radio group or checkbox group                                                                                   |
+| `hx-select`  | `[data-validate-field='title']`: the field in the answer                                                                                                        |
+| `hx-swap`    | `outerMorph`                                                                                                                                                    |
+| `hx-headers` | `SL-Validate-Field:'title'`                                                                                                                                     |
+
+The `SL-Validate-Field` header holds the request parameter of the field being validated (`title`,
+`address.street`). The field gets `data-validate-field` with the same name. A controller can read the header to do
+less work, but it does not have to.
+
+The request never uploads files. htmx 4 posts every field of the form, file inputs included, so Shadleaf's script
+takes the files out of a request that has `SL-Validate-Field`, and a multipart form still posts multipart. A
+[file upload](https://shadleaf.dev/current/components/file-upload.md) is not validated as the user types.
+
+#### Fields that depend on another
+
+Some errors come from a rule over several fields: an end time that must come after the start, a confirmation that
+must match a password. `depends-on` on the field that shows the error names the fields it depends on, separated by
+spaces:
+
+```html
+<sl:field th:field="*{end}" depends-on="start">
+```
+
+When the start is validated, the answer also holds the end time's field, in an `<hx-partial>`, and htmx swaps both.
+That happens only once the end time has a value: a user who has not reached it yet does not get an error there. Put
+the error on the dependent field: a class-level constraint that reports on `end` (with
+`addPropertyNode("end")` in its `ConstraintValidatorContext`), or `bindingResult.rejectValue("end", ...)` in the
+controller.
+
+#### What the user notices
+
+- **Focus and caret stay put.** The field is morphed, not replaced: the control that has the focus stays the same
+  element, keeps what the user is typing and where the caret is, and a password keeps its value, though the server
+  never sends it back.
+- **Fields the user has not touched stay clean.** Only the field being edited, and the fields that depend on it once
+  they have a value, are swapped. The rest of the answer is ignored, errors included.
+- **Errors are not announced.** The control becomes `aria-invalid` and described by its error, which a screen reader
+  reads when the user reaches it; a live region would talk over every keystroke. The submit still moves the focus to
+  the first error with [`<sl:form-errors autofocus/>`](https://shadleaf.dev/current/components/form-errors.md), which does not take the focus while
+  rendering the answer to a validation request.
+- **Select, combobox and date picker keep working.** Their scripts add to the server's markup (the combobox's input
+  and list, the calendar's months, the date picker's button text). Shadleaf's script keeps those as they are during a
+  validation swap, and gives them only the field's new state, which they show on the control the user works with.
+
+#### One control
+
+`sl:validate` does the same for one control, in or outside a `<sl:form>`. On a Shadleaf control inside a field, it
+gets the attributes above:
+
+```html
+<sl:field th:field="*{username}">
+  <sl:field-label>Username</sl:field-label>
+  <sl:input sl:validate="@{/signup/validate}"/>
+  <sl:field-error/>
+</sl:field>
+```
+
+A plain element (`<input sl:validate="@{/search/validate}">`), or a control outside a field, gets only `hx-post`,
+`hx-trigger`, `hx-include` and `hx-swap`: set `hx-target` and `hx-select` yourself. In a validating form,
+`sl:validate="false"` on a control leaves it out.
+
+#### Limits
+
+- In a validating form, the controls that get the attributes are Shadleaf's, in a field with `th:field`:
+  `<sl:input>`, `<sl:textarea>`, `<sl:native-select>`, `<sl:select>`, `<sl:combobox>`, `<sl:checkbox>` (also in a
+  checkbox group), `<sl:switch>`, `<sl:radio-group>`, `<sl:toggle>` and `<sl:date-picker>` (or `<sl:calendar>`). A
+  plain `<input>` in a field is left alone. A `<sl:toggle-group>` with its own `th:field` is not validated as the user
+  types.
+- An `hx-headers` of your own on a control replaces `SL-Validate-Field`: the answer then has no `<hx-partial>` for
+  the fields that depend on it, and Shadleaf's script no longer leaves the files out.
+- The `<hx-partial>` finds its field by `data-validate-field` in the whole page. Two validating forms with a field of
+  the same name on one page would both be swapped.
+
+### Attributes
+
+Attributes of `<sl:form>`: A `form`. Every attribute that is not a prop (`th:object`, `th:action`, `method`, `novalidate`, `hx-*`) passes through. With `validate`, every control in a `sl:field` or `sl:field-set` with `th:field` is validated on the server while the user edits it: it posts the whole form to that URL with htmx 4 and swaps only its own field from the response (see `sl:validate`). A field whose errors come from a rule over several fields names them in its `depends-on`.
+
+| Attribute | Values | Default | Description |
+| --- | --- | --- | --- |
+| `validate` | *string* | — | The URL of the endpoint that validates the form object and renders the form again, such as `th:validate="@{/bookings/validate}"`. Needs htmx 4; without htmx the form posts as usual. |
+
+Every prop can also be set from an expression: `th:validate="${...}"`. Any other attribute passes through to the rendered element, and `class` is appended.
+
+`sl:validate` goes on a control (any element), not on `<sl:form>`:
+
+| Attribute     | Value                                                                                                                                                                       |
+|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `sl:validate` | The URL of the validation endpoint: an expression (`@{/signup/validate}`, `${url}`) or a literal (`/signup/validate`). `false` leaves the control out of a validating form. |
 
 ---
 
@@ -5150,7 +5397,9 @@ fire after the swap, when the element that made the request may be gone.
 `open` needs Alpine (on by default: see [Alpine](https://shadleaf.dev/current/guides/alpine.md)); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
 inertness with it. Before htmx 2 saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
-the back button never brings one back; htmx 4 keeps no cache, and loads the page again.
+the back button never brings one back; htmx 4 keeps no cache, and loads the page again. The examples on this page are
+htmx 2; what changes on htmx 4 (the `HX-Trigger` timing, the `null` detail, error answers) is in
+[htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4).
 
 ### Loaded into the dialog: a body
 
@@ -5227,7 +5476,7 @@ Validation errors are no failure: return the form with its errors and a success 
 
 The body works with htmx 2 and htmx 4. htmx 4 swaps an error answer in by default; the body stops that for the
 requests into it, so the error shows above the content, as with htmx 2. An `hx-status` attribute on the element that
-sends the request, or an `HX-Reswap` header, still decides otherwise. See [htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-4).
+sends the request, or an `HX-Reswap` header, still decides otherwise. See [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4).
 
 ### Width
 
@@ -5532,6 +5781,12 @@ seconds, and the focus would fall with it. So the response moves the focus to wh
 re-rendered out of band with `autofocus`, which htmx focuses after the swap. After the last row that is the row before
 it, and once the table is empty, the button that adds a member. The toast is announced, so a screen reader user hears
 what happened and is where they can go on.
+
+> **Note: htmx 4**
+>
+> This example is htmx 2. The answer holds nothing but out-of-band rows, and htmx 4 then makes no main swap, so the row
+> the Delete button targets would stay. Add `swapEmpty:true` to its `hx-swap` (`hx-swap="outerHTML swapEmpty:true"`). The
+> dialog's own `hx:get` button needs nothing. See [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4).
 
 ```html
 <th:block th:fragment="member-row-focus" th:with="oob=true, focus=true">
@@ -5952,6 +6207,9 @@ that button an id if the row is replaced, so htmx puts the focus back on the new
 [Dialog](https://shadleaf.dev/current/components/dialog.md#rendered-by-the-server-htmx)). A failed save (an error status) shows the error in the sheet and
 keeps what was typed.
 
+The example is htmx 2. On htmx 4 the same markup works, with the changes in
+[htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4).
+
 ### Width
 
 A sheet on the right or left is three quarters of the screen wide, up to a maximum the skin sets (`24rem` in vega).
@@ -6133,7 +6391,8 @@ Alpine component places it from the trigger's position instead.
 ### A form in a popover, with htmx
 
 A form in the panel can post with htmx and swap only what it changes. An `HX-Trigger: sl-popover-close` response
-header closes the popover after a valid save, and focus returns to the trigger:
+header closes the popover after a valid save, and focus returns to the trigger (htmx 2; for htmx 4, see
+[htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4)):
 
 ```html
 <h2 id="team-name" th:text="${team.name}">Design</h2>
@@ -6988,7 +7247,9 @@ it. Several toasts in one response are a list: `htmxResponse.addTrigger("sl-toas
 - **The text is only ever text.** The toaster puts the title and description in with `textContent`, so a name such as
   `<b>Ada</b>` shows as typed and can never inject markup.
 - **Use `HX-Trigger`**, not `HX-Trigger-After-Swap` or `-After-Settle`: those are dispatched on the element that sent
-  the request, and when the swap removed it (a deleted row), the event reaches no one.
+  the request, and when the swap removed it (a deleted row), the event reaches no one. htmx 4 has only `HX-Trigger`
+  (and htmx-spring-boot 6 only `addTrigger`), which it dispatches after the swap: see
+  [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4).
 - **Not with a redirect.** An `HX-Redirect` or `HX-Location` loads another page, and the toast with it is gone. Put
   it in a flash attribute instead (next section).
 
@@ -9604,6 +9865,24 @@ static boolean wantsFragment(HtmxRequest request) {
 A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
 table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](https://shadleaf.dev/current/guides/tables-htmx.md).
 
+> **Caution: htmx 4**
+>
+> This check is htmx 2. htmx 4 sends `HX-Target: body` for a link the body boosts (`getTarget()` is `"body"`, never null),
+> so the sidebar's links would get the fragment. Two more changes: the body needs `hx-boost:inherited="true"`, because
+> htmx 4 does not inherit `hx-boost` otherwise, and a history restore (`HX-History-Restore-Request`, which htmx 4 still
+> sends) is handled by the same check. This version works with both:
+>
+> ```java
+> static boolean wantsFragment(HtmxRequest request) {
+>   String target = request.getTarget();
+>   return request.isHtmxRequest()
+>       && !request.isHistoryRestoreRequest()
+>       && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
+> }
+> ```
+>
+> See [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4).
+
 A boosted link or form made after the session expired would get the sign-in page swapped into the body (or, for a
 form, nothing at all, as its CSRF token went with the session). The Spring Security guide shows how to send the browser
 to the page instead, which then asks the user to sign in and comes back to it:
@@ -10939,6 +11218,10 @@ A boosted link sends `HX-Request` too. A controller that answers htmx with a fra
 tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
 `HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The
 [Application shell](https://shadleaf.dev/current/components/application-shell.md#with-htmx) page shows the check.
+
+On htmx 4, the body needs `hx-boost:inherited="true"`, the link sends `HX-Target: body`, and the check changes with it
+(see [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4)). Back does not show a snapshot there: htmx 4 asks the
+server for the page again, which reads the cookie as well.
 
 ### Left out
 
@@ -16671,6 +16954,12 @@ without an `Accept` header, a MockMvc test without `accept(...)`): those then ge
 the sign-in page. The htmx-spring-boot README has the details, and how this combines with a sign-in form that is itself
 sent with htmx.
 
+On htmx 4 (with htmx-spring-boot 6, which has the same entry point and handler), the problems above are the same,
+except the 403: htmx 4 swaps a `4xx` or `5xx` answer, so a POST that failed its CSRF check, and that the handler does
+not turn into an `HX-Redirect`, shows the error page in its target instead of doing nothing. The redirect itself works
+as it does in htmx 2: htmx 4 acts on `HX-Redirect` before it swaps anything, whatever the status. `HX-Current-URL` and
+`HX-Boosted`, which the handler reads, are unchanged. See [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4).
+
 Sample-02 (`samples/shadleaf-sample-02`) has it: `hx-boost` on the body, a tab on its Data page that loads with htmx,
 and a form. Its `SessionExpiryTest` makes these requests without a session.
 
@@ -17233,6 +17522,9 @@ Shadleaf's form components render plain HTML with every `id`, `aria-invalid` and
 form that htmx swaps in is as accessible as one that loaded with the page. Shadleaf has no dependency on htmx and
 ships none of it; your application loads htmx, and the components pass `hx-*` attributes through like any other.
 
+The snippets use htmx 2. On htmx 4 (`htmx.org` 4.x with htmx-spring-boot 6.x) several of them need a change, and none
+of them fails with an error: see [htmx 2 and htmx 4](#htmx-2-and-htmx-4).
+
 This guide follows the "Form with htmx" page of sample-01 (`samples/shadleaf-sample-01`, `/htmx-form`): it posts with
 htmx, comes back with its errors or a confirmation, moves focus to the right place, and still works as a normal POST
 without JavaScript. The sample's `/form` page has the same fields without htmx, for comparison.
@@ -17339,7 +17631,8 @@ public String submit(@Valid @ModelAttribute("contactForm") ContactForm contactFo
 ```
 
 - **Errors come back with status 200**, as for the full page. htmx 2 does not swap 4xx responses unless you
-  configure it to, so a `422` would need a `responseHandling` entry.
+  configure it to, so a `422` would need a `responseHandling` entry. (htmx 4 swaps them, and has no
+  `responseHandling`: see [htmx 2 and htmx 4](#htmx-2-and-htmx-4).)
 - **A valid htmx submit gets the confirmation, not a redirect.** An htmx POST is not a navigation: a reload cannot
   send it again, which is what post/redirect/get protects against. An `HX-Redirect` (`redirect:htmx:/form` with
   htmx-spring-boot, flash attributes included) works too, but loads the whole page again, and focus with it.
@@ -17369,13 +17662,20 @@ same reason: a live region inserted together with its text is not announced reli
 Add `role="alert"` when content changes without moving focus, for example a single field that htmx validates as the
 user leaves it: see [Field](https://shadleaf.dev/current/components/field.md#errors).
 
+### Validating as you type
+
+On htmx 4, `<sl:form th:validate="@{/contact/validate}">` validates each field on the server while the user edits it,
+and swaps only that field: no rules in JavaScript, no focus moved, nothing announced. See
+[Validating as you type](https://shadleaf.dev/current/components/form.md#validating-as-you-type).
+
 ### Back button and history
 
 `hx-post` pushes no history entry. The URL stays `/form`, and htmx's history cache, which snapshots the page into
 `localStorage` when htmx pushes a URL, is not involved: back from another page shows `/form` as the browser kept it
 or as the server renders it again. If you boost navigation (`hx-boost`) or push URLs, htmx does snapshot pages, and a
 failed form keeps the user's input in its `value` attributes. For a form with personal data, set
-`"historyCacheSize": 0` in the htmx config, or `hx-history="false"` on the page.
+`"historyCacheSize": 0` in the htmx config, or `hx-history="false"` on the page. This is htmx 2: htmx 4 keeps no
+snapshots and asks the server again ([htmx 2 and htmx 4](#history)).
 
 ### Dialogs
 
@@ -17407,16 +17707,161 @@ when the swap removed the element that sent the request, and a flash attribute r
 redirects. Toasts are removed before htmx saves a page in its history cache, so back never shows one again. A toast
 never takes the focus: it goes away.
 
-### htmx 4
+### htmx 2 and htmx 4
 
-This guide uses htmx 2, which sample-01 serves. The components work with htmx 4 as well (with htmx-spring-boot 6),
-where htmx 4 does things differently:
+The examples in this guide, in [Tables with htmx](https://shadleaf.dev/current/guides/tables-htmx.md), and on the component pages use **htmx 2**
+(`htmx.org` 2.0.11 with htmx-spring-boot 5.1.1): that is what samples 02 and 03 load, and what the docs' browser
+tests run against. Sample-01 runs on htmx 4 (`htmx.org` 4.0.1 with htmx-spring-boot 6.0.1), so its pages show the
+changes below in place. A few of the browser tests also run on htmx 4.0.1 (popovers, toasts, file upload, the
+dialog body and validating as you type), and the components work with it. The guides' own snippets are not tested on htmx 4. This section lists what a Shadleaf user
+changes to use them there (`htmx.org` 4.0.1 with htmx-spring-boot 6.0.1), and each htmx page has a note pointing here.
+htmx's own list is [What's new in htmx 4](https://four.htmx.org/docs/whats-new-in-htmx-4).
+
+#### Versions
+
+```xml
+<dependency>
+  <groupId>io.github.wimdeblauwe</groupId>
+  <artifactId>htmx-spring-boot-thymeleaf</artifactId>
+  <version>6.0.1</version> <!-- was 5.1.1 -->
+</dependency>
+<dependency>
+  <groupId>org.webjars.npm</groupId>
+  <artifactId>htmx.org</artifactId>
+  <version>4.0.1</version> <!-- was 2.0.11 -->
+</dependency>
+```
+
+htmx-spring-boot 6 is for htmx 4 only: an `HtmxRequest` argument works with both, but `isPartialRequest()` throws
+under htmx 2, and `hx:post` and the other `hx:` attributes work as before, with the CSRF header on the element's own
+`hx-headers`.
+
+#### The config
+
+```html
+<!-- htmx 2 -->
+<meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>
+<!-- htmx 4 -->
+<meta name="htmx-config" content='{"includeIndicatorCSS": false}'>
+```
+
+`includeIndicatorStyles` is now `includeIndicatorCSS`; htmx 4 ignores the old name and keeps adding its indicator
+rules. There is no `allowEval` in htmx 4. `hx-on:` handlers and `js:` values are still evaluated with
+`Function`, so a policy without `'unsafe-eval'` blocks them: none of Shadleaf's snippets use them. htmx's `hx-csp`
+extension (`safeEval`) covers them, with a nonce on every htmx element.
+
+#### Inheritance is explicit
+
+In htmx 2 an element inherits `hx-boost`, `hx-target`, `hx-select` and `hx-swap` from its ancestors. In htmx 4 it
+inherits an attribute only when the ancestor has it with the `:inherited` modifier. Without it, `hx-boost` on the
+body boosts nothing: it is not on the links.
+
+```html
+<!-- htmx 2 -->
+<body hx-boost="true">
+<div id="people-results"
+     hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+<!-- htmx 4 -->
+<body hx-boost:inherited="true">
+<div id="people-results"
+     hx-boost:inherited="true" hx-target:inherited="#people-results" hx-select:inherited="#people-results"
+     hx-swap:inherited="outerHTML show:none">
+```
+
+An attribute on the element that makes the request needs no modifier (`hx-post` with `hx-target` on a form), and
+`hx-boost="false"` on a link still opts it out. To keep htmx 2's behavior while you migrate, set
+`"implicitInheritance": true` in the config.
+
+`hx-select="unset"`, which a menu item inside the table's results uses to drop the `hx-select` it would inherit, is
+gone: an empty `hx-select=""` on the element does it, as the element's own attribute wins and an empty selector
+selects nothing.
+
+#### Request headers and the fragment check
+
+| | htmx 2 | htmx 4 |
+| --- | --- | --- |
+| The element that sent the request | `HX-Trigger` (its id), `HX-Trigger-Name` | `HX-Source`, as `tag#id` (`a#sort-name`) |
+| The target | `HX-Target` (its id; none without an id) | `HX-Target`, as `tag#id`, always (`div#people-results`, `body`) |
+| Full page or part | | `HX-Request-Type`: `full` or `partial` |
+
+htmx-spring-boot 6 reads them: `getSource()` replaces `getTriggerId()` and `getTriggerName()` (and `@HxRequest(source =
+...)` replaces `triggerId` and `triggerName`), and `getTarget()` returns `div#people-results`, not `people-results`.
+
+This changes the check that tells a boosted link in the navigation from a request for a fragment (see the
+[application shell](https://shadleaf.dev/current/components/application-shell.md#with-htmx)). A link boosted from a `<body>` without an id sends
+`HX-Target: body` in htmx 4, where htmx 2 sends no `HX-Target`, so `getTarget() == null` is never true and the sidebar's
+links get a fragment. This works with both:
+
+```java
+static boolean wantsFragment(HtmxRequest request) {
+  String target = request.getTarget();
+  return request.isHtmxRequest()
+      && !request.isHistoryRestoreRequest()
+      && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
+}
+```
+
+Do not use `HX-Request-Type` for this: htmx 4 sends `full` for a request with an `hx-select` too, so the table's own
+requests, which select `#people-results` from the page, are `full` as well. A history restore sends `HX-Request`,
+`HX-History-Restore-Request`, `HX-Target: body` and `full`, and not `HX-Boosted`.
+
+#### History
+
+htmx 4 has no history cache. On back and forward it asks the server for the page again, with
+`HX-History-Restore-Request`, and swaps it into the body (or the `[hx-history-elt]`). What the Back button sections of
+these guides say about snapshots, `hx-history="false"` and `historyCacheSize` is htmx 2 only: both are gone, and the
+page is always rendered again, so a search field shows the value of the address. A controller still has to answer the
+restore request with the whole page, as the check above does.
+
+The optional `hx-history-cache` extension brings the snapshots back, with `hx-history="false"`. Do not combine it with
+`hx-alpine-compat` for now, which Shadleaf needs on htmx 4 (see below). Before the extension saves a page,
+`hx-alpine-compat` stops every Alpine component on it (htmx 4.0.1). So Shadleaf cannot close an open dialog or remove
+the toasts before the snapshot, and after a request that pushes a URL, the components outside its target no longer
+work ([htmx#4221](https://github.com/bigskysoftware/htmx/issues/4221)).
+
+#### Response headers and events
+
+`HX-Trigger` works as in htmx 2: a JSON object of event names and details, which Shadleaf's `sl-toast`,
+`sl-dialog-close` and `sl-popover-close` are. `HX-Trigger-After-Swap` and `HX-Trigger-After-Settle` are gone, and so
+are `HtmxResponse.addTriggerAfterSwap()` and `addTriggerAfterSettle()` in htmx-spring-boot 6; the guides use
+`HX-Trigger`. `HX-Redirect`, `HX-Location`, `HX-Refresh`, `HX-Push-Url`, `HX-Replace-Url`, `HX-Retarget`, `HX-Reswap`
+and `HX-Reselect` remain.
+
+#### Swapping
+
+- **A response that holds only out-of-band content swaps nothing into the target.** htmx 2 emptied the target then;
+  htmx 4 skips the main swap when only `hx-swap-oob` elements are left, so the delete in the [alert dialog](https://shadleaf.dev/current/components/alert-dialog.md#confirming-with-htmx),
+  whose answer is the next row out of band, would keep its row. Ask for the empty swap with `swapEmpty:true`
+  (`"allowEmptySwapAfterOOB": true` in the config does it everywhere):
+
+  ```html
+  <sl:button variant="destructive" hx:delete="@{/members/{id}(id=${member.id})}"
+             th:hx-target="|#member-${member.id}|" hx-swap="outerHTML swapEmpty:true">Delete</sl:button>
+  ```
+
+  A toast sent out of band into `#toaster` needs nothing.
+- **`hx-delete` leaves the enclosing form out**, like `hx-get`: add `hx-include="closest form"` where it needs the
+  form's fields.
+- **`hx-disabled-elt` is `hx-disable`**, and htmx 2's `hx-disable` (leave this element alone) is `hx-ignore`. The
+  indicator class is still `htmx-request`, and `hx-indicator`, `hx-sync="this:replace"`, `hx-swap-oob` and `show:none`
+  work as before. A boosted link still scrolls to the top of the page unless `show:none` is there.
+
+#### What else changed for Shadleaf
+
+- **Validating as you type is htmx 4 only.** [`<sl:form validate>`](https://shadleaf.dev/current/components/form.md#validating-as-you-type)
+  swaps with `outerMorph` and `<hx-partial>`, which htmx 2 does not have.
+- **Do not morph a combobox, select, calendar or date picker yourself.** Their scripts build part of their markup in
+  the browser (the combobox's input and list, the calendar's months, the date picker's button text and name). A
+  morph (`outerMorph`, `innerMorph`) makes the page match the server's markup and removes those parts, and the
+  component does not start again, so it stops working. Swap a region that holds one with `outerHTML` or `innerHTML`,
+  or put `hx-morph-skip` on the component to leave it out of the morph (it then keeps its value and ignores what the
+  server sent for it). Validating as you type morphs fields too, but Shadleaf keeps these components through its own
+  swaps.
 
 - **Load htmx's Alpine extension.** htmx 4's settle step puts every attribute of the server's markup back on a swapped
   element whose `id` stayed the same, removing the ones the components set when they start (`aria-expanded` on a
   menu's trigger, for one). Load `ext/hx-alpine-compat.js` after htmx: it holds Alpine back until the settle is done.
-  The htmx 4 webjar (`htmx.org` version `4.0.0` in the pom above) has it. Alpine must start after the extension, so
-  both scripts go before the `assets` fragment, which starts Alpine (its module script runs in document order with
+  The htmx 4 webjar has it. Alpine must start after the extension, so both scripts go before the `assets` fragment, which starts Alpine (its module script runs in document order with
   the `defer` scripts):
 
   ```html
@@ -17431,17 +17876,17 @@ where htmx 4 does things differently:
   one `hx-swap`), which also turns off htmx's settle transitions.
 - **Error answers are swapped in.** htmx 4 swaps a `4xx` or `5xx` response like any other, where htmx 2 leaves the
   page alone. A [dialog or sheet body](https://shadleaf.dev/current/components/dialog.md#loaded-into-the-dialog-a-body) stops that for the
-  requests into it, so a failed save still keeps what was typed; elsewhere, use `hx-status:5xx="swap:none"` or the
-  `noSwap` config where you want htmx 2's behaviour.
-- **No history cache.** Back loads the page from the server again, so what is said above about snapshots is htmx 2
-  only.
+  requests into it, so a failed save still keeps what was typed; elsewhere, use `hx-status:5xx="swap:none"` or
+  `"noSwap": [204, 304, "4xx", "5xx"]` in the config where you want htmx 2's behavior.
 - **`HX-Trigger` runs after the swap**, on the element that sent the request, or on the document when the swap
-  removed it. Send `sl-dialog-close` and `sl-popover-close` from a request whose element stays, as the examples here
-  do (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
-- **A `null` detail in `HX-Trigger` throws** in htmx 4.0.0 (fixed for the next release,
-  [htmx#4135](https://github.com/bigskysoftware/htmx/issues/4135)). htmx-spring-boot sends one for an event without a detail
-  when another event of the same response has one, such as `sl-dialog-close` next to a toast: give it an empty detail
-  there, `htmxResponse.addTrigger("sl-dialog-close", Map.of())`.
+  removed it. A dialog, alert dialog or sheet whose request answers with `sl-dialog-close` closes when the swap
+  starts instead, as on htmx 2: the page behind a modal dialog is inert, so otherwise htmx could not put the focus
+  back on a replaced opener (by its id) or on an `autofocus` element in the answer. Send `sl-popover-close` from a
+  request whose element stays (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
+- **Use htmx 4.0.1 or later. A `null` detail in `HX-Trigger` throws in htmx 4.0.0** (`detail.cancelled` in its `trigger()`; 4.0.1 reads
+  `detail?.cancelled`, see [htmx#4135](https://github.com/bigskysoftware/htmx/issues/4135)). htmx-spring-boot sends one
+  for an event without a detail when another event of the same response has one, such as `sl-dialog-close` next to a
+  toast: on 4.0.0, give it an empty detail there, `htmxResponse.addTrigger("sl-dialog-close", Map.of())`.
 
 ---
 
@@ -17461,6 +17906,20 @@ user types and replaces only the table, and the links and the address bar stay w
 This guide follows sample-01's `/people` page (`samples/shadleaf-sample-01`): 270 people in an H2 database, sorted,
 paged and searched by Spring Data JPA, with a menu of actions per row; and its `/people-load-more` page, which reads
 them a `Slice` at a time. Loading htmx is in [Forms with htmx](https://shadleaf.dev/current/guides/htmx.md#loading-htmx).
+
+> **Caution: htmx 4**
+>
+> The snippets on this page are htmx 2, and on htmx 4 they break without an error. Sample-01 runs on htmx 4, with
+> these four changes, all in [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4):
+>
+> - `#people-results` needs `hx-boost:inherited`, `hx-target:inherited`, `hx-select:inherited` and `hx-swap:inherited`
+>   (and `hx-boost:inherited` on the body): without them, the sort, page and size links are plain links and the menu
+>   items have no target. `hx-select="unset"` on the Delete item becomes `hx-select=""`.
+> - `getTarget()` is `"body"` for a link the body boosts, not null: use the check from the
+>   [application shell](https://shadleaf.dev/current/components/application-shell.md#with-htmx).
+> - Back and forward ask the server again whatever the form says: `hx-history="false"` does nothing, and the
+>   [Back and forward](#back-and-forward) section does not apply.
+> - An `HX-Trigger` event is dispatched after the swap, not before it.
 
 ### The page
 
@@ -17531,7 +17990,8 @@ public String people(@RequestParam(required = false) String q,
 
 A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. So does a link
 that `hx-boost` on the body sends, such as the [sidebar's](https://shadleaf.dev/current/components/sidebar.md#htmx): it has `HX-Boosted` and no
-`HX-Target` (the body has no id), where the table's own boosted links target the results. htmx-spring-boot
+`HX-Target` (the body has no id; on htmx 4 it is `body`, and the check changes), where the table's own boosted links
+target the results. htmx-spring-boot
 adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
 page. Limit the sortable properties and add a unique last sort key as the [table](https://shadleaf.dev/current/components/table.md#limit-what-can-be-sorted)
 explains; the sample does both.
@@ -17584,7 +18044,8 @@ links in the headers, the page links and the rows-per-page menu's items. They in
   as a prefix, so two tables on a page keep theirs apart.
 - **Scrolling.** A boosted link scrolls to the top of the target by default (`scrollIntoViewOnBoost`). `show:none` in
   `hx-swap` keeps the page where it is, which suits a pagination at the bottom of a long table; the focused link stays
-  in view.
+  in view. (htmx 4 has no `scrollIntoViewOnBoost` setting, and still scrolls a boosted swap to the top unless
+  `show:none` says otherwise.)
 - **The search.** The links are built from the request, so they keep `q`: sorting the search results sorts the search
   results.
 
@@ -17719,7 +18180,8 @@ in the header, the selection count in the footer, and a Delete selected button t
   it, so the button inside the dialog makes the request (a non-`GET` request from inside a form sends the form's
   values). Without JavaScript the same button submits the form.
 - **Focus.** `HX-Trigger`'s events run before the swap: the dialog closes and gives the focus back to Delete selected,
-  and htmx then finds the new Delete selected by its id. The toast says how many people were deleted.
+  and htmx then finds the new Delete selected by its id. (htmx 4 dispatches them after the swap, so the dialog closes
+  when the new table is already there. The page's tests do not cover this order: check where the focus lands.) The toast says how many people were deleted.
 - **The selection resets.** The swap brings new checkboxes, unchecked; select-all and the count follow them. So does
   every sort, page and search: the selection is per page.
 
@@ -17822,6 +18284,11 @@ snapshot of this page and, on back and forward, asks the server for the page at 
 
 An application that would rather keep the snapshots can update the field's `value` attribute as the user types, in a
 script of its own; Shadleaf ships none for it.
+
+htmx 4 keeps no snapshots at all: on back and forward it asks the server for the page, with
+`HX-History-Restore-Request`, whether the form has `hx-history="false"` or not. The attribute and the stale field
+problem are gone, and the controller's check, which sends the whole page for that header, is all it needs. See
+[htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#history).
 
 ### Without JavaScript
 

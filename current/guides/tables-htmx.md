@@ -15,6 +15,20 @@ This guide follows sample-01's `/people` page (`samples/shadleaf-sample-01`): 27
 paged and searched by Spring Data JPA, with a menu of actions per row; and its `/people-load-more` page, which reads
 them a `Slice` at a time. Loading htmx is in [Forms with htmx](https://shadleaf.dev/current/guides/htmx.md#loading-htmx).
 
+> **Caution: htmx 4**
+>
+> The snippets on this page are htmx 2, and on htmx 4 they break without an error. Sample-01 runs on htmx 4, with
+> these four changes, all in [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4):
+>
+> - `#people-results` needs `hx-boost:inherited`, `hx-target:inherited`, `hx-select:inherited` and `hx-swap:inherited`
+>   (and `hx-boost:inherited` on the body): without them, the sort, page and size links are plain links and the menu
+>   items have no target. `hx-select="unset"` on the Delete item becomes `hx-select=""`.
+> - `getTarget()` is `"body"` for a link the body boosts, not null: use the check from the
+>   [application shell](https://shadleaf.dev/current/components/application-shell.md#with-htmx).
+> - Back and forward ask the server again whatever the form says: `hx-history="false"` does nothing, and the
+>   [Back and forward](#back-and-forward) section does not apply.
+> - An `HX-Trigger` event is dispatched after the swap, not before it.
+
 ## The page
 
 Two parts: the search form, which htmx never replaces, and the results (the table and its footer), which it does.
@@ -84,7 +98,8 @@ public String people(@RequestParam(required = false) String q,
 
 A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. So does a link
 that `hx-boost` on the body sends, such as the [sidebar's](https://shadleaf.dev/current/components/sidebar.md#htmx): it has `HX-Boosted` and no
-`HX-Target` (the body has no id), where the table's own boosted links target the results. htmx-spring-boot
+`HX-Target` (the body has no id; on htmx 4 it is `body`, and the check changes), where the table's own boosted links
+target the results. htmx-spring-boot
 adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
 page. Limit the sortable properties and add a unique last sort key as the [table](https://shadleaf.dev/current/components/table.md#limit-what-can-be-sorted)
 explains; the sample does both.
@@ -137,7 +152,8 @@ links in the headers, the page links and the rows-per-page menu's items. They in
   as a prefix, so two tables on a page keep theirs apart.
 - **Scrolling.** A boosted link scrolls to the top of the target by default (`scrollIntoViewOnBoost`). `show:none` in
   `hx-swap` keeps the page where it is, which suits a pagination at the bottom of a long table; the focused link stays
-  in view.
+  in view. (htmx 4 has no `scrollIntoViewOnBoost` setting, and still scrolls a boosted swap to the top unless
+  `show:none` says otherwise.)
 - **The search.** The links are built from the request, so they keep `q`: sorting the search results sorts the search
   results.
 
@@ -272,7 +288,8 @@ in the header, the selection count in the footer, and a Delete selected button t
   it, so the button inside the dialog makes the request (a non-`GET` request from inside a form sends the form's
   values). Without JavaScript the same button submits the form.
 - **Focus.** `HX-Trigger`'s events run before the swap: the dialog closes and gives the focus back to Delete selected,
-  and htmx then finds the new Delete selected by its id. The toast says how many people were deleted.
+  and htmx then finds the new Delete selected by its id. (htmx 4 dispatches them after the swap, so the dialog closes
+  when the new table is already there. The page's tests do not cover this order: check where the focus lands.) The toast says how many people were deleted.
 - **The selection resets.** The swap brings new checkboxes, unchecked; select-all and the count follow them. So does
   every sort, page and search: the selection is per page.
 
@@ -375,6 +392,11 @@ snapshot of this page and, on back and forward, asks the server for the page at 
 
 An application that would rather keep the snapshots can update the field's `value` attribute as the user types, in a
 script of its own; Shadleaf ships none for it.
+
+htmx 4 keeps no snapshots at all: on back and forward it asks the server for the page, with
+`HX-History-Restore-Request`, whether the form has `hx-history="false"` or not. The attribute and the stale field
+problem are gone, and the controller's check, which sends the whole page for that header, is all it needs. See
+[htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#history).
 
 ## Without JavaScript
 

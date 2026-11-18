@@ -1258,6 +1258,10 @@ tell such a link apart, or the sidebar's link to that page gets the fragment alo
 `HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The
 [Application shell](https://shadleaf.dev/current/components/application-shell.md#with-htmx) page shows the check.
 
+On htmx 4, the body needs `hx-boost:inherited="true"`, the link sends `HX-Target: body`, and the check changes with it
+(see [htmx 2 and htmx 4](https://shadleaf.dev/current/guides/htmx.md#htmx-2-and-htmx-4)). Back does not show a snapshot there: htmx 4 asks the
+server for the page again, which reads the cookie as well.
+
 ## Left out
 
 For now:
