@@ -27,8 +27,10 @@ Switch the preview to Phone to see it.
 
 The whole layout file. It has what [every layout needs](../../components/application-shell/#what-every-layout-needs).
 The first sample application (sample-01) has a shorter version of it, with its own pages and no team switcher.
-`hx-boost` on the body loads every page with htmx; see [With htmx](../../components/application-shell/#with-htmx) for
-the one check a controller then needs. Leave out the script and the attribute for a layout without htmx.
+`hx-boost:inherited="true"` on the body loads every page with htmx 4, which the head loads as
+[htmx](../../guides/htmx/#loading-htmx) does; see [With htmx](../../components/application-shell/#with-htmx)
+for the one check a controller then needs. Leave out the scripts, the config and the attribute for a layout without
+htmx.
 
 <LayoutCode id="layout--collapses-to-icons" part="template" />
 

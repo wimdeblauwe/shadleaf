@@ -53,8 +53,7 @@ Alpine component places it from the trigger's position instead.
 ## A form in a popover, with htmx
 
 A form in the panel can post with htmx and swap only what it changes. An `HX-Trigger: sl-popover-close` response
-header closes the popover after a valid save, and focus returns to the trigger (htmx 2; for htmx 4, see
-[htmx 2 and htmx 4](../../guides/htmx/#htmx-2-and-htmx-4)):
+header closes the popover after a valid save, and focus returns to the trigger:
 
 ```html
 <h2 id="team-name" th:text="${team.name}">Design</h2>
@@ -77,13 +76,16 @@ public String rename(@Valid @ModelAttribute("renameForm") RenameForm form, Bindi
   }
   model.addAttribute("team", teamService.rename(form.getName()));
   htmxResponse.addTrigger("sl-popover-close");
+  htmxResponse.setReswap(HtmxReswap.none());  // the form stays, for the event
   return "team :: team-name-oob";  // the heading, with hx-swap-oob="true"
 }
 ```
 
-htmx fires `sl-popover-close` on the form; it bubbles up to the popover, which closes. A popover nested in another
-closes only itself. Back never brings a popover back open: whether it is open is not part of the markup htmx saves in
-its history cache.
+htmx fires `sl-popover-close` on the form after the swap; it bubbles up to the popover, which closes. So the form must
+still be there: swap nothing where it is (`HtmxReswap.none()`), or target something else. A popover nested in another
+closes only itself. Back never brings a popover back open: htmx asks the server for the page again. On htmx 2, which
+fires the event before the swap, the example works as it is: see
+[Still using htmx 2?](../../guides/htmx/#still-using-htmx-2).
 
 ## Left out
 

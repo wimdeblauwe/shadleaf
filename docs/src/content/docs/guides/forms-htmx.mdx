@@ -1,0 +1,206 @@
+---
+title: Forms with htmx
+description: Post a Shadleaf form with htmx, get it back with its errors without a page load, and keep it working as a plain POST.
+sidebar:
+  order: 8
+---
+
+This page explains how to use HTML forms with Shadleaf and htmx.
+Be sure to have added [htmx](../htmx) to your application first.
+
+## One form, two ways to post
+
+You can keep the normal `th:action` and `method="post"` on your `<form>`.
+Just add a hx-post next to it to have htmx send the request to the server so it can swap in the response.
+
+In this example, the response is the same `contact` fragment, but with `sendTo` set to `true`, so it renders the confirmation message.
+
+```html
+<div id="contact" th:fragment="contact">
+  <th:block th:if="${sentTo}">
+    <sl:alert tabindex="-1" autofocus>
+      <sl:icon name="circle-check"/>
+      <sl:alert-title>Message sent</sl:alert-title>
+      <sl:alert-description th:text="|We will reply to ${sentTo}.|">We will reply to you.</sl:alert-description>
+    </sl:alert>
+    <sl:button as="a" variant="outline" th:href="@{/form}">Send another message</sl:button>
+  </th:block>
+
+  <form th:unless="${sentTo}" th:object="${contactForm}" th:action="@{/form}" method="post" novalidate
+        hx:post="@{/form}" hx-target="#contact" hx-swap="outerHTML">
+    <sl:form-errors autofocus/>
+    <sl:field-group>
+      <sl:field th:field="*{name}">
+        <sl:field-label>Name</sl:field-label>
+        <sl:input autocomplete="name"/>
+        <sl:field-error/>
+      </sl:field>
+      ...
+    </sl:field-group>
+    <sl:button type="submit">Send</sl:button>
+  </form>
+</div>
+```
+
+`hx:post` (with a colon) is htmx-spring-boot's Thymeleaf dialect: it resolves `@{/form}` like `th:action` does, and
+adds the CSRF header, on the element's own `hx-headers`, when Spring Security is on.
+
+`hx-target` is a plain attribute: We don't need Thymeleaf processing there.
+Moreover, using `#` would start a message expression in Thymeleaf, which we don't need here.
+The target is the fragment's own wrapper, so the fragment replaces
+itself. `hx-target` and `hx-swap` sit on the element that makes the request, so they need no `:inherited`.
+
+The controller answers an htmx request (it sends `HX-Request`) with the fragment alone, and everything else as
+before, with post/redirect/get on success:
+
+```java
+@PostMapping("/form")
+public String submit(@Valid @ModelAttribute("contactForm") ContactForm contactForm, BindingResult bindingResult,
+    HtmxRequest htmxRequest, Model model, RedirectAttributes redirectAttributes) {
+  if (htmxRequest.isHtmxRequest()) {
+    if (!bindingResult.hasErrors()) {
+      model.addAttribute("sentTo", contactForm.getEmail());
+    }
+    return "form :: contact";
+  }
+  if (bindingResult.hasErrors()) {
+    return "form";
+  }
+  redirectAttributes.addFlashAttribute("sentTo", contactForm.getEmail());
+  return "redirect:/form";
+}
+```
+
+- Errors come back with status 200, as for the full page. htmx 4 swaps a `4xx` or `5xx` answer like any other, so
+  a `422 Unprocessable Content` would work too.
+- A valid htmx submit gets the confirmation, not a redirect. An htmx POST is not a navigation: a reload cannot
+  send it again, which is what post/redirect/get protects against. An `HX-Redirect` (`redirect:htmx:/form` with
+  htmx-spring-boot, flash attributes included) works too, but loads the whole page again, and focus with it.
+- The controller uses a single method with the `HtmxRequest htmxRequest` injected to know if it was a htmx requrest or a full page request.
+You can also have two handler methods with `@HxRequest` on one of them, if you prefer that to the `if` statement.
+- If you use a boosted body (`hx-boost:inherited="true"`), then every link and form sends `HX-Request`.
+  So, `isHtmxRequest()` alone no longer tells a request for the fragment from one for a page: see
+  [Fragment or whole page](#fragment-or-whole-page).
+
+## Where focus goes
+
+When htmx replaces the form, the submit button that had the focus is gone, and focus falls back to the page.
+`<sl:form-errors autofocus/>` gives the server's answer to where it should go, the same for both ways to post:
+
+- a global error, or any error with `show="all"`: the summary, which the screen reader reads out;
+- field errors only: the first control with an error, which is read with its label, its invalid state and, through
+  `aria-describedby`, its error;
+- the confirmation has its own `tabindex="-1"` and `autofocus`.
+
+htmx focuses the first `[autofocus]` in content it swaps in. It first tries to put focus back on the element that had
+it, by id, so a user who pressed <kbd>Enter</kbd> in the name field would stay there; `autofocus` runs later and
+wins. See [Form errors](../../components/form-errors/#announcement-and-focus) for the details.
+
+## Announcement
+
+The errors are announced because focus moves to them, so there is no `role="alert"` on the summary or the field
+errors, in the htmx response or anywhere else. A live region would read the same message a second time, and
+`role="alert"` on every field error would read all of them at once. The confirmation has no `role="status"` for the
+same reason: a live region inserted together with its text is not announced reliably anyway.
+
+Add `role="alert"` when content changes without moving focus, for example a single field that htmx validates as the
+user leaves it: see [Field](../../components/field/#errors).
+
+## Validating as you type
+
+`<sl:form th:validate="@{/contact/validate}">` validates each field on the server while the user edits it, and swaps
+only that field: no rules in JavaScript, no focus moved, nothing announced. See
+[Validating as you type](../../components/form/#validating-as-you-type).
+
+## Fragment or whole page
+
+Not every htmx request wants a fragment: a link boosted from the body, or the back button, wants the whole page.
+Use this method to know which one to return:
+
+```java
+static boolean wantsFragment(HtmxRequest request) {
+  String target = request.getTarget();
+  return request.isHtmxRequest()
+      && !request.isHistoryRestoreRequest()
+      && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
+}
+```
+
+Return the fragment when it is `true`, and the whole page otherwise.
+
+## Back button and history
+
+htmx keeps no snapshots of the pages it pushed. On back and forward it asks the server for the page again, with
+`HX-History-Restore-Request`, and swaps it into the body (or the `[hx-history-elt]`). So the page is always rendered
+again: a form shows what the server renders for it, a search field the value of the address, and no personal data is
+kept in `localStorage`. The controller has to answer the restore request with the whole page, as the check above does.
+`hx-post` pushes no history entry: the URL stays `/form`.
+
+The optional `hx-history-cache` extension brings the snapshots back, with `hx-history="false"` to keep a page out.
+Do not combine it with `hx-alpine-compat` for now, which Shadleaf needs. Before the extension saves a page,
+`hx-alpine-compat` stops every Alpine component on it (htmx 4.0.2). So Shadleaf cannot close an open dialog or remove
+the toasts before the snapshot, and after a request that pushes a URL, the components outside its target no longer
+work ([htmx#4221](https://github.com/bigskysoftware/htmx/issues/4221)).
+
+## Dialogs
+
+A dialog can come from the server too: a button fetches `<sl:dialog open>` into an empty element, the form in it
+swaps only itself while it has errors, and an `HX-Trigger: sl-dialog-close` response header closes it after a valid
+save. See [Dialog](../../components/dialog/#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.
+
+htmx dispatches the events of `HX-Trigger` after the swap, on the element that sent the request, or on the document
+when the swap removed it. A dialog, alert dialog or sheet whose request answers with `sl-dialog-close` closes when the
+swap starts instead: the page behind a modal dialog is inert, so otherwise htmx could not put the focus back on a
+replaced opener (by its id) or on an `autofocus` element in the answer. A
+[dialog or sheet body](../../components/dialog/#loaded-into-the-dialog-a-body) keeps an error answer out of its
+content, so a failed save still keeps what was typed.
+
+The same works for an [alert dialog](../../components/alert-dialog/#confirming-with-htmx) that confirms a delete: its
+destructive button sends `hx-delete`, and the response closes it with the same event, shows a toast saying what
+happened, removes the row and moves the focus to the next row. A [sheet](../../components/sheet/) is a dialog too, with the same `open`
+and `sl-dialog-close`.
+
+## Menus and popovers
+
+A [dropdown menu](../../components/dropdown-menu/) item takes `hx-*` like a button: it sends its request and the menu
+closes, with the focus back on the trigger. A menu of row actions whose response replaces the row keeps the focus in
+place when the trigger has an id, which it gets from the menu's (`th:id="|order-${order.id}-actions|"` gives
+`order-42-actions-trigger`). A form in a [popover](../../components/popover/#a-form-in-a-popover-with-htmx) closes
+it with `HX-Trigger: sl-popover-close`; send it from a request whose element stays (`HtmxReswap.none()`, or a target
+elsewhere), as the event comes after the swap. A swap that replaces an open menu or popover leaves nothing open
+behind it, and back never restores one open: the server renders the page again.
+
+## Toasts
+
+An `HX-Trigger: sl-toast` response header shows a [toast](../../components/toast/), whatever the response swaps:
+`htmxResponse.addTrigger("sl-toast", Toast.success("Member deleted"))`. A response can also swap `<sl:toast>`s into
+the toaster out of band. Use a flash attribute rather than a toast when the response redirects. A toast never takes
+the focus: it goes away.
+
+## Swapping
+
+- **A response that holds only out-of-band content swaps nothing into the target.** So the delete in the
+  [alert dialog](../../components/alert-dialog/#confirming-with-htmx), whose answer is the next row out of band, would
+  keep its row. Ask for the empty swap with `swapEmpty:true` (`"allowEmptySwapAfterOOB": true` in the config does it
+  everywhere):
+
+  ```html
+  <sl:button variant="destructive" hx:delete="@{/members/{id}(id=${member.id})}"
+             th:hx-target="|#member-${member.id}|" hx-swap="outerHTML swapEmpty:true">Delete</sl:button>
+  ```
+
+  A toast sent out of band into `#toaster` needs nothing.
+- **Error answers are swapped in.** A `4xx` or `5xx` response replaces the target like any other. Use
+  `hx-status:5xx="swap:none"`, or `"noSwap": [204, 304, "4xx", "5xx"]` in the config, where you would rather leave the
+  page alone.
+- **`hx-delete` leaves the enclosing form out**, like `hx-get`: add `hx-include="closest form"` where it needs the
+  form's fields.
+- **`hx-disable` disables elements during a request** (`hx-ignore` leaves an element alone). The indicator class is
+  `htmx-request`.
+- **Do not morph a combobox, select, calendar or date picker yourself.** Their scripts build part of their markup in
+  the browser (the combobox's input and list, the calendar's months, the date picker's button text and name). A
+  morph (`outerMorph`, `innerMorph`) makes the page match the server's markup and removes those parts, and the
+  component does not start again, so it stops working. Swap a region that holds one with `outerHTML` or `innerHTML`,
+  or put `hx-morph-skip` on the component to leave it out of the morph (it then keeps its value and ignores what the
+  server sent for it). Validating as you type morphs fields too, but Shadleaf keeps these components through its own
+  swaps.

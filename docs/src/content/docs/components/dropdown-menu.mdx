@@ -179,8 +179,8 @@ focus to the trigger when it closes.
 ## With htmx
 
 - A swap that replaces an open menu leaves nothing behind: the new menu starts closed and works like the old one.
-- Back never brings a menu back open: whether a popover is open is not part of the markup htmx saves in its history
-  cache, and the restored menu starts again.
+- Back never brings a menu back open: htmx asks the server for the page again (on htmx 2, whether a popover is open is
+  not part of the markup it saves in its history cache, and the restored menu starts again).
 - An `hx-*` item sends its request and the menu closes; an `hx-target` can be anything, the menu's own row included.
 
 ## Left out

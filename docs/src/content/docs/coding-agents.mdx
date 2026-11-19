@@ -42,8 +42,9 @@ your `pom.xml`, so the agent reads the docs of the version you use.
   colours go on the series parts, number and date formats are names (`format="month-short"`).
 - Rendering fails with a message on a wrong prop value, a missing required prop or a missing accessible
   name: render every page you change (run the tests or load the page) and fix what it reports.
-- With `hx-boost` on `<body>`, every boosted page load sends `HX-Request`: return a fragment only when the
-  request targets one (see the "Application shell" guide, "With htmx").
+- htmx 4: with `hx-boost:inherited="true"` on `<body>`, every boosted page load sends `HX-Request` and
+  `HX-Target: body`: return a fragment only when the request targets one (see the "Application shell" guide,
+  "With htmx").
 ```
 
 Then tell the agent how your application loads Shadleaf's CSS and Alpine.js, as that changes what it may write. Add

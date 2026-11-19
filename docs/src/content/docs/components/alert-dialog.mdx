@@ -93,13 +93,15 @@ The fragment has the question, and the destructive button sends the request:
   <sl:alert-dialog-footer>
     <sl:alert-dialog-cancel/>
     <sl:button variant="destructive" hx:delete="@{/members/{id}(id=${member.id})}"
-               th:hx-target="|#member-${member.id}|" hx-swap="outerHTML">Delete</sl:button>
+               th:hx-target="|#member-${member.id}|" hx-swap="outerHTML swapEmpty:true">Delete</sl:button>
   </sl:alert-dialog-footer>
 </sl:alert-dialog>
 ```
 
 The controller deletes, closes the dialog with the `sl-dialog-close` event (the same one that closes a dialog), says
-what happened in a [toast](../toast/) and answers with nothing for the row, which removes it:
+what happened in a [toast](../toast/) and answers with nothing for the row, which removes it. The answer holds
+nothing but out-of-band content, and htmx then makes no main swap unless it is asked to: `swapEmpty:true` in
+`hx-swap` asks for it.
 
 ```java
 @HxRequest
@@ -125,10 +127,9 @@ re-rendered out of band with `autofocus`, which htmx focuses after the swap. Aft
 it, and once the table is empty, the button that adds a member. The toast is announced, so a screen reader user hears
 what happened and is where they can go on.
 
-:::note[htmx 4]
-This example is htmx 2. The answer holds nothing but out-of-band rows, and htmx 4 then makes no main swap, so the row
-the Delete button targets would stay. Add `swapEmpty:true` to its `hx-swap` (`hx-swap="outerHTML swapEmpty:true"`). The
-dialog's own `hx:get` button needs nothing. See [htmx 2 and htmx 4](../../guides/htmx/#htmx-2-and-htmx-4).
+:::note[htmx 2]
+htmx 2 empties the target for an answer with only out-of-band content, so `swapEmpty:true` is not needed there. See
+[Still using htmx 2?](../../guides/htmx/#still-using-htmx-2).
 :::
 
 ```html

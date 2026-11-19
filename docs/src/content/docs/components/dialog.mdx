@@ -121,18 +121,20 @@ public String update(@PathVariable long id, @Valid @ModelAttribute("member") Edi
 }
 ```
 
-htmx fires `sl-dialog-close` on the form that made the request; the event bubbles up to the dialog, which closes, and
-focus returns to the button that fetched it. When the response then replaces that button, as the new row does here,
-give the button an id (`th:id="|edit-member-${member.id}|"`): htmx moves focus to the element with the same id after a
-swap. Without one, focus falls back to the top of the page. Use `HX-Trigger`, not `HX-Trigger-After-Swap` or `-After-Settle`: those
-fire after the swap, when the element that made the request may be gone.
+The `sl-dialog-close` event in `HX-Trigger` is for the form that made the request, inside the dialog. htmx dispatches
+it after the swap, but the dialog closes when the swap starts, and focus returns to the button that fetched it: the
+page behind a modal dialog is inert, and htmx could otherwise neither keep the focus on an element it replaces nor
+focus an `autofocus` element in the answer. When the response replaces that button, as the new row does here, give the
+button an id (`th:id="|edit-member-${member.id}|"`): htmx moves focus to the element with the same id after a swap.
+Without one, focus falls back to the top of the page.
 
 `open` needs Alpine (on by default: see [Alpine](../../guides/alpine/)); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
-inertness with it. Before htmx 2 saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
-the back button never brings one back; htmx 4 keeps no cache, and loads the page again. The examples on this page are
-htmx 2; what changes on htmx 4 (the `HX-Trigger` timing, the `null` detail, error answers) is in
-[htmx 2 and htmx 4](../../guides/htmx/#htmx-2-and-htmx-4).
+inertness with it. Back and forward never bring one back open: htmx asks the server for the page again. Use htmx 4.0.1
+or later: 4.0.0 throws on the `null` detail htmx-spring-boot sends for `sl-dialog-close` next to a toast (see
+[Loading htmx](../../guides/htmx/#loading-htmx)). On htmx 2, which dispatches `HX-Trigger` before the swap and keeps
+snapshots (open dialogs close before it saves one), the examples work as they are: see
+[Still using htmx 2?](../../guides/htmx/#still-using-htmx-2).
 
 ## Loaded into the dialog: a body
 
@@ -195,9 +197,10 @@ The message is "Something went wrong. Please try again." (`sl.dialog.error` in y
 
 Validation errors are no failure: return the form with its errors and a success status, as above.
 
-The body works with htmx 2 and htmx 4. htmx 4 swaps an error answer in by default; the body stops that for the
-requests into it, so the error shows above the content, as with htmx 2. An `hx-status` attribute on the element that
-sends the request, or an `HX-Reswap` header, still decides otherwise. See [htmx 2 and htmx 4](../../guides/htmx/#htmx-2-and-htmx-4).
+htmx swaps an error answer in by default; the body stops that for the requests into it, so the error shows above the
+content. An `hx-status` attribute on the element that sends the request, or an `HX-Reswap` header, still decides
+otherwise. The body works on htmx 2 as well, which leaves error answers alone anyway: see
+[Still using htmx 2?](../../guides/htmx/#still-using-htmx-2).
 
 ## Width
 
