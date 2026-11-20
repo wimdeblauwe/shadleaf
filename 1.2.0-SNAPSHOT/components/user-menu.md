@@ -147,7 +147,7 @@ default `/logout` then signs the user out and redirects to `/login?logout`. With
 provider too with Spring Security's `OidcClientInitiatedLogoutSuccessHandler`: see
 [Signing out at Keycloak](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/oauth2.md#signing-out-at-keycloak).
 
-`hx-boost="false"` keeps a [boosted](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md) page from sending it with htmx: signing out should load a
+`hx-boost="false"` keeps a [boosted](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx) page from sending it with htmx: signing out should load a
 whole page, with a new CSRF token. The Sign in link has it too, as signing in usually redirects to an identity
 provider, which an htmx request cannot follow.
 

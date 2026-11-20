@@ -170,7 +170,8 @@ When the focus moves past the months that show, the calendar shows the next ones
 
 ## With htmx
 
-- Back restores the calendar as htmx saved it, and `slCalendar` draws it again.
+- Back renders the page again on the server, and `slCalendar` draws the calendar again (on htmx 2, from the markup
+  htmx saved).
 - `hx-trigger="change"` on the calendar's input (or on the form) sends the picked date.
 
 ## Left out

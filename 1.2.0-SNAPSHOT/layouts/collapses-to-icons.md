@@ -23,8 +23,10 @@ Switch the preview to Phone to see it.
 
 The whole layout file. It has what [every layout needs](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs).
 The first sample application (sample-01) has a shorter version of it, with its own pages and no team switcher.
-`hx-boost` on the body loads every page with htmx; see [With htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx) for
-the one check a controller then needs. Leave out the script and the attribute for a layout without htmx.
+`hx-boost:inherited="true"` on the body loads every page with htmx 4, which the head loads as
+[htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#loading-htmx) does; see [With htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx)
+for the one check a controller then needs. Leave out the scripts, the config and the attribute for a layout without
+htmx.
 
 ```html
 <!DOCTYPE html>
@@ -35,11 +37,13 @@ the one check a controller then needs. Leave out the script and the attribute fo
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title th:text="${pageTitle}">Page</title>
   <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
-  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <meta name="htmx-config" content='{"includeIndicatorCSS": false}'>
   <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <script th:src="@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}" defer></script>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
   <link rel="stylesheet" th:href="@{/css/application.css}">
 </head>
-<body hx-boost="true">
+<body hx-boost:inherited="true">
 <sl:skip-link/>
 <sl:sidebar-provider>
   <sl:sidebar variant="inset" collapsible="icon">

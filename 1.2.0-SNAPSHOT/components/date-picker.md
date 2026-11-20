@@ -154,7 +154,8 @@ The popover is a non-modal dialog, as [sl:popover](https://shadleaf.dev/1.2.0-SN
 
 ## With htmx
 
-- Back restores the date picker as htmx saved it, and `slDatePicker` formats the date again.
+- Back renders the page again on the server, and `slDatePicker` formats the date again (on htmx 2, in the markup htmx
+  saved).
 - `hx-trigger="change"` on the date picker's input (`<sl:date-picker hx-post="..." hx-trigger="change">`) or on the
   form sends the picked date.
 

@@ -123,44 +123,34 @@ hide (see the tip below). Set the paper's size and margins with `@page` in the a
 
 ## With htmx
 
-`hx-boost` on the body (as [Collapses to icons](https://shadleaf.dev/1.2.0-SNAPSHOT/layouts/collapses-to-icons.md) has it) loads every page with htmx. The server renders the whole page
-each time, so the current page, the breadcrumb and the sidebar's collapsed state are always right, and a link in the
-phone panel closes it. The [Sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md#htmx) page says what happens with history and when only
-the main area is boosted.
+`hx-boost:inherited="true"` on the body (as [Collapses to icons](https://shadleaf.dev/1.2.0-SNAPSHOT/layouts/collapses-to-icons.md) has it) loads every
+page with htmx; without `:inherited`, htmx 4 boosts nothing, as the attribute is not on the links. The server renders
+the whole page each time, so the current page, the breadcrumb and the sidebar's collapsed state are always right, and
+a link in the phone panel closes it. The [Sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md#htmx) page says what happens with history
+and when only the main area is boosted.
 
 A boosted link sends `HX-Request` too. A controller that answers other htmx requests with a fragment (a table's rows,
 a dialog) has to tell such a request apart, or a link in the navigation gets the fragment without the page around it.
-A request from the body's boost has `HX-Boosted` and no `HX-Target`, because the body has no id. With
+A request from the body's boost has `HX-Boosted` and `HX-Target: body`; a history restore (back and forward) has
+`HX-History-Restore-Request`, and wants the whole page too. With
 [htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot):
 
 ```java
 static boolean wantsFragment(HtmxRequest request) {
+  String target = request.getTarget();
   return request.isHtmxRequest()
       && !request.isHistoryRestoreRequest()
-      && !(request.isBoosted() && request.getTarget() == null);
+      && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
 }
 ```
 
 A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
-table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/tables-htmx.md).
+table) sends that target (`HX-Target: div#people-results`), and still gets its fragment. See
+[Tables with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/tables-htmx.md). Do not use `HX-Request-Type` for this: htmx sends `full` for a request
+with an `hx-select` too.
 
-> **Caution: htmx 4**
->
-> This check is htmx 2. htmx 4 sends `HX-Target: body` for a link the body boosts (`getTarget()` is `"body"`, never null),
-> so the sidebar's links would get the fragment. Two more changes: the body needs `hx-boost:inherited="true"`, because
-> htmx 4 does not inherit `hx-boost` otherwise, and a history restore (`HX-History-Restore-Request`, which htmx 4 still
-> sends) is handled by the same check. This version works with both:
->
-> ```java
-> static boolean wantsFragment(HtmxRequest request) {
->   String target = request.getTarget();
->   return request.isHtmxRequest()
->       && !request.isHistoryRestoreRequest()
->       && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
-> }
-> ```
->
-> See [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+The check works on htmx 2 as well, where the body's boost sends no `HX-Target` (`getTarget()` is null) and the body
+needs only `hx-boost="true"`: see [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 A boosted link or form made after the session expired would get the sign-in page swapped into the body (or, for a
 form, nothing at all, as its CSRF token went with the session). The Spring Security guide shows how to send the browser

@@ -267,9 +267,10 @@ keys follow what you see.
 ## With htmx
 
 - A chart that htmx swaps in draws itself; one it swaps out is cleaned up.
-- Before htmx saves a page for Back, the charts are put back to their skeletons, so the saved page holds none of the
-  inline styles Recharts sets (a strict Content-Security-Policy would report them when the page comes back). Back
-  draws them again.
+- Back asks the server for the page again, and the charts draw themselves. Where htmx saves pages for Back (htmx 2, or
+  htmx 4's `hx-history-cache` extension), the charts are put back to their skeletons first, so the saved page holds
+  none of the inline styles Recharts sets (a strict Content-Security-Policy would report them when the page comes
+  back); back draws them again.
 
 ## Left out
 

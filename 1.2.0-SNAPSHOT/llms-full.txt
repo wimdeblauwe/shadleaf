@@ -38,10 +38,6 @@ fragments in your layout's `<head>`, and write `<sl:button>`:
 Every preview on this site is rendered by the library itself, from the build that produced these pages, so it shows
 exactly the markup your application gets.
 
-> **Caution: Pre-release**
->
-> Before 1.0, the rendered markup, class names and `data-*` attributes can change between versions.
-
 ---
 
 ## Getting started
@@ -1087,8 +1083,9 @@ your `pom.xml`, so the agent reads the docs of the version you use.
   colours go on the series parts, number and date formats are names (`format="month-short"`).
 - Rendering fails with a message on a wrong prop value, a missing required prop or a missing accessible
   name: render every page you change (run the tests or load the page) and fix what it reports.
-- With `hx-boost` on `<body>`, every boosted page load sends `HX-Request`: return a fragment only when the
-  request targets one (see the "Application shell" guide, "With htmx").
+- htmx 4: with `hx-boost:inherited="true"` on `<body>`, every boosted page load sends `HX-Request` and
+  `HX-Target: body`: return a fragment only when the request targets one (see the "Application shell" guide,
+  "With htmx").
 ```
 
 Then tell the agent how your application loads Shadleaf's CSS and Alpine.js, as that changes what it may write. Add
@@ -1477,7 +1474,7 @@ that matters.
 The server cannot know what the browser stored, so neither the menu's check mark nor the button's pressed state is in
 the markup: the toggle's Alpine component sets them when it starts. Nothing shows wrong in the meantime. The icon comes
 from the `dark` class the theme script put on `<html>` before the first paint, and the menu is closed until someone
-opens it. A toggle that htmx swaps in, or brings back from its history cache, works the same way.
+opens it. A toggle that htmx swaps in, or renders again for back, works the same way.
 
 ### Several toggles, several tabs
 
@@ -1639,7 +1636,7 @@ only show with errors.
 The error has no `role="alert"`. After a submit the whole page loads again, and a screen reader would read out every
 error at once. The control is `aria-invalid` and described by its error instead, so the message is read when the user
 reaches the control. When htmx swaps the whole form in, `<sl:form-errors autofocus/>` moves focus to the first
-control with an error, which reads it out; see [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md). If you swap a single field in
+control with an error, which reads it out; see [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md). If you swap a single field in
 while focus stays elsewhere, for example to validate it as the user leaves it, add `role="alert"` to its error
 yourself.
 
@@ -2082,7 +2079,7 @@ Sample-01's "Book a room" page (`samples/shadleaf-sample-01`, `/room-booking`) i
 constraint for the rules over several fields, a room that may already be booked, and a chain of `depends-on`.
 
 **It needs htmx 4** (`htmx.org` 4.x, with its `hx-alpine-compat` extension; see
-[htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4)). It swaps with `outerMorph` and `<hx-partial>`, which
+[Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2)). It swaps with `outerMorph` and `<hx-partial>`, which
 htmx 2 does not have: do not use `validate` with htmx 2. Without htmx, or without JavaScript, the controls are plain
 controls and the form is validated when it is submitted, as before. Keep the submit's own validation either way: the
 validation while typing is a help to the user, not a check.
@@ -2337,7 +2334,7 @@ For a form that reloads the page, also put the outcome in the page title, such a
 thing a screen reader reads after a page load.
 
 htmx honours `autofocus` in the content it swaps in, after its own attempt to keep focus on the element that had it.
-The [htmx guide](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md) shows a form that posts with htmx and falls back to a plain POST.
+The [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md) guide shows a form that posts with htmx and falls back to a plain POST.
 
 ### Id
 
@@ -3190,9 +3187,10 @@ also works around a Chrome bug: after a form reset the select showed the option 
 ### With htmx
 
 - A response that renders the form again with errors keeps the chosen value (`th:field` marks it), and focus goes
-  where `autofocus` says, the select included; see [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md).
+  where `autofocus` says, the select included; see [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md).
 - A swap that replaces an open select leaves nothing open behind.
-- Back restores the select as htmx saved it; Shadleaf's list box builds itself again from the restored select.
+- Back renders the page again on the server, and Shadleaf's list box builds itself again from the select. (htmx 2
+  restores the select as it saved it, with the same result.)
 - A select can trigger a request itself: `hx-get="/cities" hx-trigger="change" hx-target="#city-field"`. Swapping in
   new items (`hx-target` on the select) is picked up by the list box.
 
@@ -3837,7 +3835,8 @@ has a key. The item under the pointer is highlighted.
 
 - A response that renders the form again with errors keeps the chosen values (`th:field` marks them).
 - A swap that replaces an open combobox leaves nothing open behind.
-- Back restores the combobox as htmx saved it; it builds its input and list again from the restored select.
+- Back renders the page again on the server, and the combobox builds its input and list again from the select (on
+  htmx 2, from the select htmx saved).
 - A combobox can trigger a request itself: `hx-get="/cities" hx-trigger="change" hx-target="#city-field"`. Options
   swapped into the select are picked up by the list.
 
@@ -4646,7 +4645,8 @@ When the focus moves past the months that show, the calendar shows the next ones
 
 ### With htmx
 
-- Back restores the calendar as htmx saved it, and `slCalendar` draws it again.
+- Back renders the page again on the server, and `slCalendar` draws the calendar again (on htmx 2, from the markup
+  htmx saved).
 - `hx-trigger="change"` on the calendar's input (or on the form) sends the picked date.
 
 ### Left out
@@ -4846,7 +4846,8 @@ The popover is a non-modal dialog, as [sl:popover](https://shadleaf.dev/1.2.0-SN
 
 ### With htmx
 
-- Back restores the date picker as htmx saved it, and `slDatePicker` formats the date again.
+- Back renders the page again on the server, and `slDatePicker` formats the date again (on htmx 2, in the markup htmx
+  saved).
 - `hx-trigger="change"` on the date picker's input (`<sl:date-picker hx-post="..." hx-trigger="change">`) or on the
   form sends the picked date.
 
@@ -5388,18 +5389,20 @@ public String update(@PathVariable long id, @Valid @ModelAttribute("member") Edi
 }
 ```
 
-htmx fires `sl-dialog-close` on the form that made the request; the event bubbles up to the dialog, which closes, and
-focus returns to the button that fetched it. When the response then replaces that button, as the new row does here,
-give the button an id (`th:id="|edit-member-${member.id}|"`): htmx moves focus to the element with the same id after a
-swap. Without one, focus falls back to the top of the page. Use `HX-Trigger`, not `HX-Trigger-After-Swap` or `-After-Settle`: those
-fire after the swap, when the element that made the request may be gone.
+The `sl-dialog-close` event in `HX-Trigger` is for the form that made the request, inside the dialog. htmx dispatches
+it after the swap, but the dialog closes when the swap starts, and focus returns to the button that fetched it: the
+page behind a modal dialog is inert, and htmx could otherwise neither keep the focus on an element it replaces nor
+focus an `autofocus` element in the answer. When the response replaces that button, as the new row does here, give the
+button an id (`th:id="|edit-member-${member.id}|"`): htmx moves focus to the element with the same id after a swap.
+Without one, focus falls back to the top of the page.
 
 `open` needs Alpine (on by default: see [Alpine](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/alpine.md)); the browser has no attribute that opens a
 dialog as a modal. A dialog removed from the page while it is open, by any swap, takes its backdrop and the page's
-inertness with it. Before htmx 2 saves a page in its history cache (`hx-push-url`, `hx-boost`), open dialogs close, so
-the back button never brings one back; htmx 4 keeps no cache, and loads the page again. The examples on this page are
-htmx 2; what changes on htmx 4 (the `HX-Trigger` timing, the `null` detail, error answers) is in
-[htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+inertness with it. Back and forward never bring one back open: htmx asks the server for the page again. Use htmx 4.0.1
+or later: 4.0.0 throws on the `null` detail htmx-spring-boot sends for `sl-dialog-close` next to a toast (see
+[Loading htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#loading-htmx)). On htmx 2, which dispatches `HX-Trigger` before the swap and keeps
+snapshots (open dialogs close before it saves one), the examples work as they are: see
+[Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 ### Loaded into the dialog: a body
 
@@ -5474,9 +5477,10 @@ The message is "Something went wrong. Please try again." (`sl.dialog.error` in y
 
 Validation errors are no failure: return the form with its errors and a success status, as above.
 
-The body works with htmx 2 and htmx 4. htmx 4 swaps an error answer in by default; the body stops that for the
-requests into it, so the error shows above the content, as with htmx 2. An `hx-status` attribute on the element that
-sends the request, or an `HX-Reswap` header, still decides otherwise. See [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+htmx swaps an error answer in by default; the body stops that for the requests into it, so the error shows above the
+content. An `hx-status` attribute on the element that sends the request, or an `HX-Reswap` header, still decides
+otherwise. The body works on htmx 2 as well, which leaves error answers alone anyway: see
+[Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 ### Width
 
@@ -5750,13 +5754,15 @@ The fragment has the question, and the destructive button sends the request:
   <sl:alert-dialog-footer>
     <sl:alert-dialog-cancel/>
     <sl:button variant="destructive" hx:delete="@{/members/{id}(id=${member.id})}"
-               th:hx-target="|#member-${member.id}|" hx-swap="outerHTML">Delete</sl:button>
+               th:hx-target="|#member-${member.id}|" hx-swap="outerHTML swapEmpty:true">Delete</sl:button>
   </sl:alert-dialog-footer>
 </sl:alert-dialog>
 ```
 
 The controller deletes, closes the dialog with the `sl-dialog-close` event (the same one that closes a dialog), says
-what happened in a [toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md) and answers with nothing for the row, which removes it:
+what happened in a [toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md) and answers with nothing for the row, which removes it. The answer holds
+nothing but out-of-band content, and htmx then makes no main swap unless it is asked to: `swapEmpty:true` in
+`hx-swap` asks for it.
 
 ```java
 @HxRequest
@@ -5782,11 +5788,10 @@ re-rendered out of band with `autofocus`, which htmx focuses after the swap. Aft
 it, and once the table is empty, the button that adds a member. The toast is announced, so a screen reader user hears
 what happened and is where they can go on.
 
-> **Note: htmx 4**
+> **Note: htmx 2**
 >
-> This example is htmx 2. The answer holds nothing but out-of-band rows, and htmx 4 then makes no main swap, so the row
-> the Delete button targets would stay. Add `swapEmpty:true` to its `hx-swap` (`hx-swap="outerHTML swapEmpty:true"`). The
-> dialog's own `hx:get` button needs nothing. See [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+> htmx 2 empties the target for an answer with only out-of-band content, so `swapEmpty:true` is not needed there. See
+> [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 ```html
 <th:block th:fragment="member-row-focus" th:with="oob=true, focus=true">
@@ -6202,13 +6207,10 @@ public String update(@PathVariable long id, @Valid @ModelAttribute("memberForm")
 }
 ```
 
-htmx fires `sl-dialog-close` on the form, inside the sheet, which closes; the focus returns to the Edit button. Give
-that button an id if the row is replaced, so htmx puts the focus back on the new one (see
+`sl-dialog-close` is for the form, inside the sheet, which closes when the swap starts; the focus returns to the Edit
+button. Give that button an id if the row is replaced, so htmx puts the focus back on the new one (see
 [Dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx)). A failed save (an error status) shows the error in the sheet and
-keeps what was typed.
-
-The example is htmx 2. On htmx 4 the same markup works, with the changes in
-[htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+keeps what was typed. On htmx 2 the same markup works: see [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 ### Width
 
@@ -6391,8 +6393,7 @@ Alpine component places it from the trigger's position instead.
 ### A form in a popover, with htmx
 
 A form in the panel can post with htmx and swap only what it changes. An `HX-Trigger: sl-popover-close` response
-header closes the popover after a valid save, and focus returns to the trigger (htmx 2; for htmx 4, see
-[htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4)):
+header closes the popover after a valid save, and focus returns to the trigger:
 
 ```html
 <h2 id="team-name" th:text="${team.name}">Design</h2>
@@ -6415,13 +6416,16 @@ public String rename(@Valid @ModelAttribute("renameForm") RenameForm form, Bindi
   }
   model.addAttribute("team", teamService.rename(form.getName()));
   htmxResponse.addTrigger("sl-popover-close");
+  htmxResponse.setReswap(HtmxReswap.none());  // the form stays, for the event
   return "team :: team-name-oob";  // the heading, with hx-swap-oob="true"
 }
 ```
 
-htmx fires `sl-popover-close` on the form; it bubbles up to the popover, which closes. A popover nested in another
-closes only itself. Back never brings a popover back open: whether it is open is not part of the markup htmx saves in
-its history cache.
+htmx fires `sl-popover-close` on the form after the swap; it bubbles up to the popover, which closes. So the form must
+still be there: swap nothing where it is (`HtmxReswap.none()`), or target something else. A popover nested in another
+closes only itself. Back never brings a popover back open: htmx asks the server for the page again. On htmx 2, which
+fires the event before the swap, the example works as it is: see
+[Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 ### Left out
 
@@ -6776,8 +6780,8 @@ focus to the trigger when it closes.
 ### With htmx
 
 - A swap that replaces an open menu leaves nothing behind: the new menu starts closed and works like the old one.
-- Back never brings a menu back open: whether a popover is open is not part of the markup htmx saves in its history
-  cache, and the restored menu starts again.
+- Back never brings a menu back open: htmx asks the server for the page again (on htmx 2, whether a popover is open is
+  not part of the markup it saves in its history cache, and the restored menu starts again).
 - An `hx-*` item sends its request and the menu closes; an `hx-target` can be anything, the menu's own row included.
 
 ### Left out
@@ -7131,7 +7135,7 @@ order with everything else; announcing them too would interrupt the user for no 
 When an alert appears later, for example in the response to an htmx request, add `role="alert"`. A screen reader then
 reads it as soon as it is inserted. Like any other attribute, `role` passes through to the rendered element. An
 alert that takes the focus when it appears (`tabindex="-1"` and `autofocus`, which htmx honours in swapped content) is
-read out because of the focus, and needs no role; see [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md).
+read out because of the focus, and needs no role; see [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md).
 
 **Example: Announced.** role="alert" makes a screen reader read the alert as soon as it appears.
 
@@ -7241,15 +7245,14 @@ public String delete(@PathVariable long id, HtmxResponse htmxResponse, Model mod
 ```
 
 The response gets `HX-Trigger: {"sl-toast": {"title": "Ada Lovelace was deleted", "description": null,
-"variant": "success", "duration": null}}`; htmx dispatches the event when the response arrives, and the toaster shows
-it. Several toasts in one response are a list: `htmxResponse.addTrigger("sl-toast", List.of(first, second))`.
+"variant": "success", "duration": null}}`; htmx dispatches the event after the swap, on the element that sent the
+request or, when the swap removed it (a deleted row), on the document, and the toaster shows it. Several toasts in one response are a list: `htmxResponse.addTrigger("sl-toast", List.of(first, second))`.
 
 - **The text is only ever text.** The toaster puts the title and description in with `textContent`, so a name such as
   `<b>Ada</b>` shows as typed and can never inject markup.
-- **Use `HX-Trigger`**, not `HX-Trigger-After-Swap` or `-After-Settle`: those are dispatched on the element that sent
-  the request, and when the swap removed it (a deleted row), the event reaches no one. htmx 4 has only `HX-Trigger`
-  (and htmx-spring-boot 6 only `addTrigger`), which it dispatches after the swap: see
-  [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+- **On htmx 2, use `HX-Trigger`**, not `HX-Trigger-After-Swap` or `-After-Settle` (which htmx 4 no longer has): those
+  are dispatched on the element that sent the request, and when the swap removed it, the event reaches no one. See
+  [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 - **Not with a redirect.** An `HX-Redirect` or `HX-Location` loads another page, and the toast with it is gone. Put
   it in a flash attribute instead (next section).
 
@@ -7488,8 +7491,8 @@ A small Alpine component, `slToaster`, is on `<sl:toaster>`: it renders as
   enough. See [Alpine](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/alpine.md).
 - **Keep your own `x-data` off `<sl:toaster>`.** An element has one `x-data`.
 - **One toaster per page.** A second one works, but the first takes every event.
-- **htmx history:** the toaster removes its toasts before htmx saves the page in its history cache, so going back never
-  shows an old toast again.
+- **htmx history:** back and forward ask the server for the page again, so going back never shows an old toast. On
+  htmx 2, the toaster removes its toasts before htmx saves the page in its history cache, with the same result.
 
 | Event | On | Effect |
 | --- | --- | --- |
@@ -9260,7 +9263,7 @@ day: 0 is Sunday, 1 Monday, up to 6. `show-week-number` adds a column with the w
 
 ### With htmx
 
-The month links are plain links, so `hx-boost` on the page, or `hx-get` with `hx-target` and `hx-select` on a
+The month links are plain links, so a boosted page (`hx-boost:inherited="true"` on the body), or `hx-get` with `hx-target` and `hx-select` on a
 container around the month view, swaps the next month in. The controller renders the same page; nothing in the month
 view needs JavaScript.
 
@@ -9560,9 +9563,10 @@ keys follow what you see.
 ### With htmx
 
 - A chart that htmx swaps in draws itself; one it swaps out is cleaned up.
-- Before htmx saves a page for Back, the charts are put back to their skeletons, so the saved page holds none of the
-  inline styles Recharts sets (a strict Content-Security-Policy would report them when the page comes back). Back
-  draws them again.
+- Back asks the server for the page again, and the charts draw themselves. Where htmx saves pages for Back (htmx 2, or
+  htmx 4's `hx-history-cache` extension), the charts are put back to their skeletons first, so the saved page holds
+  none of the inline styles Recharts sets (a strict Content-Security-Policy would report them when the page comes
+  back); back draws them again.
 
 ### Left out
 
@@ -9844,44 +9848,34 @@ hide (see the tip below). Set the paper's size and margins with `@page` in the a
 
 ### With htmx
 
-`hx-boost` on the body (as [Collapses to icons](https://shadleaf.dev/1.2.0-SNAPSHOT/layouts/collapses-to-icons.md) has it) loads every page with htmx. The server renders the whole page
-each time, so the current page, the breadcrumb and the sidebar's collapsed state are always right, and a link in the
-phone panel closes it. The [Sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md#htmx) page says what happens with history and when only
-the main area is boosted.
+`hx-boost:inherited="true"` on the body (as [Collapses to icons](https://shadleaf.dev/1.2.0-SNAPSHOT/layouts/collapses-to-icons.md) has it) loads every
+page with htmx; without `:inherited`, htmx 4 boosts nothing, as the attribute is not on the links. The server renders
+the whole page each time, so the current page, the breadcrumb and the sidebar's collapsed state are always right, and
+a link in the phone panel closes it. The [Sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md#htmx) page says what happens with history
+and when only the main area is boosted.
 
 A boosted link sends `HX-Request` too. A controller that answers other htmx requests with a fragment (a table's rows,
 a dialog) has to tell such a request apart, or a link in the navigation gets the fragment without the page around it.
-A request from the body's boost has `HX-Boosted` and no `HX-Target`, because the body has no id. With
+A request from the body's boost has `HX-Boosted` and `HX-Target: body`; a history restore (back and forward) has
+`HX-History-Restore-Request`, and wants the whole page too. With
 [htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot):
 
 ```java
 static boolean wantsFragment(HtmxRequest request) {
+  String target = request.getTarget();
   return request.isHtmxRequest()
       && !request.isHistoryRestoreRequest()
-      && !(request.isBoosted() && request.getTarget() == null);
+      && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
 }
 ```
 
 A link inside an element with an `hx-target` of its own (a table's sort and page links, boosted to swap only the
-table) does send `HX-Target`, and still gets its fragment. See [Tables with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/tables-htmx.md).
+table) sends that target (`HX-Target: div#people-results`), and still gets its fragment. See
+[Tables with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/tables-htmx.md). Do not use `HX-Request-Type` for this: htmx sends `full` for a request
+with an `hx-select` too.
 
-> **Caution: htmx 4**
->
-> This check is htmx 2. htmx 4 sends `HX-Target: body` for a link the body boosts (`getTarget()` is `"body"`, never null),
-> so the sidebar's links would get the fragment. Two more changes: the body needs `hx-boost:inherited="true"`, because
-> htmx 4 does not inherit `hx-boost` otherwise, and a history restore (`HX-History-Restore-Request`, which htmx 4 still
-> sends) is handled by the same check. This version works with both:
->
-> ```java
-> static boolean wantsFragment(HtmxRequest request) {
->   String target = request.getTarget();
->   return request.isHtmxRequest()
->       && !request.isHistoryRestoreRequest()
->       && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
-> }
-> ```
->
-> See [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+The check works on htmx 2 as well, where the body's boost sends no `HX-Target` (`getTarget()` is null) and the body
+needs only `hx-boost="true"`: see [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 A boosted link or form made after the session expired would get the sign-in page swapped into the body (or, for a
 form, nothing at all, as its CSRF token went with the session). The Spring Security guide shows how to send the browser
@@ -10326,7 +10320,7 @@ A layout usually has no model attribute saying which page it shows. `#slNav.curr
 - `/` is only the current page for `/` itself, or Home would be current on every page.
 - A query string and a trailing slash are ignored: `/people?page=2` is `/people`.
 
-On a phone the panel opens with the focus on the current page's link. With `hx-boost` on the body every page comes
+On a phone the panel opens with the focus on the current page's link. With a boosted body every page comes
 from the server with the right link marked; an application that swaps only the main area leaves the old one marked,
 unless it swaps the menu too (out of band).
 
@@ -11207,21 +11201,19 @@ as a strip of icons, where a click on a group's icon then opens a sub-menu the s
 
 ### htmx
 
-With `hx-boost` on the body, every page comes from the server with the sidebar in the cookie's state, the current
-page marked and the panel closed. Boosting only the main area works too: following a link in the panel closes it, and a trigger htmx swaps in is
-set up again. Going back through htmx's history shows the page with the panel closed (whether a popover is open is not
-part of the markup htmx saves, and the panel closes before htmx takes its snapshot), and in the state the user chose
-last: the snapshot holds the state of the moment it was taken, so the restored page reads the cookie, as the server
-would.
+With `hx-boost:inherited="true"` on the body, every page comes from the server with the sidebar in the cookie's
+state, the current page marked and the panel closed. Boosting only the main area works too: following a link in the
+panel closes it, and a trigger htmx swaps in is set up again. Back and forward ask the server for the page again, so
+it shows with the panel closed and in the state the user chose last, read from the cookie.
 
 A boosted link sends `HX-Request` too. A controller that answers htmx with a fragment (a table's rows, a dialog) must
 tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
-`HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The
+`HX-Boosted` and `HX-Target: body`, and wants the whole page. The
 [Application shell](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx) page shows the check.
 
-On htmx 4, the body needs `hx-boost:inherited="true"`, the link sends `HX-Target: body`, and the check changes with it
-(see [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4)). Back does not show a snapshot there: htmx 4 asks the
-server for the page again, which reads the cookie as well.
+On htmx 2, the body needs only `hx-boost="true"`, and the link sends no `HX-Target`; the check handles both. htmx 2
+restores a snapshot on back: the panel closes before htmx takes it, and the restored page reads the cookie, as the
+server would. See [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 ### Left out
 
@@ -11809,7 +11801,7 @@ default `/logout` then signs the user out and redirects to `/login?logout`. With
 provider too with Spring Security's `OidcClientInitiatedLogoutSuccessHandler`: see
 [Signing out at Keycloak](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/oauth2.md#signing-out-at-keycloak).
 
-`hx-boost="false"` keeps a [boosted](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md) page from sending it with htmx: signing out should load a
+`hx-boost="false"` keeps a [boosted](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx) page from sending it with htmx: signing out should load a
 whole page, with a new CSRF token. The Sign in link has it too, as signing in usually redirects to an identity
 provider, which an htmx request cannot follow.
 
@@ -12436,8 +12428,10 @@ the way.
 **A swap that replaces the tabs** shows the tab the new markup has active: send the `active` the user had (for
 example with `hx-vals` or `hx-include`) if it should stay.
 
-**History.** htmx saves the page's markup as it is when it navigates away, with the tab the user chose and any panel
-content loaded since; back restores exactly that. With link triggers the address has the tab too.
+**History.** Back and forward ask the server for the page again, so it shows the tab the address asks for (with link
+triggers the address has the tab) and loads the other panels again when they are shown. htmx 2 instead saves the
+page's markup as it is when it navigates away, with the tab the user chose and any panel content loaded since, and
+back restores exactly that.
 
 ### Left out
 
@@ -12683,8 +12677,9 @@ pointer. A closed disabled item renders no content, so find-in-page cannot open 
 
 ### With htmx
 
-An accordion is plain markup, so a swap that replaces it shows it as the server rendered it, and htmx's history cache
-keeps the sections the user opened (the `open` attribute is in the markup it saves).
+An accordion is plain markup, so a swap that replaces it shows it as the server rendered it, and so does back, which
+asks the server for the page again. On htmx 2, the history cache keeps the sections the user opened (the `open`
+attribute is in the markup it saves).
 
 Leave `name` out of a single accordion that a swap replaces. htmx inserts the new markup before it removes the old,
 and the browser closes an open `details` that joins a group which already has one open: with the same name on both,
@@ -15265,8 +15260,10 @@ Switch the preview to Phone to see it.
 
 The whole layout file. It has what [every layout needs](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#what-every-layout-needs).
 The first sample application (sample-01) has a shorter version of it, with its own pages and no team switcher.
-`hx-boost` on the body loads every page with htmx; see [With htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx) for
-the one check a controller then needs. Leave out the script and the attribute for a layout without htmx.
+`hx-boost:inherited="true"` on the body loads every page with htmx 4, which the head loads as
+[htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#loading-htmx) does; see [With htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx)
+for the one check a controller then needs. Leave out the scripts, the config and the attribute for a layout without
+htmx.
 
 ```html
 <!DOCTYPE html>
@@ -15277,11 +15274,13 @@ the one check a controller then needs. Leave out the script and the attribute fo
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title th:text="${pageTitle}">Page</title>
   <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
-  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+  <meta name="htmx-config" content='{"includeIndicatorCSS": false}'>
   <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <script th:src="@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}" defer></script>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
   <link rel="stylesheet" th:href="@{/css/application.css}">
 </head>
-<body hx-boost="true">
+<body hx-boost:inherited="true">
 <sl:skip-link/>
 <sl:sidebar-provider>
   <sl:sidebar variant="inset" collapsible="icon">
@@ -16908,14 +16907,14 @@ When the session has expired, Spring Security answers an htmx request the way it
 follow that:
 
 - **A GET** (a lazily loaded tab, a table's rows, a dialog fetched into `#modal-root`) is redirected to the sign-in
-  page. The browser's XHR follows the redirect, and htmx swaps the sign-in page into the request's target.
-- **A POST** fails its CSRF check, because the token lived in the session: a 403, which htmx does not swap. Nothing
-  happens on the page.
+  page. The browser's `fetch` follows the redirect, and htmx swaps the sign-in page into the request's target.
+- **A POST** fails its CSRF check, because the token lived in the session: a 403, which htmx swaps into the target
+  like any other answer, so the error page shows where the form was.
 - **After signing in** the user is sent to the request Spring Security saved before it asked them to sign in. For an
   htmx request that is its URL, which may be a fragment endpoint that renders a few table rows as a page.
 
-[htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot) (5.2.0 and later) has an entry point and an
-access denied handler that answer such a request with `HX-Redirect` to the page it was made from:
+[htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot) (6.x for htmx 4, and 5.2.0 and later for htmx 2) has
+an entry point and an access denied handler that answer such a request with `HX-Redirect` to the page it was made from:
 
 ```java
 @Bean
@@ -16935,7 +16934,7 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 - **The page** is the one the user is on (htmx's `HX-Current-URL`), or for a boosted link the page it links to. The
   browser loads it as a normal navigation, the sign-in page asks the user to sign in, and the page is what they come
-  back to, not the fragment.
+  back to, not the fragment. htmx acts on `HX-Redirect` before it swaps anything, whatever the status.
 - **A POST** gets the same answer, but only when its CSRF token went with the session. A signed-in user without the
   required role still gets a plain 403, and so does a request with a wrong token.
 - **Every request that is not an htmx request** goes to the entry point you pass, so it behaves as before. With OAuth2
@@ -16954,14 +16953,13 @@ without an `Accept` header, a MockMvc test without `accept(...)`): those then ge
 the sign-in page. The htmx-spring-boot README has the details, and how this combines with a sign-in form that is itself
 sent with htmx.
 
-On htmx 4 (with htmx-spring-boot 6, which has the same entry point and handler), the problems above are the same,
-except the 403: htmx 4 swaps a `4xx` or `5xx` answer, so a POST that failed its CSRF check, and that the handler does
-not turn into an `HX-Redirect`, shows the error page in its target instead of doing nothing. The redirect itself works
-as it does in htmx 2: htmx 4 acts on `HX-Redirect` before it swaps anything, whatever the status. `HX-Current-URL` and
-`HX-Boosted`, which the handler reads, are unchanged. See [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+On htmx 2 (with htmx-spring-boot 5.2.0 or later, which has the same entry point and handler), the problems above are
+the same, except the 403: htmx 2 does not swap a `4xx` or `5xx` answer, so a POST that failed its CSRF check, and that
+the handler does not turn into an `HX-Redirect`, does nothing on the page. `HX-Current-URL` and `HX-Boosted`, which
+the handler reads, are the same in both. See [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
-Sample-02 (`samples/shadleaf-sample-02`) has it: `hx-boost` on the body, a tab on its Data page that loads with htmx,
-and a form. Its `SessionExpiryTest` makes these requests without a session.
+Sample-02 (`samples/shadleaf-sample-02`) has it, on htmx 2: `hx-boost` on the body, a tab on its Data page that loads
+with htmx, and a form. Its `SessionExpiryTest` makes these requests without a session.
 
 ---
 
@@ -17512,33 +17510,95 @@ The other ways to change a component, from a prop (`variant`, `size`) to your ow
 
 ---
 
-## Forms with htmx
+## htmx
 
-> Post a Shadleaf form with htmx, get it back with its errors without a page load, and keep it working as a plain POST.
+> Add htmx to an application that uses Shadleaf, within a strict CSP, and what differs if you are still on htmx 2.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx/
 
-Shadleaf's form components render plain HTML with every `id`, `aria-invalid` and `aria-describedby` in place, so a
-form that htmx swaps in is as accessible as one that loaded with the page. Shadleaf has no dependency on htmx and
-ships none of it; your application loads htmx, and the components pass `hx-*` attributes through like any other.
+[htmx](https://four.htmx.org/) is an essential part of a Thymeleaf developer's toolkit nowadays.
+It makes it easy to create rich, interactive UIs, without the need to write JavaScript yourself.
 
-The snippets use htmx 2. On htmx 4 (`htmx.org` 4.x with htmx-spring-boot 6.x) several of them need a change, and none
-of them fails with an error: see [htmx 2 and htmx 4](#htmx-2-and-htmx-4).
+Shadleaf has no hard dependency on htmx, so it is not included by default.
+But both do work nicely together once your application loads htmx.
 
-This guide follows the "Form with htmx" page of sample-01 (`samples/shadleaf-sample-01`, `/htmx-form`): it posts with
-htmx, comes back with its errors or a confirmation, moves focus to the right place, and still works as a normal POST
-without JavaScript. The sample's `/form` page has the same fields without htmx, for comparison.
+The components pass `hx-*` attributes through like any other attribute.
+They are built for it: dialogs, menus, popovers and toasts keep working
+when htmx swaps them in or out, and response headers such as `HX-Trigger` can close a dialog or show a toast.
+
+Using htmx 4 is recommended, but Shadleaf also works with htmx 2: see [Still using htmx 2?](#still-using-htmx-2).
 
 ### Loading htmx
 
-The sample uses [htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot) for the request and response
-headers, and htmx itself from its webjar, pinned in the pom:
+Loading htmx is easiest done as a [webjar](https://www.webjars.org/):
 
-```xml
+```xml title="pom.xml"
+<dependency>
+  <groupId>org.webjars</groupId>
+  <artifactId>webjars-locator-lite</artifactId>
+</dependency>
+<dependency>
+  <groupId>org.webjars.npm</groupId>
+  <artifactId>htmx.org</artifactId>
+  <version>4.0.2</version>
+</dependency>
+```
+
+> **Tip**
+>
+> If you want to learn more about webjars, check out [Using Webjars with Thymeleaf](https://www.youtube.com/watch?v=84zmvoSg7dc).
+
+Optionally, you can use [htmx-spring-boot](https://github.com/wimdeblauwe/htmx-spring-boot) which brings some nice
+quality-of-life improvements when working with htmx and Thymeleaf:
+
+```xml title="pom.xml"
 <dependency>
   <groupId>io.github.wimdeblauwe</groupId>
   <artifactId>htmx-spring-boot-thymeleaf</artifactId>
-  <version>5.1.1</version>
+  <version>6.0.1</version>
+</dependency>
+```
+
+With the dependencies added in the `pom.xml`, you can now load htmx like this:
+
+```html
+<head>
+  ...
+  <meta name="htmx-config" content='{"includeIndicatorCSS": false}'>
+  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+  <script th:src="@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}" defer></script>
+  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+</head>
+```
+
+Some important points:
+
+- Shadleaf's components use Alpine, so be sure to also load the `hx-alpine-compat` extension, which is included in the htmx webjar.
+Without it, an htmx swap resets attributes the components set, such as `aria-expanded` on a menu's trigger.
+- The htmx scripts must load before the `sl/layout :: assets` because that contains the AlpineJS script.
+- `webjars-locator-lite` lets the script URLs leave out the version: Spring Boot adds it (`/webjars/htmx.org/4.0.2/...`).
+Without it, write the version in the URL yourself.
+- If you need a strict [CSP](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/csp.md), disable the indicator CSS via `includeIndicatorCSS`.
+Setting this to `false` avoids the inline `<style>` that htmx adds by default.
+- When the application is secured (with [Spring Security](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/spring-security.md) for example), permit `/webjars/**` so htmx can be loaded on the login page as well.
+
+### Next
+
+- [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md): post a form, get it back with its errors, and where the focus goes; also
+the request headers, history, dialogs, menus, toasts and swapping.
+- [Tables with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/tables-htmx.md): search as you type, sort and page a server-side table, row actions, load more.
+- [Application shell](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx): `hx-boost` on the body, and the check a
+controller then needs to tell a page from a fragment.
+
+### Still using htmx 2?
+
+Shadleaf works with htmx 2 too.
+Load it from its webjar and combine it with htmx-spring-boot 5.x:
+
+```xml
+<dependency>
+  <groupId>org.webjars</groupId>
+  <artifactId>webjars-locator-lite</artifactId>
 </dependency>
 <dependency>
   <groupId>org.webjars.npm</groupId>
@@ -17546,10 +17606,13 @@ headers, and htmx itself from its webjar, pinned in the pom:
   <version>2.0.11</version>
 </dependency>
 <dependency>
-  <groupId>org.webjars</groupId>
-  <artifactId>webjars-locator-lite</artifactId>
+  <groupId>io.github.wimdeblauwe</groupId>
+  <artifactId>htmx-spring-boot-thymeleaf</artifactId>
+  <version>5.2.0</version> <!-- 5.x is for htmx 2.x -->
 </dependency>
 ```
+
+The `<head>` snippet is also slightly different compared to using htmx 4:
 
 ```html
 <head>
@@ -17559,23 +17622,85 @@ headers, and htmx itself from its webjar, pinned in the pom:
   <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
 </head>
 ```
+Take note:
 
-- **A webjar, served by your application.** It needs no Node build, and it comes from your own origin, so a policy
-  with `script-src 'self'` allows it (add the [nonce](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/csp.md) if your policy uses one). With `webjars-locator-lite`
-  the template leaves the version out, and Spring Boot writes it into the URL (`/webjars/htmx.org/2.0.11/...`), which
-  also busts caches on an upgrade. An application that bundles its JavaScript with Vite can `import 'htmx.org'`
-  instead.
-- **The config keeps htmx within a strict [CSP](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/csp.md).** By default htmx adds an inline `<style>` for its request
-  indicator, which `style-src 'self'` blocks, and evaluates `hx-on` handlers and `js:` values with `eval`. Turn both
-  off unless you use them.
+- **The config has other names.** htmx 2's `includeIndicatorStyles` is htmx 4's `includeIndicatorCSS` (each ignores
+the other's name), and `allowEval: false` turns off `hx-on` handlers and `js:` values, which htmx 4 has no setting
+for.
+- **No Alpine extension.** `hx-alpine-compat` is htmx 4's; leave it out, and htmx can come after the `assets`
+fragment.
+- Use htmx-spring-boot 5.x. Version 6.x is for htmx 4.x.
 
-Behind Spring Security, an htmx request made after the session expired gets the sign-in page swapped into its
-target, or, for a POST, nothing at all. See [htmx after the session expired](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/spring-security.md#htmx-after-the-session-expired).
+The snippets in the docs are htmx 4.
+Some of those snippets need to be tweaked if you use htmx 2.
+
+Below are the differences that matter for Shadleaf.
+Important differences of htmx itself can be seen at [What's new in htmx 4](https://four.htmx.org/docs/whats-new-in-htmx-4).
+
+#### Inheritance
+
+htmx 2 inherits `hx-boost`, `hx-target`, `hx-select` and `hx-swap` from any ancestor, without `:inherited`.
+So you write `hx-boost="true"` instead of `hx-boost:inherited="true"`.
+To drop an inherited `hx-select` on one element, htmx 2 has `hx-select="unset"`.
+
+#### Request headers
+
+|                                   | htmx 2                                   | htmx 4                                                          |
+|-----------------------------------|------------------------------------------|-----------------------------------------------------------------|
+| The element that sent the request | `HX-Trigger` (its id), `HX-Trigger-Name` | `HX-Source`, as `tag#id` (`a#sort-name`)                        |
+| The target                        | `HX-Target` (its id; none without an id) | `HX-Target`, as `tag#id`, always (`div#people-results`, `body`) |
+| Full page or part                 |                                          | `HX-Request-Type`: `full` or `partial`                          |
+
+With htmx-spring-boot 5, `getTriggerId()` and `getTriggerName()` take the place of `getSource()`
+(`@HxRequest(triggerId = ..., triggerName = ...)`), and `getTarget()` returns `people-results`, not
+`div#people-results`. A link boosted from a `<body>` without an id sends no `HX-Target`, so `getTarget() == null`
+tells it apart; the [fragment check](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md#fragment-or-whole-page) works with both.
+
+#### History
+
+htmx 2 keeps a snapshot of the page in `localStorage` for each address it pushes (`hx-push-url`, `hx-boost`), and puts
+it back on the back button. A failed form keeps the user's input in its `value` attributes there: for a form with
+personal data, set `"historyCacheSize": 0` in the htmx config, or `hx-history="false"` on the page, which makes htmx
+ask the server again (`HX-History-Restore-Request`). A search field shows the value of the first load in a snapshot,
+so [Tables with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/tables-htmx.md) puts `hx-history="false"` on its search form there. Before htmx 2 saves a
+snapshot, Shadleaf closes open dialogs and removes the toasts, so back never shows one.
+
+#### Response headers and events
+
+htmx 2 also has `HX-Trigger-After-Swap` and `HX-Trigger-After-Settle` (`addTriggerAfterSwap()` and
+`addTriggerAfterSettle()` in htmx-spring-boot 5), whose events are lost when the swap removed the element that sent
+the request: use `HX-Trigger`. htmx 2 dispatches the events of `HX-Trigger` before the swap, where htmx 4 does it
+after. `HX-Redirect`, `HX-Location`, `HX-Refresh`, `HX-Push-Url`, `HX-Replace-Url`, `HX-Retarget`, `HX-Reswap` and
+`HX-Reselect` are the same in both.
+
+#### Swapping
+
+- **htmx 2 does not swap `4xx` and `5xx` answers** unless a `responseHandling` entry says so (htmx 4 has no
+`responseHandling`).
+- **A response with only out-of-band content empties the target** in htmx 2, so `swapEmpty:true` is not needed there.
+- **`hx-delete` includes the enclosing form** in htmx 2.
+- **htmx 2's `hx-disabled-elt` is htmx 4's `hx-disable`**, and htmx 2's `hx-disable` (leave this element alone) is
+htmx 4's `hx-ignore`.
+- **Validating as you type is htmx 4 only.** [`<sl:form validate>`](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form.md#validating-as-you-type)
+swaps with `outerMorph` and `<hx-partial>`, which htmx 2 does not have.
+
+---
+
+## Forms with htmx
+
+> Post a Shadleaf form with htmx, get it back with its errors without a page load, and keep it working as a plain POST.
+
+Source: https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx/
+
+This page explains how to use HTML forms with Shadleaf and htmx.
+Be sure to have added [htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md) to your application first.
 
 ### One form, two ways to post
 
-The form keeps its `th:action` and `method="post"`, and gets `hx-post` next to them. htmx posts it when JavaScript
-runs; without it, the browser does. The part htmx swaps is a fragment that holds the form, or the confirmation:
+You can keep the normal `th:action` and `method="post"` on your `<form>`.
+Just add a hx-post next to it to have htmx send the request to the server so it can swap in the response.
+
+In this example, the response is the same `contact` fragment, but with `sendTo` set to `true`, so it renders the confirmation message.
 
 ```html
 <div id="contact" th:fragment="contact">
@@ -17605,9 +17730,12 @@ runs; without it, the browser does. The part htmx swaps is a fragment that holds
 ```
 
 `hx:post` (with a colon) is htmx-spring-boot's Thymeleaf dialect: it resolves `@{/form}` like `th:action` does, and
-adds the CSRF header when Spring Security is on. `hx-target` is a plain attribute: `#` starts a message expression in
-Thymeleaf. The target is the fragment's own wrapper, so the fragment replaces itself, and a second submit works like
-the first.
+adds the CSRF header, on the element's own `hx-headers`, when Spring Security is on.
+
+`hx-target` is a plain attribute: We don't need Thymeleaf processing there.
+Moreover, using `#` would start a message expression in Thymeleaf, which we don't need here.
+The target is the fragment's own wrapper, so the fragment replaces
+itself. `hx-target` and `hx-swap` sit on the element that makes the request, so they need no `:inherited`.
 
 The controller answers an htmx request (it sends `HX-Request`) with the fragment alone, and everything else as
 before, with post/redirect/get on success:
@@ -17630,13 +17758,16 @@ public String submit(@Valid @ModelAttribute("contactForm") ContactForm contactFo
 }
 ```
 
-- **Errors come back with status 200**, as for the full page. htmx 2 does not swap 4xx responses unless you
-  configure it to, so a `422` would need a `responseHandling` entry. (htmx 4 swaps them, and has no
-  `responseHandling`: see [htmx 2 and htmx 4](#htmx-2-and-htmx-4).)
-- **A valid htmx submit gets the confirmation, not a redirect.** An htmx POST is not a navigation: a reload cannot
+- Errors come back with status 200, as for the full page. htmx 4 swaps a `4xx` or `5xx` answer like any other, so
+  a `422 Unprocessable Content` would work too.
+- A valid htmx submit gets the confirmation, not a redirect. An htmx POST is not a navigation: a reload cannot
   send it again, which is what post/redirect/get protects against. An `HX-Redirect` (`redirect:htmx:/form` with
   htmx-spring-boot, flash attributes included) works too, but loads the whole page again, and focus with it.
-- **Two handler methods** with `@HxRequest` on one of them work as well, if you prefer that to the `if`.
+- The controller uses a single method with the `HtmxRequest htmxRequest` injected to know if it was a htmx requrest or a full page request.
+You can also have two handler methods with `@HxRequest` on one of them, if you prefer that to the `if` statement.
+- If you use a boosted body (`hx-boost:inherited="true"`), then every link and form sends `HX-Request`.
+  So, `isHtmxRequest()` alone no longer tells a request for the fragment from one for a page: see
+  [Fragment or whole page](#fragment-or-whole-page).
 
 ### Where focus goes
 
@@ -17664,25 +17795,52 @@ user leaves it: see [Field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field
 
 ### Validating as you type
 
-On htmx 4, `<sl:form th:validate="@{/contact/validate}">` validates each field on the server while the user edits it,
-and swaps only that field: no rules in JavaScript, no focus moved, nothing announced. See
+`<sl:form th:validate="@{/contact/validate}">` validates each field on the server while the user edits it, and swaps
+only that field: no rules in JavaScript, no focus moved, nothing announced. See
 [Validating as you type](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form.md#validating-as-you-type).
+
+### Fragment or whole page
+
+Not every htmx request wants a fragment: a link boosted from the body, or the back button, wants the whole page.
+Use this method to know which one to return:
+
+```java
+static boolean wantsFragment(HtmxRequest request) {
+  String target = request.getTarget();
+  return request.isHtmxRequest()
+      && !request.isHistoryRestoreRequest()
+      && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
+}
+```
+
+Return the fragment when it is `true`, and the whole page otherwise.
 
 ### Back button and history
 
-`hx-post` pushes no history entry. The URL stays `/form`, and htmx's history cache, which snapshots the page into
-`localStorage` when htmx pushes a URL, is not involved: back from another page shows `/form` as the browser kept it
-or as the server renders it again. If you boost navigation (`hx-boost`) or push URLs, htmx does snapshot pages, and a
-failed form keeps the user's input in its `value` attributes. For a form with personal data, set
-`"historyCacheSize": 0` in the htmx config, or `hx-history="false"` on the page. This is htmx 2: htmx 4 keeps no
-snapshots and asks the server again ([htmx 2 and htmx 4](#history)).
+htmx keeps no snapshots of the pages it pushed. On back and forward it asks the server for the page again, with
+`HX-History-Restore-Request`, and swaps it into the body (or the `[hx-history-elt]`). So the page is always rendered
+again: a form shows what the server renders for it, a search field the value of the address, and no personal data is
+kept in `localStorage`. The controller has to answer the restore request with the whole page, as the check above does.
+`hx-post` pushes no history entry: the URL stays `/form`.
+
+The optional `hx-history-cache` extension brings the snapshots back, with `hx-history="false"` to keep a page out.
+Do not combine it with `hx-alpine-compat` for now, which Shadleaf needs. Before the extension saves a page,
+`hx-alpine-compat` stops every Alpine component on it (htmx 4.0.2). So Shadleaf cannot close an open dialog or remove
+the toasts before the snapshot, and after a request that pushes a URL, the components outside its target no longer
+work ([htmx#4221](https://github.com/bigskysoftware/htmx/issues/4221)).
 
 ### Dialogs
 
 A dialog can come from the server too: a button fetches `<sl:dialog open>` into an empty element, the form in it
 swaps only itself while it has errors, and an `HX-Trigger: sl-dialog-close` response header closes it after a valid
-save. Open dialogs close before htmx snapshots a page for its history, so back never restores one. See
-[Dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.
+save. See [Dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx); sample-01's `/dialog` page does all of it.
+
+htmx dispatches the events of `HX-Trigger` after the swap, on the element that sent the request, or on the document
+when the swap removed it. A dialog, alert dialog or sheet whose request answers with `sl-dialog-close` closes when the
+swap starts instead: the page behind a modal dialog is inert, so otherwise htmx could not put the focus back on a
+replaced opener (by its id) or on an `autofocus` element in the answer. A
+[dialog or sheet body](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md#loaded-into-the-dialog-a-body) keeps an error answer out of its
+content, so a failed save still keeps what was typed.
 
 The same works for an [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md#confirming-with-htmx) that confirms a delete: its
 destructive button sends `hx-delete`, and the response closes it with the same event, shows a toast saying what
@@ -17695,144 +17853,23 @@ A [dropdown menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.m
 closes, with the focus back on the trigger. A menu of row actions whose response replaces the row keeps the focus in
 place when the trigger has an id, which it gets from the menu's (`th:id="|order-${order.id}-actions|"` gives
 `order-42-actions-trigger`). A form in a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md#a-form-in-a-popover-with-htmx) closes
-it with `HX-Trigger: sl-popover-close`. A swap that replaces an open menu or popover leaves nothing open behind it,
-and back never restores one open: whether a popover is open is not part of the markup htmx saves.
+it with `HX-Trigger: sl-popover-close`; send it from a request whose element stays (`HtmxReswap.none()`, or a target
+elsewhere), as the event comes after the swap. A swap that replaces an open menu or popover leaves nothing open
+behind it, and back never restores one open: the server renders the page again.
 
 ### Toasts
 
 An `HX-Trigger: sl-toast` response header shows a [toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md), whatever the response swaps:
 `htmxResponse.addTrigger("sl-toast", Toast.success("Member deleted"))`. A response can also swap `<sl:toast>`s into
-the toaster out of band. Use `HX-Trigger` rather than `HX-Trigger-After-Swap`/`-After-Settle`, whose events are lost
-when the swap removed the element that sent the request, and a flash attribute rather than a toast when the response
-redirects. Toasts are removed before htmx saves a page in its history cache, so back never shows one again. A toast
-never takes the focus: it goes away.
+the toaster out of band. Use a flash attribute rather than a toast when the response redirects. A toast never takes
+the focus: it goes away.
 
-### htmx 2 and htmx 4
+### Swapping
 
-The examples in this guide, in [Tables with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/tables-htmx.md), and on the component pages use **htmx 2**
-(`htmx.org` 2.0.11 with htmx-spring-boot 5.1.1): that is what samples 02 and 03 load, and what the docs' browser
-tests run against. Sample-01 runs on htmx 4 (`htmx.org` 4.0.1 with htmx-spring-boot 6.0.1), so its pages show the
-changes below in place. A few of the browser tests also run on htmx 4.0.1 (popovers, toasts, file upload, the
-dialog body and validating as you type), and the components work with it. The guides' own snippets are not tested on htmx 4. This section lists what a Shadleaf user
-changes to use them there (`htmx.org` 4.0.1 with htmx-spring-boot 6.0.1), and each htmx page has a note pointing here.
-htmx's own list is [What's new in htmx 4](https://four.htmx.org/docs/whats-new-in-htmx-4).
-
-#### Versions
-
-```xml
-<dependency>
-  <groupId>io.github.wimdeblauwe</groupId>
-  <artifactId>htmx-spring-boot-thymeleaf</artifactId>
-  <version>6.0.1</version> <!-- was 5.1.1 -->
-</dependency>
-<dependency>
-  <groupId>org.webjars.npm</groupId>
-  <artifactId>htmx.org</artifactId>
-  <version>4.0.1</version> <!-- was 2.0.11 -->
-</dependency>
-```
-
-htmx-spring-boot 6 is for htmx 4 only: an `HtmxRequest` argument works with both, but `isPartialRequest()` throws
-under htmx 2, and `hx:post` and the other `hx:` attributes work as before, with the CSRF header on the element's own
-`hx-headers`.
-
-#### The config
-
-```html
-<!-- htmx 2 -->
-<meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false}'>
-<!-- htmx 4 -->
-<meta name="htmx-config" content='{"includeIndicatorCSS": false}'>
-```
-
-`includeIndicatorStyles` is now `includeIndicatorCSS`; htmx 4 ignores the old name and keeps adding its indicator
-rules. There is no `allowEval` in htmx 4. `hx-on:` handlers and `js:` values are still evaluated with
-`Function`, so a policy without `'unsafe-eval'` blocks them: none of Shadleaf's snippets use them. htmx's `hx-csp`
-extension (`safeEval`) covers them, with a nonce on every htmx element.
-
-#### Inheritance is explicit
-
-In htmx 2 an element inherits `hx-boost`, `hx-target`, `hx-select` and `hx-swap` from its ancestors. In htmx 4 it
-inherits an attribute only when the ancestor has it with the `:inherited` modifier. Without it, `hx-boost` on the
-body boosts nothing: it is not on the links.
-
-```html
-<!-- htmx 2 -->
-<body hx-boost="true">
-<div id="people-results"
-     hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
-<!-- htmx 4 -->
-<body hx-boost:inherited="true">
-<div id="people-results"
-     hx-boost:inherited="true" hx-target:inherited="#people-results" hx-select:inherited="#people-results"
-     hx-swap:inherited="outerHTML show:none">
-```
-
-An attribute on the element that makes the request needs no modifier (`hx-post` with `hx-target` on a form), and
-`hx-boost="false"` on a link still opts it out. To keep htmx 2's behavior while you migrate, set
-`"implicitInheritance": true` in the config.
-
-`hx-select="unset"`, which a menu item inside the table's results uses to drop the `hx-select` it would inherit, is
-gone: an empty `hx-select=""` on the element does it, as the element's own attribute wins and an empty selector
-selects nothing.
-
-#### Request headers and the fragment check
-
-| | htmx 2 | htmx 4 |
-| --- | --- | --- |
-| The element that sent the request | `HX-Trigger` (its id), `HX-Trigger-Name` | `HX-Source`, as `tag#id` (`a#sort-name`) |
-| The target | `HX-Target` (its id; none without an id) | `HX-Target`, as `tag#id`, always (`div#people-results`, `body`) |
-| Full page or part | | `HX-Request-Type`: `full` or `partial` |
-
-htmx-spring-boot 6 reads them: `getSource()` replaces `getTriggerId()` and `getTriggerName()` (and `@HxRequest(source =
-...)` replaces `triggerId` and `triggerName`), and `getTarget()` returns `div#people-results`, not `people-results`.
-
-This changes the check that tells a boosted link in the navigation from a request for a fragment (see the
-[application shell](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx)). A link boosted from a `<body>` without an id sends
-`HX-Target: body` in htmx 4, where htmx 2 sends no `HX-Target`, so `getTarget() == null` is never true and the sidebar's
-links get a fragment. This works with both:
-
-```java
-static boolean wantsFragment(HtmxRequest request) {
-  String target = request.getTarget();
-  return request.isHtmxRequest()
-      && !request.isHistoryRestoreRequest()
-      && !(request.isBoosted() && (target == null || target.equals("body") || target.startsWith("body#")));
-}
-```
-
-Do not use `HX-Request-Type` for this: htmx 4 sends `full` for a request with an `hx-select` too, so the table's own
-requests, which select `#people-results` from the page, are `full` as well. A history restore sends `HX-Request`,
-`HX-History-Restore-Request`, `HX-Target: body` and `full`, and not `HX-Boosted`.
-
-#### History
-
-htmx 4 has no history cache. On back and forward it asks the server for the page again, with
-`HX-History-Restore-Request`, and swaps it into the body (or the `[hx-history-elt]`). What the Back button sections of
-these guides say about snapshots, `hx-history="false"` and `historyCacheSize` is htmx 2 only: both are gone, and the
-page is always rendered again, so a search field shows the value of the address. A controller still has to answer the
-restore request with the whole page, as the check above does.
-
-The optional `hx-history-cache` extension brings the snapshots back, with `hx-history="false"`. Do not combine it with
-`hx-alpine-compat` for now, which Shadleaf needs on htmx 4 (see below). Before the extension saves a page,
-`hx-alpine-compat` stops every Alpine component on it (htmx 4.0.1). So Shadleaf cannot close an open dialog or remove
-the toasts before the snapshot, and after a request that pushes a URL, the components outside its target no longer
-work ([htmx#4221](https://github.com/bigskysoftware/htmx/issues/4221)).
-
-#### Response headers and events
-
-`HX-Trigger` works as in htmx 2: a JSON object of event names and details, which Shadleaf's `sl-toast`,
-`sl-dialog-close` and `sl-popover-close` are. `HX-Trigger-After-Swap` and `HX-Trigger-After-Settle` are gone, and so
-are `HtmxResponse.addTriggerAfterSwap()` and `addTriggerAfterSettle()` in htmx-spring-boot 6; the guides use
-`HX-Trigger`. `HX-Redirect`, `HX-Location`, `HX-Refresh`, `HX-Push-Url`, `HX-Replace-Url`, `HX-Retarget`, `HX-Reswap`
-and `HX-Reselect` remain.
-
-#### Swapping
-
-- **A response that holds only out-of-band content swaps nothing into the target.** htmx 2 emptied the target then;
-  htmx 4 skips the main swap when only `hx-swap-oob` elements are left, so the delete in the [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md#confirming-with-htmx),
-  whose answer is the next row out of band, would keep its row. Ask for the empty swap with `swapEmpty:true`
-  (`"allowEmptySwapAfterOOB": true` in the config does it everywhere):
+- **A response that holds only out-of-band content swaps nothing into the target.** So the delete in the
+  [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md#confirming-with-htmx), whose answer is the next row out of band, would
+  keep its row. Ask for the empty swap with `swapEmpty:true` (`"allowEmptySwapAfterOOB": true` in the config does it
+  everywhere):
 
   ```html
   <sl:button variant="destructive" hx:delete="@{/members/{id}(id=${member.id})}"
@@ -17840,16 +17877,13 @@ and `HX-Reselect` remain.
   ```
 
   A toast sent out of band into `#toaster` needs nothing.
+- **Error answers are swapped in.** A `4xx` or `5xx` response replaces the target like any other. Use
+  `hx-status:5xx="swap:none"`, or `"noSwap": [204, 304, "4xx", "5xx"]` in the config, where you would rather leave the
+  page alone.
 - **`hx-delete` leaves the enclosing form out**, like `hx-get`: add `hx-include="closest form"` where it needs the
   form's fields.
-- **`hx-disabled-elt` is `hx-disable`**, and htmx 2's `hx-disable` (leave this element alone) is `hx-ignore`. The
-  indicator class is still `htmx-request`, and `hx-indicator`, `hx-sync="this:replace"`, `hx-swap-oob` and `show:none`
-  work as before. A boosted link still scrolls to the top of the page unless `show:none` is there.
-
-#### What else changed for Shadleaf
-
-- **Validating as you type is htmx 4 only.** [`<sl:form validate>`](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form.md#validating-as-you-type)
-  swaps with `outerMorph` and `<hx-partial>`, which htmx 2 does not have.
+- **`hx-disable` disables elements during a request** (`hx-ignore` leaves an element alone). The indicator class is
+  `htmx-request`.
 - **Do not morph a combobox, select, calendar or date picker yourself.** Their scripts build part of their markup in
   the browser (the combobox's input and list, the calendar's months, the date picker's button text and name). A
   morph (`outerMorph`, `innerMorph`) makes the page match the server's markup and removes those parts, and the
@@ -17857,36 +17891,6 @@ and `HX-Reselect` remain.
   or put `hx-morph-skip` on the component to leave it out of the morph (it then keeps its value and ignores what the
   server sent for it). Validating as you type morphs fields too, but Shadleaf keeps these components through its own
   swaps.
-
-- **Load htmx's Alpine extension.** htmx 4's settle step puts every attribute of the server's markup back on a swapped
-  element whose `id` stayed the same, removing the ones the components set when they start (`aria-expanded` on a
-  menu's trigger, for one). Load `ext/hx-alpine-compat.js` after htmx: it holds Alpine back until the settle is done.
-  The htmx 4 webjar has it. Alpine must start after the extension, so both scripts go before the `assets` fragment, which starts Alpine (its module script runs in document order with
-  the `defer` scripts):
-
-  ```html
-  <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
-  <script th:src="@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}" defer></script>
-  <th:block th:replace="~{sl/layout :: assets}"></th:block>
-  ```
-
-  With `shadleaf.assets.alpine=external`, they go before the script that loads the application's Alpine.
-
-  Without it, turn the settle off, `<meta name="htmx-config" content='{"defaultSettleDelay":0}'>` (or `settle:0` in
-  one `hx-swap`), which also turns off htmx's settle transitions.
-- **Error answers are swapped in.** htmx 4 swaps a `4xx` or `5xx` response like any other, where htmx 2 leaves the
-  page alone. A [dialog or sheet body](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md#loaded-into-the-dialog-a-body) stops that for the
-  requests into it, so a failed save still keeps what was typed; elsewhere, use `hx-status:5xx="swap:none"` or
-  `"noSwap": [204, 304, "4xx", "5xx"]` in the config where you want htmx 2's behavior.
-- **`HX-Trigger` runs after the swap**, on the element that sent the request, or on the document when the swap
-  removed it. A dialog, alert dialog or sheet whose request answers with `sl-dialog-close` closes when the swap
-  starts instead, as on htmx 2: the page behind a modal dialog is inert, so otherwise htmx could not put the focus
-  back on a replaced opener (by its id) or on an `autofocus` element in the answer. Send `sl-popover-close` from a
-  request whose element stays (`HtmxReswap.none()`, or a target elsewhere); `sl-toast` works either way.
-- **Use htmx 4.0.1 or later. A `null` detail in `HX-Trigger` throws in htmx 4.0.0** (`detail.cancelled` in its `trigger()`; 4.0.1 reads
-  `detail?.cancelled`, see [htmx#4135](https://github.com/bigskysoftware/htmx/issues/4135)). htmx-spring-boot sends one
-  for an event without a detail when another event of the same response has one, such as `sl-dialog-close` next to a
-  toast: on 4.0.0, give it an empty detail there, `htmxResponse.addTrigger("sl-dialog-close", Map.of())`.
 
 ---
 
@@ -17905,21 +17909,7 @@ user types and replaces only the table, and the links and the address bar stay w
 
 This guide follows sample-01's `/people` page (`samples/shadleaf-sample-01`): 270 people in an H2 database, sorted,
 paged and searched by Spring Data JPA, with a menu of actions per row; and its `/people-load-more` page, which reads
-them a `Slice` at a time. Loading htmx is in [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#loading-htmx).
-
-> **Caution: htmx 4**
->
-> The snippets on this page are htmx 2, and on htmx 4 they break without an error. Sample-01 runs on htmx 4, with
-> these four changes, all in [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4):
->
-> - `#people-results` needs `hx-boost:inherited`, `hx-target:inherited`, `hx-select:inherited` and `hx-swap:inherited`
->   (and `hx-boost:inherited` on the body): without them, the sort, page and size links are plain links and the menu
->   items have no target. `hx-select="unset"` on the Delete item becomes `hx-select=""`.
-> - `getTarget()` is `"body"` for a link the body boosts, not null: use the check from the
->   [application shell](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md#with-htmx).
-> - Back and forward ask the server again whatever the form says: `hx-history="false"` does nothing, and the
->   [Back and forward](#back-and-forward) section does not apply.
-> - An `HX-Trigger` event is dispatched after the swap, not before it.
+them a `Slice` at a time. Loading htmx is in [htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#loading-htmx).
 
 ### The page
 
@@ -17929,14 +17919,15 @@ Two parts: the search form, which htmx never replaces, and the results (the tabl
 <form id="people-search" role="search" method="get" th:action="@{/people}"
       hx:get="@{/people}" hx-trigger="input changed delay:300ms, search, submit" hx-sync="this:replace"
       hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none"
-      hx-push-url="true" hx-history="false">
+      hx-push-url="true">
   <sl:input type="search" id="people-q" name="q" th:value="${search}" aria-label="Search people"
             placeholder="Filter by name or email…" autocomplete="off"/>
   <p id="people-status" class="visually-hidden" role="status" th:text="${found}"></p>
 </form>
 
 <div id="people-results" th:fragment="results"
-     hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+     hx-boost:inherited="true" hx-target:inherited="#people-results" hx-select:inherited="#people-results"
+     hx-swap:inherited="outerHTML show:none">
   <sl:query-params except="q" form="people-search"/>
   <p th:if="${fragment}" id="people-status" hx-swap-oob="innerHTML" th:text="${found}"></p>
   <sl:table th:page="${people}">
@@ -17966,7 +17957,7 @@ same without a context path.)
 
 ### The controller
 
-The controller answers an htmx request with the results alone, as the [htmx form](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md) does, and every other
+The controller answers an htmx request with the results alone, as the [htmx form](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md) does, and every other
 request with the page:
 
 ```java
@@ -17981,20 +17972,22 @@ public String people(@RequestParam(required = false) String q,
   model.addAttribute("search", search);
   model.addAttribute("found", search.isEmpty() ? ""
       : people.getTotalElements() == 1 ? "1 person found" : people.getTotalElements() + " people found");
-  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
-      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
+  boolean fragment = HtmxRequests.wantsFragment(htmxRequest);
   model.addAttribute("fragment", fragment);
   return fragment ? "people :: results" : "people";
 }
 ```
 
-A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. So does a link
-that `hx-boost` on the body sends, such as the [sidebar's](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md#htmx): it has `HX-Boosted` and no
-`HX-Target` (the body has no id; on htmx 4 it is `body`, and the check changes), where the table's own boosted links
-target the results. htmx-spring-boot
-adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
-page. Limit the sortable properties and add a unique last sort key as the [table](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md#limit-what-can-be-sorted)
-explains; the sample does both.
+Not every htmx request wants the results alone.
+The back button ([history restore](#back-and-forward)) and the links in the [sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md#htmx)
+also send `HX-Request`, but they want the whole page.
+`HtmxRequests.wantsFragment` tells them apart: see [Fragment or whole page](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md#fragment-or-whole-page).
+
+htmx-spring-boot adds `Vary: HX-Request` to every htmx response.
+This way, the browser never shows a cached fragment where it expects the whole page.
+
+The [table](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md#limit-what-can-be-sorted) page explains why you should limit the sortable
+properties and add a unique last sort key. The sample does both.
 
 ### Ask for the page's own URL
 
@@ -18033,19 +18026,18 @@ whole page has the id once. Keep the region out of the swapped part: a live regi
 
 ### Sort, page and size links
 
-`hx-boost="true"` on `#people-results` turns every link inside it into an htmx request for that link's URL: the sort
-links in the headers, the page links and the rows-per-page menu's items. They inherit `hx-target`, `hx-select` and
-`hx-swap` from the same element, so each replaces the results and pushes its address, as following the link would.
+`hx-boost:inherited="true"` on `#people-results` turns every link inside it into an htmx request for that link's URL:
+the sort links in the headers, the page links and the rows-per-page menu's items. They inherit `hx-target`,
+`hx-select` and `hx-swap` from the same element (each with `:inherited`, as htmx 4 inherits nothing otherwise), so
+each replaces the results and pushes its address, as following the link would.
 
 - **Focus.** htmx gives the focus back to the element with the id of the one that had it, if the swap replaced that
   element. Every link Shadleaf builds has a stable id (`sort-name`, `page-next`, `page-3`, and the size menu's button
   `page-size-trigger`, which the menu focuses before it follows the chosen size), so after a click on Next the focus is
   on the new Next, and the keyboard user can press Enter again. Ids get the [qualifier](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md#two-tables-on-one-page)
   as a prefix, so two tables on a page keep theirs apart.
-- **Scrolling.** A boosted link scrolls to the top of the target by default (`scrollIntoViewOnBoost`). `show:none` in
-  `hx-swap` keeps the page where it is, which suits a pagination at the bottom of a long table; the focused link stays
-  in view. (htmx 4 has no `scrollIntoViewOnBoost` setting, and still scrolls a boosted swap to the top unless
-  `show:none` says otherwise.)
+- **Scrolling.** A boosted link scrolls to the top by default. `show:none` in `hx-swap` keeps the page where it is,
+  which suits a pagination at the bottom of a long table; the focused link stays in view.
 - **The search.** The links are built from the request, so they keep `q`: sorting the search results sorts the search
   results.
 
@@ -18078,7 +18070,7 @@ role, the current one checked) and Delete.
         <sl:dropdown-menu-separator/>
         <sl:dropdown-menu-item as="a" variant="destructive" th:href="@{|/people/${person.id}/delete${query}|}"
                                hx:get="@{|/people/${person.id}/delete${query}|}" hx-target="#modal-root"
-                               hx-select="unset" hx-swap="innerHTML">
+                               hx-select="" hx-swap="innerHTML">
           <sl:icon name="trash-2"/>Delete
         </sl:dropdown-menu-item>
       </sl:dropdown-menu-content>
@@ -18102,8 +18094,8 @@ role, the current one checked) and Delete.
   `#people-results`; `hx-boost="false"` makes it a normal link.
 - **Delete asks first.** Without JavaScript the link opens a page asking the same question, with a form that posts
   `delete=<id>` to the people page's address (the delete link carries its query string) and a Cancel link back. With
-  htmx the same URL answers `HX-Request` with an alert dialog for `#modal-root`; `hx-select="unset"` drops the
-  `#people-results` the item would inherit. The dialog's Delete button has `hx:post` to the people page's address
+  htmx the same URL answers `HX-Request` with an alert dialog for `#modal-root`; an empty `hx-select=""` drops the
+  `#people-results` the item would inherit (the item's own attribute wins, and an empty selector selects nothing). The dialog's Delete button has `hx:post` to the people page's address
   and `hx-target`/`hx-select` `#people-results`; the answer closes the dialog with `sl-dialog-close`, then shows the
   toast, as in the [confirm with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md) example.
 
@@ -18136,20 +18128,21 @@ A menu per row is the menu's markup in every row: the trigger, the items and the
 (`TablePerformanceTest` in the starter, `mvn test -Pperformance`, Java 25 on an arm64 Mac), against the
 200 buttons with an icon that serve as the baseline:
 
-| A table of 50 rows | Render | HTML | Gzipped |
-| --- | --- | --- | --- |
-| text cells only | 0.17 ms | 6.7 KB | 0.9 KB |
-| with a badge per row | 0.41 ms | 10.0 KB | 1.0 KB |
-| with a badge and the menu's trigger only | 2.2 ms | 53.4 KB | 2.4 KB |
-| with a badge and the menu above | 8.9 ms | 222 KB | 5.3 KB |
-| (baseline: 200 buttons with an icon) | 3.7 ms | 116 KB | 1.4 KB |
+| A table of 50 rows                       | Render  | HTML    | Gzipped |
+|------------------------------------------|---------|---------|---------|
+| text cells only                          | 0.17 ms | 6.7 KB  | 0.9 KB  |
+| with a badge per row                     | 0.41 ms | 10.0 KB | 1.0 KB  |
+| with a badge and the menu's trigger only | 2.2 ms  | 53.4 KB | 2.4 KB  |
+| with a badge and the menu above          | 8.9 ms  | 222 KB  | 5.3 KB  |
+| (baseline: 200 buttons with an icon)     | 3.7 ms  | 116 KB  | 1.4 KB  |
 
 So a menu costs about 0.17 ms and 4 KB of HTML per row on the server, and next to nothing on the wire, as its markup
 repeats. That is less than the query behind the page, so sample-01 renders a menu per row, which also works without
-JavaScript. A page of hundreds of rows with long menus could render only the trigger and fetch the items when the menu
-opens (`hx-get` on the content with `hx-trigger="toggle once"`), at the price of a menu that is empty without
-JavaScript and for a moment after it opens; Shadleaf does not test that pattern, and a smaller page size is usually
-the better answer.
+JavaScript.
+
+A page of hundreds of rows with long menus could render only the trigger and fetch the items when the menu
+opens (`hx-get` on the content with `hx-trigger="toggle once"`).
+The drawback would be that the menu is empty without JavaScript and for a moment after it opens and the request is ongoing.
 
 ### Selection and a bulk action
 
@@ -18179,9 +18172,9 @@ in the header, the selection count in the footer, and a Delete selected button t
   made the request. The answer sends `sl-dialog-close` and `sl-toast`; the dialog only closes on an event from inside
   it, so the button inside the dialog makes the request (a non-`GET` request from inside a form sends the form's
   values). Without JavaScript the same button submits the form.
-- **Focus.** `HX-Trigger`'s events run before the swap: the dialog closes and gives the focus back to Delete selected,
-  and htmx then finds the new Delete selected by its id. (htmx 4 dispatches them after the swap, so the dialog closes
-  when the new table is already there. The page's tests do not cover this order: check where the focus lands.) The toast says how many people were deleted.
+- **Focus.** htmx dispatches `HX-Trigger`'s events after the swap, but an alert dialog whose request answers with
+  `sl-dialog-close` closes when the swap starts: it gives the focus back to Delete selected, and htmx then finds the
+  new Delete selected by its id. The toast says how many people were deleted.
 - **The selection resets.** The swap brings new checkboxes, unchecked; select-all and the count follow them. So does
   every sort, page and search: the selection is per page.
 
@@ -18236,8 +18229,7 @@ The controller answers `HX-Request` with the fragment of one slice, and every ot
 @GetMapping("/people-load-more")
 public String loadMore(@PageableDefault(size = 20, sort = "name") Pageable pageable, HtmxRequest htmxRequest,
     Model model) {
-  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
-      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
+  boolean fragment = HtmxRequests.wantsFragment(htmxRequest);
   Slice<Person> people;
   if (fragment) {
     people = repository.findAllBy(pageable);
@@ -18276,38 +18268,22 @@ The Load more link has none of these problems.
 
 ### Back and forward
 
-htmx keeps a snapshot of the page for each address it pushed, and puts it back on the back button. The snapshot is the
-markup, and a field's typed value is not in the markup: going back from "grace" to "ada" would show the results for
-"ada" under a field reading whatever the first load put there. So the form has `hx-history="false"`: htmx keeps no
-snapshot of this page and, on back and forward, asks the server for the page at that address instead
-(`HX-History-Restore-Request`), which renders the field and the table for it. That is one request per step back.
+htmx keeps no snapshots of the pages it pushed: on back and forward it asks the server for the page at that address,
+with `HX-History-Restore-Request`, and the controller's check sends the whole page for that header. So going back
+from "grace" to "ada" renders the field and the table for "ada" again. That is one request per step back. See
+[Back button and history](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md#back-button-and-history).
 
-An application that would rather keep the snapshots can update the field's `value` attribute as the user types, in a
-script of its own; Shadleaf ships none for it.
-
-htmx 4 keeps no snapshots at all: on back and forward it asks the server for the page, with
-`HX-History-Restore-Request`, whether the form has `hx-history="false"` or not. The attribute and the stale field
-problem are gone, and the controller's check, which sends the whole page for that header, is all it needs. See
-[htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#history).
+htmx 2 does keep a snapshot of the page for each address it pushed, and puts it back on the back button. The snapshot
+is the markup, and a field's typed value is not in the markup: going back from "grace" to "ada" would show the
+results for "ada" under a field reading whatever the first load put there. On htmx 2, give the form
+`hx-history="false"`: htmx then keeps no snapshot of this page and asks the server instead, as htmx 4 does. See
+[Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#history).
 
 ### Without JavaScript
 
 The form is a `GET` form with one field, so Enter sends it without a button, and the browser asks for
 `/people?q=ada&sort=email,asc&size=50` (the hidden inputs are part of the form through `form="people-search"`). The
 links are links. Every step is a page load, and every address is one the controller answers with the whole page.
-
-### Tests
-
-Sample-01's `PeoplePageTest` checks the server side over HTTP: the search on name and email, the links and hidden
-inputs keeping `q`, sort and size and dropping the page, the empty result, the fragment for `HX-Request` and the whole
-page for a history restore, and the row menus (their markup, a role change and a delete with and without htmx, the
-confirm page and dialog, where the focus goes); `PeopleMultiselectPageTest` the bulk delete with and without htmx;
-`PeopleLoadMorePageTest` the slices, the links and every person loaded once. The docs' `table-htmx.spec.ts` runs the
-same markup in Chromium and Firefox under a strict Content-Security-Policy: the debounce, one request for a burst of
-typing, what is typed while a request is out, Enter, the pushed address, the focus after a sort or page link, back
-and forward, the form without htmx, a row menu posting with htmx and keeping the focus, Load more (rows appended, one
-Load more row, the focus on the first new row, the address replaced, select-all and the count, the link without
-htmx) and endless scrolling; `table-selection.spec.ts` the selection through htmx swaps and history.
 
 ---
 

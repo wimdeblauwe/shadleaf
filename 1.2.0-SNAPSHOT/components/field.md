@@ -81,7 +81,7 @@ only show with errors.
 The error has no `role="alert"`. After a submit the whole page loads again, and a screen reader would read out every
 error at once. The control is `aria-invalid` and described by its error instead, so the message is read when the user
 reaches the control. When htmx swaps the whole form in, `<sl:form-errors autofocus/>` moves focus to the first
-control with an error, which reads it out; see [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md). If you swap a single field in
+control with an error, which reads it out; see [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md). If you swap a single field in
 while focus stays elsewhere, for example to validate it as the user leaves it, add `role="alert"` to its error
 yourself.
 

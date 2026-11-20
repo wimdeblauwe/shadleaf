@@ -64,15 +64,14 @@ public String delete(@PathVariable long id, HtmxResponse htmxResponse, Model mod
 ```
 
 The response gets `HX-Trigger: {"sl-toast": {"title": "Ada Lovelace was deleted", "description": null,
-"variant": "success", "duration": null}}`; htmx dispatches the event when the response arrives, and the toaster shows
-it. Several toasts in one response are a list: `htmxResponse.addTrigger("sl-toast", List.of(first, second))`.
+"variant": "success", "duration": null}}`; htmx dispatches the event after the swap, on the element that sent the
+request or, when the swap removed it (a deleted row), on the document, and the toaster shows it. Several toasts in one response are a list: `htmxResponse.addTrigger("sl-toast", List.of(first, second))`.
 
 - **The text is only ever text.** The toaster puts the title and description in with `textContent`, so a name such as
   `<b>Ada</b>` shows as typed and can never inject markup.
-- **Use `HX-Trigger`**, not `HX-Trigger-After-Swap` or `-After-Settle`: those are dispatched on the element that sent
-  the request, and when the swap removed it (a deleted row), the event reaches no one. htmx 4 has only `HX-Trigger`
-  (and htmx-spring-boot 6 only `addTrigger`), which it dispatches after the swap: see
-  [htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+- **On htmx 2, use `HX-Trigger`**, not `HX-Trigger-After-Swap` or `-After-Settle` (which htmx 4 no longer has): those
+  are dispatched on the element that sent the request, and when the swap removed it, the event reaches no one. See
+  [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 - **Not with a redirect.** An `HX-Redirect` or `HX-Location` loads another page, and the toast with it is gone. Put
   it in a flash attribute instead (next section).
 
@@ -311,8 +310,8 @@ A small Alpine component, `slToaster`, is on `<sl:toaster>`: it renders as
   enough. See [Alpine](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/alpine.md).
 - **Keep your own `x-data` off `<sl:toaster>`.** An element has one `x-data`.
 - **One toaster per page.** A second one works, but the first takes every event.
-- **htmx history:** the toaster removes its toasts before htmx saves the page in its history cache, so going back never
-  shows an old toast again.
+- **htmx history:** back and forward ask the server for the page again, so going back never shows an old toast. On
+  htmx 2, the toaster removes its toasts before htmx saves the page in its history cache, with the same result.
 
 | Event | On | Effect |
 | --- | --- | --- |

@@ -124,7 +124,7 @@ Sample-01's "Book a room" page (`samples/shadleaf-sample-01`, `/room-booking`) i
 constraint for the rules over several fields, a room that may already be booked, and a chain of `depends-on`.
 
 **It needs htmx 4** (`htmx.org` 4.x, with its `hx-alpine-compat` extension; see
-[htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4)). It swaps with `outerMorph` and `<hx-partial>`, which
+[Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2)). It swaps with `outerMorph` and `<hx-partial>`, which
 htmx 2 does not have: do not use `validate` with htmx 2. Without htmx, or without JavaScript, the controls are plain
 controls and the form is validated when it is submitted, as before. Keep the submit's own validation either way: the
 validation while typing is a help to the user, not a check.

@@ -31,7 +31,3 @@ fragments in your layout's `<head>`, and write `<sl:button>`:
 
 Every preview on this site is rendered by the library itself, from the build that produced these pages, so it shows
 exactly the markup your application gets.
-
-> **Caution: Pre-release**
->
-> Before 1.0, the rendered markup, class names and `data-*` attributes can change between versions.

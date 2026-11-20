@@ -317,13 +317,10 @@ public String update(@PathVariable long id, @Valid @ModelAttribute("memberForm")
 }
 ```
 
-htmx fires `sl-dialog-close` on the form, inside the sheet, which closes; the focus returns to the Edit button. Give
-that button an id if the row is replaced, so htmx puts the focus back on the new one (see
+`sl-dialog-close` is for the form, inside the sheet, which closes when the swap starts; the focus returns to the Edit
+button. Give that button an id if the row is replaced, so htmx puts the focus back on the new one (see
 [Dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md#rendered-by-the-server-htmx)). A failed save (an error status) shows the error in the sheet and
-keeps what was typed.
-
-The example is htmx 2. On htmx 4 the same markup works, with the changes in
-[htmx 2 and htmx 4](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#htmx-2-and-htmx-4).
+keeps what was typed. On htmx 2 the same markup works: see [Still using htmx 2?](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md#still-using-htmx-2).
 
 ## Width
 

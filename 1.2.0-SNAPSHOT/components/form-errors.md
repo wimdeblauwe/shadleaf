@@ -147,7 +147,7 @@ For a form that reloads the page, also put the outcome in the page title, such a
 thing a screen reader reads after a page load.
 
 htmx honours `autofocus` in the content it swaps in, after its own attempt to keep focus on the element that had it.
-The [htmx guide](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/htmx.md) shows a form that posts with htmx and falls back to a plain POST.
+The [Forms with htmx](https://shadleaf.dev/1.2.0-SNAPSHOT/guides/forms-htmx.md) guide shows a form that posts with htmx and falls back to a plain POST.
 
 ## Id
 
