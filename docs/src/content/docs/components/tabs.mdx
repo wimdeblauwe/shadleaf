@@ -131,8 +131,10 @@ the way.
 **A swap that replaces the tabs** shows the tab the new markup has active: send the `active` the user had (for
 example with `hx-vals` or `hx-include`) if it should stay.
 
-**History.** htmx saves the page's markup as it is when it navigates away, with the tab the user chose and any panel
-content loaded since; back restores exactly that. With link triggers the address has the tab too.
+**History.** Back and forward ask the server for the page again, so it shows the tab the address asks for (with link
+triggers the address has the tab) and loads the other panels again when they are shown. htmx 2 instead saves the
+page's markup as it is when it navigates away, with the tab the user chose and any panel content loaded since, and
+back restores exactly that.
 
 ## Left out
 

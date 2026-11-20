@@ -190,7 +190,8 @@ has a key. The item under the pointer is highlighted.
 
 - A response that renders the form again with errors keeps the chosen values (`th:field` marks them).
 - A swap that replaces an open combobox leaves nothing open behind.
-- Back restores the combobox as htmx saved it; it builds its input and list again from the restored select.
+- Back renders the page again on the server, and the combobox builds its input and list again from the select (on
+  htmx 2, from the select htmx saved).
 - A combobox can trigger a request itself: `hx-get="/cities" hx-trigger="change" hx-target="#city-field"`. Options
   swapped into the select are picked up by the list.
 

@@ -336,6 +336,16 @@ class PreviewGeneratorTest {
   }
 
   /**
+   * htmx 4 as the htmx guide loads it: its config, htmx and its Alpine extension, before the assets fragment, which
+   * starts Alpine.
+   */
+  private static final String HTMX_SCRIPTS = """
+        <meta name="htmx-config" content='{"includeIndicatorCSS": false}'>
+        <script th:src="@{/webjars/htmx.org/dist/htmx.min.js}" defer></script>
+        <script th:src="@{/webjars/htmx.org/dist/ext/hx-alpine-compat.min.js}" defer></script>
+      """;
+
+  /**
    * The whole layout file around a layout's body: the head every layout needs (theme script, Shadleaf's assets, the
    * application's CSS, and htmx if the layout uses it), the skip link first in the body, then the body, the root htmx
    * puts dialogs in and the toaster. As the Application shell guide's checklist says.
@@ -350,8 +360,8 @@ class PreviewGeneratorTest {
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <title th:text="${pageTitle}">Page</title>
           <th:block th:replace="~{sl/layout :: theme-script}"></th:block>
-          <th:block th:replace="~{sl/layout :: assets}"></th:block>
-        {htmxScript}  <link rel="stylesheet" th:href="@{/css/application.css}">
+        {htmxScripts}  <th:block th:replace="~{sl/layout :: assets}"></th:block>
+          <link rel="stylesheet" th:href="@{/css/application.css}">
         </head>
         <body{bodyAttributes}>
         <sl:skip-link/>
@@ -364,8 +374,8 @@ class PreviewGeneratorTest {
         </body>
         </html>
         """.replace("{parameters}", breadcrumb ? "pageTitle, breadcrumb, content" : "pageTitle, content")
-        .replace("{htmxScript}", htmx ? "  <script th:src=\"@{/webjars/htmx.org/dist/htmx.min.js}\" defer></script>\n" : "")
-        .replace("{bodyAttributes}", htmx ? " hx-boost=\"true\"" : "")
+        .replace("{htmxScripts}", htmx ? HTMX_SCRIPTS : "")
+        .replace("{bodyAttributes}", htmx ? " hx-boost:inherited=\"true\"" : "")
         .replace("{source}", source);
   }
 

@@ -134,7 +134,7 @@ A layout usually has no model attribute saying which page it shows. `#slNav.curr
 - `/` is only the current page for `/` itself, or Home would be current on every page.
 - A query string and a trailing slash are ignored: `/people?page=2` is `/people`.
 
-On a phone the panel opens with the focus on the current page's link. With `hx-boost` on the body every page comes
+On a phone the panel opens with the focus on the current page's link. With a boosted body every page comes
 from the server with the right link marked; an application that swaps only the main area leaves the old one marked,
 unless it swaps the menu too (out of band).
 
@@ -524,21 +524,19 @@ as a strip of icons, where a click on a group's icon then opens a sub-menu the s
 
 ## htmx
 
-With `hx-boost` on the body, every page comes from the server with the sidebar in the cookie's state, the current
-page marked and the panel closed. Boosting only the main area works too: following a link in the panel closes it, and a trigger htmx swaps in is
-set up again. Going back through htmx's history shows the page with the panel closed (whether a popover is open is not
-part of the markup htmx saves, and the panel closes before htmx takes its snapshot), and in the state the user chose
-last: the snapshot holds the state of the moment it was taken, so the restored page reads the cookie, as the server
-would.
+With `hx-boost:inherited="true"` on the body, every page comes from the server with the sidebar in the cookie's
+state, the current page marked and the panel closed. Boosting only the main area works too: following a link in the
+panel closes it, and a trigger htmx swaps in is set up again. Back and forward ask the server for the page again, so
+it shows with the panel closed and in the state the user chose last, read from the cookie.
 
 A boosted link sends `HX-Request` too. A controller that answers htmx with a fragment (a table's rows, a dialog) must
 tell such a link apart, or the sidebar's link to that page gets the fragment alone: a link the body's boost sends has
-`HX-Boosted` and no `HX-Target` (the body has no id), and wants the whole page. The
+`HX-Boosted` and `HX-Target: body`, and wants the whole page. The
 [Application shell](../../components/application-shell/#with-htmx) page shows the check.
 
-On htmx 4, the body needs `hx-boost:inherited="true"`, the link sends `HX-Target: body`, and the check changes with it
-(see [htmx 2 and htmx 4](../../guides/htmx/#htmx-2-and-htmx-4)). Back does not show a snapshot there: htmx 4 asks the
-server for the page again, which reads the cookie as well.
+On htmx 2, the body needs only `hx-boost="true"`, and the link sends no `HX-Target`; the check handles both. htmx 2
+restores a snapshot on back: the panel closes before htmx takes it, and the restored page reads the cookie, as the
+server would. See [Still using htmx 2?](../../guides/htmx/#still-using-htmx-2).
 
 ## Left out
 

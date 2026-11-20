@@ -22,7 +22,7 @@
     <htmx-spring-boot.version>6.0.1</htmx-spring-boot.version>
     <!-- htmx itself, pinned: the webjar is served from the application's own origin (/webjars/**), which a strict
       CSP allows, and needs no Node. -->
-    <htmx.version>4.0.1</htmx.version>
+    <htmx.version>4.0.2</htmx.version>
     <!-- Maven plugins -->
     <frontend-maven-plugin.version>2.0.1</frontend-maven-plugin.version>
     <frontend-maven-plugin.nodeVersion>v24.18.0</frontend-maven-plugin.nodeVersion>

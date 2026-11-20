@@ -129,9 +129,10 @@ also works around a Chrome bug: after a form reset the select showed the option 
 ## With htmx
 
 - A response that renders the form again with errors keeps the chosen value (`th:field` marks it), and focus goes
-  where `autofocus` says, the select included; see [Forms with htmx](../../guides/htmx/).
+  where `autofocus` says, the select included; see [Forms with htmx](../../guides/forms-htmx/).
 - A swap that replaces an open select leaves nothing open behind.
-- Back restores the select as htmx saved it; Shadleaf's list box builds itself again from the restored select.
+- Back renders the page again on the server, and Shadleaf's list box builds itself again from the select. (htmx 2
+  restores the select as it saved it, with the same result.)
 - A select can trigger a request itself: `hx-get="/cities" hx-trigger="change" hx-target="#city-field"`. Swapping in
   new items (`hx-target` on the select) is picked up by the list box.
 

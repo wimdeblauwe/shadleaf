@@ -109,7 +109,7 @@ day: 0 is Sunday, 1 Monday, up to 6. `show-week-number` adds a column with the w
 
 ## With htmx
 
-The month links are plain links, so `hx-boost` on the page, or `hx-get` with `hx-target` and `hx-select` on a
+The month links are plain links, so a boosted page (`hx-boost:inherited="true"` on the body), or `hx-get` with `hx-target` and `hx-select` on a
 container around the month view, swaps the next month in. The controller renders the same page; nothing in the month
 view needs JavaScript.
 

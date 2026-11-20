@@ -97,8 +97,9 @@ pointer. A closed disabled item renders no content, so find-in-page cannot open 
 
 ## With htmx
 
-An accordion is plain markup, so a swap that replaces it shows it as the server rendered it, and htmx's history cache
-keeps the sections the user opened (the `open` attribute is in the markup it saves).
+An accordion is plain markup, so a swap that replaces it shows it as the server rendered it, and so does back, which
+asks the server for the page again. On htmx 2, the history cache keeps the sections the user opened (the `open`
+attribute is in the markup it saves).
 
 Leave `name` out of a single accordion that a swap replaces. htmx inserts the new markup before it removes the old,
 and the browser closes an open `details` that joins a group which already has one open: with the same name on both,

@@ -52,16 +52,16 @@ class HtmxFormPageTest {
     Document page = Jsoup.parse(mockMvc.perform(get("/htmx-form")).andReturn().getResponse().getContentAsString());
     String src = page.selectFirst("head script[src*=htmx]").attr("src");
     assertThat(src).as("the template leaves the version out; the webjar locator puts it in")
-        .isEqualTo("/webjars/htmx.org/4.0.1/dist/htmx.min.js");
+        .isEqualTo("/webjars/htmx.org/4.0.2/dist/htmx.min.js");
     assertThat(page.selectFirst("meta[name=htmx-config]").attr("content"))
         .contains("\"includeIndicatorCSS\": false");
 
     mockMvc.perform(get(src))
         .andExpect(status().isOk())
-        .andExpect(content().string(containsString("version=\"4.0.1\"")));
+        .andExpect(content().string(containsString("version=\"4.0.2\"")));
     // htmx's Alpine extension loads after htmx and before Alpine, which the module script of the assets starts.
     List<String> scripts = page.select("head script[src]").eachAttr("src");
-    int extension = scripts.indexOf("/webjars/htmx.org/4.0.1/dist/ext/hx-alpine-compat.min.js");
+    int extension = scripts.indexOf("/webjars/htmx.org/4.0.2/dist/ext/hx-alpine-compat.min.js");
     assertThat(extension).isGreaterThan(scripts.indexOf(src));
     assertThat(page.select("head script[type=module][src]").eachAttr("src"))
         .allSatisfy(module -> assertThat(scripts.indexOf(module)).isGreaterThan(extension));

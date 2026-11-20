@@ -2,7 +2,7 @@
 title: Tables with htmx
 description: Search as you type, sort and page a server-side table with htmx, act on a row from its menu, load more rows, keep the focus and the back button, and keep it working without JavaScript.
 sidebar:
-  order: 8
+  order: 9
 ---
 
 A Shadleaf [table](../../components/table/) sorts and pages on the server through plain links: its column headers,
@@ -14,21 +14,7 @@ user types and replaces only the table, and the links and the address bar stay w
 
 This guide follows sample-01's `/people` page (`samples/shadleaf-sample-01`): 270 people in an H2 database, sorted,
 paged and searched by Spring Data JPA, with a menu of actions per row; and its `/people-load-more` page, which reads
-them a `Slice` at a time. Loading htmx is in [Forms with htmx](../htmx/#loading-htmx).
-
-:::caution[htmx 4]
-The snippets on this page are htmx 2, and on htmx 4 they break without an error. Sample-01 runs on htmx 4, with
-these four changes, all in [htmx 2 and htmx 4](../htmx/#htmx-2-and-htmx-4):
-
-- `#people-results` needs `hx-boost:inherited`, `hx-target:inherited`, `hx-select:inherited` and `hx-swap:inherited`
-  (and `hx-boost:inherited` on the body): without them, the sort, page and size links are plain links and the menu
-  items have no target. `hx-select="unset"` on the Delete item becomes `hx-select=""`.
-- `getTarget()` is `"body"` for a link the body boosts, not null: use the check from the
-  [application shell](../../components/application-shell/#with-htmx).
-- Back and forward ask the server again whatever the form says: `hx-history="false"` does nothing, and the
-  [Back and forward](#back-and-forward) section does not apply.
-- An `HX-Trigger` event is dispatched after the swap, not before it.
-:::
+them a `Slice` at a time. Loading htmx is in [htmx](../htmx/#loading-htmx).
 
 ## The page
 
@@ -38,14 +24,15 @@ Two parts: the search form, which htmx never replaces, and the results (the tabl
 <form id="people-search" role="search" method="get" th:action="@{/people}"
       hx:get="@{/people}" hx-trigger="input changed delay:300ms, search, submit" hx-sync="this:replace"
       hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none"
-      hx-push-url="true" hx-history="false">
+      hx-push-url="true">
   <sl:input type="search" id="people-q" name="q" th:value="${search}" aria-label="Search people"
             placeholder="Filter by name or email…" autocomplete="off"/>
   <p id="people-status" class="visually-hidden" role="status" th:text="${found}"></p>
 </form>
 
 <div id="people-results" th:fragment="results"
-     hx-boost="true" hx-target="#people-results" hx-select="#people-results" hx-swap="outerHTML show:none">
+     hx-boost:inherited="true" hx-target:inherited="#people-results" hx-select:inherited="#people-results"
+     hx-swap:inherited="outerHTML show:none">
   <sl:query-params except="q" form="people-search"/>
   <p th:if="${fragment}" id="people-status" hx-swap-oob="innerHTML" th:text="${found}"></p>
   <sl:table th:page="${people}">
@@ -75,7 +62,7 @@ same without a context path.)
 
 ## The controller
 
-The controller answers an htmx request with the results alone, as the [htmx form](../htmx/) does, and every other
+The controller answers an htmx request with the results alone, as the [htmx form](../forms-htmx/) does, and every other
 request with the page:
 
 ```java
@@ -90,20 +77,22 @@ public String people(@RequestParam(required = false) String q,
   model.addAttribute("search", search);
   model.addAttribute("found", search.isEmpty() ? ""
       : people.getTotalElements() == 1 ? "1 person found" : people.getTotalElements() + " people found");
-  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
-      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
+  boolean fragment = HtmxRequests.wantsFragment(htmxRequest);
   model.addAttribute("fragment", fragment);
   return fragment ? "people :: results" : "people";
 }
 ```
 
-A history restore (see [below](#back-and-forward)) also sends `HX-Request`, but wants the whole page. So does a link
-that `hx-boost` on the body sends, such as the [sidebar's](../../components/sidebar/#htmx): it has `HX-Boosted` and no
-`HX-Target` (the body has no id; on htmx 4 it is `body`, and the check changes), where the table's own boosted links
-target the results. htmx-spring-boot
-adds `Vary: HX-Request` to the answer of an htmx request, so the browser never shows the fragment where it cached the
-page. Limit the sortable properties and add a unique last sort key as the [table](../../components/table/#limit-what-can-be-sorted)
-explains; the sample does both.
+Not every htmx request wants the results alone.
+The back button ([history restore](#back-and-forward)) and the links in the [sidebar](../../components/sidebar/#htmx)
+also send `HX-Request`, but they want the whole page.
+`HtmxRequests.wantsFragment` tells them apart: see [Fragment or whole page](../forms-htmx/#fragment-or-whole-page).
+
+htmx-spring-boot adds `Vary: HX-Request` to every htmx response.
+This way, the browser never shows a cached fragment where it expects the whole page.
+
+The [table](../../components/table/#limit-what-can-be-sorted) page explains why you should limit the sortable
+properties and add a unique last sort key. The sample does both.
 
 ## Ask for the page's own URL
 
@@ -142,19 +131,18 @@ whole page has the id once. Keep the region out of the swapped part: a live regi
 
 ## Sort, page and size links
 
-`hx-boost="true"` on `#people-results` turns every link inside it into an htmx request for that link's URL: the sort
-links in the headers, the page links and the rows-per-page menu's items. They inherit `hx-target`, `hx-select` and
-`hx-swap` from the same element, so each replaces the results and pushes its address, as following the link would.
+`hx-boost:inherited="true"` on `#people-results` turns every link inside it into an htmx request for that link's URL:
+the sort links in the headers, the page links and the rows-per-page menu's items. They inherit `hx-target`,
+`hx-select` and `hx-swap` from the same element (each with `:inherited`, as htmx 4 inherits nothing otherwise), so
+each replaces the results and pushes its address, as following the link would.
 
 - **Focus.** htmx gives the focus back to the element with the id of the one that had it, if the swap replaced that
   element. Every link Shadleaf builds has a stable id (`sort-name`, `page-next`, `page-3`, and the size menu's button
   `page-size-trigger`, which the menu focuses before it follows the chosen size), so after a click on Next the focus is
   on the new Next, and the keyboard user can press Enter again. Ids get the [qualifier](../../components/table/#two-tables-on-one-page)
   as a prefix, so two tables on a page keep theirs apart.
-- **Scrolling.** A boosted link scrolls to the top of the target by default (`scrollIntoViewOnBoost`). `show:none` in
-  `hx-swap` keeps the page where it is, which suits a pagination at the bottom of a long table; the focused link stays
-  in view. (htmx 4 has no `scrollIntoViewOnBoost` setting, and still scrolls a boosted swap to the top unless
-  `show:none` says otherwise.)
+- **Scrolling.** A boosted link scrolls to the top by default. `show:none` in `hx-swap` keeps the page where it is,
+  which suits a pagination at the bottom of a long table; the focused link stays in view.
 - **The search.** The links are built from the request, so they keep `q`: sorting the search results sorts the search
   results.
 
@@ -187,7 +175,7 @@ role, the current one checked) and Delete.
         <sl:dropdown-menu-separator/>
         <sl:dropdown-menu-item as="a" variant="destructive" th:href="@{|/people/${person.id}/delete${query}|}"
                                hx:get="@{|/people/${person.id}/delete${query}|}" hx-target="#modal-root"
-                               hx-select="unset" hx-swap="innerHTML">
+                               hx-select="" hx-swap="innerHTML">
           <sl:icon name="trash-2"/>Delete
         </sl:dropdown-menu-item>
       </sl:dropdown-menu-content>
@@ -211,8 +199,8 @@ role, the current one checked) and Delete.
   `#people-results`; `hx-boost="false"` makes it a normal link.
 - **Delete asks first.** Without JavaScript the link opens a page asking the same question, with a form that posts
   `delete=<id>` to the people page's address (the delete link carries its query string) and a Cancel link back. With
-  htmx the same URL answers `HX-Request` with an alert dialog for `#modal-root`; `hx-select="unset"` drops the
-  `#people-results` the item would inherit. The dialog's Delete button has `hx:post` to the people page's address
+  htmx the same URL answers `HX-Request` with an alert dialog for `#modal-root`; an empty `hx-select=""` drops the
+  `#people-results` the item would inherit (the item's own attribute wins, and an empty selector selects nothing). The dialog's Delete button has `hx:post` to the people page's address
   and `hx-target`/`hx-select` `#people-results`; the answer closes the dialog with `sl-dialog-close`, then shows the
   toast, as in the [confirm with htmx](../../components/alert-dialog/) example.
 
@@ -245,20 +233,21 @@ A menu per row is the menu's markup in every row: the trigger, the items and the
 (`TablePerformanceTest` in the starter, `mvn test -Pperformance`, Java 25 on an arm64 Mac), against the
 200 buttons with an icon that serve as the baseline:
 
-| A table of 50 rows | Render | HTML | Gzipped |
-| --- | --- | --- | --- |
-| text cells only | 0.17 ms | 6.7 KB | 0.9 KB |
-| with a badge per row | 0.41 ms | 10.0 KB | 1.0 KB |
-| with a badge and the menu's trigger only | 2.2 ms | 53.4 KB | 2.4 KB |
-| with a badge and the menu above | 8.9 ms | 222 KB | 5.3 KB |
-| (baseline: 200 buttons with an icon) | 3.7 ms | 116 KB | 1.4 KB |
+| A table of 50 rows                       | Render  | HTML    | Gzipped |
+|------------------------------------------|---------|---------|---------|
+| text cells only                          | 0.17 ms | 6.7 KB  | 0.9 KB  |
+| with a badge per row                     | 0.41 ms | 10.0 KB | 1.0 KB  |
+| with a badge and the menu's trigger only | 2.2 ms  | 53.4 KB | 2.4 KB  |
+| with a badge and the menu above          | 8.9 ms  | 222 KB  | 5.3 KB  |
+| (baseline: 200 buttons with an icon)     | 3.7 ms  | 116 KB  | 1.4 KB  |
 
 So a menu costs about 0.17 ms and 4 KB of HTML per row on the server, and next to nothing on the wire, as its markup
 repeats. That is less than the query behind the page, so sample-01 renders a menu per row, which also works without
-JavaScript. A page of hundreds of rows with long menus could render only the trigger and fetch the items when the menu
-opens (`hx-get` on the content with `hx-trigger="toggle once"`), at the price of a menu that is empty without
-JavaScript and for a moment after it opens; Shadleaf does not test that pattern, and a smaller page size is usually
-the better answer.
+JavaScript.
+
+A page of hundreds of rows with long menus could render only the trigger and fetch the items when the menu
+opens (`hx-get` on the content with `hx-trigger="toggle once"`).
+The drawback would be that the menu is empty without JavaScript and for a moment after it opens and the request is ongoing.
 
 ## Selection and a bulk action
 
@@ -288,9 +277,9 @@ in the header, the selection count in the footer, and a Delete selected button t
   made the request. The answer sends `sl-dialog-close` and `sl-toast`; the dialog only closes on an event from inside
   it, so the button inside the dialog makes the request (a non-`GET` request from inside a form sends the form's
   values). Without JavaScript the same button submits the form.
-- **Focus.** `HX-Trigger`'s events run before the swap: the dialog closes and gives the focus back to Delete selected,
-  and htmx then finds the new Delete selected by its id. (htmx 4 dispatches them after the swap, so the dialog closes
-  when the new table is already there. The page's tests do not cover this order: check where the focus lands.) The toast says how many people were deleted.
+- **Focus.** htmx dispatches `HX-Trigger`'s events after the swap, but an alert dialog whose request answers with
+  `sl-dialog-close` closes when the swap starts: it gives the focus back to Delete selected, and htmx then finds the
+  new Delete selected by its id. The toast says how many people were deleted.
 - **The selection resets.** The swap brings new checkboxes, unchecked; select-all and the count follow them. So does
   every sort, page and search: the selection is per page.
 
@@ -345,8 +334,7 @@ The controller answers `HX-Request` with the fragment of one slice, and every ot
 @GetMapping("/people-load-more")
 public String loadMore(@PageableDefault(size = 20, sort = "name") Pageable pageable, HtmxRequest htmxRequest,
     Model model) {
-  boolean fragment = htmxRequest.isHtmxRequest() && !htmxRequest.isHistoryRestoreRequest()
-      && !(htmxRequest.isBoosted() && htmxRequest.getTarget() == null);
+  boolean fragment = HtmxRequests.wantsFragment(htmxRequest);
   Slice<Person> people;
   if (fragment) {
     people = repository.findAllBy(pageable);
@@ -385,35 +373,19 @@ The Load more link has none of these problems.
 
 ## Back and forward
 
-htmx keeps a snapshot of the page for each address it pushed, and puts it back on the back button. The snapshot is the
-markup, and a field's typed value is not in the markup: going back from "grace" to "ada" would show the results for
-"ada" under a field reading whatever the first load put there. So the form has `hx-history="false"`: htmx keeps no
-snapshot of this page and, on back and forward, asks the server for the page at that address instead
-(`HX-History-Restore-Request`), which renders the field and the table for it. That is one request per step back.
+htmx keeps no snapshots of the pages it pushed: on back and forward it asks the server for the page at that address,
+with `HX-History-Restore-Request`, and the controller's check sends the whole page for that header. So going back
+from "grace" to "ada" renders the field and the table for "ada" again. That is one request per step back. See
+[Back button and history](../forms-htmx/#back-button-and-history).
 
-An application that would rather keep the snapshots can update the field's `value` attribute as the user types, in a
-script of its own; Shadleaf ships none for it.
-
-htmx 4 keeps no snapshots at all: on back and forward it asks the server for the page, with
-`HX-History-Restore-Request`, whether the form has `hx-history="false"` or not. The attribute and the stale field
-problem are gone, and the controller's check, which sends the whole page for that header, is all it needs. See
-[htmx 2 and htmx 4](../htmx/#history).
+htmx 2 does keep a snapshot of the page for each address it pushed, and puts it back on the back button. The snapshot
+is the markup, and a field's typed value is not in the markup: going back from "grace" to "ada" would show the
+results for "ada" under a field reading whatever the first load put there. On htmx 2, give the form
+`hx-history="false"`: htmx then keeps no snapshot of this page and asks the server instead, as htmx 4 does. See
+[Still using htmx 2?](../htmx/#history).
 
 ## Without JavaScript
 
 The form is a `GET` form with one field, so Enter sends it without a button, and the browser asks for
 `/people?q=ada&sort=email,asc&size=50` (the hidden inputs are part of the form through `form="people-search"`). The
 links are links. Every step is a page load, and every address is one the controller answers with the whole page.
-
-## Tests
-
-Sample-01's `PeoplePageTest` checks the server side over HTTP: the search on name and email, the links and hidden
-inputs keeping `q`, sort and size and dropping the page, the empty result, the fragment for `HX-Request` and the whole
-page for a history restore, and the row menus (their markup, a role change and a delete with and without htmx, the
-confirm page and dialog, where the focus goes); `PeopleMultiselectPageTest` the bulk delete with and without htmx;
-`PeopleLoadMorePageTest` the slices, the links and every person loaded once. The docs' `table-htmx.spec.ts` runs the
-same markup in Chromium and Firefox under a strict Content-Security-Policy: the debounce, one request for a burst of
-typing, what is typed while a request is out, Enter, the pushed address, the focus after a sort or page link, back
-and forward, the form without htmx, a row menu posting with htmx and keeping the focus, Load more (rows appended, one
-Load more row, the focus on the first new row, the address replaced, select-all and the count, the link without
-htmx) and endless scrolling; `table-selection.spec.ts` the selection through htmx swaps and history.
