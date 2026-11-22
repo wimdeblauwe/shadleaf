@@ -78,6 +78,7 @@ Start with the [overview](https://shadleaf.dev/1.2.0-SNAPSHOT/components/applica
 ## Display
 
 - [Card](https://shadleaf.dev/1.2.0-SNAPSHOT/components/card.md): A container for related content and actions, built from its parts.
+- [Item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md): A row of content with media, a title, a description and actions, alone or in a list.
 - [Attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md): A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
 - [Badge](https://shadleaf.dev/1.2.0-SNAPSHOT/components/badge.md): A small label for a status, a count or a category.
 - [Avatar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar.md): A picture of a person, with initials when there is no picture.

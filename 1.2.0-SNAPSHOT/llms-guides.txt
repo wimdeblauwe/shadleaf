@@ -701,6 +701,28 @@ The parts and props are shadcn's.
 
 See [Attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md).
 
+#### Item
+
+The parts and props are shadcn's.
+
+- `<Item render={<a href="..." />}>` (`asChild` in the Radix version) is `<sl:item as="a" th:href="...">`.
+- shadcn's group has `role="list"` but leaves the items without a role, so you add `role="listitem"` yourself. In
+  `<sl:item-group>` every item is a list item: a `div` item takes the role, and a link item is wrapped in a `div` with
+  it, because `role="listitem"` on the link would take away its link role.
+- shadcn's header example builds a grid with utility classes; `<sl:item-group layout="grid">` is that grid, its
+  columns from the skin.
+- shadcn's group keeps its gap when it holds `ItemSeparator`s, which adds the separator's margins to it: three times
+  the space of a group without them. A Shadleaf group with separators drops its gap, so the separator's margins are the
+  space between the items.
+- An image in `<sl:item-header>` is cropped to a square with the media's radius, where shadcn's example styles it with
+  classes.
+- `<sl:item-title level="3">` is announced as a heading, as the card's title. Without a `level` it is plain text, as
+  in shadcn.
+- The description of a muted item, and of a link item on hover, uses the legible muted colour (see
+  [Contrast](#contrast)). Under Windows' high-contrast mode a focused link item gets an outline.
+
+See [Item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md).
+
 #### Avatar
 
 shadcn's avatar renders the image only once it has loaded in the browser, and the fallback until then. Shadleaf
