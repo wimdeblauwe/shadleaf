@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The icon, avatar or image at the start of an <code>sl:item</code>. With an
+      <code>sl:item-description</code> in the item it aligns with the title instead of the middle.</sl:description>
+    <sl:prop name="variant" default="default" values="default icon image"><code>default</code> shows its content as
+      it is (an <code>sl:avatar</code>, or a few of them), <code>icon</code> sizes an icon, <code>image</code> crops an
+      <code>&lt;img&gt;</code> to a square that follows the item's size.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="item-media"
+     class="item-media"
+     th:attr="data-variant=${props.unlessDefault('variant')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

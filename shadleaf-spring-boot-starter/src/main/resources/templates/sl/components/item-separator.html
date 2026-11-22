@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A horizontal line between the items of an <code>sl:item-group</code>: an
+      <code>sl:separator</code>, decorative by default. Any attribute passes through to it.</sl:description>
+  </sl:props>
+</head>
+<body>
+<!--/* A sl:separator: sl:attrs puts this part's attributes on it before it is rendered, so they reach its props. */-->
+<sl:separator th:fragment="item-separator"
+              class="item-separator"
+              sl:attrs/>
+</body>
+</html>

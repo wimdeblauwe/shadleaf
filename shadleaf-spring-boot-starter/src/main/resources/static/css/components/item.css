@@ -1,0 +1,83 @@
+/*
+  Item and its parts: structure only, from shadcn's component classes. What shadcn's styles set per style (radius,
+  border, padding, gaps, type, the image's square) and every colour (the variants, the hover tint of a link, the focus
+  ring) are identity and live in the skins.
+
+  A link item (a.item) inherits the text colour and drops the underline, which the embedded bundle gets from no
+  preflight. In forced-colors mode a ring (a box-shadow) is gone: a focused item gets an outline instead.
+
+  In a group, a link item is wrapped in a div with role="listitem" (.item-listitem), a flex container, so the link
+  fills it in a list and in a grid cell. The group's gap follows its items' size, through either.
+*/
+@layer components {
+  .item {
+    @apply flex w-full flex-wrap items-center text-inherit no-underline outline-none
+      motion-safe:transition-colors motion-safe:duration-100
+      forced-colors:focus-visible:outline-2 forced-colors:focus-visible:outline-solid;
+  }
+
+  .item-listitem {
+    @apply flex;
+  }
+
+  .item-media {
+    @apply flex shrink-0 items-center justify-center;
+  }
+
+  .item-media svg {
+    @apply pointer-events-none;
+  }
+
+  .item:has(> .item-content > .item-description) > .item-media {
+    @apply translate-y-0.5 self-start;
+  }
+
+  .item-media[data-variant='image'] {
+    @apply overflow-hidden;
+  }
+
+  .item-media[data-variant='image'] > img {
+    @apply size-full object-cover;
+  }
+
+  .item-content {
+    @apply flex min-w-0 flex-1 flex-col;
+  }
+
+  .item-content + .item-content {
+    @apply flex-none;
+  }
+
+  .item-title {
+    @apply flex w-fit items-center;
+  }
+
+  .item-description {
+    @apply line-clamp-2;
+  }
+
+  .item-actions {
+    @apply flex items-center;
+  }
+
+  .item-header,
+  .item-footer {
+    @apply flex basis-full items-center justify-between;
+  }
+
+  .item-header > img {
+    @apply aspect-square w-full object-cover;
+  }
+
+  .item-group {
+    @apply w-full;
+  }
+
+  .item-group:not([data-layout]) {
+    @apply flex flex-col;
+  }
+
+  .item-group[data-layout='grid'] {
+    @apply grid;
+  }
+}

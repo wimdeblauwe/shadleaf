@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>What else to know about an <code>sl:item</code>, below its title, in muted text. Cut off after two
+      lines. A link in it is underlined.</sl:description>
+  </sl:props>
+</head>
+<body>
+<p th:fragment="item-description"
+   class="item-description"
+   sl:attrs><sl:slot/></p>
+</body>
+</html>

@@ -417,6 +417,138 @@
   }
 
   /*
+    Item. A link item tints on hover, as shadcn's; its description turns text-muted-legible there and on the
+    muted variant. The focus ring is the button's, with the border in the ring colour.
+  */
+  .item {
+    @apply rounded-lg border text-sm;
+  }
+
+  .item:not([data-variant]) {
+    @apply border-transparent;
+  }
+
+  .item[data-variant='outline'] {
+    @apply border-border;
+  }
+
+  .item[data-variant='muted'] {
+    @apply border-transparent bg-muted/50;
+  }
+
+  a.item:hover {
+    @apply bg-muted;
+  }
+
+  .item:focus-visible {
+    @apply border-ring ring-[3px] ring-ring/50;
+  }
+
+  .item:not([data-size]) {
+    @apply gap-2.5 px-3 py-2.5;
+  }
+
+  .item[data-size='sm'] {
+    @apply gap-2.5 px-3 py-2.5;
+  }
+
+  .item[data-size='xs'] {
+    @apply gap-2 px-2.5 py-2;
+  }
+
+  .item-media {
+    @apply gap-2;
+  }
+
+  .item-media:not([data-variant]) {
+    @apply bg-transparent;
+  }
+
+  .item-media[data-variant='icon'] svg:not([class*='size-'], [data-icon-size]) {
+    @apply size-4;
+  }
+
+  .item-media[data-variant='image'] {
+    @apply size-10 rounded-sm;
+  }
+
+  .item-header > img {
+    @apply rounded-sm;
+  }
+
+  .item[data-size='sm'] > .item-media[data-variant='image'] {
+    @apply size-8;
+  }
+
+  .item[data-size='xs'] > .item-media[data-variant='image'] {
+    @apply size-6;
+  }
+
+  .item-content {
+    @apply gap-1;
+  }
+
+  .item[data-size='xs'] > .item-content {
+    @apply gap-0;
+  }
+
+  .item-title {
+    @apply gap-2 text-sm leading-snug font-medium underline-offset-4;
+  }
+
+  .item-description {
+    @apply text-start text-sm leading-normal font-normal text-muted-foreground;
+  }
+
+  .item[data-size='xs'] > .item-content > .item-description {
+    @apply text-xs;
+  }
+
+  .item[data-variant='muted'] > .item-content > .item-description,
+  a.item:hover > .item-content > .item-description {
+    @apply text-muted-legible;
+  }
+
+  .item-description > a:not(.button) {
+    @apply underline underline-offset-4;
+  }
+
+  .item-description > a:not(.button):hover {
+    @apply text-primary;
+  }
+
+  .item-actions,
+  .item-header,
+  .item-footer {
+    @apply gap-2;
+  }
+
+  .item-group {
+    @apply gap-4;
+  }
+
+  .item-group:not([data-layout]):has(> :where(.item[data-size='sm'], .item-listitem > .item[data-size='sm'])) {
+    @apply gap-2.5;
+  }
+
+  .item-group:not([data-layout]):has(> :where(.item[data-size='xs'], .item-listitem > .item[data-size='xs'])) {
+    @apply gap-2;
+  }
+
+  /* A separator's margins are the space between the items: the group's gap would add to them (shadcn adds both). */
+  .item-group:not([data-layout]):has(> .item-separator) {
+    @apply gap-0;
+  }
+
+  .item-group[data-layout='grid'] {
+    @apply grid-cols-[repeat(auto-fill,minmax(--spacing(40),1fr))];
+  }
+
+  .item-separator {
+    @apply my-2;
+  }
+
+  /*
     File upload. The drop zone is the empty state's; the hidden input's focus ring is drawn on the Browse label, as
     the button's, and its error on the drop zone's border. Files dragged over the drop zone tint it.
   */

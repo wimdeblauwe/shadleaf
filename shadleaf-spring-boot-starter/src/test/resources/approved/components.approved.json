@@ -1619,6 +1619,101 @@
     "declared" : true,
     "props" : [ ]
   }, {
+    "name" : "item",
+    "tag" : "sl:item",
+    "description" : "A row of content: an `sl:item-media` (an icon, an avatar or an image), an `sl:item-content` with an `sl:item-title` and an `sl:item-description`, and `sl:item-actions`; `sl:item-header` and `sl:item-footer` take a line of their own. Group items in an `sl:item-group`, which makes them a list. For a form control with its label, use `sl:field` instead.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "outline", "muted" ],
+      "description" : "Visual style: `default` has no border or background, `outline` a border, `muted` a muted background."
+    }, {
+      "name" : "size",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "sm", "xs" ],
+      "description" : "Size of the item: its padding, gaps and the size of an image in its media."
+    }, {
+      "name" : "as",
+      "type" : "enum",
+      "defaultValue" : "div",
+      "values" : [ "div", "a" ],
+      "description" : "Element to render: a `div`, or an anchor (`a`, give it an `href`) that makes the whole item a link, tinted on hover. A link item holds no other links or buttons."
+    } ]
+  }, {
+    "name" : "item-actions",
+    "tag" : "sl:item-actions",
+    "description" : "The buttons (or an icon, such as a chevron) at the end of an `sl:item`.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "item-content",
+    "tag" : "sl:item-content",
+    "description" : "The text of an `sl:item`: its `sl:item-title` and `sl:item-description`. Takes the space the media and the actions leave; a second content after it (a duration, a price) is as wide as its text.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "item-description",
+    "tag" : "sl:item-description",
+    "description" : "What else to know about an `sl:item`, below its title, in muted text. Cut off after two lines. A link in it is underlined.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "item-footer",
+    "tag" : "sl:item-footer",
+    "description" : "A line of its own below the rest of an `sl:item`, the full width of it, its content at either end.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "item-group",
+    "tag" : "sl:item-group",
+    "description" : "A list of `sl:item`s (`role=\"list\"`, each item a list item), stacked with a gap that follows their size, or in a grid. Put an `sl:item-separator` between items for a line.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "layout",
+      "type" : "enum",
+      "defaultValue" : "list",
+      "values" : [ "list", "grid" ],
+      "description" : "`list` stacks the items; `grid` lays them out in as many columns as fit the width, for cards with an image in their `sl:item-header`."
+    } ]
+  }, {
+    "name" : "item-header",
+    "tag" : "sl:item-header",
+    "description" : "A line of its own above the rest of an `sl:item`, the full width of it: an image, or a title and an action at either end.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "item-media",
+    "tag" : "sl:item-media",
+    "description" : "The icon, avatar or image at the start of an `sl:item`. With an `sl:item-description` in the item it aligns with the title instead of the middle.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "variant",
+      "type" : "enum",
+      "defaultValue" : "default",
+      "values" : [ "default", "icon", "image" ],
+      "description" : "`default` shows its content as it is (an `sl:avatar`, or a few of them), `icon` sizes an icon, `image` crops an `&lt;img&gt;` to a square that follows the item's size."
+    } ]
+  }, {
+    "name" : "item-separator",
+    "tag" : "sl:item-separator",
+    "description" : "A horizontal line between the items of an `sl:item-group`: an `sl:separator`, decorative by default. Any attribute passes through to it.",
+    "declared" : true,
+    "props" : [ ]
+  }, {
+    "name" : "item-title",
+    "tag" : "sl:item-title",
+    "description" : "The title of an `sl:item`, in its `sl:item-content`. It can hold an icon or an `sl:badge` next to the text.",
+    "declared" : true,
+    "props" : [ {
+      "name" : "level",
+      "type" : "enum",
+      "values" : [ "1", "2", "3", "4", "5", "6" ],
+      "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline."
+    } ]
+  }, {
     "name" : "kbd",
     "tag" : "sl:kbd",
     "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",

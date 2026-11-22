@@ -110,10 +110,15 @@
       <sl:card-description>Where you are signed in.</sl:card-description>
     </sl:card-header>
     <sl:card-content>
-      <ul class="sessions">
-        <li th:each="signIn : ${sessions}"><strong th:text="${signIn.device}">Firefox</strong>,
-          <span th:text="${signIn.place}">Antwerp</span>: <span th:text="${signIn.lastSeen}">now</span></li>
-      </ul>
+      <sl:item-group>
+        <sl:item variant="outline" size="sm" th:each="signIn : ${sessions}">
+          <sl:item-media variant="icon"><sl:icon th:name="${signIn.icon}"/></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>[[${signIn.device}]]</sl:item-title>
+            <sl:item-description>[[${signIn.place}]] · [[${signIn.lastSeen}]]</sl:item-description>
+          </sl:item-content>
+        </sl:item>
+      </sl:item-group>
     </sl:card-content>
   </sl:card>
 </div>

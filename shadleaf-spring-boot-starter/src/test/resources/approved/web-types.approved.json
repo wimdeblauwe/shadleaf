@@ -3686,6 +3686,185 @@
         "description" : "The textarea of a `sl:input-group`: a `sl:textarea` without a border of its own, as the group draws it, that grows with its content where the browser supports it. Addons go above or below it (`align` `block-start` or `block-end`). The content is the initial text, unless `th:field` sets it. Every attribute that is not a prop passes through; `class` is appended to `textarea`. With `th:field`, the textarea is marked `aria-invalid` when its field has errors. In a `sl:field`, it takes the field's `th:field`, id and `aria-describedby`.",
         "attributes" : [ ]
       }, {
+        "name" : "sl:item",
+        "description" : "A row of content: an `sl:item-media` (an icon, an avatar or an image), an `sl:item-content` with an `sl:item-title` and an `sl:item-description`, and `sl:item-actions`; `sl:item-header` and `sl:item-footer` take a line of their own. Group items in an `sl:item-group`, which makes them a list. For a form control with its label, use `sl:field` instead.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "Visual style: `default` has no border or background, `outline` a border, `muted` a muted background.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "outline"
+          }, {
+            "name" : "muted"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "size",
+          "description" : "Size of the item: its padding, gaps and the size of an image in its media.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "sm"
+          }, {
+            "name" : "xs"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "as",
+          "description" : "Element to render: a `div`, or an anchor (`a`, give it an `href`) that makes the whole item a link, tinted on hover. A link item holds no other links or buttons.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "div"
+          }, {
+            "name" : "a"
+          } ],
+          "default" : "div"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:size",
+          "description" : "`size` from a Thymeleaf expression, e.g. `th:size=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        }, {
+          "name" : "th:as",
+          "description" : "`as` from a Thymeleaf expression, e.g. `th:as=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:item-actions",
+        "description" : "The buttons (or an icon, such as a chevron) at the end of an `sl:item`.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:item-content",
+        "description" : "The text of an `sl:item`: its `sl:item-title` and `sl:item-description`. Takes the space the media and the actions leave; a second content after it (a duration, a price) is as wide as its text.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:item-description",
+        "description" : "What else to know about an `sl:item`, below its title, in muted text. Cut off after two lines. A link in it is underlined.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:item-footer",
+        "description" : "A line of its own below the rest of an `sl:item`, the full width of it, its content at either end.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:item-group",
+        "description" : "A list of `sl:item`s (`role=\"list\"`, each item a list item), stacked with a gap that follows their size, or in a grid. Put an `sl:item-separator` between items for a line.",
+        "attributes" : [ {
+          "name" : "layout",
+          "description" : "`list` stacks the items; `grid` lays them out in as many columns as fit the width, for cards with an image in their `sl:item-header`.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "list"
+          }, {
+            "name" : "grid"
+          } ],
+          "default" : "list"
+        }, {
+          "name" : "th:layout",
+          "description" : "`layout` from a Thymeleaf expression, e.g. `th:layout=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:item-header",
+        "description" : "A line of its own above the rest of an `sl:item`, the full width of it: an image, or a title and an action at either end.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:item-media",
+        "description" : "The icon, avatar or image at the start of an `sl:item`. With an `sl:item-description` in the item it aligns with the title instead of the middle.",
+        "attributes" : [ {
+          "name" : "variant",
+          "description" : "`default` shows its content as it is (an `sl:avatar`, or a few of them), `icon` sizes an icon, `image` crops an `&lt;img&gt;` to a square that follows the item's size.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "default"
+          }, {
+            "name" : "icon"
+          }, {
+            "name" : "image"
+          } ],
+          "default" : "default"
+        }, {
+          "name" : "th:variant",
+          "description" : "`variant` from a Thymeleaf expression, e.g. `th:variant=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
+        "name" : "sl:item-separator",
+        "description" : "A horizontal line between the items of an `sl:item-group`: an `sl:separator`, decorative by default. Any attribute passes through to it.",
+        "attributes" : [ ]
+      }, {
+        "name" : "sl:item-title",
+        "description" : "The title of an `sl:item`, in its `sl:item-content`. It can hold an icon or an `sl:badge` next to the text.",
+        "attributes" : [ {
+          "name" : "level",
+          "description" : "Heading level. With it the title is a heading (`role=\"heading\"` and `aria-level`) that screen reader users can jump to; without it, plain text. Pick the level that fits the page's outline.",
+          "value" : {
+            "kind" : "plain",
+            "type" : "enum",
+            "required" : false
+          },
+          "values" : [ {
+            "name" : "1"
+          }, {
+            "name" : "2"
+          }, {
+            "name" : "3"
+          }, {
+            "name" : "4"
+          }, {
+            "name" : "5"
+          }, {
+            "name" : "6"
+          } ]
+        }, {
+          "name" : "th:level",
+          "description" : "`level` from a Thymeleaf expression, e.g. `th:level=\"${...}\"`.",
+          "value" : {
+            "kind" : "expression",
+            "required" : false
+          }
+        } ]
+      }, {
         "name" : "sl:kbd",
         "description" : "A key on the keyboard, as text (`Ctrl`) or an `sl:icon`. Several keys pressed together go in an `sl:kbd-group`.",
         "attributes" : [ ]

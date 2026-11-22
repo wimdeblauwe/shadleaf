@@ -1,0 +1,125 @@
+---
+title: Item
+description: A row of content with media, a title, a description and actions, alone or in a list.
+---
+
+import ComponentPreview from '../../../components/ComponentPreview.astro';
+import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+
+<ComponentPreview id="item--default" />
+
+## Built from parts
+
+An item is `<sl:item>` plus the parts you need: `<sl:item-media>` (an icon, an avatar or an image),
+`<sl:item-content>` (holding `<sl:item-title>` and `<sl:item-description>`) and `<sl:item-actions>`.
+`<sl:item-header>` and `<sl:item-footer>` take a line of their own, above and below the rest. `<sl:item-group>` makes
+several items a list.
+
+An item only lays out what you put in it. For a form control with its label and description, such as a checkbox or a
+switch, use [`<sl:field>`](../field/) instead.
+
+## Variant
+
+`variant` is `default` (no border or background), `outline` or `muted`.
+
+<ComponentPreview id="item--variant" />
+
+## Size
+
+`size` is `default`, `sm` or `xs`. It sets the padding and the gaps, the size of an image in the media and, in a
+group, the gap between the items.
+
+<ComponentPreview id="item--size" />
+
+## Icon
+
+`<sl:item-media variant="icon">` sizes an icon. When the item has a description, the media lines up with the title
+instead of the middle of the item.
+
+<ComponentPreview id="item--icon" />
+
+## Avatar
+
+The default media shows its content as it is: an [`<sl:avatar>`](../avatar/), or a few of them next to each other.
+
+<ComponentPreview id="item--avatar" />
+
+## Image
+
+`<sl:item-media variant="image">` crops an `<img>` to a square that follows the item's size. The title already names
+the item, so the image can have an empty `alt`. A second `<sl:item-content>` after the first is as wide as its text,
+for a duration, a size or a price at the end.
+
+<ComponentPreview id="item--image" />
+
+## Group
+
+`<sl:item-group>` stacks items with a gap that follows their size. It is a list (`role="list"`) and every item in it a
+list item, so a screen reader announces how many there are.
+
+<ComponentPreview id="item--group" />
+
+`<sl:item-separator>` draws a line between two items, for items without a border. A group with separators has no gap
+of its own: the separator's margins are the space between the items.
+
+<ComponentPreview id="item--separator" />
+
+## Header
+
+`<sl:item-header>` takes the full width above the rest of the item; an image in it is cropped to a square. With
+`layout="grid"` the group lays its items out in as many columns as fit the width; the width of a column comes from the
+skin.
+
+<ComponentPreview id="item--header" />
+
+## Link
+
+`as="a"` makes the whole item a link: give it an `href`. It is tinted on hover and draws the skin's focus ring. Its
+title and description are the link's text, so keep them short, and put no other links or buttons in it: a link cannot
+hold them.
+
+<ComponentPreview id="item--link" />
+
+In a group a link item is wrapped in a `div` that is the list item, so the link keeps its role.
+
+## Attributes
+
+### sl:item
+
+<ComponentAttributes component="item" />
+
+### sl:item-media
+
+<ComponentAttributes component="item-media" />
+
+### sl:item-content
+
+<ComponentAttributes component="item-content" />
+
+### sl:item-title
+
+<ComponentAttributes component="item-title" />
+
+### sl:item-description
+
+<ComponentAttributes component="item-description" />
+
+### sl:item-actions
+
+<ComponentAttributes component="item-actions" />
+
+### sl:item-header
+
+<ComponentAttributes component="item-header" />
+
+### sl:item-footer
+
+<ComponentAttributes component="item-footer" />
+
+### sl:item-group
+
+<ComponentAttributes component="item-group" />
+
+### sl:item-separator
+
+<ComponentAttributes component="item-separator" />
