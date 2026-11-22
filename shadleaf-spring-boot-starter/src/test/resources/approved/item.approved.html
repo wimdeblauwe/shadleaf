@@ -1,0 +1,123 @@
+<!-- <sl:item>Content</sl:item> -->
+<div class="item">Content</div>
+
+<!-- <sl:item variant="default">Content</sl:item> -->
+<div class="item">Content</div>
+
+<!-- <sl:item variant="outline">Content</sl:item> -->
+<div class="item" data-variant="outline">Content</div>
+
+<!-- <sl:item variant="muted">Content</sl:item> -->
+<div class="item" data-variant="muted">Content</div>
+
+<!-- <sl:item size="default">Content</sl:item> -->
+<div class="item">Content</div>
+
+<!-- <sl:item size="sm">Content</sl:item> -->
+<div class="item" data-size="sm">Content</div>
+
+<!-- <sl:item size="xs">Content</sl:item> -->
+<div class="item" data-size="xs">Content</div>
+
+<!-- <sl:item as="div">Content</sl:item> -->
+<div class="item">Content</div>
+
+<!-- <sl:item as="a" href="/dashboard">Content</sl:item> -->
+<a class="item" href="/dashboard">Content</a>
+
+<!-- <sl:item-media>Media</sl:item-media> -->
+<div class="item-media">Media</div>
+
+<!-- <sl:item-media variant="default">Media</sl:item-media> -->
+<div class="item-media">Media</div>
+
+<!-- <sl:item-media variant="icon"><sl:icon name="inbox"/></sl:item-media> -->
+<div class="item-media" data-variant="icon">
+  <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+</div>
+
+<!-- <sl:item-media variant="image"><img src="/covers/1" alt=""></sl:item-media> -->
+<div class="item-media" data-variant="image">
+  <img src="/covers/1" alt="">
+</div>
+
+<!-- <sl:item-content>Content</sl:item-content> -->
+<div class="item-content">Content</div>
+
+<!-- <sl:item-title>Title</sl:item-title> -->
+<div class="item-title">Title</div>
+
+<!-- <sl:item-title level="3">Title</sl:item-title> -->
+<div class="item-title" role="heading" aria-level="3">Title</div>
+
+<!-- <sl:item-description>Description</sl:item-description> -->
+<p class="item-description">Description</p>
+
+<!-- <sl:item-actions>Actions</sl:item-actions> -->
+<div class="item-actions">Actions</div>
+
+<!-- <sl:item-header>Header</sl:item-header> -->
+<div class="item-header">Header</div>
+
+<!-- <sl:item-footer>Footer</sl:item-footer> -->
+<div class="item-footer">Footer</div>
+
+<!-- <sl:item-separator/> -->
+<div class="separator item-separator" role="none"></div>
+
+<!-- <sl:item-group>Items</sl:item-group> -->
+<div class="item-group" role="list">Items</div>
+
+<!-- <sl:item-group layout="list">Items</sl:item-group> -->
+<div class="item-group" role="list">Items</div>
+
+<!-- <sl:item-group layout="grid">Items</sl:item-group> -->
+<div class="item-group" role="list" data-layout="grid">Items</div>
+
+<!-- <sl:item variant="outline">
+  <sl:item-media variant="icon"><sl:icon name="shield-alert"/></sl:item-media>
+  <sl:item-content>
+    <sl:item-title>Security alert</sl:item-title>
+    <sl:item-description>New login detected from an unknown device.</sl:item-description>
+  </sl:item-content>
+  <sl:item-actions>
+    <sl:button size="sm" variant="outline">Review</sl:button>
+  </sl:item-actions>
+</sl:item> -->
+<div class="item" data-variant="outline">
+  <div class="item-media" data-variant="icon">
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"></svg>
+  </div>
+  <div class="item-content">
+    <div class="item-title">Security alert</div>
+    <p class="item-description">New login detected from an unknown device.</p>
+  </div>
+  <div class="item-actions">
+    <button class="button" type="button" data-variant="outline" data-size="sm">Review</button>
+  </div>
+</div>
+
+<!-- <sl:item-group>
+  <sl:item th:variant="${'outline'}" th:size="${'sm'}">
+    <sl:item-content><sl:item-title>[[${'Inbox'}]]</sl:item-title></sl:item-content>
+  </sl:item>
+  <sl:item-separator/>
+  <sl:item as="a" th:href="@{/settings}">
+    <sl:item-content><sl:item-title>Settings</sl:item-title></sl:item-content>
+  </sl:item>
+</sl:item-group> -->
+<div class="item-group" role="list">
+  <div class="item" role="listitem" data-variant="outline" data-size="sm">
+    <div class="item-content">
+      <div class="item-title">Inbox</div>
+    </div>
+  </div>
+  <div class="separator item-separator" role="none"></div>
+  <div class="item-listitem" role="listitem">
+    <a class="item" href="/settings">
+      <div class="item-content">
+        <div class="item-title">Settings</div>
+      </div>
+    </a>
+  </div>
+</div>

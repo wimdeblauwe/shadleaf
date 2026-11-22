@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * The settings page: tabs whose triggers are links to {@code /settings?tab=...}, so the page works without
  * JavaScript, and switch in place with it. The sessions tab loads its panel with htmx the first time it is shown,
- * unless the page was requested with that tab active, when the server renders it. The help tab holds an FAQ accordion,
+ * unless the page was requested with that tab active, when the server renders it, as a group of items. The help tab holds an FAQ accordion,
  * with the question from {@code ?question=} open; the notifications tab a collapsible.
  */
 @Controller
@@ -44,13 +44,13 @@ public class SettingsController {
   }
 
   private static List<Session> sessions() {
-    return List.of(new Session("Firefox on Linux", "Antwerp", "Now"),
-        new Session("Safari on iPhone", "Ghent", "2 hours ago"));
+    return List.of(new Session("Firefox on Linux", "monitor", "Antwerp", "Now"),
+        new Session("Safari on iPhone", "smartphone", "Ghent", "2 hours ago"));
   }
 
   public record Question(String id, String title, String answer) {
   }
 
-  public record Session(String device, String place, String lastSeen) {
+  public record Session(String device, String icon, String place, String lastSeen) {
   }
 }

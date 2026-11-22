@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A list of <code>sl:item</code>s (<code>role="list"</code>, each item a list item), stacked with a
+      gap that follows their size, or in a grid. Put an <code>sl:item-separator</code> between items for a
+      line.</sl:description>
+    <sl:prop name="layout" default="list" values="list grid"><code>list</code> stacks the items; <code>grid</code>
+      lays them out in as many columns as fit the width, for cards with an image in their
+      <code>sl:item-header</code>.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/* slItemGroup tells the items in the slot that they are list items. */-->
+<div th:fragment="item-group"
+     class="item-group"
+     role="list"
+     th:with="slItemGroup=${true}"
+     th:attr="data-layout=${props.unlessDefault('layout')}"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

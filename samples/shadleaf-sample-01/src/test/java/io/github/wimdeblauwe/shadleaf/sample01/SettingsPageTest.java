@@ -71,13 +71,13 @@ class SettingsPageTest {
 
     Element rendered = page("/settings?tab=sessions").getElementById("settings-sessions-content");
     assertThat(rendered.hasAttr("hx-get")).isFalse();
-    assertThat(rendered.select("#sessions li")).hasSize(2);
+    assertThat(rendered.select("#sessions [role=listitem].item")).hasSize(2);
 
     Document fragment = Jsoup.parseBodyFragment(mockMvc.perform(get("/settings/sessions").header("HX-Request", "true"))
         .andExpect(status().isOk())
         .andReturn().getResponse().getContentAsString());
     assertThat(fragment.body().children()).hasSize(1);
-    assertThat(fragment.select("#sessions li")).hasSize(2);
+    assertThat(fragment.select("#sessions [role=listitem].item")).hasSize(2);
     assertThat(fragment.select("nav, main")).as("the fragment alone, no layout").isEmpty();
   }
 

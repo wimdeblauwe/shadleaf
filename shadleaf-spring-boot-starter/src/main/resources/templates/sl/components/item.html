@@ -1,0 +1,46 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>A row of content: an <code>sl:item-media</code> (an icon, an avatar or an image), an
+      <code>sl:item-content</code> with an <code>sl:item-title</code> and an <code>sl:item-description</code>, and
+      <code>sl:item-actions</code>; <code>sl:item-header</code> and <code>sl:item-footer</code> take a line of their
+      own. Group items in an <code>sl:item-group</code>, which makes them a list. For a form control with its label, use
+      <code>sl:field</code> instead.</sl:description>
+    <sl:prop name="variant" default="default" values="default outline muted">Visual style: <code>default</code> has no
+      border or background, <code>outline</code> a border, <code>muted</code> a muted background.</sl:prop>
+    <sl:prop name="size" default="default" values="default sm xs">Size of the item: its padding, gaps and the size of
+      an image in its media.</sl:prop>
+    <sl:prop name="as" default="div" values="div a">Element to render: a <code>div</code>, or an anchor
+      (<code>a</code>, give it an <code>href</code>) that makes the whole item a link, tinted on hover. A link item
+      holds no other links or buttons.</sl:prop>
+  </sl:props>
+</head>
+<body>
+<!--/*
+  slItemGroup is set by sl:item-group around its slot: an item in a group is a list item. A div item takes the role
+  itself; a link keeps its own role, so a div with role="listitem" wraps it. The item sets slItemGroup to false for its
+  own content, so an item nested in it is no list item of the outer group.
+*/-->
+<th:block th:fragment="item"
+          th:with="slItemListed=${slItemGroup == true}, slItemGroup=${false}">
+  <div th:if="${props.as == 'div'}"
+       class="item"
+       th:attr="role=${slItemListed ? 'listitem' : null},
+                data-variant=${props.unlessDefault('variant')},
+                data-size=${props.unlessDefault('size')}"
+       sl:attrs><sl:slot/></div>
+  <div th:if="${props.as == 'a' and slItemListed}"
+       class="item-listitem"
+       role="listitem"><a class="item"
+                          th:attr="data-variant=${props.unlessDefault('variant')},
+                                   data-size=${props.unlessDefault('size')}"
+                          sl:attrs><sl:slot/></a></div>
+  <a th:if="${props.as == 'a' and !slItemListed}"
+     class="item"
+     th:attr="data-variant=${props.unlessDefault('variant')},
+              data-size=${props.unlessDefault('size')}"
+     sl:attrs><sl:slot/></a>
+</th:block>
+</body>
+</html>

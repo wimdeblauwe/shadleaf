@@ -1,0 +1,15 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sl="https://shadleaf.dev/sl">
+<head>
+  <sl:props>
+    <sl:description>The text of an <code>sl:item</code>: its <code>sl:item-title</code> and
+      <code>sl:item-description</code>. Takes the space the media and the actions leave; a second content after it
+      (a duration, a price) is as wide as its text.</sl:description>
+  </sl:props>
+</head>
+<body>
+<div th:fragment="item-content"
+     class="item-content"
+     sl:attrs><sl:slot/></div>
+</body>
+</html>

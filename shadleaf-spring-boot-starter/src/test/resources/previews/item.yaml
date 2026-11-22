@@ -1,0 +1,373 @@
+# Scenarios for the item's docs page and the showcase. Rendered by PreviewGeneratorTest; see docs/README.md.
+# After shadcn/ui's examples (item-demo, -variant, -size, -icon, -avatar, -image, -group, -header and -link). The
+# images' renderSource takes the photos from previews/photos/ instead of shadcn's remote images, so the previews never
+# fetch one. shadcn's dropdown example is left out: an sl:dropdown-menu-item is a button or a link, which cannot hold
+# the item's div.
+component: item
+parts: [item-media, item-content, item-title, item-description, item-actions, item-header, item-footer,
+  item-group, item-separator]
+scenarios:
+  - id: default
+    title: Item
+    source: |-
+      <sl:item variant="outline">
+        <sl:item-content>
+          <sl:item-title>Basic item</sl:item-title>
+          <sl:item-description>A simple item with a title and a description.</sl:item-description>
+        </sl:item-content>
+        <sl:item-actions>
+          <sl:button variant="outline" size="sm">Action</sl:button>
+        </sl:item-actions>
+      </sl:item>
+      <sl:item as="a" href="/profile" variant="outline" size="sm">
+        <sl:item-media><sl:icon name="badge-check" size="20"/></sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Your profile has been verified.</sl:item-title>
+        </sl:item-content>
+        <sl:item-actions><sl:icon name="chevron-right" size="16"/></sl:item-actions>
+      </sl:item>
+
+  - id: variant
+    title: Variant
+    description: default has no border or background, outline a border, muted a muted background.
+    source: |-
+      <sl:item>
+        <sl:item-media variant="icon"><sl:icon name="inbox"/></sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Default variant</sl:item-title>
+          <sl:item-description>Transparent background with no border.</sl:item-description>
+        </sl:item-content>
+      </sl:item>
+      <sl:item variant="outline">
+        <sl:item-media variant="icon"><sl:icon name="inbox"/></sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Outline variant</sl:item-title>
+          <sl:item-description>Outlined style with a visible border.</sl:item-description>
+        </sl:item-content>
+      </sl:item>
+      <sl:item variant="muted">
+        <sl:item-media variant="icon"><sl:icon name="inbox"/></sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Muted variant</sl:item-title>
+          <sl:item-description>Muted background for secondary content.</sl:item-description>
+        </sl:item-content>
+      </sl:item>
+
+  - id: size
+    title: Size
+    description: size is default, sm or xs.
+    source: |-
+      <sl:item variant="outline">
+        <sl:item-media variant="icon"><sl:icon name="inbox"/></sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Default size</sl:item-title>
+          <sl:item-description>The standard size for most use cases.</sl:item-description>
+        </sl:item-content>
+      </sl:item>
+      <sl:item variant="outline" size="sm">
+        <sl:item-media variant="icon"><sl:icon name="inbox"/></sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Small size</sl:item-title>
+          <sl:item-description>A compact size for dense layouts.</sl:item-description>
+        </sl:item-content>
+      </sl:item>
+      <sl:item variant="outline" size="xs">
+        <sl:item-media variant="icon"><sl:icon name="inbox"/></sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Extra small size</sl:item-title>
+          <sl:item-description>The most compact size available.</sl:item-description>
+        </sl:item-content>
+      </sl:item>
+
+  - id: icon
+    title: Icon
+    description: variant="icon" on the media sizes an icon.
+    source: |-
+      <sl:item variant="outline">
+        <sl:item-media variant="icon"><sl:icon name="shield-alert"/></sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Security alert</sl:item-title>
+          <sl:item-description>New login detected from an unknown device.</sl:item-description>
+        </sl:item-content>
+        <sl:item-actions>
+          <sl:button size="sm" variant="outline">Review</sl:button>
+        </sl:item-actions>
+      </sl:item>
+
+  - id: avatar
+    title: Avatar
+    description: The default media shows an sl:avatar as it is.
+    source: |-
+      <sl:item variant="outline">
+        <sl:item-media>
+          <sl:avatar size="lg">
+            <sl:avatar-image th:src="@{/users/{id}/photo(id=${user.id})}"/>
+            <sl:avatar-fallback>AM</sl:avatar-fallback>
+          </sl:avatar>
+        </sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Alex Morgan</sl:item-title>
+          <sl:item-description>Last seen 5 months ago</sl:item-description>
+        </sl:item-content>
+        <sl:item-actions>
+          <sl:button size="icon-sm" variant="outline" aria-label="Invite Alex Morgan"><sl:icon name="plus"/></sl:button>
+        </sl:item-actions>
+      </sl:item>
+      <sl:item variant="outline">
+        <sl:item-media>
+          <sl:avatar><sl:avatar-fallback>JD</sl:avatar-fallback></sl:avatar>
+          <sl:avatar><sl:avatar-fallback>KL</sl:avatar-fallback></sl:avatar>
+        </sl:item-media>
+        <sl:item-content>
+          <sl:item-title>No team members</sl:item-title>
+          <sl:item-description>Invite your team to collaborate on this project.</sl:item-description>
+        </sl:item-content>
+        <sl:item-actions>
+          <sl:button size="sm" variant="outline">Invite</sl:button>
+        </sl:item-actions>
+      </sl:item>
+    renderSource: |-
+      <sl:item variant="outline">
+        <sl:item-media>
+          <sl:avatar size="lg">
+            <sl:avatar-image th:src="${photos.shadcn}"/>
+            <sl:avatar-fallback>AM</sl:avatar-fallback>
+          </sl:avatar>
+        </sl:item-media>
+        <sl:item-content>
+          <sl:item-title>Alex Morgan</sl:item-title>
+          <sl:item-description>Last seen 5 months ago</sl:item-description>
+        </sl:item-content>
+        <sl:item-actions>
+          <sl:button size="icon-sm" variant="outline" aria-label="Invite Alex Morgan"><sl:icon name="plus"/></sl:button>
+        </sl:item-actions>
+      </sl:item>
+      <sl:item variant="outline">
+        <sl:item-media>
+          <sl:avatar><sl:avatar-fallback>JD</sl:avatar-fallback></sl:avatar>
+          <sl:avatar><sl:avatar-fallback>KL</sl:avatar-fallback></sl:avatar>
+        </sl:item-media>
+        <sl:item-content>
+          <sl:item-title>No team members</sl:item-title>
+          <sl:item-description>Invite your team to collaborate on this project.</sl:item-description>
+        </sl:item-content>
+        <sl:item-actions>
+          <sl:button size="sm" variant="outline">Invite</sl:button>
+        </sl:item-actions>
+      </sl:item>
+
+  - id: image
+    title: Image
+    description: variant="image" crops an image to a square. A second item-content is as wide as its text.
+    source: |-
+      <sl:item-group>
+        <sl:item as="a" variant="outline" th:each="photo : ${photos}" th:href="@{/photos/{id}(id=${photo.id})}">
+          <sl:item-media variant="image">
+            <img th:src="@{/photos/{id}/thumbnail(id=${photo.id})}" alt="" loading="lazy">
+          </sl:item-media>
+          <sl:item-content>
+            <sl:item-title>[[${photo.title}]]</sl:item-title>
+            <sl:item-description>[[${photo.place}]]</sl:item-description>
+          </sl:item-content>
+          <sl:item-content>
+            <sl:item-description>[[${photo.size}]]</sl:item-description>
+          </sl:item-content>
+        </sl:item>
+      </sl:item-group>
+    renderSource: |-
+      <sl:item-group>
+        <sl:item as="a" variant="outline" href="/photos/dunes">
+          <sl:item-media variant="image"><img th:src="${photos.dunes}" alt=""></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Dunes at dusk</sl:item-title>
+            <sl:item-description>Sahara, Morocco</sl:item-description>
+          </sl:item-content>
+          <sl:item-content><sl:item-description>820 KB</sl:item-description></sl:item-content>
+        </sl:item>
+        <sl:item as="a" variant="outline" href="/photos/lake">
+          <sl:item-media variant="image"><img th:src="${photos.lake}" alt=""></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Mountain lake</sl:item-title>
+            <sl:item-description>Lake Bled, Slovenia</sl:item-description>
+          </sl:item-content>
+          <sl:item-content><sl:item-description>1.1 MB</sl:item-description></sl:item-content>
+        </sl:item>
+        <sl:item as="a" variant="outline" href="/photos/forest">
+          <sl:item-media variant="image"><img th:src="${photos.forest}" alt=""></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Pine forest</sl:item-title>
+            <sl:item-description>Black Forest, Germany</sl:item-description>
+          </sl:item-content>
+          <sl:item-content><sl:item-description>940 KB</sl:item-description></sl:item-content>
+        </sl:item>
+      </sl:item-group>
+
+  - id: group
+    title: Group
+    description: sl:item-group makes its items a list, with a gap that follows their size.
+    source: |-
+      <sl:item-group>
+        <th:block th:each="person : ${people}">
+          <sl:item variant="outline">
+            <sl:item-media>
+              <sl:avatar><sl:avatar-fallback>[[${person.initials}]]</sl:avatar-fallback></sl:avatar>
+            </sl:item-media>
+            <sl:item-content>
+              <sl:item-title>[[${person.name}]]</sl:item-title>
+              <sl:item-description>[[${person.email}]]</sl:item-description>
+            </sl:item-content>
+            <sl:item-actions>
+              <sl:button variant="ghost" size="icon" th:aria-label="|Add ${person.name}|"><sl:icon name="plus"/></sl:button>
+            </sl:item-actions>
+          </sl:item>
+        </th:block>
+      </sl:item-group>
+    renderSource: |-
+      <sl:item-group>
+        <sl:item variant="outline">
+          <sl:item-media><sl:avatar><sl:avatar-fallback>AM</sl:avatar-fallback></sl:avatar></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Alex Morgan</sl:item-title>
+            <sl:item-description>alex@example.com</sl:item-description>
+          </sl:item-content>
+          <sl:item-actions>
+            <sl:button variant="ghost" size="icon" aria-label="Add Alex Morgan"><sl:icon name="plus"/></sl:button>
+          </sl:item-actions>
+        </sl:item>
+        <sl:item variant="outline">
+          <sl:item-media><sl:avatar><sl:avatar-fallback>JD</sl:avatar-fallback></sl:avatar></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Jane Doe</sl:item-title>
+            <sl:item-description>jane@example.com</sl:item-description>
+          </sl:item-content>
+          <sl:item-actions>
+            <sl:button variant="ghost" size="icon" aria-label="Add Jane Doe"><sl:icon name="plus"/></sl:button>
+          </sl:item-actions>
+        </sl:item>
+        <sl:item variant="outline">
+          <sl:item-media><sl:avatar><sl:avatar-fallback>KL</sl:avatar-fallback></sl:avatar></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Kim Lee</sl:item-title>
+            <sl:item-description>kim@example.com</sl:item-description>
+          </sl:item-content>
+          <sl:item-actions>
+            <sl:button variant="ghost" size="icon" aria-label="Add Kim Lee"><sl:icon name="plus"/></sl:button>
+          </sl:item-actions>
+        </sl:item>
+      </sl:item-group>
+
+  - id: separator
+    title: Separator
+    description: sl:item-separator draws a line between items without a border; the group then has no gap of its own.
+    source: |-
+      <sl:item-group>
+        <th:block th:each="person, status : ${people}">
+          <sl:item>
+            <sl:item-media>
+              <sl:avatar><sl:avatar-fallback>[[${person.initials}]]</sl:avatar-fallback></sl:avatar>
+            </sl:item-media>
+            <sl:item-content>
+              <sl:item-title>[[${person.name}]]</sl:item-title>
+              <sl:item-description>[[${person.email}]]</sl:item-description>
+            </sl:item-content>
+            <sl:item-actions>
+              <sl:button variant="ghost" size="icon" th:aria-label="|Add ${person.name}|"><sl:icon name="plus"/></sl:button>
+            </sl:item-actions>
+          </sl:item>
+          <sl:item-separator th:unless="${status.last}"/>
+        </th:block>
+      </sl:item-group>
+    renderSource: |-
+      <sl:item-group>
+        <sl:item>
+          <sl:item-media><sl:avatar><sl:avatar-fallback>AM</sl:avatar-fallback></sl:avatar></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Alex Morgan</sl:item-title>
+            <sl:item-description>alex@example.com</sl:item-description>
+          </sl:item-content>
+          <sl:item-actions>
+            <sl:button variant="ghost" size="icon" aria-label="Add Alex Morgan"><sl:icon name="plus"/></sl:button>
+          </sl:item-actions>
+        </sl:item>
+        <sl:item-separator/>
+        <sl:item>
+          <sl:item-media><sl:avatar><sl:avatar-fallback>JD</sl:avatar-fallback></sl:avatar></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Jane Doe</sl:item-title>
+            <sl:item-description>jane@example.com</sl:item-description>
+          </sl:item-content>
+          <sl:item-actions>
+            <sl:button variant="ghost" size="icon" aria-label="Add Jane Doe"><sl:icon name="plus"/></sl:button>
+          </sl:item-actions>
+        </sl:item>
+        <sl:item-separator/>
+        <sl:item>
+          <sl:item-media><sl:avatar><sl:avatar-fallback>KL</sl:avatar-fallback></sl:avatar></sl:item-media>
+          <sl:item-content>
+            <sl:item-title>Kim Lee</sl:item-title>
+            <sl:item-description>kim@example.com</sl:item-description>
+          </sl:item-content>
+          <sl:item-actions>
+            <sl:button variant="ghost" size="icon" aria-label="Add Kim Lee"><sl:icon name="plus"/></sl:button>
+          </sl:item-actions>
+        </sl:item>
+      </sl:item-group>
+
+  - id: header
+    title: Header
+    description: sl:item-header takes a line of its own above the content; layout="grid" lays the items out in columns.
+    source: |-
+      <sl:item-group layout="grid">
+        <sl:item variant="outline" th:each="model : ${models}">
+          <sl:item-header>
+            <img th:src="@{/models/{id}/cover(id=${model.id})}" alt="">
+          </sl:item-header>
+          <sl:item-content>
+            <sl:item-title>[[${model.name}]]</sl:item-title>
+            <sl:item-description>[[${model.description}]]</sl:item-description>
+          </sl:item-content>
+        </sl:item>
+      </sl:item-group>
+    renderSource: |-
+      <sl:item-group layout="grid">
+        <sl:item variant="outline">
+          <sl:item-header><img th:src="${photos.dunes}" alt=""></sl:item-header>
+          <sl:item-content>
+            <sl:item-title>v0-1.5-sm</sl:item-title>
+            <sl:item-description>Everyday tasks and UI generation.</sl:item-description>
+          </sl:item-content>
+        </sl:item>
+        <sl:item variant="outline">
+          <sl:item-header><img th:src="${photos.lake}" alt=""></sl:item-header>
+          <sl:item-content>
+            <sl:item-title>v0-1.5-lg</sl:item-title>
+            <sl:item-description>Advanced thinking or reasoning.</sl:item-description>
+          </sl:item-content>
+        </sl:item>
+        <sl:item variant="outline">
+          <sl:item-header><img th:src="${photos.forest}" alt=""></sl:item-header>
+          <sl:item-content>
+            <sl:item-title>v0-2.0-mini</sl:item-title>
+            <sl:item-description>Open source model for everyone.</sl:item-description>
+          </sl:item-content>
+        </sl:item>
+      </sl:item-group>
+
+  - id: link
+    title: Link
+    description: as="a" makes the whole item a link, tinted on hover.
+    source: |-
+      <sl:item as="a" href="/docs">
+        <sl:item-content>
+          <sl:item-title>Visit our documentation</sl:item-title>
+          <sl:item-description>Learn how to get started with our components.</sl:item-description>
+        </sl:item-content>
+        <sl:item-actions><sl:icon name="chevron-right" size="16"/></sl:item-actions>
+      </sl:item>
+      <sl:item as="a" href="https://example.com/resources" target="_blank" rel="noopener noreferrer" variant="outline">
+        <sl:item-content>
+          <sl:item-title>External resource</sl:item-title>
+          <sl:item-description>Opens in a new tab.</sl:item-description>
+        </sl:item-content>
+        <sl:item-actions><sl:icon name="external-link" size="16"/></sl:item-actions>
+      </sl:item>
