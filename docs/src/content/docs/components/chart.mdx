@@ -1,12 +1,27 @@
 ---
 title: Chart
-description: Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+description: Bar, line and area charts drawn by Recharts from rows the controller puts in the model; for dashboards, reports and figures over time.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A bar, line or area chart, drawn in the browser by Recharts in the skin's look, from rows the controller puts in the
+model.
+
 <ComponentPreview id="chart--bar-multiple" />
+
+## When to use
+
+- Figures over time on a dashboard, such as visitors or revenue per month.
+- Comparing a few series, such as desktop against mobile.
+- A report with totals per category.
+
+Use something else for:
+
+- Exact values the user reads, sorts or compares: a [table](../table/).
+- A single figure: a [card](../card/) with the number in it.
+- Data per day of a month: a [month view](../month-view/).
 
 ## Built from parts
 

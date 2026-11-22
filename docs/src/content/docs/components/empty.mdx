@@ -1,12 +1,25 @@
 ---
 title: Empty
-description: What a list, a table, a search or a page shows when there is nothing to show yet.
+description: What a list, a table, a search or a page shows when there is nothing to show yet; with an icon, a title, a text and a next step.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A centred block with an icon, a title, a description and what to do next, in the place where content would be.
+
 <ComponentPreview id="empty--default" />
+
+## When to use
+
+- A list or a table without rows yet, with a button to create the first.
+- A search that found nothing, with a way to change it.
+- An inbox, a cart or a list of notifications with nothing in it.
+
+Use something else for:
+
+- An error: an [alert](../alert/).
+- Content that is still loading: a [skeleton](../skeleton/).
 
 ## Built from parts
 

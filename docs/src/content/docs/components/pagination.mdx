@@ -1,12 +1,25 @@
 ---
 title: Pagination
-description: Links to the other pages of a list, built from the Spring Data Page the controller returns.
+description: Links to the other pages of a list, built from the Spring Data Page the controller returns; for tables and other long lists.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+Links to the previous, the next and the numbered pages of a long list, with an optional summary and a choice of rows per
+page, built from the Spring Data `Page` the controller returns.
+
 <ComponentPreview id="pagination--default" />
+
+## When to use
+
+- Below a table.
+- Search results, or any other list the server returns a page at a time.
+
+Use something else for:
+
+- The trail of pages up to the current one: a [breadcrumb](../breadcrumb/).
+- Keeping the page and the order when a search form is sent: [query params](../query-params/).
 
 ## From a page
 

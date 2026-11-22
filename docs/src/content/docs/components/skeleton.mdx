@@ -1,12 +1,24 @@
 ---
 title: Skeleton
-description: A placeholder that pulses while content loads.
+description: A placeholder that pulses while content loads; for the cards, rows and text that htmx loads after the page.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A grey shape that pulses in the place where content will appear, while it loads.
+
 <ComponentPreview id="skeleton--default" />
+
+## When to use
+
+- The cards, rows or text of a part of the page that htmx loads after the page itself.
+- The avatars and lines of text of a list that is being fetched.
+
+Use something else for:
+
+- An action that is busy, such as a button that saves: a [spinner](../spinner/), or the button's `loading`.
+- Nothing to show once it has loaded: an [empty state](../empty/).
 
 ## Shapes and sizes
 

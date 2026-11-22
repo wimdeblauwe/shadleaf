@@ -1,13 +1,26 @@
 ---
 title: Sheet
-description: A dialog that slides in from an edge of the screen.
+description: A dialog that slides in from an edge of the screen; for filters, settings or the details of a row beside the page.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 import {Steps} from '@astrojs/starlight/components';
 
+A dialog that slides in from an edge of the screen, for content that complements the page.
+
 <ComponentPreview id="sheet--default" />
+
+## When to use
+
+- Filters for a list or a table.
+- The details, or the edit form, of a table row.
+- Settings or a cart on the side of the page.
+
+Use something else for:
+
+- A form in the middle of the screen: a [dialog](../dialog/).
+- Something small next to its button: a [popover](../popover/).
 
 ## Built from parts
 

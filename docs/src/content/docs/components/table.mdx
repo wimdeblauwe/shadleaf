@@ -1,12 +1,26 @@
 ---
 title: Table
-description: A styled table, whose column headers sort it on the server.
+description: A styled table, whose column headers sort it on the server; for lists of records with columns, search, actions per row and selection.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A table in the skin's look, for rows of records with columns. Its column headers sort it on the server, and rows can
+have actions and checkboxes.
+
 <ComponentPreview id="table--default" />
+
+## When to use
+
+- Records the user scans and compares, such as orders, users or invoices.
+- Sorting, searching and paging a Spring Data query.
+- Actions per row in a menu, and rows selected for an action on all of them.
+
+Use something else for:
+
+- Rows with a picture and a description rather than columns: an [item](../item/).
+- Moving between pages: [pagination](../pagination/), below the table.
 
 ## Plain rows and cells
 

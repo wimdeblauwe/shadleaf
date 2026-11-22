@@ -197,6 +197,10 @@ there instead of fetching from the web.
   control labelled, and landmarks named uniquely; `showcase: false` keeps a scenario off the showcase.
 - **Docs page:** `docs/src/content/docs/components/<name>.mdx`, listed in `docs/src/component-groups.mjs` (the build
   fails otherwise). A new MDX component needs a case in `docs/src/lib/markdown.ts` (the `.md`/`llms.txt` output).
+  Every page says what the component is and what it is for, so people and agents find the right one: the frontmatter
+  `description` (what it is; then its typical uses after a semicolon; read by the overview cards and `llms.txt`), an
+  intro of one or two sentences before the first preview, and after it a `## When to use` section: a list of concrete
+  uses, then "Use something else for:" with links to the components for neighbouring cases (see `item.mdx`).
 - **Browser tests** (`docs/tests/<name>.spec.ts`) for anything with behaviour: the showcase in every skin and theme,
   and fixture pages (`fixture.ts`: strict CSP, the `csp` build, Alpine on/off, htmx, served routes). Add the spec to
   the Firefox project's `testMatch` in `docs/playwright.config.ts` when browsers differ (it runs in `test:full` only).

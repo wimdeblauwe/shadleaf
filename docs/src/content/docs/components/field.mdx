@@ -1,12 +1,27 @@
 ---
 title: Field
-description: A label, a control, a description and the binding's error messages, wired together from one th:field.
+description: A label, a control, a description and the binding's error messages, wired together from one th:field; for every control of a form bound to an object.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+The frame around one form control: its label, an optional description and the field's error messages, all bound from one
+`th:field` and wired to the control for screen readers.
+
 <ComponentPreview id="field--default" />
+
+## When to use
+
+- Every input, select, textarea or combobox in a form bound to an object.
+- A checkbox or a switch with its label and a description next to it.
+- A group of radio buttons or checkboxes with one legend.
+- The layout of a form's fields, with field groups and field sets.
+
+Use something else for:
+
+- Errors that belong to no single field: [form errors](../form-errors/).
+- A label on its own: a [label](../label/).
 
 ## One th:field for the whole field
 

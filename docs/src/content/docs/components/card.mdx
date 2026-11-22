@@ -1,12 +1,28 @@
 ---
 title: Card
-description: A container for related content and actions, built from its parts.
+description: A bordered box for related content and actions, built from its parts; for a sign-in form, a dashboard tile or a section of a settings page.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A bordered box that groups content about one thing, with an optional header (title, description, an action) and
+footer. It holds anything: text, a form, a table, a chart.
+
 <ComponentPreview id="card--default" />
+
+## When to use
+
+- A sign-in or settings form in a box of its own.
+- A tile on a dashboard: a figure, a chart, a short list.
+- One section of a settings or detail page, such as "Billing" or "Notifications".
+- A grid of things to choose from, such as plans or projects.
+
+Use something else for:
+
+- A row in a list (a file, a member, a notification): an [item](../item/), or several in an item group.
+- A message the user should notice: an [alert](../alert/).
+- Nothing to show yet: an [empty state](../empty/).
 
 ## Built from parts
 

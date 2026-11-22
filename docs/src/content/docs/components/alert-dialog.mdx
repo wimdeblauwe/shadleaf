@@ -1,12 +1,26 @@
 ---
 title: Alert Dialog
-description: A modal dialog that interrupts the user with something important and waits for an answer.
+description: A modal dialog that interrupts the user with something important and waits for an answer; for confirming a delete or another action that cannot be undone.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A modal dialog that asks the user to confirm or cancel before going on. A click outside it does not close it, so the
+user has to answer.
+
 <ComponentPreview id="alert-dialog--default" />
+
+## When to use
+
+- Confirming a delete, or anything else that cannot be undone.
+- Confirming a step with consequences, such as publishing or cancelling a subscription.
+- Warning about unsaved changes before the user leaves.
+
+Use something else for:
+
+- A form or content the user can close at any time: a [dialog](../dialog/).
+- A message that needs no answer: an [alert](../alert/) or a [toast](../toast/).
 
 ## Built from parts
 

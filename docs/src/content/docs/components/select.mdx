@@ -1,12 +1,26 @@
 ---
 title: Select
-description: A select drawn in the page's style on a real select element, bound with th:field; the browser's customizable select where it has one.
+description: A select drawn in the page's style on a real select element, bound with th:field; for one value out of a short list.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A select whose list is drawn in the page's style, with a check mark on the chosen item, and icons and groups if you want
+them. Underneath it is a real `<select>`, bound and submitted as one.
+
 <ComponentPreview id="select--default" />
+
+## When to use
+
+- One value out of a few to a few dozen, such as a status, a role or a sort order.
+- A list with icons or groups.
+
+Use something else for:
+
+- A long list, or the phone's own picker: a [native select](../select-native/).
+- A list the user searches, or several values: a [combobox](../combobox/).
+- A few options that are all visible: a [radio group](../radio-group/).
 
 ## Built from parts
 

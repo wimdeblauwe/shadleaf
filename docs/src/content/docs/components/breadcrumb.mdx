@@ -1,12 +1,25 @@
 ---
 title: Breadcrumb
-description: The trail of pages above the one shown now, with a menu for the levels a long trail leaves out.
+description: The trail of pages above the one shown now, with a menu for the levels a long trail leaves out; for the top of a page deep in a hierarchy.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A row of links from the top of the application down to the current page, so the user sees where they are and can go up a
+level.
+
 <ComponentPreview id="breadcrumb--default" />
+
+## When to use
+
+- The top of a detail page, such as Projects › Acme › Settings.
+- Folders, categories or any other hierarchy more than two levels deep.
+
+Use something else for:
+
+- Moving between the pages of a list: [pagination](../pagination/).
+- The application's main navigation: a [sidebar](../sidebar/) or a [site header](../site-header/).
 
 ## Built from parts
 

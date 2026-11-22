@@ -1,12 +1,26 @@
 ---
 title: Combobox
-description: A searchable select on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+description: A select the user types into to filter, bound with th:field; one value or several as chips, options from the server as the user types; for long lists such as customers, countries or tags.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A select with a text input: the user types to filter the list, and picks one value, or several shown as chips. The
+options can come from the server as the user types.
+
 <ComponentPreview id="combobox--default" />
+
+## When to use
+
+- Picking from a long list, such as a country, a time zone or a customer.
+- Several values at once, such as tags or the members of a team.
+- A list too long to put in the page, searched on the server (`search-url`).
+
+Use something else for:
+
+- A short list people scan: a [select](../select/).
+- The phone's own picker: a [native select](../select-native/).
 
 ## Built from parts
 

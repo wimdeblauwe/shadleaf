@@ -1,12 +1,26 @@
 ---
 title: Attachment
-description: A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
+description: A file or an image attached to a message, a form or a record, with its name, its size or state, and actions; for the documents on a record or the files of an upload.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A small card for one file: an icon or a thumbnail, its name, its size or upload state, and actions such as download or
+remove. It shows a file; it uploads nothing.
+
 <ComponentPreview id="attachment--default" />
+
+## When to use
+
+- The documents on a customer's or an order's page, with a Download action.
+- The files attached to a message or a comment.
+- The list of files under a file upload, with their progress or errors.
+
+Use something else for:
+
+- Picking and uploading files: a [file upload](../file-upload/), which uses attachments for its list.
+- A row about something other than a file: an [item](../item/).
 
 ## Built from parts
 

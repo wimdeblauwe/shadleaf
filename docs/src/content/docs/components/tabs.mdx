@@ -1,12 +1,26 @@
 ---
 title: Tabs
-description: Panels of content shown one at a time, chosen from a row of tabs.
+description: Panels of content shown one at a time, chosen from a row of tabs; for the views of one record, such as Overview, Activity and Settings.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A row of tabs over panels of content, of which one shows at a time. A tab can be a link, so the address opens it.
+
 <ComponentPreview id="tabs--default" />
+
+## When to use
+
+- The views of one record, such as a project's Overview, Activity and Settings.
+- The sections of a settings page.
+- Two forms on one page, such as Account and Password.
+
+Use something else for:
+
+- Stacked sections the user opens one or more of: an [accordion](../accordion/).
+- Navigation between the application's pages: a [sidebar](../sidebar/) or a [site header](../site-header/).
+- Choosing a value, such as list or grid: a [toggle group](../toggle-group/).
 
 ## Built from parts
 

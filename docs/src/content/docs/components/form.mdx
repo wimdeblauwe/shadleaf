@@ -6,7 +6,19 @@ description: A form element that passes every attribute on, and validates its fi
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A `<form>` that validates its fields on the server while the user types, with htmx 4. Without `validate` it is a plain
+form.
+
 <ComponentPreview id="form--default" />
+
+## When to use
+
+- A form whose fields show their errors before it is submitted, such as a sign-up that checks whether a name is taken.
+
+Use something else for:
+
+- A form that is validated only when it is submitted: a plain `<form>` works as well.
+- The layout of the fields: a [field group](../field/#layout).
 
 `<sl:form>` renders a `<form class="form">` and passes every attribute on: `th:object`, `th:action`, `method`,
 `novalidate`, `enctype`, `hx-*`. It has no styling of its own; a [`<sl:field-group>`](../field/#layout) lays out the

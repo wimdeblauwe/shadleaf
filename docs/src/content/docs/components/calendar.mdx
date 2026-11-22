@@ -1,12 +1,26 @@
 ---
 title: Calendar
-description: A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates.
+description: A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates, always visible in the page.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A month the user picks a date, or a range of dates, from. It stays open in the page, and binds to a form field as a date
+input does.
+
 <ComponentPreview id="calendar--default" />
+
+## When to use
+
+- Picking a date where there is room to show the month, such as a booking form.
+- Picking a range, such as the dates of a holiday or the period of a report.
+- A filter by day beside a list.
+
+Use something else for:
+
+- A date in a form where space is tight: a [date picker](../date-picker/), a button that opens a calendar.
+- Data per day, without picking: a [month view](../month-view/).
 
 ## Drawn over date inputs
 

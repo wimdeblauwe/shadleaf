@@ -1,12 +1,24 @@
 ---
 title: Query params
-description: Hidden inputs that keep a table's order, page size and filters when a search form is sent.
+description: Hidden inputs that keep a table's order, page size and filters when a search form is sent; for a search above a sorted or paged table.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+Hidden inputs that copy the current request's other parameters into a `GET` form, so sending it keeps the page's order,
+page size and filters.
+
 <ComponentPreview id="query-params--default" />
+
+## When to use
+
+- A search above a sorted, paged table.
+- A filter form that should not reset the other filters.
+
+Use something else for:
+
+- Links to the other pages of the list: [pagination](../pagination/).
 
 ## Searching a sorted table
 

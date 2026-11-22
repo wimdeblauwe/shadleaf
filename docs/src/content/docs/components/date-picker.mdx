@@ -1,12 +1,26 @@
 ---
 title: Date Picker
-description: A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
+description: A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field; for the date fields of forms and filters.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A button that shows the chosen date and opens a calendar in a popover to change it. It takes the space of one form
+control, and binds as a date input does.
+
 <ComponentPreview id="date-picker--default" />
+
+## When to use
+
+- A date in a form, such as a due date.
+- A range in a filter bar, such as the period of a report.
+- A date of birth, far in the past.
+
+Use something else for:
+
+- A calendar that is always visible: a [calendar](../calendar/).
+- Data per day, without picking: a [month view](../month-view/).
 
 ## A popover with a calendar
 

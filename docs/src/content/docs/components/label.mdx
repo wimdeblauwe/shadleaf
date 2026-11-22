@@ -1,12 +1,22 @@
 ---
 title: Label
-description: A label for a form control.
+description: A label for a form control; for a control outside a field, such as a checkbox or a switch with its text next to it.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+The text that names a form control. A click on it focuses or toggles the control.
+
 <ComponentPreview id="label--default" />
+
+## When to use
+
+- A control outside a field, such as a checkbox or a switch with its text next to it.
+
+Use something else for:
+
+- A control in a form, with its description and errors: a [field](../field/), whose field label does this for you.
 
 ## Pointing at a control
 

@@ -1,12 +1,26 @@
 ---
 title: Month view
-description: A month rendered on the server, with content of your own per day and a link per day; no picking.
+description: A month rendered on the server, with content of your own per day and a link per day; for an agenda, a booking overview or orders per day.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A month rendered on the server, with your own content in every day and a link to each day. It shows data; it picks no
+dates.
+
 <ComponentPreview id="month-view--default" />
+
+## When to use
+
+- An agenda, or a calendar of events.
+- An overview of bookings or availability.
+- Figures per day, such as orders or hours worked.
+
+Use something else for:
+
+- A date picked in a form: a [calendar](../calendar/) or a [date picker](../date-picker/).
+- Figures over time as a graph: a [chart](../chart/).
 
 ## Content per day
 

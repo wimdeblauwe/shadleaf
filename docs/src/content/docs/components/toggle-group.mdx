@@ -1,12 +1,27 @@
 ---
 title: Toggle Group
-description: A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
+description: A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field; for text alignment, formatting or switching a view.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A row of toggle buttons of which one, or several, can be on. Underneath they are radio buttons or checkboxes, bound to a
+form field.
+
 <ComponentPreview id="toggle-group--default" />
+
+## When to use
+
+- Text alignment or formatting in an editor's toolbar.
+- Switching a view, such as list or grid.
+- A few values that fit on buttons, such as the days of the week.
+
+Use something else for:
+
+- Options with longer labels: a [radio group](../radio-group/).
+- One button on its own: a [toggle](../toggle/).
+- Panels of content: [tabs](../tabs/).
 
 The items of a toggle group are [toggles](../toggle/) around radio buttons (`type="single"`, the default: one item is
 on at a time) or checkboxes (`type="multiple"`: any number). The form submits them as such inputs, and they work
