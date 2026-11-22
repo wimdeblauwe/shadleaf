@@ -1,12 +1,26 @@
 ---
 title: Tooltip
-description: A short text that shows while the pointer rests on an element or the keyboard focuses it.
+description: A short text that shows while the pointer rests on an element or the keyboard focuses it; for the name of an icon button or a keyboard shortcut.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A short text that appears while the pointer rests on an element or the keyboard focuses it, and disappears when they
+leave. It explains the element; it holds no links or buttons, and nobody on a touch screen sees it.
+
 <ComponentPreview id="tooltip--default" />
+
+## When to use
+
+- The name of an icon-only button in a toolbar, a table row or a collapsed sidebar.
+- The keyboard shortcut of an action, such as "Save (Ctrl S)".
+- A short explanation of a value or an abbreviation, when the page also makes it clear some other way.
+
+Use something else for:
+
+- Content with links, buttons or a form, or that must work on a touch screen: a [popover](../popover/).
+- Why a button is disabled, or an error: text next to it, which everyone sees.
 
 ## Usage
 

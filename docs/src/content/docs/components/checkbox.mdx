@@ -1,12 +1,27 @@
 ---
 title: Checkbox
-description: The browser's own checkbox, styled, bound to a form field with th:field.
+description: The browser's own checkbox, styled, bound to a form field with th:field; for accepting terms, a yes or no in a form, or picking several options.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A box the user ticks for yes or leaves empty for no, bound to a form field. Several bound to one collection field let
+the user pick several values.
+
 <ComponentPreview id="checkbox--default" />
+
+## When to use
+
+- Accepting terms, or a yes or no that takes effect when the form is submitted.
+- Picking several options from a short list, such as the channels to be notified on.
+- Selecting rows in a table.
+
+Use something else for:
+
+- A setting that is on or off, such as email notifications: a [switch](../switch/).
+- One option out of several: a [radio group](../radio-group/).
+- Several values from a long list: a [combobox](../combobox/) with `multiple`.
 
 ## Binding to a form field
 

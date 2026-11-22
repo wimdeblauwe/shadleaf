@@ -1,12 +1,26 @@
 ---
 title: Sidebar
-description: The application's navigation beside the page, and a panel over it on a phone.
+description: The application's navigation beside the page, and a panel over it on a phone; for admin panels, dashboards and other applications with many pages.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+The column of navigation beside the page: menus of links with icons and badges, groups that fold, a header and a footer.
+On a desktop it collapses to icons; on a phone it opens as a panel over the page. It remembers its state.
+
 <ComponentPreview id="sidebar--default" />
+
+## When to use
+
+- The main navigation of an application with many pages, such as an admin panel or a dashboard.
+- Navigation in sections, with groups that fold and the current page marked.
+- The signed-in user's menu, in its footer.
+
+Use something else for:
+
+- A few links across the top of the page: a [site header](../site-header/).
+- Choosing between the two: the [application shell](../application-shell/).
 
 :::tip[Layouts to copy]
 The Layouts section has whole layouts built from these parts, such as [Collapses to

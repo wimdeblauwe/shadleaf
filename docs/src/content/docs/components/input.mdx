@@ -1,12 +1,27 @@
 ---
 title: Input
-description: A text input, bound to a form field with th:field.
+description: A text input, bound to a form field with th:field; for names, email addresses, numbers, passwords and other one-line values.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A one-line text input in the skin's look, bound to a form field. Every HTML type works: text, email, number, password,
+search, date.
+
 <ComponentPreview id="input--default" />
+
+## When to use
+
+- Names, email addresses, numbers and other short values in a form.
+- A search field above a table.
+- A field the server validates as the user types, with htmx.
+
+Use something else for:
+
+- Several lines of text: a [textarea](../textarea/).
+- Icons, text or buttons inside the field: an [input group](../input-group/).
+- A date picked from a calendar: a [date picker](../date-picker/).
 
 ## Binding to a form field
 

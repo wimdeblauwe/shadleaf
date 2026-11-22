@@ -1,12 +1,29 @@
 ---
 title: Button
-description: A button, or a link that looks like one.
+description: A button that submits a form, opens a dialog or runs an action, or a link that looks like one; with an icon, or icon-only for toolbars and table rows.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A button the user presses to do something: submit a form, open a dialog, delete a row, start an htmx request.
+With `as="a"` it is a link that looks like a button, for navigation that should stand out.
+
 <ComponentPreview id="button--default" />
+
+## When to use
+
+- The main action of a form or a page (`default`), and the actions next to it (`outline`, `secondary`, `ghost`).
+- An action that destroys something, such as Delete (`destructive`).
+- An icon-only action in a toolbar, a table row or a card header (the `icon` sizes).
+- A link that should look like an action, such as "Create project" leading to a form (`as="a"`).
+
+Use something else for:
+
+- A button that stays on or off, such as Bold in a toolbar: a [toggle](../toggle/), or a
+  [toggle group](../toggle-group/) for several.
+- A list of actions behind one button: a [dropdown menu](../dropdown-menu/).
+- A link inside running text: a plain `<a>`.
 
 ## A button never submits by accident
 

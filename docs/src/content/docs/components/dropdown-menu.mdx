@@ -1,12 +1,27 @@
 ---
 title: Dropdown Menu
-description: A menu of actions or links that opens from a button, on the browser's Popover API.
+description: A menu of actions or links that opens from a button, on the browser's Popover API; for the actions of a table row, a More button or an account menu.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A list of actions or links that opens from a button, with the keyboard behaviour of a menu. Items can also be checkboxes
+or radio buttons.
+
 <ComponentPreview id="dropdown-menu--default" />
+
+## When to use
+
+- The actions of a table row behind a button with an ellipsis.
+- A More menu in a toolbar or a card header.
+- Options that are on or off, such as the columns a table shows.
+
+Use something else for:
+
+- Choosing a value in a form: a [select](../select/) or a [combobox](../combobox/).
+- Rich content or a small form: a [popover](../popover/).
+- The signed-in user's menu: the [user menu](../user-menu/), built on this one.
 
 ## Built from parts
 

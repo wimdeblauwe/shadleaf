@@ -1,12 +1,29 @@
 ---
 title: Popover
-description: Rich content in a panel next to the button that opens it, on the browser's Popover API.
+description: Rich content in a panel next to the button that opens it, on the browser's Popover API; for a small inline form, details with links, or a share panel.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A panel that opens next to the button that triggers it and closes when the user clicks elsewhere or presses Escape.
+It holds anything: text, links, a small form. The rest of the page stays usable while it is open.
+
 <ComponentPreview id="popover--default" />
+
+## When to use
+
+- A small form that edits one thing in place, such as dimensions, a rename or a filter.
+- Extra details about something on the page, with links in them.
+- A share panel, a colour choice or a set of options that does not need a page or a dialog of its own.
+
+Use something else for:
+
+- A list of actions or links: a [dropdown menu](../dropdown-menu/), which has the keyboard behaviour of a menu.
+- A short hint while the pointer rests on an element: a [tooltip](../tooltip/).
+- Content the user must deal with before going on, or a larger form: a [dialog](../dialog/), or a
+  [sheet](../sheet/) from the edge of the screen.
+- Picking a date: a [date picker](../date-picker/).
 
 ## Built from parts
 

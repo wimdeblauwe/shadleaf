@@ -1,12 +1,23 @@
 ---
 title: Textarea
-description: A multi-line text input, bound to a form field with th:field.
+description: A multi-line text input, bound to a form field with th:field; for comments, messages, descriptions and notes.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A text input of several lines, bound to a form field.
+
 <ComponentPreview id="textarea--default" />
+
+## When to use
+
+- Comments, messages, descriptions and notes.
+
+Use something else for:
+
+- One line of text: an [input](../input/).
+- A Send button inside its border: an [input group](../input-group/).
 
 The textarea grows with its content in browsers that support `field-sizing`; elsewhere it keeps its height and
 scrolls. `rows` sets a starting height.

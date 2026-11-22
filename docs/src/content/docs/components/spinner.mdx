@@ -1,12 +1,23 @@
 ---
 title: Spinner
-description: A spinning icon that says something is loading.
+description: A spinning icon that says something is loading; for a busy button or a part of the page that waits for the server.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A spinning icon that tells the user something is loading, with a label for screen readers.
+
 <ComponentPreview id="spinner--default" />
+
+## When to use
+
+- In a button while it saves (the button's `loading` does this for you).
+- In a part of the page that waits for an htmx response.
+
+Use something else for:
+
+- The shape of the content that is loading: a [skeleton](../skeleton/).
 
 ## What it says
 

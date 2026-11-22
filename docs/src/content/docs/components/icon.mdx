@@ -1,6 +1,6 @@
 ---
 title: Icon
-description: Inline SVG icons from lucide, or your own.
+description: Inline SVG icons from lucide, or your own; for buttons, menu items, badges, alerts and anywhere a symbol helps the text.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
@@ -11,6 +11,17 @@ works inside htmx swaps. It draws in `currentColor`, so it takes the colour of t
 fails with the closest known ones.
 
 <ComponentPreview id="icon--default" />
+
+## When to use
+
+- An icon in a button, a menu item, a badge or an alert, which takes its colour.
+- An icon-only button, with an `aria-label` on the button.
+- Your own icons, such as a logo, from an `IconSource` bean.
+
+Use something else for:
+
+- A picture of a person: an [avatar](../avatar/).
+- Something that is loading: a [spinner](../spinner/).
 
 ## Size and stroke width
 

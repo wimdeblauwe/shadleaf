@@ -1,12 +1,26 @@
 ---
 title: Badge
-description: A small label for a status, a count or a category.
+description: A small label for a status, a count or a category; for the state of an order, unread messages or a tag.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A small, rounded label next to other content, in the same variants as the button.
+
 <ComponentPreview id="badge--default" />
+
+## When to use
+
+- The state of something in a table row, such as Paid, Pending or Failed.
+- A count, such as unread messages.
+- A tag or a category on an item or a card.
+
+Use something else for:
+
+- A count next to a link in the sidebar: the sidebar's [menu badge](../sidebar/#badges).
+- A key on the keyboard: a [kbd](../kbd/).
+- A message the user should read: an [alert](../alert/).
 
 ## Variants
 

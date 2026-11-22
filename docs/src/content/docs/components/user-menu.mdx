@@ -1,12 +1,25 @@
 ---
 title: User Menu
-description: The signed-in user with a menu that signs out, or a Sign in link, for the sidebar's footer or the site header.
+description: The signed-in user with a menu that signs out, or a Sign in link; for the sidebar's footer or the site header.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+The signed-in user's picture and name, opening a menu with your own links and Sign out. When nobody is signed in, it is
+a Sign in link.
+
 <ComponentPreview id="user-menu--default" />
+
+## When to use
+
+- The footer of the sidebar.
+- The end of the site header.
+
+Use something else for:
+
+- Another menu of actions: a [dropdown menu](../dropdown-menu/).
+- The picture alone: an [avatar](../avatar/).
 
 ## Usage
 

@@ -1,12 +1,29 @@
 ---
 title: Item
-description: A row of content with media, a title, a description and actions, alone or in a list.
+description: A row of content with media, a title, a description and actions, alone or in a list; for people, files, notifications or settings.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A row that shows one thing at a glance: an icon, avatar or image, a title and a description, and actions at its end.
+Several make a list in an item group, or a grid of tiles.
+
 <ComponentPreview id="item--default" />
+
+## When to use
+
+- A list of people, files, notifications, integrations or devices, each with a button or a menu.
+- A setting shown as a title, an explanation and a button, such as "Two-factor authentication: Enable".
+- A row that links to its detail page (`as="a"`).
+- A grid of products or albums with a picture above each (`<sl:item-header>`, `layout="grid"`).
+
+Use something else for:
+
+- A box holding a form, a table or a chart: a [card](../card/).
+- A checkbox or switch with its label and description: a [field](../field/).
+- Rows with columns the user compares or sorts: a [table](../table/).
+- A file attached to a form or a message: an [attachment](../attachment/).
 
 ## Built from parts
 

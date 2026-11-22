@@ -1,12 +1,27 @@
 ---
 title: Dialog
-description: A modal window over the page, on the native dialog element.
+description: A modal window over the page, on the native dialog element; for a short form, details or a step the user finishes before going back to the page.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A window over the page that the user deals with before going back to it; the page behind it is inert. It can hold a form
+that the server renders and htmx swaps in.
+
 <ComponentPreview id="dialog--default" />
+
+## When to use
+
+- Creating or editing something with a short form, such as a new project.
+- The details of a row, loaded when the dialog opens.
+- A step that needs the user's attention, such as inviting a member.
+
+Use something else for:
+
+- A confirmation the user must answer: an [alert dialog](../alert-dialog/).
+- Filters, settings or a row's details beside the page: a [sheet](../sheet/).
+- Something small next to its button that leaves the page usable: a [popover](../popover/).
 
 ## Built from parts
 

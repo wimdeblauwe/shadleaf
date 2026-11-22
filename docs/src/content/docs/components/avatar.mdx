@@ -1,12 +1,25 @@
 ---
 title: Avatar
-description: A picture of a person, with initials when there is no picture.
+description: A picture of a person, with initials when there is no picture; for the signed-in user, the author of a comment or the members of a team.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+A round picture of a person, or their initials when there is no picture or it fails to load.
+
 <ComponentPreview id="avatar--default" />
+
+## When to use
+
+- The signed-in user in a header or a sidebar.
+- The author next to a comment, a message or a change.
+- The members of a team in a list or a table.
+
+Use something else for:
+
+- The signed-in user with a menu that signs out: the [user menu](../user-menu/).
+- The thumbnail of a file: an [attachment](../attachment/).
 
 ## Image and fallback
 

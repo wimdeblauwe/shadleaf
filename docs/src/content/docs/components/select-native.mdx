@@ -1,12 +1,26 @@
 ---
 title: Select (Native)
-description: The browser's own select, styled, bound to a form field with th:field.
+description: The browser's own select, styled, bound to a form field with th:field; for long lists, dense forms and several values, with the phone's own picker.
 ---
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
 
+The browser's `<select>`, with the closed control in the skin's look and the list left to the operating system, which on
+a phone is its own picker.
+
 <ComponentPreview id="native-select--default" />
+
+## When to use
+
+- Long lists, such as countries or years.
+- Dense forms and filter bars.
+- Several values at once (`multiple`).
+
+Use something else for:
+
+- A list drawn in the page's style, with icons and a check mark: a [select](../select/).
+- A list the user searches: a [combobox](../combobox/).
 
 ## Native select or select?
 
