@@ -57,7 +57,7 @@ test('the overview has a card per page, under its group\'s heading', async ({pag
   await expect(main.locator('p a[href="/components/application-shell/"]')).toHaveText('overview');
   const button = main.locator('.sl-link-card').filter({has: page.locator('a[href="/components/button/"]')});
   await expect(button).toContainText('Button');
-  await expect(button).toContainText('A button, or a link that looks like one.');
+  await expect(button).toContainText('A button that submits a form, opens a dialog or runs an action, or a link that looks like one;');
 });
 
 test('the layouts overview is first in the Layouts group and has a card per layout', async ({page}) => {
