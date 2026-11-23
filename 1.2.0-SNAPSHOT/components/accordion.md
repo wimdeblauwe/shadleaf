@@ -1,8 +1,11 @@
 # Accordion
 
-> A stack of sections, each with a heading that shows or hides its content, on the browser's details element.
+> A stack of sections, each with a heading that shows or hides its content, on the browser's details element; for an FAQ, grouped settings or details most readers skip.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion/
+
+A list of headings that each open a section of content below them, one at a time or several at once. The content is in
+the page from the start, so find in page and links still reach it.
 
 **Example: Accordion.** One section open at a time. Opening another closes it; the open one closes on a click.
 
@@ -24,6 +27,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion/
   </sl:accordion-item>
 </sl:accordion>
 ```
+
+## When to use
+
+- An FAQ page.
+- Groups of settings or filters, on a narrow screen.
+- Details most readers skip, such as shipping and returns on a product page.
+
+Use something else for:
+
+- One section that shows and hides on its own: a [collapsible](https://shadleaf.dev/1.2.0-SNAPSHOT/components/collapsible.md).
+- Sections the user switches between, one visible at a time: [tabs](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs.md).
 
 ## Built from parts
 

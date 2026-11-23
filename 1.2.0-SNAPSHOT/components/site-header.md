@@ -1,8 +1,11 @@
 # Site Header
 
-> A header bar across the top of the page, or at the top of the sidebar layout's page.
+> A header bar across the top of the page, or at the top of the sidebar layout's page; for the logo, the main links, a search and the user menu.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header/
+
+A bar across the top of the page that lays out its content in a row: what you put in it at the start, its `end` slot at
+the end.
 
 **Example: Site header.** A header bar: its content in a row from the start, the end slot at the end. Across the top of a page it has the page's ground and a border below.
 
@@ -18,6 +21,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header/
   </sl:slot>
 </sl:site-header>
 ```
+
+## When to use
+
+- The header of an application without a sidebar, with the logo, a few links and the user menu.
+- The bar above the content in the sidebar layout, with the sidebar's trigger and a breadcrumb.
+- The header of a public site, with a theme toggle.
+
+Use something else for:
+
+- Navigation for many pages: a [sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md).
 
 ## Usage
 

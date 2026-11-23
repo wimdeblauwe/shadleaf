@@ -1,8 +1,10 @@
 # Tabs
 
-> Panels of content shown one at a time, chosen from a row of tabs.
+> Panels of content shown one at a time, chosen from a row of tabs; for the views of one record, such as Overview, Activity and Settings.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs/
+
+A row of tabs over panels of content, of which one shows at a time. A tab can be a link, so the address opens it.
 
 **Example: Tabs.** The arrow keys move between the tabs; Tab moves on to the panel.
 
@@ -56,6 +58,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs/
   </sl:tabs-content>
 </sl:tabs>
 ```
+
+## When to use
+
+- The views of one record, such as a project's Overview, Activity and Settings.
+- The sections of a settings page.
+- Two forms on one page, such as Account and Password.
+
+Use something else for:
+
+- Stacked sections the user opens one or more of: an [accordion](https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion.md).
+- Navigation between the application's pages: a [sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md) or a [site header](https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header.md).
+- Choosing a value, such as list or grid: a [toggle group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md).
 
 ## Built from parts
 

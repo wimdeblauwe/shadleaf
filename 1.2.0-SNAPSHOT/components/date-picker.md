@@ -1,8 +1,11 @@
 # Date Picker
 
-> A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
+> A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field; for the date fields of forms and filters.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker/
+
+A button that shows the chosen date and opens a calendar in a popover to change it. It takes the space of one form
+control, and binds as a date input does.
 
 **Example: Date picker.** A date in a field. The button shows "Pick a date" until a date is chosen; a pick closes the popover.
 
@@ -12,6 +15,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker/
   <sl:date-picker/>
 </sl:field>
 ```
+
+## When to use
+
+- A date in a form, such as a due date.
+- A range in a filter bar, such as the period of a report.
+- A date of birth, far in the past.
+
+Use something else for:
+
+- A calendar that is always visible: a [calendar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar.md).
+- Data per day, without picking: a [month view](https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view.md).
 
 ## A popover with a calendar
 

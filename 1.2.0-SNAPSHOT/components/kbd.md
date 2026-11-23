@@ -1,8 +1,10 @@
 # Kbd
 
-> A key on the keyboard, or a combination of keys.
+> A key on the keyboard, or a combination of keys; for the shortcuts in menus, tooltips and buttons, and in help text.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/kbd/
+
+A key, or a combination of keys, drawn the way it looks on a keyboard.
 
 **Example: Kbd.**
 
@@ -11,6 +13,15 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/kbd/
 <sl:kbd>Enter</sl:kbd>
 <sl:kbd>/</sl:kbd>
 ```
+
+## When to use
+
+- The shortcut of an action, in a tooltip, a menu or a button.
+- Instructions in text, such as "Press Ctrl K to search".
+
+Use something else for:
+
+- A status or a category: a [badge](https://shadleaf.dev/1.2.0-SNAPSHOT/components/badge.md).
 
 `<sl:kbd>` renders HTML's own `<kbd>` element, so it fits in running text.
 

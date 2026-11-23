@@ -1,8 +1,10 @@
 # Collapsible
 
-> Content that a button shows and hides, on the browser's details element.
+> Content that a button shows and hides, on the browser's details element; for advanced options, extra details or a Show more.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/collapsible/
+
+A trigger and a piece of content that the trigger shows and hides: one section, without an accordion's styling.
 
 **Example: Collapsible.**
 
@@ -16,6 +18,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/collapsible/
   </sl:collapsible-content>
 </sl:collapsible>
 ```
+
+## When to use
+
+- Advanced options below a form.
+- Extra details, or the rest of a list behind a Show more.
+
+Use something else for:
+
+- Several sections of which the user opens one or more: an [accordion](https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion.md).
+- Content that floats over the page next to its button: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
 
 ## Built from parts
 

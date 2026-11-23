@@ -1,14 +1,31 @@
 # Button
 
-> A button, or a link that looks like one.
+> A button that submits a form, opens a dialog or runs an action, or a link that looks like one; with an icon, or icon-only for toolbars and table rows.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/button/
+
+A button the user presses to do something: submit a form, open a dialog, delete a row, start an htmx request.
+With `as="a"` it is a link that looks like a button, for navigation that should stand out.
 
 **Example: Button.**
 
 ```html
 <sl:button>Save</sl:button>
 ```
+
+## When to use
+
+- The main action of a form or a page (`default`), and the actions next to it (`outline`, `secondary`, `ghost`).
+- An action that destroys something, such as Delete (`destructive`).
+- An icon-only action in a toolbar, a table row or a card header (the `icon` sizes).
+- A link that should look like an action, such as "Create project" leading to a form (`as="a"`).
+
+Use something else for:
+
+- A button that stays on or off, such as Bold in a toolbar: a [toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md), or a
+  [toggle group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md) for several.
+- A list of actions behind one button: a [dropdown menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.md).
+- A link inside running text: a plain `<a>`.
 
 ## A button never submits by accident
 

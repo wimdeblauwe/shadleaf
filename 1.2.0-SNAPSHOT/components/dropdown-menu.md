@@ -1,8 +1,11 @@
 # Dropdown Menu
 
-> A menu of actions or links that opens from a button, on the browser's Popover API.
+> A menu of actions or links that opens from a button, on the browser's Popover API; for the actions of a table row, a More button or an account menu.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu/
+
+A list of actions or links that opens from a button, with the keyboard behaviour of a menu. Items can also be checkboxes
+or radio buttons.
 
 **Example: Dropdown menu.** Labels, groups, separators and shortcuts; links and buttons; a disabled item.
 
@@ -41,6 +44,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu/
 </sl:dropdown-menu>
 <form id="logout-form" method="post" action="/logout"></form>
 ```
+
+## When to use
+
+- The actions of a table row behind a button with an ellipsis.
+- A More menu in a toolbar or a card header.
+- Options that are on or off, such as the columns a table shows.
+
+Use something else for:
+
+- Choosing a value in a form: a [select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md) or a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md).
+- Rich content or a small form: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
+- The signed-in user's menu: the [user menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu.md), built on this one.
 
 ## Built from parts
 

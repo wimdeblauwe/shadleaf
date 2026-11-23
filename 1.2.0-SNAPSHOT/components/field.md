@@ -1,8 +1,11 @@
 # Field
 
-> A label, a control, a description and the binding's error messages, wired together from one th:field.
+> A label, a control, a description and the binding's error messages, wired together from one th:field; for every control of a form bound to an object.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/field/
+
+The frame around one form control: its label, an optional description and the field's error messages, all bound from one
+`th:field` and wired to the control for screen readers.
 
 **Example: Field.**
 
@@ -14,6 +17,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/field/
   <sl:field-error/>
 </sl:field>
 ```
+
+## When to use
+
+- Every input, select, textarea or combobox in a form bound to an object.
+- A checkbox or a switch with its label and a description next to it.
+- A group of radio buttons or checkboxes with one legend.
+- The layout of a form's fields, with field groups and field sets.
+
+Use something else for:
+
+- Errors that belong to no single field: [form errors](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors.md).
+- A label on its own: a [label](https://shadleaf.dev/1.2.0-SNAPSHOT/components/label.md).
 
 ## One th:field for the whole field
 
@@ -232,6 +247,11 @@ heading.
   </sl:field-group>
 </sl:field-set>
 ```
+
+> **Tip: Give a shrink-to-fit container a width**
+>
+> A field group takes the width of its container. Inside a box that sizes to its content (a centred flex column, for
+> example), give the form or the group a width, or its inputs collapse.
 
 `orientation="responsive"` puts the label and the control side by side when the enclosing field group is at least
 28rem wide, and stacks them when it is narrower.

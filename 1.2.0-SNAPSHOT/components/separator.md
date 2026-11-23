@@ -1,14 +1,26 @@
 # Separator
 
-> A thin line between content.
+> A thin line between content; for dividing the sections of a page, a card or a toolbar.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/separator/
+
+A thin horizontal or vertical line between pieces of content.
 
 **Example: Separator.**
 
 ```html
 <sl:separator/>
 ```
+
+## When to use
+
+- Between the sections of a page, a card or a panel.
+- Between groups of buttons or links in a toolbar or a header (vertical).
+
+Use something else for:
+
+- Between the items of a list: the [item separator](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md#group).
+- Between the groups of a menu or a select: the separator part of that component.
 
 ## Vertical
 

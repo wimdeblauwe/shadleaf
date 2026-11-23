@@ -1,8 +1,11 @@
 # Month view
 
-> A month rendered on the server, with content of your own per day and a link per day; no picking.
+> A month rendered on the server, with content of your own per day and a link per day; for an agenda, a booking overview or orders per day.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view/
+
+A month rendered on the server, with your own content in every day and a link to each day. It shows data; it picks no
+dates.
 
 **Example: Month view.** Each day shows its events from the model and links to the day's agenda.
 
@@ -13,6 +16,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view/
   </sl:slot>
 </sl:month-view>
 ```
+
+## When to use
+
+- An agenda, or a calendar of events.
+- An overview of bookings or availability.
+- Figures per day, such as orders or hours worked.
+
+Use something else for:
+
+- A date picked in a form: a [calendar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar.md) or a [date picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md).
+- Figures over time as a graph: a [chart](https://shadleaf.dev/1.2.0-SNAPSHOT/components/chart.md).
 
 ## Content per day
 

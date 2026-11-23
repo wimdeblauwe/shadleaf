@@ -1,14 +1,25 @@
 # Spinner
 
-> A spinning icon that says something is loading.
+> A spinning icon that says something is loading; for a busy button or a part of the page that waits for the server.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/spinner/
+
+A spinning icon that tells the user something is loading, with a label for screen readers.
 
 **Example: Spinner.**
 
 ```html
 <sl:spinner/>
 ```
+
+## When to use
+
+- In a button while it saves (the button's `loading` does this for you).
+- In a part of the page that waits for an htmx response.
+
+Use something else for:
+
+- The shape of the content that is loading: a [skeleton](https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton.md).
 
 ## What it says
 

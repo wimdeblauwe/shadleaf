@@ -1,8 +1,11 @@
 # Table
 
-> A styled table, whose column headers sort it on the server.
+> A styled table, whose column headers sort it on the server; for lists of records with columns, search, actions per row and selection.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/table/
+
+A table in the skin's look, for rows of records with columns. Its column headers sort it on the server, and rows can
+have actions and checkboxes.
 
 **Example: Table.**
 
@@ -45,6 +48,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/table/
   </tfoot>
 </sl:table>
 ```
+
+## When to use
+
+- Records the user scans and compares, such as orders, users or invoices.
+- Sorting, searching and paging a Spring Data query.
+- Actions per row in a menu, and rows selected for an action on all of them.
+
+Use something else for:
+
+- Rows with a picture and a description rather than columns: an [item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md).
+- Moving between pages: [pagination](https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination.md), below the table.
 
 ## Plain rows and cells
 

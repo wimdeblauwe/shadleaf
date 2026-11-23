@@ -1,6 +1,6 @@
 # Icon
 
-> Inline SVG icons from lucide, or your own.
+> Inline SVG icons from lucide, or your own; for buttons, menu items, badges, alerts and anywhere a symbol helps the text.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/icon/
 
@@ -15,6 +15,17 @@ fails with the closest known ones.
 <sl:icon name="trash"/>
 <sl:icon name="settings"/>
 ```
+
+## When to use
+
+- An icon in a button, a menu item, a badge or an alert, which takes its colour.
+- An icon-only button, with an `aria-label` on the button.
+- Your own icons, such as a logo, from an `IconSource` bean.
+
+Use something else for:
+
+- A picture of a person: an [avatar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar.md).
+- Something that is loading: a [spinner](https://shadleaf.dev/1.2.0-SNAPSHOT/components/spinner.md).
 
 ## Size and stroke width
 

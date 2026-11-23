@@ -1,8 +1,10 @@
 # Empty
 
-> What a list, a table, a search or a page shows when there is nothing to show yet.
+> What a list, a table, a search or a page shows when there is nothing to show yet; with an icon, a title, a text and a next step.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty/
+
+A centred block with an icon, a title, a description and what to do next, in the place where content would be.
 
 **Example: Empty.**
 
@@ -23,6 +25,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty/
   </sl:button>
 </sl:empty>
 ```
+
+## When to use
+
+- A list or a table without rows yet, with a button to create the first.
+- A search that found nothing, with a way to change it.
+- An inbox, a cart or a list of notifications with nothing in it.
+
+Use something else for:
+
+- An error: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
+- Content that is still loading: a [skeleton](https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton.md).
 
 ## Built from parts
 

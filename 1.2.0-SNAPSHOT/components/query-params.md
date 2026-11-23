@@ -1,8 +1,11 @@
 # Query params
 
-> Hidden inputs that keep a table's order, page size and filters when a search form is sent.
+> Hidden inputs that keep a table's order, page size and filters when a search form is sent; for a search above a sorted or paged table.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/query-params/
+
+Hidden inputs that copy the current request's other parameters into a `GET` form, so sending it keeps the page's order,
+page size and filters.
 
 **Example: Query params.** In a request for /people?q=ada&sort=email,desc&size=50&page=2. Sending the form asks for /people?q=…&sort=email,desc&size=50: the order and the size stay, the page starts again at the first.
 
@@ -13,6 +16,15 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/query-params/
   <sl:query-params except="q"/>
 </form>
 ```
+
+## When to use
+
+- A search above a sorted, paged table.
+- A filter form that should not reset the other filters.
+
+Use something else for:
+
+- Links to the other pages of the list: [pagination](https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination.md).
 
 ## Searching a sorted table
 

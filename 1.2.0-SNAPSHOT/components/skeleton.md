@@ -1,8 +1,10 @@
 # Skeleton
 
-> A placeholder that pulses while content loads.
+> A placeholder that pulses while content loads; for the cards, rows and text that htmx loads after the page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton/
+
+A grey shape that pulses in the place where content will appear, while it loads.
 
 **Example: Skeleton.**
 
@@ -10,6 +12,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton/
 <sl:skeleton/>
 <sl:skeleton/>
 ```
+
+## When to use
+
+- The cards, rows or text of a part of the page that htmx loads after the page itself.
+- The avatars and lines of text of a list that is being fetched.
+
+Use something else for:
+
+- An action that is busy, such as a button that saves: a [spinner](https://shadleaf.dev/1.2.0-SNAPSHOT/components/spinner.md), or the button's `loading`.
+- Nothing to show once it has loaded: an [empty state](https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty.md).
 
 ## Shapes and sizes
 

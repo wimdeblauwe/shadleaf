@@ -1,8 +1,11 @@
 # Sidebar
 
-> The application's navigation beside the page, and a panel over it on a phone.
+> The application's navigation beside the page, and a panel over it on a phone; for admin panels, dashboards and other applications with many pages.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar/
+
+The column of navigation beside the page: menus of links with icons and badges, groups that fold, a header and a footer.
+On a desktop it collapses to icons; on a phone it opens as a panel over the page. It remembers its state.
 
 **Example: Sidebar.** Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the sidebar's ground (from 768 px), and collapsible="icon" collapses it to a strip of icons whose tooltips show the labels, as sample-01's layout. Documents opens a sub-menu. The footer ends in the signed-in user's menu (sl:user-menu). The large button in the header is a team switcher: it opens a dropdown menu beside the sidebar (below it in the panel) with the current team checked, and "More" beside Design Engineering opens one too.
 
@@ -174,6 +177,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar/
   </sl:sidebar-inset>
 </sl:sidebar-provider>
 ```
+
+## When to use
+
+- The main navigation of an application with many pages, such as an admin panel or a dashboard.
+- Navigation in sections, with groups that fold and the current page marked.
+- The signed-in user's menu, in its footer.
+
+Use something else for:
+
+- A few links across the top of the page: a [site header](https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header.md).
+- Choosing between the two: the [application shell](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md).
 
 > **Tip: Layouts to copy**
 >

@@ -1,8 +1,11 @@
 # Select (Native)
 
-> The browser's own select, styled, bound to a form field with th:field.
+> The browser's own select, styled, bound to a form field with th:field; for long lists, dense forms and several values, with the phone's own picker.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native/
+
+The browser's `<select>`, with the closed control in the skin's look and the list left to the operating system, which on
+a phone is its own picker.
 
 **Example: Native select.**
 
@@ -13,6 +16,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native/
   <option th:each="status : ${statuses}" th:value="${status}" th:text="#{|status.${status}|}">Todo</option>
 </sl:native-select>
 ```
+
+## When to use
+
+- Long lists, such as countries or years.
+- Dense forms and filter bars.
+- Several values at once (`multiple`).
+
+Use something else for:
+
+- A list drawn in the page's style, with icons and a check mark: a [select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md).
+- A list the user searches: a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md).
 
 ## Native select or select?
 

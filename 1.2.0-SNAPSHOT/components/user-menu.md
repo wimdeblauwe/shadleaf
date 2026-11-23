@@ -1,8 +1,11 @@
 # User Menu
 
-> The signed-in user with a menu that signs out, or a Sign in link, for the sidebar's footer or the site header.
+> The signed-in user with a menu that signs out, or a Sign in link; for the sidebar's footer or the site header.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu/
+
+The signed-in user's picture and name, opening a menu with your own links and Sign out. When nobody is signed in, it is
+a Sign in link.
 
 **Example: User menu.** In the sidebar's footer, the signed-in user as a large menu button: picture, name and email. It opens a menu beside the sidebar (below the button in the phone panel) with the user, the application's items and Sign out, which posts to #slUser.logoutUrl with the CSRF token. Collapsed to icons, the picture stays, with the name as a tooltip.
 
@@ -25,6 +28,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu/
   </sl:sidebar-inset>
 </sl:sidebar-provider>
 ```
+
+## When to use
+
+- The footer of the sidebar.
+- The end of the site header.
+
+Use something else for:
+
+- Another menu of actions: a [dropdown menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.md).
+- The picture alone: an [avatar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar.md).
 
 ## Usage
 

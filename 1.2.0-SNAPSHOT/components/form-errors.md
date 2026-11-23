@@ -1,8 +1,11 @@
 # Form errors
 
-> The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
+> The errors that belong to the whole form rather than one field, or all of the form's errors, shown above the fields; for passwords that do not match or a request the server refused.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors/
+
+A destructive alert above a form's fields, with the errors that belong to no single field, read from Spring's binding
+result. It renders nothing while there are none.
 
 **Example: Form errors.** The binding has a global error, from a class-level constraint or reject(...) in the controller. It shows above the fields (here first in the field group, which spaces it like a field); the field errors stay with their fields.
 
@@ -19,6 +22,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors/
   </sl:field>
 </sl:field-group>
 ```
+
+## When to use
+
+- Two fields that do not match, such as a password and its repeat.
+- A service that refused the request, such as a payment that failed.
+- A summary of every error at the top of a long form.
+
+Use something else for:
+
+- The error of one field: the [field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md)'s error, under its control.
+- Any other message in the page: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
 
 ## Errors that belong to the form
 

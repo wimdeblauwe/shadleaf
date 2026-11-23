@@ -1,14 +1,26 @@
 # Switch
 
-> An on/off control, bound to a boolean form field with th:field.
+> An on/off control, bound to a boolean form field with th:field; for settings that are on or off, such as email notifications.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch/
+
+A control that slides between on and off, bound to a boolean form field.
 
 **Example: Switch.**
 
 ```html
 <sl:label><sl:switch th:field="*{airplaneMode}"/>Airplane mode</sl:label>
 ```
+
+## When to use
+
+- A setting that is on or off, such as email notifications or a public profile.
+- A feature in a settings page, with a description next to it in a field.
+
+Use something else for:
+
+- Accepting terms, or picking several options: a [checkbox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox.md).
+- A button that is pressed or not, such as Bold: a [toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md).
 
 A switch is a checkbox with `role="switch"`, so a screen reader announces it as on or off and a form submits it as a
 checkbox. `th:field` on a boolean field works as it does on the [checkbox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox.md), including the numbered `id`:

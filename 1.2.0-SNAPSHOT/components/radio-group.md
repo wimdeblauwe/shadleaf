@@ -1,8 +1,10 @@
 # Radio Group
 
-> A set of the browser's own radio buttons, styled, bound to a form field with th:field.
+> A set of the browser's own radio buttons, styled, bound to a form field with th:field; for one choice out of a few options that are all visible.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group/
+
+A set of radio buttons of which the user picks exactly one, bound to a form field. All the options stay in view.
 
 **Example: Radio group.**
 
@@ -15,6 +17,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group/
   </sl:label>
 </sl:radio-group>
 ```
+
+## When to use
+
+- One choice out of two to five options, such as a plan or a delivery method.
+- Options the user should see side by side before choosing, such as how often to be notified.
+
+Use something else for:
+
+- A long list: a [select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md) or a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md).
+- A yes or no: a [checkbox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox.md) or a [switch](https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch.md).
+- Options that fit on buttons, such as text alignment: a [toggle group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md).
 
 ## Binding to a form field
 

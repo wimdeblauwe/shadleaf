@@ -1,8 +1,11 @@
 # Toast
 
-> A short message in a corner of the page that closes itself, sent by the server.
+> A short message in a corner of the page that closes itself, sent by the server; for confirming an action, such as a saved form or a deleted row.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast/
+
+A short message that appears in a corner of the page and closes by itself. The server sends it, in an htmx response or
+after a redirect.
 
 **Example: Toast.** The button sends an sl-toast event; the toaster shows it, and a screen reader announces it.
 
@@ -14,6 +17,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast/
 
 <sl:toaster id="toaster-default"/>
 ```
+
+## When to use
+
+- Confirming an action, such as "Member deleted" or "Settings saved".
+- Saying that an htmx request failed.
+- A message after a redirect, from a flash attribute.
+
+Use something else for:
+
+- A message that stays until the page changes: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
+- A question the user must answer: an [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md).
 
 ## One toaster, toasts from the server
 

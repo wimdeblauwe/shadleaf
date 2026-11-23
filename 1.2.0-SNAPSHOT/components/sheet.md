@@ -1,8 +1,10 @@
 # Sheet
 
-> A dialog that slides in from an edge of the screen.
+> A dialog that slides in from an edge of the screen; for filters, settings or the details of a row beside the page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet/
+
+A dialog that slides in from an edge of the screen, for content that complements the page.
 
 **Example: Sheet.** A form in a sheet. The form wraps the sheet, so the submit button in its footer submits it.
 
@@ -32,6 +34,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet/
   </sl:sheet>
 </form>
 ```
+
+## When to use
+
+- Filters for a list or a table.
+- The details, or the edit form, of a table row.
+- Settings or a cart on the side of the page.
+
+Use something else for:
+
+- A form in the middle of the screen: a [dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md).
+- Something small next to its button: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
 
 ## Built from parts
 

@@ -1,8 +1,11 @@
 # Toggle Group
 
-> A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
+> A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field; for text alignment, formatting or switching a view.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group/
+
+A row of toggle buttons of which one, or several, can be on. Underneath they are radio buttons or checkboxes, bound to a
+form field.
 
 **Example: Toggle group.**
 
@@ -13,6 +16,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group/
   <sl:toggle-group-item value="underline" aria-label="Underline"><sl:icon name="underline"/></sl:toggle-group-item>
 </sl:toggle-group>
 ```
+
+## When to use
+
+- Text alignment or formatting in an editor's toolbar.
+- Switching a view, such as list or grid.
+- A few values that fit on buttons, such as the days of the week.
+
+Use something else for:
+
+- Options with longer labels: a [radio group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group.md).
+- One button on its own: a [toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md).
+- Panels of content: [tabs](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs.md).
 
 The items of a toggle group are [toggles](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md) around radio buttons (`type="single"`, the default: one item is
 on at a time) or checkboxes (`type="multiple"`: any number). The form submits them as such inputs, and they work

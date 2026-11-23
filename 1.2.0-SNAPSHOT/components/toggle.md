@@ -1,8 +1,10 @@
 # Toggle
 
-> A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
+> A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field; for Bold in a toolbar, or marking a favourite.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle/
+
+A button that stays pressed or not, such as Bold. Underneath it is a checkbox, bound to a boolean form field.
 
 **Example: Toggle.**
 
@@ -11,6 +13,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle/
   <sl:icon name="bookmark"/> Bookmark
 </sl:toggle>
 ```
+
+## When to use
+
+- A formatting option in a toolbar, such as Bold or Italic.
+- Marking something, such as a favourite or a pin.
+
+Use something else for:
+
+- A setting in a settings page: a [switch](https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch.md).
+- Several related toggles: a [toggle group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md).
+- A button that runs an action: a [button](https://shadleaf.dev/1.2.0-SNAPSHOT/components/button.md).
 
 A toggle is a checkbox drawn as a button: a `<label>` with the checkbox inside it, covering it. A click anywhere on the
 toggle checks or unchecks it, the form submits it as a checkbox, and it works without JavaScript. A screen reader

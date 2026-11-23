@@ -1,8 +1,11 @@
 # Dialog
 
-> A modal window over the page, on the native dialog element.
+> A modal window over the page, on the native dialog element; for a short form, details or a step the user finishes before going back to the page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog/
+
+A window over the page that the user deals with before going back to it; the page behind it is inert. It can hold a form
+that the server renders and htmx swaps in.
 
 **Example: Dialog.** A form in a dialog. The form wraps the dialog, so the submit button in its footer submits it.
 
@@ -33,6 +36,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog/
   </sl:dialog>
 </form>
 ```
+
+## When to use
+
+- Creating or editing something with a short form, such as a new project.
+- The details of a row, loaded when the dialog opens.
+- A step that needs the user's attention, such as inviting a member.
+
+Use something else for:
+
+- A confirmation the user must answer: an [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md).
+- Filters, settings or a row's details beside the page: a [sheet](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet.md).
+- Something small next to its button that leaves the page usable: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
 
 ## Built from parts
 

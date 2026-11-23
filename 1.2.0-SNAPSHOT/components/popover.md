@@ -1,8 +1,11 @@
 # Popover
 
-> Rich content in a panel next to the button that opens it, on the browser's Popover API.
+> Rich content in a panel next to the button that opens it, on the browser's Popover API; for a small inline form, details with links, or a share panel.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover/
+
+A panel that opens next to the button that triggers it and closes when the user clicks elsewhere or presses Escape.
+It holds anything: text, links, a small form. The rest of the page stays usable while it is open.
 
 **Example: Popover.** A small form next to its trigger. Focus moves to the first field when it opens.
 
@@ -27,6 +30,20 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover/
   </sl:popover-content>
 </sl:popover>
 ```
+
+## When to use
+
+- A small form that edits one thing in place, such as dimensions, a rename or a filter.
+- Extra details about something on the page, with links in them.
+- A share panel, a colour choice or a set of options that does not need a page or a dialog of its own.
+
+Use something else for:
+
+- A list of actions or links: a [dropdown menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.md), which has the keyboard behaviour of a menu.
+- A short hint while the pointer rests on an element: a [tooltip](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tooltip.md).
+- Content the user must deal with before going on, or a larger form: a [dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md), or a
+  [sheet](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet.md) from the edge of the screen.
+- Picking a date: a [date picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md).
 
 ## Built from parts
 

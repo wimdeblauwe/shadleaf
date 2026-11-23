@@ -1,8 +1,11 @@
 # Alert Dialog
 
-> A modal dialog that interrupts the user with something important and waits for an answer.
+> A modal dialog that interrupts the user with something important and waits for an answer; for confirming a delete or another action that cannot be undone.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog/
+
+A modal dialog that asks the user to confirm or cancel before going on. A click outside it does not close it, so the
+user has to answer.
 
 **Example: Alert dialog.** A question the user has to answer. Cancel has the focus when it opens.
 
@@ -22,6 +25,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog/
   </sl:alert-dialog-footer>
 </sl:alert-dialog>
 ```
+
+## When to use
+
+- Confirming a delete, or anything else that cannot be undone.
+- Confirming a step with consequences, such as publishing or cancelling a subscription.
+- Warning about unsaved changes before the user leaves.
+
+Use something else for:
+
+- A form or content the user can close at any time: a [dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md).
+- A message that needs no answer: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md) or a [toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md).
 
 ## Built from parts
 

@@ -1,8 +1,10 @@
 # Label
 
-> A label for a form control.
+> A label for a form control; for a control outside a field, such as a checkbox or a switch with its text next to it.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/label/
+
+The text that names a form control. A click on it focuses or toggles the control.
 
 **Example: Label.**
 
@@ -10,6 +12,14 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/label/
 <sl:label for="label-email">Email</sl:label>
 <sl:input type="email" id="label-email" placeholder="you@example.com"/>
 ```
+
+## When to use
+
+- A control outside a field, such as a checkbox or a switch with its text next to it.
+
+Use something else for:
+
+- A control in a form, with its description and errors: a [field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md), whose field label does this for you.
 
 ## Pointing at a control
 

@@ -1,8 +1,11 @@
 # File Upload
 
-> A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
+> A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field; for uploading documents, photos or a file to import.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/file-upload/
+
+A drop zone around a file input: the user drops files on it or browses for them, and sees the files picked, with
+previews of images. It submits with the form, or uploads with htmx and shows the progress.
 
 **Example: File upload.** Drop files on it or browse. Each file shows as an attachment with a remove button; a file of another type or larger than max-size shows as an error.
 
@@ -15,6 +18,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/file-upload/
   <sl:field-error/>
 </sl:field>
 ```
+
+## When to use
+
+- Attaching documents to a form, such as receipts to an expense.
+- Uploading a photo, such as a profile picture, with a preview.
+- A file to import, such as a CSV.
+
+Use something else for:
+
+- Files already on the server: an [attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md).
 
 ## A file input with a drop zone
 

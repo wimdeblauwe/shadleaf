@@ -1,8 +1,11 @@
 # Input
 
-> A text input, bound to a form field with th:field.
+> A text input, bound to a form field with th:field; for names, email addresses, numbers, passwords and other one-line values.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/input/
+
+A one-line text input in the skin's look, bound to a form field. Every HTML type works: text, email, number, password,
+search, date.
 
 **Example: Input.**
 
@@ -10,6 +13,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/input/
 <sl:label for="email">Email</sl:label>
 <sl:input type="email" th:field="*{email}" placeholder="you@example.com"/>
 ```
+
+## When to use
+
+- Names, email addresses, numbers and other short values in a form.
+- A search field above a table.
+- A field the server validates as the user types, with htmx.
+
+Use something else for:
+
+- Several lines of text: a [textarea](https://shadleaf.dev/1.2.0-SNAPSHOT/components/textarea.md).
+- Icons, text or buttons inside the field: an [input group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group.md).
+- A date picked from a calendar: a [date picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md).
 
 ## Binding to a form field
 

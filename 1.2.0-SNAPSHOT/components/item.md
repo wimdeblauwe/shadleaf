@@ -1,8 +1,11 @@
 # Item
 
-> A row of content with media, a title, a description and actions, alone or in a list.
+> A row of content with media, a title, a description and actions, alone or in a list; for people, files, notifications or settings.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/item/
+
+A row that shows one thing at a glance: an icon, avatar or image, a title and a description, and actions at its end.
+Several make a list in an item group, or a grid of tiles.
 
 **Example: Item.**
 
@@ -24,6 +27,20 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/item/
   <sl:item-actions><sl:icon name="chevron-right" size="16"/></sl:item-actions>
 </sl:item>
 ```
+
+## When to use
+
+- A list of people, files, notifications, integrations or devices, each with a button or a menu.
+- A setting shown as a title, an explanation and a button, such as "Two-factor authentication: Enable".
+- A row that links to its detail page (`as="a"`).
+- A grid of products or albums with a picture above each (`<sl:item-header>`, `layout="grid"`).
+
+Use something else for:
+
+- A box holding a form, a table or a chart: a [card](https://shadleaf.dev/1.2.0-SNAPSHOT/components/card.md).
+- A checkbox or switch with its label and description: a [field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md).
+- Rows with columns the user compares or sorts: a [table](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md).
+- A file attached to a form or a message: an [attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md).
 
 ## Built from parts
 

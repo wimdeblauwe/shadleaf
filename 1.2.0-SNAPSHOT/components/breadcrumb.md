@@ -1,8 +1,11 @@
 # Breadcrumb
 
-> The trail of pages above the one shown now, with a menu for the levels a long trail leaves out.
+> The trail of pages above the one shown now, with a menu for the levels a long trail leaves out; for the top of a page deep in a hierarchy.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/breadcrumb/
+
+A row of links from the top of the application down to the current page, so the user sees where they are and can go up a
+level.
 
 **Example: Breadcrumb.**
 
@@ -17,6 +20,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/breadcrumb/
   </sl:breadcrumb-list>
 </sl:breadcrumb>
 ```
+
+## When to use
+
+- The top of a detail page, such as Projects › Acme › Settings.
+- Folders, categories or any other hierarchy more than two levels deep.
+
+Use something else for:
+
+- Moving between the pages of a list: [pagination](https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination.md).
+- The application's main navigation: a [sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md) or a [site header](https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header.md).
 
 ## Built from parts
 

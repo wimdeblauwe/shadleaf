@@ -1,14 +1,27 @@
 # Pagination
 
-> Links to the other pages of a list, built from the Spring Data Page the controller returns.
+> Links to the other pages of a list, built from the Spring Data Page the controller returns; for tables and other long lists.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination/
+
+Links to the previous, the next and the numbered pages of a long list, with an optional summary and a choice of rows per
+page, built from the Spring Data `Page` the controller returns.
 
 **Example: From a page.** Page 5 of 27, in a request for /people?sort=name,asc&page=4. Each link keeps the sort.
 
 ```html
 <sl:pagination th:page="${people}"/>
 ```
+
+## When to use
+
+- Below a table.
+- Search results, or any other list the server returns a page at a time.
+
+Use something else for:
+
+- The trail of pages up to the current one: a [breadcrumb](https://shadleaf.dev/1.2.0-SNAPSHOT/components/breadcrumb.md).
+- Keeping the page and the order when a search form is sent: [query params](https://shadleaf.dev/1.2.0-SNAPSHOT/components/query-params.md).
 
 ## From a page
 

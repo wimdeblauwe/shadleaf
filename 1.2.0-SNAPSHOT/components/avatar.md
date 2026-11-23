@@ -1,8 +1,10 @@
 # Avatar
 
-> A picture of a person, with initials when there is no picture.
+> A picture of a person, with initials when there is no picture; for the signed-in user, the author of a comment or the members of a team.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar/
+
+A round picture of a person, or their initials when there is no picture or it fails to load.
 
 **Example: Avatar.**
 
@@ -12,6 +14,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar/
   <sl:avatar-fallback>AM</sl:avatar-fallback>
 </sl:avatar>
 ```
+
+## When to use
+
+- The signed-in user in a header or a sidebar.
+- The author next to a comment, a message or a change.
+- The members of a team in a list or a table.
+
+Use something else for:
+
+- The signed-in user with a menu that signs out: the [user menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu.md).
+- The thumbnail of a file: an [attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md).
 
 ## Image and fallback
 

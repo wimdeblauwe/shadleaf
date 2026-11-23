@@ -1,14 +1,29 @@
 # Checkbox
 
-> The browser's own checkbox, styled, bound to a form field with th:field.
+> The browser's own checkbox, styled, bound to a form field with th:field; for accepting terms, a yes or no in a form, or picking several options.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox/
+
+A box the user ticks for yes or leaves empty for no, bound to a form field. Several bound to one collection field let
+the user pick several values.
 
 **Example: Checkbox.**
 
 ```html
 <sl:label><sl:checkbox th:field="*{terms}"/>Accept the terms and conditions</sl:label>
 ```
+
+## When to use
+
+- Accepting terms, or a yes or no that takes effect when the form is submitted.
+- Picking several options from a short list, such as the channels to be notified on.
+- Selecting rows in a table.
+
+Use something else for:
+
+- A setting that is on or off, such as email notifications: a [switch](https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch.md).
+- One option out of several: a [radio group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group.md).
+- Several values from a long list: a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md) with `multiple`.
 
 ## Binding to a form field
 

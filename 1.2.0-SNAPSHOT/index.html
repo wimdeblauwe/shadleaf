@@ -94,6 +94,9 @@ fragments in your layout’s <code dir="auto">&lt;head&gt;</code>, and write <co
     /* An accordion fills its container, tabs and a collapsible fit their content: give them a width too. */
     .stage > .accordion { max-inline-size: 32rem; }
     .stage > :is(.tabs, .collapsible) { inline-size: 24rem; max-inline-size: 100%; }
+    /* A form is as wide as its fields, and a field-group (a size container) adds no width of its own: give the form
+       a width, or its inputs collapse. */
+    .stage > .form { inline-size: 24rem; max-inline-size: 100%; }
     /* A row of attachments scrolls inside the width a page's layout gives it; a full-width attachment fills that
        width, stacked. */
     .stage > .attachment-group { inline-size: 24rem; max-inline-size: 100%; }

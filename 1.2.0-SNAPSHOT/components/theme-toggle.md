@@ -1,14 +1,20 @@
 # Theme Toggle
 
-> Switches the page between the light and the dark theme, and remembers the choice in the browser.
+> Switches the page between the light and the dark theme, and remembers the choice in the browser; for the site header or the sidebar.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/theme-toggle/
+
+A button that switches the page between the light and the dark theme, and remembers the choice in the browser.
 
 **Example: Theme toggle.** An icon button opening a menu with Light, Dark and System; the icon shows the page's theme.
 
 ```html
 <sl:theme-toggle/>
 ```
+
+## When to use
+
+- In the site header or the sidebar of any application with a dark theme.
 
 ## Usage
 

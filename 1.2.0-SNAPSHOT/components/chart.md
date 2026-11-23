@@ -1,8 +1,11 @@
 # Chart
 
-> Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+> Bar, line and area charts drawn by Recharts from rows the controller puts in the model; for dashboards, reports and figures over time.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/chart/
+
+A bar, line or area chart, drawn in the browser by Recharts in the skin's look, from rows the controller puts in the
+model.
 
 **Example: Bar chart.** Two series side by side, in a card. The months are YearMonths: month-short writes the ticks (Jan), month the tooltip's label (January).
 
@@ -26,6 +29,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/chart/
   </sl:card-footer>
 </sl:card>
 ```
+
+## When to use
+
+- Figures over time on a dashboard, such as visitors or revenue per month.
+- Comparing a few series, such as desktop against mobile.
+- A report with totals per category.
+
+Use something else for:
+
+- Exact values the user reads, sorts or compares: a [table](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md).
+- A single figure: a [card](https://shadleaf.dev/1.2.0-SNAPSHOT/components/card.md) with the number in it.
+- Data per day of a month: a [month view](https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view.md).
 
 ## Built from parts
 

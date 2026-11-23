@@ -1,8 +1,11 @@
 # Attachment
 
-> A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
+> A file or an image attached to a message, a form or a record, with its name, its size or state, and actions; for the documents on a record or the files of an upload.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment/
+
+A small card for one file: an icon or a thumbnail, its name, its size or upload state, and actions such as download or
+remove. It shows a file; it uploads nothing.
 
 **Example: Attachment.**
 
@@ -18,6 +21,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment/
   </sl:attachment-actions>
 </sl:attachment>
 ```
+
+## When to use
+
+- The documents on a customer's or an order's page, with a Download action.
+- The files attached to a message or a comment.
+- The list of files under a file upload, with their progress or errors.
+
+Use something else for:
+
+- Picking and uploading files: a [file upload](https://shadleaf.dev/1.2.0-SNAPSHOT/components/file-upload.md), which uses attachments for its list.
+- A row about something other than a file: an [item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md).
 
 ## Built from parts
 

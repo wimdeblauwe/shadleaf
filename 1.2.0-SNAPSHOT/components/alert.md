@@ -1,8 +1,11 @@
 # Alert
 
-> A callout for a message the user should notice.
+> A callout for a message the user should notice; for an error on the page, a warning or a notice about the account.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert/
+
+A box with an icon, a title and a description that draws attention to a message in the page. It stays where it is until
+the page changes.
 
 **Example: Alert.**
 
@@ -13,6 +16,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert/
   <sl:alert-description>We will email you when it ships.</sl:alert-description>
 </sl:alert>
 ```
+
+## When to use
+
+- An error the server reports, such as data that could not be loaded.
+- A notice, such as a trial that ends soon or a feature in beta.
+- A warning above a form, such as a change that affects every user.
+
+Use something else for:
+
+- A short message about what just happened, that goes away by itself: a [toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md).
+- Errors that belong to a whole form: [form errors](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors.md).
+- A question the user must answer: an [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md).
 
 ## Built from parts
 

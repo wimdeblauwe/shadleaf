@@ -1,8 +1,11 @@
 # Calendar
 
-> A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates.
+> A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates, always visible in the page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar/
+
+A month the user picks a date, or a range of dates, from. It stays open in the page, and binds to a form field as a date
+input does.
 
 **Example: Calendar.** A date in a field; th:field binds the date input the calendar draws over.
 
@@ -12,6 +15,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar/
   <sl:calendar/>
 </sl:field>
 ```
+
+## When to use
+
+- Picking a date where there is room to show the month, such as a booking form.
+- Picking a range, such as the dates of a holiday or the period of a report.
+- A filter by day beside a list.
+
+Use something else for:
+
+- A date in a form where space is tight: a [date picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md), a button that opens a calendar.
+- Data per day, without picking: a [month view](https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view.md).
 
 ## Drawn over date inputs
 

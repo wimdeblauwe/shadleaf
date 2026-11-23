@@ -4,6 +4,9 @@
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/form/
 
+A `<form>` that validates its fields on the server while the user types, with htmx 4. Without `validate` it is a plain
+form.
+
 **Example: Form.** A form element that passes every attribute on (th:object, th:action, method). sl:field-group lays out its fields.
 
 ```html
@@ -23,6 +26,15 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/form/
   </sl:field-group>
 </sl:form>
 ```
+
+## When to use
+
+- A form whose fields show their errors before it is submitted, such as a sign-up that checks whether a name is taken.
+
+Use something else for:
+
+- A form that is validated only when it is submitted: a plain `<form>` works as well.
+- The layout of the fields: a [field group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md#layout).
 
 `<sl:form>` renders a `<form class="form">` and passes every attribute on: `th:object`, `th:action`, `method`,
 `novalidate`, `enctype`, `hx-*`. It has no styling of its own; a [`<sl:field-group>`](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md#layout) lays out the

@@ -1,8 +1,11 @@
 # Select
 
-> A select drawn in the page's style on a real select element, bound with th:field; the browser's customizable select where it has one.
+> A select drawn in the page's style on a real select element, bound with th:field; for one value out of a short list.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/select/
+
+A select whose list is drawn in the page's style, with a check mark on the chosen item, and icons and groups if you want
+them. Underneath it is a real `<select>`, bound and submitted as one.
 
 **Example: Select.** A placeholder until an option is chosen; th:field marks the bound one.
 
@@ -20,6 +23,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/select/
   </sl:select>
 </sl:field>
 ```
+
+## When to use
+
+- One value out of a few to a few dozen, such as a status, a role or a sort order.
+- A list with icons or groups.
+
+Use something else for:
+
+- A long list, or the phone's own picker: a [native select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native.md).
+- A list the user searches, or several values: a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md).
+- A few options that are all visible: a [radio group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group.md).
 
 ## Built from parts
 

@@ -1,8 +1,11 @@
 # Input Group
 
-> Text, icons and buttons inside the border of an input or textarea.
+> Text, icons and buttons inside the border of an input or textarea; for a search field with an icon, an amount with its currency or a message box with a Send button.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group/
+
+An input or a textarea with text, icons, buttons or keys inside its border: at its start, at its end, above it or below
+it.
 
 **Example: Input group.**
 
@@ -13,6 +16,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group/
   <sl:input-group-addon align="inline-end">12 results</sl:input-group-addon>
 </sl:input-group>
 ```
+
+## When to use
+
+- A search field with a magnifier and a keyboard shortcut.
+- An amount or an address with its unit or prefix, such as `€` or `https://`.
+- A message box with a Send button below the text.
+
+Use something else for:
+
+- A plain one-line input: an [input](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input.md).
 
 ## Composition
 

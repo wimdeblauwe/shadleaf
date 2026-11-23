@@ -1,8 +1,11 @@
 # Card
 
-> A container for related content and actions, built from its parts.
+> A bordered box for related content and actions, built from its parts; for a sign-in form, a dashboard tile or a section of a settings page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/card/
+
+A bordered box that groups content about one thing, with an optional header (title, description, an action) and
+footer. It holds anything: text, a form, a table, a chart.
 
 **Example: Card.**
 
@@ -21,6 +24,19 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/card/
   </sl:card-footer>
 </sl:card>
 ```
+
+## When to use
+
+- A sign-in or settings form in a box of its own.
+- A tile on a dashboard: a figure, a chart, a short list.
+- One section of a settings or detail page, such as "Billing" or "Notifications".
+- A grid of things to choose from, such as plans or projects.
+
+Use something else for:
+
+- A row in a list (a file, a member, a notification): an [item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md), or several in an item group.
+- A message the user should notice: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
+- Nothing to show yet: an [empty state](https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty.md).
 
 ## Built from parts
 

@@ -1,8 +1,10 @@
 # Textarea
 
-> A multi-line text input, bound to a form field with th:field.
+> A multi-line text input, bound to a form field with th:field; for comments, messages, descriptions and notes.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/textarea/
+
+A text input of several lines, bound to a form field.
 
 **Example: Textarea.**
 
@@ -10,6 +12,15 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/textarea/
 <sl:label for="message">Message</sl:label>
 <sl:textarea th:field="*{message}" placeholder="Type your message here."/>
 ```
+
+## When to use
+
+- Comments, messages, descriptions and notes.
+
+Use something else for:
+
+- One line of text: an [input](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input.md).
+- A Send button inside its border: an [input group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group.md).
 
 The textarea grows with its content in browsers that support `field-sizing`; elsewhere it keeps its height and
 scrolls. `rows` sets a starting height.

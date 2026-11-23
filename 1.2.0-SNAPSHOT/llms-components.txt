@@ -16,95 +16,112 @@ markup to write, and a table of the component's attributes. Whole pages built fr
 
 ### Actions
 
-- [Button](https://shadleaf.dev/1.2.0-SNAPSHOT/components/button.md): A button, or a link that looks like one.
-- [Theme Toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/theme-toggle.md): Switches the page between the light and the dark theme, and remembers the choice in the browser.
+- [Button](https://shadleaf.dev/1.2.0-SNAPSHOT/components/button.md): A button that submits a form, opens a dialog or runs an action, or a link that looks like one; with an icon, or icon-only for toolbars and table rows.
+- [Theme Toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/theme-toggle.md): Switches the page between the light and the dark theme, and remembers the choice in the browser; for the site header or the sidebar.
 
 ### Forms
 
-- [Field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md): A label, a control, a description and the binding's error messages, wired together from one th:field.
+- [Field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md): A label, a control, a description and the binding's error messages, wired together from one th:field; for every control of a form bound to an object.
 - [Form](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form.md): A form element that passes every attribute on, and validates its fields on the server as the user types, with htmx 4.
-- [Form errors](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors.md): The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
-- [Label](https://shadleaf.dev/1.2.0-SNAPSHOT/components/label.md): A label for a form control.
-- [Input](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input.md): A text input, bound to a form field with th:field.
-- [Input Group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group.md): Text, icons and buttons inside the border of an input or textarea.
-- [Textarea](https://shadleaf.dev/1.2.0-SNAPSHOT/components/textarea.md): A multi-line text input, bound to a form field with th:field.
-- [Select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md): A select drawn in the page's style on a real select element, bound with th:field; the browser's customizable select where it has one.
-- [Select (Native)](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native.md): The browser's own select, styled, bound to a form field with th:field.
-- [Combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md): A searchable select on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
-- [Checkbox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox.md): The browser's own checkbox, styled, bound to a form field with th:field.
-- [Radio Group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field.
-- [Switch](https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch.md): An on/off control, bound to a boolean form field with th:field.
-- [Toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md): A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
-- [Toggle Group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md): A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
-- [Calendar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar.md): A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates.
-- [Date Picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
-- [File Upload](https://shadleaf.dev/1.2.0-SNAPSHOT/components/file-upload.md): A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
+- [Form errors](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors.md): The errors that belong to the whole form rather than one field, or all of the form's errors, shown above the fields; for passwords that do not match or a request the server refused.
+- [Label](https://shadleaf.dev/1.2.0-SNAPSHOT/components/label.md): A label for a form control; for a control outside a field, such as a checkbox or a switch with its text next to it.
+- [Input](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input.md): A text input, bound to a form field with th:field; for names, email addresses, numbers, passwords and other one-line values.
+- [Input Group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group.md): Text, icons and buttons inside the border of an input or textarea; for a search field with an icon, an amount with its currency or a message box with a Send button.
+- [Textarea](https://shadleaf.dev/1.2.0-SNAPSHOT/components/textarea.md): A multi-line text input, bound to a form field with th:field; for comments, messages, descriptions and notes.
+- [Select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md): A select drawn in the page's style on a real select element, bound with th:field; for one value out of a short list.
+- [Select (Native)](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native.md): The browser's own select, styled, bound to a form field with th:field; for long lists, dense forms and several values, with the phone's own picker.
+- [Combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md): A select the user types into to filter, bound with th:field; one value or several as chips, options from the server as the user types; for long lists such as customers, countries or tags.
+- [Checkbox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox.md): The browser's own checkbox, styled, bound to a form field with th:field; for accepting terms, a yes or no in a form, or picking several options.
+- [Radio Group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group.md): A set of the browser's own radio buttons, styled, bound to a form field with th:field; for one choice out of a few options that are all visible.
+- [Switch](https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch.md): An on/off control, bound to a boolean form field with th:field; for settings that are on or off, such as email notifications.
+- [Toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md): A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field; for Bold in a toolbar, or marking a favourite.
+- [Toggle Group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md): A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field; for text alignment, formatting or switching a view.
+- [Calendar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar.md): A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates, always visible in the page.
+- [Date Picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md): A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field; for the date fields of forms and filters.
+- [File Upload](https://shadleaf.dev/1.2.0-SNAPSHOT/components/file-upload.md): A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field; for uploading documents, photos or a file to import.
 
 ### Overlays
 
-- [Dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md): A modal window over the page, on the native dialog element.
-- [Alert Dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md): A modal dialog that interrupts the user with something important and waits for an answer.
-- [Sheet](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet.md): A dialog that slides in from an edge of the screen.
-- [Popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md): Rich content in a panel next to the button that opens it, on the browser's Popover API.
-- [Dropdown Menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.md): A menu of actions or links that opens from a button, on the browser's Popover API.
-- [Tooltip](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tooltip.md): A short text that shows while the pointer rests on an element or the keyboard focuses it.
+- [Dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md): A modal window over the page, on the native dialog element; for a short form, details or a step the user finishes before going back to the page.
+- [Alert Dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md): A modal dialog that interrupts the user with something important and waits for an answer; for confirming a delete or another action that cannot be undone.
+- [Sheet](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet.md): A dialog that slides in from an edge of the screen; for filters, settings or the details of a row beside the page.
+- [Popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md): Rich content in a panel next to the button that opens it, on the browser's Popover API; for a small inline form, details with links, or a share panel.
+- [Dropdown Menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.md): A menu of actions or links that opens from a button, on the browser's Popover API; for the actions of a table row, a More button or an account menu.
+- [Tooltip](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tooltip.md): A short text that shows while the pointer rests on an element or the keyboard focuses it; for the name of an icon button or a keyboard shortcut.
 
 ### Feedback
 
-- [Alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md): A callout for a message the user should notice.
-- [Toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md): A short message in a corner of the page that closes itself, sent by the server.
-- [Skeleton](https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton.md): A placeholder that pulses while content loads.
-- [Spinner](https://shadleaf.dev/1.2.0-SNAPSHOT/components/spinner.md): A spinning icon that says something is loading.
-- [Empty](https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty.md): What a list, a table, a search or a page shows when there is nothing to show yet.
+- [Alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md): A callout for a message the user should notice; for an error on the page, a warning or a notice about the account.
+- [Toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md): A short message in a corner of the page that closes itself, sent by the server; for confirming an action, such as a saved form or a deleted row.
+- [Skeleton](https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton.md): A placeholder that pulses while content loads; for the cards, rows and text that htmx loads after the page.
+- [Spinner](https://shadleaf.dev/1.2.0-SNAPSHOT/components/spinner.md): A spinning icon that says something is loading; for a busy button or a part of the page that waits for the server.
+- [Empty](https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty.md): What a list, a table, a search or a page shows when there is nothing to show yet; with an icon, a title, a text and a next step.
 
 ### Data
 
-- [Table](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md): A styled table, whose column headers sort it on the server.
-- [Pagination](https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination.md): Links to the other pages of a list, built from the Spring Data Page the controller returns.
-- [Query params](https://shadleaf.dev/1.2.0-SNAPSHOT/components/query-params.md): Hidden inputs that keep a table's order, page size and filters when a search form is sent.
-- [Month view](https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view.md): A month rendered on the server, with content of your own per day and a link per day; no picking.
-- [Chart](https://shadleaf.dev/1.2.0-SNAPSHOT/components/chart.md): Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+- [Table](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md): A styled table, whose column headers sort it on the server; for lists of records with columns, search, actions per row and selection.
+- [Pagination](https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination.md): Links to the other pages of a list, built from the Spring Data Page the controller returns; for tables and other long lists.
+- [Query params](https://shadleaf.dev/1.2.0-SNAPSHOT/components/query-params.md): Hidden inputs that keep a table's order, page size and filters when a search form is sent; for a search above a sorted or paged table.
+- [Month view](https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view.md): A month rendered on the server, with content of your own per day and a link per day; for an agenda, a booking overview or orders per day.
+- [Chart](https://shadleaf.dev/1.2.0-SNAPSHOT/components/chart.md): Bar, line and area charts drawn by Recharts from rows the controller puts in the model; for dashboards, reports and figures over time.
 
 ### Application shell
 
 Start with the [overview](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md): Choosing between a sidebar and a header for the frame around every page, and what every layout needs whichever you pick.
 
-- [Sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md): The application's navigation beside the page, and a panel over it on a phone.
-- [Site Header](https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header.md): A header bar across the top of the page, or at the top of the sidebar layout's page.
-- [User Menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu.md): The signed-in user with a menu that signs out, or a Sign in link, for the sidebar's footer or the site header.
-- [Breadcrumb](https://shadleaf.dev/1.2.0-SNAPSHOT/components/breadcrumb.md): The trail of pages above the one shown now, with a menu for the levels a long trail leaves out.
-- [Skip Link](https://shadleaf.dev/1.2.0-SNAPSHOT/components/skip-link.md): A link past the navigation to the page's content, for keyboard users.
+- [Sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md): The application's navigation beside the page, and a panel over it on a phone; for admin panels, dashboards and other applications with many pages.
+- [Site Header](https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header.md): A header bar across the top of the page, or at the top of the sidebar layout's page; for the logo, the main links, a search and the user menu.
+- [User Menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu.md): The signed-in user with a menu that signs out, or a Sign in link; for the sidebar's footer or the site header.
+- [Breadcrumb](https://shadleaf.dev/1.2.0-SNAPSHOT/components/breadcrumb.md): The trail of pages above the one shown now, with a menu for the levels a long trail leaves out; for the top of a page deep in a hierarchy.
+- [Skip Link](https://shadleaf.dev/1.2.0-SNAPSHOT/components/skip-link.md): A link past the navigation to the page's content, for keyboard users; first in the body of every layout.
 
 ### Disclosure
 
-- [Tabs](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs.md): Panels of content shown one at a time, chosen from a row of tabs.
-- [Accordion](https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion.md): A stack of sections, each with a heading that shows or hides its content, on the browser's details element.
-- [Collapsible](https://shadleaf.dev/1.2.0-SNAPSHOT/components/collapsible.md): Content that a button shows and hides, on the browser's details element.
+- [Tabs](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs.md): Panels of content shown one at a time, chosen from a row of tabs; for the views of one record, such as Overview, Activity and Settings.
+- [Accordion](https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion.md): A stack of sections, each with a heading that shows or hides its content, on the browser's details element; for an FAQ, grouped settings or details most readers skip.
+- [Collapsible](https://shadleaf.dev/1.2.0-SNAPSHOT/components/collapsible.md): Content that a button shows and hides, on the browser's details element; for advanced options, extra details or a Show more.
 
 ### Display
 
-- [Card](https://shadleaf.dev/1.2.0-SNAPSHOT/components/card.md): A container for related content and actions, built from its parts.
-- [Item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md): A row of content with media, a title, a description and actions, alone or in a list.
-- [Attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md): A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
-- [Badge](https://shadleaf.dev/1.2.0-SNAPSHOT/components/badge.md): A small label for a status, a count or a category.
-- [Avatar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar.md): A picture of a person, with initials when there is no picture.
-- [Icon](https://shadleaf.dev/1.2.0-SNAPSHOT/components/icon.md): Inline SVG icons from lucide, or your own.
-- [Kbd](https://shadleaf.dev/1.2.0-SNAPSHOT/components/kbd.md): A key on the keyboard, or a combination of keys.
-- [Separator](https://shadleaf.dev/1.2.0-SNAPSHOT/components/separator.md): A thin line between content.
+- [Card](https://shadleaf.dev/1.2.0-SNAPSHOT/components/card.md): A bordered box for related content and actions, built from its parts; for a sign-in form, a dashboard tile or a section of a settings page.
+- [Item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md): A row of content with media, a title, a description and actions, alone or in a list; for people, files, notifications or settings.
+- [Attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md): A file or an image attached to a message, a form or a record, with its name, its size or state, and actions; for the documents on a record or the files of an upload.
+- [Badge](https://shadleaf.dev/1.2.0-SNAPSHOT/components/badge.md): A small label for a status, a count or a category; for the state of an order, unread messages or a tag.
+- [Avatar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar.md): A picture of a person, with initials when there is no picture; for the signed-in user, the author of a comment or the members of a team.
+- [Icon](https://shadleaf.dev/1.2.0-SNAPSHOT/components/icon.md): Inline SVG icons from lucide, or your own; for buttons, menu items, badges, alerts and anywhere a symbol helps the text.
+- [Kbd](https://shadleaf.dev/1.2.0-SNAPSHOT/components/kbd.md): A key on the keyboard, or a combination of keys; for the shortcuts in menus, tooltips and buttons, and in help text.
+- [Separator](https://shadleaf.dev/1.2.0-SNAPSHOT/components/separator.md): A thin line between content; for dividing the sections of a page, a card or a toolbar.
 
 ---
 
 ## Button
 
-> A button, or a link that looks like one.
+> A button that submits a form, opens a dialog or runs an action, or a link that looks like one; with an icon, or icon-only for toolbars and table rows.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/button/
+
+A button the user presses to do something: submit a form, open a dialog, delete a row, start an htmx request.
+With `as="a"` it is a link that looks like a button, for navigation that should stand out.
 
 **Example: Button.**
 
 ```html
 <sl:button>Save</sl:button>
 ```
+
+### When to use
+
+- The main action of a form or a page (`default`), and the actions next to it (`outline`, `secondary`, `ghost`).
+- An action that destroys something, such as Delete (`destructive`).
+- An icon-only action in a toolbar, a table row or a card header (the `icon` sizes).
+- A link that should look like an action, such as "Create project" leading to a form (`as="a"`).
+
+Use something else for:
+
+- A button that stays on or off, such as Bold in a toolbar: a [toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md), or a
+  [toggle group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md) for several.
+- A list of actions behind one button: a [dropdown menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.md).
+- A link inside running text: a plain `<a>`.
 
 ### A button never submits by accident
 
@@ -290,15 +307,21 @@ Every prop can also be set from an expression: `th:variant="${...}"`. Any other 
 
 ## Theme Toggle
 
-> Switches the page between the light and the dark theme, and remembers the choice in the browser.
+> Switches the page between the light and the dark theme, and remembers the choice in the browser; for the site header or the sidebar.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/theme-toggle/
+
+A button that switches the page between the light and the dark theme, and remembers the choice in the browser.
 
 **Example: Theme toggle.** An icon button opening a menu with Light, Dark and System; the icon shows the page's theme.
 
 ```html
 <sl:theme-toggle/>
 ```
+
+### When to use
+
+- In the site header or the sidebar of any application with a dark theme.
 
 ### Usage
 
@@ -426,9 +449,12 @@ A small Alpine component, `slThemeToggle`, does the work: `<sl:theme-toggle>` re
 
 ## Field
 
-> A label, a control, a description and the binding's error messages, wired together from one th:field.
+> A label, a control, a description and the binding's error messages, wired together from one th:field; for every control of a form bound to an object.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/field/
+
+The frame around one form control: its label, an optional description and the field's error messages, all bound from one
+`th:field` and wired to the control for screen readers.
 
 **Example: Field.**
 
@@ -440,6 +466,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/field/
   <sl:field-error/>
 </sl:field>
 ```
+
+### When to use
+
+- Every input, select, textarea or combobox in a form bound to an object.
+- A checkbox or a switch with its label and a description next to it.
+- A group of radio buttons or checkboxes with one legend.
+- The layout of a form's fields, with field groups and field sets.
+
+Use something else for:
+
+- Errors that belong to no single field: [form errors](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors.md).
+- A label on its own: a [label](https://shadleaf.dev/1.2.0-SNAPSHOT/components/label.md).
 
 ### One th:field for the whole field
 
@@ -659,6 +697,11 @@ heading.
 </sl:field-set>
 ```
 
+> **Tip: Give a shrink-to-fit container a width**
+>
+> A field group takes the width of its container. Inside a box that sizes to its content (a centred flex column, for
+> example), give the form or the group a width, or its inputs collapse.
+
 `orientation="responsive"` puts the label and the control side by side when the enclosing field group is at least
 28rem wide, and stacks them when it is narrower.
 
@@ -830,6 +873,9 @@ Attributes of `<sl:field-group>`: Stacks `sl:field`s and `sl:field-set`s with ev
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/form/
 
+A `<form>` that validates its fields on the server while the user types, with htmx 4. Without `validate` it is a plain
+form.
+
 **Example: Form.** A form element that passes every attribute on (th:object, th:action, method). sl:field-group lays out its fields.
 
 ```html
@@ -849,6 +895,15 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/form/
   </sl:field-group>
 </sl:form>
 ```
+
+### When to use
+
+- A form whose fields show their errors before it is submitted, such as a sign-up that checks whether a name is taken.
+
+Use something else for:
+
+- A form that is validated only when it is submitted: a plain `<form>` works as well.
+- The layout of the fields: a [field group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md#layout).
 
 `<sl:form>` renders a `<form class="form">` and passes every attribute on: `th:object`, `th:action`, `method`,
 `novalidate`, `enctype`, `hx-*`. It has no styling of its own; a [`<sl:field-group>`](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md#layout) lays out the
@@ -1058,9 +1113,12 @@ Every prop can also be set from an expression: `th:validate="${...}"`. Any other
 
 ## Form errors
 
-> The errors that belong to the whole form rather than one field, or all of the form's errors, read from the binding and shown above the fields.
+> The errors that belong to the whole form rather than one field, or all of the form's errors, shown above the fields; for passwords that do not match or a request the server refused.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors/
+
+A destructive alert above a form's fields, with the errors that belong to no single field, read from Spring's binding
+result. It renders nothing while there are none.
 
 **Example: Form errors.** The binding has a global error, from a class-level constraint or reject(...) in the controller. It shows above the fields (here first in the field group, which spaces it like a field); the field errors stay with their fields.
 
@@ -1077,6 +1135,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors/
   </sl:field>
 </sl:field-group>
 ```
+
+### When to use
+
+- Two fields that do not match, such as a password and its repeat.
+- A service that refused the request, such as a payment that failed.
+- A summary of every error at the top of a long form.
+
+Use something else for:
+
+- The error of one field: the [field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md)'s error, under its control.
+- Any other message in the page: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
 
 ### Errors that belong to the form
 
@@ -1287,9 +1356,11 @@ Every prop can also be set from an expression: `th:show="${...}"`. Any other att
 
 ## Label
 
-> A label for a form control.
+> A label for a form control; for a control outside a field, such as a checkbox or a switch with its text next to it.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/label/
+
+The text that names a form control. A click on it focuses or toggles the control.
 
 **Example: Label.**
 
@@ -1297,6 +1368,14 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/label/
 <sl:label for="label-email">Email</sl:label>
 <sl:input type="email" id="label-email" placeholder="you@example.com"/>
 ```
+
+### When to use
+
+- A control outside a field, such as a checkbox or a switch with its text next to it.
+
+Use something else for:
+
+- A control in a form, with its description and errors: a [field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md), whose field label does this for you.
 
 ### Pointing at a control
 
@@ -1329,9 +1408,12 @@ Attributes of `<sl:label>`: A label for a form control. Point it at the control 
 
 ## Input
 
-> A text input, bound to a form field with th:field.
+> A text input, bound to a form field with th:field; for names, email addresses, numbers, passwords and other one-line values.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/input/
+
+A one-line text input in the skin's look, bound to a form field. Every HTML type works: text, email, number, password,
+search, date.
 
 **Example: Input.**
 
@@ -1339,6 +1421,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/input/
 <sl:label for="email">Email</sl:label>
 <sl:input type="email" th:field="*{email}" placeholder="you@example.com"/>
 ```
+
+### When to use
+
+- Names, email addresses, numbers and other short values in a form.
+- A search field above a table.
+- A field the server validates as the user types, with htmx.
+
+Use something else for:
+
+- Several lines of text: a [textarea](https://shadleaf.dev/1.2.0-SNAPSHOT/components/textarea.md).
+- Icons, text or buttons inside the field: an [input group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group.md).
+- A date picked from a calendar: a [date picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md).
 
 ### Binding to a form field
 
@@ -1440,9 +1534,12 @@ Every prop can also be set from an expression: `th:type="${...}"`. Any other att
 
 ## Input Group
 
-> Text, icons and buttons inside the border of an input or textarea.
+> Text, icons and buttons inside the border of an input or textarea; for a search field with an icon, an amount with its currency or a message box with a Send button.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group/
+
+An input or a textarea with text, icons, buttons or keys inside its border: at its start, at its end, above it or below
+it.
 
 **Example: Input group.**
 
@@ -1453,6 +1550,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group/
   <sl:input-group-addon align="inline-end">12 results</sl:input-group-addon>
 </sl:input-group>
 ```
+
+### When to use
+
+- A search field with a magnifier and a keyboard shortcut.
+- An amount or an address with its unit or prefix, such as `€` or `https://`.
+- A message box with a Send button below the text.
+
+Use something else for:
+
+- A plain one-line input: an [input](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input.md).
 
 ### Composition
 
@@ -1752,9 +1859,11 @@ Attributes of `<sl:input-group-textarea>`: The textarea of a `sl:input-group`: a
 
 ## Textarea
 
-> A multi-line text input, bound to a form field with th:field.
+> A multi-line text input, bound to a form field with th:field; for comments, messages, descriptions and notes.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/textarea/
+
+A text input of several lines, bound to a form field.
 
 **Example: Textarea.**
 
@@ -1762,6 +1871,15 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/textarea/
 <sl:label for="message">Message</sl:label>
 <sl:textarea th:field="*{message}" placeholder="Type your message here."/>
 ```
+
+### When to use
+
+- Comments, messages, descriptions and notes.
+
+Use something else for:
+
+- One line of text: an [input](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input.md).
+- A Send button inside its border: an [input group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/input-group.md).
 
 The textarea grows with its content in browsers that support `field-sizing`; elsewhere it keeps its height and
 scrolls. `rows` sets a starting height.
@@ -1820,9 +1938,12 @@ Attributes of `<sl:textarea>`: A multi-line text input that grows with its conte
 
 ## Select
 
-> A select drawn in the page's style on a real select element, bound with th:field; the browser's customizable select where it has one.
+> A select drawn in the page's style on a real select element, bound with th:field; for one value out of a short list.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/select/
+
+A select whose list is drawn in the page's style, with a check mark on the chosen item, and icons and groups if you want
+them. Underneath it is a real `<select>`, bound and submitted as one.
 
 **Example: Select.** A placeholder until an option is chosen; th:field marks the bound one.
 
@@ -1840,6 +1961,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/select/
   </sl:select>
 </sl:field>
 ```
+
+### When to use
+
+- One value out of a few to a few dozen, such as a status, a role or a sort order.
+- A list with icons or groups.
+
+Use something else for:
+
+- A long list, or the phone's own picker: a [native select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native.md).
+- A list the user searches, or several values: a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md).
+- A few options that are all visible: a [radio group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group.md).
 
 ### Built from parts
 
@@ -2165,9 +2297,12 @@ A small Alpine component, `slSelect`, sits on the select's wrapper:
 
 ## Select (Native)
 
-> The browser's own select, styled, bound to a form field with th:field.
+> The browser's own select, styled, bound to a form field with th:field; for long lists, dense forms and several values, with the phone's own picker.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native/
+
+The browser's `<select>`, with the closed control in the skin's look and the list left to the operating system, which on
+a phone is its own picker.
 
 **Example: Native select.**
 
@@ -2178,6 +2313,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native/
   <option th:each="status : ${statuses}" th:value="${status}" th:text="#{|status.${status}|}">Todo</option>
 </sl:native-select>
 ```
+
+### When to use
+
+- Long lists, such as countries or years.
+- Dense forms and filter bars.
+- Several values at once (`multiple`).
+
+Use something else for:
+
+- A list drawn in the page's style, with icons and a check mark: a [select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md).
+- A list the user searches: a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md).
 
 ### Native select or select?
 
@@ -2269,9 +2415,12 @@ Every prop can also be set from an expression: `th:size="${...}"`. Any other att
 
 ## Combobox
 
-> A searchable select on a real select element, bound with th:field; type to filter, choose one value or several as chips, and load the options from the server as you type.
+> A select the user types into to filter, bound with th:field; one value or several as chips, options from the server as the user types; for long lists such as customers, countries or tags.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox/
+
+A select with a text input: the user types to filter the list, and picks one value, or several shown as chips. The
+options can come from the server as the user types.
 
 **Example: Combobox.** Type to filter the list; th:field marks the bound item.
 
@@ -2287,6 +2436,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox/
   </sl:combobox>
 </sl:field>
 ```
+
+### When to use
+
+- Picking from a long list, such as a country, a time zone or a customer.
+- Several values at once, such as tags or the members of a team.
+- A list too long to put in the page, searched on the server (`search-url`).
+
+Use something else for:
+
+- A short list people scan: a [select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md).
+- The phone's own picker: a [native select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select-native.md).
 
 ### Built from parts
 
@@ -2793,15 +2953,30 @@ A small Alpine component, `slCombobox`, sits on the wrapper: `<div class="combob
 
 ## Checkbox
 
-> The browser's own checkbox, styled, bound to a form field with th:field.
+> The browser's own checkbox, styled, bound to a form field with th:field; for accepting terms, a yes or no in a form, or picking several options.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox/
+
+A box the user ticks for yes or leaves empty for no, bound to a form field. Several bound to one collection field let
+the user pick several values.
 
 **Example: Checkbox.**
 
 ```html
 <sl:label><sl:checkbox th:field="*{terms}"/>Accept the terms and conditions</sl:label>
 ```
+
+### When to use
+
+- Accepting terms, or a yes or no that takes effect when the form is submitted.
+- Picking several options from a short list, such as the channels to be notified on.
+- Selecting rows in a table.
+
+Use something else for:
+
+- A setting that is on or off, such as email notifications: a [switch](https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch.md).
+- One option out of several: a [radio group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group.md).
+- Several values from a long list: a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md) with `multiple`.
 
 ### Binding to a form field
 
@@ -2898,9 +3073,11 @@ Every prop can also be set from an expression: `th:indeterminate="${...}"`. Any 
 
 ## Radio Group
 
-> A set of the browser's own radio buttons, styled, bound to a form field with th:field.
+> A set of the browser's own radio buttons, styled, bound to a form field with th:field; for one choice out of a few options that are all visible.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group/
+
+A set of radio buttons of which the user picks exactly one, bound to a form field. All the options stay in view.
 
 **Example: Radio group.**
 
@@ -2913,6 +3090,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group/
   </sl:label>
 </sl:radio-group>
 ```
+
+### When to use
+
+- One choice out of two to five options, such as a plan or a delivery method.
+- Options the user should see side by side before choosing, such as how often to be notified.
+
+Use something else for:
+
+- A long list: a [select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md) or a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md).
+- A yes or no: a [checkbox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox.md) or a [switch](https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch.md).
+- Options that fit on buttons, such as text alignment: a [toggle group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md).
 
 ### Binding to a form field
 
@@ -2987,15 +3175,27 @@ Attributes of `<sl:radio-group-item>`: One radio button in `sl:radio-group`: the
 
 ## Switch
 
-> An on/off control, bound to a boolean form field with th:field.
+> An on/off control, bound to a boolean form field with th:field; for settings that are on or off, such as email notifications.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch/
+
+A control that slides between on and off, bound to a boolean form field.
 
 **Example: Switch.**
 
 ```html
 <sl:label><sl:switch th:field="*{airplaneMode}"/>Airplane mode</sl:label>
 ```
+
+### When to use
+
+- A setting that is on or off, such as email notifications or a public profile.
+- A feature in a settings page, with a description next to it in a field.
+
+Use something else for:
+
+- Accepting terms, or picking several options: a [checkbox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox.md).
+- A button that is pressed or not, such as Bold: a [toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md).
 
 A switch is a checkbox with `role="switch"`, so a screen reader announces it as on or off and a form submits it as a
 checkbox. `th:field` on a boolean field works as it does on the [checkbox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/checkbox.md), including the numbered `id`:
@@ -3047,9 +3247,11 @@ Every prop can also be set from an expression: `th:size="${...}"`. Any other att
 
 ## Toggle
 
-> A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field.
+> A button that is on or off, as a checkbox drawn as a button, bound to a boolean form field with th:field; for Bold in a toolbar, or marking a favourite.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle/
+
+A button that stays pressed or not, such as Bold. Underneath it is a checkbox, bound to a boolean form field.
 
 **Example: Toggle.**
 
@@ -3058,6 +3260,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle/
   <sl:icon name="bookmark"/> Bookmark
 </sl:toggle>
 ```
+
+### When to use
+
+- A formatting option in a toolbar, such as Bold or Italic.
+- Marking something, such as a favourite or a pin.
+
+Use something else for:
+
+- A setting in a settings page: a [switch](https://shadleaf.dev/1.2.0-SNAPSHOT/components/switch.md).
+- Several related toggles: a [toggle group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md).
+- A button that runs an action: a [button](https://shadleaf.dev/1.2.0-SNAPSHOT/components/button.md).
 
 A toggle is a checkbox drawn as a button: a `<label>` with the checkbox inside it, covering it. A click anywhere on the
 toggle checks or unchecks it, the form submits it as a checkbox, and it works without JavaScript. A screen reader
@@ -3143,9 +3356,12 @@ Every prop can also be set from an expression: `th:variant="${...}"`. Any other 
 
 ## Toggle Group
 
-> A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field.
+> A set of toggles of which one or several can be on, as radio buttons or checkboxes bound with th:field; for text alignment, formatting or switching a view.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group/
+
+A row of toggle buttons of which one, or several, can be on. Underneath they are radio buttons or checkboxes, bound to a
+form field.
 
 **Example: Toggle group.**
 
@@ -3156,6 +3372,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group/
   <sl:toggle-group-item value="underline" aria-label="Underline"><sl:icon name="underline"/></sl:toggle-group-item>
 </sl:toggle-group>
 ```
+
+### When to use
+
+- Text alignment or formatting in an editor's toolbar.
+- Switching a view, such as list or grid.
+- A few values that fit on buttons, such as the days of the week.
+
+Use something else for:
+
+- Options with longer labels: a [radio group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/radio-group.md).
+- One button on its own: a [toggle](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md).
+- Panels of content: [tabs](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs.md).
 
 The items of a toggle group are [toggles](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle.md) around radio buttons (`type="single"`, the default: one item is
 on at a time) or checkboxes (`type="multiple"`: any number). The form submits them as such inputs, and they work
@@ -3346,9 +3574,12 @@ Attributes of `<sl:toggle-group-item>`: One item of a `sl:toggle-group`, drawn a
 
 ## Calendar
 
-> A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates.
+> A month to pick from, drawn over native date inputs, bound with th:field; a date or a range of dates, always visible in the page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar/
+
+A month the user picks a date, or a range of dates, from. It stays open in the page, and binds to a form field as a date
+input does.
 
 **Example: Calendar.** A date in a field; th:field binds the date input the calendar draws over.
 
@@ -3358,6 +3589,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar/
   <sl:calendar/>
 </sl:field>
 ```
+
+### When to use
+
+- Picking a date where there is room to show the month, such as a booking form.
+- Picking a range, such as the dates of a holiday or the period of a report.
+- A filter by day beside a list.
+
+Use something else for:
+
+- A date in a form where space is tight: a [date picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md), a button that opens a calendar.
+- Data per day, without picking: a [month view](https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view.md).
 
 ### Drawn over date inputs
 
@@ -3563,9 +3805,12 @@ Every prop can also be set from an expression: `th:caption-layout="${...}"`. Any
 
 ## Date Picker
 
-> A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field.
+> A button showing the chosen date that opens a calendar in a popover; a date or a range, bound with th:field; for the date fields of forms and filters.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker/
+
+A button that shows the chosen date and opens a calendar in a popover to change it. It takes the space of one form
+control, and binds as a date input does.
 
 **Example: Date picker.** A date in a field. The button shows "Pick a date" until a date is chosen; a pick closes the popover.
 
@@ -3575,6 +3820,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker/
   <sl:date-picker/>
 </sl:field>
 ```
+
+### When to use
+
+- A date in a form, such as a due date.
+- A range in a filter bar, such as the period of a report.
+- A date of birth, far in the past.
+
+Use something else for:
+
+- A calendar that is always visible: a [calendar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar.md).
+- Data per day, without picking: a [month view](https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view.md).
 
 ### A popover with a calendar
 
@@ -3756,9 +4012,12 @@ Every prop can also be set from an expression: `th:placeholder="${...}"`. Any ot
 
 ## File Upload
 
-> A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field.
+> A drop zone with a Browse button and the list of the files picked, around a file input bound with th:field; for uploading documents, photos or a file to import.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/file-upload/
+
+A drop zone around a file input: the user drops files on it or browses for them, and sees the files picked, with
+previews of images. It submits with the form, or uploads with htmx and shows the progress.
 
 **Example: File upload.** Drop files on it or browse. Each file shows as an attachment with a remove button; a file of another type or larger than max-size shows as an error.
 
@@ -3771,6 +4030,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/file-upload/
   <sl:field-error/>
 </sl:field>
 ```
+
+### When to use
+
+- Attaching documents to a form, such as receipts to an expense.
+- Uploading a photo, such as a profile picture, with a preview.
+- A file to import, such as a CSV.
+
+Use something else for:
+
+- Files already on the server: an [attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md).
 
 ### A file input with a drop zone
 
@@ -4101,9 +4370,12 @@ Every prop can also be set from an expression: `th:multiple="${...}"`. Any other
 
 ## Dialog
 
-> A modal window over the page, on the native dialog element.
+> A modal window over the page, on the native dialog element; for a short form, details or a step the user finishes before going back to the page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog/
+
+A window over the page that the user deals with before going back to it; the page behind it is inert. It can hold a form
+that the server renders and htmx swaps in.
 
 **Example: Dialog.** A form in a dialog. The form wraps the dialog, so the submit button in its footer submits it.
 
@@ -4134,6 +4406,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog/
   </sl:dialog>
 </form>
 ```
+
+### When to use
+
+- Creating or editing something with a short form, such as a new project.
+- The details of a row, loaded when the dialog opens.
+- A step that needs the user's attention, such as inviting a member.
+
+Use something else for:
+
+- A confirmation the user must answer: an [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md).
+- Filters, settings or a row's details beside the page: a [sheet](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet.md).
+- Something small next to its button that leaves the page usable: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
 
 ### Built from parts
 
@@ -4449,9 +4733,12 @@ A small Alpine component, `slDialog`, adds what the browser's `<dialog>` cannot 
 
 ## Alert Dialog
 
-> A modal dialog that interrupts the user with something important and waits for an answer.
+> A modal dialog that interrupts the user with something important and waits for an answer; for confirming a delete or another action that cannot be undone.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog/
+
+A modal dialog that asks the user to confirm or cancel before going on. A click outside it does not close it, so the
+user has to answer.
 
 **Example: Alert dialog.** A question the user has to answer. Cancel has the focus when it opens.
 
@@ -4471,6 +4758,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog/
   </sl:alert-dialog-footer>
 </sl:alert-dialog>
 ```
+
+### When to use
+
+- Confirming a delete, or anything else that cannot be undone.
+- Confirming a step with consequences, such as publishing or cancelling a subscription.
+- Warning about unsaved changes before the user leaves.
+
+Use something else for:
+
+- A form or content the user can close at any time: a [dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md).
+- A message that needs no answer: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md) or a [toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md).
 
 ### Built from parts
 
@@ -4761,9 +5059,11 @@ An alert dialog uses the dialog's Alpine component, `slDialog`; see [Dialog](htt
 
 ## Sheet
 
-> A dialog that slides in from an edge of the screen.
+> A dialog that slides in from an edge of the screen; for filters, settings or the details of a row beside the page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet/
+
+A dialog that slides in from an edge of the screen, for content that complements the page.
 
 **Example: Sheet.** A form in a sheet. The form wraps the sheet, so the submit button in its footer submits it.
 
@@ -4793,6 +5093,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet/
   </sl:sheet>
 </form>
 ```
+
+### When to use
+
+- Filters for a list or a table.
+- The details, or the edit form, of a table row.
+- Settings or a cart on the side of the page.
+
+Use something else for:
+
+- A form in the middle of the screen: a [dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md).
+- Something small next to its button: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
 
 ### Built from parts
 
@@ -5172,9 +5483,12 @@ A sheet uses the dialog's Alpine component, `slDialog`; see [Dialog](https://sha
 
 ## Popover
 
-> Rich content in a panel next to the button that opens it, on the browser's Popover API.
+> Rich content in a panel next to the button that opens it, on the browser's Popover API; for a small inline form, details with links, or a share panel.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover/
+
+A panel that opens next to the button that triggers it and closes when the user clicks elsewhere or presses Escape.
+It holds anything: text, links, a small form. The rest of the page stays usable while it is open.
 
 **Example: Popover.** A small form next to its trigger. Focus moves to the first field when it opens.
 
@@ -5199,6 +5513,20 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover/
   </sl:popover-content>
 </sl:popover>
 ```
+
+### When to use
+
+- A small form that edits one thing in place, such as dimensions, a rename or a filter.
+- Extra details about something on the page, with links in them.
+- A share panel, a colour choice or a set of options that does not need a page or a dialog of its own.
+
+Use something else for:
+
+- A list of actions or links: a [dropdown menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.md), which has the keyboard behaviour of a menu.
+- A short hint while the pointer rests on an element: a [tooltip](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tooltip.md).
+- Content the user must deal with before going on, or a larger form: a [dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dialog.md), or a
+  [sheet](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sheet.md) from the edge of the screen.
+- Picking a date: a [date picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md).
 
 ### Built from parts
 
@@ -5384,9 +5712,12 @@ A small Alpine component, `slPopover`, adds what the browser's popover lacks: `<
 
 ## Dropdown Menu
 
-> A menu of actions or links that opens from a button, on the browser's Popover API.
+> A menu of actions or links that opens from a button, on the browser's Popover API; for the actions of a table row, a More button or an account menu.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu/
+
+A list of actions or links that opens from a button, with the keyboard behaviour of a menu. Items can also be checkboxes
+or radio buttons.
 
 **Example: Dropdown menu.** Labels, groups, separators and shortcuts; links and buttons; a disabled item.
 
@@ -5425,6 +5756,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu/
 </sl:dropdown-menu>
 <form id="logout-form" method="post" action="/logout"></form>
 ```
+
+### When to use
+
+- The actions of a table row behind a button with an ellipsis.
+- A More menu in a toolbar or a card header.
+- Options that are on or off, such as the columns a table shows.
+
+Use something else for:
+
+- Choosing a value in a form: a [select](https://shadleaf.dev/1.2.0-SNAPSHOT/components/select.md) or a [combobox](https://shadleaf.dev/1.2.0-SNAPSHOT/components/combobox.md).
+- Rich content or a small form: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
+- The signed-in user's menu: the [user menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu.md), built on this one.
 
 ### Built from parts
 
@@ -5796,9 +6139,12 @@ renders as `<div class="dropdown-menu-content" role="menu" popover x-data="slDro
 
 ## Tooltip
 
-> A short text that shows while the pointer rests on an element or the keyboard focuses it.
+> A short text that shows while the pointer rests on an element or the keyboard focuses it; for the name of an icon button or a keyboard shortcut.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/tooltip/
+
+A short text that appears while the pointer rests on an element or the keyboard focuses it, and disappears when they
+leave. It explains the element; it holds no links or buttons, and nobody on a touch screen sees it.
 
 **Example: Tooltip.** Shows while the pointer rests on the button, and at once when the keyboard focuses it.
 
@@ -5808,6 +6154,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/tooltip/
   <sl:tooltip-content>Add to library</sl:tooltip-content>
 </sl:tooltip>
 ```
+
+### When to use
+
+- The name of an icon-only button in a toolbar, a table row or a collapsed sidebar.
+- The keyboard shortcut of an action, such as "Save (Ctrl S)".
+- A short explanation of a value or an abbreviation, when the page also makes it clear some other way.
+
+Use something else for:
+
+- Content with links, buttons or a form, or that must work on a touch screen: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
+- Why a button is disabled, or an error: text next to it, which everyone sees.
 
 ### Usage
 
@@ -5953,9 +6310,12 @@ The tooltip is shown and hidden by a small Alpine component, `slTooltip`: `<sl:t
 
 ## Alert
 
-> A callout for a message the user should notice.
+> A callout for a message the user should notice; for an error on the page, a warning or a notice about the account.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert/
+
+A box with an icon, a title and a description that draws attention to a message in the page. It stays where it is until
+the page changes.
 
 **Example: Alert.**
 
@@ -5966,6 +6326,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert/
   <sl:alert-description>We will email you when it ships.</sl:alert-description>
 </sl:alert>
 ```
+
+### When to use
+
+- An error the server reports, such as data that could not be loaded.
+- A notice, such as a trial that ends soon or a feature in beta.
+- A warning above a form, such as a change that affects every user.
+
+Use something else for:
+
+- A short message about what just happened, that goes away by itself: a [toast](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast.md).
+- Errors that belong to a whole form: [form errors](https://shadleaf.dev/1.2.0-SNAPSHOT/components/form-errors.md).
+- A question the user must answer: an [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md).
 
 ### Built from parts
 
@@ -6052,9 +6424,12 @@ Attributes of `<sl:alert-description>`: The body of an alert, inside `sl:alert`:
 
 ## Toast
 
-> A short message in a corner of the page that closes itself, sent by the server.
+> A short message in a corner of the page that closes itself, sent by the server; for confirming an action, such as a saved form or a deleted row.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast/
+
+A short message that appears in a corner of the page and closes by itself. The server sends it, in an htmx response or
+after a redirect.
 
 **Example: Toast.** The button sends an sl-toast event; the toaster shows it, and a screen reader announces it.
 
@@ -6066,6 +6441,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/toast/
 
 <sl:toaster id="toaster-default"/>
 ```
+
+### When to use
+
+- Confirming an action, such as "Member deleted" or "Settings saved".
+- Saying that an htmx request failed.
+- A message after a redirect, from a flash attribute.
+
+Use something else for:
+
+- A message that stays until the page changes: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
+- A question the user must answer: an [alert dialog](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert-dialog.md).
 
 ### One toaster, toasts from the server
 
@@ -6373,9 +6759,11 @@ A small Alpine component, `slToaster`, is on `<sl:toaster>`: it renders as
 
 ## Skeleton
 
-> A placeholder that pulses while content loads.
+> A placeholder that pulses while content loads; for the cards, rows and text that htmx loads after the page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton/
+
+A grey shape that pulses in the place where content will appear, while it loads.
 
 **Example: Skeleton.**
 
@@ -6383,6 +6771,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton/
 <sl:skeleton/>
 <sl:skeleton/>
 ```
+
+### When to use
+
+- The cards, rows or text of a part of the page that htmx loads after the page itself.
+- The avatars and lines of text of a list that is being fetched.
+
+Use something else for:
+
+- An action that is busy, such as a button that saves: a [spinner](https://shadleaf.dev/1.2.0-SNAPSHOT/components/spinner.md), or the button's `loading`.
+- Nothing to show once it has loaded: an [empty state](https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty.md).
 
 ### Shapes and sizes
 
@@ -6424,15 +6822,26 @@ Every prop can also be set from an expression: `th:shape="${...}"`. Any other at
 
 ## Spinner
 
-> A spinning icon that says something is loading.
+> A spinning icon that says something is loading; for a busy button or a part of the page that waits for the server.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/spinner/
+
+A spinning icon that tells the user something is loading, with a label for screen readers.
 
 **Example: Spinner.**
 
 ```html
 <sl:spinner/>
 ```
+
+### When to use
+
+- In a button while it saves (the button's `loading` does this for you).
+- In a part of the page that waits for an htmx response.
+
+Use something else for:
+
+- The shape of the content that is loading: a [skeleton](https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton.md).
 
 ### What it says
 
@@ -6480,9 +6889,11 @@ Every prop can also be set from an expression: `th:size="${...}"`. Any other att
 
 ## Empty
 
-> What a list, a table, a search or a page shows when there is nothing to show yet.
+> What a list, a table, a search or a page shows when there is nothing to show yet; with an icon, a title, a text and a next step.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty/
+
+A centred block with an icon, a title, a description and what to do next, in the place where content would be.
 
 **Example: Empty.**
 
@@ -6503,6 +6914,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty/
   </sl:button>
 </sl:empty>
 ```
+
+### When to use
+
+- A list or a table without rows yet, with a button to create the first.
+- A search that found nothing, with a way to change it.
+- An inbox, a cart or a list of notifications with nothing in it.
+
+Use something else for:
+
+- An error: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
+- Content that is still loading: a [skeleton](https://shadleaf.dev/1.2.0-SNAPSHOT/components/skeleton.md).
 
 ### Built from parts
 
@@ -6726,9 +7148,12 @@ Attributes of `<sl:empty-content>`: What to do next in an `sl:empty`, below its 
 
 ## Table
 
-> A styled table, whose column headers sort it on the server.
+> A styled table, whose column headers sort it on the server; for lists of records with columns, search, actions per row and selection.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/table/
+
+A table in the skin's look, for rows of records with columns. Its column headers sort it on the server, and rows can
+have actions and checkboxes.
 
 **Example: Table.**
 
@@ -6771,6 +7196,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/table/
   </tfoot>
 </sl:table>
 ```
+
+### When to use
+
+- Records the user scans and compares, such as orders, users or invoices.
+- Sorting, searching and paging a Spring Data query.
+- Actions per row in a menu, and rows selected for an action on all of them.
+
+Use something else for:
+
+- Rows with a picture and a description rather than columns: an [item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md).
+- Moving between pages: [pagination](https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination.md), below the table.
 
 ### Plain rows and cells
 
@@ -7597,15 +8033,28 @@ Every prop can also be set from an expression: `th:for="${...}"`. Any other attr
 
 ## Pagination
 
-> Links to the other pages of a list, built from the Spring Data Page the controller returns.
+> Links to the other pages of a list, built from the Spring Data Page the controller returns; for tables and other long lists.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination/
+
+Links to the previous, the next and the numbered pages of a long list, with an optional summary and a choice of rows per
+page, built from the Spring Data `Page` the controller returns.
 
 **Example: From a page.** Page 5 of 27, in a request for /people?sort=name,asc&page=4. Each link keeps the sort.
 
 ```html
 <sl:pagination th:page="${people}"/>
 ```
+
+### When to use
+
+- Below a table.
+- Search results, or any other list the server returns a page at a time.
+
+Use something else for:
+
+- The trail of pages up to the current one: a [breadcrumb](https://shadleaf.dev/1.2.0-SNAPSHOT/components/breadcrumb.md).
+- Keeping the page and the order when a search form is sent: [query params](https://shadleaf.dev/1.2.0-SNAPSHOT/components/query-params.md).
 
 ### From a page
 
@@ -7908,9 +8357,12 @@ Every prop can also be set from an expression: `th:page="${...}"`. Any other att
 
 ## Query params
 
-> Hidden inputs that keep a table's order, page size and filters when a search form is sent.
+> Hidden inputs that keep a table's order, page size and filters when a search form is sent; for a search above a sorted or paged table.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/query-params/
+
+Hidden inputs that copy the current request's other parameters into a `GET` form, so sending it keeps the page's order,
+page size and filters.
 
 **Example: Query params.** In a request for /people?q=ada&sort=email,desc&size=50&page=2. Sending the form asks for /people?q=…&sort=email,desc&size=50: the order and the size stay, the page starts again at the first.
 
@@ -7921,6 +8373,15 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/query-params/
   <sl:query-params except="q"/>
 </form>
 ```
+
+### When to use
+
+- A search above a sorted, paged table.
+- A filter form that should not reset the other filters.
+
+Use something else for:
+
+- Links to the other pages of the list: [pagination](https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination.md).
 
 ### Searching a sorted table
 
@@ -8003,9 +8464,12 @@ Every prop can also be set from an expression: `th:except="${...}"`. Any other a
 
 ## Month view
 
-> A month rendered on the server, with content of your own per day and a link per day; no picking.
+> A month rendered on the server, with content of your own per day and a link per day; for an agenda, a booking overview or orders per day.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view/
+
+A month rendered on the server, with your own content in every day and a link to each day. It shows data; it picks no
+dates.
 
 **Example: Month view.** Each day shows its events from the model and links to the day's agenda.
 
@@ -8016,6 +8480,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view/
   </sl:slot>
 </sl:month-view>
 ```
+
+### When to use
+
+- An agenda, or a calendar of events.
+- An overview of bookings or availability.
+- Figures per day, such as orders or hours worked.
+
+Use something else for:
+
+- A date picked in a form: a [calendar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/calendar.md) or a [date picker](https://shadleaf.dev/1.2.0-SNAPSHOT/components/date-picker.md).
+- Figures over time as a graph: a [chart](https://shadleaf.dev/1.2.0-SNAPSHOT/components/chart.md).
 
 ### Content per day
 
@@ -8167,9 +8642,12 @@ Every prop can also be set from an expression: `th:month="${...}"`. Any other at
 
 ## Chart
 
-> Recharts drawing bars, lines and areas from rows the controller puts in the model; labels and colours on the series, named Intl formats.
+> Bar, line and area charts drawn by Recharts from rows the controller puts in the model; for dashboards, reports and figures over time.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/chart/
+
+A bar, line or area chart, drawn in the browser by Recharts in the skin's look, from rows the controller puts in the
+model.
 
 **Example: Bar chart.** Two series side by side, in a card. The months are YearMonths: month-short writes the ticks (Jan), month the tooltip's label (January).
 
@@ -8193,6 +8671,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/chart/
   </sl:card-footer>
 </sl:card>
 ```
+
+### When to use
+
+- Figures over time on a dashboard, such as visitors or revenue per month.
+- Comparing a few series, such as desktop against mobile.
+- A report with totals per category.
+
+Use something else for:
+
+- Exact values the user reads, sorts or compares: a [table](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md).
+- A single figure: a [card](https://shadleaf.dev/1.2.0-SNAPSHOT/components/card.md) with the number in it.
+- Data per day of a month: a [month view](https://shadleaf.dev/1.2.0-SNAPSHOT/components/month-view.md).
 
 ### Built from parts
 
@@ -8826,9 +9316,12 @@ signed-in user comes from.
 
 ## Sidebar
 
-> The application's navigation beside the page, and a panel over it on a phone.
+> The application's navigation beside the page, and a panel over it on a phone; for admin panels, dashboards and other applications with many pages.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar/
+
+The column of navigation beside the page: menus of links with icons and badges, groups that fold, a header and a footer.
+On a desktop it collapses to icons; on a phone it opens as a panel over the page. It remembers its state.
 
 **Example: Sidebar.** Where there are 768 px or more (here: the frame's width), the sidebar sits beside the page and the trigger (or Ctrl/⌘+B) collapses it, remembered in a cookie; narrower, the trigger opens it as a panel over the page. Rendered for a request for /, so #slNav.current('/') marks Home as the current page. The skip link (the first Tab) goes to the inset, whose header holds the trigger and the breadcrumb. variant="inset" makes the page a card on the sidebar's ground (from 768 px), and collapsible="icon" collapses it to a strip of icons whose tooltips show the labels, as sample-01's layout. Documents opens a sub-menu. The footer ends in the signed-in user's menu (sl:user-menu). The large button in the header is a team switcher: it opens a dropdown menu beside the sidebar (below it in the panel) with the current team checked, and "More" beside Design Engineering opens one too.
 
@@ -9000,6 +9493,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar/
   </sl:sidebar-inset>
 </sl:sidebar-provider>
 ```
+
+### When to use
+
+- The main navigation of an application with many pages, such as an admin panel or a dashboard.
+- Navigation in sections, with groups that fold and the current page marked.
+- The signed-in user's menu, in its footer.
+
+Use something else for:
+
+- A few links across the top of the page: a [site header](https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header.md).
+- Choosing between the two: the [application shell](https://shadleaf.dev/1.2.0-SNAPSHOT/components/application-shell.md).
 
 > **Tip: Layouts to copy**
 >
@@ -10329,9 +10833,12 @@ A small Alpine component, `slSidebar`, does the work: `<sl:sidebar-provider>` re
 
 ## Site Header
 
-> A header bar across the top of the page, or at the top of the sidebar layout's page.
+> A header bar across the top of the page, or at the top of the sidebar layout's page; for the logo, the main links, a search and the user menu.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header/
+
+A bar across the top of the page that lays out its content in a row: what you put in it at the start, its `end` slot at
+the end.
 
 **Example: Site header.** A header bar: its content in a row from the start, the end slot at the end. Across the top of a page it has the page's ground and a border below.
 
@@ -10347,6 +10854,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header/
   </sl:slot>
 </sl:site-header>
 ```
+
+### When to use
+
+- The header of an application without a sidebar, with the logo, a few links and the user menu.
+- The bar above the content in the sidebar layout, with the sidebar's trigger and a breadcrumb.
+- The header of a public site, with a theme toggle.
+
+Use something else for:
+
+- Navigation for many pages: a [sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md).
 
 ### Usage
 
@@ -10525,9 +11042,12 @@ Attributes of `<sl:site-header>`: A header bar: a `header` laying out its conten
 
 ## User Menu
 
-> The signed-in user with a menu that signs out, or a Sign in link, for the sidebar's footer or the site header.
+> The signed-in user with a menu that signs out, or a Sign in link; for the sidebar's footer or the site header.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu/
+
+The signed-in user's picture and name, opening a menu with your own links and Sign out. When nobody is signed in, it is
+a Sign in link.
 
 **Example: User menu.** In the sidebar's footer, the signed-in user as a large menu button: picture, name and email. It opens a menu beside the sidebar (below the button in the phone panel) with the user, the application's items and Sign out, which posts to #slUser.logoutUrl with the CSRF token. Collapsed to icons, the picture stays, with the name as a tooltip.
 
@@ -10550,6 +11070,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu/
   </sl:sidebar-inset>
 </sl:sidebar-provider>
 ```
+
+### When to use
+
+- The footer of the sidebar.
+- The end of the site header.
+
+Use something else for:
+
+- Another menu of actions: a [dropdown menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/dropdown-menu.md).
+- The picture alone: an [avatar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar.md).
 
 ### Usage
 
@@ -10749,9 +11279,12 @@ Every prop can also be set from an expression: `th:placement="${...}"`. Any othe
 
 ## Breadcrumb
 
-> The trail of pages above the one shown now, with a menu for the levels a long trail leaves out.
+> The trail of pages above the one shown now, with a menu for the levels a long trail leaves out; for the top of a page deep in a hierarchy.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/breadcrumb/
+
+A row of links from the top of the application down to the current page, so the user sees where they are and can go up a
+level.
 
 **Example: Breadcrumb.**
 
@@ -10766,6 +11299,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/breadcrumb/
   </sl:breadcrumb-list>
 </sl:breadcrumb>
 ```
+
+### When to use
+
+- The top of a detail page, such as Projects › Acme › Settings.
+- Folders, categories or any other hierarchy more than two levels deep.
+
+Use something else for:
+
+- Moving between the pages of a list: [pagination](https://shadleaf.dev/1.2.0-SNAPSHOT/components/pagination.md).
+- The application's main navigation: a [sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md) or a [site header](https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header.md).
 
 ### Built from parts
 
@@ -10988,9 +11531,12 @@ no plugin. Without it the button still opens the menu (the browser's popover), w
 
 ## Skip Link
 
-> A link past the navigation to the page's content, for keyboard users.
+> A link past the navigation to the page's content, for keyboard users; first in the body of every layout.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/skip-link/
+
+A link that stays out of sight until a keyboard user tabs to it, and then jumps past the navigation to the page's
+content.
 
 **Example: Skip link.** Hidden until it has the focus: click into the frame and press Tab. It skips to the element with id="main" (here the paragraph below), which tabindex="-1" lets take the focus.
 
@@ -10998,6 +11544,10 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/skip-link/
 <sl:skip-link/>
 <p id="main" tabindex="-1">The page's content.</p>
 ```
+
+### When to use
+
+- First in the body of every layout with a sidebar or a header.
 
 ### Usage
 
@@ -11067,9 +11617,11 @@ Every prop can also be set from an expression: `th:for="${...}"`. Any other attr
 
 ## Tabs
 
-> Panels of content shown one at a time, chosen from a row of tabs.
+> Panels of content shown one at a time, chosen from a row of tabs; for the views of one record, such as Overview, Activity and Settings.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs/
+
+A row of tabs over panels of content, of which one shows at a time. A tab can be a link, so the address opens it.
 
 **Example: Tabs.** The arrow keys move between the tabs; Tab moves on to the panel.
 
@@ -11123,6 +11675,18 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs/
   </sl:tabs-content>
 </sl:tabs>
 ```
+
+### When to use
+
+- The views of one record, such as a project's Overview, Activity and Settings.
+- The sections of a settings page.
+- Two forms on one page, such as Account and Password.
+
+Use something else for:
+
+- Stacked sections the user opens one or more of: an [accordion](https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion.md).
+- Navigation between the application's pages: a [sidebar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md) or a [site header](https://shadleaf.dev/1.2.0-SNAPSHOT/components/site-header.md).
+- Choosing a value, such as list or grid: a [toggle group](https://shadleaf.dev/1.2.0-SNAPSHOT/components/toggle-group.md).
 
 ### Built from parts
 
@@ -11375,9 +11939,12 @@ A small Alpine component, `slTabs`, is on `<sl:tabs>`: it renders as
 
 ## Accordion
 
-> A stack of sections, each with a heading that shows or hides its content, on the browser's details element.
+> A stack of sections, each with a heading that shows or hides its content, on the browser's details element; for an FAQ, grouped settings or details most readers skip.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion/
+
+A list of headings that each open a section of content below them, one at a time or several at once. The content is in
+the page from the start, so find in page and links still reach it.
 
 **Example: Accordion.** One section open at a time. Opening another closes it; the open one closes on a click.
 
@@ -11399,6 +11966,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion/
   </sl:accordion-item>
 </sl:accordion>
 ```
+
+### When to use
+
+- An FAQ page.
+- Groups of settings or filters, on a narrow screen.
+- Details most readers skip, such as shipping and returns on a product page.
+
+Use something else for:
+
+- One section that shows and hides on its own: a [collapsible](https://shadleaf.dev/1.2.0-SNAPSHOT/components/collapsible.md).
+- Sections the user switches between, one visible at a time: [tabs](https://shadleaf.dev/1.2.0-SNAPSHOT/components/tabs.md).
 
 ### Built from parts
 
@@ -11611,9 +12189,11 @@ Attributes of `<sl:accordion-content>`: The content of a `sl:accordion-item`, sh
 
 ## Collapsible
 
-> Content that a button shows and hides, on the browser's details element.
+> Content that a button shows and hides, on the browser's details element; for advanced options, extra details or a Show more.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/collapsible/
+
+A trigger and a piece of content that the trigger shows and hides: one section, without an accordion's styling.
 
 **Example: Collapsible.**
 
@@ -11627,6 +12207,16 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/collapsible/
   </sl:collapsible-content>
 </sl:collapsible>
 ```
+
+### When to use
+
+- Advanced options below a form.
+- Extra details, or the rest of a list behind a Show more.
+
+Use something else for:
+
+- Several sections of which the user opens one or more: an [accordion](https://shadleaf.dev/1.2.0-SNAPSHOT/components/accordion.md).
+- Content that floats over the page next to its button: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
 
 ### Built from parts
 
@@ -11727,9 +12317,12 @@ Attributes of `<sl:collapsible-content>`: The content of a `sl:collapsible`, sho
 
 ## Card
 
-> A container for related content and actions, built from its parts.
+> A bordered box for related content and actions, built from its parts; for a sign-in form, a dashboard tile or a section of a settings page.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/card/
+
+A bordered box that groups content about one thing, with an optional header (title, description, an action) and
+footer. It holds anything: text, a form, a table, a chart.
 
 **Example: Card.**
 
@@ -11748,6 +12341,19 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/card/
   </sl:card-footer>
 </sl:card>
 ```
+
+### When to use
+
+- A sign-in or settings form in a box of its own.
+- A tile on a dashboard: a figure, a chart, a short list.
+- One section of a settings or detail page, such as "Billing" or "Notifications".
+- A grid of things to choose from, such as plans or projects.
+
+Use something else for:
+
+- A row in a list (a file, a member, a notification): an [item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md), or several in an item group.
+- A message the user should notice: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
+- Nothing to show yet: an [empty state](https://shadleaf.dev/1.2.0-SNAPSHOT/components/empty.md).
 
 ### Built from parts
 
@@ -11873,9 +12479,12 @@ Every prop can also be set from an expression: `th:border="${...}"`. Any other a
 
 ## Item
 
-> A row of content with media, a title, a description and actions, alone or in a list.
+> A row of content with media, a title, a description and actions, alone or in a list; for people, files, notifications or settings.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/item/
+
+A row that shows one thing at a glance: an icon, avatar or image, a title and a description, and actions at its end.
+Several make a list in an item group, or a grid of tiles.
 
 **Example: Item.**
 
@@ -11897,6 +12506,20 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/item/
   <sl:item-actions><sl:icon name="chevron-right" size="16"/></sl:item-actions>
 </sl:item>
 ```
+
+### When to use
+
+- A list of people, files, notifications, integrations or devices, each with a button or a menu.
+- A setting shown as a title, an explanation and a button, such as "Two-factor authentication: Enable".
+- A row that links to its detail page (`as="a"`).
+- A grid of products or albums with a picture above each (`<sl:item-header>`, `layout="grid"`).
+
+Use something else for:
+
+- A box holding a form, a table or a chart: a [card](https://shadleaf.dev/1.2.0-SNAPSHOT/components/card.md).
+- A checkbox or switch with its label and description: a [field](https://shadleaf.dev/1.2.0-SNAPSHOT/components/field.md).
+- Rows with columns the user compares or sorts: a [table](https://shadleaf.dev/1.2.0-SNAPSHOT/components/table.md).
+- A file attached to a form or a message: an [attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md).
 
 ### Built from parts
 
@@ -12235,9 +12858,12 @@ Attributes of `<sl:item-separator>`: A horizontal line between the items of an `
 
 ## Attachment
 
-> A file or an image attached to a message, a form or a record, with its name, its size or state, and actions.
+> A file or an image attached to a message, a form or a record, with its name, its size or state, and actions; for the documents on a record or the files of an upload.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment/
+
+A small card for one file: an icon or a thumbnail, its name, its size or upload state, and actions such as download or
+remove. It shows a file; it uploads nothing.
 
 **Example: Attachment.**
 
@@ -12253,6 +12879,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment/
   </sl:attachment-actions>
 </sl:attachment>
 ```
+
+### When to use
+
+- The documents on a customer's or an order's page, with a Download action.
+- The files attached to a message or a comment.
+- The list of files under a file upload, with their progress or errors.
+
+Use something else for:
+
+- Picking and uploading files: a [file upload](https://shadleaf.dev/1.2.0-SNAPSHOT/components/file-upload.md), which uses attachments for its list.
+- A row about something other than a file: an [item](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md).
 
 ### Built from parts
 
@@ -12664,15 +13301,29 @@ Every prop can also be set from an expression: `th:layout="${...}"`. Any other a
 
 ## Badge
 
-> A small label for a status, a count or a category.
+> A small label for a status, a count or a category; for the state of an order, unread messages or a tag.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/badge/
+
+A small, rounded label next to other content, in the same variants as the button.
 
 **Example: Badge.**
 
 ```html
 <sl:badge>New</sl:badge>
 ```
+
+### When to use
+
+- The state of something in a table row, such as Paid, Pending or Failed.
+- A count, such as unread messages.
+- A tag or a category on an item or a card.
+
+Use something else for:
+
+- A count next to a link in the sidebar: the sidebar's [menu badge](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md#badges).
+- A key on the keyboard: a [kbd](https://shadleaf.dev/1.2.0-SNAPSHOT/components/kbd.md).
+- A message the user should read: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
 
 ### Variants
 
@@ -12757,9 +13408,11 @@ Every prop can also be set from an expression: `th:variant="${...}"`. Any other 
 
 ## Avatar
 
-> A picture of a person, with initials when there is no picture.
+> A picture of a person, with initials when there is no picture; for the signed-in user, the author of a comment or the members of a team.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar/
+
+A round picture of a person, or their initials when there is no picture or it fails to load.
 
 **Example: Avatar.**
 
@@ -12769,6 +13422,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar/
   <sl:avatar-fallback>AM</sl:avatar-fallback>
 </sl:avatar>
 ```
+
+### When to use
+
+- The signed-in user in a header or a sidebar.
+- The author next to a comment, a message or a change.
+- The members of a team in a list or a table.
+
+Use something else for:
+
+- The signed-in user with a menu that signs out: the [user menu](https://shadleaf.dev/1.2.0-SNAPSHOT/components/user-menu.md).
+- The thumbnail of a file: an [attachment](https://shadleaf.dev/1.2.0-SNAPSHOT/components/attachment.md).
 
 ### Image and fallback
 
@@ -12895,7 +13559,7 @@ Attributes of `<sl:avatar-fallback>`: What `sl:avatar` shows when its image has 
 
 ## Icon
 
-> Inline SVG icons from lucide, or your own.
+> Inline SVG icons from lucide, or your own; for buttons, menu items, badges, alerts and anywhere a symbol helps the text.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/icon/
 
@@ -12910,6 +13574,17 @@ fails with the closest known ones.
 <sl:icon name="trash"/>
 <sl:icon name="settings"/>
 ```
+
+### When to use
+
+- An icon in a button, a menu item, a badge or an alert, which takes its colour.
+- An icon-only button, with an `aria-label` on the button.
+- Your own icons, such as a logo, from an `IconSource` bean.
+
+Use something else for:
+
+- A picture of a person: an [avatar](https://shadleaf.dev/1.2.0-SNAPSHOT/components/avatar.md).
+- Something that is loading: a [spinner](https://shadleaf.dev/1.2.0-SNAPSHOT/components/spinner.md).
 
 ### Size and stroke width
 
@@ -12969,9 +13644,11 @@ Every prop can also be set from an expression: `th:name="${...}"`. Any other att
 
 ## Kbd
 
-> A key on the keyboard, or a combination of keys.
+> A key on the keyboard, or a combination of keys; for the shortcuts in menus, tooltips and buttons, and in help text.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/kbd/
+
+A key, or a combination of keys, drawn the way it looks on a keyboard.
 
 **Example: Kbd.**
 
@@ -12980,6 +13657,15 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/kbd/
 <sl:kbd>Enter</sl:kbd>
 <sl:kbd>/</sl:kbd>
 ```
+
+### When to use
+
+- The shortcut of an action, in a tooltip, a menu or a button.
+- Instructions in text, such as "Press Ctrl K to search".
+
+Use something else for:
+
+- A status or a category: a [badge](https://shadleaf.dev/1.2.0-SNAPSHOT/components/badge.md).
 
 `<sl:kbd>` renders HTML's own `<kbd>` element, so it fits in running text.
 
@@ -13059,15 +13745,27 @@ Attributes of `<sl:kbd-group>`: A key combination: `sl:kbd` elements, with any t
 
 ## Separator
 
-> A thin line between content.
+> A thin line between content; for dividing the sections of a page, a card or a toolbar.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/separator/
+
+A thin horizontal or vertical line between pieces of content.
 
 **Example: Separator.**
 
 ```html
 <sl:separator/>
 ```
+
+### When to use
+
+- Between the sections of a page, a card or a panel.
+- Between groups of buttons or links in a toolbar or a header (vertical).
+
+Use something else for:
+
+- Between the items of a list: the [item separator](https://shadleaf.dev/1.2.0-SNAPSHOT/components/item.md#group).
+- Between the groups of a menu or a select: the separator part of that component.
 
 ### Vertical
 

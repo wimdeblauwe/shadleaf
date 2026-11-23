@@ -1,8 +1,11 @@
 # Skip Link
 
-> A link past the navigation to the page's content, for keyboard users.
+> A link past the navigation to the page's content, for keyboard users; first in the body of every layout.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/skip-link/
+
+A link that stays out of sight until a keyboard user tabs to it, and then jumps past the navigation to the page's
+content.
 
 **Example: Skip link.** Hidden until it has the focus: click into the frame and press Tab. It skips to the element with id="main" (here the paragraph below), which tabindex="-1" lets take the focus.
 
@@ -10,6 +13,10 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/skip-link/
 <sl:skip-link/>
 <p id="main" tabindex="-1">The page's content.</p>
 ```
+
+## When to use
+
+- First in the body of every layout with a sidebar or a header.
 
 ## Usage
 

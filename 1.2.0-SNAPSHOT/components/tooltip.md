@@ -1,8 +1,11 @@
 # Tooltip
 
-> A short text that shows while the pointer rests on an element or the keyboard focuses it.
+> A short text that shows while the pointer rests on an element or the keyboard focuses it; for the name of an icon button or a keyboard shortcut.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/tooltip/
+
+A short text that appears while the pointer rests on an element or the keyboard focuses it, and disappears when they
+leave. It explains the element; it holds no links or buttons, and nobody on a touch screen sees it.
 
 **Example: Tooltip.** Shows while the pointer rests on the button, and at once when the keyboard focuses it.
 
@@ -12,6 +15,17 @@ Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/tooltip/
   <sl:tooltip-content>Add to library</sl:tooltip-content>
 </sl:tooltip>
 ```
+
+## When to use
+
+- The name of an icon-only button in a toolbar, a table row or a collapsed sidebar.
+- The keyboard shortcut of an action, such as "Save (Ctrl S)".
+- A short explanation of a value or an abbreviation, when the page also makes it clear some other way.
+
+Use something else for:
+
+- Content with links, buttons or a form, or that must work on a touch screen: a [popover](https://shadleaf.dev/1.2.0-SNAPSHOT/components/popover.md).
+- Why a button is disabled, or an error: text next to it, which everyone sees.
 
 ## Usage
 

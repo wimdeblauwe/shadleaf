@@ -1,14 +1,28 @@
 # Badge
 
-> A small label for a status, a count or a category.
+> A small label for a status, a count or a category; for the state of an order, unread messages or a tag.
 
 Source: https://shadleaf.dev/1.2.0-SNAPSHOT/components/badge/
+
+A small, rounded label next to other content, in the same variants as the button.
 
 **Example: Badge.**
 
 ```html
 <sl:badge>New</sl:badge>
 ```
+
+## When to use
+
+- The state of something in a table row, such as Paid, Pending or Failed.
+- A count, such as unread messages.
+- A tag or a category on an item or a card.
+
+Use something else for:
+
+- A count next to a link in the sidebar: the sidebar's [menu badge](https://shadleaf.dev/1.2.0-SNAPSHOT/components/sidebar.md#badges).
+- A key on the keyboard: a [kbd](https://shadleaf.dev/1.2.0-SNAPSHOT/components/kbd.md).
+- A message the user should read: an [alert](https://shadleaf.dev/1.2.0-SNAPSHOT/components/alert.md).
 
 ## Variants
 
