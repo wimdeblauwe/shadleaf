@@ -15,7 +15,7 @@
               sizes=${ {'xs', 'sm', 'default', 'lg'} },
               iconSizes=${ {'icon-xs', 'icon-sm', 'icon', 'icon-lg'} }">
 
-  <p>The five rungs of the adjustability ladder, all on <code>&lt;sl:button&gt;</code>. Take the highest rung that
+  <p>The six rungs of the adjustability ladder, all on <code>&lt;sl:button&gt;</code>. Take the highest rung that
     solves the problem. View the page source to see what each one renders.</p>
 
   <section>
@@ -65,7 +65,7 @@
 
     <h3>As a link</h3>
     <div class="row">
-      <sl:button as="a" variant="link" href="#rung-5">Jump to rung 5</sl:button>
+      <sl:button as="a" variant="link" href="#rung-6">Jump to rung 6</sl:button>
       <sl:button as="a" variant="outline" th:href="@{/}">
         <sl:slot name="icon-start"><sl:icon name="house"/></sl:slot>
         Home
@@ -108,8 +108,19 @@
       tokens, different geometry, type size and focus ring.</p>
   </section>
 
-  <section id="rung-5">
-    <h2>5. Own the template</h2>
+  <section>
+    <h2>5. Your own CSS rules</h2>
+    <p>The same buttons inside <code>.hooks</code>, where the application's stylesheet (application.css) writes rules
+      against the button's styling hooks: its class and its <code>data-variant</code> attribute, which is absent for
+      the default variant. The docs list every component's hooks under its attributes.</p>
+    <div class="row hooks">
+      <sl:button th:each="variant : ${variants}" th:variant="${variant}"
+                 th:text="${#strings.capitalize(variant)}">Button</sl:button>
+    </div>
+  </section>
+
+  <section id="rung-6">
+    <h2>6. Own the template</h2>
     <p>Copy <code>templates/sl/components/button.html</code> from the Shadleaf jar into the application's own
       <code>src/main/resources/templates/sl/components/</code>. The application's copy comes first on the classpath,
       props included, so it wins with no configuration. It no longer receives the library's fixes.</p>

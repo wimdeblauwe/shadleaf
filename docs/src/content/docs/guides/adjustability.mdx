@@ -1,6 +1,6 @@
 ---
 title: The adjustability ladder
-description: Five ways to make the components your own, from a prop to owning the template.
+description: Six ways to make the components your own, from a prop to owning the template.
 sidebar:
   order: 1
 ---
@@ -46,8 +46,17 @@ to rebrand every component at once:
 
 The library's tokens sit in a cascade layer, so your values win whether or not you put them in a layer yourself.
 
+That has one consequence for dark mode. A rule outside a layer beats every rule inside one, whatever their
+specificity, so your `:root` values also beat the library's `.dark` values: a token you set on `:root` and not in a
+`.dark` block of your own keeps its light value in dark mode. Give every token you change a dark value too, in a
+`.dark` block after the `:root` one. The two selectors have the same specificity, so the later one wins while the
+`dark` class is on `<html>`.
+
 The variables have shadcn/ui's names, so a theme from a shadcn theme builder, such as
 [tweakcn](https://tweakcn.com) or [shadcn's own](https://ui.shadcn.com/themes), can be pasted in unchanged.
+The colours, `--radius` and the fonts (`--font-sans`, `--font-mono`) apply. The shadows do not: each skin has its own,
+so a builder's `--shadow-*` variables change nothing. Leave them out, or write [your own rules](#5-your-own-css-rules)
+for the shadows you want.
 
 ## 4. Skin
 
@@ -77,7 +86,41 @@ come from the tokens: a theme applies, and the pencil is `--foreground`.
 
 Token overrides keep working under every skin. Use the skin switch on any preview in these docs to compare.
 
-## 5. Own the template
+## 5. Your own CSS rules
+
+When tokens and a skin are not enough (a gradient, a border on every button, a hard shadow), write CSS against the
+components' styling hooks: the class named after each component and its parts, and the `data-*` and `aria-*`
+attributes the library styles them by.
+
+```css
+.button[data-variant='outline'] {
+  border-width: 2px;
+  box-shadow: 2px 2px 0 var(--foreground);
+}
+
+.sidebar-menu-button[aria-current='page'] {
+  font-weight: 700;
+}
+```
+
+Every component's page lists its hooks in a Styling hooks section, after its attributes, in three groups:
+
+- **Parts**: the class of the component's own element and of each element inside it, such as `.button` and
+  `.button-spinner`.
+- **Props**: the attributes that reflect a prop, such as `data-variant` for `variant`. Such an attribute is absent
+  while the prop has its default value, so select the default with `:not([data-variant])`.
+- **States**: the attributes the component, or its script, sets for a state, such as `aria-current="page"` on the link
+  of the current page or `aria-expanded="true"` on a trigger whose menu is open.
+
+Point at a group to copy it as an empty stylesheet, one rule per selector, to fill in.
+
+The hooks are an API, as the props are: a minor version does not rename or remove one.
+
+As with tokens, the library's rules sit in a cascade layer (`components`), so a rule of yours outside a layer wins over
+the skin's whatever its specificity. A rule inside a layer of your own only wins if that layer comes later in the
+layer order than `components`.
+
+## 6. Own the template
 
 Copy a component's template from the jar, for example `templates/sl/components/button.html`, into your application's
 `src/main/resources/templates/sl/components/`. Your copy wins, props included, with no configuration.
