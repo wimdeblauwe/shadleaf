@@ -5,6 +5,7 @@ description: What a list, a table, a search or a page shows when there is nothin
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A centred block with an icon, a title, a description and what to do next, in the place where content would be.
 
@@ -93,3 +94,32 @@ An [`<sl:spinner>`](../spinner/) takes the icon's place in the media while somet
 ### sl:empty-content
 
 <ComponentAttributes component="empty-content" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:empty
+
+<StylingHooks component="empty" />
+
+### sl:empty-header
+
+<StylingHooks component="empty-header" />
+
+### sl:empty-media
+
+<StylingHooks component="empty-media" />
+
+### sl:empty-title
+
+<StylingHooks component="empty-title" />
+
+### sl:empty-description
+
+<StylingHooks component="empty-description" />
+
+### sl:empty-content
+
+<StylingHooks component="empty-content" />

@@ -4,6 +4,7 @@
 //   <starter>/target/generated-docs/components.json      -> src/generated/components.json
 //   <starter>/target/generated-docs/theme-script.json    -> src/generated/theme-script.json
 //   <starter>/target/generated-docs/messages.json        -> src/generated/messages.json
+//   <starter>/target/generated-docs/styling-hooks.json   -> src/generated/styling-hooks.json
 //   <starter>/target/generated-docs/shadleaf/            -> public/shadleaf/  (CSS per skin, JS per Alpine variant)
 //   <starter>/target/generated-docs/web-types.json       -> public/shadleaf.web-types.json  (for download)
 //
@@ -24,6 +25,7 @@ const placeholders = {
   'components.json': {version: '', components: []},
   'theme-script.json': {cspHash: '', script: ''},
   'messages.json': {languages: [], messages: []},
+  'styling-hooks.json': {components: []},
 };
 
 mkdirSync(generatedDir, {recursive: true});

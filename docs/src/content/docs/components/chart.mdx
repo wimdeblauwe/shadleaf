@@ -5,6 +5,7 @@ description: Bar, line and area charts drawn by Recharts from rows the controlle
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A bar, line or area chart, drawn in the browser by Recharts in the skin's look, from rows the controller puts in the
 model.
@@ -220,6 +221,47 @@ else, `sl-chart` is a custom element: an application can write its own.
 ### sl:chart-area
 
 <ComponentAttributes component="chart-area" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:chart
+
+<StylingHooks component="chart" />
+
+### sl:chart-grid
+
+<StylingHooks component="chart-grid" />
+
+### sl:chart-x-axis
+
+<StylingHooks component="chart-x-axis" />
+
+### sl:chart-y-axis
+
+<StylingHooks component="chart-y-axis" />
+
+### sl:chart-tooltip
+
+<StylingHooks component="chart-tooltip" />
+
+### sl:chart-legend
+
+<StylingHooks component="chart-legend" />
+
+### sl:chart-bar
+
+<StylingHooks component="chart-bar" />
+
+### sl:chart-line
+
+<StylingHooks component="chart-line" />
+
+### sl:chart-area
+
+<StylingHooks component="chart-area" />
 
 ## JavaScript
 

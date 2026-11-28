@@ -5,6 +5,7 @@ description: A dialog that slides in from an edge of the screen; for filters, se
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 import {Steps} from '@astrojs/starlight/components';
 
 A dialog that slides in from an edge of the screen, for content that complements the page.
@@ -272,6 +273,35 @@ If you compile Tailwind yourself (the `embedded` bundle), a utility class does t
 ### sl:sheet-footer
 
 <ComponentAttributes component="sheet-footer" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:sheet
+
+<StylingHooks component="sheet" />
+
+### sl:sheet-header
+
+<StylingHooks component="sheet-header" />
+
+### sl:sheet-title
+
+<StylingHooks component="sheet-title" />
+
+### sl:sheet-description
+
+<StylingHooks component="sheet-description" />
+
+### sl:sheet-body
+
+<StylingHooks component="sheet-body" />
+
+### sl:sheet-footer
+
+<StylingHooks component="sheet-footer" />
 
 ## JavaScript
 

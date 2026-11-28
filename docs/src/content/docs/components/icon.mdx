@@ -5,6 +5,7 @@ description: Inline SVG icons from lucide, or your own; for buttons, menu items,
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 `<sl:icon>` inlines the SVG of a [lucide](https://lucide.dev) icon into the page: no sprite, no extra request, and it
 works inside htmx swaps. It draws in `currentColor`, so it takes the colour of the text around it. An unknown name
@@ -51,3 +52,10 @@ IconSource applicationIcons() {
 ## Attributes
 
 <ComponentAttributes component="icon" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="icon" />

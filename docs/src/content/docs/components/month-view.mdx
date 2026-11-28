@@ -5,6 +5,7 @@ description: A month rendered on the server, with content of your own per day an
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A month rendered on the server, with your own content in every day and a link to each day. It shows data; it picks no
 dates.
@@ -138,3 +139,10 @@ view needs JavaScript.
 ## Attributes
 
 <ComponentAttributes component="month-view" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="month-view" />

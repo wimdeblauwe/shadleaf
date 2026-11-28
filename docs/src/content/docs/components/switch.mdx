@@ -5,6 +5,7 @@ description: An on/off control, bound to a boolean form field with th:field; for
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A control that slides between on and off, bound to a boolean form field.
 
@@ -45,3 +46,10 @@ hidden marker input it adds for a `th:field` checkbox: the bound value stays as 
 ## Attributes
 
 <ComponentAttributes component="switch" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="switch" />

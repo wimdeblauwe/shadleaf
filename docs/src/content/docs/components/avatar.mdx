@@ -5,6 +5,7 @@ description: A picture of a person, with initials when there is no picture; for 
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A round picture of a person, or their initials when there is no picture or it fails to load.
 
@@ -102,3 +103,20 @@ shows. `aria-labelledby`, pointing at a name elsewhere on the page, works too.
 ### sl:avatar-fallback
 
 <ComponentAttributes component="avatar-fallback" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:avatar
+
+<StylingHooks component="avatar" />
+
+### sl:avatar-image
+
+<StylingHooks component="avatar-image" />
+
+### sl:avatar-fallback
+
+<StylingHooks component="avatar-fallback" />

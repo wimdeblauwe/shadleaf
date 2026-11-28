@@ -5,6 +5,7 @@ description: The browser's own select, styled, bound to a form field with th:fie
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 The browser's `<select>`, with the closed control in the skin's look and the list left to the operating system, which on
 a phone is its own picker.
@@ -66,3 +67,10 @@ HTML has no read-only select: `readonly` does nothing on one. To show a choice t
 ## Attributes
 
 <ComponentAttributes component="native-select" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="native-select" />

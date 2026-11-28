@@ -5,6 +5,7 @@ description: A button that submits a form, opens a dialog or runs an action, or 
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A button the user presses to do something: submit a form, open a dialog, delete a row, start an htmx request.
 With `as="a"` it is a link that looks like a button, for navigation that should stand out.
@@ -122,3 +123,10 @@ so the button works with htmx and Alpine. `class` is appended to the component's
 ## Attributes
 
 <ComponentAttributes component="button" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="button" />

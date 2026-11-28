@@ -115,7 +115,8 @@ so they swap on a right-to-left page.
 
 The rendered markup uses class names (`class="card-header"`) where shadcn uses `data-slot="card-header"`, and a
 `data-variant` or `data-size` attribute only when the value is not the default. It matters only if you port CSS written
-against shadcn's markup.
+against shadcn's markup: select `.card-header` where it selects `[data-slot=card-header]`. Every component's page
+lists the classes and attributes your CSS can rely on under its attribute table.
 
 ## Overlays
 

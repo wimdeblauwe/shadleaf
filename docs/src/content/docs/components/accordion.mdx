@@ -5,6 +5,7 @@ description: A stack of sections, each with a heading that shows or hides its co
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A list of headings that each open a section of content below them, one at a time or several at once. The content is in
 the page from the start, so find in page and links still reach it.
@@ -147,3 +148,24 @@ the old one.
 ### sl:accordion-content
 
 <ComponentAttributes component="accordion-content" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:accordion
+
+<StylingHooks component="accordion" />
+
+### sl:accordion-item
+
+<StylingHooks component="accordion-item" />
+
+### sl:accordion-trigger
+
+<StylingHooks component="accordion-trigger" />
+
+### sl:accordion-content
+
+<StylingHooks component="accordion-content" />

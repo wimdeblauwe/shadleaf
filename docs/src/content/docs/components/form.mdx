@@ -5,6 +5,7 @@ description: A form element that passes every attribute on, and validates its fi
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A `<form>` that validates its fields on the server while the user types, with htmx 4. Without `validate` it is a plain
 form.
@@ -192,3 +193,10 @@ A plain element (`<input sl:validate="@{/search/validate}">`), or a control outs
 | Attribute     | Value                                                                                                                                                                       |
 |---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `sl:validate` | The URL of the validation endpoint: an expression (`@{/signup/validate}`, `${url}`) or a literal (`/signup/validate`). `false` leaves the control out of a validating form. |
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="form" />

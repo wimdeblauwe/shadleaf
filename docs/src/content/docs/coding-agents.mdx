@@ -27,6 +27,8 @@ your `pom.xml`, so the agent reads the docs of the version you use.
   Use only the props in the attribute table; `th:<prop>="${...}"` sets one from an expression.
 - Change a component's look with its props (`variant`, `size`, `border`, ...), not with utility classes:
   the library's stylesheet defines none. `class` is appended to the component's own class.
+- For a look no prop gives, redefine the tokens (`--primary`, `--radius`, ...) on `:root` and `.dark`, or write CSS
+  against the styling hooks listed under the component's attribute table (`.button[data-variant='outline']`).
 - A link that looks like a button is `<sl:button as="a" th:href="@{/x}">`. `<sl:button>` renders
   `type="button"`: write `type="submit"` on the one that submits a form.
 - Forms: `th:object` on the `<form>`, `th:field` on `<sl:field>` (its label, control and errors share it),
@@ -90,4 +92,3 @@ The site's root also has the files of the [llms.txt](https://llmstxt.org) conven
 Every version of the docs has its own set, under `/<version>/`; `/current/` is the latest release.
 In a session without the rules above, a prompt such as "read https://shadleaf.dev/current/llms.txt,
 then add a delete confirmation to the members table" is enough to get started.
-

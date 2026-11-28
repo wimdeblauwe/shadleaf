@@ -5,6 +5,7 @@ description: The trail of pages above the one shown now, with a menu for the lev
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A row of links from the top of the application down to the current page, so the user sees where they are and can go up a
 level.
@@ -156,6 +157,39 @@ search engines.
 ### sl:breadcrumb-ellipsis
 
 <ComponentAttributes component="breadcrumb-ellipsis" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:breadcrumb
+
+<StylingHooks component="breadcrumb" />
+
+### sl:breadcrumb-list
+
+<StylingHooks component="breadcrumb-list" />
+
+### sl:breadcrumb-item
+
+<StylingHooks component="breadcrumb-item" />
+
+### sl:breadcrumb-link
+
+<StylingHooks component="breadcrumb-link" />
+
+### sl:breadcrumb-page
+
+<StylingHooks component="breadcrumb-page" />
+
+### sl:breadcrumb-separator
+
+<StylingHooks component="breadcrumb-separator" />
+
+### sl:breadcrumb-ellipsis
+
+<StylingHooks component="breadcrumb-ellipsis" />
 
 ## JavaScript
 

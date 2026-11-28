@@ -3,7 +3,8 @@
 // generated parts of a page become Markdown of their own here. A preview becomes its Thymeleaf source, an attribute
 // table a Markdown table from the same registry export, so an agent gets exactly what a reader sees.
 import {getCollection, type CollectionEntry} from 'astro:content';
-import {components, previews, themeScript} from './generated';
+import {components, previews, stylingHooks, themeScript} from './generated';
+import {stylingHooksGroups} from './styling-hooks';
 import {messageGroups, supportedLanguages} from './messages';
 import {componentOverview, layoutOverview} from './component-overview';
 
@@ -102,7 +103,7 @@ function demoteHeadings(markdown: string): string {
 
 /**
  * The MDX body with everything that is not Markdown replaced: imports dropped, ComponentPreview, LayoutCode,
- * ComponentAttributes, CspHash, SupportedLanguages, MessageKeys and DependencySnippet written out, Starlight's asides as block quotes, and links to other pages pointed at
+ * ComponentAttributes, StylingHooks, CspHash, SupportedLanguages, MessageKeys and DependencySnippet written out, Starlight's asides as block quotes, and links to other pages pointed at
  * their Markdown copies. Code blocks are left alone (they hold JSX and imports as examples).
  */
 export function bodyMarkdown(entry: DocsEntry): string {
@@ -168,6 +169,10 @@ function convertLine(line: string, entry: DocsEntry): string {
   const attributes = line.match(/^\s*<ComponentAttributes\s+component="([^"]+)"\s*\/>\s*$/);
   if (attributes) {
     return attributesMarkdown(attributes[1]);
+  }
+  const hooks = line.match(/^\s*<StylingHooks\s+component="([^"]+)"\s*\/>\s*$/);
+  if (hooks) {
+    return stylingHooksMarkdown(hooks[1]);
   }
   if (/^\s*<SupportedLanguages\s*\/>\s*$/.test(line)) {
     const languages = supportedLanguages();
@@ -252,6 +257,34 @@ export function attributesMarkdown(name: string): string {
   }
   return [heading, '', '| Attribute | Values | Default | Description |', '| --- | --- | --- | --- |', ...rows, '', note]
       .join('\n');
+}
+
+/** The styling hooks of a component, as StylingHooks.astro shows them: parts, props and states. */
+export function stylingHooksMarkdown(name: string): string {
+  const hooks = stylingHooks.find(c => c.name === name.replace(/^sl:/, ''));
+  const component = components.find(c => c.name === name.replace(/^sl:/, ''));
+  if (!hooks || !component) {
+    return `(The styling hooks of sl:${name} are missing from this build.)`;
+  }
+  const groups = stylingHooksGroups(hooks, component);
+  if (groups.parts.length === 0) {
+    return `\`${component.tag}\` has no styling hooks of its own: style the components it renders or holds.`;
+  }
+  const code = (values: string[]) => values.map(value => `\`${value}\``).join(', ');
+  const sections = [[`Styling hooks of \`<${component.tag}>\`.`, '', '**Parts**', '', '| Class | Element |',
+    '| --- | --- |', ...groups.parts.map(part => `| \`.${part.name}\` | ${code(part.elements.map(e => `<${e}>`))} |`)]
+      .join('\n')];
+  if (groups.props.length > 0) {
+    sections.push(['**Props**', '', '| Prop | Selector | Values |', '| --- | --- | --- |',
+      ...groups.props.map(prop => `| \`${prop.prop}\` | \`${prop.selector}\`, \`${prop.defaultSelector}\` | `
+          + `${code(prop.values)}; \`${prop.defaultValue}\` (default) |`)].join('\n'));
+  }
+  if (groups.states.length > 0) {
+    sections.push(['**States**', '', '| Selector | Values |', '| --- | --- |',
+      ...groups.states.map(state => `| \`${state.selector}\` | ${state.values.length === 0 ? '*present or absent*'
+          : code(state.values)} |`)].join('\n'));
+  }
+  return sections.join('\n\n');
 }
 
 /** The message keys, as MessageKeys.astro shows them: a table per component. */

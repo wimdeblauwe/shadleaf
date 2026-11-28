@@ -5,6 +5,7 @@ description: A styled table, whose column headers sort it on the server; for lis
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A table in the skin's look, for rows of records with columns. Its column headers sort it on the server, and rows can
 have actions and checkboxes.
@@ -467,3 +468,28 @@ across pages (see above).
 ### sl:table-selection-count
 
 <ComponentAttributes component="table-selection-count" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:table
+
+<StylingHooks component="table" />
+
+### sl:table-head
+
+<StylingHooks component="table-head" />
+
+### sl:table-empty
+
+<StylingHooks component="table-empty" />
+
+### sl:table-select-all
+
+<StylingHooks component="table-select-all" />
+
+### sl:table-selection-count
+
+<StylingHooks component="table-selection-count" />

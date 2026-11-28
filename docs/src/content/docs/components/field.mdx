@@ -5,6 +5,7 @@ description: A label, a control, a description and the binding's error messages,
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 The frame around one form control: its label, an optional description and the field's error messages, all bound from one
 `th:field` and wired to the control for screen readers.
@@ -218,3 +219,40 @@ not there.
 ### sl:field-group
 
 <ComponentAttributes component="field-group" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:field
+
+<StylingHooks component="field" />
+
+### sl:field-label
+
+<StylingHooks component="field-label" />
+
+### sl:field-description
+
+<StylingHooks component="field-description" />
+
+### sl:field-error
+
+<StylingHooks component="field-error" />
+
+### sl:field-content
+
+<StylingHooks component="field-content" />
+
+### sl:field-set
+
+<StylingHooks component="field-set" />
+
+### sl:field-legend
+
+<StylingHooks component="field-legend" />
+
+### sl:field-group
+
+<StylingHooks component="field-group" />
