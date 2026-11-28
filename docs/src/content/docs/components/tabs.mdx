@@ -5,6 +5,7 @@ description: Panels of content shown one at a time, chosen from a row of tabs; f
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A row of tabs over panels of content, of which one shows at a time. A tab can be a link, so the address opens it.
 
@@ -173,6 +174,27 @@ back restores exactly that.
 ### sl:tabs-content
 
 <ComponentAttributes component="tabs-content" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:tabs
+
+<StylingHooks component="tabs" />
+
+### sl:tabs-list
+
+<StylingHooks component="tabs-list" />
+
+### sl:tabs-trigger
+
+<StylingHooks component="tabs-trigger" />
+
+### sl:tabs-content
+
+<StylingHooks component="tabs-content" />
 
 ## JavaScript
 

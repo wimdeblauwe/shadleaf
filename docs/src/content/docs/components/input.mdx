@@ -5,6 +5,7 @@ description: A text input, bound to a form field with th:field; for names, email
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A one-line text input in the skin's look, bound to a form field. Every HTML type works: text, email, number, password,
 search, date.
@@ -83,3 +84,10 @@ Every attribute that is not a prop lands on the `<input>`:
 ## Attributes
 
 <ComponentAttributes component="input" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="input" />

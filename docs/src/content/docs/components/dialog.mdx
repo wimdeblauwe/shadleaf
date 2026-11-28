@@ -5,6 +5,7 @@ description: A modal window over the page, on the native dialog element; for a s
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A window over the page that the user deals with before going back to it; the page behind it is inert. It can hold a form
 that the server renders and htmx swaps in.
@@ -259,6 +260,35 @@ If you compile Tailwind yourself (the `embedded` bundle), a utility class does t
 ### sl:dialog-footer
 
 <ComponentAttributes component="dialog-footer" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:dialog
+
+<StylingHooks component="dialog" />
+
+### sl:dialog-header
+
+<StylingHooks component="dialog-header" />
+
+### sl:dialog-title
+
+<StylingHooks component="dialog-title" />
+
+### sl:dialog-description
+
+<StylingHooks component="dialog-description" />
+
+### sl:dialog-body
+
+<StylingHooks component="dialog-body" />
+
+### sl:dialog-footer
+
+<StylingHooks component="dialog-footer" />
 
 ## JavaScript
 

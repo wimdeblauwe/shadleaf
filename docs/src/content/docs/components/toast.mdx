@@ -5,6 +5,7 @@ description: A short message in a corner of the page that closes itself, sent by
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A short message that appears in a corner of the page and closes by itself. The server sends it, in an htmx response or
 after a redirect.
@@ -249,6 +250,19 @@ away; events and out-of-band toasts need htmx or a script anyway.
 ### sl:toast
 
 <ComponentAttributes component="toast" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:toaster
+
+<StylingHooks component="toaster" />
+
+### sl:toast
+
+<StylingHooks component="toast" />
 
 ## JavaScript
 

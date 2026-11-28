@@ -5,6 +5,7 @@ description: The browser's own checkbox, styled, bound to a form field with th:f
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A box the user ticks for yes or leaves empty for no, bound to a form field. Several bound to one collection field let
 the user pick several values.
@@ -85,3 +86,10 @@ high-contrast mode the browser draws its own checkbox, with its own dash when it
 ## Attributes
 
 <ComponentAttributes component="checkbox" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="checkbox" />

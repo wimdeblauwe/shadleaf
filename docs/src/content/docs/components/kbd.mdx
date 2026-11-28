@@ -5,6 +5,7 @@ description: A key on the keyboard, or a combination of keys; for the shortcuts 
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A key, or a combination of keys, drawn the way it looks on a keyboard.
 
@@ -59,3 +60,16 @@ announces the shortcut: listening for the key is up to your own script.
 ### sl:kbd-group
 
 <ComponentAttributes component="kbd-group" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:kbd
+
+<StylingHooks component="kbd" />
+
+### sl:kbd-group
+
+<StylingHooks component="kbd-group" />

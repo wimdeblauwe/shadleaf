@@ -5,6 +5,7 @@ description: A callout for a message the user should notice; for an error on the
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A box with an icon, a title and a description that draws attention to a message in the page. It stays where it is until
 the page changes.
@@ -61,3 +62,20 @@ For a message that is not urgent, `role="status"` is announced when the user is 
 ### sl:alert-description
 
 <ComponentAttributes component="alert-description" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:alert
+
+<StylingHooks component="alert" />
+
+### sl:alert-title
+
+<StylingHooks component="alert-title" />
+
+### sl:alert-description
+
+<StylingHooks component="alert-description" />

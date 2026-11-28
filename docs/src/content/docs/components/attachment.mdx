@@ -5,6 +5,7 @@ description: A file or an image attached to a message, a form or a record, with 
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A small card for one file: an icon or a thumbnail, its name, its size or upload state, and actions such as download or
 remove. It shows a file; it uploads nothing.
@@ -166,3 +167,44 @@ An attachment can be only its media, as an image in a chat message. Then the ima
 ### sl:attachment-group
 
 <ComponentAttributes component="attachment-group" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:attachment
+
+<StylingHooks component="attachment" />
+
+### sl:attachment-media
+
+<StylingHooks component="attachment-media" />
+
+### sl:attachment-content
+
+<StylingHooks component="attachment-content" />
+
+### sl:attachment-title
+
+<StylingHooks component="attachment-title" />
+
+### sl:attachment-description
+
+<StylingHooks component="attachment-description" />
+
+### sl:attachment-actions
+
+<StylingHooks component="attachment-actions" />
+
+### sl:attachment-action
+
+<StylingHooks component="attachment-action" />
+
+### sl:attachment-trigger
+
+<StylingHooks component="attachment-trigger" />
+
+### sl:attachment-group
+
+<StylingHooks component="attachment-group" />

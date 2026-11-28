@@ -5,6 +5,7 @@ description: A month to pick from, drawn over native date inputs, bound with th:
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A month the user picks a date, or a range of dates, from. It stays open in the page, and binds to a form field as a date
 input does.
@@ -155,6 +156,13 @@ For a button that opens the calendar in a popover, see the [date picker](../date
 ## Attributes
 
 <ComponentAttributes component="calendar" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="calendar" />
 
 ## JavaScript
 

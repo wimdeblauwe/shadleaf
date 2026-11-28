@@ -5,6 +5,7 @@ description: A select the user types into to filter, bound with th:field; one va
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A select with a text input: the user types to filter the list, and picks one value, or several shown as chips. The
 options can come from the server as the user types.
@@ -246,6 +247,27 @@ select. With Alpine, `slCombobox` puts its input and list in the select's place.
 ### sl:combobox-separator
 
 <ComponentAttributes component="combobox-separator" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:combobox
+
+<StylingHooks component="combobox" />
+
+### sl:combobox-item
+
+<StylingHooks component="combobox-item" />
+
+### sl:combobox-group
+
+<StylingHooks component="combobox-group" />
+
+### sl:combobox-separator
+
+<StylingHooks component="combobox-separator" />
 
 ## JavaScript
 

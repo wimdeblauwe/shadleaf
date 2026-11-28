@@ -5,6 +5,7 @@ description: A bordered box for related content and actions, built from its part
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A bordered box that groups content about one thing, with an optional header (title, description, an action) and
 footer. It holds anything: text, a form, a table, a chart.
@@ -83,3 +84,36 @@ utility classes, so also with the standalone stylesheet.
 ### sl:card-footer
 
 <ComponentAttributes component="card-footer" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:card
+
+<StylingHooks component="card" />
+
+### sl:card-header
+
+<StylingHooks component="card-header" />
+
+### sl:card-title
+
+<StylingHooks component="card-title" />
+
+### sl:card-description
+
+<StylingHooks component="card-description" />
+
+### sl:card-action
+
+<StylingHooks component="card-action" />
+
+### sl:card-content
+
+<StylingHooks component="card-content" />
+
+### sl:card-footer
+
+<StylingHooks component="card-footer" />

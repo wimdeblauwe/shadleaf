@@ -15,6 +15,7 @@ import io.github.wimdeblauwe.shadleaf.security.ShadleafUser;
 import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
 import io.github.wimdeblauwe.shadleaf.test.FixedUserSource;
 import io.github.wimdeblauwe.shadleaf.test.FormModel;
+import io.github.wimdeblauwe.shadleaf.test.HtmlApproval;
 import io.github.wimdeblauwe.shadleaf.test.LibraryComponents;
 import io.github.wimdeblauwe.shadleaf.test.Rendered;
 import io.github.wimdeblauwe.shadleaf.theme.ShadleafThemeScript;
@@ -44,6 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
+import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.PageImpl;
@@ -67,7 +69,11 @@ import tools.jackson.databind.json.JsonMapper;
  *   IDE metadata offered for download;</li>
  *   <li>{@code theme-script.json}: the theme script and its CSP hash, for the CSP page;</li>
  *   <li>{@code messages.json}: the languages the library ships messages in, and every built-in message key with its
- *   comment and its English text, for the Translating guide.</li>
+ *   comment and its English text, for the Translating guide;</li>
+ *   <li>{@code styling-hooks.json}: the classes and attributes an application's CSS can select, per component
+ *   ({@link StylingHooks}), for the tables under each component's attributes. They are a public API, so the file is
+ *   approved too ({@code approved/styling-hooks.approved.json}): a rename or a removal fails this test until it is
+ *   accepted with {@code -Dshadleaf.approve}.</li>
  * </ul>
  * A scenario's {@code renderSource} can show a photo from {@code previews/photos/} as {@code ${photos.<name>}}, a data:
  * URI, so the previews and the showcase checks never fetch an image. A scenario's {@code pages} are Spring Data
@@ -105,6 +111,7 @@ class PreviewGeneratorTest {
   private static final Map<String, String> PHOTO_TYPES = Map.of("jpg", "image/jpeg", "png", "image/png",
       "svg", "image/svg+xml");
   private static final Path BUILT_ASSETS = Path.of("target", "classes", "META-INF", "resources", "shadleaf");
+  private static final Path BUILT_TEMPLATES = Path.of("target", "classes", "templates", "sl", "components");
   private static final Path MANIFEST = Path.of("target", "classes").resolve(ShadleafAssets.MANIFEST_LOCATION);
   private static final Pattern STANDALONE_ENTRY = Pattern.compile("css/entries/shadleaf-([^.]+)\\.css");
   private static final String DEFAULT_SKIN = "vega";
@@ -113,6 +120,7 @@ class PreviewGeneratorTest {
   private final ComponentRenderTester tester = ComponentRenderTester.create();
   private final Map<String, ComponentRenderTester> testersByRequest = new HashMap<>();
   private final Map<String, String> photos = loadPhotos();
+  private final List<Document> renderedPreviews = new ArrayList<>();
 
   @Test
   void generatesDocsArtifacts() throws IOException {
@@ -136,12 +144,27 @@ class PreviewGeneratorTest {
     ShadleafThemeScript themeScript = new ShadleafThemeScript("cspNonce");
     write("theme-script.json", new ThemeScript(themeScript.getCspHash(), themeScript.getContent()));
     write("messages.json", new Messages(List.copyOf(MessageBundles.all().keySet()), messages()));
+    String stylingHooks = jsonMapper.writerWithDefaultPrettyPrinter().writeValueAsString(new StylingHooksFile(
+        StylingHooks.collect(registry, BUILT_TEMPLATES, stylesheets(manifest), renderedPreviews)));
+    Files.writeString(OUTPUT_DIRECTORY.resolve("styling-hooks.json"), stylingHooks + "\n", StandardCharsets.UTF_8);
 
     assertThat(skins).extracting(Skin::name).startsWith(DEFAULT_SKIN).contains("lyra");
     for (Skin skin : skins) {
       assertThat(OUTPUT_DIRECTORY.resolve(skin.css())).exists();
     }
     assertThat(scripts).containsOnlyKeys("bundled", "csp", "external");
+    HtmlApproval.verify("styling-hooks", "json", stylingHooks);
+  }
+
+  /** The compiled CSS of every bundle, standalone and embedded, through the Vite manifest. */
+  private static List<String> stylesheets(ViteManifest manifest) throws IOException {
+    List<String> stylesheets = new ArrayList<>();
+    for (String key : new TreeSet<>(manifest.entries().keySet())) {
+      if (key.startsWith("css/entries/")) {
+        stylesheets.add(Files.readString(BUILT_ASSETS.resolve(manifest.getEntry(key).file())));
+      }
+    }
+    return stylesheets;
   }
 
   private Preview render(Scenario scenario) {
@@ -175,6 +198,7 @@ class PreviewGeneratorTest {
       throw new AssertionError("Preview " + scenario.id() + " does not render: " + e.getMessage(), e);
     }
     assertThat(rendered.html()).as("preview %s", scenario.id()).isNotBlank();
+    renderedPreviews.add(rendered.document());
     Layout layout = scenario.layout();
     return new Preview(scenario.id(), scenario.component(), scenario.title(), scenario.description(),
         scenario.source(), rendered.html().strip(), rendered.normalizedHtml(), scenario.showcase(), scenario.width(),
@@ -552,6 +576,10 @@ class PreviewGeneratorTest {
   }
 
   private record ThemeScript(String cspHash, String script) {
+
+  }
+
+  private record StylingHooksFile(List<StylingHooks.ComponentHooks> components) {
 
   }
 

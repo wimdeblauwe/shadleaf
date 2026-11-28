@@ -5,6 +5,7 @@ description: Content that a button shows and hides, on the browser's details ele
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A trigger and a piece of content that the trigger shows and hides: one section, without an accordion's styling.
 
@@ -79,3 +80,20 @@ a closed disabled collapsible renders no content, so find-in-page cannot open it
 ### sl:collapsible-content
 
 <ComponentAttributes component="collapsible-content" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:collapsible
+
+<StylingHooks component="collapsible" />
+
+### sl:collapsible-trigger
+
+<StylingHooks component="collapsible-trigger" />
+
+### sl:collapsible-content
+
+<StylingHooks component="collapsible-content" />

@@ -5,6 +5,7 @@ description: A link past the navigation to the page's content, for keyboard user
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A link that stays out of sight until a keyboard user tabs to it, and then jumps past the navigation to the page's
 content.
@@ -72,3 +73,10 @@ following it makes no request.
 ## Attributes
 
 <ComponentAttributes component="skip-link" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="skip-link" />

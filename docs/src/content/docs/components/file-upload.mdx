@@ -5,6 +5,7 @@ description: A drop zone with a Browse button and the list of the files picked, 
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A drop zone around a file input: the user drops files on it or browses for them, and sees the files picked, with
 previews of images. It submits with the form, or uploads with htmx and shows the progress.
@@ -224,3 +225,10 @@ failed upload: set the limits to what the form may send.
 ## Attributes
 
 <ComponentAttributes component="file-upload" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="file-upload" />

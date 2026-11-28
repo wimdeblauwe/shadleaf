@@ -10,6 +10,7 @@
     "The complete examples and attribute tables are in the docs as Markdown: https://shadleaf.dev/current/llms.txt (each page also at <page>.md).",
     "An attribute that is not a declared prop passes through to the HTML silently; use only the props in a component's attribute table, and th:<prop> for expressions.",
     "Do not put Tailwind utility classes on components to change them; the library's stylesheet has none. Use props such as variant, size and border.",
+    "For a look no prop gives, redefine the tokens (--primary, --radius, ...) on :root and .dark, or write CSS against the styling hooks listed under a component's attribute table, such as .button[data-variant='outline'].",
     "A link styled as a button is <sl:button as=\"a\" th:href=\"@{/x}\">; sl:button renders type=\"button\", so the submit button needs type=\"submit\".",
     "In a form with th:object, put th:field on sl:field: its label, control and errors share it. Place sl:form-errors before the fields. To validate as the user types (htmx 4 only), use <sl:form th:validate=\"@{/x/validate}\"> and an endpoint that renders the same form.",
     "Dialogs and sheets need an id and open from any button with commandfor=\"<id>\" command=\"show-modal\"; there are no trigger or close parts.",

@@ -5,6 +5,7 @@ description: Hidden inputs that keep a table's order, page size and filters when
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 Hidden inputs that copy the current request's other parameters into a `GET` form, so sending it keeps the page's order,
 page size and filters.
@@ -89,3 +90,10 @@ and follow the order of the table they came with:
 ## Attributes
 
 <ComponentAttributes component="query-params" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="query-params" />

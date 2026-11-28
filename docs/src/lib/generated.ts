@@ -4,6 +4,7 @@ import previewsJson from '../generated/previews.json';
 import componentsJson from '../generated/components.json';
 import themeScriptJson from '../generated/theme-script.json';
 import messagesJson from '../generated/messages.json';
+import stylingHooksJson from '../generated/styling-hooks.json';
 
 export type Skin = { name: string; css: string };
 
@@ -45,6 +46,20 @@ export type Component = {
   accessibleName?: { prop?: string; values: string[] };
 };
 
+/**
+ * The classes and attributes an application's CSS can select on a component (StylingHooks in the starter's tests):
+ * what the library renders and its own CSS selects. A data-* attribute named after a prop names it; one without
+ * values only matters by being there.
+ */
+export type StylingHooks = {
+  name: string;
+  classes: {
+    name: string;
+    elements: string[];
+    attributes: { name: string; prop?: string | null; values: string[] }[];
+  }[];
+};
+
 /** A built-in message key: the comment above it in messages.properties, and its English text. */
 export type Message = { key: string; comment?: string | null; text: string };
 
@@ -55,6 +70,7 @@ export const previews = previewsJson as { version: string; skins: Skin[]; script
 export const components = (componentsJson as { version: string; components: Component[] }).components;
 export const themeScript = themeScriptJson as { cspHash: string; script: string };
 export const messages = messagesJson as { languages: string[]; messages: Message[] };
+export const stylingHooks = (stylingHooksJson as { components: StylingHooks[] }).components;
 
 /** The command that fills the generated files, for the hints shown when they are empty. */
 export const GENERATE_COMMAND = 'pnpm run generate';

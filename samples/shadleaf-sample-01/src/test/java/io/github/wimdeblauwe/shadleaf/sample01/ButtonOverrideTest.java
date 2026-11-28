@@ -15,7 +15,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Ladder rung 5: an application's own templates/sl/components/button.html replaces the library's, with no
+ * Ladder rung 6: an application's own templates/sl/components/button.html replaces the library's, with no
  * configuration. The copy is in src/test/resources, so it applies to every test in this sample but not to the
  * running sample.
  */

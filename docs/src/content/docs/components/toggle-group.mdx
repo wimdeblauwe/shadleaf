@@ -5,6 +5,7 @@ description: A set of toggles of which one or several can be on, as radio button
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A row of toggle buttons of which one, or several, can be on. Underneath they are radio buttons or checkboxes, bound to a
 form field.
@@ -96,3 +97,16 @@ keyboard focuses the item, and its text describes the item's input. An icon-only
 ### sl:toggle-group-item
 
 <ComponentAttributes component="toggle-group-item" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:toggle-group
+
+<StylingHooks component="toggle-group" />
+
+### sl:toggle-group-item
+
+<StylingHooks component="toggle-group-item" />

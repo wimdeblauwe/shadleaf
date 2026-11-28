@@ -29,6 +29,11 @@
   }
 }
 
+/* A component's styling hooks (StylingHooksTable.astro): a class name or an attribute never breaks inside itself. */
+.sl-markdown-content .styling-hooks code {
+  white-space: nowrap;
+}
+
 /* Brand colours: pine teal on slate. Starlight's dark theme is :root, its light theme :root[data-theme='light']. */
 :root {
   --sl-color-accent-low: #0c2725;

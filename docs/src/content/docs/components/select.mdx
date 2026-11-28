@@ -5,6 +5,7 @@ description: A select drawn in the page's style on a real select element, bound 
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A select whose list is drawn in the page's style, with a check mark on the chosen item, and icons and groups if you want
 them. Underneath it is a real `<select>`, bound and submitted as one.
@@ -211,6 +212,27 @@ an item's icon is extra, never its only label.
 ### sl:select-separator
 
 <ComponentAttributes component="select-separator" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:select
+
+<StylingHooks component="select" />
+
+### sl:select-item
+
+<StylingHooks component="select-item" />
+
+### sl:select-group
+
+<StylingHooks component="select-group" />
+
+### sl:select-separator
+
+<StylingHooks component="select-separator" />
 
 ## JavaScript
 

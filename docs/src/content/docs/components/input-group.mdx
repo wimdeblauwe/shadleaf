@@ -5,6 +5,7 @@ description: Text, icons and buttons inside the border of an input or textarea; 
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 An input or a textarea with text, icons, buttons or keys inside its border: at its start, at its end, above it or below
 it.
@@ -154,3 +155,32 @@ selected and copied.
 ### sl:input-group-textarea
 
 <ComponentAttributes component="input-group-textarea" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:input-group
+
+<StylingHooks component="input-group" />
+
+### sl:input-group-addon
+
+<StylingHooks component="input-group-addon" />
+
+### sl:input-group-text
+
+<StylingHooks component="input-group-text" />
+
+### sl:input-group-button
+
+<StylingHooks component="input-group-button" />
+
+### sl:input-group-input
+
+<StylingHooks component="input-group-input" />
+
+### sl:input-group-textarea
+
+<StylingHooks component="input-group-textarea" />

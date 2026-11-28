@@ -50,14 +50,19 @@ Live reload while working on components:
 - Do not commit until asked.
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`,
   `build:`, `test:`, `refactor:`, `chore:`). There is no CHANGELOG.md: JReleaser builds release notes from the
-  commits. No breaking-change markers (`!` / `BREAKING CHANGE:`) before 1.0.0; until then markup may change freely.
+  commits.
+- Semantic versioning since 1.0.0. The API is the components and their props with their values, the message keys,
+  and the styling hooks (the classes and attributes in `styling-hooks.approved.json`, see Testing). Adding to it is a
+  `feat:`; removing or renaming any of it is a breaking change: only in a major version, marked with `!` and a
+  `BREAKING CHANGE:` footer saying what to change. Markup outside the hooks (wrapper elements, the order of parts)
+  may change in a minor version.
 - Follow shadcn/ui: its component names, part names, prop names and variant names, unless there is a reason not to.
   Every deviation a shadcn user should know goes on the docs page `coming-from-shadcn.mdx`.
 - Settled decisions (ask before revisiting): no Spring Boot 3.x; Java 17 baseline, Spring Boot 4, Thymeleaf 3.1,
   Tailwind CSS v4; the `sl:` prefix is fixed (namespace URI `https://shadleaf.dev/sl`, only an identifier);
   configuration under `shadleaf.*`; no htmx in the starter; the skins are shadcn's styles (`vega` the default) and
-  one of Shadleaf's own, `sketch` (hand-drawn, for mockups), no others; no `shadleaf-test` module yet; ttcli
-  integration just before 1.0; a sidebar below a full-width header is unsupported.
+  one of Shadleaf's own, `sketch` (hand-drawn, for mockups), no others; no `shadleaf-test` module yet; a sidebar
+  below a full-width header is unsupported.
 
 ## Reference material (read-only)
 
@@ -132,6 +137,9 @@ there instead of fetching from the web.
   non-default values. Only `sl:x` is a component: Thymeleaf's HTML mode also matches `sl-x`, which the component
   processor leaves alone, so a custom element can be called `<sl-chart>`. `th:attr` drops an attribute whose value is `''`, so a presence-style data attribute needs a
   real value (`data-border="bottom"`).
+- The classes and the `data-*` / `aria-*` attributes the library's CSS selects are styling hooks, public API that
+  applications write their own CSS against: name a new part's class `<component>-<part>`, so it belongs to its
+  component in the docs, and never rename one in a minor version.
 - Comments inside a fragment must be parser-level (`<!--/* */-->`), or they reach every page. Never name a fragment
   after an HTML element: it also matches that element.
 - `th:text` on a component replaces its whole content, icons included; docs tell users to write `[[${...}]]`.
@@ -192,6 +200,10 @@ there instead of fetching from the web.
   a selector for each rendered `data-*` value, an explicit default rule (`.x:not([data-size])`), `:focus-visible`
   for focusable elements, `:disabled`/`[readonly]`/`:indeterminate` where they apply; `CssBundleHygieneTest` and
   `JsBundleHygieneTest` check the bundles.
+- **Styling hooks:** `PreviewGeneratorTest` also collects every component's hooks (`StylingHooks`: what the library
+  renders, alone and in the previews, and its compiled CSS selects), writes them to `styling-hooks.json` for the table
+  under each attribute table, and approves them as `approved/styling-hooks.approved.json`. A new hook needs
+  `-Dshadleaf.approve` and a review of that diff; a renamed or removed one is a breaking change (Working agreements).
 - **Preview YAML** (`src/test/resources/previews/<component>.yaml`, required for every component; a family shares one
   with `parts:`): the scenarios of the docs page and the showcase. Ids must be unique across the whole showcase, every
   control labelled, and landmarks named uniquely; `showcase: false` keeps a scenario off the showcase.
@@ -201,6 +213,8 @@ there instead of fetching from the web.
   `description` (what it is; then its typical uses after a semicolon; read by the overview cards and `llms.txt`), an
   intro of one or two sentences before the first preview, and after it a `## When to use` section: a list of concrete
   uses, then "Use something else for:" with links to the components for neighbouring cases (see `item.mdx`).
+  After `## Attributes` comes `## Styling hooks`, with a `<StylingHooks>` for every `<ComponentAttributes>`
+  (`docs/tests/styling-hooks.spec.ts` checks).
 - **Browser tests** (`docs/tests/<name>.spec.ts`) for anything with behaviour: the showcase in every skin and theme,
   and fixture pages (`fixture.ts`: strict CSP, the `csp` build, Alpine on/off, htmx, served routes). Add the spec to
   the Firefox project's `testMatch` in `docs/playwright.config.ts` when browsers differ (it runs in `test:full` only).
@@ -224,11 +238,12 @@ Standalone Maven projects depending on the starter's SNAPSHOT; CI builds each as
 ## Documentation site
 
 `PreviewGeneratorTest` renders the preview YAML through `ComponentRenderTester` into `target/generated-docs/`
-(`previews.json`, the CSS bundles and scripts, `components.json`, `web-types.json`); `docs/scripts/sync.mjs` copies it
-into the site. Layout pages come from `previews/layouts/*.yaml`. Every URL goes through `withBase()`; the site is
-published per version on GitHub Pages by `publish-docs.yml`. `/showcase/` renders every scenario on one bare page for
-the axe, focus and hover checks. Every page is also served as Markdown, plus `llms.txt` and friends for coding agents
-(`docs/src/lib/markdown.ts`); keep `coding-agents.mdx`, the `llms.txt` intro and `context7.json`'s `rules` in step.
+(`previews.json`, the CSS bundles and scripts, `components.json`, `web-types.json`, `styling-hooks.json`);
+`docs/scripts/sync.mjs` copies it into the site. Layout pages come from `previews/layouts/*.yaml`. Every URL goes
+through `withBase()`; the site is published per version on GitHub Pages by `publish-docs.yml`. `/showcase/` renders
+every scenario on one bare page for the axe, focus and hover checks. Every page is also served as Markdown, plus
+`llms.txt` and friends for coding agents (`docs/src/lib/markdown.ts`); keep `coding-agents.mdx`, the `llms.txt` intro
+and `context7.json`'s `rules` in step.
 
 ## Releases
 

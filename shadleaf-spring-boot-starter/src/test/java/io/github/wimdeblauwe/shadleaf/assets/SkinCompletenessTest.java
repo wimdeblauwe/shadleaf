@@ -9,7 +9,7 @@ import io.github.wimdeblauwe.shadleaf.component.ComponentRegistry;
 import io.github.wimdeblauwe.shadleaf.component.PropDefinition;
 import io.github.wimdeblauwe.shadleaf.component.PropType;
 import io.github.wimdeblauwe.shadleaf.test.ComponentRenderTester;
-import io.github.wimdeblauwe.shadleaf.test.FormModel;
+import io.github.wimdeblauwe.shadleaf.test.IsolatedRender;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -29,9 +29,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import tools.jackson.databind.json.JsonMapper;
 
 /**
@@ -51,18 +48,14 @@ import tools.jackson.databind.json.JsonMapper;
  */
 class SkinCompletenessTest {
 
-  private static final ComponentRenderTester RENDERER = ComponentRenderTester.create();
-  private static final FormModel FORM = FormModel.of(Map.of(), Map.of());
   private static final ComponentRegistry REGISTRY = new ComponentRegistry(List.of(
       new ClasspathComponentDefinitionSource(SkinCompletenessTest.class.getClassLoader())));
+  private static final IsolatedRender RENDERER = new IsolatedRender(REGISTRY, ComponentRenderTester.create());
 
   private static final Set<String> FOCUSABLE_ELEMENTS = Set.of("a", "button", "input", "select", "textarea",
       "summary");
   private static final Set<String> FORM_CONTROLS = Set.of("input", "select", "textarea");
   // Input types that ignore readonly.
-  /** The page an object prop ({@code th:page}) gets: page 2 of 3, so every pagination link is there. */
-  private static final Page<String> SAMPLE_PAGE = new PageImpl<>(List.of("x"), PageRequest.of(1, 1), 3);
-
   private static final Set<String> WITHOUT_READONLY = Set.of("checkbox", "radio", "file", "range", "color", "hidden");
 
   // A rule's selector list: the text before a "{" back to the previous "{", "}" or ";", skipping at-rules. A selector
@@ -163,26 +156,8 @@ class SkinCompletenessTest {
 
   /** The rendered root element, or {@code null} for a component that renders none of its own. */
   private static @Nullable Element renderRoot(String component, @Nullable String prop, @Nullable String value) {
-    // aria-label satisfies any accessible-name rule; name satisfies <sl:icon>; every other required prop gets "x" (a
-    // number "1"); an object prop gets the page of SAMPLE_PAGE (th:page, and a chart's th:data takes its rows); a
-    // currency prop gets "EUR", which the chart parts' currency formats need.
-    // Inside a form object, for the components that read one (sl:form-errors).
-    StringBuilder propAttribute = new StringBuilder(prop == null ? "" : "%s=\"%s\" ".formatted(prop, value));
-    REGISTRY.get(component).props().values().stream()
-        .filter(PropDefinition::required)
-        .filter(required -> !required.name().equals(prop) && !required.name().equals("name"))
-        .forEach(required -> propAttribute.append("%s=\"%s\" ".formatted(required.name(),
-            required.type() == PropType.NUMBER ? "1" : "x")));
-    if (REGISTRY.get(component).props().containsKey("currency")) {
-      propAttribute.append("currency=\"EUR\" ");
-    }
-    REGISTRY.get(component).props().values().stream()
-        .filter(object -> object.type() == PropType.OBJECT && !object.name().equals(prop))
-        .forEach(object -> propAttribute.append("th:%s=\"${samplePage}\" ".formatted(object.name())));
-    Map<String, Object> variables = new LinkedHashMap<>(FORM.variables());
-    variables.put("samplePage", SAMPLE_PAGE);
-    Elements rendered = RENDERER.render(FormModel.wrap("<sl:%s %saria-label=\"x\" name=\"x\">x</sl:%s>"
-        .formatted(component, propAttribute, component)), variables).document().body().children();
+    Elements rendered = RENDERER.render(component, prop == null || value == null ? Map.of() : Map.of(prop, value),
+        "x");
     return rendered.isEmpty() ? null : rendered.first();
   }
 

@@ -5,6 +5,7 @@ description: Links to the other pages of a list, built from the Spring Data Page
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 Links to the previous, the next and the numbered pages of a long list, with an optional summary and a choice of rows per
 page, built from the Spring Data `Page` the controller returns.
@@ -211,3 +212,44 @@ a field to type a page number, and paging in the browser.
 ### sl:pagination-size
 
 <ComponentAttributes component="pagination-size" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:pagination
+
+<StylingHooks component="pagination" />
+
+### sl:pagination-content
+
+<StylingHooks component="pagination-content" />
+
+### sl:pagination-item
+
+<StylingHooks component="pagination-item" />
+
+### sl:pagination-link
+
+<StylingHooks component="pagination-link" />
+
+### sl:pagination-previous
+
+<StylingHooks component="pagination-previous" />
+
+### sl:pagination-next
+
+<StylingHooks component="pagination-next" />
+
+### sl:pagination-ellipsis
+
+<StylingHooks component="pagination-ellipsis" />
+
+### sl:pagination-summary
+
+<StylingHooks component="pagination-summary" />
+
+### sl:pagination-size
+
+<StylingHooks component="pagination-size" />

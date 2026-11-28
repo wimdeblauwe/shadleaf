@@ -5,6 +5,7 @@ description: The signed-in user with a menu that signs out, or a Sign in link; f
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 The signed-in user's picture and name, opening a menu with your own links and Sign out. When nobody is signed in, it is
 a Sign in link.
@@ -170,3 +171,10 @@ picture lies over the initials and covers them once loaded.
 ## Attributes
 
 <ComponentAttributes component="user-menu" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="user-menu" />

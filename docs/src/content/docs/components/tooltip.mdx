@@ -5,6 +5,7 @@ description: A short text that shows while the pointer rests on an element or th
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A short text that appears while the pointer rests on an element or the keyboard focuses it, and disappears when they
 leave. It explains the element; it holds no links or buttons, and nobody on a touch screen sees it.
@@ -95,6 +96,19 @@ Alpine component places it from the trigger's position instead.
 ### sl:tooltip-content
 
 <ComponentAttributes component="tooltip-content" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:tooltip
+
+<StylingHooks component="tooltip" />
+
+### sl:tooltip-content
+
+<StylingHooks component="tooltip-content" />
 
 ## JavaScript
 

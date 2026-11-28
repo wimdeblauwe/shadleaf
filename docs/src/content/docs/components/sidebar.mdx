@@ -5,6 +5,7 @@ description: The application's navigation beside the page, and a panel over it o
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 The column of navigation beside the page: menus of links with icons and badges, groups that fold, a header and a footer.
 On a desktop it collapses to icons; on a phone it opens as a panel over the page. It remembers its state.
@@ -648,6 +649,91 @@ For now:
 ### sl:sidebar-menu-sub-button
 
 <ComponentAttributes component="sidebar-menu-sub-button" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:sidebar-provider
+
+<StylingHooks component="sidebar-provider" />
+
+### sl:sidebar
+
+<StylingHooks component="sidebar" />
+
+### sl:sidebar-trigger
+
+<StylingHooks component="sidebar-trigger" />
+
+### sl:sidebar-inset
+
+<StylingHooks component="sidebar-inset" />
+
+### sl:sidebar-header
+
+<StylingHooks component="sidebar-header" />
+
+### sl:sidebar-content
+
+<StylingHooks component="sidebar-content" />
+
+### sl:sidebar-footer
+
+<StylingHooks component="sidebar-footer" />
+
+### sl:sidebar-separator
+
+<StylingHooks component="sidebar-separator" />
+
+### sl:sidebar-group
+
+<StylingHooks component="sidebar-group" />
+
+### sl:sidebar-group-label
+
+<StylingHooks component="sidebar-group-label" />
+
+### sl:sidebar-group-action
+
+<StylingHooks component="sidebar-group-action" />
+
+### sl:sidebar-group-content
+
+<StylingHooks component="sidebar-group-content" />
+
+### sl:sidebar-menu
+
+<StylingHooks component="sidebar-menu" />
+
+### sl:sidebar-menu-item
+
+<StylingHooks component="sidebar-menu-item" />
+
+### sl:sidebar-menu-button
+
+<StylingHooks component="sidebar-menu-button" />
+
+### sl:sidebar-menu-action
+
+<StylingHooks component="sidebar-menu-action" />
+
+### sl:sidebar-menu-badge
+
+<StylingHooks component="sidebar-menu-badge" />
+
+### sl:sidebar-menu-sub
+
+<StylingHooks component="sidebar-menu-sub" />
+
+### sl:sidebar-menu-sub-item
+
+<StylingHooks component="sidebar-menu-sub-item" />
+
+### sl:sidebar-menu-sub-button
+
+<StylingHooks component="sidebar-menu-sub-button" />
 
 ## JavaScript
 

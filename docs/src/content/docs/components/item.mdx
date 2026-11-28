@@ -5,6 +5,7 @@ description: A row of content with media, a title, a description and actions, al
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A row that shows one thing at a glance: an icon, avatar or image, a title and a description, and actions at its end.
 Several make a list in an item group, or a grid of tiles.
@@ -140,3 +141,48 @@ In a group a link item is wrapped in a `div` that is the list item, so the link 
 ### sl:item-separator
 
 <ComponentAttributes component="item-separator" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:item
+
+<StylingHooks component="item" />
+
+### sl:item-media
+
+<StylingHooks component="item-media" />
+
+### sl:item-content
+
+<StylingHooks component="item-content" />
+
+### sl:item-title
+
+<StylingHooks component="item-title" />
+
+### sl:item-description
+
+<StylingHooks component="item-description" />
+
+### sl:item-actions
+
+<StylingHooks component="item-actions" />
+
+### sl:item-header
+
+<StylingHooks component="item-header" />
+
+### sl:item-footer
+
+<StylingHooks component="item-footer" />
+
+### sl:item-group
+
+<StylingHooks component="item-group" />
+
+### sl:item-separator
+
+<StylingHooks component="item-separator" />

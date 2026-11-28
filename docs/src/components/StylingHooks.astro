@@ -1,0 +1,158 @@
+---
+// A component's styling hooks, grouped by kind: its parts (classes), the attributes its props set, and the states it
+// sets itself, from the registry export (styling-hooks.json, StylingHooks in the starter's tests), so they cannot drift
+// from what the library renders and styles. What they mean, and :not(...) for a prop's default, is explained once, in
+// the adjustability guide. Each group copies as an empty stylesheet to fill in; the button shows while the pointer is
+// on the group or focus is in it, and always on a touch screen.
+import {components, stylingHooks} from '../lib/generated';
+import {stylingHooksCss, stylingHooksGroups} from '../lib/styling-hooks';
+import Missing from './Missing.astro';
+
+interface Props {
+  /** Component name, with or without the sl: prefix, e.g. "button". */
+  component: string;
+}
+
+const name = Astro.props.component.replace(/^sl:/, '');
+const hooks = stylingHooks.find(c => c.name === name);
+const definition = components.find(c => c.name === name);
+const groups = hooks && definition ? stylingHooksGroups(hooks, definition) : null;
+const copyIcon = '<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+    + 'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" '
+    + 'ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>';
+---
+
+{
+  !groups ? (
+    <Missing what={`styling hooks of sl:${name}`}/>
+  ) : groups.parts.length === 0 ? (
+    <p><code>sl:{name}</code> has no styling hooks of its own: style the components it renders or holds.</p>
+  ) : (
+    <>
+      {(['parts', 'props', 'states'] as const).filter(kind => groups[kind].length > 0).map(kind => (
+        <div class="styling-hooks-group">
+          <p class="styling-hooks-title">
+            <strong>{kind[0].toUpperCase() + kind.slice(1)}</strong>
+            <button type="button" class="styling-hooks-copy" data-copy-css={stylingHooksCss(groups, kind)}
+                    aria-label={`Copy the ${kind} of sl:${name} as CSS`}>
+              <Fragment set:html={copyIcon}/><span class="styling-hooks-copy-label">CSS</span>
+            </button>
+            <span class="sr-only" aria-live="polite"></span>
+          </p>
+          {kind === 'parts' && (
+            <table class="styling-hooks">
+              <thead><tr><th>Class</th><th>Element</th></tr></thead>
+              <tbody>
+                {groups.parts.map(part => (
+                  <tr><td><code>.{part.name}</code></td><td>{part.elements.map((element, i) => <>{i > 0 && ' '}<code>{`<${element}>`}</code></>)}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {kind === 'props' && (
+            <table class="styling-hooks">
+              <thead><tr><th>Prop</th><th>Selector</th><th>Values</th></tr></thead>
+              <tbody>
+                {groups.props.map(prop => (
+                  <tr>
+                    <td><code>{prop.prop}</code></td>
+                    <td><code>{prop.selector}</code><br/><code>{prop.defaultSelector}</code></td>
+                    <td>{prop.values.map((value, i) => <>{i > 0 && ' '}<code>{value}</code></>)}<br/><code>{prop.defaultValue}</code> (default)</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {kind === 'states' && (
+            <table class="styling-hooks">
+              <thead><tr><th>Selector</th><th>Values</th></tr></thead>
+              <tbody>
+                {groups.states.map(state => (
+                  <tr>
+                    <td><code>{state.selector}</code></td>
+                    <td>{state.values.length === 0 ? <em>present or absent</em> : state.values.map((value, i) => <>{i > 0 && ' '}<code>{value}</code></>)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      ))}
+    </>
+  )
+}
+
+<script>
+  document.addEventListener('click', async event => {
+    const button = (event.target as Element).closest<HTMLButtonElement>('.styling-hooks-copy');
+    if (!button) {
+      return;
+    }
+    await navigator.clipboard.writeText(button.dataset.copyCss ?? '');
+    const status = button.nextElementSibling;
+    const label = button.querySelector('.styling-hooks-copy-label');
+    button.dataset.copied = '';
+    if (label) {
+      label.textContent = 'Copied';
+    }
+    if (status) {
+      status.textContent = 'Copied';
+    }
+    setTimeout(() => {
+      delete button.dataset.copied;
+      if (label) {
+        label.textContent = 'CSS';
+      }
+      if (status) {
+        status.textContent = '';
+      }
+    }, 1500);
+  });
+</script>
+
+<style>
+  .styling-hooks-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .styling-hooks-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.375rem;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-xs);
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .styling-hooks-copy:hover,
+  .styling-hooks-copy:focus-visible {
+    color: var(--sl-color-white);
+    border-color: var(--sl-color-gray-3);
+  }
+
+  .styling-hooks-copy[data-copied] {
+    color: var(--sl-color-text-accent);
+    border-color: var(--sl-color-text-accent);
+  }
+
+  /* Out of the way while reading: shown while the pointer is on the group or focus is in it. A touch screen cannot
+     hover, so there it always shows. */
+  @media (hover: hover) {
+    .styling-hooks-group:not(:hover, :focus-within) .styling-hooks-copy {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .styling-hooks-copy {
+      transition: none;
+    }
+  }
+</style>

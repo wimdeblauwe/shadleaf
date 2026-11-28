@@ -5,6 +5,7 @@ description: The errors that belong to the whole form rather than one field, or 
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A destructive alert above a form's fields, with the errors that belong to no single field, read from Spring's binding
 result. It renders nothing while there are none.
@@ -186,3 +187,10 @@ The messages are not links to their controls (GOV.UK's summary has those), at le
 ## Attributes
 
 <ComponentAttributes component="form-errors" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+<StylingHooks component="form-errors" />

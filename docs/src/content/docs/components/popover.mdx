@@ -5,6 +5,7 @@ description: Rich content in a panel next to the button that opens it, on the br
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A panel that opens next to the button that triggers it and closes when the user clicks elsewhere or presses Escape.
 It holds anything: text, links, a small form. The rest of the page stays usable while it is open.
@@ -136,6 +137,35 @@ fires the event before the swap, the example works as it is: see
 ### sl:popover-description
 
 <ComponentAttributes component="popover-description" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:popover
+
+<StylingHooks component="popover" />
+
+### sl:popover-trigger
+
+<StylingHooks component="popover-trigger" />
+
+### sl:popover-content
+
+<StylingHooks component="popover-content" />
+
+### sl:popover-header
+
+<StylingHooks component="popover-header" />
+
+### sl:popover-title
+
+<StylingHooks component="popover-title" />
+
+### sl:popover-description
+
+<StylingHooks component="popover-description" />
 
 ## JavaScript
 

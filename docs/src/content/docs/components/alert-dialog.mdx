@@ -5,6 +5,7 @@ description: A modal dialog that interrupts the user with something important an
 
 import ComponentPreview from '../../../components/ComponentPreview.astro';
 import ComponentAttributes from '../../../components/ComponentAttributes.astro';
+import StylingHooks from '../../../components/StylingHooks.astro';
 
 A modal dialog that asks the user to confirm or cancel before going on. A click outside it does not close it, so the
 user has to answer.
@@ -196,6 +197,39 @@ Without JavaScript the same buttons need a page of their own for the question, o
 ### sl:alert-dialog-cancel
 
 <ComponentAttributes component="alert-dialog-cancel" />
+
+## Styling hooks
+
+The classes and attributes your own CSS can select to restyle the component, as explained in
+[your own CSS rules](../../guides/adjustability/#5-your-own-css-rules).
+
+### sl:alert-dialog
+
+<StylingHooks component="alert-dialog" />
+
+### sl:alert-dialog-header
+
+<StylingHooks component="alert-dialog-header" />
+
+### sl:alert-dialog-media
+
+<StylingHooks component="alert-dialog-media" />
+
+### sl:alert-dialog-title
+
+<StylingHooks component="alert-dialog-title" />
+
+### sl:alert-dialog-description
+
+<StylingHooks component="alert-dialog-description" />
+
+### sl:alert-dialog-footer
+
+<StylingHooks component="alert-dialog-footer" />
+
+### sl:alert-dialog-cancel
+
+<StylingHooks component="alert-dialog-cancel" />
 
 ## JavaScript
 
